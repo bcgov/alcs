@@ -1,0 +1,14 @@
+version: '3.6'
+services:
+  db:
+    image: postgres:14.4-bullseye
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres:/var/lib/postgres
+volumes:
+  postgres:
