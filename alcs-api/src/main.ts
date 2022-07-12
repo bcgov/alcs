@@ -7,6 +7,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as config from 'config';
 
 async function bootstrap() {
   // fastify
@@ -14,9 +15,6 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
-
-  //init config
-  const config: ConfigService = app.get(ConfigService);
 
   // config variables
   const port: number = config.get<number>('PORT');
