@@ -35,7 +35,6 @@ jobs:
           name: coverage-app
           path: ${{ github.workspace }}/alcs-frontend/coverage
           retention-days: 1
-      - uses:
   coverage:
     needs: [test]
     name: coverage
@@ -43,7 +42,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: actions/download-artifact@v2
-      - name: Publish code coverage
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: 3afdaf9ea2909da512cd49bd70113304aad3f6a3b84c4f1047c8ae0111817ab1
