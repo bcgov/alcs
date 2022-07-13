@@ -58,6 +58,24 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## TypeOrm
+
+```bash
+# create empty migration file:
+  npm run migration:create --name=<file_name>
+
+# generate migrations:
+  npm run migration:generate --name=<file_name>
+#  or
+  npm run typeorm -- migration:generate ./src/providers/typeorm/migrations/<file_name>
+
+# apply migration:
+  npm run typeorm migration:run
+
+# revert migration:
+  npm run typeorm migration:revert
+```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
