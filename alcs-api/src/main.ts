@@ -12,7 +12,7 @@ async function bootstrap() {
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: true }),
+    new FastifyAdapter({ logger: JSON.parse(config.get<string>('VERBOSE')) }),
   );
 
   // config variables

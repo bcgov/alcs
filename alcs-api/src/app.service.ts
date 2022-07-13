@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
+import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 
 @Injectable()
@@ -41,7 +42,7 @@ export class AppService {
     }
   }
 
-  async getHealthStatus(): Promise<any> {
+  async getHealthStatus(): Promise<HealthCheckDto> {
     // declare response model to handle db
     return {
       alive: true,
