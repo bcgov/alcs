@@ -37,6 +37,6 @@ export const connectionSource = new DataSource({
   logging: ormConfig.logging,
   synchronize: ormConfig.synchronize,
   name: 'default',
-  entities: ormConfig.entities,
+  entities: ['src/**/*.entity.{ts,js}'], // note, this must point to entities folder in src, so cli can discover entities for migration generation
   migrations: ormConfig.migrations,
 });
