@@ -30,11 +30,12 @@ jobs:
       - run: npm run build
       - run: npm run coverage
       - if: matrix.node-version == '16'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: coverage-app
-          path: ${{ github.workspace }}/alcs-frontend/coverage
+          name: coverage-frontend
+          path: coverage
           retention-days: 1
+          if-no-files-found: error
   test-api:
     defaults:
       run:
@@ -54,10 +55,11 @@ jobs:
       - run: npm run build
       - run: npm run test:cov
       - if: matrix.node-version == '16'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: coverage-app
-          path: ${{ github.workspace }}/alcs-api/coverage
+          name: coverage-api
+          path: coverage
+          if-no-files-found: error
           retention-days: 1
   coverage:
     needs: [test-frontend, test-api]
