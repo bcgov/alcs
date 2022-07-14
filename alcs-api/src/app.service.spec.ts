@@ -42,4 +42,17 @@ describe('AppService', () => {
 
     expect(await service.getHealthStatus()).toStrictEqual(result);
   });
+
+  it('AppController should return HealthCheckDto and suppress exception', async () => {
+    const dbDto: HealthCheckDbDto = {
+      read: false,
+      write: false,
+    };
+    const result: HealthCheckDto = { alive: true, db: dbDto };
+    repositoryMock.findOne.mockImplementation(async () => {
+      throw Error('Expected error');
+    });
+
+    expect(await service.getHealthStatus()).toStrictEqual(result);
+  });
 });
