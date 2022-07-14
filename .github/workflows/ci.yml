@@ -48,4 +48,4 @@ jobs:
         with:
           coverageLocations: |
             ${{ github.workspace }}/**/lcov.info:lcov
-          prefix: ${{ github.workplace }}
+          #prefix: ${{ github.workplace }}
