@@ -6,5 +6,5 @@ export class HealthCheck {
   id: number;
 
   @Column({ default: BigInt(new Date().getTime()).toString(), type: 'bigint' })
-  UpdateDate: string;
+  updateDate: string;
 }

@@ -16,7 +16,7 @@ export class AppService {
   private async canReadDb(): Promise<boolean> {
     try {
       await this.healthCheckRepository.findOne({
-        where: { UpdateDate: Not(IsNull()) },
+        where: { updateDate: Not(IsNull()) },
       });
 
       return true;
@@ -30,10 +30,10 @@ export class AppService {
     try {
       const healthCheck =
         (await this.healthCheckRepository.findOne({
-          where: { UpdateDate: Not(IsNull()) },
+          where: { updateDate: Not(IsNull()) },
         })) || new HealthCheck();
 
-      healthCheck.UpdateDate = BigInt(new Date().getTime()).toString();
+      healthCheck.updateDate = BigInt(new Date().getTime()).toString();
 
       await this.healthCheckRepository.save(healthCheck);
 
