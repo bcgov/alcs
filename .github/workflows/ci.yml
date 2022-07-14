@@ -35,13 +35,38 @@ jobs:
           name: coverage-app
           path: ${{ github.workspace }}/alcs-frontend/coverage
           retention-days: 1
+  test-api:
+    defaults:
+      run:
+        working-directory: alcs-api
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: ["14", "16"]
+    name: test/node ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:cov
+      - if: matrix.node-version == '16'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-app
+          path: ${{ github.workspace }}/alcs-api/coverage
+          retention-days: 1
   coverage:
-    needs: [test-frontend]
+    needs: [test-frontend, test-api]
     name: coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - uses: actions/download-artifact@v2
+      - run: find .
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: 3afdaf9ea2909da512cd49bd70113304aad3f6a3b84c4f1047c8ae0111817ab1
