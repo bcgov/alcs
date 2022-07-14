@@ -12,7 +12,7 @@ describe('TypeormConfigService', () => {
     service = module.get<TypeormConfigService>(TypeormConfigService);
   });
 
-  it('should be defined', () => {
+  it('TypeormConfigService should be defined', () => {
     expect(service).toBeDefined();
   });
 });
