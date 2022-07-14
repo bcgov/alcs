@@ -13,7 +13,7 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
   entities: [join(__dirname, '**', '*.entity.{ts,js}')],
   /* Note : it is unsafe to use synchronize: true for schema synchronization
     on production once you get data in your database. */
-  synchronize: false,
+  synchronize: true,
   autoLoadEntities: true,
 };
 

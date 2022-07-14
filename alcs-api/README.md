@@ -47,6 +47,8 @@ $ npm run start:prod
 
 ## Test
 
+Create test.json
+
 ```bash
 # unit tests
 $ npm run test

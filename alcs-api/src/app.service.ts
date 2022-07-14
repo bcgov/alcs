@@ -30,7 +30,7 @@ export class AppService {
         (await this.healthCheckRepository.findOne({
           where: { UpdateDate: Not(IsNull()) },
         })) || new HealthCheck();
-      console.log(healthCheck);
+
       healthCheck.UpdateDate = BigInt(new Date().getTime()).toString();
 
       await this.healthCheckRepository.save(healthCheck);
@@ -43,7 +43,6 @@ export class AppService {
   }
 
   async getHealthStatus(): Promise<HealthCheckDto> {
-    // declare response model to handle db
     return {
       alive: true,
       db: {
