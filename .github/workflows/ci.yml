@@ -1,12 +1,12 @@
 name: CI
 on:
   push:
-    # tags:
-    #   - "!*" # Do not execute on tags
-    # paths:
-    #   - alcs-*/src/*
-    #   - alcs-*/test/*
-    #   - "alcs-*/*.json"
+    tags:
+      - "!*" # Do not execute on tags
+    paths:
+      - alcs-*/src/*
+      - alcs-*/test/*
+      - "alcs-*/*.json"
   pull_request:
     paths:
       - "!*.MD"
