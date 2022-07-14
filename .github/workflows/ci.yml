@@ -1,0 +1,42 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  test-frontend:
+    defaults:
+      run:
+        working-directory: alcs-frontend
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: ["16"]
+    name: Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:ci
+  test-api:
+    defaults:
+      run:
+        working-directory: alcs-api
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: ["16"]
+    name: API Tests - ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test
