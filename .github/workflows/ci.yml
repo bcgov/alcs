@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage-frontend
-          path: ${{ github.workspace }}/alcs-api/coverage
+          path: ${{ github.workspace }}/alcs-frontend/coverage
           retention-days: 1
           if-no-files-found: error
   test-api:
@@ -44,7 +44,7 @@ jobs:
       matrix:
         platform: [ubuntu-latest]
         node: ["16"]
-    name: Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
+    name: API Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@master
