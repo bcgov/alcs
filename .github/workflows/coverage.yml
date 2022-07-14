@@ -1,0 +1,71 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test-frontend:
+    defaults:
+      run:
+        working-directory: alcs-frontend
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: ["16"]
+    name: Coverage Report Frontend - ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:cov
+      - if: matrix.node == '16'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-frontend
+          path: ${{ github.workspace }}/alcs-frontend/coverage
+          retention-days: 1
+          if-no-files-found: error
+  test-api:
+    defaults:
+      run:
+        working-directory: alcs-api
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: ["16"]
+    name: Coverage Report API - ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:cov
+      - if: matrix.node == '16'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-api
+          path: ${{ github.workspace }}/alcs-api/coverage
+          if-no-files-found: error
+          retention-days: 1
+  coverage:
+    needs: [test-frontend, test-api]
+    name: Publish Coverage Reports
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/download-artifact@v2
+      - run: find .
+      - uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: 3afdaf9ea2909da512cd49bd70113304aad3f6a3b84c4f1047c8ae0111817ab1
+        with:
+          coverageLocations: |
+            ${{ github.workspace }}/**/lcov.info:lcov
+          prefix: ${{ github.workplace }}

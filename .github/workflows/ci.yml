@@ -1,9 +1,8 @@
 name: CI
 on:
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
 jobs:
   test-frontend:
     defaults:
@@ -22,14 +21,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install
       - run: npm run build
-      - run: npm run coverage
-      - if: matrix.node == '16'
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-frontend
-          path: ${{ github.workspace }}/alcs-frontend/coverage
-          retention-days: 1
-          if-no-files-found: error
+      - run: npm run test:ci
   test-api:
     defaults:
       run:
@@ -47,26 +39,4 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install
       - run: npm run build
-      - run: npm run test:cov
-      - if: matrix.node == '16'
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-api
-          path: ${{ github.workspace }}/alcs-api/coverage
-          if-no-files-found: error
-          retention-days: 1
-  coverage:
-    needs: [test-frontend, test-api]
-    name: coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/download-artifact@v2
-      - run: find .
-      - uses: paambaati/codeclimate-action@v3.0.0
-        env:
-          CC_TEST_REPORTER_ID: 3afdaf9ea2909da512cd49bd70113304aad3f6a3b84c4f1047c8ae0111817ab1
-        with:
-          coverageLocations: |
-            ${{ github.workspace }}/**/lcov.info:lcov
-          prefix: ${{ github.workplace }}
+      - run: npm run test
