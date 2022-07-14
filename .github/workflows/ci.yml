@@ -1,15 +1,9 @@
 name: CI
 on:
   push:
-    tags:
-      - "!*" # Do not execute on tags
-    paths:
-      - alcs-*/src/*
-      - alcs-*/test/*
-      - "alcs-*/*.json"
+    branches:
+      - main
   pull_request:
-    paths:
-      - "!*.MD"
 jobs:
   test-frontend:
     defaults:
