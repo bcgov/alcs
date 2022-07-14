@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["16"]
+        node: ["16.x"]
     name: test/node ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -29,11 +29,11 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run coverage
-      - if: matrix.node-version == '16'
+      - if: matrix.node-version == '16.x'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-frontend
-          path: coverage
+          path: ${{ github.workspace }}/alcs-api/coverage
           retention-days: 1
           if-no-files-found: error
   test-api:
@@ -43,7 +43,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["16"]
+        node: ["16.x"]
     name: test/node ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -54,11 +54,11 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run test:cov
-      - if: matrix.node-version == '16'
+      - if: matrix.node-version == '16.x'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-api
-          path: coverage
+          path: ${{ github.workspace }}/alcs-api/coverage
           if-no-files-found: error
           retention-days: 1
   coverage:
