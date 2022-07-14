@@ -47,6 +47,8 @@ $ npm run start:prod
 
 ## Test
 
+Create test.json
+
 ```bash
 # unit tests
 $ npm run test
@@ -56,6 +58,24 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## TypeOrm
+
+```bash
+# create empty migration file:
+  npm run migration:create --name=<file_name>
+
+# generate migrations:
+  npm run migration:generate --name=<file_name>
+#  or
+  npm run typeorm -- migration:generate ./src/providers/typeorm/migrations/<file_name>
+
+# apply migration:
+  npm run typeorm migration:run
+
+# revert migration:
+  npm run typeorm migration:revert
 ```
 
 ## Support
