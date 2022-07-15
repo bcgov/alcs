@@ -1,21 +1,22 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
-import { createMock } from '@golevelup/nestjs-testing';
 import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
   KEYCLOAK_LOGGER,
+  RoleGuard as KeyCloakRoleGuard,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { UserService } from '../../user/user.service';
-import { AUTH_ROLES, RoleGuard } from './role.guard';
-import { RoleGuard as KeyCloakRoleGuard } from 'nest-keycloak-connect';
+import { AUTH_ROLE } from '../enum';
+import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {
   let guard: RoleGuard;
-  let reflector: Reflector;
-  let mockUserService: Partial<UserService> = {};
+  let reflector: DeepMocked<Reflector>;
+  let mockUserService: DeepMocked<UserService>;
 
   const mockHttpContext = {
     getRequest: () => ({
@@ -28,9 +29,8 @@ describe('RoleGuard', () => {
 
   beforeEach(async () => {
     reflector = createMock<Reflector>();
-    jest
-      .spyOn(reflector, 'get')
-      .mockReturnValue([AUTH_ROLES.ADMIN, 'poweruser']);
+    mockUserService = createMock<UserService>();
+    reflector.get.mockReturnValue([AUTH_ROLE.ADMIN, AUTH_ROLE.USER]);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -49,18 +49,19 @@ describe('RoleGuard', () => {
         },
         KeycloakMultiTenantService,
         {
-          provide: UserService,
-          useValue: mockUserService,
-        },
-        {
           provide: Reflector,
           useValue: reflector,
+        },
+        {
+          provide: UserService,
+          useValue: mockUserService,
         },
       ],
     }).compile();
 
-    reflector = new Reflector();
     guard = module.get<RoleGuard>(RoleGuard);
+    guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
+    guard.keyCloakGuard.canActivate = jest.fn(async () => true);
   });
 
   it('should be defined', () => {
@@ -69,7 +70,6 @@ describe('RoleGuard', () => {
 
   it('should reject if underlying keycloak fails', async () => {
     const mockContext = createMock<ExecutionContext>();
-    guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
     guard.keyCloakGuard.canActivate = jest.fn(async () => false);
 
     const isAllowed = await guard.canActivate(mockContext);
@@ -87,9 +87,7 @@ describe('RoleGuard', () => {
       }),
     } as any);
 
-    guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
-    guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    reflector.get = jest.fn((): any => [AUTH_ROLES.ADMIN]);
+    reflector.get.mockReturnValue([AUTH_ROLE.ADMIN]);
 
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeFalsy();
@@ -99,9 +97,9 @@ describe('RoleGuard', () => {
     const mockContext = createMock<ExecutionContext>();
     mockContext.switchToHttp.mockReturnValue(mockHttpContext);
 
-    guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
-    guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    mockUserService.getUserRoles = jest.fn(async () => ['not-admin']);
+    mockUserService.getUserRoles.mockResolvedValue([
+      'invalid-role',
+    ] as unknown as AUTH_ROLE[]);
 
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeFalsy();
@@ -110,10 +108,7 @@ describe('RoleGuard', () => {
   it('should accept if users has any of the roles', async () => {
     const mockContext = createMock<ExecutionContext>();
     mockContext.switchToHttp.mockReturnValue(mockHttpContext);
-
-    guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
-    guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    mockUserService.getUserRoles = jest.fn(async () => [AUTH_ROLES.ADMIN]);
+    mockUserService.getUserRoles.mockResolvedValue([AUTH_ROLE.ADMIN]);
 
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();
@@ -123,11 +118,9 @@ describe('RoleGuard', () => {
     const mockContext = createMock<ExecutionContext>();
     mockContext.switchToHttp.mockReturnValue(mockHttpContext);
 
-    guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
-    guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    mockUserService.getUserRoles = jest.fn(async () => [
-      AUTH_ROLES.ADMIN,
-      'poweruser',
+    mockUserService.getUserRoles.mockResolvedValue([
+      AUTH_ROLE.ADMIN,
+      AUTH_ROLE.USER,
     ]);
 
     const isAllowed = await guard.canActivate(mockContext);
