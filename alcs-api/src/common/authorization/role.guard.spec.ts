@@ -9,7 +9,7 @@ import {
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { UserService } from '../../user/user.service';
-import { RoleGuard } from './role.guard';
+import { AUTH_ROLES, RoleGuard } from './role.guard';
 import { RoleGuard as KeyCloakRoleGuard } from 'nest-keycloak-connect';
 
 describe('RoleGuard', () => {
@@ -17,9 +17,20 @@ describe('RoleGuard', () => {
   let reflector: Reflector;
   let mockUserService: Partial<UserService> = {};
 
+  const mockHttpContext = {
+    getRequest: () => ({
+      user: {
+        email: 'test@test.com',
+        email_verified: true,
+      },
+    }),
+  } as any;
+
   beforeEach(async () => {
     reflector = createMock<Reflector>();
-    jest.spyOn(reflector, 'get').mockReturnValue(['admin', 'poweruser']);
+    jest
+      .spyOn(reflector, 'get')
+      .mockReturnValue([AUTH_ROLES.ADMIN, 'poweruser']);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -78,7 +89,7 @@ describe('RoleGuard', () => {
 
     guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
     guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    reflector.get = jest.fn((): any => ['admin']);
+    reflector.get = jest.fn((): any => [AUTH_ROLES.ADMIN]);
 
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeFalsy();
@@ -86,14 +97,7 @@ describe('RoleGuard', () => {
 
   it('should reject if users has no matching roles', async () => {
     const mockContext = createMock<ExecutionContext>();
-    mockContext.switchToHttp.mockReturnValue({
-      getRequest: () => ({
-        user: {
-          email: 'test@test.com',
-          email_verified: true,
-        },
-      }),
-    } as any);
+    mockContext.switchToHttp.mockReturnValue(mockHttpContext);
 
     guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
     guard.keyCloakGuard.canActivate = jest.fn(async () => true);
@@ -105,18 +109,11 @@ describe('RoleGuard', () => {
 
   it('should accept if users has any of the roles', async () => {
     const mockContext = createMock<ExecutionContext>();
-    mockContext.switchToHttp.mockReturnValue({
-      getRequest: () => ({
-        user: {
-          email: 'test@test.com',
-          email_verified: true,
-        },
-      }),
-    } as any);
+    mockContext.switchToHttp.mockReturnValue(mockHttpContext);
 
     guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
     guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    mockUserService.getUserRoles = jest.fn(async () => ['admin']);
+    mockUserService.getUserRoles = jest.fn(async () => [AUTH_ROLES.ADMIN]);
 
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();
@@ -124,18 +121,14 @@ describe('RoleGuard', () => {
 
   it('should accept if users has all of the roles', async () => {
     const mockContext = createMock<ExecutionContext>();
-    mockContext.switchToHttp.mockReturnValue({
-      getRequest: () => ({
-        user: {
-          email: 'test@test.com',
-          email_verified: true,
-        },
-      }),
-    } as any);
+    mockContext.switchToHttp.mockReturnValue(mockHttpContext);
 
     guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
     guard.keyCloakGuard.canActivate = jest.fn(async () => true);
-    mockUserService.getUserRoles = jest.fn(async () => ['admin', 'poweruser']);
+    mockUserService.getUserRoles = jest.fn(async () => [
+      AUTH_ROLES.ADMIN,
+      'poweruser',
+    ]);
 
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();

@@ -17,6 +17,10 @@ import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { UserService } from '../../user/user.service';
 
+export enum AUTH_ROLES {
+  ADMIN = 'admin',
+}
+
 @Injectable()
 export class RoleGuard implements CanActivate {
   public keyCloakGuard: KeyCloakRoleGuard;
