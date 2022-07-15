@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# Development Config File
+/config/development.json
+
 # Logs
 logs
 *.log
