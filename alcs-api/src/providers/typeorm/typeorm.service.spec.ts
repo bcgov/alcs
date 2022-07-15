@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '../../common/config/config.module';
 import { TypeormConfigService } from './typeorm.service';
 
 describe('TypeormConfigService', () => {
@@ -6,6 +7,7 @@ describe('TypeormConfigService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule],
       providers: [TypeormConfigService],
     }).compile();
 
