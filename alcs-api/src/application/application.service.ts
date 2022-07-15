@@ -13,7 +13,21 @@ export class ApplicationService {
     private readonly applicationRepository: Repository<Application>,
   ) {}
 
-  async create(application: ApplicationCreateDto): Promise<Application> {
+  async resetApplicationStatus(
+    sourceStatusId: string,
+    targetStatusId: string,
+  ): Promise<void> {
+    // TODO this needs to be done in bulk
+    const applicationsToReset = await this.getAll([sourceStatusId]);
+    applicationsToReset?.forEach((application) => {
+      application.statusId = targetStatusId;
+      this.createOrUpdate(application);
+    });
+  }
+
+  async createOrUpdate(
+    application: ApplicationCreateDto,
+  ): Promise<Application> {
     let applicationEntity = await this.applicationRepository.findOne({
       where: { number: application.number },
     });

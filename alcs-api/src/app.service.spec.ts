@@ -32,7 +32,7 @@ describe('AppService', () => {
     expect(service).toBeDefined();
   });
 
-  it('AppController should return HealthCheckDto', async () => {
+  it('AppService should return HealthCheckDto', async () => {
     const dbDto: HealthCheckDbDto = {
       read: true,
       write: true,
@@ -43,7 +43,7 @@ describe('AppService', () => {
     expect(await service.getHealthStatus()).toStrictEqual(result);
   });
 
-  it('AppController should return HealthCheckDto and suppress exception', async () => {
+  it('AppService should return HealthCheckDto and suppress exception', async () => {
     const dbDto: HealthCheckDbDto = {
       read: false,
       write: false,

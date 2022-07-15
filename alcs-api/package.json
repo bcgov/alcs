@@ -80,7 +80,7 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s",
       "!**/migrations/**",
-      "!**/app.module.ts",
+      "!**/*.module.ts",
       "!**/main.ts"
     ],
     "coverageDirectory": "../coverage",

@@ -26,7 +26,7 @@ export class ApplicationController {
   async add(
     @Body() application: ApplicationCreateDto,
   ): Promise<ApplicationDto> {
-    const app = await this.applicationService.create(application);
+    const app = await this.applicationService.createOrUpdate(application);
     return {
       number: app.number,
       title: app.title,
