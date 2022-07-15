@@ -19,9 +19,9 @@ export class ApplicationService {
   ): Promise<void> {
     // TODO this needs to be done in bulk
     const applicationsToReset = await this.getAll([sourceStatusId]);
-    applicationsToReset?.forEach((application) => {
+    applicationsToReset?.forEach(async (application) => {
       application.statusId = targetStatusId;
-      this.createOrUpdate(application);
+      await this.createOrUpdate(application);
     });
   }
 
@@ -38,8 +38,7 @@ export class ApplicationService {
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
 
-    if (applicationEntity.statusId)
-      applicationEntity.statusId = application.statusId;
+    if (application.statusId) applicationEntity.statusId = application.statusId;
 
     return await this.applicationRepository.save(applicationEntity);
   }

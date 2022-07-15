@@ -81,7 +81,8 @@
       "**/*.(t|j)s",
       "!**/migrations/**",
       "!**/*.module.ts",
-      "!**/main.ts"
+      "!**/main.ts",
+      "!**/mockTypes.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
