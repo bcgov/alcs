@@ -16,10 +16,7 @@ import {
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { UserService } from '../../user/user.service';
-
-export enum AUTH_ROLES {
-  ADMIN = 'admin',
-}
+import { AUTH_ROLE } from '../enum';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -28,12 +25,17 @@ export class RoleGuard implements CanActivate {
   constructor(
     @Inject(KEYCLOAK_INSTANCE)
     private singleTenant: Keycloak,
+
     @Inject(KEYCLOAK_CONNECT_OPTIONS)
     private keycloakOpts: KeycloakConnectConfig,
+
     @Inject(KEYCLOAK_LOGGER)
     private logger: Logger,
+
     private multiTenant: KeycloakMultiTenantService,
     private readonly reflector: Reflector,
+
+    @Inject(UserService)
     private userService: UserService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
@@ -52,13 +54,14 @@ export class RoleGuard implements CanActivate {
     }
 
     //Keycloak is good, load our own roles
-    const requiredRoles = this.reflector.get<string[]>(
+    const requiredRoles = this.reflector.get<AUTH_ROLE[]>(
       'userRoles',
       context.getHandler(),
     );
 
     const request = context.switchToHttp().getRequest();
     if (!request.user.email_verified) {
+      this.logger.warn('Received User with unverified email');
       return false;
     }
     const email = request.user.email;
@@ -67,6 +70,12 @@ export class RoleGuard implements CanActivate {
     const matchingRoles = userRoles.filter((value) =>
       requiredRoles.includes(value),
     );
+
+    if (matchingRoles.length === 0) {
+      this.logger.debug(
+        `Received request but user ${email} has wrong roles Required: ${requiredRoles} Has: ${userRoles}`,
+      );
+    }
 
     //If user has at least one matching role, allow them through
     return matchingRoles.length > 0;

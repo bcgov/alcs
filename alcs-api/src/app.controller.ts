@@ -1,7 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AUTH_ROLES, RoleGuard } from './common/authorization/role.guard';
+import { RoleGuard } from './common/authorization/role.guard';
 import { UserRoles } from './common/authorization/roles.decorator';
+import { AUTH_ROLE } from './common/enum';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 
 @Controller()
@@ -15,7 +16,7 @@ export class AppController {
 
   @Get('admin')
   @UseGuards(RoleGuard)
-  @UserRoles(AUTH_ROLES.ADMIN)
+  @UserRoles(AUTH_ROLE.ADMIN)
   adminRoute(): string {
     return 'Admin!';
   }
