@@ -1,5 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { mockKeyCloakProviders } from '../common/utils/mockTypes';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -13,6 +14,7 @@ describe('UserController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
+        ...mockKeyCloakProviders,
         {
           provide: UserService,
           useValue: mockService,

@@ -2,15 +2,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  KEYCLOAK_CONNECT_OPTIONS,
-  KEYCLOAK_INSTANCE,
-  KEYCLOAK_LOGGER,
-  RoleGuard as KeyCloakRoleGuard,
-} from 'nest-keycloak-connect';
-import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
+import { RoleGuard as KeyCloakRoleGuard } from 'nest-keycloak-connect';
 import { UserService } from '../../user/user.service';
 import { AUTH_ROLE } from '../enum';
+import { mockKeyCloakProviders } from '../utils/mockTypes';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {
@@ -35,26 +30,14 @@ describe('RoleGuard', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RoleGuard,
-        {
-          provide: KEYCLOAK_INSTANCE,
-          useValue: {},
-        },
-        {
-          provide: KEYCLOAK_CONNECT_OPTIONS,
-          useValue: {},
-        },
-        {
-          provide: KEYCLOAK_LOGGER,
-          useValue: {},
-        },
-        KeycloakMultiTenantService,
-        {
-          provide: Reflector,
-          useValue: reflector,
-        },
+        ...mockKeyCloakProviders,
         {
           provide: UserService,
           useValue: mockUserService,
+        },
+        {
+          provide: Reflector,
+          useValue: reflector,
         },
       ],
     }).compile();
