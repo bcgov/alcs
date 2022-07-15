@@ -7,7 +7,7 @@ import {
 } from './healthcheck/healthcheck.dto';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
-import { repositoryMockFactory } from './common/utils/mockTypes';
+import { repositoryMockFactory } from './common/utils/test-helpers/mockTypes';
 
 describe('AppController', () => {
   let appController: AppController;

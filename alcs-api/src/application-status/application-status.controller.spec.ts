@@ -1,16 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { repositoryMockFactory } from '../common/utils/mockTypes';
+import { repositoryMockFactory } from '../common/utils/test-helpers/mockTypes';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ApplicationStatusController } from './application-status.controller';
 import { ApplicationStatus } from './application-status.entity';
 import { ApplicationStatusService } from './application-status.service';
 import { ApplicationStatusDto } from './application-status.dto';
+import { initApplicationStatusMockEntity } from '../common/utils/test-helpers/mockEntities';
 
 describe('ApplicationStatusController', () => {
   let controller: ApplicationStatusController;
   let applicationStatusService: ApplicationStatusService;
+  const mockApplicationStatusEntity = initApplicationStatusMockEntity();
+  const applicationStatusDto: ApplicationStatusDto = {
+    code: 'app_1',
+    description: 'app desc 1',
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,18 +43,6 @@ describe('ApplicationStatusController', () => {
     );
   });
 
-  const initApplicationStatusMockEntity = (): ApplicationStatus => {
-    const applicationStatus = new ApplicationStatus();
-    applicationStatus.code = 'app_1';
-    applicationStatus.description = 'app desc 1';
-    applicationStatus.id = '1111-1111-1111-1111';
-    applicationStatus.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);
-    applicationStatus.auditCreatedAt = 111111111;
-    applicationStatus.auditUpdatedAt = 111111111;
-
-    return applicationStatus;
-  };
-
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
@@ -64,31 +58,21 @@ describe('ApplicationStatusController', () => {
   });
 
   it('can add', async () => {
-    const mockServiceResult = initApplicationStatusMockEntity();
     jest
       .spyOn(applicationStatusService, 'create')
-      .mockImplementation(async () => mockServiceResult);
+      .mockImplementation(async () => mockApplicationStatusEntity);
 
-    const result: ApplicationStatusDto = {
-      code: 'app_1',
-      description: 'app desc 1',
-    };
-
-    expect(await controller.add(result)).toStrictEqual(result);
+    expect(await controller.add(applicationStatusDto)).toStrictEqual(
+      applicationStatusDto,
+    );
   });
 
   it('can getall', async () => {
-    const mockServiceResult = initApplicationStatusMockEntity();
-    const result: ApplicationStatusDto[] = [
-      {
-        code: 'app_1',
-        description: 'app desc 1',
-      },
-    ];
+    const result: ApplicationStatusDto[] = [applicationStatusDto];
 
     jest
       .spyOn(applicationStatusService, 'getAll')
-      .mockImplementation(async () => [mockServiceResult]);
+      .mockImplementation(async () => [mockApplicationStatusEntity]);
 
     expect(await controller.getAll()).toStrictEqual(result);
   });

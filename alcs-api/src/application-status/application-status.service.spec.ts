@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ApplicationService } from '../application/application.service';
-import { MockType, repositoryMockFactory } from '../common/utils/mockTypes';
+import {
+  MockType,
+  repositoryMockFactory,
+} from '../common/utils/test-helpers/mockTypes';
 import { Repository } from 'typeorm';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatus } from './application-status.entity';
@@ -10,11 +13,18 @@ import {
   defaultApplicationStatus,
 } from './application-status.service';
 import { Application } from '../application/application.entity';
+import { initApplicationStatusMockEntity } from '../common/utils/test-helpers/mockEntities';
 
 describe('ApplicationStatusService', () => {
   let applicationStatusService: ApplicationStatusService;
   let applicationsStatusRepositoryMock: MockType<Repository<ApplicationStatus>>;
   let applicationService: ApplicationService;
+
+  const applicationStatusDto: ApplicationStatusDto = {
+    code: 'app_1',
+    description: 'app desc 1',
+  };
+  const applicationStatusMockEntity = initApplicationStatusMockEntity();
 
   beforeEach(async () => {
     const applicationStatusModule: TestingModule =
@@ -36,27 +46,26 @@ describe('ApplicationStatusService', () => {
     applicationsStatusRepositoryMock = applicationStatusModule.get(
       getRepositoryToken(ApplicationStatus),
     );
-
     applicationStatusService =
       applicationStatusModule.get<ApplicationStatusService>(
         ApplicationStatusService,
       );
-
     applicationService =
       applicationStatusModule.get<ApplicationService>(ApplicationService);
+
+    applicationsStatusRepositoryMock.findOne.mockReturnValue(
+      applicationStatusMockEntity,
+    );
+    applicationsStatusRepositoryMock.save.mockReturnValue(
+      applicationStatusMockEntity,
+    );
+    applicationsStatusRepositoryMock.find.mockReturnValue([
+      applicationStatusMockEntity,
+    ]);
+    jest
+      .spyOn(applicationService, 'resetApplicationStatus')
+      .mockImplementation();
   });
-
-  const initApplicationStatusMockEntity = (): ApplicationStatus => {
-    const applicationStatus = new ApplicationStatus();
-    applicationStatus.code = 'app_1';
-    applicationStatus.description = 'app desc 1';
-    applicationStatus.id = '1111-1111-1111-1111';
-    applicationStatus.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);
-    applicationStatus.auditCreatedAt = 111111111;
-    applicationStatus.auditUpdatedAt = 111111111;
-
-    return applicationStatus;
-  };
 
   it('should be defined', () => {
     expect(applicationStatusService).toBeDefined();
@@ -64,45 +73,18 @@ describe('ApplicationStatusService', () => {
   });
 
   it('can create application_status', async () => {
-    const applicationStatusDto: ApplicationStatusDto = {
-      code: 'app_1',
-      description: 'app desc 1',
-    };
-
-    const applicationStatusMockEntity = initApplicationStatusMockEntity();
-
-    applicationsStatusRepositoryMock.save.mockReturnValue(
-      applicationStatusMockEntity,
-    );
-
     expect(
       await applicationStatusService.create(applicationStatusDto),
     ).toStrictEqual(applicationStatusMockEntity);
   });
 
   it('can getall application statuses', async () => {
-    const applicationStatusMockEntity = initApplicationStatusMockEntity();
-
-    applicationsStatusRepositoryMock.find.mockReturnValue([
-      applicationStatusMockEntity,
-    ]);
-
     expect(await applicationStatusService.getAll()).toStrictEqual([
       applicationStatusMockEntity,
     ]);
   });
 
   it('can delete application status', async () => {
-    const applicationStatusMockEntity = initApplicationStatusMockEntity();
-
-    applicationsStatusRepositoryMock.findOne.mockReturnValue(
-      applicationStatusMockEntity,
-    );
-
-    jest
-      .spyOn(applicationService, 'resetApplicationStatus')
-      .mockImplementation();
-
     await applicationStatusService.delete('app_1');
 
     expect(
@@ -111,15 +93,7 @@ describe('ApplicationStatusService', () => {
   });
 
   it('does not fail if application status does not exist', async () => {
-    const applicationStatusMockEntity = null;
-
-    applicationsStatusRepositoryMock.findOne.mockReturnValue(
-      applicationStatusMockEntity,
-    );
-
-    jest
-      .spyOn(applicationService, 'resetApplicationStatus')
-      .mockImplementation();
+    applicationsStatusRepositoryMock.findOne.mockReturnValue(null);
 
     await applicationStatusService.delete('app_2');
 
@@ -129,28 +103,13 @@ describe('ApplicationStatusService', () => {
   });
 
   it('cannot delete default application status', async () => {
-    const applicationStatusMockEntity = null;
+    applicationsStatusRepositoryMock.findOne.mockReturnValue(null);
 
-    applicationsStatusRepositoryMock.findOne.mockReturnValue(
-      applicationStatusMockEntity,
-    );
-
-    jest
-      .spyOn(applicationService, 'resetApplicationStatus')
-      .mockImplementation();
-
-    // FIXME for some reason expect.rejects.toThrow is not working
-    let error = null;
-    try {
-      await applicationStatusService.delete(defaultApplicationStatus.code);
-    } catch (err) {
-      error = err;
-    }
-
+    expect(
+      applicationStatusService.delete(defaultApplicationStatus.code),
+    ).rejects.toMatchObject(new Error('You cannot delete default status'));
     expect(
       await applicationService.resetApplicationStatus,
     ).toHaveBeenCalledTimes(0);
-
-    expect(error.message).toStrictEqual('You cannot delete default status');
   });
 });

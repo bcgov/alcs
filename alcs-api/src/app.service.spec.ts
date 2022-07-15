@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppService } from './app.service';
-import { MockType, repositoryMockFactory } from './common/utils/mockTypes';
+import { MockType, repositoryMockFactory } from './common/utils/test-helpers/mockTypes';
 import {
   HealthCheckDbDto,
   HealthCheckDto,

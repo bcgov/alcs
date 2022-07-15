@@ -1,15 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { repositoryMockFactory } from '../common/utils/mockTypes';
+import { repositoryMockFactory } from '../common/utils/test-helpers/mockTypes';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 import { ApplicationCreateDto, ApplicationDto } from './application.dto';
-import { ApplicationStatus } from '../application-status/application-status.entity';
+import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: ApplicationService;
+  const mockApplicationEntity = initApplicationMockEntity();
+
+  const mockApplicationCreateDto: ApplicationCreateDto = {
+    title: mockApplicationEntity.title,
+    number: mockApplicationEntity.number,
+    body: mockApplicationEntity.body,
+    statusId: mockApplicationEntity.statusId,
+  };
+
+  const mockApplicationDto: ApplicationDto = {
+    title: mockApplicationEntity.title,
+    number: mockApplicationEntity.number,
+    body: mockApplicationEntity.body,
+    status: {
+      code: mockApplicationEntity.status.code,
+      description: mockApplicationEntity.status.description,
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,33 +45,6 @@ describe('ApplicationController', () => {
     controller = module.get<ApplicationController>(ApplicationController);
   });
 
-  const initApplicationStatusMockEntity = (): ApplicationStatus => {
-    const applicationStatus = new ApplicationStatus();
-    applicationStatus.code = 'app_1';
-    applicationStatus.description = 'app desc 1';
-    applicationStatus.id = '1111-1111-1111-1111';
-    applicationStatus.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);
-    applicationStatus.auditCreatedAt = 111111111;
-    applicationStatus.auditUpdatedAt = 111111111;
-
-    return applicationStatus;
-  };
-
-  const initApplicationMockEntity = (): Application => {
-    const applicationEntity = new Application();
-    applicationEntity.title = 'app_1';
-    applicationEntity.number = 'app_1';
-    applicationEntity.body = 'app desc 1';
-    applicationEntity.id = '1111-1111-1111-1111';
-    applicationEntity.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);
-    applicationEntity.auditCreatedAt = 111111111;
-    applicationEntity.auditUpdatedAt = 111111111;
-    applicationEntity.status = initApplicationStatusMockEntity();
-    applicationEntity.statusId = applicationEntity.status.id;
-
-    return applicationEntity;
-  };
-
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
@@ -69,50 +60,20 @@ describe('ApplicationController', () => {
   });
 
   it('can add', async () => {
-    const mockServiceResult = initApplicationMockEntity();
-
     jest
       .spyOn(applicationService, 'createOrUpdate')
-      .mockImplementation(async () => mockServiceResult);
+      .mockImplementation(async () => mockApplicationEntity);
 
-    const payload: ApplicationCreateDto = {
-      title: mockServiceResult.title,
-      number: mockServiceResult.number,
-      body: mockServiceResult.body,
-      statusId: mockServiceResult.statusId,
-    };
-
-    const result: ApplicationDto = {
-      title: mockServiceResult.title,
-      number: mockServiceResult.number,
-      body: mockServiceResult.body,
-      status: {
-        code: mockServiceResult.status.code,
-        description: mockServiceResult.status.description,
-      },
-    };
-
-    expect(await controller.add(payload)).toStrictEqual(result);
+    expect(await controller.add(mockApplicationCreateDto)).toStrictEqual(
+      mockApplicationDto,
+    );
   });
 
   it('can getall', async () => {
-    const mockServiceResult = initApplicationMockEntity();
-    const result: ApplicationDto[] = [
-      {
-        title: mockServiceResult.title,
-        number: mockServiceResult.number,
-        body: mockServiceResult.body,
-        status: {
-          code: mockServiceResult.status.code,
-          description: mockServiceResult.status.description,
-        },
-      },
-    ];
-
     jest
       .spyOn(applicationService, 'getAll')
-      .mockImplementation(async () => [mockServiceResult]);
+      .mockImplementation(async () => [mockApplicationEntity]);
 
-    expect(await controller.getAll()).toStrictEqual(result);
+    expect(await controller.getAll()).toStrictEqual([mockApplicationDto]);
   });
 });
