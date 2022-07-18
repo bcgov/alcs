@@ -6,8 +6,8 @@ import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatus } from './application-status.entity';
 
 export const defaultApplicationStatus = {
-  id: 'e0083fa2-9457-433b-b711-9344e1e3fd48',
-  code: '1111',
+  id: '46235264-9529-4e52-9c2d-6ed2b8b9edb8',
+  code: 'TODO',
 };
 
 @Injectable()
