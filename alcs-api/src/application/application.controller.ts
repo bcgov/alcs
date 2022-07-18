@@ -1,7 +1,10 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
 import { ApplicationCreateDto, ApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
+import * as config from 'config';
 
+@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}

@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard, KeycloakConnectModule } from 'nest-keycloak-connect';
+import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakConfigService } from '../../providers/keycloak/keycloak-config.service';
 import { UserModule } from '../../user/user.module';
 
@@ -13,6 +12,6 @@ import { UserModule } from '../../user/user.module';
     UserModule,
   ],
   providers: [],
-  exports: [KeycloakConnectModule],
+  exports: [KeycloakConnectModule, UserModule],
 })
 export class AuthorizationModule {}

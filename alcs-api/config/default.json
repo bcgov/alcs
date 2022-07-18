@@ -8,7 +8,10 @@
   "DATABASE_PASSWORD": "postgres",
   "LOG_LEVEL": "error",
   "KEYCLOAK": {
+    "AUTH_SERVER": "localhost:8081",
     "AUTH_SERVER_URL": "http://localhost:8081/auth",
+    "AUTH_TOKEN_URL": "http://localhost:8081/auth/realms/master/protocol/openid-connect/token",
+    "SCOPES": ["openid"],
     "REALM": "master",
     "CLIENT_ID": "",
     "SECRET": ""

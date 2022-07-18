@@ -7,6 +7,7 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as config from 'config';
+import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 
 async function bootstrap() {
   // fastify
@@ -21,14 +22,28 @@ async function bootstrap() {
   const port: number = config.get<number>('PORT');
 
   // cors
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      config.get<string>('BASE_URL'),
+      config.get<string>('KEYCLOAK.AUTH_SERVER'),
+    ],
+  });
 
   // swagger
   const documentBuilderConfig = new DocumentBuilder()
     .setTitle('ALCS API')
     .setDescription('ALCS - provide explanation for ALCS')
     .setVersion('0.1')
-    .addTag('ALCS')
+    .addOAuth2({
+      type: 'oauth2',
+      flows: {
+        password: {
+          tokenUrl: config.get<string>('KEYCLOAK.AUTH_TOKEN_URL'),
+          authorizationUrl: config.get<string>('KEYCLOAK.AUTH_SERVER_URL'),
+          scopes: { openid: 'openid' },
+        },
+      },
+    })
     .build();
   const document = SwaggerModule.createDocument(app, documentBuilderConfig);
   SwaggerModule.setup('docs', app, document);
@@ -37,7 +52,7 @@ async function bootstrap() {
   await app.register(fastifyHelmet, {
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: [`'self'`],
+        defaultSrc: [`'self'`, config.get<string>('KEYCLOAK.AUTH_SERVER')],
         styleSrc: [
           `'self'`,
           `'unsafe-inline'`,
@@ -50,6 +65,9 @@ async function bootstrap() {
       },
     },
   });
+
+  // register global exception filters
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {

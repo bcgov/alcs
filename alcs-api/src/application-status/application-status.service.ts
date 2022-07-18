@@ -4,6 +4,7 @@ import { ApplicationService } from '../application/application.service';
 import { Repository } from 'typeorm';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatus } from './application-status.entity';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 
 export const defaultApplicationStatus = {
   id: '46235264-9529-4e52-9c2d-6ed2b8b9edb8',
@@ -31,8 +32,8 @@ export class ApplicationStatusService {
   }
 
   async delete(applicationStatusCode: string): Promise<void> {
-    if (defaultApplicationStatus.code == applicationStatusCode) {
-      throw new Error('You cannot delete default status');
+    if (defaultApplicationStatus.code === applicationStatusCode) {
+      throw new ServiceValidationException('You cannot delete default status');
     }
 
     const applicationStatus = await this.applicationStatusRepository.findOne({
