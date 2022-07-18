@@ -1,13 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {
   HealthCheckDbDto,
   HealthCheckDto,
 } from './healthcheck/healthcheck.dto';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
-import { repositoryMockFactory } from './common/utils/test-helpers/mockTypes';
+import {
+  repositoryMockFactory,
+  mockKeyCloakProviders,
+} from './common/utils/test-helpers/mockTypes';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -22,6 +25,7 @@ describe('AppController', () => {
           provide: getRepositoryToken(HealthCheck),
           useFactory: repositoryMockFactory,
         },
+        ...mockKeyCloakProviders,
       ],
     }).compile();
 

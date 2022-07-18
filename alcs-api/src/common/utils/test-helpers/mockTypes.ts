@@ -1,4 +1,11 @@
+import {
+  KEYCLOAK_CONNECT_OPTIONS,
+  KEYCLOAK_INSTANCE,
+  KEYCLOAK_LOGGER,
+} from 'nest-keycloak-connect';
+import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { Repository } from 'typeorm';
+import { UserService } from '../../../user/user.service';
 
 export type MockType<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -13,3 +20,32 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
     softRemove: jest.fn((entity) => [entity]),
   }),
 );
+
+export const mockKeyCloakProviders = [
+  {
+    provide: KEYCLOAK_INSTANCE,
+    useValue: {},
+  },
+  {
+    provide: KEYCLOAK_CONNECT_OPTIONS,
+    useValue: {},
+  },
+  {
+    provide: KEYCLOAK_LOGGER,
+    useValue: {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      log: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      debug: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      warn: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      error: () => {},
+    },
+  },
+  KeycloakMultiTenantService,
+  {
+    provide: UserService,
+    useValue: {},
+  },
+];

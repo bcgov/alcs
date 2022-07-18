@@ -11,7 +11,7 @@ export abstract class Base extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   auditDeletedDateAt: Date;
 
   @Column({ type: 'bigint', nullable: false, readonly: true })

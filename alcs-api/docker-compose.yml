@@ -11,5 +11,20 @@ services:
       - '5432:5432'
     volumes:
       - postgres:/var/lib/postgres
+  keycloak:
+    image: quay.io/keycloak/keycloak:legacy
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: db
+      DB_DATABASE: postgres
+      DB_USER: postgres
+      DB_SCHEMA: public
+      DB_PASSWORD: postgres
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
 volumes:
   postgres:
