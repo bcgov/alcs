@@ -33,7 +33,7 @@ export class AppService {
           where: { updateDate: Not(IsNull()) },
         })) || new HealthCheck();
 
-      healthCheck.updateDate = BigInt(new Date().getTime()).toString();
+      healthCheck.updateDate = BigInt(Date.now()).toString();
 
       await this.healthCheckRepository.save(healthCheck);
 

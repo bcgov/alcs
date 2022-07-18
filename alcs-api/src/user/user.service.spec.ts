@@ -70,7 +70,7 @@ describe('UserService', () => {
       expect(repositoryMock.save).toHaveBeenCalled();
     });
 
-    it('should reject when user doesnt exist and invalid roles are passed to create', async () => {
+    it("should reject when user doesn't exist and invalid roles are passed to create", async () => {
       repositoryMock.find.mockResolvedValue(undefined);
 
       await expect(

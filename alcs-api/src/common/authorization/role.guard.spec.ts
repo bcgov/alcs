@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RoleGuard as KeyCloakRoleGuard } from 'nest-keycloak-connect';
 import { UserService } from '../../user/user.service';
 import { AUTH_ROLE } from '../enum';
-import { mockKeyCloakProviders } from '../utils/mockTypes';
+import { mockKeyCloakProviders } from '../utils/test-helpers/mockTypes';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {

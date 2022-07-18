@@ -3,14 +3,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {
-  mockKeyCloakProviders,
-  repositoryMockFactory,
-} from './common/utils/mockTypes';
-import {
   HealthCheckDbDto,
   HealthCheckDto,
 } from './healthcheck/healthcheck.dto';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
+import {
+  repositoryMockFactory,
+  mockKeyCloakProviders,
+} from './common/utils/test-helpers/mockTypes';
 
 describe('AppController', () => {
   let appController: AppController;
