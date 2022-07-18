@@ -49,7 +49,7 @@ describe('ApplicationController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('can delete', async () => {
+  it('should delete', async () => {
     const applicationNumberToDelete = 'app_1';
     jest.spyOn(applicationService, 'delete').mockImplementation();
 
@@ -59,7 +59,7 @@ describe('ApplicationController', () => {
     expect(applicationService.delete).toBeCalledWith(applicationNumberToDelete);
   });
 
-  it('can add', async () => {
+  it('should add', async () => {
     jest
       .spyOn(applicationService, 'createOrUpdate')
       .mockImplementation(async () => mockApplicationEntity);
@@ -69,7 +69,7 @@ describe('ApplicationController', () => {
     );
   });
 
-  it('can getall', async () => {
+  it('should getall', async () => {
     jest
       .spyOn(applicationService, 'getAll')
       .mockImplementation(async () => [mockApplicationEntity]);

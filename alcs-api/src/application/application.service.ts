@@ -38,7 +38,9 @@ export class ApplicationService {
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
 
-    if (application.statusId) applicationEntity.statusId = application.statusId;
+    if (application.statusId) {
+      applicationEntity.statusId = application.statusId;
+    }
 
     return await this.applicationRepository.save(applicationEntity);
   }
@@ -54,8 +56,9 @@ export class ApplicationService {
 
   async getAll(statusIds?: string[]): Promise<Application[]> {
     let whereClause = {};
-    if (statusIds && statusIds.length > 0)
+    if (statusIds && statusIds.length > 0) {
       whereClause = { statusId: In(statusIds) };
+    }
 
     const applications = await this.applicationRepository.find({
       where: whereClause,

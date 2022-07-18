@@ -47,7 +47,7 @@ describe('ApplicationStatusController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('can delete', async () => {
+  it('should delete', async () => {
     const statusToDelete = 'some_code';
     jest.spyOn(applicationStatusService, 'delete').mockImplementation();
 
@@ -57,7 +57,7 @@ describe('ApplicationStatusController', () => {
     expect(applicationStatusService.delete).toBeCalledWith(statusToDelete);
   });
 
-  it('can add', async () => {
+  it('should add', async () => {
     jest
       .spyOn(applicationStatusService, 'create')
       .mockImplementation(async () => mockApplicationStatusEntity);
@@ -67,7 +67,7 @@ describe('ApplicationStatusController', () => {
     );
   });
 
-  it('can getall', async () => {
+  it('should getall', async () => {
     const result: ApplicationStatusDto[] = [applicationStatusDto];
 
     jest

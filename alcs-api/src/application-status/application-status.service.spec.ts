@@ -72,19 +72,19 @@ describe('ApplicationStatusService', () => {
     expect(applicationService).toBeDefined();
   });
 
-  it('can create application_status', async () => {
+  it('should create application_status', async () => {
     expect(
       await applicationStatusService.create(applicationStatusDto),
     ).toStrictEqual(applicationStatusMockEntity);
   });
 
-  it('can getall application statuses', async () => {
+  it('should getall application statuses', async () => {
     expect(await applicationStatusService.getAll()).toStrictEqual([
       applicationStatusMockEntity,
     ]);
   });
 
-  it('can delete application status', async () => {
+  it('should delete application status', async () => {
     await applicationStatusService.delete('app_1');
 
     expect(
@@ -92,7 +92,7 @@ describe('ApplicationStatusService', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fail if application status does not exist', async () => {
+  it('should not fail if application status does not exist', async () => {
     applicationsStatusRepositoryMock.findOne.mockReturnValue(null);
 
     await applicationStatusService.delete('app_2');
@@ -102,7 +102,7 @@ describe('ApplicationStatusService', () => {
     ).toHaveBeenCalledTimes(0);
   });
 
-  it('cannot delete default application status', async () => {
+  it('should not delete default application status', async () => {
     applicationsStatusRepositoryMock.findOne.mockReturnValue(null);
 
     expect(

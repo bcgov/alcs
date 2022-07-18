@@ -39,24 +39,24 @@ describe('ApplicationService', () => {
     expect(applicationService).toBeDefined();
   });
 
-  it('can getall applications', async () => {
+  it('should getall applications', async () => {
     expect(await applicationService.getAll()).toStrictEqual([
       applicationMockEntity,
     ]);
   });
 
-  it('can getall applications by status', async () => {
+  it('should getall applications by status', async () => {
     expect(
       await applicationService.getAll([applicationMockEntity.statusId]),
     ).toStrictEqual([applicationMockEntity]);
   });
 
-  it('can delete application', async () => {
+  it('should delete application', async () => {
     await applicationService.delete(applicationMockEntity.number);
     expect(applicationService.delete).toBeDefined();
   });
 
-  it('can reset application', async () => {
+  it('should reset application', async () => {
     const targetStatusId = 'app_st_2';
     jest
       .spyOn(applicationService, 'getAll')
@@ -73,7 +73,7 @@ describe('ApplicationService', () => {
     expect(applicationMockEntity.statusId).toStrictEqual(targetStatusId);
   });
 
-  it('can create|update application', async () => {
+  it('should create|update application', async () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne.mockReturnValue(null);
 
