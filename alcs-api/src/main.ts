@@ -9,26 +9,7 @@ import { AppModule } from './app.module';
 import * as config from 'config';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 
-async function bootstrap() {
-  // fastify
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({
-      logger: { level: config.get<string>('LOG_LEVEL') },
-    }),
-  );
-
-  // config variables
-  const port: number = config.get<number>('PORT');
-
-  // cors
-  app.enableCors({
-    origin: [
-      config.get<string>('BASE_URL'),
-      config.get<string>('KEYCLOAK.AUTH_SERVER'),
-    ],
-  });
-
+const registerSwagger = (app: NestFastifyApplication) => {
   // swagger
   const documentBuilderConfig = new DocumentBuilder()
     .setTitle('ALCS API')
@@ -47,8 +28,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, documentBuilderConfig);
   SwaggerModule.setup('docs', app, document);
+};
 
-  // helmet
+const registerHelmet = async (app: NestFastifyApplication) => {
   await app.register(fastifyHelmet, {
     contentSecurityPolicy: {
       directives: {
@@ -65,9 +47,37 @@ async function bootstrap() {
       },
     },
   });
+};
 
-  // register global exception filters
+const registerGlobalFilters = (app: NestFastifyApplication) => {
   app.useGlobalFilters(new HttpExceptionFilter());
+};
+
+const registerCors = (app: NestFastifyApplication) => {
+  app.enableCors({
+    origin: [
+      config.get<string>('BASE_URL'),
+      config.get<string>('KEYCLOAK.AUTH_SERVER'),
+    ],
+  });
+};
+
+async function bootstrap() {
+  // fastify
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({
+      logger: { level: config.get<string>('LOG_LEVEL') },
+    }),
+  );
+
+  // config variables
+  const port: number = config.get<number>('PORT');
+
+  registerCors(app);
+  registerSwagger(app);
+  await registerHelmet(app);
+  registerGlobalFilters(app);
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
