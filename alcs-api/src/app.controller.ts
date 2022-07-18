@@ -1,12 +1,11 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
-import { Public } from 'nest-keycloak-connect';
+import { Public, RoleGuard } from 'nest-keycloak-connect';
 import { AppService } from './app.service';
-import { RoleGuard } from './common/authorization/role.guard';
-import { UserRoles } from './common/authorization/roles.decorator';
-import { AUTH_ROLE } from './common/enum';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 import * as config from 'config';
+import { AUTH_ROLE } from './common/enum';
+import { UserRoles } from './common/authorization/roles.decorator';
 
 @Controller()
 export class AppController {
