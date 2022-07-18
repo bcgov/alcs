@@ -12,12 +12,25 @@ services:
     volumes:
       - postgres:/var/lib/postgres
     networks: 
-      - backend
+      - alcs
+  db-admin:
+    image: postgres:14.4-bullseye
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5431:5432'
+    volumes:
+      - postgres:/var/lib/postgres
+    networks: 
+      - alcs
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: db
+      DB_ADDR: db-admin
       DB_DATABASE: postgres
       DB_USER: postgres
       DB_SCHEMA: public
@@ -29,11 +42,11 @@ services:
     networks: 
       - alcs
     depends_on:
-      - db
+      - db-admin
 volumes:
   postgres:
 
 networks: 
-  backend: 
+  alcs: 
     name: alcs 
     driver: bridge
