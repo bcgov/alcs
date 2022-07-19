@@ -1,7 +1,10 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatusService } from './application-status.service';
+import * as config from 'config';
 
+@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-status')
 export class ApplicationStatusController {
   constructor(

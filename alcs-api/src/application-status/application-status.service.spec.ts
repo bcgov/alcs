@@ -14,6 +14,7 @@ import {
 } from './application-status.service';
 import { Application } from '../application/application.entity';
 import { initApplicationStatusMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 
 describe('ApplicationStatusService', () => {
   let applicationStatusService: ApplicationStatusService;
@@ -107,7 +108,9 @@ describe('ApplicationStatusService', () => {
 
     expect(
       applicationStatusService.delete(defaultApplicationStatus.code),
-    ).rejects.toMatchObject(new Error('You cannot delete default status'));
+    ).rejects.toMatchObject(
+      new ServiceValidationException('You cannot delete default status'),
+    );
     expect(
       await applicationService.resetApplicationStatus,
     ).toHaveBeenCalledTimes(0);
