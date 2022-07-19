@@ -8,6 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as config from 'config';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
+import { Logger } from '@nestjs/common';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   // swagger
@@ -50,7 +51,7 @@ const registerHelmet = async (app: NestFastifyApplication) => {
 };
 
 const registerGlobalFilters = (app: NestFastifyApplication) => {
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(new Logger('Global')));
 };
 
 const registerCors = (app: NestFastifyApplication) => {
