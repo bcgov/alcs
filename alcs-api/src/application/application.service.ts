@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { ApplicationCreateDto } from './application.dto';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { Application } from './application.entity';
 
 @Injectable()
@@ -17,17 +17,17 @@ export class ApplicationService {
     sourceStatusId: string,
     targetStatusId: string,
   ): Promise<void> {
-    // TODO this needs to be done in bulk
-    const applicationsToReset = await this.getAll([sourceStatusId]);
-    applicationsToReset?.forEach(async (application) => {
-      application.statusId = targetStatusId;
-      await this.createOrUpdate(application);
-    });
+    await this.applicationRepository.update(
+      {
+        statusId: sourceStatusId,
+      },
+      {
+        statusId: targetStatusId,
+      },
+    );
   }
 
-  async createOrUpdate(
-    application: ApplicationCreateDto,
-  ): Promise<Application> {
+  async create(application: Partial<Application>): Promise<Application> {
     let applicationEntity = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
@@ -38,27 +38,26 @@ export class ApplicationService {
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
 
-    if (application.statusId) {
-      applicationEntity.statusId = application.statusId;
-    }
-
     return await this.applicationRepository.save(applicationEntity);
   }
 
-  async updateApplication(
-    fileNumber: string,
-    application: Partial<ApplicationCreateDto>,
-  ) {
+  async update(application: Partial<Application>) {
     const applicationEntity = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
 
     if (!applicationEntity) {
-      throw new Error('Application not found');
+      throw new ServiceValidationException('Application not found');
     }
 
-    Object.assign(applicationEntity, application);
-    return this.applicationRepository.save(applicationEntity);
+    await this.applicationRepository.update(applicationEntity.id, application);
+
+    return this.applicationRepository.findOne({
+      where: {
+        id: applicationEntity.id,
+      },
+      relations: ['status'],
+    });
   }
 
   async delete(applicationNumber: string): Promise<void> {

@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ApplicationService } from '../application/application.service';
+import { Repository } from 'typeorm';
+import { ServiceValidationException } from '../../common/exceptions/base.exception';
+import { initApplicationStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 import {
   MockType,
   repositoryMockFactory,
-} from '../common/utils/test-helpers/mockTypes';
-import { Repository } from 'typeorm';
+} from '../../common/utils/test-helpers/mockTypes';
+import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatus } from './application-status.entity';
 import {
   ApplicationStatusService,
   defaultApplicationStatus,
 } from './application-status.service';
-import { Application } from '../application/application.entity';
-import { initApplicationStatusMockEntity } from '../common/utils/test-helpers/mockEntities';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 
 describe('ApplicationStatusService', () => {
   let applicationStatusService: ApplicationStatusService;

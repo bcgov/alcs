@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
-import { ApplicationCreateDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -33,6 +33,7 @@ describe('ApplicationService', () => {
     applicationRepositoryMock.find.mockReturnValue([applicationMockEntity]);
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.save.mockReturnValue(applicationMockEntity);
+    applicationRepositoryMock.update.mockReturnValue(applicationMockEntity);
   });
 
   it('should be defined', () => {
@@ -56,36 +57,79 @@ describe('ApplicationService', () => {
     expect(applicationService.delete).toBeDefined();
   });
 
-  it('should reset application', async () => {
+  it('should call update when resetApplicationStatus is performed', async () => {
     const targetStatusId = 'app_st_2';
     jest
       .spyOn(applicationService, 'getAll')
       .mockImplementation(async () => [applicationMockEntity]);
-    jest.spyOn(applicationService, 'createOrUpdate').mockImplementation();
+    jest.spyOn(applicationService, 'create').mockImplementation();
 
     await applicationService.resetApplicationStatus(
       applicationMockEntity.statusId,
       targetStatusId,
     );
 
-    expect(applicationService.getAll).toBeCalledTimes(1);
-    expect(applicationService.createOrUpdate).toBeCalledTimes(1);
-    expect(applicationMockEntity.statusId).toStrictEqual(targetStatusId);
+    expect(applicationRepositoryMock.update).toBeCalledTimes(1);
   });
 
-  it('should create|update application', async () => {
+  it('should call save when an Application is created', async () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne.mockReturnValue(null);
 
-    const payload: ApplicationCreateDto = {
+    const payload: Partial<Application> = {
       title: applicationMockEntity.title,
-      number: applicationMockEntity.fileNumber,
+      fileNumber: applicationMockEntity.fileNumber,
       body: applicationMockEntity.body,
       statusId: applicationMockEntity.statusId,
     };
 
-    expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
+    expect(await applicationService.create(payload)).toStrictEqual(
       applicationMockEntity,
     );
+    expect(applicationRepositoryMock.save).toHaveBeenCalled();
+  });
+
+  it('should call update when update is called', async () => {
+    const applicationMockEntity = initApplicationMockEntity();
+
+    //Return old entity on first call, new one on second call
+    applicationRepositoryMock.findOne
+      .mockReturnValueOnce({
+        ...applicationMockEntity,
+        title: 'Old Title',
+      })
+      .mockReturnValueOnce(applicationMockEntity);
+
+    const payload: Partial<Application> = {
+      title: applicationMockEntity.title,
+      fileNumber: applicationMockEntity.fileNumber,
+      body: applicationMockEntity.body,
+      statusId: applicationMockEntity.statusId,
+    };
+
+    expect(await applicationService.update(payload)).toStrictEqual(
+      applicationMockEntity,
+    );
+    expect(applicationRepositoryMock.update).toHaveBeenCalled();
+    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
+  });
+
+  it('should throw an exception when update is called and the entity does not exist', async () => {
+    const applicationMockEntity = initApplicationMockEntity();
+
+    //Return old entity on first call, new one on second call
+    applicationRepositoryMock.findOne.mockReturnValue(undefined);
+
+    const payload: Partial<Application> = {
+      title: applicationMockEntity.title,
+      fileNumber: applicationMockEntity.fileNumber,
+      body: applicationMockEntity.body,
+      statusId: applicationMockEntity.statusId,
+    };
+
+    await expect(applicationService.update(payload)).rejects.toMatchObject(
+      new ServiceValidationException('Application not found'),
+    );
+    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
   });
 });

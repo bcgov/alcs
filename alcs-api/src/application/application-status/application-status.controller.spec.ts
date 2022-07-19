@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { repositoryMockFactory } from '../common/utils/test-helpers/mockTypes';
-import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
+import { repositoryMockFactory } from '../../common/utils/test-helpers/mockTypes';
+import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationStatusController } from './application-status.controller';
 import { ApplicationStatus } from './application-status.entity';
 import { ApplicationStatusService } from './application-status.service';
 import { ApplicationStatusDto } from './application-status.dto';
-import { initApplicationStatusMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { initApplicationStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 
 describe('ApplicationStatusController', () => {
   let controller: ApplicationStatusController;

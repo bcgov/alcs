@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { firstValueFrom } from 'rxjs';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { DragDropItem } from '../../shared/drag-drop-board/drag-drop-item.interface';
 import { ApplicationService } from '../application/application.service';
@@ -29,12 +28,14 @@ export class AdminComponent implements OnInit {
 
     this.applicationService.$applications.subscribe((applications) => {
       this.cards = applications.map((application) => ({
-        status: application.status.code,
+        status: application.status,
         label: application.title,
         assignee: 'Me',
         id: application.fileNumber,
       }));
     });
+
+    this.applicationService.refreshApplications();
   }
 
   onSelected(id: string) {
@@ -45,9 +46,15 @@ export class AdminComponent implements OnInit {
   }
 
   onDropped($event: { id: string; status: string }) {
-    this.applicationService.updateApplication($event.id, {
-      statusId: '',
-    });
+    this.applicationService
+      .updateApplication({
+        fileNumber: $event.id,
+        status: $event.status,
+      })
+      .then((r) => {
+        //TODO: Move this to a toast
+        console.log('Application Updated');
+      });
   }
 }
 

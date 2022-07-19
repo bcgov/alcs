@@ -1,4 +1,4 @@
-import { ApplicationStatus } from '../../../application-status/application-status.entity';
+import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
 
 const initApplicationStatusMockEntity = (): ApplicationStatus => {

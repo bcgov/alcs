@@ -1,10 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApplicationService } from '../application/application.service';
 import { Repository } from 'typeorm';
+import { ServiceValidationException } from '../../common/exceptions/base.exception';
+import { ApplicationService } from '../application.service';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatus } from './application-status.entity';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 
 export const defaultApplicationStatus = {
   id: '46235264-9529-4e52-9c2d-6ed2b8b9edb8',
@@ -31,6 +31,15 @@ export class ApplicationStatusService {
     return await this.applicationStatusRepository.save(applicationEntity);
   }
 
+  async fetchStatusId(statusCode: string) {
+    const status = await this.applicationStatusRepository.findOneOrFail({
+      where: {
+        code: statusCode,
+      },
+    });
+    return status.id;
+  }
+
   async delete(applicationStatusCode: string): Promise<void> {
     if (defaultApplicationStatus.code === applicationStatusCode) {
       throw new ServiceValidationException('You cannot delete default status');
@@ -54,8 +63,6 @@ export class ApplicationStatusService {
   }
 
   async getAll(): Promise<ApplicationStatus[]> {
-    const applicationStatuses = await this.applicationStatusRepository.find();
-
-    return applicationStatuses;
+    return this.applicationStatusRepository.find();
   }
 }

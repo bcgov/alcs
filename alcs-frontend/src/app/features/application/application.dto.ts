@@ -1,15 +1,13 @@
-import { ApplicationStatusDto } from './application-status.dto';
-
 export interface ApplicationDto {
   fileNumber: string;
   title: string;
   body: string;
-  status: ApplicationStatusDto;
+  status: string;
 }
 
-export interface ApplicationCreateDto {
+export interface ApplicationPartialDto {
   fileNumber: string;
-  title: string;
-  body: string;
-  statusId?: string;
+  title?: string;
+  body?: string;
+  status?: string;
 }

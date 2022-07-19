@@ -1,15 +1,13 @@
-import { ApplicationStatusDto } from 'src/application-status/application-status.dto';
-
 export class ApplicationDto {
   fileNumber: string;
   title: string;
   body: string;
-  status: ApplicationStatusDto;
+  status: string;
 }
 
-export class ApplicationCreateDto {
+export class ApplicationPartialDto {
   fileNumber: string;
-  title: string;
-  body: string;
-  statusId?: string;
+  title?: string;
+  body?: string;
+  status?: string;
 }

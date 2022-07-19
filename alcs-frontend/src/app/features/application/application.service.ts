@@ -3,7 +3,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationStatusDto } from './application-status.dto';
-import { ApplicationCreateDto, ApplicationDto } from './application.dto';
+import { ApplicationDto, ApplicationPartialDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,9 @@ export class ApplicationService implements OnInit {
   private applications: ApplicationDto[] = [];
   private applicationStatuses: ApplicationStatusDto[] = [];
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  refreshApplications() {
     this.fetchApplicationStatuses();
     this.fetchApplications();
   }
@@ -34,9 +36,9 @@ export class ApplicationService implements OnInit {
     this.$applicationStatuses.next(this.applicationStatuses);
   }
 
-  async updateApplication(id: string, application: Partial<ApplicationCreateDto>) {
+  async updateApplication(application: ApplicationPartialDto) {
     const updatedApplication = await firstValueFrom(
-      this.http.patch<ApplicationDto>(`${environment.apiRoot}/application/${id}`, application)
+      this.http.patch<ApplicationDto>(`${environment.apiRoot}/application`, application)
     );
     this.applications.forEach((app) => {
       if (app.fileNumber === updatedApplication.fileNumber) {

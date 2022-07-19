@@ -1,6 +1,6 @@
 import { Base } from '../common/entities/base.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { ApplicationStatus } from '../application-status/application-status.entity';
+import { ApplicationStatus } from './application-status/application-status.entity';
 
 @Entity()
 export class Application extends Base {
