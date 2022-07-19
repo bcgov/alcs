@@ -35,7 +35,6 @@ describe('HttpExceptionFilter', () => {
     });
 
     it('Http exception', () => {
-      // jest.fn(mockArgumentsHost.switchToHttp().getResponse().send);
       const mockHttpException = new HttpException(
         { message: 'Sample Exception' },
         HttpStatus.BAD_REQUEST,
