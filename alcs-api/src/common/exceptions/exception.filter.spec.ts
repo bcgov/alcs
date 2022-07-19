@@ -34,7 +34,7 @@ describe('HttpExceptionFilter', () => {
       expect(service).toBeDefined();
     });
 
-    it('Http exception', () => {
+    it('should call global HttpExceptionFilter', () => {
       const mockHttpException = new HttpException(
         { message: 'Sample Exception' },
         HttpStatus.BAD_REQUEST,
