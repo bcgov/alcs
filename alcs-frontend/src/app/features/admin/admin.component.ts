@@ -17,23 +17,24 @@ export class AdminComponent implements OnInit {
   constructor(private applicationService: ApplicationService, public dialog: MatDialog) {}
 
   async ngOnInit() {
-    const statuses = await firstValueFrom(this.applicationService.getApplicationStatuses());
+    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+      const allStatuses = statuses.map((status) => status.code);
 
-    const allStatuses = statuses.map((status) => status.code);
+      this.columns = statuses.map((status) => ({
+        status: status.code,
+        name: status.description,
+        allowedTransitions: allStatuses,
+      }));
+    });
 
-    this.columns = statuses.map((status) => ({
-      status: status.code,
-      name: status.description,
-      allowedTransitions: allStatuses,
-    }));
-
-    const applications = await firstValueFrom(this.applicationService.getApplications());
-    this.cards = applications.map((application) => ({
-      status: application.status.code,
-      label: application.title,
-      assignee: 'Me',
-      id: application.number,
-    }));
+    this.applicationService.$applications.subscribe((applications) => {
+      this.cards = applications.map((application) => ({
+        status: application.status.code,
+        label: application.title,
+        assignee: 'Me',
+        id: application.fileNumber,
+      }));
+    });
   }
 
   onSelected(id: string) {
@@ -44,7 +45,9 @@ export class AdminComponent implements OnInit {
   }
 
   onDropped($event: { id: string; status: string }) {
-    //this.applicationService.setCardStatus($event);
+    this.applicationService.updateApplication($event.id, {
+      statusId: '',
+    });
   }
 }
 

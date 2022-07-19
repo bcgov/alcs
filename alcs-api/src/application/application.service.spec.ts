@@ -52,7 +52,7 @@ describe('ApplicationService', () => {
   });
 
   it('should delete application', async () => {
-    await applicationService.delete(applicationMockEntity.number);
+    await applicationService.delete(applicationMockEntity.fileNumber);
     expect(applicationService.delete).toBeDefined();
   });
 
@@ -79,7 +79,7 @@ describe('ApplicationService', () => {
 
     const payload: ApplicationCreateDto = {
       title: applicationMockEntity.title,
-      number: applicationMockEntity.number,
+      number: applicationMockEntity.fileNumber,
       body: applicationMockEntity.body,
       statusId: applicationMockEntity.statusId,
     };

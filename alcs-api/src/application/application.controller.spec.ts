@@ -14,14 +14,14 @@ describe('ApplicationController', () => {
 
   const mockApplicationCreateDto: ApplicationCreateDto = {
     title: mockApplicationEntity.title,
-    number: mockApplicationEntity.number,
+    number: mockApplicationEntity.fileNumber,
     body: mockApplicationEntity.body,
     statusId: mockApplicationEntity.statusId,
   };
 
   const mockApplicationDto: ApplicationDto = {
     title: mockApplicationEntity.title,
-    number: mockApplicationEntity.number,
+    number: mockApplicationEntity.fileNumber,
     body: mockApplicationEntity.body,
     status: {
       code: mockApplicationEntity.status.code,

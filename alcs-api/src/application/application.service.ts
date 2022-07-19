@@ -29,12 +29,12 @@ export class ApplicationService {
     application: ApplicationCreateDto,
   ): Promise<Application> {
     let applicationEntity = await this.applicationRepository.findOne({
-      where: { number: application.number },
+      where: { fileNumber: application.fileNumber },
     });
 
     // TODO replace with AutoMapper
     applicationEntity = applicationEntity ?? new Application();
-    applicationEntity.number = application.number;
+    applicationEntity.fileNumber = application.fileNumber;
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
 
@@ -45,9 +45,25 @@ export class ApplicationService {
     return await this.applicationRepository.save(applicationEntity);
   }
 
+  async updateApplication(
+    fileNumber: string,
+    application: Partial<ApplicationCreateDto>,
+  ) {
+    const applicationEntity = await this.applicationRepository.findOne({
+      where: { fileNumber: application.fileNumber },
+    });
+
+    if (!applicationEntity) {
+      throw new Error('Application not found');
+    }
+
+    Object.assign(applicationEntity, application);
+    return this.applicationRepository.save(applicationEntity);
+  }
+
   async delete(applicationNumber: string): Promise<void> {
     const application = await this.applicationRepository.findOne({
-      where: { number: applicationNumber },
+      where: { fileNumber: applicationNumber },
     });
 
     await this.applicationRepository.softRemove([application]);
@@ -60,11 +76,9 @@ export class ApplicationService {
       whereClause = { statusId: In(statusIds) };
     }
 
-    const applications = await this.applicationRepository.find({
+    return await this.applicationRepository.find({
       where: whereClause,
       relations: ['status'],
     });
-
-    return applications;
   }
 }

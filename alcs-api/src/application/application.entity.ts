@@ -5,7 +5,7 @@ import { ApplicationStatus } from '../application-status/application-status.enti
 @Entity()
 export class Application extends Base {
   @Column({ nullable: false, unique: true })
-  number: string;
+  fileNumber: string;
 
   @Column({ nullable: false })
   title: string;

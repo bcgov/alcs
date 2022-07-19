@@ -1,14 +1,14 @@
 import { ApplicationStatusDto } from './application-status.dto';
 
 export interface ApplicationDto {
-  number: string;
+  fileNumber: string;
   title: string;
   body: string;
   status: ApplicationStatusDto;
 }
 
 export interface ApplicationCreateDto {
-  number: string;
+  fileNumber: string;
   title: string;
   body: string;
   statusId?: string;

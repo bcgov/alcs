@@ -16,7 +16,7 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
 const initApplicationMockEntity = (): Application => {
   const applicationEntity = new Application();
   applicationEntity.title = 'app_1';
-  applicationEntity.number = 'app_1';
+  applicationEntity.fileNumber = 'app_1';
   applicationEntity.body = 'app desc 1';
   applicationEntity.id = '1111-1111-1111-1111';
   applicationEntity.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);

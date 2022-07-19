@@ -1,5 +1,12 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
-import { ApiOAuth2 } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApplicationCreateDto, ApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
 import * as config from 'config';
@@ -14,7 +21,7 @@ export class ApplicationController {
     const applications = await this.applicationService.getAll();
     return applications.map<ApplicationDto>((app) => {
       return {
-        number: app.number,
+        fileNumber: app.fileNumber,
         title: app.title,
         body: app.body,
         status: {
@@ -31,7 +38,27 @@ export class ApplicationController {
   ): Promise<ApplicationDto> {
     const app = await this.applicationService.createOrUpdate(application);
     return {
-      number: app.number,
+      fileNumber: app.fileNumber,
+      title: app.title,
+      body: app.body,
+      status: {
+        code: app.status?.code,
+        description: app.status?.description,
+      },
+    };
+  }
+
+  @Patch(':id')
+  async update(
+    @Body() application: Partial<ApplicationCreateDto>,
+    @Param('id') id: string,
+  ): Promise<ApplicationDto> {
+    const app = await this.applicationService.updateApplication(
+      id,
+      application,
+    );
+    return {
+      fileNumber: app.fileNumber,
       title: app.title,
       body: app.body,
       status: {
