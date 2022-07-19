@@ -1,20 +1,13 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class BaseErrorResponseModel {
-  constructor(
-    statusCode: number,
-    message: string,
-    path?: string,
-    timestamp?: number,
-  ) {
+  constructor(statusCode: number, message: string, path?: string) {
     this.statusCode = statusCode;
     this.message = message;
-    this.timestamp = timestamp ?? Date.now();
     this.path = path;
   }
 
   statusCode: number;
-  timestamp: number;
   path: string;
   message: string;
 }
