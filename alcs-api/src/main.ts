@@ -8,10 +8,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as config from 'config';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 const registerSwagger = (app: NestFastifyApplication) => {
-  // swagger
   const documentBuilderConfig = new DocumentBuilder()
     .setTitle('ALCS API')
     .setDescription('ALCS - provide explanation for ALCS')
@@ -55,13 +54,16 @@ const registerGlobalFilters = (app: NestFastifyApplication) => {
 };
 
 const registerCors = (app: NestFastifyApplication) => {
-  app.enableCors({
-    origin: [
-      config.get<string>('BASE_URL'),
-      config.get<string>('KEYCLOAK.AUTH_SERVER'),
-    ],
-  });
+  app.enableCors();
 };
+
+function registerPipes(app: NestFastifyApplication) {
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
+}
 
 async function bootstrap() {
   // fastify
@@ -79,6 +81,7 @@ async function bootstrap() {
   registerSwagger(app);
   await registerHelmet(app);
   registerGlobalFilters(app);
+  registerPipes(app);
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
