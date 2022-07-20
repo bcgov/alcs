@@ -54,7 +54,13 @@ const registerGlobalFilters = (app: NestFastifyApplication) => {
 };
 
 const registerCors = (app: NestFastifyApplication) => {
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      config.get<string>('BASE_URL'),
+      config.get<string>('KEYCLOAK.AUTH_SERVER'),
+      config.get<string>('FRONTEND_ROOT'),
+    ],
+  });
 };
 
 function registerPipes(app: NestFastifyApplication) {

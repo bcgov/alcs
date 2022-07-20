@@ -31,13 +31,12 @@ export class ApplicationStatusService {
     return await this.applicationStatusRepository.save(applicationEntity);
   }
 
-  async fetchStatusId(statusCode: string) {
-    const status = await this.applicationStatusRepository.findOneOrFail({
+  async fetchStatus(statusCode: string) {
+    return await this.applicationStatusRepository.findOneOrFail({
       where: {
         code: statusCode,
       },
     });
-    return status.id;
   }
 
   async delete(applicationStatusCode: string): Promise<void> {

@@ -27,7 +27,9 @@ export class ApplicationService {
     );
   }
 
-  async create(application: Partial<Application>): Promise<Application> {
+  async createOrUpdate(
+    application: Partial<Application>,
+  ): Promise<Application> {
     let applicationEntity = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
@@ -37,21 +39,11 @@ export class ApplicationService {
     applicationEntity.fileNumber = application.fileNumber;
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
+    applicationEntity.statusId = application.statusId;
 
-    return await this.applicationRepository.save(applicationEntity);
-  }
+    await this.applicationRepository.save(applicationEntity);
 
-  async update(application: Partial<Application>) {
-    const applicationEntity = await this.applicationRepository.findOne({
-      where: { fileNumber: application.fileNumber },
-    });
-
-    if (!applicationEntity) {
-      throw new ServiceValidationException('Application not found');
-    }
-
-    await this.applicationRepository.update(applicationEntity.id, application);
-
+    //Save does not return the full entity in case of update
     return this.applicationRepository.findOne({
       where: {
         id: applicationEntity.id,
@@ -77,6 +69,15 @@ export class ApplicationService {
 
     return await this.applicationRepository.find({
       where: whereClause,
+      relations: ['status'],
+    });
+  }
+
+  async get(fileNumber: string) {
+    return this.applicationRepository.findOne({
+      where: {
+        fileNumber,
+      },
       relations: ['status'],
     });
   }

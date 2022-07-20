@@ -2,6 +2,7 @@ import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { repositoryMockFactory } from '../common/utils/test-helpers/mockTypes';
+import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -39,7 +40,9 @@ describe('ApplicationController', () => {
     }).compile();
 
     applicationService = module.get<ApplicationService>(ApplicationService);
-    applicationStatusService.fetchStatusId.mockResolvedValue('fake-status-id');
+    applicationStatusService.fetchStatus.mockResolvedValue(
+      createMock<ApplicationStatus>(),
+    );
     controller = module.get<ApplicationController>(ApplicationController);
   });
 
@@ -59,7 +62,7 @@ describe('ApplicationController', () => {
 
   it('should add', async () => {
     jest
-      .spyOn(applicationService, 'create')
+      .spyOn(applicationService, 'createOrUpdate')
       .mockImplementation(async () => mockApplicationEntity);
 
     expect(await controller.add(mockApplicationDto)).toStrictEqual(

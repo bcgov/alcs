@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationDto, ApplicationPartialDto } from './application.dto';
 import { Application } from './application.entity';
@@ -30,7 +32,7 @@ export class ApplicationController {
   @Post()
   async add(@Body() application: ApplicationDto): Promise<ApplicationDto> {
     const entity = await this.mapToEntity(application);
-    const app = await this.applicationService.create(entity);
+    const app = await this.applicationService.createOrUpdate(entity);
     return {
       fileNumber: app.fileNumber,
       title: app.title,
@@ -43,18 +45,29 @@ export class ApplicationController {
   async update(
     @Body() application: ApplicationPartialDto,
   ): Promise<ApplicationDto> {
-    let statusId;
-    if (application.status) {
-      statusId = await this.applicationStatusService.fetchStatusId(
+    const existingApplication = await this.applicationService.get(
+      application.fileNumber,
+    );
+
+    if (!existingApplication) {
+      throw new ServiceValidationException('File not found');
+    }
+
+    let status: ApplicationStatus | undefined;
+    if (
+      application.status &&
+      application.status != existingApplication.status.code
+    ) {
+      status = await this.applicationStatusService.fetchStatus(
         application.status,
       );
     }
 
-    const app = await this.applicationService.update({
+    const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       title: application.title,
       body: application.body,
-      statusId,
+      statusId: status ? status.id : undefined,
     });
 
     return {
@@ -73,7 +86,7 @@ export class ApplicationController {
   private async mapToEntity(
     application: ApplicationDto,
   ): Promise<Partial<Application>> {
-    const statusId = await this.applicationStatusService.fetchStatusId(
+    const status = await this.applicationStatusService.fetchStatus(
       application.status,
     );
 
@@ -81,7 +94,7 @@ export class ApplicationController {
       fileNumber: application.fileNumber,
       title: application.title,
       body: application.body,
-      statusId: statusId,
+      statusId: status.id,
     };
   }
 }

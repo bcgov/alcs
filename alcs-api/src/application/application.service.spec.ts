@@ -62,7 +62,7 @@ describe('ApplicationService', () => {
     jest
       .spyOn(applicationService, 'getAll')
       .mockImplementation(async () => [applicationMockEntity]);
-    jest.spyOn(applicationService, 'create').mockImplementation();
+    jest.spyOn(applicationService, 'createOrUpdate').mockImplementation();
 
     await applicationService.resetApplicationStatus(
       applicationMockEntity.statusId,
@@ -74,30 +74,8 @@ describe('ApplicationService', () => {
 
   it('should call save when an Application is created', async () => {
     const applicationMockEntity = initApplicationMockEntity();
-    applicationRepositoryMock.findOne.mockReturnValue(null);
-
-    const payload: Partial<Application> = {
-      title: applicationMockEntity.title,
-      fileNumber: applicationMockEntity.fileNumber,
-      body: applicationMockEntity.body,
-      statusId: applicationMockEntity.statusId,
-    };
-
-    expect(await applicationService.create(payload)).toStrictEqual(
-      applicationMockEntity,
-    );
-    expect(applicationRepositoryMock.save).toHaveBeenCalled();
-  });
-
-  it('should call update when update is called', async () => {
-    const applicationMockEntity = initApplicationMockEntity();
-
-    //Return old entity on first call, new one on second call
     applicationRepositoryMock.findOne
-      .mockReturnValueOnce({
-        ...applicationMockEntity,
-        title: 'Old Title',
-      })
+      .mockReturnValueOnce(null)
       .mockReturnValueOnce(applicationMockEntity);
 
     const payload: Partial<Application> = {
@@ -107,18 +85,15 @@ describe('ApplicationService', () => {
       statusId: applicationMockEntity.statusId,
     };
 
-    expect(await applicationService.update(payload)).toStrictEqual(
+    expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
       applicationMockEntity,
     );
-    expect(applicationRepositoryMock.update).toHaveBeenCalled();
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
+    expect(applicationRepositoryMock.save).toHaveBeenCalled();
   });
 
-  it('should throw an exception when update is called and the entity does not exist', async () => {
+  it('should call save when an Application is updated', async () => {
     const applicationMockEntity = initApplicationMockEntity();
-
-    //Return old entity on first call, new one on second call
-    applicationRepositoryMock.findOne.mockReturnValue(undefined);
+    applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
 
     const payload: Partial<Application> = {
       title: applicationMockEntity.title,
@@ -127,9 +102,9 @@ describe('ApplicationService', () => {
       statusId: applicationMockEntity.statusId,
     };
 
-    await expect(applicationService.update(payload)).rejects.toMatchObject(
-      new ServiceValidationException('Application not found'),
+    expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
+      applicationMockEntity,
     );
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.save).toHaveBeenCalled();
   });
 });
