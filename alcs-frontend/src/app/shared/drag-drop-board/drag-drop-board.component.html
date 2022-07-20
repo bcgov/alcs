@@ -1,0 +1,28 @@
+<div>
+  <div class="container column-headers">
+    <div *ngFor="let column of columns">
+      {{ column.name }}
+    </div>
+  </div>
+  <div class="container" cdkDropListGroup>
+    <div class="column" *ngFor="let column of columns">
+      <div
+        class="card-container"
+        cdkDropList
+        (cdkDropListDropped)="drop($event, column)"
+        [cdkDropListEnterPredicate]="predicateGenerator(column)"
+      >
+        <mat-card
+          [id]="'card-' + card.id"
+          class="card"
+          *ngFor="let card of cards | statusfilter: column.status"
+          cdkDrag
+          [cdkDragData]="card"
+          (click)="click(card.id)"
+        >
+          {{ card.label }}
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,15 +1,34 @@
-import { ApplicationStatusDto } from 'src/application-status/application-status.dto';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class ApplicationDto {
-  number: string;
+  @IsNotEmpty()
+  @IsString()
+  fileNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
   title: string;
+
+  @IsNotEmpty()
+  @IsString()
   body: string;
-  status: ApplicationStatusDto;
+
+  @IsNotEmpty()
+  @IsString()
+  status: string;
 }
 
-export class ApplicationCreateDto {
-  number: string;
-  title: string;
-  body: string;
-  statusId?: string;
+export class ApplicationPartialDto {
+  @IsNotEmpty()
+  @IsString()
+  fileNumber: string;
+
+  @IsOptional()
+  title?: string;
+
+  @IsOptional()
+  body?: string;
+
+  @IsOptional()
+  status?: string;
 }

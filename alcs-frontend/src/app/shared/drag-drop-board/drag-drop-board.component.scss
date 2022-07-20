@@ -1,0 +1,41 @@
+.container {
+  display: grid;
+  grid-column-gap: 2rem;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+}
+
+.header-container {
+  position: relative;
+}
+
+.column-headers {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1000;
+  text-align: center;
+  align-content: center;
+  height: 55px;
+}
+
+.column {
+}
+
+.card-container {
+  border: 1px solid #999;
+  height: 100%;
+  padding: 1rem;
+  min-height: 400px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  height: 70px;
+  margin-bottom: 1rem;
+  cursor: grab;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.6;
+}

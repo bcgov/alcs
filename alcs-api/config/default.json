@@ -7,6 +7,7 @@
   "DATABASE_USER": "postgres",
   "DATABASE_PASSWORD": "postgres",
   "LOG_LEVEL": "error",
+  "FRONTEND_ROOT": "http://localhost:4200",
   "KEYCLOAK": {
     "AUTH_SERVER": "localhost:8081",
     "AUTH_SERVER_URL": "http://localhost:8081/auth",
