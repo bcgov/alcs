@@ -1,32 +1,26 @@
+import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { repositoryMockFactory } from '../common/utils/test-helpers/mockTypes';
+import { ApplicationStatus } from './application-status/application-status.entity';
+import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import { ApplicationCreateDto, ApplicationDto } from './application.dto';
+import { ApplicationDto } from './application.dto';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: ApplicationService;
+  const applicationStatusService = createMock<ApplicationStatusService>();
   const mockApplicationEntity = initApplicationMockEntity();
-
-  const mockApplicationCreateDto: ApplicationCreateDto = {
-    title: mockApplicationEntity.title,
-    number: mockApplicationEntity.number,
-    body: mockApplicationEntity.body,
-    statusId: mockApplicationEntity.statusId,
-  };
 
   const mockApplicationDto: ApplicationDto = {
     title: mockApplicationEntity.title,
-    number: mockApplicationEntity.number,
+    fileNumber: mockApplicationEntity.fileNumber,
     body: mockApplicationEntity.body,
-    status: {
-      code: mockApplicationEntity.status.code,
-      description: mockApplicationEntity.status.description,
-    },
+    status: mockApplicationEntity.status.code,
   };
 
   beforeEach(async () => {
@@ -35,6 +29,10 @@ describe('ApplicationController', () => {
       providers: [
         ApplicationService,
         {
+          provide: ApplicationStatusService,
+          useValue: applicationStatusService,
+        },
+        {
           provide: getRepositoryToken(Application),
           useFactory: repositoryMockFactory,
         },
@@ -42,6 +40,9 @@ describe('ApplicationController', () => {
     }).compile();
 
     applicationService = module.get<ApplicationService>(ApplicationService);
+    applicationStatusService.fetchStatus.mockResolvedValue(
+      createMock<ApplicationStatus>(),
+    );
     controller = module.get<ApplicationController>(ApplicationController);
   });
 
@@ -64,7 +65,7 @@ describe('ApplicationController', () => {
       .spyOn(applicationService, 'createOrUpdate')
       .mockImplementation(async () => mockApplicationEntity);
 
-    expect(await controller.add(mockApplicationCreateDto)).toStrictEqual(
+    expect(await controller.add(mockApplicationDto)).toStrictEqual(
       mockApplicationDto,
     );
   });

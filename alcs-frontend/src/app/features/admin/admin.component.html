@@ -1,1 +1,3 @@
-<p>This is the admin page</p>
+<div>
+  <app-drag-drop-board [cards]="cards" [columns]="columns" (cardSelected)="onSelected($event)" (cardDropped)="onDropped($event)"></app-drag-drop-board>
+</div>

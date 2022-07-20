@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { ApplicationCreateDto } from './application.dto';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { Application } from './application.entity';
 
 @Injectable()
@@ -17,37 +17,44 @@ export class ApplicationService {
     sourceStatusId: string,
     targetStatusId: string,
   ): Promise<void> {
-    // TODO this needs to be done in bulk
-    const applicationsToReset = await this.getAll([sourceStatusId]);
-    applicationsToReset?.forEach(async (application) => {
-      application.statusId = targetStatusId;
-      await this.createOrUpdate(application);
-    });
+    await this.applicationRepository.update(
+      {
+        statusId: sourceStatusId,
+      },
+      {
+        statusId: targetStatusId,
+      },
+    );
   }
 
   async createOrUpdate(
-    application: ApplicationCreateDto,
+    application: Partial<Application>,
   ): Promise<Application> {
     let applicationEntity = await this.applicationRepository.findOne({
-      where: { number: application.number },
+      where: { fileNumber: application.fileNumber },
     });
 
     // TODO replace with AutoMapper
     applicationEntity = applicationEntity ?? new Application();
-    applicationEntity.number = application.number;
+    applicationEntity.fileNumber = application.fileNumber;
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
+    applicationEntity.statusId = application.statusId;
 
-    if (application.statusId) {
-      applicationEntity.statusId = application.statusId;
-    }
+    await this.applicationRepository.save(applicationEntity);
 
-    return await this.applicationRepository.save(applicationEntity);
+    //Save does not return the full entity in case of update
+    return this.applicationRepository.findOne({
+      where: {
+        id: applicationEntity.id,
+      },
+      relations: ['status'],
+    });
   }
 
   async delete(applicationNumber: string): Promise<void> {
     const application = await this.applicationRepository.findOne({
-      where: { number: applicationNumber },
+      where: { fileNumber: applicationNumber },
     });
 
     await this.applicationRepository.softRemove([application]);
@@ -60,11 +67,18 @@ export class ApplicationService {
       whereClause = { statusId: In(statusIds) };
     }
 
-    const applications = await this.applicationRepository.find({
+    return await this.applicationRepository.find({
       where: whereClause,
       relations: ['status'],
     });
+  }
 
-    return applications;
+  async get(fileNumber: string) {
+    return this.applicationRepository.findOne({
+      where: {
+        fileNumber,
+      },
+      relations: ['status'],
+    });
   }
 }

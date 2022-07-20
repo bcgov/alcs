@@ -9,7 +9,6 @@ import { ConfigModule } from './common/config/config.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { ApplicationModule } from './application/application.module';
-import { ApplicationStatusModule } from './application-status/application-status.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 
@@ -18,7 +17,6 @@ import { UserService } from './user/user.service';
     TypeOrmModule.forRootAsync({ useClass: TypeormConfigService }),
     TypeOrmModule.forFeature([HealthCheck, User]),
     ApplicationModule,
-    ApplicationStatusModule,
     ConfigModule,
     AuthorizationModule,
   ],
