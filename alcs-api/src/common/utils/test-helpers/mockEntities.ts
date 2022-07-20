@@ -6,7 +6,7 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.code = 'app_1';
   applicationStatus.description = 'app desc 1';
   applicationStatus.id = '1111-1111-1111-1111';
-  applicationStatus.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);
+  applicationStatus.auditDeletedDateAt = 11111111; ///new Date(2022, 1, 1, 1, 1, 1, 1);
   applicationStatus.auditCreatedAt = 111111111;
   applicationStatus.auditUpdatedAt = 111111111;
 
@@ -19,7 +19,7 @@ const initApplicationMockEntity = (): Application => {
   applicationEntity.fileNumber = 'app_1';
   applicationEntity.body = 'app desc 1';
   applicationEntity.id = '1111-1111-1111-1111';
-  applicationEntity.auditDeletedDateAt = new Date(2022, 1, 1, 1, 1, 1, 1);
+  applicationEntity.auditDeletedDateAt = 11111111; //new Date(2022, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditCreatedAt = 111111111;
   applicationEntity.auditUpdatedAt = 111111111;
   applicationEntity.status = initApplicationStatusMockEntity();

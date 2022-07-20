@@ -1,32 +1,68 @@
 import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
   PrimaryGeneratedColumn,
   BaseEntity,
   DeleteDateColumn,
+  CreateDateColumn,
+  ColumnOptions,
+  UpdateDateColumn,
+  Column,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
+export const getAuditColumnsOptions = (): ColumnOptions => {
+  return {
+    type: 'timestamptz',
+    transformer: {
+      from: (value?: Date | null) =>
+        value === undefined || value === null ? value : value.getTime(),
+      to: (value?: string | null) =>
+        value === undefined || value === null
+          ? value
+          : new Date(value).getTime(),
+    },
+  };
+};
+
 export abstract class Base extends BaseEntity {
+  // this is a private column, this should never be returned to api consumer
+  @Column({ unique: true, generated: true })
+  id: number;
+
+  // this is a public column, this is safe to expose to consumers
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  uuid: string;
 
-  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
-  auditDeletedDateAt: Date;
+  @DeleteDateColumn({
+    ...getAuditColumnsOptions(),
+    nullable: true,
+  })
+  auditDeletedDateAt: number;
 
-  @Column({ type: 'bigint', nullable: false, readonly: true })
+  @CreateDateColumn({ ...getAuditColumnsOptions(), update: false })
   auditCreatedAt: number;
 
-  @Column({ type: 'bigint', nullable: true, readonly: true })
+  @UpdateDateColumn({
+    ...getAuditColumnsOptions(),
+    update: false,
+    nullable: true,
+  })
   auditUpdatedAt: number;
 
-  @BeforeUpdate()
-  public setUpdatedAt() {
-    this.auditUpdatedAt = Date.now();
-  }
+  // TODO set proper values once we have user
+  @Column({ nullable: false })
+  auditCreatedBy: string;
+
+  @Column({ nullable: true })
+  auditUpdatedBy: string;
 
   @BeforeInsert()
   public setCreatedAt() {
-    this.auditCreatedAt = Date.now();
+    this.auditCreatedBy = 'setAuditUpdatedBy here';
+  }
+
+  @BeforeUpdate()
+  public setAuditUpdatedBy() {
+    this.auditCreatedBy = 'setAuditUpdatedBy here';
   }
 }
