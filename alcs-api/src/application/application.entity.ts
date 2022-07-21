@@ -18,7 +18,7 @@ export class Application extends Base {
     nullable: false,
     default: 'e0083fa2-9457-433b-b711-9344e1e3fd48',
   })
-  statusId: string;
+  statusUuid: string;
 
   @ManyToOne((status) => ApplicationStatus)
   status: ApplicationStatus;

@@ -53,7 +53,7 @@ export class ApplicationStatusService {
     }
 
     await this.applicationService.resetApplicationStatus(
-      applicationStatus.id,
+      applicationStatus.uuid,
       defaultApplicationStatus.id,
     );
 
