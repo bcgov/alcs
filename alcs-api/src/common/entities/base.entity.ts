@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-export const getAuditColumnsOptions = (): ColumnOptions => {
+export const getTimestampColumnsOptions = (): ColumnOptions => {
   return {
     type: 'timestamp',
     transformer: {
@@ -35,16 +35,16 @@ export abstract class Base extends BaseEntity {
   uuid: string;
 
   @DeleteDateColumn({
-    ...getAuditColumnsOptions(),
+    ...getTimestampColumnsOptions(),
     nullable: true,
   })
   auditDeletedDateAt: number;
 
-  @CreateDateColumn({ ...getAuditColumnsOptions(), update: false })
+  @CreateDateColumn({ ...getTimestampColumnsOptions(), update: false })
   auditCreatedAt: number;
 
   @UpdateDateColumn({
-    ...getAuditColumnsOptions(),
+    ...getTimestampColumnsOptions(),
     update: false,
     nullable: true,
   })
