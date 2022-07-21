@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { Application } from './application.entity';
 
 @Injectable()
@@ -19,10 +18,10 @@ export class ApplicationService {
   ): Promise<void> {
     await this.applicationRepository.update(
       {
-        statusId: sourceStatusId,
+        statusUuid: sourceStatusId,
       },
       {
-        statusId: targetStatusId,
+        statusUuid: targetStatusId,
       },
     );
   }
@@ -39,14 +38,14 @@ export class ApplicationService {
     applicationEntity.fileNumber = application.fileNumber;
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
-    applicationEntity.statusId = application.statusId;
+    applicationEntity.statusUuid = application.statusUuid;
 
     await this.applicationRepository.save(applicationEntity);
 
     //Save does not return the full entity in case of update
     return this.applicationRepository.findOne({
       where: {
-        id: applicationEntity.id,
+        uuid: applicationEntity.uuid,
       },
       relations: ['status'],
     });

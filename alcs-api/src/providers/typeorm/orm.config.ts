@@ -1,6 +1,7 @@
 import { IConfig } from 'config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export const getTypeOrmModuleOptions = (
   config: IConfig,
@@ -16,6 +17,7 @@ export const getTypeOrmModuleOptions = (
     on production once you get data in your database. */
   synchronize: true,
   autoLoadEntities: true,
+  namingStrategy: new SnakeNamingStrategy(),
 });
 
 export const getOrmConfig = (config: IConfig) => ({

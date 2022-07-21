@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -27,6 +35,17 @@ export class ApplicationController {
         status: app.status.code,
       };
     });
+  }
+
+  @Get('/:fileNumber')
+  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
+    const application = await this.applicationService.get(fileNumber);
+    return {
+      fileNumber: application.fileNumber,
+      title: application.title,
+      body: application.body,
+      status: application.status.code,
+    };
   }
 
   @Post()
@@ -67,7 +86,7 @@ export class ApplicationController {
       fileNumber: application.fileNumber,
       title: application.title,
       body: application.body,
-      statusId: status ? status.id : undefined,
+      statusUuid: status ? status.uuid : undefined,
     });
 
     return {
@@ -94,7 +113,7 @@ export class ApplicationController {
       fileNumber: application.fileNumber,
       title: application.title,
       body: application.body,
-      statusId: status.id,
+      statusUuid: status.uuid,
     };
   }
 }

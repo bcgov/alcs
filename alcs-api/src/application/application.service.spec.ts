@@ -48,7 +48,7 @@ describe('ApplicationService', () => {
 
   it('should getall applications by status', async () => {
     expect(
-      await applicationService.getAll([applicationMockEntity.statusId]),
+      await applicationService.getAll([applicationMockEntity.statusUuid]),
     ).toStrictEqual([applicationMockEntity]);
   });
 
@@ -65,7 +65,7 @@ describe('ApplicationService', () => {
     jest.spyOn(applicationService, 'createOrUpdate').mockImplementation();
 
     await applicationService.resetApplicationStatus(
-      applicationMockEntity.statusId,
+      applicationMockEntity.statusUuid,
       targetStatusId,
     );
 
@@ -82,7 +82,7 @@ describe('ApplicationService', () => {
       title: applicationMockEntity.title,
       fileNumber: applicationMockEntity.fileNumber,
       body: applicationMockEntity.body,
-      statusId: applicationMockEntity.statusId,
+      statusUuid: applicationMockEntity.statusUuid,
     };
 
     expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
@@ -99,7 +99,7 @@ describe('ApplicationService', () => {
       title: applicationMockEntity.title,
       fileNumber: applicationMockEntity.fileNumber,
       body: applicationMockEntity.body,
-      statusId: applicationMockEntity.statusId,
+      statusUuid: applicationMockEntity.statusUuid,
     };
 
     expect(await applicationService.createOrUpdate(payload)).toStrictEqual(

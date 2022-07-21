@@ -1,5 +1,4 @@
 import {
-  PrimaryGeneratedColumn,
   BaseEntity,
   DeleteDateColumn,
   CreateDateColumn,
@@ -8,11 +7,12 @@ import {
   Column,
   BeforeInsert,
   BeforeUpdate,
+  PrimaryColumn,
 } from 'typeorm';
 
 export const getAuditColumnsOptions = (): ColumnOptions => {
   return {
-    type: 'timestamptz',
+    type: 'timestamp',
     transformer: {
       from: (value?: Date | null) =>
         value === undefined || value === null ? value : value.getTime(),
@@ -25,12 +25,13 @@ export const getAuditColumnsOptions = (): ColumnOptions => {
 };
 
 export abstract class Base extends BaseEntity {
-  // this is a private column, this should never be returned to api consumer
-  @Column({ unique: true, generated: true })
-  id: number;
+  // TODO this will be discussed
+  // // this is a private column, this should never be returned to api consumer
+  // @Column({ unique: true, generated: true })
+  // id: number;
 
   // this is a public column, this is safe to expose to consumers
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'uuid' })
   uuid: string;
 
   @DeleteDateColumn({
@@ -57,8 +58,8 @@ export abstract class Base extends BaseEntity {
   auditUpdatedBy: string;
 
   @BeforeInsert()
-  public setCreatedAt() {
-    this.auditCreatedBy = 'setAuditUpdatedBy here';
+  public setCreatedBy() {
+    this.auditCreatedBy = 'setAuditCreatedBy here';
   }
 
   @BeforeUpdate()
