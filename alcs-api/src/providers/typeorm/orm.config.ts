@@ -18,6 +18,7 @@ export const getTypeOrmModuleOptions = (
   synchronize: true,
   autoLoadEntities: true,
   namingStrategy: new SnakeNamingStrategy(),
+  uuidExtension: 'pgcrypto',
 });
 
 export const getOrmConfig = (config: IConfig) => ({

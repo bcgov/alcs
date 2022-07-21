@@ -7,7 +7,7 @@ import {
   Column,
   BeforeInsert,
   BeforeUpdate,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 export const getAuditColumnsOptions = (): ColumnOptions => {
@@ -31,7 +31,7 @@ export abstract class Base extends BaseEntity {
   // id: number;
 
   // this is a public column, this is safe to expose to consumers
-  @PrimaryColumn({ type: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
   @DeleteDateColumn({
