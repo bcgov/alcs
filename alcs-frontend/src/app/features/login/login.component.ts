@@ -4,17 +4,14 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  template: '<div></div>',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
-  public token = '';
-
-  async login() {
-    await this.authenticationService.setToken(this.token);
-    await this.router.navigateByUrl('/admin');
-    console.log('LOGGING IN');
+  async ngOnInit() {
+    if (await this.authenticationService.loadTokenFromStorage()) {
+      this.router.navigateByUrl('/admin');
+    }
   }
 }

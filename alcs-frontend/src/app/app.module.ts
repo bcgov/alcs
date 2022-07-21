@@ -8,6 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { AdminComponent, ApplicationDialog } from './features/admin/admin.component';
@@ -30,6 +31,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     DragDropBoardComponent,
     ApplicationDialog,
     StatusFilterPipe,
+    AuthorizationComponent,
   ],
   imports: [
     BrowserModule,
