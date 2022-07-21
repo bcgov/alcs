@@ -23,7 +23,7 @@ services:
     ports:
       - '5431:5432'
     volumes:
-      - postgres-admin:/var/lib/postgres
+      - postgres:/var/lib/postgres
     networks: 
       - alcs
   keycloak:
@@ -45,7 +45,6 @@ services:
       - db-admin
 volumes:
   postgres:
-  postgres-admin:
 
 networks: 
   alcs: 
