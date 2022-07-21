@@ -13,8 +13,7 @@ export class createTriggerHelperFunctions1658442355602
     $$ LANGUAGE plpgsql;`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async down(_queryRunner: QueryRunner): Promise<void> {
+  public async down(): Promise<void> {
     console.log(
       'nothing to revert in createTriggerHelperFunctions1658442355602',
     );
