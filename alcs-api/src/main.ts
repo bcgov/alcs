@@ -1,14 +1,14 @@
 import fastifyHelmet from '@fastify/helmet';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
 import * as config from 'config';
+import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
-import { Logger, ValidationPipe } from '@nestjs/common';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()

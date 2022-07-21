@@ -35,7 +35,9 @@ export class AuthenticationService {
       return true;
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 401) {
-        return false;
+        //Take user to login
+        //TODO: Can we use something other than e.error?
+        window.location.href = e.error;
       }
       throw e;
     }
