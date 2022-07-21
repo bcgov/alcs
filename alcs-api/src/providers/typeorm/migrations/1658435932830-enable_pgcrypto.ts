@@ -5,8 +5,7 @@ export class enablePgcrypto1658435932830 implements MigrationInterface {
     await queryRunner.query(`CREATE EXTENSION pgcrypto`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async down(_queryRunner: QueryRunner): Promise<void> {
+  public async down(): Promise<void> {
     console.log('Nothing to revert in enablePgcrypto1658435932830');
   }
 }
