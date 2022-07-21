@@ -34,6 +34,7 @@ export class AuthorizationFilter implements ExceptionFilter {
       `${baseUrl}/authorize`,
     );
 
-    response.status(status).send(loginUrl);
+    response.status(status);
+    response.send(loginUrl);
   }
 }

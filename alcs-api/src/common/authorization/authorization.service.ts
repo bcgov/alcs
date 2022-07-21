@@ -3,6 +3,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
+export type TokenResponse = {
+  access_token: string;
+  expired_in: number;
+  refresh_expires_in: number;
+  refresh_token: string;
+  token_type: string;
+  id_token: string;
+  session_state: string;
+  scope: string;
+};
+
 @Injectable()
 export class AuthorizationService {
   constructor(
@@ -10,10 +21,7 @@ export class AuthorizationService {
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 
-  async exchangeCodeForToken(code: string): Promise<{
-    id_token: string;
-    exp: number;
-  }> {
+  async exchangeCodeForToken(code: string): Promise<TokenResponse> {
     const baseUrl = this.config.get<string>('BASE_URL');
     const secret = this.config.get<string>('KEYCLOAK.SECRET');
     const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
@@ -35,10 +43,7 @@ export class AuthorizationService {
     return res.data;
   }
 
-  async refreshToken(refreshToken: string): Promise<{
-    id_token: string;
-    exp: number;
-  }> {
+  async refreshToken(refreshToken: string): Promise<TokenResponse> {
     const secret = this.config.get<string>('KEYCLOAK.SECRET');
     const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
     const tokenUrl = this.config.get<string>('KEYCLOAK.AUTH_TOKEN_URL');

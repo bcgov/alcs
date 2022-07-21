@@ -26,7 +26,8 @@ export class AuthorizationController {
       //TODO: Set in Redis
 
       const frontEndUrl = this.config.get('FRONTEND_ROOT');
-      res.status(302).redirect(`${frontEndUrl}/authorized?t=${token.id_token}`);
+      res.status(302);
+      res.redirect(`${frontEndUrl}/authorized?t=${token.access_token}`);
     } catch (e) {
       console.log(e);
     }
