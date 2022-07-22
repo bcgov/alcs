@@ -9,7 +9,7 @@ import { AuthorizationService } from './authorization.service';
 describe('AuthorizationController', () => {
   let controller: AuthorizationController;
   let mockService: DeepMocked<AuthorizationService>;
-  let fakeToken = 'fake-token';
+  const fakeToken = 'fake-token';
 
   beforeEach(async () => {
     mockService = createMock<AuthorizationService>();
@@ -33,7 +33,7 @@ describe('AuthorizationController', () => {
       access_token: fakeToken,
       refresh_token: '',
       id_token: '',
-      expired_in: 1,
+      expires_in: 1,
       session_state: '',
       token_type: 'mock',
       refresh_expires_in: 1,
@@ -47,7 +47,7 @@ describe('AuthorizationController', () => {
 
   it('should provide an access token on the return url', async () => {
     const res = createMock<FastifyReply>();
-    await controller.handleAuth('code', 'session', res);
+    await controller.handleAuth('code', res);
 
     const frontEndUrl = config.get('FRONTEND_ROOT');
 

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   KeycloakConnectOptions,
   KeycloakConnectOptionsFactory,
+  TokenValidation,
 } from 'nest-keycloak-connect';
 import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 
@@ -19,6 +20,8 @@ export class KeycloakConfigService implements KeycloakConnectOptionsFactory {
       resource: this.config.get<string>('KEYCLOAK.CLIENT_ID'),
       'confidential-port': 0,
       useNestLogger: true,
+      tokenValidation: TokenValidation.OFFLINE,
+      verifyTokenAudience: true,
     };
   }
 }

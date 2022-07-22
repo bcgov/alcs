@@ -6,6 +6,7 @@ import {
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { Repository } from 'typeorm';
 import { UserService } from '../../../user/user.service';
+import { mockAppLoggerService } from './mockLogger';
 
 export type MockType<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -33,16 +34,7 @@ export const mockKeyCloakProviders = [
   },
   {
     provide: KEYCLOAK_LOGGER,
-    useValue: {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      log: () => {},
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      debug: () => {},
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      warn: () => {},
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      error: () => {},
-    },
+    useValue: mockAppLoggerService,
   },
   KeycloakMultiTenantService,
   {

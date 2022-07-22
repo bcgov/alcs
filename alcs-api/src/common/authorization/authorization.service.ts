@@ -1,11 +1,12 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { CONFIG_TOKEN, IConfig } from '../config/config.module';
+import { JWK, JWS } from 'node-jose';
 
 export type TokenResponse = {
   access_token: string;
-  expired_in: number;
+  expires_in: number;
   refresh_expires_in: number;
   refresh_token: string;
   token_type: string;
@@ -16,10 +17,25 @@ export type TokenResponse = {
 
 @Injectable()
 export class AuthorizationService {
+  private jwks: JWK.KeyStore;
+
   constructor(
     private readonly httpService: HttpService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
-  ) {}
+  ) {
+    this.initKeys();
+  }
+
+  async initKeys() {
+    const baseUrl = this.config.get('KEYCLOAK.AUTH_SERVER_URL');
+    const realm = this.config.get('KEYCLOAK.REALM');
+    const res = await firstValueFrom(
+      await this.httpService.get(
+        `${baseUrl}/realms/${realm}/protocol/openid-connect/certs`,
+      ),
+    );
+    this.jwks = await JWK.asKeyStore(res.data);
+  }
 
   async exchangeCodeForToken(code: string): Promise<TokenResponse> {
     const baseUrl = this.config.get<string>('BASE_URL');
@@ -40,7 +56,15 @@ export class AuthorizationService {
       ),
     );
 
-    return res.data;
+    const token = res.data;
+
+    //Make sure token is legit, the Authguard will only do this on the next request
+    const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
+    if (payload) {
+      return res.data;
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   async refreshToken(refreshToken: string): Promise<TokenResponse> {
