@@ -1,7 +1,7 @@
 # ALCS
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 ![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)
-[![codecov](https://codecov.io/gh/bcgov/alcs/branch/dev/graph/badge.svg)](https://codecov.io/gh/bcgov/alcs)
+[![codecov](https://img.shields.io/codeclimate/coverage/bcgov/alcs)](https://codeclimate.com/github/bcgov/alcs)
 
 [![Forks](https://img.shields.io/github/forks/bcgov/alcs.svg)](https://github.com/bcgov/tno/network/members)
 [![Stars](https://img.shields.io/github/stars/bcgov/alcs.svg)](https://github.com/bcgov/tno/stargazers)
