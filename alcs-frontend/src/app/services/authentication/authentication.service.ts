@@ -21,6 +21,7 @@ export class AuthenticationService implements OnInit {
       this.token = token;
       localStorage.setItem('jwt_token', token);
     }
+    return valid;
   }
 
   getToken() {
@@ -29,11 +30,7 @@ export class AuthenticationService implements OnInit {
 
   async loadTokenFromStorage() {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
-    if (existingToken) {
-      await this.setToken(existingToken);
-      return true;
-    }
-    return false;
+    return this.setToken(existingToken || '');
   }
 
   private async isTokenValid(token: string) {
