@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CardDetailDialogComponent } from '../../card-detail-dialog/card-detail-dialog.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { DragDropItem } from '../../shared/drag-drop-board/drag-drop-item.interface';
 import { ApplicationService } from '../application/application.service';
@@ -38,11 +39,24 @@ export class AdminComponent implements OnInit {
     this.applicationService.refreshApplications();
   }
 
-  onSelected(id: string) {
-    this.dialog.open(ApplicationDialog, {
-      width: '250px',
-      data: { id },
-    });
+  async onSelected(id: string) {
+    try {
+      const application = await this.applicationService.fetchApplication(id);
+      this.dialog.open(CardDetailDialogComponent, {
+        minHeight: '500px',
+        minWidth: '250px',
+        height: '80%',
+        width: '40%',
+        data: {
+          fileNumber: application.fileNumber,
+          title: application.title,
+          body: application.body,
+          status: application.status,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   onDropped($event: { id: string; status: string }) {
@@ -56,12 +70,4 @@ export class AdminComponent implements OnInit {
         console.log('Application Updated');
       });
   }
-}
-
-@Component({
-  selector: 'dialog-animations-example-dialog',
-  templateUrl: 'dialog.html',
-})
-export class ApplicationDialog {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { id: string }) {}
 }

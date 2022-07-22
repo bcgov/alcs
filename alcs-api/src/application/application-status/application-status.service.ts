@@ -23,7 +23,7 @@ export class ApplicationStatusService {
   ) {}
 
   async create(application: ApplicationStatusDto): Promise<ApplicationStatus> {
-    // TODO replace with AutoMapper
+    // TODO: replace with AutoMapper
     const applicationEntity = new ApplicationStatus();
     applicationEntity.code = application.code;
     applicationEntity.description = application.description;

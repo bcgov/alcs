@@ -1,0 +1,67 @@
+@import '@bcgov/bc-sans/css/BCSans.css';
+
+$font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+
+@mixin typography-style($size, $weight) {
+  font-family: $font-family !important;
+  font-size: $size !important;
+  font-weight: $weight !important;
+  margin: 0 !important;
+}
+
+* {
+  font-family: $font-family !important;
+}
+
+h1 {
+  @include typography-style(38px, 700);
+}
+
+h2 {
+  @include typography-style(32px, 700);
+}
+
+h3 {
+  @include typography-style(28px, 700);
+}
+
+h4 {
+  @include typography-style(24px, 700);
+}
+
+h5 {
+  @include typography-style(20px, 700);
+}
+
+a,
+p,
+.body1-text {
+  @include typography-style(16px, 400);
+  line-height: 24px;
+}
+
+.body2-text {
+  @include typography-style(14px, 400);
+  line-height: 20px;
+}
+
+.button-text {
+  @include typography-style(16px, 700);
+  line-height: 24px;
+  letter-spacing: 1px;
+}
+
+.label-text {
+  @include typography-style(14px, 700);
+  line-height: 20px;
+}
+
+.subtitle {
+  @include typography-style(18px, 700);
+  line-height: 28px;
+}
+
+button {
+  @extend .button-text;
+  padding: 8px 16px;
+}

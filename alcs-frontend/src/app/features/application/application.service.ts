@@ -47,4 +47,9 @@ export class ApplicationService implements OnInit {
     });
     this.$applications.next(this.applications);
   }
+
+  async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
+    // TODO: in future applicationDto will be replaced with DetailedApplicationDto
+    return firstValueFrom(this.http.get<ApplicationDto>(`${environment.apiRoot}/application/${fileNumber}`));
+  }
 }
