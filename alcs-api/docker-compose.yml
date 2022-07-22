@@ -13,6 +13,7 @@ services:
       - postgres:/var/lib/postgres
     networks: 
       - alcs
+
   db-admin:
     image: postgres:14.4-bullseye
     restart: always
@@ -26,6 +27,7 @@ services:
       - postgres:/var/lib/postgres
     networks: 
       - alcs
+
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
     environment:
@@ -43,6 +45,17 @@ services:
       - alcs
     depends_on:
       - db-admin
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - alcs
+
 volumes:
   postgres:
 

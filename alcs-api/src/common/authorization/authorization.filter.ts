@@ -25,9 +25,7 @@ export class AuthorizationFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    //TODO: Store session in redis
     const sessionId = v4();
-
     const baseUrl = this.config.get<string>('BASE_URL');
     const loginUrl = this.singleTenant.loginUrl(
       sessionId,

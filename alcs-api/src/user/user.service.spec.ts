@@ -91,7 +91,7 @@ describe('UserService', () => {
         ...mockUser,
         roles: [AUTH_ROLE.ADMIN],
       };
-      const newRoles = [AUTH_ROLE.USER];
+      const newRoles = [AUTH_ROLE.LUP];
       repositoryMock.findOne.mockResolvedValue(clonedUser as User);
 
       await service.setUserRoles(mockUser.email, newRoles);
