@@ -151,3 +151,17 @@ body {
   font-family: 'Material Icons' !important;
 }
 
+.mat-dialog-override {
+  mat-dialog-container {
+    > :first-child {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    mat-dialog-content,
+    div[mat-dialog-content] {
+      flex-grow: 1;
+      max-height: unset;
+    }
+  }
+}

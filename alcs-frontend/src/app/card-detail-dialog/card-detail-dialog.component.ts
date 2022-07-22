@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ApplicationDto } from '../features/application/application.dto';
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -7,9 +8,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./card-detail-dialog.component.scss'],
 })
 export class CardDetailDialogComponent implements OnInit {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { fileNumber: string; title: string; body: string; status: string }
-  ) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ApplicationDto) {}
 
   ngOnInit(): void {}
 }

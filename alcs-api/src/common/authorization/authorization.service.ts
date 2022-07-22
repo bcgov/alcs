@@ -61,6 +61,7 @@ export class AuthorizationService {
     //Make sure token is legit, the Authguard will only do this on the next request
     const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
     if (payload) {
+      // TODO: store user details here
       return res.data;
     } else {
       throw new UnauthorizedException();
