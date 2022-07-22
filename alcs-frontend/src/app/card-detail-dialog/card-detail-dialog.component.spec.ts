@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
@@ -8,9 +9,10 @@ describe('CardDetailDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CardDetailDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [CardDetailDialogComponent],
+      imports: [MatDialogModule],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CardDetailDialogComponent);
     component = fixture.componentInstance;
