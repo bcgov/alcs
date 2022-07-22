@@ -15,7 +15,7 @@ export class ApplicationStatusController {
   async getAll(): Promise<ApplicationStatusDto[]> {
     const applications = await this.applicationStatusService.getAll();
     return applications.map<ApplicationStatusDto>((app) => {
-      return { code: app.code, description: app.description };
+      return { code: app.code, description: app.description, label: app.label };
     });
   }
 
@@ -27,6 +27,7 @@ export class ApplicationStatusController {
     return {
       code: app.code,
       description: app.description,
+      label: app.label,
     };
   }
 

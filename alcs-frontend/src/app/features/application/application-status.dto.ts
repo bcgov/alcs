@@ -1,3 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 
-export interface ApplicationStatusDto extends BaseCodeDto {}
+export interface ApplicationStatusDto extends BaseCodeDto {
+  label: string;
+}

@@ -1,5 +1,8 @@
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
-import { Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class ApplicationStatus extends BaseCodeEntity {}
+export class ApplicationStatus extends BaseCodeEntity {
+  @Column({ nullable: false })
+  label: string;
+}
