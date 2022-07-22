@@ -3,4 +3,5 @@ export const mockAppLoggerService = {
   error: jest.fn(),
   warn: jest.fn(),
   debug: jest.fn(),
+  verbose: jest.fn(),
 };

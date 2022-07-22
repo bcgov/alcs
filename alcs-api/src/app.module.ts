@@ -4,12 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ApplicationModule } from './application/application.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { ConfigModule } from './common/config/config.module';
+import { RedisModule } from './common/redis/redis.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
-import { ApplicationModule } from './application/application.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 
@@ -20,6 +21,7 @@ import { UserService } from './user/user.service';
     ApplicationModule,
     ConfigModule,
     AuthorizationModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [

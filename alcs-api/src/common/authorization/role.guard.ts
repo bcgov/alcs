@@ -34,9 +34,6 @@ export class RoleGuard implements CanActivate {
 
     private multiTenant: KeycloakMultiTenantService,
     private readonly reflector: Reflector,
-
-    @Inject(UserService)
-    private userService: UserService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
@@ -53,19 +50,15 @@ export class RoleGuard implements CanActivate {
       return false;
     }
 
-    //Keycloak is good, load our own roles
+    //Keycloak is good, use our own role checker
     const requiredRoles = this.reflector.get<AUTH_ROLE[]>(
       'userRoles',
       context.getHandler(),
     );
 
     const request = context.switchToHttp().getRequest();
-    if (!request.user.email_verified) {
-      this.logger.warn('Received User with unverified email');
-      return false;
-    }
     const email = request.user.email;
-    const userRoles = await this.userService.getUserRoles(email);
+    const userRoles = request.user.client_roles as AUTH_ROLE[];
 
     const matchingRoles = userRoles.filter((value) =>
       requiredRoles.includes(value),
@@ -73,7 +66,11 @@ export class RoleGuard implements CanActivate {
 
     if (matchingRoles.length === 0) {
       this.logger.debug(
-        `Received request but user ${email} has wrong roles Required: ${requiredRoles} Has: ${userRoles}`,
+        `Received request but user ${email} has wrong roles. Required: ${requiredRoles} Has: ${userRoles}`,
+      );
+    } else {
+      this.logger.verbose(
+        `Approved request with roles Required: ${requiredRoles} Has: ${userRoles}`,
       );
     }
 

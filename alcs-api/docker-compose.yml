@@ -13,36 +13,17 @@ services:
       - postgres:/var/lib/postgres
     networks: 
       - alcs
-  db-admin:
-    image: postgres:14.4-bullseye
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass redis
     ports:
-      - '5431:5432'
-    volumes:
-      - postgres:/var/lib/postgres
-    networks: 
-      - alcs
-  keycloak:
-    image: quay.io/keycloak/keycloak:legacy
+      - "6379:6379"
     environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: db-admin
-      DB_DATABASE: postgres
-      DB_USER: postgres
-      DB_SCHEMA: public
-      DB_PASSWORD: postgres
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-    ports:
-      - "8081:8080"
-    networks: 
+      - REDIS_REPLICATION_MODE=master
+    networks:
       - alcs
-    depends_on:
-      - db-admin
+
 volumes:
   postgres:
 
