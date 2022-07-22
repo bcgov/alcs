@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
-import { AdminComponent, ApplicationDialog } from './features/admin/admin.component';
+import { AdminComponent } from './features/admin/admin.component';
 import { LoginComponent } from './features/login/login.component';
 import { DragDropBoardComponent } from './shared/drag-drop-board/drag-drop-board.component';
 import { StatusFilterPipe } from './shared/drag-drop-board/status-filter.pipe';
@@ -19,6 +19,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,9 +30,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FooterComponent,
     NotFoundComponent,
     DragDropBoardComponent,
-    ApplicationDialog,
     StatusFilterPipe,
     AuthorizationComponent,
+    CardDetailDialogComponent,
   ],
   imports: [
     BrowserModule,
