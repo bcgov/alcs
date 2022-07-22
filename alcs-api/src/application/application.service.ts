@@ -33,7 +33,7 @@ export class ApplicationService {
       where: { fileNumber: application.fileNumber },
     });
 
-    // TODO replace with AutoMapper
+    // TODO: replace with AutoMapper
     applicationEntity = applicationEntity ?? new Application();
     applicationEntity.fileNumber = application.fileNumber;
     applicationEntity.title = application.title;

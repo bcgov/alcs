@@ -25,7 +25,7 @@ export const getTimestampColumnsOptions = (): ColumnOptions => {
 };
 
 export abstract class Base extends BaseEntity {
-  // TODO this will be discussed
+  // TODO: this will be discussed
   // // this is a private column, this should never be returned to api consumer
   // @Column({ unique: true, generated: true })
   // id: number;
@@ -50,7 +50,7 @@ export abstract class Base extends BaseEntity {
   })
   auditUpdatedAt: number;
 
-  // TODO set proper values once we have user
+  // TODO: set proper values once we have authentication
   @Column({ nullable: false })
   auditCreatedBy: string;
 
