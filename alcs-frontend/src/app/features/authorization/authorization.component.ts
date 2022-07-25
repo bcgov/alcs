@@ -1,10 +1,6 @@
-import { Component, Directive, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { DragDropItem } from '../../shared/drag-drop-board/drag-drop-item.interface';
-import { ApplicationService } from '../application/application.service';
 
 @Component({
   selector: 'app-authorization',

@@ -1,8 +1,15 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 import { JWK, JWS } from 'node-jose';
+import { UserService } from '../../user/user.service';
+import { CreateOrUpdateUserDto } from '../../user/user.dto';
 
 export type TokenResponse = {
   access_token: string;
@@ -15,13 +22,27 @@ export type TokenResponse = {
   scope: string;
 };
 
+export type UserFromToken = {
+  email: string;
+  name: string;
+  display_name: string;
+  identity_provider: string;
+  preferred_username: string;
+  given_name: string;
+  family_name: string;
+  idir_user_guid?: string;
+  idir_username?: string;
+};
+
 @Injectable()
 export class AuthorizationService {
   private jwks: JWK.KeyStore;
+  private readonly logger: Logger = new Logger(AuthorizationService.name);
 
   constructor(
     private readonly httpService: HttpService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
+    @Inject(UserService) private readonly userService: UserService,
   ) {
     this.initKeys();
   }
@@ -61,6 +82,7 @@ export class AuthorizationService {
     //Make sure token is legit, the Authguard will only do this on the next request
     const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
     if (payload) {
+      this.registerUser(payload.payload);
       return res.data;
     } else {
       throw new UnauthorizedException();
@@ -85,5 +107,35 @@ export class AuthorizationService {
     );
 
     return res.data;
+  }
+
+  // FIXME: this will be replaced with automapper
+  private mapUserFromTokenToCreateDto(
+    user: UserFromToken,
+  ): CreateOrUpdateUserDto {
+    return {
+      email: user.email,
+      name: user.name,
+      displayName: user.display_name,
+      identityProvider: user.identity_provider,
+      preferredUsername: user.preferred_username,
+      givenName: user.given_name,
+      familyName: user.family_name,
+      idirUserGuid: user.idir_user_guid,
+      idirUserName: user.idir_username,
+    };
+  }
+
+  private async registerUser(payload: Buffer) {
+    const decodedToken = JSON.parse(
+      Buffer.from(payload).toString(),
+    ) as UserFromToken;
+    this.logger.debug(decodedToken);
+    const existingUser = await this.userService.getUser(decodedToken.email);
+    if (!existingUser) {
+      await this.userService.createUser(
+        this.mapUserFromTokenToCreateDto(decodedToken),
+      );
+    }
   }
 }

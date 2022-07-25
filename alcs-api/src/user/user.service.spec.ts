@@ -2,7 +2,6 @@ import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AUTH_ROLE } from '../common/enum';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -13,7 +12,14 @@ describe('UserService', () => {
   const email = 'bruce.wayne@gotham.com';
   const mockUser: User = {
     email,
-    roles: [AUTH_ROLE.ADMIN],
+    name: 'test_name',
+    displayName: 'test_displayName',
+    identityProvider: 'test_identityProvider',
+    preferredUsername: 'test_preferredUsername',
+    givenName: 'test_givenName',
+    familyName: 'test_familyName',
+    idirUserGuid: 'test_idirUserGuid',
+    idirUserName: 'test_idirUserName',
   } as unknown as User;
 
   beforeEach(async () => {
@@ -43,26 +49,15 @@ describe('UserService', () => {
     expect(users[0]).toEqual(mockUser);
   });
 
-  describe('getUserRoles', () => {
-    it('should return the roles if user exists', async () => {
-      const roles = await service.getUserRoles(email);
+  it('should return the user by email from the repository', async () => {
+    const user = await service.getUser(mockUser.email);
 
-      expect(roles.length).toEqual(1);
-      expect(roles[0]).toEqual(AUTH_ROLE.ADMIN);
-    });
-
-    it('should return empty roles if the user does not exist', async () => {
-      repositoryMock.findOne.mockReturnValue(undefined);
-
-      const roles = await service.getUserRoles(email);
-
-      expect(roles.length).toEqual(0);
-    });
+    expect(user).toStrictEqual(mockUser);
   });
 
   describe('createUser', () => {
-    it('should save a user when valid roles are passed and user does not exist', async () => {
-      repositoryMock.find.mockResolvedValue(undefined);
+    it('should save a user when user does not exist', async () => {
+      repositoryMock.findOne.mockResolvedValue(undefined);
 
       const user = await service.createUser(mockUser);
 
@@ -70,48 +65,10 @@ describe('UserService', () => {
       expect(repositoryMock.save).toHaveBeenCalled();
     });
 
-    it("should reject when user doesn't exist and invalid roles are passed to create", async () => {
-      repositoryMock.find.mockResolvedValue(undefined);
-
-      await expect(
-        service.createUser({ ...mockUser, roles: ['TEAPOT'] }),
-      ).rejects.toMatchObject(new Error('Provided roles do not exist'));
-    });
-
     it('should reject if user already exists', async () => {
       await expect(service.createUser(mockUser)).rejects.toMatchObject(
-        new Error('Email already exists'),
+        new Error(`Email already exists: ${mockUser.email}`),
       );
-    });
-  });
-
-  describe('setUserRoles', () => {
-    it('should update a users roles', async () => {
-      const clonedUser = {
-        ...mockUser,
-        roles: [AUTH_ROLE.ADMIN],
-      };
-      const newRoles = [AUTH_ROLE.LUP];
-      repositoryMock.findOne.mockResolvedValue(clonedUser as User);
-
-      await service.setUserRoles(mockUser.email, newRoles);
-
-      expect(clonedUser.roles).toEqual(newRoles);
-      expect(repositoryMock.save).toHaveBeenCalled();
-    });
-
-    it('should reject when invalid roles are passed', async () => {
-      await expect(
-        service.setUserRoles(mockUser.email, ['TEAPOT']),
-      ).rejects.toMatchObject(new Error('Provided roles do not exist'));
-    });
-
-    it('should reject when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(undefined);
-
-      await expect(
-        service.setUserRoles(mockUser.email, mockUser.roles),
-      ).rejects.toMatchObject(new Error('User not found'));
     });
   });
 

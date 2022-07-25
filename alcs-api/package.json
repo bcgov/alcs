@@ -94,7 +94,8 @@
       "!**/migrations/**",
       "!**/*.module.ts",
       "!**/main.ts",
-      "!**/mockTypes.ts"
+      "!**/mockTypes.ts",
+      "!**/*orm.config.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
