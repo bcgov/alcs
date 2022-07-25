@@ -65,7 +65,7 @@ export class RoleGuard implements CanActivate {
       requiredRoles.includes(value),
     );
 
-    this.cls.set('userId', email);
+    this.cls.set('userEmail', email);
 
     if (matchingRoles.length === 0) {
       this.logger.debug(

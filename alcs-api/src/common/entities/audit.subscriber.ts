@@ -6,11 +6,12 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { UserService } from '../../user/user.service';
+import { Base } from './base.entity';
 
 export const SYSTEM_ID = 'alcs-api';
 
 @EventSubscriber()
-export class UpdatedBySubscriber implements EntitySubscriberInterface {
+export class AuditSubscriber implements EntitySubscriberInterface {
   constructor(
     dataSource: DataSource,
     private readonly cls: ClsService,
@@ -23,14 +24,7 @@ export class UpdatedBySubscriber implements EntitySubscriberInterface {
     if ('auditCreatedBy' in event.entity) {
       const userEmail = this.cls.get('userEmail');
       if (userEmail) {
-        const user = await this.userService.getUser(userEmail);
-        if (!user) {
-          throw new Error(
-            'User not found from token! Has their email changed?',
-          );
-        }
-
-        event.entity.auditCreatedBy = user.uuid;
+        event.entity.auditCreatedBy = await this.fetchUserUuid(userEmail);
       } else {
         event.entity.auditCreatedBy = SYSTEM_ID;
       }
@@ -41,17 +35,18 @@ export class UpdatedBySubscriber implements EntitySubscriberInterface {
     if ('auditUpdatedBy' in event.entity) {
       const userEmail = this.cls.get('userEmail');
       if (userEmail) {
-        const user = await this.userService.getUser(userEmail);
-        if (!user) {
-          throw new Error(
-            'User not found from token! Has their email changed?',
-          );
-        }
-
-        event.entity.auditUpdatedBy = user.uuid;
+        event.entity.auditUpdatedBy = await this.fetchUserUuid(userEmail);
       } else {
-        event.entity.auditCreatedBy = SYSTEM_ID;
+        event.entity.auditUpdatedBy = SYSTEM_ID;
       }
     }
+  }
+
+  private async fetchUserUuid(userEmail: string) {
+    const user = await this.userService.getUser(userEmail);
+    if (!user) {
+      throw new Error('User not found from token! Has their email changed?');
+    }
+    return user.uuid;
   }
 }

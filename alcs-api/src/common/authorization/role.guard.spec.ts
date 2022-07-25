@@ -18,6 +18,7 @@ describe('RoleGuard', () => {
     getRequest: () => ({
       user: {
         client_roles: [AUTH_ROLE.ADMIN, AUTH_ROLE.LUP],
+        email: 'fake-email',
       },
     }),
   } as any;
@@ -58,7 +59,7 @@ describe('RoleGuard', () => {
   it('should accept and set the user into CLS if users has all of the roles', async () => {
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();
-    expect(mockClsService.set).toHaveBeenCalledWith('userId', undefined);
+    expect(mockClsService.set).toHaveBeenCalledWith('userEmail', 'fake-email');
   });
 
   it('should reject if underlying keycloak fails', async () => {

@@ -5,10 +5,10 @@ import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { Base } from './base.entity';
-import { SYSTEM_ID, UpdatedBySubscriber } from './updated-by.subscriber';
+import { SYSTEM_ID, AuditSubscriber } from './audit.subscriber';
 
-describe('UpdatedBySubscriber', () => {
-  let updatedBySubscriber: UpdatedBySubscriber;
+describe('AuditSubscriber', () => {
+  let updatedBySubscriber: AuditSubscriber;
   let mockDataSource;
   let mockClsService: DeepMocked<ClsService>;
   let mockUserService: DeepMocked<UserService>;
@@ -57,11 +57,11 @@ describe('UpdatedBySubscriber', () => {
           provide: UserService,
           useValue: mockUserService,
         },
-        UpdatedBySubscriber,
+        AuditSubscriber,
       ],
     }).compile();
 
-    updatedBySubscriber = module.get<UpdatedBySubscriber>(UpdatedBySubscriber);
+    updatedBySubscriber = module.get<AuditSubscriber>(AuditSubscriber);
   });
 
   it('should be add itself to subscribers', () => {
