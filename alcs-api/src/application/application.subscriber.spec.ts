@@ -5,7 +5,7 @@ import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { ApplicationHistory } from './application-history.entity';
-import { ApplicationSubscriber } from './application-subscriber';
+import { ApplicationSubscriber } from './application.subscriber';
 import { Application } from './application.entity';
 
 describe('ApplicationSubscriber', () => {
