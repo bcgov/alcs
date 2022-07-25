@@ -1,6 +1,7 @@
 import { Base } from '../common/entities/base.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Application extends Base {
@@ -22,4 +23,7 @@ export class Application extends Base {
 
   @ManyToOne((status) => ApplicationStatus)
   status: ApplicationStatus;
+
+  @ManyToOne((assignee) => User, { nullable: true })
+  assignee: User;
 }

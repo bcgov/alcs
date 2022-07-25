@@ -27,11 +27,7 @@ export class UserService {
   }
 
   async createUser(dto: CreateOrUpdateUserDto) {
-    const existingUser = await this.userRepository.findOne({
-      where: {
-        email: dto.email,
-      },
-    });
+    const existingUser = await this.getUser(dto.email);
 
     if (existingUser) {
       throw new Error(`Email already exists: ${dto.email}`);
@@ -53,16 +49,20 @@ export class UserService {
   }
 
   async deleteUser(email: string) {
-    const existingUser = await this.userRepository.findOne({
-      where: {
-        email,
-      },
-    });
+    const existingUser = await this.getUser(email);
 
     if (!existingUser) {
       throw new Error('User not found');
     }
 
     return this.userRepository.softRemove(existingUser);
+  }
+
+  async getUser(email: string) {
+    return await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
   }
 }

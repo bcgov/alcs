@@ -82,13 +82,7 @@ export class AuthorizationService {
     //Make sure token is legit, the Authguard will only do this on the next request
     const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
     if (payload) {
-      const decodedToken = JSON.parse(
-        Buffer.from(payload.payload).toString(),
-      ) as UserFromToken;
-      this.logger.debug(decodedToken);
-      await this.userService.createUser(
-        this.mapUserFromTokenToCreateDto(decodedToken),
-      );
+      this.registerUser(payload.payload);
       return res.data;
     } else {
       throw new UnauthorizedException();
@@ -130,5 +124,18 @@ export class AuthorizationService {
       idirUserGuid: user.idir_user_guid,
       idirUserName: user.idir_username,
     } as CreateOrUpdateUserDto;
+  }
+
+  private async registerUser(payload: Buffer) {
+    const decodedToken = JSON.parse(
+      Buffer.from(payload).toString(),
+    ) as UserFromToken;
+    this.logger.debug(decodedToken);
+    const existingUser = await this.userService.getUser(decodedToken.email);
+    if (!existingUser) {
+      await this.userService.createUser(
+        this.mapUserFromTokenToCreateDto(decodedToken),
+      );
+    }
   }
 }

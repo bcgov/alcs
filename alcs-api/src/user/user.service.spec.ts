@@ -12,6 +12,14 @@ describe('UserService', () => {
   const email = 'bruce.wayne@gotham.com';
   const mockUser: User = {
     email,
+    name: 'test_name',
+    displayName: 'test_displayName',
+    identityProvider: 'test_identityProvider',
+    preferredUsername: 'test_preferredUsername',
+    givenName: 'test_givenName',
+    familyName: 'test_familyName',
+    idirUserGuid: 'test_idirUserGuid',
+    idirUserName: 'test_idirUserName',
   } as unknown as User;
 
   beforeEach(async () => {
@@ -39,6 +47,12 @@ describe('UserService', () => {
 
     expect(users.length).toEqual(1);
     expect(users[0]).toEqual(mockUser);
+  });
+
+  it('should return the user by email from the repository', async () => {
+    const user = await service.getUser(mockUser.email);
+
+    expect(user).toStrictEqual(mockUser);
   });
 
   describe('createUser', () => {

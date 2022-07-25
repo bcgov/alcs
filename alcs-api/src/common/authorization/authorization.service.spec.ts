@@ -46,6 +46,7 @@ describe('AuthorizationService', () => {
     );
 
     mockUserService.createUser.mockReturnValue(createMock<Promise<User>>());
+    mockUserService.getUser.mockReturnValue(null);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -83,8 +84,14 @@ describe('AuthorizationService', () => {
     expect(mockHttpService.post).toHaveBeenCalled();
   });
 
-  it('should call out CreateUser on receiving token', async () => {
+  it('should call out CreateUser on receiving token if user is not registered', async () => {
     await service.exchangeCodeForToken('fake-code');
     expect(mockUserService.createUser).toBeCalledTimes(1);
+  });
+
+  it('should not call out CreateUser on receiving token if user is registered', async () => {
+    mockUserService.getUser.mockReturnValue(createMock<Promise<User>>());
+    await service.exchangeCodeForToken('fake-code');
+    expect(mockUserService.createUser).toBeCalledTimes(0);
   });
 });
