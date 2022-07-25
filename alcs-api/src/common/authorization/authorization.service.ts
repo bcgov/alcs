@@ -123,7 +123,7 @@ export class AuthorizationService {
       familyName: user.family_name,
       idirUserGuid: user.idir_user_guid,
       idirUserName: user.idir_username,
-    } as CreateOrUpdateUserDto;
+    };
   }
 
   private async registerUser(payload: Buffer) {
