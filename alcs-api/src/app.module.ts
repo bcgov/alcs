@@ -9,6 +9,7 @@ import { ApplicationModule } from './application/application.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { ConfigModule } from './common/config/config.module';
+import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
@@ -32,6 +33,7 @@ import { UserService } from './user/user.service';
   providers: [
     AppService,
     UserService,
+    AuditSubscriber,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
