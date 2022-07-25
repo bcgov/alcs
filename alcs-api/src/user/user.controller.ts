@@ -26,13 +26,6 @@ export class UserController {
     return this.userService.createUser(dto);
   }
 
-  @Post('/roles')
-  @UseGuards(RoleGuard)
-  @UserRoles(AUTH_ROLE.ADMIN)
-  setUserRoles(@Body() dto: CreateOrUpdateUserDto) {
-    return this.userService.setUserRoles(dto.email, dto.roles);
-  }
-
   @Delete()
   @UseGuards(RoleGuard)
   @UserRoles(AUTH_ROLE.ADMIN)

@@ -23,7 +23,6 @@ describe('UserController', () => {
     }).compile();
 
     mockRes = {
-      roles: [],
       email: 'bruce@wayne.com',
     };
 
@@ -46,13 +45,6 @@ describe('UserController', () => {
     const res = await controller.getUsers();
     expect(res).toEqual([mockRes]);
     expect(mockService.listUsers).toHaveBeenCalled();
-  });
-
-  it('should call setUserRoles on the service', async () => {
-    mockService.setUserRoles.mockResolvedValue(mockRes);
-    const res = await controller.setUserRoles(mockRes);
-    expect(res).toEqual(mockRes);
-    expect(mockService.setUserRoles).toHaveBeenCalled();
   });
 
   it('should call deleteUser on the service', async () => {
