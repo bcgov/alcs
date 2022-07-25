@@ -1,7 +1,11 @@
 import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { repositoryMockFactory } from '../common/utils/test-helpers/mockTypes';
+import { RoleGuard } from '../common/authorization/role.guard';
+import {
+  mockKeyCloakProviders,
+  repositoryMockFactory,
+} from '../common/utils/test-helpers/mockTypes';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationController } from './application.controller';
@@ -9,6 +13,10 @@ import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 import { ApplicationDto } from './application.dto';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
+
+jest.mock('../common/authorization/role.guard', () => ({
+  RoleGuard: createMock<RoleGuard>(),
+}));
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
@@ -36,6 +44,7 @@ describe('ApplicationController', () => {
           provide: getRepositoryToken(Application),
           useFactory: repositoryMockFactory,
         },
+        ...mockKeyCloakProviders,
       ],
     }).compile();
 

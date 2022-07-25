@@ -3,6 +3,6 @@ import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class ApplicationStatus extends BaseCodeEntity {
-  @Column({ nullable: false })
+  @Column()
   label: string;
 }

@@ -5,3 +5,5 @@ export enum AUTH_ROLE {
   LUP = 'LUP',
   SENIOR_LUP = 'Senior Lup',
 }
+
+export const ANY_AUTH_ROLE = Object.values(AUTH_ROLE);

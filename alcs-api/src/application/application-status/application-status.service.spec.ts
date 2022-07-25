@@ -24,6 +24,7 @@ describe('ApplicationStatusService', () => {
   const applicationStatusDto: ApplicationStatusDto = {
     code: 'app_1',
     description: 'app desc 1',
+    label: 'app_label',
   };
   const applicationStatusMockEntity = initApplicationStatusMockEntity();
 

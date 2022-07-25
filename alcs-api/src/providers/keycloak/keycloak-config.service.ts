@@ -15,11 +15,11 @@ export class KeycloakConfigService implements KeycloakConnectOptionsFactory {
       authServerUrl: this.config.get<string>('KEYCLOAK.AUTH_SERVER_URL'),
       realm: this.config.get<string>('KEYCLOAK.REALM'),
       secret: this.config.get<string>('KEYCLOAK.SECRET'),
-      logLevels: ['verbose'],
+      logLevels: ['warn'],
       'ssl-required': 'external',
       resource: this.config.get<string>('KEYCLOAK.CLIENT_ID'),
       'confidential-port': 0,
-      useNestLogger: true,
+      useNestLogger: false,
       tokenValidation: TokenValidation.OFFLINE,
       verifyTokenAudience: true,
     };

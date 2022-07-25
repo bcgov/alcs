@@ -1,25 +1,18 @@
-import { Base } from '../common/entities/base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { ApplicationStatus } from './application-status/application-status.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { EntityHistory } from '../common/entities/history.entity';
+import { Application } from './application.entity';
 
 @Entity()
-export class Application extends Base {
-  @Column({ nullable: false, unique: true })
-  fileNumber: string;
-
-  @Column({ nullable: false })
-  title: string;
-
-  @Column()
-  body: string;
+export class ApplicationHistory extends EntityHistory {
+  constructor() {
+    super();
+  }
 
   @Column({
     type: 'uuid',
-    nullable: false,
-    default: 'e0083fa2-9457-433b-b711-9344e1e3fd48',
   })
   statusUuid: string;
 
-  @ManyToOne((status) => ApplicationStatus)
-  status: ApplicationStatus;
+  @ManyToOne(() => Application, (application) => application.history)
+  application: Application;
 }

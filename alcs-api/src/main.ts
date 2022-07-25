@@ -1,5 +1,5 @@
 import fastifyHelmet from '@fastify/helmet';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, LogLevel, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -78,6 +78,9 @@ async function bootstrap() {
     new FastifyAdapter({
       logger: { level: config.get<string>('LOG_LEVEL') },
     }),
+    {
+      logger: [config.get<LogLevel>('LOG_LEVEL')],
+    },
   );
 
   // config variables
