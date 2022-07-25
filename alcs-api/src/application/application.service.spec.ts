@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
   MockType,

@@ -1,14 +1,15 @@
 import { Base } from '../common/entities/base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { ApplicationHistory } from './application-history.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
 export class Application extends Base {
-  @Column({ nullable: false, unique: true })
+  @Column({ unique: true })
   fileNumber: string;
 
-  @Column({ nullable: false })
+  @Column()
   title: string;
 
   @Column()
@@ -16,8 +17,7 @@ export class Application extends Base {
 
   @Column({
     type: 'uuid',
-    nullable: false,
-    default: 'e0083fa2-9457-433b-b711-9344e1e3fd48',
+    default: 'e6ddd1af-1cb9-4e45-962a-92e8d532b149',
   })
   statusUuid: string;
 
@@ -26,4 +26,7 @@ export class Application extends Base {
 
   @ManyToOne((assignee) => User, { nullable: true })
   assignee: User;
+
+  @OneToMany(() => ApplicationHistory, (appHistory) => appHistory.application)
+  history: ApplicationHistory[];
 }

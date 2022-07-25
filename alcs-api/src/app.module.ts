@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { ClsModule } from 'nestjs-cls';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApplicationModule } from './application/application.module';
@@ -18,6 +19,10 @@ import { UserService } from './user/user.service';
   imports: [
     TypeOrmModule.forRootAsync({ useClass: TypeormConfigService }),
     TypeOrmModule.forFeature([HealthCheck, User]),
+    ClsModule.register({
+      global: true,
+      middleware: { mount: true },
+    }),
     ApplicationModule,
     ConfigModule,
     AuthorizationModule,

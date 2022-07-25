@@ -1,8 +1,12 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { RoleGuard } from '../common/authorization/role.guard';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+
+jest.mock('../common/authorization/role.guard', () => ({
+  RoleGuard: createMock<RoleGuard>(),
+}));
 
 describe('UserController', () => {
   let controller: UserController;
@@ -14,7 +18,6 @@ describe('UserController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
-        ...mockKeyCloakProviders,
         {
           provide: UserService,
           useValue: mockService,

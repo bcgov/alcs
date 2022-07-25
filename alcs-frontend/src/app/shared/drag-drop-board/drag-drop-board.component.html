@@ -1,11 +1,9 @@
 <div>
-  <div class="container column-headers">
-    <div *ngFor="let column of columns">
-      {{ column.name }}
-    </div>
-  </div>
   <div class="container" cdkDropListGroup>
     <div class="column" *ngFor="let column of columns">
+      <div class="column-header">
+        {{ column.name }}
+      </div>
       <div
         class="card-container"
         cdkDropList

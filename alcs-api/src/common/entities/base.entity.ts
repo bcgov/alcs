@@ -12,14 +12,12 @@ import {
 
 export const getTimestampColumnsOptions = (): ColumnOptions => {
   return {
-    type: 'timestamp',
+    type: 'timestamptz',
     transformer: {
       from: (value?: Date | null) =>
         value === undefined || value === null ? value : value.getTime(),
-      to: (value?: string | null) =>
-        value === undefined || value === null
-          ? value
-          : new Date(value).getTime(),
+      to: (value?: number | null) =>
+        value === undefined || value === null ? value : new Date(value),
     },
   };
 };
@@ -38,9 +36,13 @@ export abstract class Base extends BaseEntity {
     ...getTimestampColumnsOptions(),
     nullable: true,
   })
-  auditDeletedDateAt: number;
+  auditDeletedDateAt?: number;
 
-  @CreateDateColumn({ ...getTimestampColumnsOptions(), update: false })
+  @CreateDateColumn({
+    ...getTimestampColumnsOptions(),
+    nullable: false,
+    update: false,
+  })
   auditCreatedAt: number;
 
   @UpdateDateColumn({
@@ -48,14 +50,14 @@ export abstract class Base extends BaseEntity {
     update: false,
     nullable: true,
   })
-  auditUpdatedAt: number;
+  auditUpdatedAt?: number;
 
   // TODO: set proper values once we have authentication
   @Column({ nullable: false })
   auditCreatedBy: string;
 
   @Column({ nullable: true })
-  auditUpdatedBy: string;
+  auditUpdatedBy?: string;
 
   @BeforeInsert()
   public setCreatedBy() {
