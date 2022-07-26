@@ -11,8 +11,8 @@ import { ApplicationService } from '../application/application.service';
   styleUrls: ['./card-detail-dialog.component.scss'],
 })
 export class CardDetailDialogComponent implements OnInit {
-  assignees: UserDto[] = [];
-  filteredAssignees?: UserDto[] = [];
+  users: UserDto[] = [];
+  filteredUsers: UserDto[] = [];
   selectedAssignee?: UserDto;
   selectedAssigneeEmail: string = '';
   currentCard: ApplicationPartialDto = this.data;
@@ -28,21 +28,21 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeEmail = this.selectedAssignee?.email || '';
     this.userService.$users.subscribe((users) => {
-      this.assignees = users;
-      this.filteredAssignees = this.assignees;
+      this.users = users;
+      this.filteredUsers = this.users;
     });
 
     this.userService.fetchUsers();
   }
 
-  filterAssigneeList(event: any) {
-    const filterValue = event.target.value.toLowerCase();
-    this.filteredAssignees = this.assignees.filter((option) => option.email?.toLowerCase().includes(filterValue));
+  filterAssigneeList(event: KeyboardEvent) {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredUsers = this.users.filter((option) => option.email?.toLowerCase().includes(filterValue));
   }
 
   onAssigneeSelected(assigneeEmail: string) {
     console.log('onAssigneeSelected', assigneeEmail);
-    this.selectedAssignee = this.assignees.find((assignee) => assignee.email === assigneeEmail);
+    this.selectedAssignee = this.users.find((user) => user.email === assigneeEmail);
     this.currentCard.assignee = this.selectedAssignee;
     console.log('onAssigneeSelected', this.currentCard.assignee);
     this.updateCard(this.currentCard);

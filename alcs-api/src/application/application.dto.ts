@@ -19,9 +19,9 @@ export class ApplicationDto {
   status: string;
 
   @IsString()
-  assigneeUuid: string;
+  assigneeUuid?: string;
 
-  assignee: UserDto;
+  assignee?: UserDto;
 }
 
 export class ApplicationPartialDto {
@@ -38,6 +38,6 @@ export class ApplicationPartialDto {
   @IsOptional()
   status?: string;
 
-  @IsString()
-  assigneeUuid: string;
+  @IsOptional()
+  assigneeUuid?: string;
 }
