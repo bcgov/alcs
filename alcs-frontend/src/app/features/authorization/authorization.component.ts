@@ -11,9 +11,12 @@ export class AuthorizationComponent implements OnInit {
 
   async ngOnInit() {
     const token = this.route.snapshot.queryParamMap.get('t');
-    if (token) {
-      await this.authService.setToken(token);
+    const refreshToken = this.route.snapshot.queryParamMap.get('r');
+    if (token && refreshToken) {
+      await this.authService.setTokens(token, refreshToken);
       await this.router.navigateByUrl('/admin');
+    } else {
+      console.error('Failed to receive tokens from redirect');
     }
   }
 }
