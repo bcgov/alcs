@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { UserDto } from '../user/user.dto';
 
 export class ApplicationDto {
   @IsNotEmpty()
@@ -16,6 +17,11 @@ export class ApplicationDto {
   @IsNotEmpty()
   @IsString()
   status: string;
+
+  @IsString()
+  assigneeUuid: string;
+
+  assignee: UserDto;
 }
 
 export class ApplicationPartialDto {
@@ -31,4 +37,7 @@ export class ApplicationPartialDto {
 
   @IsOptional()
   status?: string;
+
+  @IsString()
+  assigneeUuid: string;
 }

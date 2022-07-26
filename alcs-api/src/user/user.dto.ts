@@ -1,5 +1,4 @@
 import { IsEmail, IsString } from 'class-validator';
-import { AUTH_ROLE } from '../common/enum';
 
 export class CreateOrUpdateUserDto {
   @IsEmail()
@@ -30,10 +29,7 @@ export class CreateOrUpdateUserDto {
   idirUserName?: string;
 }
 
-export class UserDto {
-  @IsEmail()
-  email: string;
-
-  @IsString({ each: true })
-  roles: AUTH_ROLE[];
+export class UserDto extends CreateOrUpdateUserDto {
+  @IsString()
+  uuid: string;
 }

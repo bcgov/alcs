@@ -39,6 +39,7 @@ export class ApplicationService {
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
     applicationEntity.statusUuid = application.statusUuid;
+    applicationEntity.assigneeUuid = application.assigneeUuid;
 
     await this.applicationRepository.save(applicationEntity);
 
@@ -47,7 +48,7 @@ export class ApplicationService {
       where: {
         uuid: applicationEntity.uuid,
       },
-      relations: ['status'],
+      relations: ['status', 'assignee'],
     });
   }
 
@@ -68,7 +69,7 @@ export class ApplicationService {
 
     return await this.applicationRepository.find({
       where: whereClause,
-      relations: ['status'],
+      relations: ['status', 'assignee'],
     });
   }
 
@@ -77,7 +78,7 @@ export class ApplicationService {
       where: {
         fileNumber,
       },
-      relations: ['status'],
+      relations: ['status', 'assignee'],
     });
   }
 }

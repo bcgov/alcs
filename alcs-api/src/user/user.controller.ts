@@ -13,8 +13,6 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  @UseGuards(RoleGuard)
-  @UserRoles(AUTH_ROLE.ADMIN)
   getUsers() {
     return this.userService.listUsers();
   }

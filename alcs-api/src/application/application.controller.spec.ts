@@ -21,6 +21,8 @@ describe('ApplicationController', () => {
     fileNumber: mockApplicationEntity.fileNumber,
     body: mockApplicationEntity.body,
     status: mockApplicationEntity.status.code,
+    assigneeUuid: mockApplicationEntity.assigneeUuid,
+    assignee: mockApplicationEntity.assignee,
   };
 
   beforeEach(async () => {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CardDetailDialogComponent } from '../../card-detail-dialog/card-detail-dialog.component';
+import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { DragDropItem } from '../../shared/drag-drop-board/drag-drop-item.interface';
 import { ApplicationService } from '../application/application.service';
@@ -42,17 +42,13 @@ export class AdminComponent implements OnInit {
   async onSelected(id: string) {
     try {
       const application = await this.applicationService.fetchApplication(id);
+
       this.dialog.open(CardDetailDialogComponent, {
         minHeight: '500px',
         minWidth: '250px',
         height: '80%',
         width: '40%',
-        data: {
-          fileNumber: application.fileNumber,
-          title: application.title,
-          body: application.body,
-          status: application.status,
-        },
+        data: application,
       });
     } catch (err) {
       console.log(err);
