@@ -1,0 +1,11 @@
+<mat-card class="card" cdkDrag [cdkDragData]="cardData" (click)="onClick(cardData.id)">
+  <div class="card-content">
+    <div>{{ cardData.title }}</div>
+    <div class="lower-card">
+      <div class="type">{{ cardData.type }}</div>
+      <div>
+        <div *ngIf="cardData.assigneeInitials" class="assignee">{{ cardData.assigneeInitials }}</div>
+      </div>
+    </div>
+  </div>
+</mat-card>

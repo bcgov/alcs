@@ -1,0 +1,38 @@
+.card {
+  border: 1px solid #ccc;
+  height: 70px;
+  margin-bottom: 1rem;
+  cursor: grab;
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+.lower-card {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.assignee {
+  border-radius: 50%;
+  padding: 6px;
+  border: 1px solid #0a5a9c;
+}
+
+.type {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  background-color: #5bd37b;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.6;
+}

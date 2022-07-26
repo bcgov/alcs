@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
+import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { DragDropItem } from '../../shared/drag-drop-board/drag-drop-item.interface';
 import { ApplicationService } from '../application/application.service';
+import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
 
 @Component({
   selector: 'app-admin',
@@ -11,7 +11,7 @@ import { ApplicationService } from '../application/application.service';
   styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent implements OnInit {
-  public cards: DragDropItem[] = [];
+  public cards: CardData[] = [];
   public columns: DragDropColumn[] = [];
 
   constructor(private applicationService: ApplicationService, public dialog: MatDialog) {}
@@ -30,9 +30,12 @@ export class AdminComponent implements OnInit {
     this.applicationService.$applications.subscribe((applications) => {
       this.cards = applications.map((application) => ({
         status: application.status,
-        label: application.title,
-        assignee: 'Me',
+        title: `${application.fileNumber} (${application.title})`,
+        assigneeInitials: application.assignee
+          ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
+          : undefined,
         id: application.fileNumber,
+        type: 'LUP',
       }));
     });
 
