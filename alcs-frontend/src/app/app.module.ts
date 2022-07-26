@@ -8,6 +8,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +24,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
+import { CardDetailDialogComponent } from './features/card-detail-dialog/card-detail-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dial
     MatGridListModule,
     MatFormFieldModule,
     MatDividerModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   providers: [
     AuthenticationService,

@@ -21,6 +21,12 @@ export class Application extends Base {
   })
   statusUuid: string;
 
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  assigneeUuid: string;
+
   @ManyToOne((status) => ApplicationStatus)
   status: ApplicationStatus;
 

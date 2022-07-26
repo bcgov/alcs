@@ -39,6 +39,8 @@ export class ApplicationController {
         title: app.title,
         body: app.body,
         status: app.status.code,
+        assigneeUuid: app.assigneeUuid,
+        assignee: app.assignee,
       };
     });
   }
@@ -52,6 +54,8 @@ export class ApplicationController {
       title: application.title,
       body: application.body,
       status: application.status.code,
+      assigneeUuid: application.assignee?.uuid,
+      assignee: application.assignee,
     };
   }
 
@@ -65,6 +69,8 @@ export class ApplicationController {
       title: app.title,
       body: app.body,
       status: app.status.code,
+      assigneeUuid: app.assigneeUuid,
+      assignee: app.assignee,
     };
   }
 
@@ -96,6 +102,7 @@ export class ApplicationController {
       title: application.title,
       body: application.body,
       statusUuid: status ? status.uuid : undefined,
+      assigneeUuid: application.assigneeUuid,
     });
 
     return {
@@ -103,6 +110,8 @@ export class ApplicationController {
       title: app.title,
       body: app.body,
       status: app.status.code,
+      assigneeUuid: app.assigneeUuid,
+      assignee: app.assignee,
     };
   }
 

@@ -1,0 +1,38 @@
+<div mat-dialog-title>
+  <h2>{{ data.title }}</h2>
+  in {{ data.status }}
+</div>
+<mat-dialog-content>
+  <h4>PAUSED</h4>
+  <div class="card-details-wrapper">
+    <div>
+      <mat-label>File number:</mat-label>
+      <p>{{ data.fileNumber }}</p>
+    </div>
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Assignee</mat-label>
+      <mat-select
+        placeholder="Select one"
+        [(value)]="selectedAssigneeEmail"
+        (selectionChange)="onAssigneeSelected($event.value)"
+      >
+        <input type="text" (keyup)="filterAssigneeList($event)" matInput placeholder="Start typing" />
+        <mat-option *ngFor="let option of filteredUsers" [value]="option.email">
+          {{ option.email }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <mat-label>Details:</mat-label>
+      <p>{{ data.body }}</p>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-label>Comments</mat-label>
+    <p>{{ data.body }}</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

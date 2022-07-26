@@ -1,5 +1,6 @@
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
+import { User } from '../../../user/user.entity';
 
 const initApplicationStatusMockEntity = (): ApplicationStatus => {
   const applicationStatus = new ApplicationStatus();
@@ -14,6 +15,23 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   return applicationStatus;
 };
 
+const initAssigneeMockEntity = (): User => {
+  const applicationStatus = new User();
+  applicationStatus.familyName = 'familyName';
+  applicationStatus.email = 'email_1@emai.com';
+  applicationStatus.uuid = '1111-1111-1111-1111';
+  applicationStatus.givenName = 'givenName';
+  applicationStatus.identityProvider = 'identityProvider';
+  applicationStatus.name = 'name';
+  applicationStatus.displayName = 'displayName';
+  applicationStatus.preferredUsername = 'preferredUsername';
+  applicationStatus.idirUserGuid = 'idirUserGuid';
+  applicationStatus.idirUserName = 'idirUserName';
+  applicationStatus.auditCreatedAt = 111111111;
+  applicationStatus.auditUpdatedAt = 111111111;
+  return applicationStatus;
+};
+
 const initApplicationMockEntity = (): Application => {
   const applicationEntity = new Application();
   applicationEntity.title = 'app_1';
@@ -25,6 +43,8 @@ const initApplicationMockEntity = (): Application => {
   applicationEntity.auditUpdatedAt = 111111111;
   applicationEntity.status = initApplicationStatusMockEntity();
   applicationEntity.statusUuid = applicationEntity.status.uuid;
+  applicationEntity.assigneeUuid = '1111-1111-1111';
+  applicationEntity.assignee = initAssigneeMockEntity();
 
   return applicationEntity;
 };

@@ -14,6 +14,7 @@ export class UserService {
   async listUsers() {
     const users = await this.userRepository.find();
     return users.map((user) => ({
+      uuid: user.uuid,
       email: user.email,
       name: user.name,
       displayName: user.displayName,
