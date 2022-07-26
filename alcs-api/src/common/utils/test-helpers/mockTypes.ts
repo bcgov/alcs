@@ -4,6 +4,7 @@ import {
   KEYCLOAK_LOGGER,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
+import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { UserService } from '../../../user/user.service';
 import { mockAppLoggerService } from './mockLogger';
@@ -23,6 +24,9 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
   }),
 );
 
+/**
+ * Used to mock the secondary dependencies of keyCloak, should not be used when test actually needs to test keycloak
+ */
 export const mockKeyCloakProviders = [
   {
     provide: KEYCLOAK_INSTANCE,

@@ -15,7 +15,7 @@ import {
 } from 'nest-keycloak-connect';
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
-import { UserService } from '../../user/user.service';
+import { ClsService } from 'nestjs-cls';
 import { AUTH_ROLE } from '../enum';
 
 @Injectable()
@@ -34,6 +34,7 @@ export class RoleGuard implements CanActivate {
 
     private multiTenant: KeycloakMultiTenantService,
     private readonly reflector: Reflector,
+    private readonly cls: ClsService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
@@ -63,6 +64,8 @@ export class RoleGuard implements CanActivate {
     const matchingRoles = userRoles.filter((value) =>
       requiredRoles.includes(value),
     );
+
+    this.cls.set('userEmail', email);
 
     if (matchingRoles.length === 0) {
       this.logger.debug(

@@ -7,6 +7,7 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.code = 'app_1';
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
+  applicationStatus.label = 'app_label';
   applicationStatus.auditDeletedDateAt = 11111111;
   applicationStatus.auditCreatedAt = 111111111;
   applicationStatus.auditUpdatedAt = 111111111;

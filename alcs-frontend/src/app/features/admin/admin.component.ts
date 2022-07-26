@@ -22,7 +22,7 @@ export class AdminComponent implements OnInit {
 
       this.columns = statuses.map((status) => ({
         status: status.code,
-        name: status.description,
+        name: status.label,
         allowedTransitions: allStatuses,
       }));
     });

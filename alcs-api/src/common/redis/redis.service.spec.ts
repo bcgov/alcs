@@ -30,4 +30,8 @@ describe('RedisService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should return the client', () => {
+    expect(service.getClient()).toBeDefined();
+  });
 });

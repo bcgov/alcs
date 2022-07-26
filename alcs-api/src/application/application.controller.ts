@@ -6,8 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { RoleGuard } from '../common/authorization/role.guard';
+import { UserRoles } from '../common/authorization/roles.decorator';
+import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
@@ -18,6 +22,7 @@ import * as config from 'config';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
+@UseGuards(RoleGuard)
 export class ApplicationController {
   constructor(
     private readonly applicationService: ApplicationService,
@@ -25,6 +30,7 @@ export class ApplicationController {
   ) {}
 
   @Get()
+  @UserRoles(...ANY_AUTH_ROLE)
   async getAll(): Promise<ApplicationDto[]> {
     const applications = await this.applicationService.getAll();
     return applications.map<ApplicationDto>((app) => {
@@ -40,6 +46,7 @@ export class ApplicationController {
   }
 
   @Get('/:fileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
     const application = await this.applicationService.get(fileNumber);
     return {
@@ -53,6 +60,7 @@ export class ApplicationController {
   }
 
   @Post()
+  @UserRoles(...ANY_AUTH_ROLE)
   async add(@Body() application: ApplicationDto): Promise<ApplicationDto> {
     const entity = await this.mapToEntity(application);
     const app = await this.applicationService.createOrUpdate(entity);
@@ -67,6 +75,7 @@ export class ApplicationController {
   }
 
   @Patch()
+  @UserRoles(...ANY_AUTH_ROLE)
   async update(
     @Body() application: ApplicationPartialDto,
   ): Promise<ApplicationDto> {
@@ -107,6 +116,7 @@ export class ApplicationController {
   }
 
   @Delete()
+  @UserRoles(...ANY_AUTH_ROLE)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
   }
