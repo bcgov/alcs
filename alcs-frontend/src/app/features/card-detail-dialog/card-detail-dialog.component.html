@@ -17,7 +17,7 @@
           [(value)]="selectedAssigneeEmail"
           (selectionChange)="onAssigneeSelected($event.value)"
         >
-          <input type="text" [value]="selectedAssigneeEmail" (keyup)="filterAssigneeList($event)" matInput />
+          <input type="text" (keyup)="filterAssigneeList($event)" matInput placeholder="Start typing" />
           <mat-option *ngFor="let option of filteredAssignees" [value]="option.email">
             {{ option.email }}
           </mat-option>
