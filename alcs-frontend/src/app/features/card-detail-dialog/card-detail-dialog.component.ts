@@ -12,9 +12,7 @@ import { ApplicationService } from '../application/application.service';
   styleUrls: ['./card-detail-dialog.component.scss'],
 })
 export class CardDetailDialogComponent implements OnInit {
-  users: UserDto[] = [];
   $users: Observable<UserDto[]> | undefined;
-  filteredUsers: UserDto[] = [];
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
   currentCard: ApplicationDetailedDto = this.data;
@@ -30,11 +28,6 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
     this.$users = this.userService.$users;
-    this.userService.$users.subscribe((users) => {
-      this.users = users;
-      this.filteredUsers = this.users;
-    });
-
     this.userService.fetchUsers();
   }
 
