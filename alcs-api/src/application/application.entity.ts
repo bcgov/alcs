@@ -1,6 +1,13 @@
 import { Base } from '../common/entities/base.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { ApplicationHistory } from './application-history.entity';
+import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { User } from '../user/user.entity';
 
@@ -8,6 +15,9 @@ import { User } from '../user/user.entity';
 export class Application extends Base {
   @Column({ unique: true })
   fileNumber: string;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
 
   @Column()
   title: string;
@@ -27,6 +37,13 @@ export class Application extends Base {
   })
   assigneeUuid: string;
 
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  paused: boolean;
+
   @ManyToOne((status) => ApplicationStatus)
   status: ApplicationStatus;
 
@@ -35,4 +52,7 @@ export class Application extends Base {
 
   @OneToMany(() => ApplicationHistory, (appHistory) => appHistory.application)
   history: ApplicationHistory[];
+
+  @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
+  pauses: ApplicationPaused[];
 }

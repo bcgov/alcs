@@ -9,6 +9,7 @@ export interface ApplicationDto {
   assignee?: UserDto;
   activeDays: number;
   pausedDays: number;
+  paused: boolean;
 }
 
 export interface ApplicationPartialDto {
@@ -18,6 +19,7 @@ export interface ApplicationPartialDto {
   status?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;
+  paused?: boolean;
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {

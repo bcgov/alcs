@@ -1,13 +1,11 @@
 import {
   BaseEntity,
-  DeleteDateColumn,
-  CreateDateColumn,
-  ColumnOptions,
-  UpdateDateColumn,
   Column,
-  BeforeInsert,
-  BeforeUpdate,
+  ColumnOptions,
+  CreateDateColumn,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export const getTimestampColumnsOptions = (): ColumnOptions => {
@@ -52,20 +50,9 @@ export abstract class Base extends BaseEntity {
   })
   auditUpdatedAt?: number;
 
-  // TODO: set proper values once we have authentication
   @Column({ nullable: false })
   auditCreatedBy: string;
 
   @Column({ nullable: true })
   auditUpdatedBy?: string;
-
-  @BeforeInsert()
-  public setCreatedBy() {
-    this.auditCreatedBy = 'setAuditCreatedBy here';
-  }
-
-  @BeforeUpdate()
-  public setAuditUpdatedBy() {
-    this.auditCreatedBy = 'setAuditUpdatedBy here';
-  }
 }

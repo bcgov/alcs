@@ -14,9 +14,9 @@ import { RoleGuard } from '../common/authorization/role.guard';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
-import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
+import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -32,24 +32,23 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private applicationStatusService: ApplicationStatusService,
-    private businessDayService: BusinessDayService,
+    private applicationPausedService: ApplicationTimeTrackingService,
   ) {}
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
   async getAll(): Promise<ApplicationDto[]> {
     const applications = await this.applicationService.getAll();
-    return applications.map<ApplicationDto>(
-      this.mapApplicationToDto.bind(this),
-    );
+    return this.mapApplicationsToDtos(applications);
   }
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
+    const mappedApplication = await this.mapApplicationsToDtos([application]);
     return {
-      ...this.mapApplicationToDto(application),
+      ...mappedApplication[0],
       statusDetails: application.status,
     };
   }
@@ -59,19 +58,8 @@ export class ApplicationController {
   async add(@Body() application: ApplicationDto): Promise<ApplicationDto> {
     const entity = await this.mapToEntity(application);
     const app = await this.applicationService.createOrUpdate(entity);
-    return {
-      fileNumber: app.fileNumber,
-      title: app.title,
-      body: app.body,
-      status: app.status.code,
-      assigneeUuid: app.assigneeUuid,
-      assignee: app.assignee,
-      activeDays: this.businessDayService.calculateDays(
-        new Date(app.auditCreatedBy),
-        new Date(),
-      ),
-      pausedDays: 0,
-    };
+    const mappedApps = await this.mapApplicationsToDtos([app]);
+    return mappedApps[0];
   }
 
   @Patch()
@@ -103,9 +91,11 @@ export class ApplicationController {
       body: application.body,
       statusUuid: status ? status.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
+      paused: application.paused,
     });
 
-    return this.mapApplicationToDto(app);
+    const mappedApps = await this.mapApplicationsToDtos([app]);
+    return mappedApps[0];
   }
 
   @Delete()
@@ -129,19 +119,22 @@ export class ApplicationController {
     };
   }
 
-  private mapApplicationToDto(app: Application) {
-    return {
+  private async mapApplicationsToDtos(applications: Application[]) {
+    const appTimeMap =
+      await this.applicationPausedService.fetchApplicationActiveTimes(
+        applications,
+      );
+
+    return applications.map((app) => ({
       fileNumber: app.fileNumber,
       title: app.title,
       body: app.body,
       status: app.status.code,
       assigneeUuid: app.assigneeUuid,
       assignee: app.assignee,
-      activeDays: this.businessDayService.calculateDays(
-        new Date(app.auditCreatedAt),
-        new Date(),
-      ),
-      pausedDays: 0,
-    };
+      paused: app.paused,
+      activeDays: appTimeMap.get(app.uuid).activeDays || 0,
+      pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
+    }));
   }
 }

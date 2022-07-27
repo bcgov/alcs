@@ -18,6 +18,7 @@ describe('CardComponent', () => {
       type: 'LUP',
       title: 'Title',
       activeDays: 2,
+      paused: false,
     };
 
     fixture.detectChanges();
@@ -34,5 +35,24 @@ describe('CardComponent', () => {
     const activeDays = compiled.querySelector('.active-days');
     const textBlock = activeDays.querySelector('span');
     expect(textBlock.textContent).toContain('2');
+
+    const pausedCard = compiled.querySelector('.paused');
+    expect(pausedCard).toBeFalsy();
+  });
+
+  it('should apply the paused class to paused application', () => {
+    component.cardData = {
+      id: '1',
+      status: '',
+      type: 'LUP',
+      title: 'Title',
+      activeDays: 2,
+      paused: true,
+    };
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const pausedCard = compiled.querySelector('.paused');
+    expect(pausedCard).toBeTruthy();
   });
 });
