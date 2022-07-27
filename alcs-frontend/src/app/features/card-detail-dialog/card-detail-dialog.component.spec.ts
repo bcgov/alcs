@@ -77,7 +77,7 @@ describe('CardDetailDialogComponent', () => {
     expect(compiled.querySelector('.card-state').textContent).toEqual('Paused');
     expect(compiled.querySelector('.card-file-number').textContent).toEqual(mockCardDetail.fileNumber);
     expect(compiled.querySelector('.card-applicant').textContent).toEqual('Dart Placeholder');
-    expect(compiled.querySelector('.card-assignee ')).toBeTruthy();
+    expect(compiled.querySelector('.card-assignee')).toBeTruthy();
     expect(compiled.querySelector('.card-active-days').textContent).toEqual('10 Placeholder');
     expect(compiled.querySelector('.card-paused-days').textContent).toEqual('5 Placeholder');
     expect(compiled.querySelector('.card-state-btn').textContent).toEqual('Activate');

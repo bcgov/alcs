@@ -17,7 +17,7 @@
 
   <div>
     <ng-select
-      class="assignee"
+      class="card-assignee"
       [items]="$users | async"
       placeholder="Assignee"
       bindLabel="name"
@@ -27,7 +27,7 @@
       (change)="onAssigneeSelected($event)"
     >
       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-        <div class="card-body">
+        <div class="assignee-card-body">
           <h5 [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</h5>
           <p class="assignee-card-email" [ngOptionHighlight]="search" class="assignee-card-email">{{ item.email }}</p>
         </div>
