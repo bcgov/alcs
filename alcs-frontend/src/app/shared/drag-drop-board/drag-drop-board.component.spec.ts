@@ -13,6 +13,7 @@ describe('DragDropBoardComponent', () => {
     assigneeInitials: '',
     type: 'LUP',
     title: 'Im Title',
+    activeDays: 2,
   };
 
   beforeEach(async () => {

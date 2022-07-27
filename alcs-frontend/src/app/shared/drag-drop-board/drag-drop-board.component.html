@@ -10,7 +10,12 @@
         (cdkDropListDropped)="drop($event, column)"
         [cdkDropListEnterPredicate]="predicateGenerator(column)"
       >
-        <app-card [id]="'card-' + card.id" *ngFor="let card of cards | statusfilter: column.status" [cardData]="card" (cardSelected)="cardClicked($event)">
+        <app-card
+          [id]="'card-' + card.id"
+          *ngFor="let card of cards | statusfilter: column.status"
+          [cardData]="card"
+          (cardSelected)="cardClicked($event)"
+        >
         </app-card>
       </div>
     </div>

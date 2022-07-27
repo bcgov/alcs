@@ -7,6 +7,7 @@ import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/d
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -56,6 +57,7 @@ import { HeaderComponent } from './shared/header/header.component';
     MatInputModule,
     NgSelectModule,
     NgOptionHighlightModule,
+    MatIconModule,
   ],
   providers: [
     AuthenticationService,

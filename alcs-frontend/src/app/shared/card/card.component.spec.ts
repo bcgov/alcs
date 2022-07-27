@@ -17,6 +17,7 @@ describe('CardComponent', () => {
       status: '',
       type: 'LUP',
       title: 'Title',
+      activeDays: 2,
     };
 
     fixture.detectChanges();
@@ -24,5 +25,14 @@ describe('CardComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render the number of active business days', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const activeDays = compiled.querySelector('.active-days');
+    const textBlock = activeDays.querySelector('span');
+    expect(textBlock.textContent).toContain('2');
   });
 });

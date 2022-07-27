@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
+import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
 
@@ -28,15 +29,7 @@ export class AdminComponent implements OnInit {
     });
 
     this.applicationService.$applications.subscribe((applications) => {
-      this.cards = applications.map((application) => ({
-        status: application.status,
-        title: `${application.fileNumber} (${application.title})`,
-        assigneeInitials: application.assignee
-          ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
-          : undefined,
-        id: application.fileNumber,
-        type: 'LUP',
-      }));
+      this.cards = applications.map(AdminComponent.mapApplicationDtoToCard);
     });
 
     this.applicationService.refreshApplications();
@@ -68,5 +61,18 @@ export class AdminComponent implements OnInit {
         //TODO: Move this to a toast
         console.log('Application Updated');
       });
+  }
+
+  private static mapApplicationDtoToCard(application: ApplicationDto) {
+    return {
+      status: application.status,
+      title: `${application.fileNumber} (${application.title})`,
+      assigneeInitials: application.assignee
+        ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
+        : undefined,
+      id: application.fileNumber,
+      type: 'LUP',
+      activeDays: application.activeDays,
+    };
   }
 }
