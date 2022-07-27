@@ -18,10 +18,25 @@
   align-content: center;
 }
 
+.lower-card > div {
+  display: flex;
+  align-items: center;
+}
+
 .assignee {
   border-radius: 50%;
   padding: 6px;
   border: 1px solid #0a5a9c;
+}
+
+.active-days {
+  padding: 6px;
+
+  mat-icon {
+    color: #ccc;
+    text-align: center;
+    transform: scale(0.75);
+  }
 }
 
 .type {
@@ -29,7 +44,7 @@
   align-content: center;
   justify-content: center;
   background-color: #5bd37b;
-  padding: 6px;
+  padding: 4px;
   border-radius: 8px;
 }
 

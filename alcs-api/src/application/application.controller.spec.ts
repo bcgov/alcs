@@ -1,4 +1,4 @@
-import { createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RoleGuard } from '../common/authorization/role.guard';
@@ -6,6 +6,7 @@ import {
   mockKeyCloakProviders,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
+import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationController } from './application.controller';
@@ -21,6 +22,7 @@ jest.mock('../common/authorization/role.guard', () => ({
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: ApplicationService;
+  let mockBusinessDays: DeepMocked<BusinessDayService>;
   const applicationStatusService = createMock<ApplicationStatusService>();
   const mockApplicationEntity = initApplicationMockEntity();
 
@@ -31,9 +33,13 @@ describe('ApplicationController', () => {
     status: mockApplicationEntity.status.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
     assignee: mockApplicationEntity.assignee,
+    activeDays: 2,
+    pausedDays: 0,
   };
 
   beforeEach(async () => {
+    mockBusinessDays = createMock<BusinessDayService>();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
       providers: [
@@ -43,13 +49,16 @@ describe('ApplicationController', () => {
           useValue: applicationStatusService,
         },
         {
+          provide: BusinessDayService,
+          useValue: mockBusinessDays,
+        },
+        {
           provide: getRepositoryToken(Application),
           useFactory: repositoryMockFactory,
         },
         ...mockKeyCloakProviders,
       ],
     }).compile();
-
     applicationService = module.get<ApplicationService>(ApplicationService);
     applicationStatusService.fetchStatus.mockResolvedValue(
       createMock<ApplicationStatus>(),
@@ -81,11 +90,14 @@ describe('ApplicationController', () => {
     );
   });
 
-  it('should getall', async () => {
+  it('should add business days to getAll', async () => {
     jest
       .spyOn(applicationService, 'getAll')
       .mockImplementation(async () => [mockApplicationEntity]);
 
-    expect(await controller.getAll()).toStrictEqual([mockApplicationDto]);
+    const res = await controller.getAll();
+
+    expect(res).toStrictEqual([mockApplicationDto]);
+    expect(mockBusinessDays.calculateDays).toHaveBeenCalled();
   });
 });

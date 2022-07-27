@@ -22,6 +22,10 @@ export class ApplicationDto {
   assigneeUuid?: string;
 
   assignee?: UserDto;
+
+  activeDays: number;
+
+  pausedDays: number;
 }
 
 export class ApplicationPartialDto {

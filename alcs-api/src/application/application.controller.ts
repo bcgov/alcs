@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -13,6 +14,7 @@ import { RoleGuard } from '../common/authorization/role.guard';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationDto, ApplicationPartialDto } from './application.dto';
@@ -25,38 +27,25 @@ import * as config from 'config';
 @UseGuards(RoleGuard)
 export class ApplicationController {
   constructor(
-    private readonly applicationService: ApplicationService,
+    private applicationService: ApplicationService,
     private applicationStatusService: ApplicationStatusService,
+    private businessDayService: BusinessDayService,
   ) {}
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
   async getAll(): Promise<ApplicationDto[]> {
     const applications = await this.applicationService.getAll();
-    return applications.map<ApplicationDto>((app) => {
-      return {
-        fileNumber: app.fileNumber,
-        title: app.title,
-        body: app.body,
-        status: app.status.code,
-        assigneeUuid: app.assigneeUuid,
-        assignee: app.assignee,
-      };
-    });
+    return applications.map<ApplicationDto>(
+      this.mapApplicationToDto.bind(this),
+    );
   }
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
     const application = await this.applicationService.get(fileNumber);
-    return {
-      fileNumber: application.fileNumber,
-      title: application.title,
-      body: application.body,
-      status: application.status.code,
-      assigneeUuid: application.assignee?.uuid,
-      assignee: application.assignee,
-    };
+    return this.mapApplicationToDto(application);
   }
 
   @Post()
@@ -71,6 +60,11 @@ export class ApplicationController {
       status: app.status.code,
       assigneeUuid: app.assigneeUuid,
       assignee: app.assignee,
+      activeDays: this.businessDayService.calculateDays(
+        new Date(app.auditCreatedBy),
+        new Date(),
+      ),
+      pausedDays: 0,
     };
   }
 
@@ -105,14 +99,7 @@ export class ApplicationController {
       assigneeUuid: application.assigneeUuid,
     });
 
-    return {
-      fileNumber: app.fileNumber,
-      title: app.title,
-      body: app.body,
-      status: app.status.code,
-      assigneeUuid: app.assigneeUuid,
-      assignee: app.assignee,
-    };
+    return this.mapApplicationToDto(app);
   }
 
   @Delete()
@@ -133,6 +120,22 @@ export class ApplicationController {
       title: application.title,
       body: application.body,
       statusUuid: status.uuid,
+    };
+  }
+
+  private mapApplicationToDto(app: Application) {
+    return {
+      fileNumber: app.fileNumber,
+      title: app.title,
+      body: app.body,
+      status: app.status.code,
+      assigneeUuid: app.assigneeUuid,
+      assignee: app.assignee,
+      activeDays: this.businessDayService.calculateDays(
+        new Date(app.auditCreatedAt),
+        new Date(),
+      ),
+      pausedDays: 0,
     };
   }
 }

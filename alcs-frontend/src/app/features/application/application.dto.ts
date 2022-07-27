@@ -6,6 +6,8 @@ export interface ApplicationDto {
   body: string;
   status: string;
   assignee?: UserDto;
+  activeDays: number;
+  pausedDays: number;
 }
 
 export interface ApplicationPartialDto {
