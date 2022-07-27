@@ -32,12 +32,13 @@ export class CardDetailDialogComponent implements OnInit {
   }
 
   filterAssigneeList(term: string, item: UserDto) {
-    term = term.toLocaleLowerCase();
-    return item.email.toLocaleLowerCase().indexOf(term) > -1 || item.name.toLocaleLowerCase().indexOf(term) > -1;
+    const termLower = term.toLocaleLowerCase();
+    return (
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+    );
   }
 
   onAssigneeSelected(assignee: UserDto) {
-    console.log(assignee);
     this.selectedAssignee = assignee;
     this.currentCard.assignee = assignee;
     this.updateCard(this.currentCard);
