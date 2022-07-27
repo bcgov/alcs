@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
+      - run: npm install
       - run: npm run build
       - run: npm run test:ci
   test-api:
