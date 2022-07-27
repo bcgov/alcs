@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserDto } from '../user/user.dto';
+import { ApplicationStatusDto } from './application-status/application-status.dto';
 
 export class ApplicationDto {
   @IsNotEmpty()
@@ -26,6 +27,10 @@ export class ApplicationDto {
   activeDays: number;
 
   pausedDays: number;
+}
+
+export class ApplicationDetailedDto extends ApplicationDto {
+  statusDetails: ApplicationStatusDto;
 }
 
 export class ApplicationPartialDto {

@@ -3,13 +3,13 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import * as config from 'config';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ANY_AUTH_ROLE } from '../common/enum';
@@ -17,10 +17,13 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
-import { ApplicationDto, ApplicationPartialDto } from './application.dto';
+import {
+  ApplicationDetailedDto,
+  ApplicationDto,
+  ApplicationPartialDto,
+} from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import * as config from 'config';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
@@ -43,9 +46,12 @@ export class ApplicationController {
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
+  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
-    return this.mapApplicationToDto(application);
+    return {
+      ...this.mapApplicationToDto(application),
+      statusDetails: application.status,
+    };
   }
 
   @Post()

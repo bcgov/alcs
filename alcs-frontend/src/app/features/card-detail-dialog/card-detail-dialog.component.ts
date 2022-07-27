@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs/internal/Observable';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDto, ApplicationPartialDto } from '../application/application.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 
 @Component({
@@ -11,14 +12,13 @@ import { ApplicationService } from '../application/application.service';
   styleUrls: ['./card-detail-dialog.component.scss'],
 })
 export class CardDetailDialogComponent implements OnInit {
-  users: UserDto[] = [];
-  filteredUsers: UserDto[] = [];
+  $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
-  selectedAssigneeEmail: string = '';
-  currentCard: ApplicationPartialDto = this.data;
+  selectedAssigneeName?: string;
+  currentCard: ApplicationDetailedDto = this.data;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
     private readonly userService: UserService,
     private applicationService: ApplicationService
   ) {}
@@ -26,25 +26,21 @@ export class CardDetailDialogComponent implements OnInit {
   ngOnInit(): void {
     this.currentCard = this.data;
     this.selectedAssignee = this.data.assignee;
-    this.selectedAssigneeEmail = this.selectedAssignee?.email || '';
-    this.userService.$users.subscribe((users) => {
-      this.users = users;
-      this.filteredUsers = this.users;
-    });
-
+    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.$users = this.userService.$users;
     this.userService.fetchUsers();
   }
 
-  filterAssigneeList(event: KeyboardEvent) {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredUsers = this.users.filter((option) => option.email?.toLowerCase().includes(filterValue));
+  filterAssigneeList(term: string, item: UserDto) {
+    const termLower = term.toLocaleLowerCase();
+    return (
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+    );
   }
 
-  onAssigneeSelected(assigneeEmail: string) {
-    console.log('onAssigneeSelected', assigneeEmail);
-    this.selectedAssignee = this.users.find((user) => user.email === assigneeEmail);
-    this.currentCard.assignee = this.selectedAssignee;
-    console.log('onAssigneeSelected', this.currentCard.assignee);
+  onAssigneeSelected(assignee: UserDto) {
+    this.selectedAssignee = assignee;
+    this.currentCard.assignee = assignee;
     this.updateCard(this.currentCard);
   }
 
@@ -52,11 +48,18 @@ export class CardDetailDialogComponent implements OnInit {
     this.applicationService
       .updateApplication({
         fileNumber: currentCard.fileNumber,
-        assigneeUuid: currentCard?.assignee?.uuid,
+        assigneeUuid: currentCard?.assignee?.uuid || null,
       })
       .then((r) => {
         //TODO: Move this to a toast
         console.log('Application Updated');
       });
+  }
+
+  // placeholders
+  paused: boolean = true;
+
+  onToggle() {
+    this.paused = !this.paused;
   }
 }

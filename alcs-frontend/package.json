@@ -24,6 +24,8 @@
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
     "@bcgov/bc-sans": "^1.0.1",
+    "@ng-select/ng-option-highlight": "^0.0.7",
+    "@ng-select/ng-select": "^9.0.2",
     "jwt-decode": "^3.1.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

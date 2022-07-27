@@ -1,18 +1,18 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminComponent } from './features/admin/admin.component';
@@ -55,7 +55,8 @@ import { HeaderComponent } from './shared/header/header.component';
     MatFormFieldModule,
     MatDividerModule,
     MatInputModule,
-    MatSelectModule,
+    NgSelectModule,
+    NgOptionHighlightModule,
     MatIconModule,
   ],
   providers: [
@@ -65,4 +66,8 @@ import { HeaderComponent } from './shared/header/header.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private config: NgSelectConfig) {
+    this.config.notFoundText = 'No results';
+  }
+}
