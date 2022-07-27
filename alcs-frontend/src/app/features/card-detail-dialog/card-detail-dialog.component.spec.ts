@@ -40,6 +40,8 @@ describe('CardDetailDialogComponent', () => {
     body: 'this is a body',
     status: 'TEST',
     assignee: mockAssignee,
+    activeDays: 0,
+    pausedDays: 0,
   };
 
   beforeEach(async () => {
