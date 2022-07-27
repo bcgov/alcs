@@ -28,7 +28,7 @@
     >
       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
         <div class="assignee-card-body">
-          <h5 [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</h5>
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
           <p class="assignee-card-email" [ngOptionHighlight]="search" class="assignee-card-email">{{ item.email }}</p>
         </div>
       </ng-template>

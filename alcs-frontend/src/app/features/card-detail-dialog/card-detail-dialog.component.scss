@@ -27,6 +27,10 @@ div {
 }
 
 .card-assignee {
+  .assignee-card-name {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+  }
   .assignee-card-email {
     font-size: 0.9em !important;
   }
