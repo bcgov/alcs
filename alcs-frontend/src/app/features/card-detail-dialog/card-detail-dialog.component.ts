@@ -41,10 +41,8 @@ export class CardDetailDialogComponent implements OnInit {
   }
 
   onAssigneeSelected(assigneeEmail: string) {
-    console.log('onAssigneeSelected', assigneeEmail);
     this.selectedAssignee = this.users.find((user) => user.email === assigneeEmail);
     this.currentCard.assignee = this.selectedAssignee;
-    console.log('onAssigneeSelected', this.currentCard.assignee);
     this.updateCard(this.currentCard);
   }
 
