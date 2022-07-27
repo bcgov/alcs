@@ -41,7 +41,6 @@ export class AuthenticationService implements OnInit {
       this.token = undefined;
 
       const newTokens = await this.getNewTokens(this.refreshToken);
-      debugger;
       await this.setTokens(newTokens.token, newTokens.refresh_token);
     }
     return this.token;
