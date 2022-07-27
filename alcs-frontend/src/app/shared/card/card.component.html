@@ -2,9 +2,19 @@
   <div class="card-content">
     <div>{{ cardData.title }}</div>
     <div class="lower-card">
-      <div class="type">{{ cardData.type }}</div>
       <div>
-        <div *ngIf="cardData.assigneeInitials" class="assignee">{{ cardData.assigneeInitials }}</div>
+        <div class="activeDays center">
+          <span class="center">{{ cardData.activeDays }}</span>
+          <mat-icon title="Active Days">calendar_today</mat-icon>
+        </div>
+        <div class="type">
+          <span class="center">{{ cardData.type }}</span>
+        </div>
+      </div>
+      <div>
+        <div *ngIf="cardData.assigneeInitials" class="assignee">
+          <span class="center">{{ cardData.assigneeInitials }}</span>
+        </div>
       </div>
     </div>
   </div>

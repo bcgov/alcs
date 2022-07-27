@@ -7,6 +7,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/d
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserModule } from '@angular/platform-browser';
@@ -55,6 +56,7 @@ import { HeaderComponent } from './shared/header/header.component';
     MatDividerModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule,
   ],
   providers: [
     AuthenticationService,
