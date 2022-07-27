@@ -31,7 +31,7 @@ describe('CardComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    const activeDays = compiled.querySelector('.activeDays');
+    const activeDays = compiled.querySelector('.active-days');
     const textBlock = activeDays.querySelector('span');
     expect(textBlock.textContent).toContain('2');
   });
