@@ -1,20 +1,20 @@
 <div mat-dialog-title>
-  <h2>{{ data.title }}</h2>
+  <h2 class="card-title">{{ currentCard.title }}</h2>
   <span>
-    in <span class="italic">{{ data.statusDetails.label }}</span>
+    in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
   </span>
-  <span class="pull-right"> {{ paused ? 'Paused' : 'Active' }}</span>
+  <span class="pull-right card-state">{{ paused ? 'Paused' : 'Active' }}</span>
 </div>
 <mat-dialog-content>
   <div>
     <mat-label>File number:</mat-label>
-    <p>{{ data.fileNumber }}</p>
+    <p class="card-file-number">{{ currentCard.fileNumber }}</p>
   </div>
   <div>
     <mat-label>Applicant:</mat-label>
-    <p>Dart Placeholder</p>
+    <p class="card-applicant">Dart Placeholder</p>
   </div>
-  <mat-form-field class="full-width" appearance="fill">
+  <mat-form-field class="card-assignee full-width" appearance="fill">
     <mat-label>Assignee</mat-label>
     <mat-select
       placeholder="Select one"
@@ -33,24 +33,24 @@
   <div class="flex-container">
     <div class="flex-child">
       <mat-label>Active days:</mat-label>
-      <p>10 Placeholder</p>
+      <p class="card-active-days">10 Placeholder</p>
     </div>
     <div class="flex-child">
       <mat-label>Paused days:</mat-label>
-      <p>5 Placeholder</p>
+      <p class="card-paused-days">5 Placeholder</p>
     </div>
     <div class="flex-chil small">
       <mat-label></mat-label>
-      <button class="pull-right" (click)="onToggle()">{{ paused ? 'Activate' : 'Pause' }}</button>
+      <button class="card-state-btn pull-right" (click)="onToggle()">{{ paused ? 'Activate' : 'Pause' }}</button>
     </div>
   </div>
   <div>
     <mat-label>Details:</mat-label>
-    <p>{{ data.body }}</p>
+    <p class="card-details">{{ currentCard.body }}</p>
   </div>
 
   <mat-divider></mat-divider>
-  <div>
+  <div class="card-comments-wrapper">
     <mat-label>Comments</mat-label>
     <p>Placeholder comments</p>
   </div>

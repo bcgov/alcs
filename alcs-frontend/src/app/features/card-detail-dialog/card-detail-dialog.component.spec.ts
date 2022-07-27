@@ -11,10 +11,37 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CardDetailDialogComponent', () => {
   let component: CardDetailDialogComponent;
   let fixture: ComponentFixture<CardDetailDialogComponent>;
+
+  const mockAssignee: UserDto = {
+    uuid: '11111-11111-11111',
+    email: '11111@1111.11',
+    name: 'Dart',
+    displayName: 'Dart P',
+    identityProvider: 'star',
+    preferredUsername: 'Dart Placeholder',
+    givenName: 'Dart',
+    familyName: 'Placeholder',
+  };
+
+  const mockApplicationStatusDetails: ApplicationStatusDto = {
+    label: 'test_st',
+    code: 'TEST',
+    description: 'this is a test status',
+  };
+
+  const mockCardDetail: ApplicationDetailedDto = {
+    statusDetails: mockApplicationStatusDetails,
+    fileNumber: '1111',
+    title: '111 title',
+    body: 'this is a body',
+    status: 'TEST',
+    assignee: mockAssignee,
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,6 +53,7 @@ describe('CardDetailDialogComponent', () => {
         MatDividerModule,
         MatInputModule,
         MatSelectModule,
+        BrowserAnimationsModule,
       ],
       providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -33,6 +61,7 @@ describe('CardDetailDialogComponent', () => {
 
     fixture = TestBed.createComponent(CardDetailDialogComponent);
     component = fixture.componentInstance;
+    component.data = mockCardDetail;
     fixture.detectChanges();
   });
 
@@ -41,35 +70,19 @@ describe('CardDetailDialogComponent', () => {
   });
 
   it('should render card detail with correct data', () => {
-    const testAssignee: UserDto = {
-      uuid: '11111-11111-11111',
-      email: '11111@1111.11',
-      name: 'Dart',
-      displayName: 'Dart P',
-      identityProvider: 'star',
-      preferredUsername: 'Dart Placeholder',
-      givenName: 'Dart',
-      familyName: 'Placeholder',
-    };
-
-    const testApplicationStatusDetails: ApplicationStatusDto = {
-      label: 'test_st',
-      code: 'TEST',
-      description: 'this is a test status',
-    };
-
-    const testCardDetail: ApplicationDetailedDto = {
-      statusDetails: testApplicationStatusDetails,
-      fileNumber: '1111',
-      title: '111 title',
-      body: 'this is a body',
-      status: 'TEST',
-      assignee: testAssignee,
-    };
-
-    component.data = testCardDetail;
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.card-title').textContent).toEqual(mockCardDetail.title);
+    expect(compiled.querySelector('.card-status-label').textContent).toEqual(mockCardDetail.statusDetails.label);
+    expect(compiled.querySelector('.card-state').textContent).toEqual('Paused');
+    expect(compiled.querySelector('.card-file-number').textContent).toEqual(mockCardDetail.fileNumber);
+    expect(compiled.querySelector('.card-applicant').textContent).toEqual('Dart Placeholder');
+    expect(compiled.querySelector('.card-assignee ')).toBeTruthy();
+    expect(compiled.querySelector('.card-active-days').textContent).toEqual('10 Placeholder');
+    expect(compiled.querySelector('.card-paused-days').textContent).toEqual('5 Placeholder');
+    expect(compiled.querySelector('.card-state-btn').textContent).toEqual('Activate');
+    expect(compiled.querySelector('.card-details').textContent).toEqual(mockCardDetail.body);
+    expect(compiled.querySelector('.card-comments-wrapper')).toBeTruthy();
   });
 });
