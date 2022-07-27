@@ -1,13 +1,17 @@
 <div mat-dialog-title>
   <h2>{{ data.title }}</h2>
-  in {{ data.status }}
+  <span>in {{ data.statusDetails.label }} </span>
+  <span class="pull-right"> {{ paused ? 'Paused' : 'Active' }}</span>
 </div>
 <mat-dialog-content>
-  <h4>PAUSED</h4>
   <div class="card-details-wrapper">
     <div>
       <mat-label>File number:</mat-label>
       <p>{{ data.fileNumber }}</p>
+    </div>
+    <div>
+      <mat-label>Applicant:</mat-label>
+      <p>Dart Placeholder</p>
     </div>
     <mat-form-field class="full-width" appearance="fill">
       <mat-label>Assignee</mat-label>
@@ -16,12 +20,29 @@
         [(value)]="selectedAssigneeEmail"
         (selectionChange)="onAssigneeSelected($event.value)"
       >
-        <input type="text" (keyup)="filterAssigneeList($event)" matInput placeholder="Start typing" />
+        <div>
+          <input type="text" (keyup)="filterAssigneeList($event)" matInput placeholder="Start typing" />
+        </div>
+        <mat-option [value]="">None</mat-option>
         <mat-option *ngFor="let option of filteredUsers" [value]="option.email">
           {{ option.email }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <div class="flex-container">
+      <div class="flex-child">
+        <mat-label>Active days:</mat-label>
+        <p>10 Placeholder</p>
+      </div>
+      <div class="flex-child">
+        <mat-label>Paused days:</mat-label>
+        <p>5 Placeholder</p>
+      </div>
+      <div class="flex-chil small">
+        <mat-label></mat-label>
+        <button class="pull-right" (click)="onToggle()">{{ paused ? 'Activate' : 'Pause' }}</button>
+      </div>
+    </div>
     <div>
       <mat-label>Details:</mat-label>
       <p>{{ data.body }}</p>
@@ -30,7 +51,7 @@
   <mat-divider></mat-divider>
   <div>
     <mat-label>Comments</mat-label>
-    <p>{{ data.body }}</p>
+    <p>Placeholder comments</p>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

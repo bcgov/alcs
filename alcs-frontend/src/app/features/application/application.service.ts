@@ -3,7 +3,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationStatusDto } from './application-status.dto';
-import { ApplicationDto, ApplicationPartialDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -48,8 +48,7 @@ export class ApplicationService implements OnInit {
     this.$applications.next(this.applications);
   }
 
-  async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
-    // TODO: in future applicationDto will be replaced with DetailedApplicationDto
-    return firstValueFrom(this.http.get<ApplicationDto>(`${environment.apiRoot}/application/${fileNumber}`));
+  async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
+    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiRoot}/application/${fileNumber}`));
   }
 }

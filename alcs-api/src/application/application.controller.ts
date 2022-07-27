@@ -15,7 +15,11 @@ import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
-import { ApplicationDto, ApplicationPartialDto } from './application.dto';
+import {
+  ApplicationDetailedDto,
+  ApplicationDto,
+  ApplicationPartialDto,
+} from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 import * as config from 'config';
@@ -47,13 +51,14 @@ export class ApplicationController {
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
+  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
     return {
       fileNumber: application.fileNumber,
       title: application.title,
       body: application.body,
       status: application.status.code,
+      statusDetails: application.status,
       assigneeUuid: application.assignee?.uuid,
       assignee: application.assignee,
     };

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDto, ApplicationPartialDto } from '../application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 
 @Component({
@@ -15,10 +15,10 @@ export class CardDetailDialogComponent implements OnInit {
   filteredUsers: UserDto[] = [];
   selectedAssignee?: UserDto;
   selectedAssigneeEmail: string = '';
-  currentCard: ApplicationPartialDto = this.data;
+  currentCard: ApplicationDetailedDto = this.data;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
     private readonly userService: UserService,
     private applicationService: ApplicationService
   ) {}
@@ -52,11 +52,18 @@ export class CardDetailDialogComponent implements OnInit {
     this.applicationService
       .updateApplication({
         fileNumber: currentCard.fileNumber,
-        assigneeUuid: currentCard?.assignee?.uuid,
+        assigneeUuid: currentCard?.assignee?.uuid || '',
       })
       .then((r) => {
         //TODO: Move this to a toast
         console.log('Application Updated');
       });
+  }
+
+  // placeholders
+  paused: boolean = true;
+
+  onToggle() {
+    this.paused = !this.paused;
   }
 }
