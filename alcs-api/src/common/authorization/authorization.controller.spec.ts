@@ -10,6 +10,7 @@ describe('AuthorizationController', () => {
   let controller: AuthorizationController;
   let mockService: DeepMocked<AuthorizationService>;
   const fakeToken = 'fake-token';
+  const fakeRefreshToken = 'fake-refresh';
 
   beforeEach(async () => {
     mockService = createMock<AuthorizationService>();
@@ -29,16 +30,19 @@ describe('AuthorizationController', () => {
 
     controller = module.get<AuthorizationController>(AuthorizationController);
 
-    mockService.exchangeCodeForToken.mockResolvedValue({
+    const mockToken = {
       access_token: fakeToken,
-      refresh_token: '',
+      refresh_token: fakeRefreshToken,
       id_token: '',
       expires_in: 1,
       session_state: '',
       token_type: 'mock',
       refresh_expires_in: 1,
       scope: '',
-    });
+    };
+
+    mockService.exchangeCodeForToken.mockResolvedValue(mockToken);
+    mockService.refreshToken.mockResolvedValue(mockToken);
   });
 
   it('should be defined', () => {
@@ -53,7 +57,17 @@ describe('AuthorizationController', () => {
 
     expect(res.status).toHaveBeenCalledWith(302);
     expect(res.redirect).toHaveBeenCalledWith(
-      `${frontEndUrl}/authorized?t=${fakeToken}`,
+      `${frontEndUrl}/authorized?t=${fakeToken}&r=${fakeRefreshToken}`,
     );
+  });
+
+  it('should refresh the token', async () => {
+    const res = createMock<FastifyReply>();
+    await controller.refreshToken('refresh-token', res);
+
+    expect(res.send).toHaveBeenCalledWith({
+      refresh_token: fakeRefreshToken,
+      token: fakeToken,
+    });
   });
 });

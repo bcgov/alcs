@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from '../application/application.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 
 @Component({
