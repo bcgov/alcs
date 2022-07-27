@@ -1,15 +1,36 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
+import { Repository } from 'typeorm';
 import { ConfigModule } from '../../common/config/config.module';
 import { BusinessDayService } from './business-day.service';
+import { HolidayEntity } from './holiday.entity';
 
 describe('BusinessDayService', () => {
   let service: BusinessDayService;
+  let mockHolidayRespostory: DeepMocked<Repository<HolidayEntity>>;
 
   beforeEach(async () => {
+    mockHolidayRespostory = createMock<Repository<HolidayEntity>>();
+
+    mockHolidayRespostory.find.mockResolvedValue([
+      {
+        day: new Date('2022-06-15'),
+        name: 'mock-holiday',
+        uuid: 'mock-uuid',
+      },
+    ]);
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
-      providers: [BusinessDayService],
+      providers: [
+        BusinessDayService,
+        {
+          provide: getRepositoryToken(HolidayEntity),
+          useValue: mockHolidayRespostory,
+        },
+      ],
     }).compile();
 
     service = module.get<BusinessDayService>(BusinessDayService);
@@ -57,5 +78,13 @@ describe('BusinessDayService', () => {
 
     const calculatedDays = service.calculateDays(startDate, endDate);
     expect(calculatedDays).toEqual(12);
+  });
+
+  it('should have 4 business days when one day in the week is a holiday', () => {
+    const startDate = dayjs('2022-06-11T00:00:00.000Z').toDate();
+    const endDate = dayjs('2022-06-18T00:00:00.000Z').toDate();
+
+    const calculatedDays = service.calculateDays(startDate, endDate);
+    expect(calculatedDays).toEqual(4);
   });
 });

@@ -1,13 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Dayjs } from 'dayjs';
 import * as dayjs from 'dayjs';
 import en from 'dayjs/locale/en';
 import * as utc from 'dayjs/plugin/utc';
-import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
+import { Repository } from 'typeorm';
+import { HolidayEntity } from './holiday.entity';
+
 dayjs.extend(utc);
 
 @Injectable()
 export class BusinessDayService {
-  constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {}
+  private holidays: Dayjs[] = [];
+
+  constructor(
+    @InjectRepository(HolidayEntity)
+    private readonly applicationRepository: Repository<HolidayEntity>,
+  ) {
+    this.loadHolidays();
+  }
 
   calculateDays(startDate: Date, endDate: Date) {
     //Change startOf('week') to go to Monday instead of Sunday
@@ -41,8 +52,28 @@ export class BusinessDayService {
     }
 
     //Subtract Holidays
-    //TODO: Count holidays that fall between these two dates using inBetween
+    const holidaysPassed = this.calculateHolidays(start, end);
 
-    return businessDaysBetween + startWeekBusinessDays + endWeekBusinessDays;
+    return (
+      businessDaysBetween +
+      startWeekBusinessDays +
+      endWeekBusinessDays -
+      holidaysPassed
+    );
+  }
+
+  private async loadHolidays() {
+    const entities = await this.applicationRepository.find();
+    this.holidays = entities.map((entity) => dayjs(entity.day));
+  }
+
+  private calculateHolidays(startDate: Dayjs, endDate: Dayjs) {
+    let totalHolidays = 0;
+    for (const holiday of this.holidays) {
+      if (startDate.isBefore(holiday) && endDate.isAfter(holiday)) {
+        totalHolidays += 1;
+      }
+    }
+    return totalHolidays;
   }
 }
