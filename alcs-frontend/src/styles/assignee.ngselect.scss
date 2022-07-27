@@ -1,9 +1,14 @@
 // Not ng-select styles must be overridden in global css
 
-.ng-select.assignee .ng-select-container {
-    padding-left: 5px;
-    .ng-value-container  {
+.ng-select.card-assignee .ng-select-container {
+    .ng-value-container  {    
         margin-top: 15px;
+
+        .ng-value .ng-star-inserted {
+            font-size: 1.1em !important;
+            
+        }
+        
         .ng-placeholder {
             bottom: 10px;
         }
