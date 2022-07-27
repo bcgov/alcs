@@ -1,0 +1,5 @@
+// Not ng-select styles must be overridden in global css
+
+.ng-select.assignee .ng-select-container .ng-value-container  {
+    margin-top: 7px;
+  }

@@ -1,17 +1,16 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApplicationDetailedDto } from '../application/application.dto';
-import { UserDto } from '../../services/user/user.dto';
-
-import { CardDetailDialogComponent } from './card-detail-dialog.component';
-import { ApplicationStatusDto } from '../application/application-status.dto';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UserDto } from '../../services/user/user.dto';
+import { ApplicationStatusDto } from '../application/application-status.dto';
+import { ApplicationDetailedDto } from '../application/application.dto';
+import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
   let component: CardDetailDialogComponent;

@@ -1,4 +1,4 @@
-div{
+div {
     margin: 10px;
 }
   
@@ -24,4 +24,10 @@ div{
 
 .italic {
   font-style: italic;
+}
+
+.assignee {
+  .assignee-card-email {
+    font-size: 0.9em !important;
+  }
 }

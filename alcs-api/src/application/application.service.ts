@@ -39,9 +39,7 @@ export class ApplicationService {
     applicationEntity.title = application.title;
     applicationEntity.body = application.body;
     applicationEntity.statusUuid = application.statusUuid;
-    applicationEntity.assigneeUuid = application.assigneeUuid
-      ? application.assigneeUuid
-      : null;
+    applicationEntity.assigneeUuid = application.assigneeUuid;
 
     await this.applicationRepository.save(applicationEntity);
 

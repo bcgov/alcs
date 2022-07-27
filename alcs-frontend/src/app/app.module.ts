@@ -1,12 +1,17 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminComponent } from './features/admin/admin.component';
@@ -20,11 +25,7 @@ import { CardComponent } from './shared/card/card.component';
 import { DragDropBoardComponent } from './shared/drag-drop-board/drag-drop-board.component';
 import { StatusFilterPipe } from './shared/drag-drop-board/status-filter.pipe';
 import { FooterComponent } from './shared/footer/footer.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './shared/header/header.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatFormFieldModule,
     MatDividerModule,
     MatInputModule,
-    MatSelectModule,
+    NgSelectModule,
+    NgOptionHighlightModule,
   ],
   providers: [
     AuthenticationService,
@@ -62,4 +64,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private config: NgSelectConfig) {
+    this.config.notFoundText = 'No results';
+  }
+}

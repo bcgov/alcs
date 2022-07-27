@@ -14,22 +14,27 @@
     <mat-label>Applicant:</mat-label>
     <p class="card-applicant">Dart Placeholder</p>
   </div>
-  <mat-form-field class="card-assignee full-width" appearance="fill">
-    <mat-label>Assignee</mat-label>
-    <mat-select
-      placeholder="Select one"
-      [(value)]="selectedAssigneeEmail"
-      (selectionChange)="onAssigneeSelected($event.value)"
+
+  <div>
+    <ng-select
+      class="assignee"
+      [items]="$users | async"
+      placeholder="Assignee"
+      bindLabel="name"
+      bindValue="name"
+      [(ngModel)]="selectedAssigneeName"
+      [searchFn]="filterAssigneeList"
+      (change)="onAssigneeSelected($event)"
     >
-      <div>
-        <input type="text" (keyup)="filterAssigneeList($event)" matInput placeholder="Start typing" />
-      </div>
-      <mat-option [value]="">None</mat-option>
-      <mat-option *ngFor="let option of filteredUsers" [value]="option.email">
-        {{ option.email }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+        <div class="card-body">
+          <h5 [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</h5>
+          <p class="assignee-card-email" [ngOptionHighlight]="search" class="assignee-card-email">{{ item.email }}</p>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+
   <div class="flex-container">
     <div class="flex-child">
       <mat-label>Active days:</mat-label>
@@ -48,13 +53,16 @@
     <mat-label>Details:</mat-label>
     <p class="card-details">{{ currentCard.body }}</p>
   </div>
-
-  <mat-divider></mat-divider>
+  <div>
+    <mat-divider></mat-divider>
+  </div>
   <div class="card-comments-wrapper">
     <mat-label>Comments</mat-label>
     <p>Placeholder comments</p>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
+  <div>
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
 </mat-dialog-actions>
