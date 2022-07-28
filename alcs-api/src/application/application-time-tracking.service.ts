@@ -43,29 +43,8 @@ export class ApplicationTimeTrackingService {
   private async getApplicationPausedTimes(applicationUuids: string[]) {
     const pausedTimes = (await this.applicationPausedRepository.query(
       `
-        SELECT
-            application_uuid,
-            (SUM(
-                GREATEST( ---Take greater of calculated time or 1 day to round up
-                    EXTRACT(
-                        epoch FROM (COALESCE(end_date, NOW()) - start_date)  ---coalesce to provide end_date as now if null
-                    ),
-                    (60 * 60 * 24)::NUMERIC) --- 1 day
-                )) / (60 * 60 * 24) AS days --- divide by 1 day in MS to get days
-        FROM (
-            SELECT
-                application_uuid,
-                max(end_date) AS end_date, ---Select by max end date, and group by start date, this gets the longest range for each start date
-                start_date
-            FROM
-                application_paused
-            WHERE application_uuid in ($1)
-            GROUP BY
-                start_date,
-                application_uuid) AS paused
-        GROUP BY
-            application_uuid;`,
-      [applicationUuids.join(', ')],
+        SELECT * from calculate_paused_time($1)`,
+      [`{${applicationUuids.join(', ')}}`],
     )) as { application_uuid: string; days: string }[];
 
     const results = new Map<string, number>();

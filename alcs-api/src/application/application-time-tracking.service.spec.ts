@@ -2,7 +2,6 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BusinessDayModule } from '../providers/business-days/business-day.module';
 import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
