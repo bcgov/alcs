@@ -86,7 +86,6 @@ export class ApplicationSubscriber
         },
         {
           auditUpdatedBy: user.uuid,
-          auditUpdatedAt: Date.now(),
           endDate: new Date(),
         },
       );

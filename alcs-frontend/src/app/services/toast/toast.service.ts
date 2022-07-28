@@ -25,7 +25,6 @@ export class ToastService {
 
   showErrorToast(text: string, action: string = '') {
     this.snackBar.open(text, action, {
-      duration: this.TOAST_DURATION,
       panelClass: 'error',
     });
   }
