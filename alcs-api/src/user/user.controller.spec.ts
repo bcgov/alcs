@@ -55,7 +55,6 @@ describe('UserController', () => {
   it('should call listUser on the service', async () => {
     mockService.listUsers.mockResolvedValue([mockRes]);
     const res = await controller.getUsers();
-    console.log(res);
     expect(res).toEqual([mockRes]);
     expect(mockService.listUsers).toHaveBeenCalled();
   });
