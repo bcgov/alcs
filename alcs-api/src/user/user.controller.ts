@@ -1,13 +1,12 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { Public } from 'nest-keycloak-connect';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ANY_AUTH_ROLE, AUTH_ROLE } from '../common/enum';
-import { CreateOrUpdateUserDto, UserDto } from './user.dto';
+import { UserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -25,14 +24,6 @@ export class UserController {
   async getUsers() {
     const users = await this.userService.listUsers();
     return this.userMapper.mapArrayAsync(users, User, UserDto);
-  }
-
-  @Post()
-  @UserRoles(AUTH_ROLE.ADMIN)
-  @Public()
-  async createUser(@Body() dto: CreateOrUpdateUserDto) {
-    const user = await this.userService.createUser(dto);
-    return this.userMapper.mapAsync(user, User, UserDto);
   }
 
   @Delete()

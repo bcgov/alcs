@@ -1,6 +1,9 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleGuard } from '../common/authorization/role.guard';
+import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -16,17 +19,31 @@ describe('UserController', () => {
   beforeEach(async () => {
     mockService = createMock<UserService>();
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
+      controllers: [UserController, UserProfile],
       providers: [
         {
           provide: UserService,
           useValue: mockService,
         },
       ],
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
     }).compile();
 
     mockRes = {
       email: 'bruce@wayne.com',
+      name: 'bruce',
+      displayName: 'bruce wayne',
+      identityProvider: 'test',
+      preferredUsername: 'wayne',
+      givenName: 'bruce',
+      familyName: 'wayne',
+      idirUserGuid: '001bat',
+      idirUserName: 'bat',
+      initials: 'BW',
     };
 
     controller = module.get<UserController>(UserController);
@@ -35,17 +52,10 @@ describe('UserController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-
-  it('should call createUser on the service', async () => {
-    mockService.createUser.mockResolvedValue(mockRes);
-    const res = await controller.createUser(mockRes);
-    expect(res).toEqual(mockRes);
-    expect(mockService.createUser).toHaveBeenCalled();
-  });
-
   it('should call listUser on the service', async () => {
     mockService.listUsers.mockResolvedValue([mockRes]);
     const res = await controller.getUsers();
+    console.log(res);
     expect(res).toEqual([mockRes]);
     expect(mockService.listUsers).toHaveBeenCalled();
   });
