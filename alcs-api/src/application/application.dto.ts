@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserDto } from '../user/user.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
@@ -27,6 +27,9 @@ export class ApplicationDto {
   activeDays: number;
 
   pausedDays: number;
+
+  @IsBoolean()
+  paused: boolean;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
@@ -49,4 +52,8 @@ export class ApplicationPartialDto {
 
   @IsOptional()
   assigneeUuid?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  paused?: boolean;
 }

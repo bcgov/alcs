@@ -14,6 +14,7 @@ describe('DragDropBoardComponent', () => {
     type: 'LUP',
     title: 'Im Title',
     activeDays: 2,
+    paused: false,
   };
 
   beforeEach(async () => {

@@ -1,8 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
   BaseEntity,
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   ColumnOptions,
   CreateDateColumn,
@@ -54,20 +52,9 @@ export abstract class Base extends BaseEntity {
   })
   auditUpdatedAt?: number;
 
-  // TODO: set proper values once we have authentication
   @Column({ nullable: false })
   auditCreatedBy: string;
 
   @Column({ nullable: true })
   auditUpdatedBy?: string;
-
-  @BeforeInsert()
-  public setCreatedBy() {
-    this.auditCreatedBy = 'setAuditCreatedBy here';
-  }
-
-  @BeforeUpdate()
-  public setAuditUpdatedBy() {
-    this.auditCreatedBy = 'setAuditUpdatedBy here';
-  }
 }

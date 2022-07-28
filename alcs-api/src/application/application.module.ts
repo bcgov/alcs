@@ -3,8 +3,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { BusinessDayModule } from '../providers/business-days/business-day.module';
-import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationHistory } from './application-history.entity';
+import { ApplicationPaused } from './application-paused.entity';
+import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationStatusController } from './application-status/application-status.controller';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
@@ -19,12 +20,14 @@ import { ApplicationService } from './application.service';
       ApplicationStatus,
       Application,
       ApplicationHistory,
+      ApplicationPaused,
     ]),
     BusinessDayModule,
   ],
   providers: [
     ApplicationService,
     ApplicationStatusService,
+    ApplicationTimeTrackingService,
     ApplicationSubscriber,
     {
       provide: APP_GUARD,

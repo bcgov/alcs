@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { EntityHistory } from '../common/entities/history.entity';
 import { Application } from './application.entity';
 

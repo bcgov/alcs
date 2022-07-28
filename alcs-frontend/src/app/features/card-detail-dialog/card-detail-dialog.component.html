@@ -3,7 +3,7 @@
   <span>
     in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
   </span>
-  <span class="pull-right card-state">{{ paused ? 'Paused' : 'Active' }}</span>
+  <span class="pull-right card-state">{{ currentCard.paused ? 'Paused' : 'Active' }}</span>
 </div>
 <mat-dialog-content>
   <div>
@@ -46,7 +46,9 @@
     </div>
     <div class="flex-chil small">
       <mat-label></mat-label>
-      <button class="card-state-btn pull-right" (click)="onToggle()">{{ paused ? 'Activate' : 'Pause' }}</button>
+      <button class="card-state-btn pull-right" (click)="onToggleActive()">
+        {{ currentCard.paused ? 'Activate' : 'Pause' }}
+      </button>
     </div>
   </div>
   <div>

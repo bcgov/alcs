@@ -5,6 +5,7 @@ import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { ApplicationHistory } from './application-history.entity';
+import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationSubscriber } from './application.subscriber';
 import { Application } from './application.entity';
 
@@ -16,9 +17,12 @@ describe('ApplicationSubscriber', () => {
   let subscribersArray;
 
   let updateEvent: DeepMocked<UpdateEvent<Application>>;
-  let oldApplication: DeepMocked<Application>;
-  let newApplication: DeepMocked<Application>;
+  let oldApplication: Application;
+  let newApplication: Application;
   let mockManager: DeepMocked<EntityManager>;
+
+  const oldStatus = 'old-status';
+  const newStatus = 'new-status';
 
   beforeAll(() => {
     jest.useFakeTimers({
@@ -36,20 +40,23 @@ describe('ApplicationSubscriber', () => {
       uuid: 'fake-uuid',
     } as User);
     updateEvent = createMock<UpdateEvent<Application>>();
-    oldApplication = createMock<Application>();
-    newApplication = createMock<Application>();
+    oldApplication = {} as Application;
+    newApplication = {} as Application;
     mockManager = createMock<EntityManager>();
 
     mockDataSource.subscribers = subscribersArray;
 
-    oldApplication.statusUuid = 'old-status';
+    oldApplication.statusUuid = oldStatus;
     oldApplication.auditUpdatedAt = 10001;
-    newApplication.statusUuid = 'new-status';
+    oldApplication.paused = false;
+    newApplication.statusUuid = newStatus;
+    newApplication.paused = false;
 
     updateEvent.databaseEntity = oldApplication;
     updateEvent.entity = newApplication;
     updateEvent.manager = mockManager;
     mockManager.save.mockResolvedValue({});
+    mockManager.update.mockResolvedValue({} as any);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -86,41 +93,6 @@ describe('ApplicationSubscriber', () => {
     expect(applicationSubscriber.listenTo()).toEqual(Application);
   });
 
-  it('should create a new history application when status is changed', async () => {
-    const endDate = Date.now();
-
-    await applicationSubscriber.beforeUpdate(updateEvent);
-
-    expect(mockManager.save).toHaveBeenCalled();
-    const savedValue = mockManager.save.mock
-      .calls[0][0] as unknown as ApplicationHistory;
-    expect(savedValue.startDate).toEqual(oldApplication.auditUpdatedAt);
-    expect(savedValue.endDate).toEqual(endDate);
-    expect(savedValue.statusUuid).toEqual(oldApplication.statusUuid);
-  });
-
-  it('should fallback to createdAt if old entity has no updatedAt', async () => {
-    updateEvent.databaseEntity = {
-      auditUpdatedAt: null,
-      auditCreatedAt: 10002,
-    } as Application;
-
-    await applicationSubscriber.beforeUpdate(updateEvent);
-
-    expect(mockManager.save).toHaveBeenCalled();
-    const savedValue = mockManager.save.mock
-      .calls[0][0] as unknown as ApplicationHistory;
-    expect(savedValue.startDate).toEqual(10002);
-  });
-
-  it('should not save anything if status is the same', async () => {
-    oldApplication.statusUuid = 'same-status';
-    newApplication.statusUuid = 'same-status';
-
-    await applicationSubscriber.beforeUpdate(updateEvent);
-    expect(mockManager.save).not.toHaveBeenCalled();
-  });
-
   it('should throw an error if user is not found', async () => {
     mockUserService.getUser.mockResolvedValue(undefined);
 
@@ -129,5 +101,58 @@ describe('ApplicationSubscriber', () => {
     ).rejects.toMatchObject(
       new Error(`User not found from token! Has their email changed?`),
     );
+  });
+
+  describe('ApplicationHistory', () => {
+    it('should create a new history application when status is changed', async () => {
+      const endDate = Date.now();
+
+      await applicationSubscriber.beforeUpdate(updateEvent);
+
+      expect(mockManager.save).toHaveBeenCalled();
+      const savedValue = mockManager.save.mock
+        .calls[0][0] as unknown as ApplicationHistory;
+      expect(savedValue.startDate).toEqual(oldApplication.auditUpdatedAt);
+      expect(savedValue.endDate).toEqual(endDate);
+      expect(savedValue.statusUuid).toEqual(oldApplication.statusUuid);
+    });
+
+    it('should fallback to createdAt if old entity has no updatedAt', async () => {
+      updateEvent.databaseEntity = {
+        auditUpdatedAt: null,
+        auditCreatedAt: 10002,
+      } as Application;
+
+      await applicationSubscriber.beforeUpdate(updateEvent);
+
+      expect(mockManager.save).toHaveBeenCalled();
+      const savedValue = mockManager.save.mock
+        .calls[0][0] as unknown as ApplicationHistory;
+      expect(savedValue.startDate).toEqual(10002);
+    });
+
+    it('should not save anything if status is the same', async () => {
+      oldApplication.statusUuid = 'same-status';
+      newApplication.statusUuid = 'same-status';
+
+      await applicationSubscriber.beforeUpdate(updateEvent);
+      expect(mockManager.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ApplicationPaused', () => {
+    it('should create a new paused entity when paused is started', async () => {
+      updateEvent.databaseEntity.paused = false;
+      updateEvent.entity.paused = true;
+      updateEvent.entity.statusUuid = oldStatus;
+
+      await applicationSubscriber.beforeUpdate(updateEvent);
+
+      expect(mockManager.save).toHaveBeenCalled();
+      const savedValue = mockManager.save.mock
+        .calls[0][0] as unknown as ApplicationPaused;
+      expect(savedValue.application).toEqual(newApplication);
+      expect(savedValue.auditCreatedBy).toEqual('fake-uuid');
+    });
   });
 });

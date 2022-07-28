@@ -42,6 +42,7 @@ describe('CardDetailDialogComponent', () => {
     assignee: mockAssignee,
     activeDays: 0,
     pausedDays: 0,
+    paused: true,
   };
 
   beforeEach(async () => {
@@ -82,7 +83,7 @@ describe('CardDetailDialogComponent', () => {
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();
     expect(compiled.querySelector('.card-active-days').textContent).toEqual('10 Placeholder');
     expect(compiled.querySelector('.card-paused-days').textContent).toEqual('5 Placeholder');
-    expect(compiled.querySelector('.card-state-btn').textContent).toEqual('Activate');
+    expect(compiled.querySelector('.card-state-btn').textContent.trim()).toEqual('Activate');
     expect(compiled.querySelector('.card-details').textContent).toEqual(mockCardDetail.body);
     expect(compiled.querySelector('.card-comments-wrapper')).toBeTruthy();
   });
