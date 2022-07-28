@@ -1,13 +1,14 @@
+import { AutoMap } from '@automapper/classes';
 import {
   BaseEntity,
-  DeleteDateColumn,
-  CreateDateColumn,
-  ColumnOptions,
-  UpdateDateColumn,
-  Column,
   BeforeInsert,
   BeforeUpdate,
+  Column,
+  ColumnOptions,
+  CreateDateColumn,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export const getTimestampColumnsOptions = (): ColumnOptions => {
@@ -29,6 +30,7 @@ export abstract class Base extends BaseEntity {
   // id: number;
 
   // this is a public column, this is safe to expose to consumers
+  @AutoMap()
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
