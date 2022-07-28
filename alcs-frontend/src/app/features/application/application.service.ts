@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ToastService } from '../../services/toast/toast.service';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from './application.dto';
 
@@ -9,7 +10,7 @@ import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from '.
   providedIn: 'root',
 })
 export class ApplicationService implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastService: ToastService) {}
 
   public $applications = new BehaviorSubject<ApplicationDto[]>([]);
   public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
@@ -37,15 +38,19 @@ export class ApplicationService implements OnInit {
   }
 
   async updateApplication(application: ApplicationPartialDto) {
-    const updatedApplication = await firstValueFrom(
-      this.http.patch<ApplicationDto>(`${environment.apiRoot}/application`, application)
-    );
-    this.applications.forEach((app) => {
-      if (app.fileNumber === updatedApplication.fileNumber) {
-        Object.assign(app, updatedApplication);
-      }
-    });
-    this.$applications.next(this.applications);
+    try {
+      const updatedApplication = await firstValueFrom(
+        this.http.patch<ApplicationDto>(`${environment.apiRoot}/application`, application)
+      );
+      this.applications.forEach((app) => {
+        if (app.fileNumber === updatedApplication.fileNumber) {
+          Object.assign(app, updatedApplication);
+        }
+      });
+      this.$applications.next(this.applications);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to update Application');
+    }
   }
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
