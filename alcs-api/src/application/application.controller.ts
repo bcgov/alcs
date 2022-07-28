@@ -22,7 +22,7 @@ import { ApplicationTimeTrackingService } from './application-time-tracking.serv
 import {
   ApplicationDetailedDto,
   ApplicationDto,
-  ApplicationPartialDto,
+  ApplicationUpdateDto,
 } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -53,6 +53,7 @@ export class ApplicationController {
     return {
       ...mappedApplication[0],
       statusDetails: application.status,
+      typeDetails: application.type,
     };
   }
 
@@ -68,7 +69,7 @@ export class ApplicationController {
   @Patch()
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
-    @Body() application: ApplicationPartialDto,
+    @Body() application: ApplicationUpdateDto,
   ): Promise<ApplicationDto> {
     const existingApplication = await this.applicationService.get(
       application.fileNumber,
@@ -91,7 +92,7 @@ export class ApplicationController {
     const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       title: application.title,
-      body: application.body,
+      applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
@@ -121,7 +122,9 @@ export class ApplicationController {
     };
   }
 
-  private async mapApplicationsToDtos(applications: Application[]) {
+  private async mapApplicationsToDtos(
+    applications: Application[],
+  ): Promise<ApplicationDto[]> {
     const appTimeMap =
       await this.applicationPausedService.fetchApplicationActiveTimes(
         applications,

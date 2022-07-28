@@ -10,6 +10,7 @@ import { ApplicationStatusController } from './application-status/application-st
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
+import { ApplicationType } from './application-type/application-type.entity';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -19,6 +20,7 @@ import { ApplicationSubscriber } from './application.subscriber';
   imports: [
     TypeOrmModule.forFeature([
       ApplicationStatus,
+      ApplicationType,
       Application,
       ApplicationHistory,
       ApplicationPaused,

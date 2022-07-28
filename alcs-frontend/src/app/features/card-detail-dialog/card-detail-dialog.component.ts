@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../application/application.dto';
-import { ApplicationService } from '../application/application.service';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -43,14 +43,23 @@ export class CardDetailDialogComponent implements OnInit {
   onAssigneeSelected(assignee: UserDto) {
     this.selectedAssignee = assignee;
     this.currentCard.assignee = assignee;
-    this.updateCard(this.currentCard);
+    this.updateCard({
+      assignee,
+    });
   }
 
-  updateCard(currentCard: ApplicationPartialDto) {
+  onUpdateTextField(cardProperty: string, newValue: string) {
+    const updateObject = {
+      [cardProperty]: newValue,
+    };
+    this.updateCard(updateObject);
+  }
+
+  updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
     this.applicationService
       .updateApplication({
-        fileNumber: currentCard.fileNumber,
-        assigneeUuid: currentCard?.assignee?.uuid || null,
+        ...changes,
+        fileNumber: this.currentCard.fileNumber,
       })
       .then((r) => {
         this.toastService.showSuccessToast('Application Updated');

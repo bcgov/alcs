@@ -29,6 +29,7 @@ import { DragDropBoardComponent } from './shared/drag-drop-board/drag-drop-board
 import { StatusFilterPipe } from './shared/drag-drop-board/status-filter.pipe';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
+import { InlineEditComponent } from './shared/inline-edit/inline-edit.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { HeaderComponent } from './shared/header/header.component';
     AuthorizationComponent,
     CardDetailDialogComponent,
     CardComponent,
+    InlineEditComponent,
   ],
   imports: [
     BrowserModule,

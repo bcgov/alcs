@@ -12,7 +12,17 @@
   </div>
   <div>
     <mat-label>Applicant:</mat-label>
-    <p class="card-applicant">Dart Placeholder</p>
+    <div class="card-applicant">
+      <app-inline-edit
+        value="{{ currentCard.applicant }}"
+        (save)="onUpdateTextField('applicant', $event)"
+      ></app-inline-edit>
+    </div>
+  </div>
+
+  <div>
+    <mat-label>Type:</mat-label>
+    <p class="card-type">{{ currentCard.typeDetails.label }}</p>
   </div>
 
   <div>
@@ -38,22 +48,18 @@
   <div class="flex-container">
     <div class="flex-child">
       <mat-label>Active days:</mat-label>
-      <p class="card-active-days">10 Placeholder</p>
+      <p class="card-active-days">{{ currentCard.activeDays }}</p>
     </div>
     <div class="flex-child">
       <mat-label>Paused days:</mat-label>
-      <p class="card-paused-days">5 Placeholder</p>
+      <p class="card-paused-days">{{ currentCard.pausedDays }}</p>
     </div>
-    <div class="flex-chil small">
+    <div class="flex-child small">
       <mat-label></mat-label>
       <button class="card-state-btn pull-right" (click)="onToggleActive()">
         {{ currentCard.paused ? 'Activate' : 'Pause' }}
       </button>
     </div>
-  </div>
-  <div>
-    <mat-label>Details:</mat-label>
-    <p class="card-details">{{ currentCard.body }}</p>
   </div>
   <div>
     <mat-divider></mat-divider>

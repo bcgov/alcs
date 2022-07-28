@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ToastService } from '../../services/toast/toast.service';
+import { ToastService } from '../toast/toast.service';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from './application.dto';
 

@@ -1,7 +1,14 @@
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { AutoMap } from '@automapper/classes';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserDto } from '../user/user.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
+import { ApplicationTypeDto } from './application-type/application-type.dto';
 
 export class ApplicationDto {
   @AutoMap()
@@ -17,14 +24,14 @@ export class ApplicationDto {
   @AutoMap()
   @IsNotEmpty()
   @IsString()
-  body: string;
+  applicant: string;
 
   @IsNotEmpty()
   @IsString()
   status: string;
 
   @AutoMap()
-  @IsString()
+  @IsUUID()
   assigneeUuid?: string;
 
   @AutoMap()
@@ -39,14 +46,18 @@ export class ApplicationDto {
   @AutoMap()
   @IsBoolean()
   paused: boolean;
+
+  @AutoMap()
+  type: string;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
   @AutoMap()
   statusDetails: ApplicationStatusDto;
+  typeDetails: ApplicationTypeDto;
 }
 
-export class ApplicationPartialDto {
+export class ApplicationUpdateDto {
   @AutoMap()
   @IsNotEmpty()
   @IsString()
@@ -54,18 +65,22 @@ export class ApplicationPartialDto {
 
   @AutoMap()
   @IsOptional()
+  @IsString()
   title?: string;
 
   @AutoMap()
   @IsOptional()
-  body?: string;
+  @IsString()
+  applicant?: string;
 
   @AutoMap()
   @IsOptional()
+  @IsString()
   status?: string;
 
   @AutoMap()
   @IsOptional()
+  @IsUUID()
   assigneeUuid?: string;
 
   @AutoMap()

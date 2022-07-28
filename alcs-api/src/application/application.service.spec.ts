@@ -80,7 +80,7 @@ describe('ApplicationService', () => {
     const payload: Partial<Application> = {
       title: applicationMockEntity.title,
       fileNumber: applicationMockEntity.fileNumber,
-      body: applicationMockEntity.body,
+      applicant: applicationMockEntity.applicant,
       statusUuid: applicationMockEntity.statusUuid,
     };
 
@@ -97,7 +97,7 @@ describe('ApplicationService', () => {
     const payload: Partial<Application> = {
       title: applicationMockEntity.title,
       fileNumber: applicationMockEntity.fileNumber,
-      body: applicationMockEntity.body,
+      applicant: applicationMockEntity.applicant,
       statusUuid: applicationMockEntity.statusUuid,
     };
 

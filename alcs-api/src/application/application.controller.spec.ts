@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RoleGuard } from '../common/authorization/role.guard';
+import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
@@ -39,13 +40,14 @@ describe('ApplicationController', () => {
   const mockApplicationDto: ApplicationDto = {
     title: mockApplicationEntity.title,
     fileNumber: mockApplicationEntity.fileNumber,
-    body: mockApplicationEntity.body,
+    applicant: mockApplicationEntity.applicant,
     status: mockApplicationEntity.status.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
     assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
     paused: mockApplicationEntity.paused,
+    type: mockApplicationEntity.type.shortLabel,
   };
 
   beforeEach(async () => {

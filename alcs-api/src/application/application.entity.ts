@@ -11,6 +11,8 @@ import { User } from '../user/user.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { User } from '../user/user.entity';
+import { ApplicationType } from './application-type/application-type.entity';
 
 @Entity()
 export class Application extends Base {
@@ -28,7 +30,7 @@ export class Application extends Base {
 
   @AutoMap()
   @Column()
-  body: string;
+  applicant: string;
 
   @AutoMap()
   @Column({
@@ -52,8 +54,15 @@ export class Application extends Base {
   })
   paused: boolean;
 
-  @ManyToOne((status) => ApplicationStatus)
+  @ManyToOne((status) => ApplicationStatus, {
+    nullable: false,
+  })
   status: ApplicationStatus;
+
+  @ManyToOne((type) => ApplicationType, {
+    nullable: false,
+  })
+  type: ApplicationType;
 
   @AutoMap()
   @ManyToOne((assignee) => User, { nullable: true })

@@ -5,6 +5,8 @@ import { Application } from './application.entity';
 
 @Injectable()
 export class ApplicationService {
+  private DEFAULT_RELATIONS = ['status', 'type', 'assignee'];
+
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,
@@ -35,7 +37,7 @@ export class ApplicationService {
     applicationEntity = applicationEntity ?? new Application();
     applicationEntity.fileNumber = application.fileNumber;
     applicationEntity.title = application.title;
-    applicationEntity.body = application.body;
+    applicationEntity.applicant = application.applicant;
     applicationEntity.statusUuid = application.statusUuid;
     applicationEntity.assigneeUuid = application.assigneeUuid;
     applicationEntity.paused = application.paused;
@@ -47,7 +49,7 @@ export class ApplicationService {
       where: {
         uuid: applicationEntity.uuid,
       },
-      relations: ['status', 'assignee'],
+      relations: this.DEFAULT_RELATIONS,
     });
   }
 
@@ -68,7 +70,7 @@ export class ApplicationService {
 
     return await this.applicationRepository.find({
       where: whereClause,
-      relations: ['status', 'assignee'],
+      relations: this.DEFAULT_RELATIONS,
     });
   }
 
@@ -77,7 +79,7 @@ export class ApplicationService {
       where: {
         fileNumber,
       },
-      relations: ['status', 'assignee'],
+      relations: this.DEFAULT_RELATIONS,
     });
   }
 }

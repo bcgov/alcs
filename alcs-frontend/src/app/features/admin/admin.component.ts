@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { ApplicationDto } from '../application/application.dto';
-import { ApplicationService } from '../application/application.service';
+import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
 import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
 
 @Component({
@@ -70,12 +70,12 @@ export class AdminComponent implements OnInit {
   private static mapApplicationDtoToCard(application: ApplicationDto): CardData {
     return {
       status: application.status,
-      title: `${application.fileNumber} (${application.title})`,
+      title: `${application.fileNumber} (${application.applicant})`,
       assigneeInitials: application.assignee
         ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
         : undefined,
       id: application.fileNumber,
-      type: 'LUP',
+      type: application.type,
       activeDays: application.activeDays,
       paused: application.paused,
     };
