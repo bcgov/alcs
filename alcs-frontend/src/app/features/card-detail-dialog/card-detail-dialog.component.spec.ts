@@ -6,6 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserDto } from '../../services/user/user.dto';
 import { ApplicationStatusDto } from '../application/application-status.dto';
@@ -56,6 +57,7 @@ describe('CardDetailDialogComponent', () => {
         MatInputModule,
         MatSelectModule,
         BrowserAnimationsModule,
+        MatSnackBarModule,
       ],
       providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

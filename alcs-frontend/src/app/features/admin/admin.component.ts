@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { ApplicationDto } from '../application/application.dto';
@@ -15,7 +16,11 @@ export class AdminComponent implements OnInit {
   public cards: CardData[] = [];
   public columns: DragDropColumn[] = [];
 
-  constructor(private applicationService: ApplicationService, public dialog: MatDialog) {}
+  constructor(
+    private applicationService: ApplicationService,
+    public dialog: MatDialog,
+    private toastService: ToastService
+  ) {}
 
   async ngOnInit() {
     this.applicationService.$applicationStatuses.subscribe((statuses) => {
@@ -58,8 +63,7 @@ export class AdminComponent implements OnInit {
         status: $event.status,
       })
       .then((r) => {
-        //TODO: Move this to a toast
-        console.log('Application Updated');
+        this.toastService.showSuccessToast('Application Updated');
       });
   }
 

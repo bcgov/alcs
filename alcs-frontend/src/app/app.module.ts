@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
@@ -22,6 +23,7 @@ import { NotFoundComponent } from './features/errors/not-found/not-found.compone
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
+import { ToastService } from './services/toast/toast.service';
 import { CardComponent } from './shared/card/card.component';
 import { DragDropBoardComponent } from './shared/drag-drop-board/drag-drop-board.component';
 import { StatusFilterPipe } from './shared/drag-drop-board/status-filter.pipe';
@@ -58,9 +60,11 @@ import { HeaderComponent } from './shared/header/header.component';
     NgSelectModule,
     NgOptionHighlightModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   providers: [
     AuthenticationService,
+    ToastService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
   ],
