@@ -45,6 +45,7 @@ const initApplicationMockEntity = (): Application => {
   applicationEntity.statusUuid = applicationEntity.status.uuid;
   applicationEntity.assigneeUuid = '1111-1111-1111';
   applicationEntity.assignee = initAssigneeMockEntity();
+  applicationEntity.paused = false;
 
   return applicationEntity;
 };

@@ -63,7 +63,7 @@ export class AdminComponent implements OnInit {
       });
   }
 
-  private static mapApplicationDtoToCard(application: ApplicationDto) {
+  private static mapApplicationDtoToCard(application: ApplicationDto): CardData {
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.title})`,
@@ -73,6 +73,7 @@ export class AdminComponent implements OnInit {
       id: application.fileNumber,
       type: 'LUP',
       activeDays: application.activeDays,
+      paused: application.paused,
     };
   }
 }

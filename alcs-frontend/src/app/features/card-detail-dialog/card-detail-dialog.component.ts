@@ -56,10 +56,16 @@ export class CardDetailDialogComponent implements OnInit {
       });
   }
 
-  // placeholders
-  paused: boolean = true;
-
-  onToggle() {
-    this.paused = !this.paused;
+  onToggleActive() {
+    this.currentCard.paused = !this.currentCard.paused;
+    this.applicationService
+      .updateApplication({
+        fileNumber: this.currentCard.fileNumber,
+        paused: !this.currentCard.paused,
+      })
+      .then((r) => {
+        //TODO: Move this to a toast
+        console.log('Application Active Updated');
+      });
   }
 }

@@ -7,6 +7,7 @@ export interface CardData {
   status: string;
   assigneeInitials?: string;
   activeDays: number;
+  paused: boolean;
 }
 
 @Component({

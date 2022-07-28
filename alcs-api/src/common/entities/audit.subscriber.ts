@@ -6,14 +6,13 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { UserService } from '../../user/user.service';
-import { Base } from './base.entity';
 
 export const SYSTEM_ID = 'alcs-api';
 
 @EventSubscriber()
 export class AuditSubscriber implements EntitySubscriberInterface {
   constructor(
-    dataSource: DataSource,
+    private dataSource: DataSource,
     private readonly cls: ClsService,
     private userService: UserService,
   ) {

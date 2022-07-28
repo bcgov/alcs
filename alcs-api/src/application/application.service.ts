@@ -40,6 +40,7 @@ export class ApplicationService {
     applicationEntity.body = application.body;
     applicationEntity.statusUuid = application.statusUuid;
     applicationEntity.assigneeUuid = application.assigneeUuid;
+    applicationEntity.paused = application.paused;
 
     await this.applicationRepository.save(applicationEntity);
 

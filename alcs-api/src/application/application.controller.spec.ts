@@ -7,6 +7,10 @@ import {
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
 import { BusinessDayService } from '../providers/business-days/business-day.service';
+import {
+  ApplicationTimeTrackingService,
+  ApplicationTimeData,
+} from './application-time-tracking.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationController } from './application.controller';
@@ -22,7 +26,7 @@ jest.mock('../common/authorization/role.guard', () => ({
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: ApplicationService;
-  let mockBusinessDays: DeepMocked<BusinessDayService>;
+  let mockApplicationPaused: DeepMocked<ApplicationTimeTrackingService>;
   const applicationStatusService = createMock<ApplicationStatusService>();
   const mockApplicationEntity = initApplicationMockEntity();
 
@@ -35,10 +39,11 @@ describe('ApplicationController', () => {
     assignee: mockApplicationEntity.assignee,
     activeDays: 2,
     pausedDays: 0,
+    paused: mockApplicationEntity.paused,
   };
 
   beforeEach(async () => {
-    mockBusinessDays = createMock<BusinessDayService>();
+    mockApplicationPaused = createMock<ApplicationTimeTrackingService>();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -49,8 +54,8 @@ describe('ApplicationController', () => {
           useValue: applicationStatusService,
         },
         {
-          provide: BusinessDayService,
-          useValue: mockBusinessDays,
+          provide: ApplicationTimeTrackingService,
+          useValue: mockApplicationPaused,
         },
         {
           provide: getRepositoryToken(Application),
@@ -64,6 +69,15 @@ describe('ApplicationController', () => {
       createMock<ApplicationStatus>(),
     );
     controller = module.get<ApplicationController>(ApplicationController);
+
+    const mockTimesMap = new Map<string, ApplicationTimeData>();
+    mockTimesMap.set(mockApplicationEntity.uuid, {
+      activeDays: 2,
+      pausedDays: 0,
+    });
+    mockApplicationPaused.fetchApplicationActiveTimes.mockResolvedValue(
+      mockTimesMap,
+    );
   });
 
   it('should be defined', () => {
@@ -90,14 +104,16 @@ describe('ApplicationController', () => {
     );
   });
 
-  it('should add business days to getAll', async () => {
+  it('should add active and paused days to getAll', async () => {
     jest
       .spyOn(applicationService, 'getAll')
       .mockImplementation(async () => [mockApplicationEntity]);
 
     const res = await controller.getAll();
 
-    expect(res).toStrictEqual([mockApplicationDto]);
-    expect(mockBusinessDays.calculateDays).toHaveBeenCalled();
+    expect(res[0].pausedDays).toEqual(0);
+    expect(
+      mockApplicationPaused.fetchApplicationActiveTimes,
+    ).toHaveBeenCalled();
   });
 });
