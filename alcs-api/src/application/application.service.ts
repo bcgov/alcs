@@ -1,12 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Application } from './application.entity';
 
 @Injectable()
 export class ApplicationService {
-  private readonly logger: Logger = new Logger(ApplicationService.name);
-
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,

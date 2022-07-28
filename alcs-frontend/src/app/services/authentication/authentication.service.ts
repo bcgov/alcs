@@ -25,7 +25,7 @@ export class AuthenticationService implements OnInit {
       this.token = token;
       this.refreshToken = refreshToken;
       localStorage.setItem(JWT_TOKEN_KEY, token);
-      localStorage.setItem(REFRESH_TOKEN_KEY, token);
+      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 
       const decodedToken = jwtDecode<JwtPayload>(token);
 
