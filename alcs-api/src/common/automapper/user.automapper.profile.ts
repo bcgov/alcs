@@ -21,8 +21,8 @@ export class UserProfile extends AutomapperProfile {
           (ud) => ud.initials,
           mapFrom(
             (u) =>
-              u.givenName.charAt(0).toUpperCase() +
-              u.familyName.charAt(0).toUpperCase(),
+              u.givenName?.charAt(0).toUpperCase() +
+              u.familyName?.charAt(0).toUpperCase(),
           ),
         ),
       );
