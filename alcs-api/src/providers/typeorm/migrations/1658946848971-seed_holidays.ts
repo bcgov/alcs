@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class seedApplicationStatus1658160165559 implements MigrationInterface {
+export class seedHolidays1658946848971 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`INSERT INTO "public"."holiday_entity" ("uuid", "name", "day") VALUES
       ('481649cb-9b7b-4df2-ab87-0e66a08095bb', 'New Year''s Day', '2022-01-01'),
@@ -26,6 +26,6 @@ export class seedApplicationStatus1658160165559 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`delete from public.application_status`);
+    await queryRunner.query(`delete from public.holiday_entity`);
   }
 }

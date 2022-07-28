@@ -36,6 +36,8 @@ export class pausedCalculationFunction1659032043316
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`delete from public.application_status`);
+    await queryRunner.query(
+      `DROP FUNCTION IF EXISTS calculate_paused_time(p_ids uuid[]);`,
+    );
   }
 }
