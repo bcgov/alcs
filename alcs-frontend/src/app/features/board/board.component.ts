@@ -10,11 +10,11 @@ import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dia
 import { CreateCardDialogComponent } from '../create-card-detail-dialog/create-card-dialog.component';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+  selector: 'app-board',
+  templateUrl: './board.component.html',
+  styleUrls: ['./board.component.scss'],
 })
-export class AdminComponent implements OnInit {
+export class BoardComponent implements OnInit {
   public cards: CardData[] = [];
   public columns: DragDropColumn[] = [];
 
