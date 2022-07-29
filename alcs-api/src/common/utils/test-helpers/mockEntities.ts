@@ -1,5 +1,6 @@
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
+import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
 const initApplicationStatusMockEntity = (): ApplicationStatus => {
@@ -16,20 +17,20 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
 };
 
 const initAssigneeMockEntity = (): User => {
-  const applicationStatus = new User();
-  applicationStatus.familyName = 'familyName';
-  applicationStatus.email = 'email_1@emai.com';
-  applicationStatus.uuid = '1111-1111-1111-1111';
-  applicationStatus.givenName = 'givenName';
-  applicationStatus.identityProvider = 'identityProvider';
-  applicationStatus.name = 'name';
-  applicationStatus.displayName = 'displayName';
-  applicationStatus.preferredUsername = 'preferredUsername';
-  applicationStatus.idirUserGuid = 'idirUserGuid';
-  applicationStatus.idirUserName = 'idirUserName';
-  applicationStatus.auditCreatedAt = 111111111;
-  applicationStatus.auditUpdatedAt = 111111111;
-  return applicationStatus;
+  const user = new User();
+  user.familyName = 'familyName';
+  user.email = 'email_1@emai.com';
+  user.uuid = '1111-1111-1111-1111';
+  user.givenName = 'givenName';
+  user.identityProvider = 'identityProvider';
+  user.name = 'name';
+  user.displayName = 'displayName';
+  user.preferredUsername = 'preferredUsername';
+  user.idirUserGuid = 'idirUserGuid';
+  user.idirUserName = 'idirUserName';
+  user.auditCreatedAt = 111111111;
+  user.auditUpdatedAt = 111111111;
+  return user;
 };
 
 const initApplicationMockEntity = (): Application => {
@@ -50,4 +51,27 @@ const initApplicationMockEntity = (): Application => {
   return applicationEntity;
 };
 
-export { initApplicationStatusMockEntity, initApplicationMockEntity };
+const initAssigneeMockDto = (assignee?: User): UserDto => {
+  const userEntity = assignee ?? initAssigneeMockEntity();
+  const userDto = new UserDto();
+  userDto.familyName = userEntity.familyName;
+  userDto.email = userEntity.email;
+  userDto.uuid = userEntity.uuid;
+  userDto.givenName = userEntity.givenName;
+  userDto.identityProvider = userEntity.identityProvider;
+  userDto.name = userEntity.name;
+  userDto.displayName = userEntity.displayName;
+  userDto.preferredUsername = userEntity.preferredUsername;
+  userDto.idirUserGuid = userEntity.idirUserGuid;
+  userDto.idirUserName = userEntity.idirUserName;
+  userDto.initials =
+    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.familyName.charAt(0).toUpperCase();
+  return userDto;
+};
+
+export {
+  initApplicationStatusMockEntity,
+  initApplicationMockEntity,
+  initAssigneeMockDto,
+};

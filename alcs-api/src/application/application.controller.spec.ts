@@ -1,8 +1,15 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RoleGuard } from '../common/authorization/role.guard';
-import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { UserProfile } from '../common/automapper/user.automapper.profile';
+import {
+  initApplicationMockEntity,
+  initAssigneeMockDto,
+} from '../common/utils/test-helpers/mockEntities';
 import {
   mockKeyCloakProviders,
   repositoryMockFactory,
@@ -35,7 +42,7 @@ describe('ApplicationController', () => {
     body: mockApplicationEntity.body,
     status: mockApplicationEntity.status.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
-    assignee: mockApplicationEntity.assignee,
+    assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
     paused: mockApplicationEntity.paused,
@@ -45,7 +52,7 @@ describe('ApplicationController', () => {
     mockApplicationPaused = createMock<ApplicationTimeTrackingService>();
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ApplicationController],
+      controllers: [ApplicationController, ApplicationProfile, UserProfile],
       providers: [
         ApplicationService,
         {
@@ -61,6 +68,11 @@ describe('ApplicationController', () => {
           useFactory: repositoryMockFactory,
         },
         ...mockKeyCloakProviders,
+      ],
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
       ],
     }).compile();
     applicationService = module.get<ApplicationService>(ApplicationService);

@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import {
   Column,
   CreateDateColumn,
@@ -13,30 +14,37 @@ import { ApplicationStatus } from './application-status/application-status.entit
 
 @Entity()
 export class Application extends Base {
+  @AutoMap()
   @Column({ unique: true })
   fileNumber: string;
 
+  @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
+  @AutoMap()
   @Column()
   title: string;
 
+  @AutoMap()
   @Column()
   body: string;
 
+  @AutoMap()
   @Column({
     type: 'uuid',
     default: 'e6ddd1af-1cb9-4e45-962a-92e8d532b149',
   })
   statusUuid: string;
 
+  @AutoMap()
   @Column({
     type: 'uuid',
     nullable: true,
   })
   assigneeUuid: string;
 
+  @AutoMap()
   @Column({
     type: 'boolean',
     nullable: false,
@@ -47,12 +55,15 @@ export class Application extends Base {
   @ManyToOne((status) => ApplicationStatus)
   status: ApplicationStatus;
 
+  @AutoMap()
   @ManyToOne((assignee) => User, { nullable: true })
   assignee: User;
 
+  @AutoMap()
   @OneToMany(() => ApplicationHistory, (appHistory) => appHistory.application)
   history: ApplicationHistory[];
 
+  @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
   pauses: ApplicationPaused[];
 }
