@@ -94,7 +94,7 @@ export class BoardComponent implements OnInit {
         ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
         : undefined,
       id: application.fileNumber,
-      typeLabel: mappedType!.shortLabel,
+      type: mappedType!,
       activeDays: application.activeDays,
       paused: application.paused,
     };

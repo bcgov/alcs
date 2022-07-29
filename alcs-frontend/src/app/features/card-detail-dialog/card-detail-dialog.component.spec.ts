@@ -40,6 +40,8 @@ describe('CardDetailDialogComponent', () => {
     code: 'TYPE',
     description: 'this is a test type',
     shortLabel: 'short_label',
+    textColor: '#000',
+    backgroundColor: '#fff',
   };
 
   const mockCardDetail: ApplicationDetailedDto = {

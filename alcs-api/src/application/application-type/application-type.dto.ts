@@ -7,4 +7,10 @@ export class ApplicationTypeDto extends BaseCodeDto {
 
   @AutoMap()
   shortLabel: string;
+
+  @AutoMap()
+  backgroundColor: string;
+
+  @AutoMap()
+  textColor: string;
 }
