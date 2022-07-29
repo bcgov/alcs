@@ -10,7 +10,9 @@ import { ApplicationStatusController } from './application-status/application-st
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
+import { ApplicationTypeController } from './application-type/application-type.controller';
 import { ApplicationType } from './application-type/application-type.entity';
+import { ApplicationTypeService } from './application-type/application-type.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -30,6 +32,7 @@ import { ApplicationSubscriber } from './application.subscriber';
   providers: [
     ApplicationService,
     ApplicationStatusService,
+    ApplicationTypeService,
     ApplicationTimeTrackingService,
     ApplicationSubscriber,
     {
@@ -38,7 +41,11 @@ import { ApplicationSubscriber } from './application.subscriber';
     },
     ApplicationProfile,
   ],
-  controllers: [ApplicationController, ApplicationStatusController],
+  controllers: [
+    ApplicationController,
+    ApplicationStatusController,
+    ApplicationTypeController,
+  ],
   exports: [ApplicationService],
 })
 export class ApplicationModule {}

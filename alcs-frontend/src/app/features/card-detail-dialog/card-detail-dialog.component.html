@@ -12,8 +12,9 @@
   </div>
   <div>
     <mat-label>Applicant:</mat-label>
-    <div class="card-applicant">
+    <div>
       <app-inline-edit
+        class="card-applicant"
         value="{{ currentCard.applicant }}"
         (save)="onUpdateTextField('applicant', $event)"
       ></app-inline-edit>
@@ -22,7 +23,17 @@
 
   <div>
     <mat-label>Type:</mat-label>
-    <p class="card-type">{{ currentCard.typeDetails.label }}</p>
+    <ng-select
+      class="card-type"
+      [items]="applicationTypes"
+      placeholder="Type"
+      bindLabel="label"
+      bindValue="code"
+      [clearable]="false"
+      [(ngModel)]="selectedApplicationType"
+      (change)="onTypeSelected($event)"
+    >
+    </ng-select>
   </div>
 
   <div>

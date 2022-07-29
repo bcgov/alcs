@@ -39,6 +39,7 @@ export class ApplicationService {
     applicationEntity.title = application.title;
     applicationEntity.applicant = application.applicant;
     applicationEntity.statusUuid = application.statusUuid;
+    applicationEntity.typeUuid = application.typeUuid;
     applicationEntity.assigneeUuid = application.assigneeUuid;
     applicationEntity.paused = application.paused;
 

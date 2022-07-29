@@ -47,13 +47,16 @@ export class ApplicationDto {
   @IsBoolean()
   paused: boolean;
 
-  @AutoMap()
+  @IsNotEmpty()
+  @IsString()
   type: string;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
   @AutoMap()
   statusDetails: ApplicationStatusDto;
+
+  @AutoMap()
   typeDetails: ApplicationTypeDto;
 }
 
@@ -72,6 +75,11 @@ export class ApplicationUpdateDto {
   @IsOptional()
   @IsString()
   applicant?: string;
+
+  @AutoMap()
+  @IsOptional()
+  @IsString()
+  type?: string;
 
   @AutoMap()
   @IsOptional()

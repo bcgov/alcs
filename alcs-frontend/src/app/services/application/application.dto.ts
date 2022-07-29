@@ -19,6 +19,7 @@ export interface ApplicationPartialDto {
   title?: string;
   applicant?: string;
   status?: string;
+  type?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;
   paused?: boolean;

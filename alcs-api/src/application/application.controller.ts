@@ -19,6 +19,8 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
+import { ApplicationType } from './application-type/application-type.entity';
+import { ApplicationTypeService } from './application-type/application-type.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -34,6 +36,7 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private applicationStatusService: ApplicationStatusService,
+    private applicationTypeService: ApplicationTypeService,
     private applicationPausedService: ApplicationTimeTrackingService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
@@ -89,11 +92,17 @@ export class ApplicationController {
       );
     }
 
+    let type: ApplicationType | undefined;
+    if (application.type && application.type != existingApplication.type.code) {
+      type = await this.applicationTypeService.get(application.type);
+    }
+
     const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       title: application.title,
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
+      typeUuid: type ? type.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
     });
@@ -111,15 +120,11 @@ export class ApplicationController {
   private async mapToEntity(
     application: ApplicationDto,
   ): Promise<Partial<Application>> {
-    const app = await this.applicationMapper.mapAsync(
+    return this.applicationMapper.mapAsync(
       application,
       ApplicationDto,
       Application,
     );
-
-    return {
-      ...app,
-    };
   }
 
   private async mapApplicationsToDtos(

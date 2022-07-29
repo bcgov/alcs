@@ -8,6 +8,7 @@
     name="value"
     #editInput
     [(ngModel)]="pendingValue"
+    (blur)="confirmEdit()"
     (keydown.enter)="confirmEdit()"
     (keydown.escape)="cancelEdit()"
   />

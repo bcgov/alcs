@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export interface CardData {
   id: string;
   title: string;
-  type: string;
+  typeLabel: string;
   status: string;
   assigneeInitials?: string;
   activeDays: number;

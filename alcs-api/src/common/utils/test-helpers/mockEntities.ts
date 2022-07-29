@@ -6,7 +6,7 @@ import { User } from '../../../user/user.entity';
 
 const initApplicationStatusMockEntity = (): ApplicationStatus => {
   const applicationStatus = new ApplicationStatus();
-  applicationStatus.code = 'app_1';
+  applicationStatus.code = 'status_1';
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
   applicationStatus.label = 'app_label';
@@ -19,7 +19,7 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
 
 const initApplicationTypeMockEntity = (): ApplicationType => {
   const applicationType = new ApplicationType();
-  applicationType.code = 'app_1';
+  applicationType.code = 'type_1';
   applicationType.description = 'app desc 1';
   applicationType.uuid = '1111-1111-1111-1111';
   applicationType.label = 'app_label';

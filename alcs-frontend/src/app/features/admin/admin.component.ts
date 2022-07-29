@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ApplicationTypeDto } from '../../services/application/application-type.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
@@ -15,6 +16,8 @@ import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dia
 export class AdminComponent implements OnInit {
   public cards: CardData[] = [];
   public columns: DragDropColumn[] = [];
+
+  private applicationTypes: ApplicationTypeDto[] = [];
 
   constructor(
     private applicationService: ApplicationService,
@@ -33,8 +36,12 @@ export class AdminComponent implements OnInit {
       }));
     });
 
+    this.applicationService.$applicationTypes.subscribe((types) => {
+      this.applicationTypes = types;
+    });
+
     this.applicationService.$applications.subscribe((applications) => {
-      this.cards = applications.map(AdminComponent.mapApplicationDtoToCard);
+      this.cards = applications.map(this.mapApplicationDtoToCard.bind(this));
     });
 
     this.applicationService.refreshApplications();
@@ -67,7 +74,8 @@ export class AdminComponent implements OnInit {
       });
   }
 
-  private static mapApplicationDtoToCard(application: ApplicationDto): CardData {
+  private mapApplicationDtoToCard(application: ApplicationDto): CardData {
+    const mappedType = this.applicationTypes.find((type) => type.code === application.type);
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.applicant})`,
@@ -75,7 +83,7 @@ export class AdminComponent implements OnInit {
         ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
         : undefined,
       id: application.fileNumber,
-      type: application.type,
+      typeLabel: mappedType!.shortLabel,
       activeDays: application.activeDays,
       paused: application.paused,
     };

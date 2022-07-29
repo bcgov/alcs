@@ -11,7 +11,7 @@ describe('DragDropBoardComponent', () => {
     id: '1',
     status: 'status',
     assigneeInitials: '',
-    type: 'LUP',
+    typeLabel: 'LUP',
     title: 'Im Title',
     activeDays: 2,
     paused: false,

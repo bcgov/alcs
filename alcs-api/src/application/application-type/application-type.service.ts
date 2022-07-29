@@ -13,4 +13,12 @@ export class ApplicationTypeService {
   async getAll(): Promise<ApplicationType[]> {
     return this.applicationTypeRepository.find();
   }
+
+  async get(code: string): Promise<ApplicationType> {
+    return this.applicationTypeRepository.findOne({
+      where: {
+        code,
+      },
+    });
+  }
 }

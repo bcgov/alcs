@@ -14,9 +14,9 @@ describe('ApplicationStatusController', () => {
   let applicationStatusService: ApplicationStatusService;
   const mockApplicationStatusEntity = initApplicationStatusMockEntity();
   const applicationStatusDto: ApplicationStatusDto = {
-    code: 'app_1',
-    description: 'app desc 1',
-    label: 'app_label',
+    code: mockApplicationStatusEntity.code,
+    description: mockApplicationStatusEntity.description,
+    label: mockApplicationStatusEntity.label,
   };
 
   beforeEach(async () => {

@@ -30,15 +30,24 @@ describe('ApplicationTypeService', () => {
     applicationsTypeRepositoryMock.find.mockResolvedValue([
       initApplicationTypeMockEntity(),
     ]);
+    applicationsTypeRepositoryMock.findOne.mockResolvedValue(
+      initApplicationTypeMockEntity(),
+    );
   });
 
   it('should be defined', () => {
     expect(applicationTypeService).toBeDefined();
   });
 
-  it('should return the mocked application type', async () => {
+  it('should return the mocked application type in an array for getAll', async () => {
     expect(await applicationTypeService.getAll()).toStrictEqual([
       initApplicationTypeMockEntity(),
     ]);
+  });
+
+  it('should return the mocked application type for get', async () => {
+    expect(await applicationTypeService.get('code')).toStrictEqual(
+      initApplicationTypeMockEntity(),
+    );
   });
 });

@@ -4,6 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationStatusDto } from './application-status.dto';
+import { ApplicationTypeDto } from './application-type.dto';
 import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from './application.dto';
 
 @Injectable({
@@ -14,14 +15,17 @@ export class ApplicationService implements OnInit {
 
   public $applications = new BehaviorSubject<ApplicationDto[]>([]);
   public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
+  public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
 
   private applications: ApplicationDto[] = [];
   private applicationStatuses: ApplicationStatusDto[] = [];
+  private applicationTypes: ApplicationTypeDto[] = [];
 
   ngOnInit(): void {}
 
   refreshApplications() {
     this.fetchApplicationStatuses();
+    this.fetchApplicationTypes();
     this.fetchApplications();
   }
 
@@ -35,6 +39,13 @@ export class ApplicationService implements OnInit {
       this.http.get<ApplicationStatusDto[]>(`${environment.apiRoot}/application-status`)
     );
     this.$applicationStatuses.next(this.applicationStatuses);
+  }
+
+  private async fetchApplicationTypes() {
+    this.applicationTypes = await firstValueFrom(
+      this.http.get<ApplicationTypeDto[]>(`${environment.apiRoot}/application-types`)
+    );
+    this.$applicationTypes.next(this.applicationTypes);
   }
 
   async updateApplication(application: ApplicationPartialDto) {
