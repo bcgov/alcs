@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
@@ -33,6 +35,7 @@ export class ApplicationController {
     private applicationService: ApplicationService,
     private applicationStatusService: ApplicationStatusService,
     private applicationPausedService: ApplicationTimeTrackingService,
+    @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
   @Get()
@@ -107,15 +110,14 @@ export class ApplicationController {
   private async mapToEntity(
     application: ApplicationDto,
   ): Promise<Partial<Application>> {
-    const status = await this.applicationStatusService.fetchStatus(
-      application.status,
+    const app = await this.applicationMapper.mapAsync(
+      application,
+      ApplicationDto,
+      Application,
     );
 
     return {
-      fileNumber: application.fileNumber,
-      title: application.title,
-      body: application.body,
-      statusUuid: status.uuid,
+      ...app,
     };
   }
 
@@ -126,13 +128,7 @@ export class ApplicationController {
       );
 
     return applications.map((app) => ({
-      fileNumber: app.fileNumber,
-      title: app.title,
-      body: app.body,
-      status: app.status.code,
-      assigneeUuid: app.assigneeUuid,
-      assignee: app.assignee,
-      paused: app.paused,
+      ...this.applicationMapper.map(app, Application, ApplicationDto),
       activeDays: appTimeMap.get(app.uuid).activeDays || 0,
       pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
     }));
