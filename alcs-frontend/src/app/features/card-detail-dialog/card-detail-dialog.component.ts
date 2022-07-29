@@ -57,7 +57,7 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedAssignee = assignee;
     this.currentCard.assignee = assignee;
     this.updateCard({
-      assignee,
+      assigneeUuid: assignee.uuid,
     });
   }
 

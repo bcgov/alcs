@@ -73,6 +73,25 @@ describe('ApplicationTimeTrackingService', () => {
     expect(res.get(fakeUuid).pausedDays).toEqual(0);
   });
 
+  it('should return 0 active days when app is active for 0 and paused for 1', async () => {
+    const fakeUuid = 'fake-uuid';
+    const activeTime = 0;
+    mockBusinessDayService.calculateDays.mockReturnValue(activeTime);
+
+    applicationRepositoryMock.query.mockResolvedValue([
+      { application_uuid: fakeUuid, days: 1 } as any,
+    ]);
+
+    const res = await applicationPausedService.fetchApplicationActiveTimes([
+      { uuid: fakeUuid, createdAt: new Date() } as Application,
+    ]);
+
+    expect(res.size).toEqual(1);
+    expect(res.get(fakeUuid)).toBeTruthy();
+    expect(res.get(fakeUuid).activeDays).toEqual(0);
+    expect(res.get(fakeUuid).pausedDays).toEqual(1);
+  });
+
   it('should map multiple applications at the same time if one has paused and one does not', async () => {
     const fakeUuid1 = 'fake-uuid-1';
     const fakeUuid2 = 'fake-uuid-2';

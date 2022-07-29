@@ -33,7 +33,7 @@ export class ApplicationTimeTrackingService {
 
       resultMap.set(app.uuid, {
         pausedDays: pausedDays || 0,
-        activeDays: totalBusinessDays - pausedDays,
+        activeDays: Math.max(totalBusinessDays - pausedDays, 0),
       });
     });
 
