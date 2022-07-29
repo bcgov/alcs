@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
+import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../application/application.dto';
@@ -20,7 +21,8 @@ export class CardDetailDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
     private readonly userService: UserService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -51,21 +53,23 @@ export class CardDetailDialogComponent implements OnInit {
         assigneeUuid: currentCard?.assignee?.uuid || null,
       })
       .then((r) => {
-        //TODO: Move this to a toast
-        console.log('Application Updated');
+        this.toastService.showSuccessToast('Application Updated');
       });
   }
 
   onToggleActive() {
-    this.currentCard.paused = !this.currentCard.paused;
     this.applicationService
       .updateApplication({
         fileNumber: this.currentCard.fileNumber,
         paused: !this.currentCard.paused,
       })
       .then((r) => {
-        //TODO: Move this to a toast
-        console.log('Application Active Updated');
+        this.currentCard.paused = !this.currentCard.paused;
+        if (this.currentCard.paused) {
+          this.toastService.showSuccessToast('Application Paused');
+        } else {
+          this.toastService.showSuccessToast('Application Activated');
+        }
       });
   }
 }

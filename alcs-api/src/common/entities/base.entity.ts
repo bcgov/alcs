@@ -47,8 +47,8 @@ export abstract class Base extends BaseEntity {
 
   @UpdateDateColumn({
     ...getTimestampColumnsOptions(),
-    update: false,
     nullable: true,
+    update: false,
   })
   auditUpdatedAt?: number;
 
