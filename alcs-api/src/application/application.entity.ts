@@ -1,4 +1,3 @@
-import { Base } from '../common/entities/base.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,10 +5,11 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { Base } from '../common/entities/base.entity';
+import { User } from '../user/user.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { User } from '../user/user.entity';
 
 @Entity()
 export class Application extends Base {

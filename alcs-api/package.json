@@ -25,6 +25,9 @@
     "migration:create": "npm run typeorm:cli migration:create ./src/providers/typeorm/migrations/$npm_config_name"
   },
   "dependencies": {
+    "@automapper/classes": "^8.7.0",
+    "@automapper/core": "^8.7.0",
+    "@automapper/nestjs": "^8.7.0",
     "@fastify/cors": "^8.0.0",
     "@fastify/helmet": "^9.1.0",
     "@fastify/static": "^6.4.0",

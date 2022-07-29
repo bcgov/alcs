@@ -1,30 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateOrUpdateUserDto } from './user.dto';
+import { CreateOrUpdateUserDto, UserDto } from './user.dto';
 import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
+  private readonly logger: Logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectMapper() private userMapper: Mapper,
   ) {}
 
   async listUsers() {
-    const users = await this.userRepository.find();
-    return users.map((user) => ({
-      uuid: user.uuid,
-      email: user.email,
-      name: user.name,
-      displayName: user.displayName,
-      identityProvider: user.identityProvider,
-      preferredUsername: user.preferredUsername,
-      givenName: user.givenName,
-      familyName: user.familyName,
-      idirUserGuid: user.idirUserGuid,
-      idirUserName: user.idirUserName,
-    }));
+    return this.userRepository.find();
   }
 
   async createUser(dto: CreateOrUpdateUserDto) {
@@ -34,17 +27,8 @@ export class UserService {
       throw new Error(`Email already exists: ${dto.email}`);
     }
 
-    // TODO: automapper
-    const user = new User();
-    user.email = dto.email;
-    user.name = dto.name;
-    user.displayName = dto.displayName;
-    user.identityProvider = dto.identityProvider;
-    user.preferredUsername = dto.preferredUsername;
-    user.givenName = dto.givenName;
-    user.familyName = dto.familyName;
-    user.idirUserGuid = dto.idirUserGuid;
-    user.idirUserName = dto.idirUserName;
+    let user = new User();
+    user = await this.userMapper.mapAsync(dto, UserDto, User);
 
     return this.userRepository.save(user);
   }

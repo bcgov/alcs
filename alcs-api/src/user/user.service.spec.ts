@@ -1,7 +1,10 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -30,6 +33,12 @@ describe('UserService', () => {
           provide: getRepositoryToken(User),
           useValue: repositoryMock,
         },
+        UserProfile,
+      ],
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
       ],
     }).compile();
 

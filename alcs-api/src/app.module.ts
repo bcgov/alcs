@@ -1,3 +1,5 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -28,6 +30,9 @@ import { UserService } from './user/user.service';
     ConfigModule,
     AuthorizationModule,
     RedisModule,
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
   ],
   controllers: [AppController],
   providers: [

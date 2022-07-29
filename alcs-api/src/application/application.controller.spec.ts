@@ -2,22 +2,21 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RoleGuard } from '../common/authorization/role.guard';
+import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
   mockKeyCloakProviders,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
-import { BusinessDayService } from '../providers/business-days/business-day.service';
-import {
-  ApplicationTimeTrackingService,
-  ApplicationTimeData,
-} from './application-time-tracking.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
+import {
+  ApplicationTimeData,
+  ApplicationTimeTrackingService,
+} from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
+import { ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import { ApplicationDto } from './application.dto';
-import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 
 jest.mock('../common/authorization/role.guard', () => ({
   RoleGuard: createMock<RoleGuard>(),

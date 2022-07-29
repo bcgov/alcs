@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import {
   BaseEntity,
   Column,
@@ -27,6 +28,7 @@ export abstract class Base extends BaseEntity {
   // id: number;
 
   // this is a public column, this is safe to expose to consumers
+  @AutoMap()
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
