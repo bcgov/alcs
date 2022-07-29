@@ -25,6 +25,7 @@ import {
   ApplicationDetailedDto,
   ApplicationDto,
   ApplicationUpdateDto,
+  CreateApplicationDto,
 } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -62,9 +63,16 @@ export class ApplicationController {
 
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
-  async add(@Body() application: ApplicationDto): Promise<ApplicationDto> {
-    const entity = await this.mapToEntity(application);
-    const app = await this.applicationService.createOrUpdate(entity);
+  async create(
+    @Body() application: CreateApplicationDto,
+  ): Promise<ApplicationDto> {
+    const type = await this.applicationTypeService.get(application.type);
+    const app = await this.applicationService.createOrUpdate({
+      ...application,
+      type,
+      typeUuid: type.uuid,
+      title: 'Do we still need title?',
+    });
     const mappedApps = await this.mapApplicationsToDtos([app]);
     return mappedApps[0];
   }

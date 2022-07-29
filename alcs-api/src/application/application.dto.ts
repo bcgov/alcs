@@ -10,6 +10,22 @@ import { UserDto } from '../user/user.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ApplicationTypeDto } from './application-type/application-type.dto';
 
+export class CreateApplicationDto {
+  @AutoMap()
+  @IsNotEmpty()
+  @IsString()
+  fileNumber: string;
+
+  @AutoMap()
+  @IsNotEmpty()
+  @IsString()
+  applicant: string;
+
+  @IsNotEmpty()
+  @IsString()
+  type: string;
+}
+
 export class ApplicationDto {
   @AutoMap()
   @IsNotEmpty()

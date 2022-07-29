@@ -1,9 +1,10 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -19,6 +20,7 @@ import { AppComponent } from './app.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { CardDetailDialogComponent } from './features/card-detail-dialog/card-detail-dialog.component';
+import { CreateCardDialogComponent } from './features/create-card-detail-dialog/create-card-dialog.component';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
@@ -43,6 +45,7 @@ import { InlineEditComponent } from './shared/inline-edit/inline-edit.component'
     StatusFilterPipe,
     AuthorizationComponent,
     CardDetailDialogComponent,
+    CreateCardDialogComponent,
     CardComponent,
     InlineEditComponent,
   ],
@@ -63,6 +66,8 @@ import { InlineEditComponent } from './shared/inline-edit/inline-edit.component'
     NgOptionHighlightModule,
     MatIconModule,
     MatSnackBarModule,
+    MatButtonModule,
+    ReactiveFormsModule,
   ],
   providers: [
     AuthenticationService,

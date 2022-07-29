@@ -2,6 +2,12 @@ import { UserDto } from '../user/user.dto';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationTypeDto } from './application-type.dto';
 
+export interface CreateApplicationDto {
+  fileNumber: string;
+  applicant: string;
+  type: string;
+}
+
 export interface ApplicationDto {
   fileNumber: string;
   title: string;

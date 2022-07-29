@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationTypeDto } from './application-type.dto';
-import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +24,10 @@ export class ApplicationService implements OnInit {
   ngOnInit(): void {}
 
   refreshApplications() {
-    this.fetchApplicationStatuses();
-    this.fetchApplicationTypes();
-    this.fetchApplications();
+    //Don't load applications till we have status & type
+    Promise.all([this.fetchApplicationStatuses(), this.fetchApplicationTypes()]).then(() => {
+      this.fetchApplications();
+    });
   }
 
   private async fetchApplications() {
@@ -66,5 +67,13 @@ export class ApplicationService implements OnInit {
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
     return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiRoot}/application/${fileNumber}`));
+  }
+
+  async createApplication(application: CreateApplicationDto) {
+    return firstValueFrom(
+      this.http.post<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+    ).then(() => {
+      this.fetchApplications();
+    });
   }
 }

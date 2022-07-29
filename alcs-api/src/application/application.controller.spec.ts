@@ -118,10 +118,15 @@ describe('ApplicationController', () => {
     );
   });
 
-  it('should add', async () => {
+  it('should return the entity after create', async () => {
     applicationService.createOrUpdate.mockResolvedValue(mockApplicationEntity);
 
-    const res = await controller.add(mockApplicationDto);
+    applicationTypeService.get.mockResolvedValue({
+      uuid: 'fake-uuid',
+      code: 'fake-code',
+    } as ApplicationType);
+
+    const res = await controller.create(mockApplicationDto);
 
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
     expect(res).toStrictEqual(mockApplicationDto);

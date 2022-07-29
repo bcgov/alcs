@@ -6,6 +6,7 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { UserService } from '../../user/user.service';
+import { Base } from './base.entity';
 
 export const SYSTEM_ID = 'alcs-api';
 
@@ -19,25 +20,25 @@ export class AuditSubscriber implements EntitySubscriberInterface {
     dataSource.subscribers.push(this);
   }
 
+  listenTo() {
+    return Base;
+  }
+
   async beforeInsert(event: UpdateEvent<any>) {
-    if ('auditCreatedBy' in event.entity) {
-      const userEmail = this.cls.get('userEmail');
-      if (userEmail) {
-        event.entity.auditCreatedBy = await this.fetchUserUuid(userEmail);
-      } else {
-        event.entity.auditCreatedBy = SYSTEM_ID;
-      }
+    const userEmail = this.cls.get('userEmail');
+    if (userEmail) {
+      event.entity.auditCreatedBy = await this.fetchUserUuid(userEmail);
+    } else {
+      event.entity.auditCreatedBy = SYSTEM_ID;
     }
   }
 
   async beforeUpdate(event: UpdateEvent<any>) {
-    if ('auditUpdatedBy' in event.entity) {
-      const userEmail = this.cls.get('userEmail');
-      if (userEmail) {
-        event.entity.auditUpdatedBy = await this.fetchUserUuid(userEmail);
-      } else {
-        event.entity.auditUpdatedBy = SYSTEM_ID;
-      }
+    const userEmail = this.cls.get('userEmail');
+    if (userEmail) {
+      event.entity.auditUpdatedBy = await this.fetchUserUuid(userEmail);
+    } else {
+      event.entity.auditUpdatedBy = SYSTEM_ID;
     }
   }
 

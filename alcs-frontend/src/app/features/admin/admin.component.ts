@@ -7,6 +7,7 @@ import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.in
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
+import { CreateCardDialogComponent } from '../create-card-detail-dialog/create-card-dialog.component';
 
 @Component({
   selector: 'app-admin',
@@ -61,6 +62,16 @@ export class AdminComponent implements OnInit {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async onCreate() {
+    this.dialog.open(CreateCardDialogComponent, {
+      minHeight: '500px',
+      minWidth: '250px',
+      height: '80%',
+      width: '40%',
+      data: {},
+    });
   }
 
   onDropped($event: { id: string; status: string }) {
