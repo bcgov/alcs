@@ -1,0 +1,11 @@
+<div style="margin: 32px 8px;">
+  <button mat-flat-button color="primary" (click)="onCreate()">Create</button>
+  <div>
+    <app-drag-drop-board
+      [cards]="cards"
+      [columns]="columns"
+      (cardSelected)="onSelected($event)"
+      (cardDropped)="onDropped($event)"
+    ></app-drag-drop-board>
+  </div>
+</div>

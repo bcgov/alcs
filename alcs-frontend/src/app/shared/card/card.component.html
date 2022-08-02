@@ -1,4 +1,10 @@
-<mat-card class="card" [ngClass]="{'paused' : cardData.paused}" cdkDrag [cdkDragData]="cardData" (click)="onClick(cardData.id)">
+<mat-card
+  class="card"
+  [ngClass]="{ paused: cardData.paused }"
+  cdkDrag
+  [cdkDragData]="cardData"
+  (click)="onClick(cardData.id)"
+>
   <div class="card-content">
     <div>{{ cardData.title }}</div>
     <div class="lower-card">
@@ -7,8 +13,11 @@
           <span class="center">{{ cardData.activeDays }}</span>
           <mat-icon title="Active Days">calendar_today</mat-icon>
         </div>
-        <div class="type">
-          <span class="center">{{ cardData.type }}</span>
+        <div
+          class="type"
+          [ngStyle]="{ backgroundColor: cardData.type.backgroundColor, color: cardData.type.textColor }"
+        >
+          <span class="center">{{ cardData.type.shortLabel }}</span>
         </div>
       </div>
       <div>

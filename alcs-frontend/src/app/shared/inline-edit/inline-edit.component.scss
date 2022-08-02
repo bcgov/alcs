@@ -1,0 +1,20 @@
+@import '../../../styles/colors';
+
+.editable {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #eee;
+  border: 2px solid transparent;
+  padding: 4px;
+  margin: 4px 0;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.editable:hover {
+  border: 2px solid $accent-color;
+}
+
+input.mat-body.editing {
+  @extend .editable;
+}

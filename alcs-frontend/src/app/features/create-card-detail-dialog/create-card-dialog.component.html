@@ -1,0 +1,75 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Create Application</h2>
+</div>
+<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content style="height: 100%">
+    <div>
+      <label for="fileNumber">File number: </label>
+      <div>
+        <input
+          id="fileNumber"
+          formControlName="fileNumber"
+          type="number"
+          [class.valid]="
+            createForm.get('fileNumber')!.valid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('fileNumber')!.invalid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+        />
+        <small
+          class="text-danger"
+          *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
+        >
+          This field is required.
+        </small>
+      </div>
+    </div>
+    <div>
+      <label for="applicant">Applicant: </label>
+      <div>
+        <input
+          id="applicant"
+          formControlName="applicant"
+          type="text"
+          [class.valid]="
+            createForm.get('applicant')!.valid &&
+            (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('applicant')!.invalid &&
+            (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
+          "
+        />
+        <small
+          class="text-danger"
+          *ngIf="createForm.get('applicant')!.touched && createForm.get('applicant')!.hasError('required')"
+        >
+          This field is required.
+        </small>
+      </div>
+    </div>
+    <div>
+      <ng-select
+        class="card-type"
+        [items]="applicationTypes"
+        appendTo="body"
+        placeholder="Type"
+        bindLabel="label"
+        bindValue="code"
+        [clearable]="false"
+        (change)="onSelectApplicationType($event)"
+        required
+      >
+      </ng-select>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div>
+      <button mat-button mat-dialog-close>Close</button>
+      <button mat-button type="submit" [disabled]="!createForm.valid">Save</button>
+    </div>
+  </mat-dialog-actions>
+</form>

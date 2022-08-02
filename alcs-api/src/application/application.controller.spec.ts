@@ -20,6 +20,8 @@ import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
+import { ApplicationType } from './application-type/application-type.entity';
+import { ApplicationTypeService } from './application-type/application-type.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
@@ -31,16 +33,18 @@ jest.mock('../common/authorization/role.guard', () => ({
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
-  let applicationService: ApplicationService;
-  let mockApplicationPaused: DeepMocked<ApplicationTimeTrackingService>;
+  let applicationService: DeepMocked<ApplicationService>;
+  let applicationTypeService: DeepMocked<ApplicationTypeService>;
+  let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
   const applicationStatusService = createMock<ApplicationStatusService>();
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
     title: mockApplicationEntity.title,
     fileNumber: mockApplicationEntity.fileNumber,
-    body: mockApplicationEntity.body,
+    applicant: mockApplicationEntity.applicant,
     status: mockApplicationEntity.status.code,
+    type: mockApplicationEntity.type.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
     assignee: initAssigneeMockDto(),
     activeDays: 2,
@@ -49,19 +53,28 @@ describe('ApplicationController', () => {
   };
 
   beforeEach(async () => {
-    mockApplicationPaused = createMock<ApplicationTimeTrackingService>();
+    mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
+    applicationTypeService = createMock<ApplicationTypeService>();
+    applicationService = createMock<ApplicationService>();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController, ApplicationProfile, UserProfile],
       providers: [
-        ApplicationService,
+        {
+          provide: ApplicationService,
+          useValue: applicationService,
+        },
         {
           provide: ApplicationStatusService,
           useValue: applicationStatusService,
         },
         {
           provide: ApplicationTimeTrackingService,
-          useValue: mockApplicationPaused,
+          useValue: mockApplicationTimeService,
+        },
+        {
+          provide: ApplicationTypeService,
+          useValue: applicationTypeService,
         },
         {
           provide: getRepositoryToken(Application),
@@ -75,7 +88,6 @@ describe('ApplicationController', () => {
         }),
       ],
     }).compile();
-    applicationService = module.get<ApplicationService>(ApplicationService);
     applicationStatusService.fetchStatus.mockResolvedValue(
       createMock<ApplicationStatus>(),
     );
@@ -86,7 +98,7 @@ describe('ApplicationController', () => {
       activeDays: 2,
       pausedDays: 0,
     });
-    mockApplicationPaused.fetchApplicationActiveTimes.mockResolvedValue(
+    mockApplicationTimeService.fetchApplicationActiveTimes.mockResolvedValue(
       mockTimesMap,
     );
   });
@@ -96,35 +108,130 @@ describe('ApplicationController', () => {
   });
 
   it('should delete', async () => {
+    applicationService.delete.mockResolvedValue();
     const applicationNumberToDelete = 'app_1';
-    jest.spyOn(applicationService, 'delete').mockImplementation();
-
     await controller.softDelete(applicationNumberToDelete);
 
-    expect(applicationService.delete).toBeCalledTimes(1);
-    expect(applicationService.delete).toBeCalledWith(applicationNumberToDelete);
-  });
-
-  it('should add', async () => {
-    jest
-      .spyOn(applicationService, 'createOrUpdate')
-      .mockImplementation(async () => mockApplicationEntity);
-
-    expect(await controller.add(mockApplicationDto)).toStrictEqual(
-      mockApplicationDto,
+    expect(applicationService.delete).toHaveBeenCalled();
+    expect(applicationService.delete).toHaveBeenCalledWith(
+      applicationNumberToDelete,
     );
   });
 
+  it('should return the entity after create', async () => {
+    applicationService.createOrUpdate.mockResolvedValue(mockApplicationEntity);
+
+    applicationTypeService.get.mockResolvedValue({
+      uuid: 'fake-uuid',
+      code: 'fake-code',
+    } as ApplicationType);
+
+    const res = await controller.create(mockApplicationDto);
+
+    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+    expect(res).toStrictEqual(mockApplicationDto);
+  });
+
   it('should add active and paused days to getAll', async () => {
-    jest
-      .spyOn(applicationService, 'getAll')
-      .mockImplementation(async () => [mockApplicationEntity]);
+    applicationService.getAll.mockResolvedValue([mockApplicationEntity]);
 
     const res = await controller.getAll();
 
     expect(res[0].pausedDays).toEqual(0);
     expect(
-      mockApplicationPaused.fetchApplicationActiveTimes,
+      mockApplicationTimeService.fetchApplicationActiveTimes,
     ).toHaveBeenCalled();
+  });
+
+  it('should throw an exception when application is not found during update', async () => {
+    applicationService.get.mockResolvedValue(undefined);
+
+    await expect(
+      controller.update({
+        fileNumber: '11',
+        applicant: 'New Applicant',
+      }),
+    ).rejects.toMatchObject(new Error(`File 11 not found`));
+  });
+
+  it('should update only the given fields', async () => {
+    const mockUpdate = {
+      fileNumber: '11',
+      applicant: 'New Applicant',
+    };
+
+    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.createOrUpdate.mockResolvedValue({
+      ...mockApplicationEntity,
+      applicant: mockUpdate.applicant,
+    } as Application);
+
+    const res = await controller.update(mockUpdate);
+
+    expect(res.applicant).toEqual(mockUpdate.applicant);
+    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+    expect(applicationService.createOrUpdate).toHaveBeenCalledWith(mockUpdate);
+  });
+
+  it('should handle updating status', async () => {
+    const mockStatus = 'NEW_STATUS';
+    const mockUuid = 'uuid';
+    const mockUpdate = {
+      fileNumber: '11',
+      status: mockStatus,
+    };
+
+    applicationStatusService.fetchStatus.mockResolvedValue({
+      uuid: mockUuid,
+      code: mockStatus,
+    } as ApplicationStatus);
+    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.createOrUpdate.mockResolvedValue({
+      ...mockApplicationEntity,
+      status: {
+        code: mockStatus,
+        label: '',
+        description: '',
+      },
+    } as Application);
+
+    const res = await controller.update(mockUpdate);
+
+    expect(res.status).toEqual(mockUpdate.status);
+    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+
+    const savedData = applicationService.createOrUpdate.mock.calls[0][0];
+    expect(savedData.statusUuid).toEqual(mockUuid);
+  });
+
+  it('should handle updating type', async () => {
+    const mockType = 'NEW_STATUS';
+    const mockUuid = 'uuid';
+    const mockUpdate = {
+      fileNumber: '11',
+      type: mockType,
+    };
+
+    applicationTypeService.get.mockResolvedValue({
+      uuid: mockUuid,
+      code: mockType,
+    } as ApplicationType);
+    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.createOrUpdate.mockResolvedValue({
+      ...mockApplicationEntity,
+      status: {
+        code: mockType,
+        label: '',
+        description: '',
+      },
+    } as Application);
+
+    const res = await controller.update(mockUpdate);
+
+    expect(res.status).toEqual(mockUpdate.type);
+    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+
+    const savedData = applicationService.createOrUpdate.mock.calls[0][0];
+    expect(savedData.typeUuid).toEqual(mockUuid);
   });
 });

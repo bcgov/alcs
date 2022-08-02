@@ -8,9 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ApplicationTypeDto } from '../../services/application/application-type.dto';
 import { UserDto } from '../../services/user/user.dto';
-import { ApplicationStatusDto } from '../application/application-status.dto';
-import { ApplicationDetailedDto } from '../application/application.dto';
+import { ApplicationStatusDto } from '../../services/application/application-status.dto';
+import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
@@ -30,19 +31,30 @@ describe('CardDetailDialogComponent', () => {
 
   const mockApplicationStatusDetails: ApplicationStatusDto = {
     label: 'test_st',
-    code: 'TEST',
+    code: 'STATUS',
     description: 'this is a test status',
+  };
+
+  const mockApplicationType: ApplicationTypeDto = {
+    label: 'test_ty',
+    code: 'TYPE',
+    description: 'this is a test type',
+    shortLabel: 'short_label',
+    textColor: '#000',
+    backgroundColor: '#fff',
   };
 
   const mockCardDetail: ApplicationDetailedDto = {
     statusDetails: mockApplicationStatusDetails,
+    typeDetails: mockApplicationType,
+    type: 'TYPE',
     fileNumber: '1111',
     title: '111 title',
-    body: 'this is a body',
-    status: 'TEST',
+    applicant: 'I am an applicant',
+    status: 'STATUS',
     assignee: mockAssignee,
-    activeDays: 0,
-    pausedDays: 0,
+    activeDays: 10,
+    pausedDays: 5,
     paused: true,
   };
 
@@ -81,12 +93,12 @@ describe('CardDetailDialogComponent', () => {
     expect(compiled.querySelector('.card-status-label').textContent).toEqual(mockCardDetail.statusDetails.label);
     expect(compiled.querySelector('.card-state').textContent).toEqual('Paused');
     expect(compiled.querySelector('.card-file-number').textContent).toEqual(mockCardDetail.fileNumber);
-    expect(compiled.querySelector('.card-applicant').textContent).toEqual('Dart Placeholder');
+    expect(compiled.querySelector('.card-applicant')).toBeTruthy();
+    expect(compiled.querySelector('.card-type')).toBeTruthy();
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();
-    expect(compiled.querySelector('.card-active-days').textContent).toEqual('10 Placeholder');
-    expect(compiled.querySelector('.card-paused-days').textContent).toEqual('5 Placeholder');
+    expect(compiled.querySelector('.card-active-days').textContent).toEqual(`${mockCardDetail.activeDays}`);
+    expect(compiled.querySelector('.card-paused-days').textContent).toEqual(`${mockCardDetail.pausedDays}`);
     expect(compiled.querySelector('.card-state-btn').textContent.trim()).toEqual('Activate');
-    expect(compiled.querySelector('.card-details').textContent).toEqual(mockCardDetail.body);
     expect(compiled.querySelector('.card-comments-wrapper')).toBeTruthy();
   });
 });

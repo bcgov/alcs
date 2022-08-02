@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
+import { ApplicationTypeDto } from '../../services/application/application-type.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../application/application.dto';
-import { ApplicationService } from '../application/application.service';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -16,7 +17,12 @@ export class CardDetailDialogComponent implements OnInit {
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
+  selectedApplicationType = '';
   currentCard: ApplicationDetailedDto = this.data;
+  applicationTypes: {
+    label: string;
+    code: string;
+  }[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
@@ -29,8 +35,15 @@ export class CardDetailDialogComponent implements OnInit {
     this.currentCard = this.data;
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedApplicationType = this.data.typeDetails.code;
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
+    this.applicationService.$applicationTypes.subscribe((types) => {
+      this.applicationTypes = types.map((type) => ({
+        label: type.label,
+        code: type.code,
+      }));
+    });
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -43,14 +56,30 @@ export class CardDetailDialogComponent implements OnInit {
   onAssigneeSelected(assignee: UserDto) {
     this.selectedAssignee = assignee;
     this.currentCard.assignee = assignee;
-    this.updateCard(this.currentCard);
+    this.updateCard({
+      assigneeUuid: assignee.uuid,
+    });
   }
 
-  updateCard(currentCard: ApplicationPartialDto) {
+  onTypeSelected(applicationType: ApplicationTypeDto) {
+    this.selectedApplicationType = applicationType.code;
+    this.updateCard({
+      type: applicationType.code,
+    });
+  }
+
+  onUpdateTextField(cardProperty: string, newValue: string) {
+    const updateObject = {
+      [cardProperty]: newValue,
+    };
+    this.updateCard(updateObject);
+  }
+
+  updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
     this.applicationService
       .updateApplication({
-        fileNumber: currentCard.fileNumber,
-        assigneeUuid: currentCard?.assignee?.uuid || null,
+        ...changes,
+        fileNumber: this.currentCard.fileNumber,
       })
       .then((r) => {
         this.toastService.showSuccessToast('Application Updated');

@@ -15,7 +15,14 @@ describe('CardComponent', () => {
     component.cardData = {
       id: '1',
       status: '',
-      type: 'LUP',
+      type: {
+        textColor: '#000',
+        shortLabel: 'LUP',
+        backgroundColor: '#fff',
+        code: 'LUP',
+        label: 'LUP',
+        description: 'LUP',
+      },
       title: 'Title',
       activeDays: 2,
       paused: false,
@@ -44,7 +51,14 @@ describe('CardComponent', () => {
     component.cardData = {
       id: '1',
       status: '',
-      type: 'LUP',
+      type: {
+        textColor: '#000',
+        shortLabel: 'LUP',
+        backgroundColor: '#fff',
+        code: 'LUP',
+        label: 'LUP',
+        description: 'LUP',
+      },
       title: 'Title',
       activeDays: 2,
       paused: true,

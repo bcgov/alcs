@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ApplicationTypeDto } from '../../services/application/application-type.dto';
 
 export interface CardData {
   id: string;
   title: string;
-  type: string;
+  type: ApplicationTypeDto;
   status: string;
   assigneeInitials?: string;
   activeDays: number;

@@ -4,6 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
 import { ApplicationStatusService } from '../../application/application-status/application-status.service';
+import { ApplicationTypeDto } from '../../application/application-type/application-type.dto';
+import { ApplicationType } from '../../application/application-type/application-type.entity';
+import { ApplicationTypeService } from '../../application/application-type/application-type.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -15,6 +18,7 @@ export class ApplicationProfile extends AutomapperProfile {
   constructor(
     @InjectMapper() mapper: Mapper,
     private applicationStatusService: ApplicationStatusService,
+    private applicationTypeService: ApplicationTypeService,
   ) {
     super(mapper);
   }
@@ -22,6 +26,7 @@ export class ApplicationProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, ApplicationStatus, ApplicationStatusDto);
+      createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationStatusDto, ApplicationStatus);
 
       createMap(
@@ -31,6 +36,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.status,
           mapFrom((a) => a.status.code),
+        ),
+        forMember(
+          (ad) => ad.type,
+          mapFrom((a) => a.type.code),
         ),
       );
 
@@ -44,6 +53,12 @@ export class ApplicationProfile extends AutomapperProfile {
             this.mapper.map(a.status, ApplicationStatus, ApplicationStatusDto),
           ),
         ),
+        forMember(
+          (ad) => ad.typeDetails,
+          mapFrom((a) =>
+            this.mapper.map(a.type, ApplicationType, ApplicationTypeDto),
+          ),
+        ),
       );
 
       createMap(
@@ -53,10 +68,13 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           async (a) => a.status,
           mapFrom(async (ad) => {
-            const status = await this.applicationStatusService.fetchStatus(
-              ad.status,
-            );
-            return status;
+            return await this.applicationStatusService.fetchStatus(ad.status);
+          }),
+        ),
+        forMember(
+          async (a) => a.type,
+          mapFrom(async (ad) => {
+            return await this.applicationTypeService.get(ad.type);
           }),
         ),
       );

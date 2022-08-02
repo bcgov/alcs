@@ -19,10 +19,13 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
+import { ApplicationType } from './application-type/application-type.entity';
+import { ApplicationTypeService } from './application-type/application-type.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
-  ApplicationPartialDto,
+  ApplicationUpdateDto,
+  CreateApplicationDto,
 } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -34,6 +37,7 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private applicationStatusService: ApplicationStatusService,
+    private applicationTypeService: ApplicationTypeService,
     private applicationPausedService: ApplicationTimeTrackingService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
@@ -53,14 +57,22 @@ export class ApplicationController {
     return {
       ...mappedApplication[0],
       statusDetails: application.status,
+      typeDetails: application.type,
     };
   }
 
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
-  async add(@Body() application: ApplicationDto): Promise<ApplicationDto> {
-    const entity = await this.mapToEntity(application);
-    const app = await this.applicationService.createOrUpdate(entity);
+  async create(
+    @Body() application: CreateApplicationDto,
+  ): Promise<ApplicationDto> {
+    const type = await this.applicationTypeService.get(application.type);
+    const app = await this.applicationService.createOrUpdate({
+      ...application,
+      type,
+      typeUuid: type.uuid,
+      title: 'Do we still need title?',
+    });
     const mappedApps = await this.mapApplicationsToDtos([app]);
     return mappedApps[0];
   }
@@ -68,14 +80,16 @@ export class ApplicationController {
   @Patch()
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
-    @Body() application: ApplicationPartialDto,
+    @Body() application: ApplicationUpdateDto,
   ): Promise<ApplicationDto> {
     const existingApplication = await this.applicationService.get(
       application.fileNumber,
     );
 
     if (!existingApplication) {
-      throw new ServiceValidationException('File not found');
+      throw new ServiceValidationException(
+        `File ${application.fileNumber} not found`,
+      );
     }
 
     let status: ApplicationStatus | undefined;
@@ -88,11 +102,17 @@ export class ApplicationController {
       );
     }
 
+    let type: ApplicationType | undefined;
+    if (application.type && application.type != existingApplication.type.code) {
+      type = await this.applicationTypeService.get(application.type);
+    }
+
     const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       title: application.title,
-      body: application.body,
+      applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
+      typeUuid: type ? type.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
     });
@@ -110,18 +130,16 @@ export class ApplicationController {
   private async mapToEntity(
     application: ApplicationDto,
   ): Promise<Partial<Application>> {
-    const app = await this.applicationMapper.mapAsync(
+    return this.applicationMapper.mapAsync(
       application,
       ApplicationDto,
       Application,
     );
-
-    return {
-      ...app,
-    };
   }
 
-  private async mapApplicationsToDtos(applications: Application[]) {
+  private async mapApplicationsToDtos(
+    applications: Application[],
+  ): Promise<ApplicationDto[]> {
     const appTimeMap =
       await this.applicationPausedService.fetchApplicationActiveTimes(
         applications,

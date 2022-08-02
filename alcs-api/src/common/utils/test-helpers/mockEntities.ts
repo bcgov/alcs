@@ -1,11 +1,12 @@
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
+import { ApplicationType } from '../../../application/application-type/application-type.entity';
 import { Application } from '../../../application/application.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
 const initApplicationStatusMockEntity = (): ApplicationStatus => {
   const applicationStatus = new ApplicationStatus();
-  applicationStatus.code = 'app_1';
+  applicationStatus.code = 'status_1';
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
   applicationStatus.label = 'app_label';
@@ -14,6 +15,20 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.auditUpdatedAt = 111111111;
 
   return applicationStatus;
+};
+
+const initApplicationTypeMockEntity = (): ApplicationType => {
+  const applicationType = new ApplicationType();
+  applicationType.code = 'type_1';
+  applicationType.description = 'app desc 1';
+  applicationType.uuid = '1111-1111-1111-1111';
+  applicationType.label = 'app_label';
+  applicationType.shortLabel = 'short_label';
+  applicationType.auditDeletedDateAt = 11111111;
+  applicationType.auditCreatedAt = 111111111;
+  applicationType.auditUpdatedAt = 111111111;
+
+  return applicationType;
 };
 
 const initAssigneeMockEntity = (): User => {
@@ -37,7 +52,7 @@ const initApplicationMockEntity = (): Application => {
   const applicationEntity = new Application();
   applicationEntity.title = 'app_1';
   applicationEntity.fileNumber = 'app_1';
-  applicationEntity.body = 'app desc 1';
+  applicationEntity.applicant = 'applicant 1';
   applicationEntity.uuid = '1111-1111-1111-1111';
   applicationEntity.auditDeletedDateAt = 111111111;
   applicationEntity.auditCreatedAt = 111111111;
@@ -47,6 +62,7 @@ const initApplicationMockEntity = (): Application => {
   applicationEntity.assigneeUuid = '1111-1111-1111';
   applicationEntity.assignee = initAssigneeMockEntity();
   applicationEntity.paused = false;
+  applicationEntity.type = initApplicationTypeMockEntity();
 
   return applicationEntity;
 };
@@ -74,4 +90,5 @@ export {
   initApplicationStatusMockEntity,
   initApplicationMockEntity,
   initAssigneeMockDto,
+  initApplicationTypeMockEntity,
 };

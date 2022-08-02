@@ -1,0 +1,15 @@
+<span class="editable" *ngIf="!isEditing" (click)="startEdit()">
+  {{ value }}
+</span>
+<span *ngIf="isEditing">
+  <input
+    class="editable"
+    type="text"
+    name="value"
+    #editInput
+    [(ngModel)]="pendingValue"
+    (blur)="confirmEdit()"
+    (keydown.enter)="confirmEdit()"
+    (keydown.escape)="cancelEdit()"
+  />
+</span>
