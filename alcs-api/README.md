@@ -83,7 +83,7 @@ $ npm run test:cov
 Postgres unit tests are implemented using pgTap.
 
 ```bash
-# to run tests
+# run tests
 docker-compose up pgtap --build
 ```
 
