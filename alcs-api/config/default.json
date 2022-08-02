@@ -1,6 +1,7 @@
 {
   "PORT": 8080,
   "BASE_URL": "http://localhost:8080",
+  "ENV": "production",
   "DATABASE_HOST": "localhost",
   "DATABASE_PORT": 5432,
   "DATABASE_NAME": "postgres",
@@ -9,7 +10,6 @@
   "DATABASE_MIGRATION_TABLE": "migrations",
   "LOG_LEVEL": "error",
   "FRONTEND_ROOT": "http://localhost:4200",
-  "DATABASE_MIGRATION_TABLE": "migrations",
   "KEYCLOAK": {
     "AUTH_SERVER": "dev.loginproxy.gov.bc.ca",
     "AUTH_SERVER_URL": "https://dev.loginproxy.gov.bc.ca/auth",

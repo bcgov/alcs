@@ -1,5 +1,5 @@
 import fastifyHelmet from '@fastify/helmet';
-import { Logger, LogLevel, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -9,6 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
+import { Logger } from 'nestjs-pino';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -50,7 +51,7 @@ const registerHelmet = async (app: NestFastifyApplication) => {
 };
 
 const registerGlobalFilters = (app: NestFastifyApplication) => {
-  app.useGlobalFilters(new HttpExceptionFilter(new Logger('Global')));
+  app.useGlobalFilters(new HttpExceptionFilter(app.get(Logger)));
 };
 
 const registerCors = (app: NestFastifyApplication) => {
@@ -75,13 +76,12 @@ async function bootstrap() {
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({
-      logger: { level: config.get<string>('LOG_LEVEL') },
-    }),
+    new FastifyAdapter(),
     {
-      logger: [config.get<LogLevel>('LOG_LEVEL')],
+      bufferLogs: true,
     },
   );
+  app.useLogger(app.get(Logger));
 
   // config variables
   const port: number = config.get<number>('PORT');
