@@ -78,6 +78,15 @@ $ npm run test:cov
   npm run typeorm migration:revert
 ```
 
+## Postgres tests
+
+Postgres unit tests are implemented using pgTap.
+
+```bash
+# to run tests
+docker-compose up pgtap --build
+```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
