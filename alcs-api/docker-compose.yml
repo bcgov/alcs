@@ -24,6 +24,21 @@ services:
     networks:
       - alcs
 
+  pgtap:
+    image: hbpmip/pgtap:1.0.0-2
+    environment:
+      - DATABASE=postgres
+      - USER=postgres
+      - PASSWORD=postgres
+    depends_on:
+      - db
+    command:
+      - cp /mnt/** /test
+    volumes:
+      - ./test/pgtap:/test
+    networks: 
+      - alcs
+
 volumes:
   postgres:
 
