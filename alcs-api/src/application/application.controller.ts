@@ -87,7 +87,9 @@ export class ApplicationController {
     );
 
     if (!existingApplication) {
-      throw new ServiceValidationException('File not found');
+      throw new ServiceValidationException(
+        `File ${application.fileNumber} not found`,
+      );
     }
 
     let status: ApplicationStatus | undefined;

@@ -74,7 +74,7 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           async (a) => a.type,
           mapFrom(async (ad) => {
-            return await this.applicationTypeService.get(ad.status);
+            return await this.applicationTypeService.get(ad.type);
           }),
         ),
       );

@@ -151,7 +151,7 @@ describe('ApplicationController', () => {
         fileNumber: '11',
         applicant: 'New Applicant',
       }),
-    ).rejects.toMatchObject(new Error(`File not found`));
+    ).rejects.toMatchObject(new Error(`File 11 not found`));
   });
 
   it('should update only the given fields', async () => {
