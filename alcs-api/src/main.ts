@@ -7,9 +7,10 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
+import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
-import { Logger } from 'nestjs-pino';
+import { SchedulerService } from './queues/scheduler/scheduler.service';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -95,6 +96,9 @@ async function bootstrap() {
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
     console.log('[WEB]', config.get<string>('BASE_URL'));
+
+    const schedulerQueueService = app.get(SchedulerService);
+    schedulerQueueService.scheduleApplicationExpiry();
   });
 }
 bootstrap();

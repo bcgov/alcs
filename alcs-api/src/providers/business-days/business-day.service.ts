@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Dayjs } from 'dayjs';
 import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import en from 'dayjs/locale/en';
 import * as utc from 'dayjs/plugin/utc';
 import { Repository } from 'typeorm';

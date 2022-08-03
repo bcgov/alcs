@@ -1,15 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
+import { applicationExpirationDayRanges } from '../common/constant';
+import {
+  ApplicationTimeData,
+  ApplicationTimeTrackingService,
+} from './application-time-tracking.service';
 import { Application } from './application.entity';
 
 @Injectable()
 export class ApplicationService {
   private DEFAULT_RELATIONS = ['status', 'type', 'assignee'];
+  private logger = new Logger(ApplicationService.name);
 
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,
+    private readonly applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
 
   async resetApplicationStatus(
@@ -82,5 +89,37 @@ export class ApplicationService {
       },
       relations: this.DEFAULT_RELATIONS,
     });
+  }
+
+  async getApplicationsNearExpiryDates(startDate, endDate) {
+    const applications = await this.applicationRepository.find({
+      where: {
+        createdAt: Between(startDate, endDate),
+      },
+    });
+
+    let applicationsProcessingTimes: Map<string, ApplicationTimeData>;
+
+    if (applications && applications.length > 0) {
+      applicationsProcessingTimes =
+        await this.applicationTimeTrackingService.fetchApplicationActiveTimes(
+          applications,
+        );
+    }
+
+    const applicationsToProcess: Application[] = [];
+
+    applicationsProcessingTimes.forEach((val, key) => {
+      if (
+        val.activeDays <= applicationExpirationDayRanges.ACTIVE_DAYS_START &&
+        val.activeDays >= applicationExpirationDayRanges.ACTIVE_DAYS_END
+      ) {
+        applicationsProcessingTimes.delete(key);
+      } else {
+        applicationsToProcess.push(applications.find((ap) => ap.uuid === key));
+      }
+    });
+
+    return applicationsToProcess;
   }
 }
