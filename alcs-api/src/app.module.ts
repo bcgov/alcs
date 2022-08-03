@@ -7,6 +7,8 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
+import { LoggerModule } from 'nestjs-pino';
+import * as config from 'config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApplicationModule } from './application/application.module';
@@ -33,6 +35,24 @@ import { UserService } from './user/user.service';
     RedisModule,
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: config.get('LOG_LEVEL'),
+        autoLogging: false, //Disable auto-logging every request/response for now
+        transport:
+          config.get('ENV') === 'development'
+            ? {
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  levelFirst: true,
+                  translateTime: 'mmm-dd h:MM:ss',
+                  ignore: 'hostname',
+                },
+              }
+            : undefined,
+      },
     }),
   ],
   controllers: [AppController],
