@@ -29,9 +29,8 @@ export class SchedulerConsumerService {
       );
       // TODO: this will be refactored once we have the templating engine
       const body = `
-    <p>Following applications near expiration:</p>
-    ${applicationsNumbers.join('<br/>')}
-        `;
+      <p>Following applications near expiration:</p>
+      ${applicationsNumbers.join('<br/>')}`;
 
       await this.emailService.sendEmail({
         to: this.config.get<string[]>('EMAIL.DEFAULT_ADMIN'),
@@ -43,7 +42,7 @@ export class SchedulerConsumerService {
     }
 
     this.logger.debug('applicationExpiry complete');
-    return {};
+    return;
   }
 
   private addDays(date, days) {
