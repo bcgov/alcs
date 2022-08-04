@@ -53,7 +53,7 @@ describe('SchedulerConsumerService', () => {
       body: `
       <p>Following applications near expiration:</p>
       ${mockApplicationEntity.fileNumber}`,
-      to: config.get<string[]>('EMAIL.DEFAULT_ADMIN'),
+      to: config.get<string[]>('EMAIL.DEFAULT_ADMINS'),
       subject: 'Applications near expiry',
     };
 

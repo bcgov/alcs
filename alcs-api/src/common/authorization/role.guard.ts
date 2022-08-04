@@ -33,8 +33,8 @@ export class RoleGuard implements CanActivate {
     private logger: Logger,
 
     private multiTenant: KeycloakMultiTenantService,
-    private readonly reflector: Reflector,
-    private readonly cls: ClsService,
+    private reflector: Reflector,
+    private cls: ClsService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,

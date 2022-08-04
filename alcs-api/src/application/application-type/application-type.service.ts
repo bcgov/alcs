@@ -7,7 +7,7 @@ import { ApplicationType } from './application-type.entity';
 export class ApplicationTypeService {
   constructor(
     @InjectRepository(ApplicationType)
-    private readonly applicationTypeRepository: Repository<ApplicationType>,
+    private applicationTypeRepository: Repository<ApplicationType>,
   ) {}
 
   async getAll(): Promise<ApplicationType[]> {

@@ -11,7 +11,7 @@ import { ApplicationTypeService } from './application-type.service';
 @Controller('application-types')
 export class ApplicationTypeController {
   constructor(
-    private readonly applicationTypeService: ApplicationTypeService,
+    private applicationTypeService: ApplicationTypeService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 

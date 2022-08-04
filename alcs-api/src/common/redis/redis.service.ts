@@ -4,7 +4,7 @@ import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
 @Injectable()
 export class RedisService {
-  private readonly logger: Logger = new Logger(RedisService.name);
+  private logger: Logger = new Logger(RedisService.name);
   private client: ReturnType<typeof createClient>;
 
   constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {

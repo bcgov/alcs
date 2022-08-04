@@ -40,9 +40,6 @@ describe('SchedulerService', () => {
   it('should call add once on scheduleApplicationExpiry', () => {
     schedulerService.scheduleApplicationExpiry();
     expect(mockQueue.add).toBeCalledTimes(1);
-    // expect(mockQueue.add).nthCalledWith(1, {
-    //   repeat: { cron: '0 0 2 * * 1-5' },
-    // });
     expect(mockQueue.add).toBeCalledWith(
       {},
       { repeat: { cron: '0 0 2 * * 1-5' } },

@@ -15,7 +15,6 @@ export class ApplicationTimeTrackingService {
   constructor(
     @InjectRepository(ApplicationPaused)
     private applicationPausedRepository: Repository<ApplicationPaused>,
-    @Inject(BusinessDayService)
     private businessDayService: BusinessDayService,
   ) {}
 

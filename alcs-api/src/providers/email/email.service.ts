@@ -5,11 +5,11 @@ import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 
 @Injectable()
 export class EmailService {
-  private readonly logger: Logger = new Logger(EmailService.name);
+  private logger: Logger = new Logger(EmailService.name);
 
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
-    private readonly httpService: HttpService,
+    private httpService: HttpService,
   ) {}
 
   private token = '';

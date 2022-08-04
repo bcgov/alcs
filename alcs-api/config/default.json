@@ -20,6 +20,7 @@
     "SECRET": ""
   },
   "CHES": {
+    "MODE": "production",
     "URL": "",
     "FROM": "",
     "TOKEN_URL": "",
@@ -30,6 +31,6 @@
     "URL": "redis://redis:@localhost:6379"
   },
   "EMAIL": {
-    "DEFAULT_ADMIN": [""]
+    "DEFAULT_ADMINS": [""]
   }
 }

@@ -10,9 +10,7 @@ export class SchedulerConsumerService {
   private logger = new Logger(SchedulerConsumerService.name);
 
   constructor(
-    @Inject(ApplicationService)
     private applicationService: ApplicationService,
-    @Inject(EmailService)
     private emailService: EmailService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
@@ -33,7 +31,7 @@ export class SchedulerConsumerService {
       ${applicationsNumbers.join('<br/>')}`;
 
       await this.emailService.sendEmail({
-        to: this.config.get<string[]>('EMAIL.DEFAULT_ADMIN'),
+        to: this.config.get<string[]>('EMAIL.DEFAULT_ADMINS'),
         body: body,
         subject: 'Applications near expiry',
       });

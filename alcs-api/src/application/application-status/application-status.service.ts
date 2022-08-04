@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../common/exceptions/base.exception';
@@ -13,13 +13,12 @@ export const defaultApplicationStatus = {
 
 @Injectable()
 export class ApplicationStatusService {
-  private readonly logger: Logger = new Logger(ApplicationStatusService.name);
+  private logger: Logger = new Logger(ApplicationStatusService.name);
 
   constructor(
     @InjectRepository(ApplicationStatus)
-    private readonly applicationStatusRepository: Repository<ApplicationStatus>,
-    @Inject(ApplicationService)
-    private readonly applicationService: ApplicationService,
+    private applicationStatusRepository: Repository<ApplicationStatus>,
+    private applicationService: ApplicationService,
   ) {}
 
   async create(application: ApplicationStatusDto): Promise<ApplicationStatus> {

@@ -14,7 +14,7 @@ export const SYSTEM_ID = 'alcs-api';
 export class AuditSubscriber implements EntitySubscriberInterface {
   constructor(
     private dataSource: DataSource,
-    private readonly cls: ClsService,
+    private cls: ClsService,
     private userService: UserService,
   ) {
     dataSource.subscribers.push(this);

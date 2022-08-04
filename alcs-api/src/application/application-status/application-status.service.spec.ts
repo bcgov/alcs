@@ -1,4 +1,3 @@
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -22,7 +21,6 @@ describe('ApplicationStatusService', () => {
   let applicationStatusService: ApplicationStatusService;
   let applicationsStatusRepositoryMock: MockType<Repository<ApplicationStatus>>;
   let applicationService: ApplicationService;
-  let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
 
   const applicationStatusDto: ApplicationStatusDto = {
     code: 'app_1',
@@ -32,8 +30,6 @@ describe('ApplicationStatusService', () => {
   const applicationStatusMockEntity = initApplicationStatusMockEntity();
 
   beforeEach(async () => {
-    mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
-
     const applicationStatusModule: TestingModule =
       await Test.createTestingModule({
         providers: [
@@ -41,7 +37,7 @@ describe('ApplicationStatusService', () => {
           ApplicationService,
           {
             provide: ApplicationTimeTrackingService,
-            useValue: mockApplicationTimeService,
+            useValue: {},
           },
           {
             provide: getRepositoryToken(ApplicationStatus),

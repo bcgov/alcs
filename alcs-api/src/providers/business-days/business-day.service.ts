@@ -15,7 +15,7 @@ export class BusinessDayService {
 
   constructor(
     @InjectRepository(HolidayEntity)
-    private readonly applicationRepository: Repository<HolidayEntity>,
+    private applicationRepository: Repository<HolidayEntity>,
   ) {
     this.loadHolidays();
   }

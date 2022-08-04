@@ -6,7 +6,7 @@ import { AuthorizationService } from './authorization.service';
 
 @Controller('/authorize')
 export class AuthorizationController {
-  private readonly logger = new Logger(AuthorizationController.name);
+  private logger = new Logger(AuthorizationController.name);
 
   constructor(
     private authorizationService: AuthorizationService,
