@@ -112,12 +112,12 @@ export class ApplicationService {
 
     applicationsProcessingTimes.forEach((val, key) => {
       if (
-        val.activeDays <= applicationExpirationDayRanges.ACTIVE_DAYS_START &&
-        val.activeDays >= applicationExpirationDayRanges.ACTIVE_DAYS_END
+        val.activeDays >= applicationExpirationDayRanges.ACTIVE_DAYS_START &&
+        val.activeDays <= applicationExpirationDayRanges.ACTIVE_DAYS_END
       ) {
-        applicationsProcessingTimes.delete(key);
-      } else {
         applicationsToProcess.push(applications.find((ap) => ap.uuid === key));
+      } else {
+        applicationsProcessingTimes.delete(key);
       }
     });
 

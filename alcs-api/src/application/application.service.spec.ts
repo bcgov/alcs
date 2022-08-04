@@ -9,7 +9,10 @@ import {
 } from '../common/utils/test-helpers/mockTypes';
 import { BusinessDayService } from '../providers/business-days/business-day.service';
 import { ApplicationPaused } from './application-paused.entity';
-import { ApplicationTimeTrackingService } from './application-time-tracking.service';
+import {
+  ApplicationTimeData,
+  ApplicationTimeTrackingService,
+} from './application-time-tracking.service';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -125,5 +128,60 @@ describe('ApplicationService', () => {
       applicationMockEntity,
     );
     expect(applicationRepositoryMock.save).toHaveBeenCalled();
+  });
+
+  it('should get applications near expiry', async () => {
+    const applicationMockEntity = initApplicationMockEntity();
+    const applicationMockEntity2 = initApplicationMockEntity();
+    applicationMockEntity2.uuid = applicationMockEntity2.uuid + '2';
+
+    applicationRepositoryMock.find.mockReturnValue([
+      applicationMockEntity,
+      applicationMockEntity2,
+    ]);
+
+    const mockApplicationTimeMap = new Map<string, ApplicationTimeData>();
+    mockApplicationTimeMap.set(applicationMockEntity.uuid, {
+      activeDays: 55,
+      pausedDays: 50,
+    });
+    mockApplicationTimeMap.set(applicationMockEntity2.uuid, {
+      activeDays: 54,
+      pausedDays: 50,
+    });
+
+    mockApplicationTimeService.fetchApplicationActiveTimes.mockResolvedValue(
+      mockApplicationTimeMap,
+    );
+
+    const result = await applicationService.getApplicationsNearExpiryDates(
+      new Date(10, 5),
+      new Date(11, 6),
+    );
+
+    expect(result).toStrictEqual([applicationMockEntity]);
+    expect(
+      mockApplicationTimeService.fetchApplicationActiveTimes,
+    ).toBeCalledTimes(1);
+  });
+
+  it('should not return applications near expiry', async () => {
+    const applicationMockEntity = initApplicationMockEntity();
+
+    applicationRepositoryMock.find.mockReturnValue([applicationMockEntity]);
+
+    mockApplicationTimeService.fetchApplicationActiveTimes.mockResolvedValue(
+      new Map<string, ApplicationTimeData>(),
+    );
+
+    const result = await applicationService.getApplicationsNearExpiryDates(
+      new Date(10, 5),
+      new Date(11, 6),
+    );
+
+    expect(result).toStrictEqual([]);
+    expect(
+      mockApplicationTimeService.fetchApplicationActiveTimes,
+    ).toBeCalledTimes(1);
   });
 });
