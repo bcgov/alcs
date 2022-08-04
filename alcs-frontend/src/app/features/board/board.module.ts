@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterModule, Routes } from '@angular/router';
+import { AppModule } from '../../app.module';
 import { CardComponent } from '../../shared/card/card.component';
+import { CommentComponent } from '../../shared/commenting/comment.component';
+import { CommentsComponent } from '../../shared/commenting/comments.component';
 import { DragDropBoardComponent } from '../../shared/drag-drop-board/drag-drop-board.component';
 import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pipe';
 import { InlineEditComponent } from '../../shared/inline-edit/inline-edit.component';
@@ -28,6 +31,8 @@ const routes: Routes = [
     CreateCardDialogComponent,
     CardComponent,
     InlineEditComponent,
+    CommentComponent,
+    CommentsComponent,
   ],
   imports: [CommonModule, SharedModule, DragDropModule, MatGridListModule, RouterModule.forChild(routes)],
   providers: [],

@@ -1,0 +1,59 @@
+.comment {
+  width: 100%;
+  margin: 8px 4px 16px 4px;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .body {
+    margin-bottom: 8px;
+    padding: 6px;
+    border-radius: 6px;
+    background-color: #efefef;
+    min-height: 28px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.comment-input {
+  width: 100%;
+
+  ::ng-deep .mat-form-field-infix {
+    border-top-width: 0;
+  }
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: end;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0px;
+
+  button {
+    font-size: 10px !important;
+    text-decoration: underline;
+    color: #666;
+    min-width: unset;
+    padding: 0 8px;
+    line-height: 14px;
+  }
+
+  .edited {
+    font-size: 10px;
+    color: #666;
+  }
+}

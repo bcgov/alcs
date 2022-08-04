@@ -19,6 +19,7 @@ import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UserService } from './user/user.service';
       middleware: { mount: true },
     }),
     ApplicationModule,
+    CommentModule,
     ConfigModule,
     AuthorizationModule,
     RedisModule,
