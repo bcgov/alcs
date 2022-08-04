@@ -1,6 +1,5 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,11 +16,8 @@ import { ConfigModule } from './common/config/config.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
-import { EmailModule } from './providers/email/email.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
-import { BullConfigService } from './queues/bullConfig.service';
-import { SchedulerConsumerService } from './queues/scheduler/scheduler.consumer.service';
-import { SchedulerService } from './queues/scheduler/scheduler.service';
+import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 
@@ -58,13 +54,7 @@ import { UserService } from './user/user.service';
             : undefined,
       },
     }),
-    BullModule.forRootAsync({
-      useClass: BullConfigService,
-    }),
-    BullModule.registerQueue({
-      name: 'SchedulerQueue',
-    }),
-    EmailModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -79,8 +69,6 @@ import { UserService } from './user/user.service';
       provide: APP_FILTER,
       useClass: AuthorizationFilter,
     },
-    SchedulerService,
-    SchedulerConsumerService,
   ],
 })
 export class AppModule {}

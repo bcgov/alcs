@@ -1,3 +1,4 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,6 +7,9 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
+import { BusinessDayService } from '../providers/business-days/business-day.service';
+import { ApplicationPaused } from './application-paused.entity';
+import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -13,11 +17,27 @@ describe('ApplicationService', () => {
   let applicationService: ApplicationService;
   let applicationRepositoryMock: MockType<Repository<Application>>;
   const applicationMockEntity = initApplicationMockEntity();
+  let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
+  let mockBusinessDayService: DeepMocked<BusinessDayService>;
 
   beforeEach(async () => {
+    mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationService,
+        {
+          provide: ApplicationTimeTrackingService,
+          useValue: mockApplicationTimeService,
+        },
+        {
+          provide: BusinessDayService,
+          useValue: mockBusinessDayService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationPaused),
+          useFactory: repositoryMockFactory,
+        },
         {
           provide: getRepositoryToken(Application),
           useFactory: repositoryMockFactory,

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SchedulerConsumerService } from './scheduler.consumer.service';
 
-describe('Scheduler.ConsumerService', () => {
+describe('SchedulerConsumerService', () => {
   let service: SchedulerConsumerService;
 
   beforeEach(async () => {

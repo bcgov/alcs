@@ -7,7 +7,7 @@ export class SchedulerService {
   constructor(@InjectQueue('SchedulerQueue') private schedulerQueue: Queue) {}
 
   async scheduleApplicationExpiry() {
-    // await this.schedulerQueue.add({}, { repeat: { cron: '0 28 15 * * *' } });
-    await this.schedulerQueue.add({});
+    await this.schedulerQueue.add({}, { repeat: { cron: '0 0 2 * * 1-5' } });
+    // await this.schedulerQueue.add({});
   }
 }

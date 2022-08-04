@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, In, Repository } from 'typeorm';
 import { applicationExpirationDayRanges } from '../common/constant';
@@ -16,6 +16,7 @@ export class ApplicationService {
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,
+    @Inject(ApplicationTimeTrackingService)
     private readonly applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
 
