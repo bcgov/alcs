@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, In, Repository } from 'typeorm';
-import { applicationExpirationDayRanges } from '../common/constant';
+import { APPLICATION_EXPIRATION_DAY_RANGES } from '../common/constant';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -112,8 +112,8 @@ export class ApplicationService {
 
     applicationsProcessingTimes.forEach((val, key) => {
       if (
-        val.activeDays >= applicationExpirationDayRanges.ACTIVE_DAYS_START &&
-        val.activeDays <= applicationExpirationDayRanges.ACTIVE_DAYS_END
+        val.activeDays >= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_START &&
+        val.activeDays <= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_END
       ) {
         applicationsToProcess.push(applications.find((ap) => ap.uuid === key));
       } else {

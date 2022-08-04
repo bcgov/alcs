@@ -1,4 +1,8 @@
-export const applicationExpirationDayRanges = {
+export const APPLICATION_EXPIRATION_DAY_RANGES = {
   ACTIVE_DAYS_START: 55,
   ACTIVE_DAYS_END: 60,
+};
+
+export const CRON_EXPRESSIONS = {
+  MONDAY_TO_FRIDAY_AT_2AM: '0 0 2 * * 1-5',
 };

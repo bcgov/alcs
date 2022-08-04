@@ -2,7 +2,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { ApplicationService } from '../../application/application.service';
 import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
-import { applicationExpirationDayRanges } from '../../common/constant';
+import { APPLICATION_EXPIRATION_DAY_RANGES } from '../../common/constant';
 import { EmailService } from '../../providers/email/email.service';
 
 @Processor('SchedulerQueue')
@@ -55,7 +55,7 @@ export class SchedulerConsumerService {
     const startDate = this.addDays(new Date(), -90);
     const endDate = this.addDays(
       new Date(),
-      -applicationExpirationDayRanges.ACTIVE_DAYS_START,
+      -APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_START,
     );
     return this.applicationService.getApplicationsNearExpiryDates(
       startDate,
