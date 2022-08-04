@@ -37,6 +37,20 @@
 
   <div>
     <ng-select
+      class="card-decision-maker"
+      [items]="decisionMakers"
+      placeholder="Decision Maker"
+      bindLabel="label"
+      bindValue="code"
+      [clearable]="false"
+      [(ngModel)]="selectedDecisionMaker"
+      (change)="onDecisionMakerSelected($event)"
+    >
+    </ng-select>
+  </div>
+
+  <div>
+    <ng-select
       class="card-assignee"
       [items]="$users | async"
       placeholder="Assignee"

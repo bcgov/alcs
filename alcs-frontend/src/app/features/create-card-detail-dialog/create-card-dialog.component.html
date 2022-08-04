@@ -61,7 +61,18 @@
         bindValue="code"
         [clearable]="false"
         (change)="onSelectApplicationType($event)"
-        required
+      >
+      </ng-select>
+    </div>
+    <div>
+      <ng-select
+        class="card-type"
+        [items]="decisionMakers"
+        appendTo="body"
+        placeholder="Decision Maker"
+        bindLabel="label"
+        bindValue="code"
+        (change)="onSelectDecisionMaker($event)"
       >
       </ng-select>
     </div>
