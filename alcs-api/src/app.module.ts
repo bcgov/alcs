@@ -17,6 +17,7 @@ import { ConfigModule } from './common/config/config.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
+import { EmailModule } from './providers/email/email.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { BullConfigService } from './queues/bullConfig.service';
 import { SchedulerConsumerService } from './queues/scheduler/scheduler.consumer.service';
@@ -63,6 +64,7 @@ import { UserService } from './user/user.service';
     BullModule.registerQueue({
       name: 'SchedulerQueue',
     }),
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [
