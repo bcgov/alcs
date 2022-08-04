@@ -1,12 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, In, Repository } from 'typeorm';
-import { APPLICATION_EXPIRATION_DAY_RANGES } from '../common/constant';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
 import { Application } from './application.entity';
+
+export const APPLICATION_EXPIRATION_DAY_RANGES = {
+  ACTIVE_DAYS_START: 55,
+  ACTIVE_DAYS_END: 60,
+};
 
 @Injectable()
 export class ApplicationService {
@@ -91,7 +95,7 @@ export class ApplicationService {
     });
   }
 
-  async getApplicationsNearExpiryDates(startDate, endDate) {
+  async getApplicationsNearExpiryDates(startDate: Date, endDate: Date) {
     const applications = await this.applicationRepository.find({
       where: {
         createdAt: Between(startDate, endDate),

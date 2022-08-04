@@ -1,7 +1,8 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
-import { CRON_EXPRESSIONS } from '../../common/constant';
+
+const MONDAY_TO_FRIDAY_AT_2AM = '0 0 2 * * 1-5';
 
 @Injectable()
 export class SchedulerService {
@@ -10,7 +11,7 @@ export class SchedulerService {
   async scheduleApplicationExpiry() {
     await this.schedulerQueue.add(
       {},
-      { repeat: { cron: CRON_EXPRESSIONS.MONDAY_TO_FRIDAY_AT_2AM } },
+      { repeat: { cron: MONDAY_TO_FRIDAY_AT_2AM } },
     );
   }
 }
