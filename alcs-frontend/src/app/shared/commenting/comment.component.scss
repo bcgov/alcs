@@ -28,7 +28,7 @@
 .comment-input {
   width: 100%;
 
-  ::ng-deep .mat-form-field-infix {
+  host::ng-deep .mat-form-field-infix {
     border-top-width: 0;
   }
 }
@@ -41,10 +41,10 @@
 .footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 0px;
+  margin-top: 0;
 
   button {
-    font-size: 10px !important;
+    font-size: 0.6rem !important;
     text-decoration: underline;
     color: #666;
     min-width: unset;
@@ -53,7 +53,7 @@
   }
 
   .edited {
-    font-size: 10px;
+    font-size: 0.8em;
     color: #666;
   }
 }

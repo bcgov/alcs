@@ -34,7 +34,6 @@ import { SharedModule } from './shared/shared.module';
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
   ],
   bootstrap: [AppComponent],
-  exports: [],
 })
 export class AppModule {
   constructor(private config: NgSelectConfig) {

@@ -16,7 +16,7 @@ describe('CommentComponent', () => {
     component.comment = {
       uuid: 'fake-uuid',
       body: 'fake-body',
-      madeBy: 'fake-madeBy',
+      author: 'fake-author',
       edited: false,
       isEditable: false,
       createdAt: Date.now(),

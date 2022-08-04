@@ -25,7 +25,7 @@ describe('CommentService', () => {
 
     comment = new Comment({
       body: 'body',
-      madeBy: {
+      author: {
         uuid: '',
         email: 'fake-email',
         name: 'fake-name',
@@ -101,7 +101,7 @@ describe('CommentService', () => {
 
     expect(mockCommentRepository.save).toHaveBeenCalled();
     const savedData = mockCommentRepository.save.mock.calls[0][0];
-    expect(savedData.madeBy).toEqual(fakeUser);
+    expect(savedData.author).toEqual(fakeUser);
     expect(savedData.application).toEqual(fakeApplication);
     expect(savedData.body).toEqual('new-comment');
   });

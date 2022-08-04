@@ -33,7 +33,7 @@ describe('CommentController', () => {
 
     comment = new Comment({
       body: 'body',
-      madeBy: user as any,
+      author: user as any,
       createdAt: new Date(),
       applicationUuid: 'file-number',
       edited: false,
@@ -68,12 +68,12 @@ describe('CommentController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should correctly map fetched the madeBy and editable fields', async () => {
+  it('should correctly map the author and editable fields', async () => {
     mockCommentService.fetchComments.mockResolvedValue([comment]);
 
     const comments = await controller.get('file-number', request);
     expect(comments.length).toEqual(1);
-    expect(comments[0].madeBy).toEqual(user.name);
+    expect(comments[0].author).toEqual(user.name);
     expect(comments[0].isEditable).toEqual(true);
   });
 

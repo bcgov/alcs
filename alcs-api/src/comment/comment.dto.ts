@@ -9,7 +9,7 @@ export class CommentDto {
   body: string;
 
   @AutoMap()
-  madeBy: string;
+  author: string;
 
   @AutoMap()
   edited: boolean;

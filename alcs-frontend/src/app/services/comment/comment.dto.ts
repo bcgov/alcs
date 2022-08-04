@@ -1,7 +1,7 @@
 export interface CommentDto {
   uuid: string;
   body: string;
-  madeBy: string;
+  author: string;
   edited: boolean;
   createdAt: number;
   isEditable: boolean;

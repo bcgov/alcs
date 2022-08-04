@@ -18,8 +18,8 @@ export class CommentProfile extends AutomapperProfile {
         Comment,
         CommentDto,
         forMember(
-          (ud) => ud.madeBy,
-          mapFrom((u) => u.madeBy.name),
+          (ud) => ud.author,
+          mapFrom((u) => u.author.name),
         ),
       );
     };

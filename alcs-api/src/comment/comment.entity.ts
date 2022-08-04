@@ -21,7 +21,7 @@ export class Comment extends Base {
 
   @AutoMap()
   @ManyToOne(() => User)
-  madeBy: User;
+  author: User;
 
   @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })

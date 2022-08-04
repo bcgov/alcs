@@ -22,7 +22,7 @@ export class CommentService {
       where: {
         applicationUuid: application.uuid,
       },
-      relations: ['madeBy'],
+      relations: ['author'],
       order: {
         createdAt: 'DESC',
       },
@@ -34,7 +34,7 @@ export class CommentService {
       where: {
         uuid: commentUuid,
       },
-      relations: ['madeBy'],
+      relations: ['author'],
     });
   }
 
@@ -50,7 +50,7 @@ export class CommentService {
     const comment = new Comment({
       body: commentBody,
       application,
-      madeBy: user,
+      author: user,
     });
     return this.commentRepository.save(comment);
   }

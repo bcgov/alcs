@@ -38,15 +38,7 @@ export class CommentController {
     @Req() req,
   ): Promise<CommentDto[]> {
     const comments = await this.commentService.fetchComments(fileNumber);
-
-    return comments.map((comment) => ({
-      uuid: comment.uuid,
-      edited: comment.edited,
-      madeBy: comment.madeBy.name,
-      body: comment.body,
-      createdAt: comment.createdAt.valueOf(),
-      isEditable: comment.madeBy.email === req.user.email,
-    }));
+    return this.mapToDto(comments, req.user.email);
   }
 
   @Post()
@@ -71,7 +63,7 @@ export class CommentController {
       throw new NotFoundException(`Comment ${comment.uuid} not found`);
     }
 
-    if (existingComment.madeBy.email === req.user.email) {
+    if (existingComment.author.email === req.user.email) {
       const updatedComment = await this.commentService.update(
         comment.uuid,
         comment.body,
@@ -91,10 +83,20 @@ export class CommentController {
       throw new NotFoundException(`Comment ${id} not found`);
     }
 
-    if (comment.madeBy.email === req.user.email) {
+    if (comment.author.email === req.user.email) {
       await this.commentService.delete(id);
     } else {
       throw new ForbiddenException('Unable to delete others comments');
     }
+  }
+
+  private async mapToDto(
+    comments: Comment[],
+    userEmail: string,
+  ): Promise<CommentDto[]> {
+    return comments.map((comment) => ({
+      ...this.autoMapper.map(comment, Comment, CommentDto),
+      isEditable: comment.author.email === userEmail,
+    }));
   }
 }
