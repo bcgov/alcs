@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ApplicationModule } from '../../application/application.module';
 import { EmailModule } from '../../providers/email/email.module';
 import { BullConfigService } from '../bullConfig.service';
@@ -20,4 +20,10 @@ import { SchedulerService } from './scheduler.service';
   providers: [SchedulerService, SchedulerConsumerService],
   exports: [SchedulerService],
 })
-export class SchedulerModule {}
+export class SchedulerModule implements OnApplicationBootstrap {
+  async onApplicationBootstrap() {
+    this.schedulerService.scheduleApplicationExpiry();
+  }
+
+  constructor(private schedulerService: SchedulerService) {}
+}
