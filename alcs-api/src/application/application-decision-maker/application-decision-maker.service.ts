@@ -7,7 +7,7 @@ import { ApplicationDecisionMaker } from './application-decision-maker.entity';
 export class ApplicationDecisionMakerService {
   constructor(
     @InjectRepository(ApplicationDecisionMaker)
-    private readonly applicationTypeRepository: Repository<ApplicationDecisionMaker>,
+    private applicationTypeRepository: Repository<ApplicationDecisionMaker>,
   ) {}
 
   async getAll(): Promise<ApplicationDecisionMaker[]> {

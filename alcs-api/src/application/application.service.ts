@@ -47,7 +47,6 @@ export class ApplicationService {
     // TODO: replace with AutoMapper
     applicationEntity = applicationEntity ?? new Application();
     applicationEntity.fileNumber = application.fileNumber;
-    applicationEntity.title = application.title;
     applicationEntity.applicant = application.applicant;
     applicationEntity.status = application.status;
     applicationEntity.statusUuid = application.statusUuid;

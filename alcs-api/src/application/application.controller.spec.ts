@@ -42,7 +42,6 @@ describe('ApplicationController', () => {
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
-    title: mockApplicationEntity.title,
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
     status: mockApplicationEntity.status.code,

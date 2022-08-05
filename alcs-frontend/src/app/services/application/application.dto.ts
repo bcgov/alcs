@@ -12,7 +12,6 @@ export interface CreateApplicationDto {
 
 export interface ApplicationDto {
   fileNumber: string;
-  title: string;
   applicant: string;
   status: string;
   type: string;
@@ -25,7 +24,6 @@ export interface ApplicationDto {
 
 export interface ApplicationPartialDto {
   fileNumber: string;
-  title?: string;
   applicant?: string;
   status?: string;
   decisionMaker?: string;

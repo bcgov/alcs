@@ -1,15 +1,11 @@
 <div mat-dialog-title>
-  <h2 class="card-title">{{ currentCard.title }}</h2>
+  <h2 class="card-title">{{ currentCard.fileNumber }} ({{ currentCard.applicant }})</h2>
   <span>
     in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
   </span>
   <span class="pull-right card-state">{{ currentCard.paused ? 'Paused' : 'Active' }}</span>
 </div>
 <mat-dialog-content>
-  <div>
-    <mat-label>File number:</mat-label>
-    <p class="card-file-number">{{ currentCard.fileNumber }}</p>
-  </div>
   <div>
     <mat-label>Applicant:</mat-label>
     <div>

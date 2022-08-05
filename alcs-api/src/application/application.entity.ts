@@ -27,10 +27,6 @@ export class Application extends Base {
 
   @AutoMap()
   @Column()
-  title: string;
-
-  @AutoMap()
-  @Column()
   applicant: string;
 
   @AutoMap()

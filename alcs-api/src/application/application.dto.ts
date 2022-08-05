@@ -40,11 +40,6 @@ export class ApplicationDto {
   @AutoMap()
   @IsNotEmpty()
   @IsString()
-  title: string;
-
-  @AutoMap()
-  @IsNotEmpty()
-  @IsString()
   applicant: string;
 
   @IsNotEmpty()
@@ -92,11 +87,6 @@ export class ApplicationUpdateDto {
   @IsNotEmpty()
   @IsString()
   fileNumber: string;
-
-  @AutoMap()
-  @IsOptional()
-  @IsString()
-  title?: string;
 
   @AutoMap()
   @IsOptional()

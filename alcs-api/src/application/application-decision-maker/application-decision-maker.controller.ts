@@ -11,7 +11,7 @@ import { ApplicationDecisionMakerService } from './application-decision-maker.se
 @Controller('application-decision-maker')
 export class ApplicationDecisionMakerController {
   constructor(
-    private readonly applicationTypeService: ApplicationDecisionMakerService,
+    private applicationTypeService: ApplicationDecisionMakerService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 

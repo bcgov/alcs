@@ -80,7 +80,6 @@ export class ApplicationController {
       ...application,
       type,
       decisionMaker,
-      title: 'Do we still need title?',
     });
     const mappedApps = await this.mapApplicationsToDtos([app]);
     return mappedApps[0];
@@ -129,7 +128,6 @@ export class ApplicationController {
 
     const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
-      title: application.title,
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
       typeUuid: type ? type.uuid : undefined,

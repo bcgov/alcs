@@ -20,6 +20,6 @@ export class seedApplicationDecisionMaker1659644464368
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`delete from public.holiday_entity`);
+    await queryRunner.query(`delete from public.application_decision_maker`);
   }
 }

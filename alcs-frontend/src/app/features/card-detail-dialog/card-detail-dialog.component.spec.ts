@@ -49,7 +49,6 @@ describe('CardDetailDialogComponent', () => {
     typeDetails: mockApplicationType,
     type: 'TYPE',
     fileNumber: '1111',
-    title: '111 title',
     applicant: 'I am an applicant',
     status: 'STATUS',
     assignee: mockAssignee,
@@ -89,10 +88,8 @@ describe('CardDetailDialogComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.card-title').textContent).toEqual(mockCardDetail.title);
     expect(compiled.querySelector('.card-status-label').textContent).toEqual(mockCardDetail.statusDetails.label);
     expect(compiled.querySelector('.card-state').textContent).toEqual('Paused');
-    expect(compiled.querySelector('.card-file-number').textContent).toEqual(mockCardDetail.fileNumber);
     expect(compiled.querySelector('.card-applicant')).toBeTruthy();
     expect(compiled.querySelector('.card-type')).toBeTruthy();
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();

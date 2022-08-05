@@ -50,7 +50,6 @@ const initAssigneeMockEntity = (): User => {
 
 const initApplicationMockEntity = (): Application => {
   const applicationEntity = new Application();
-  applicationEntity.title = 'app_1';
   applicationEntity.fileNumber = 'app_1';
   applicationEntity.applicant = 'applicant 1';
   applicationEntity.uuid = '1111-1111-1111-1111';
