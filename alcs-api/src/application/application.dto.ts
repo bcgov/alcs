@@ -7,9 +7,9 @@ import {
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
 import { UserDto } from '../user/user.dto';
-import { ApplicationDecisionMakerDto } from './application-decision-maker/application-decision-maker.dto';
+import { ApplicationDecisionMakerDto } from './application-code/application-decision-maker/application-decision-maker.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
-import { ApplicationTypeDto } from './application-type/application-type.dto';
+import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
 
 export class CreateApplicationDto {
   @AutoMap()

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ApplicationTypeDto } from '../../services/application/application-type.dto';
+import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 
 export interface CardData {
   id: string;

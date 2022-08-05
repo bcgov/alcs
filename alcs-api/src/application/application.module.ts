@@ -4,18 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { BusinessDayModule } from '../providers/business-days/business-day.module';
-import { ApplicationDecisionMakerController } from './application-decision-maker/application-decision-maker.controller';
-import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
-import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
+import { ApplicationCodeModule } from './application-code/application-code.module';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatusController } from './application-status/application-status.controller';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
-import { ApplicationTypeController } from './application-type/application-type.controller';
-import { ApplicationType } from './application-type/application-type.entity';
-import { ApplicationTypeService } from './application-type/application-type.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -25,19 +20,16 @@ import { ApplicationSubscriber } from './application.subscriber';
   imports: [
     TypeOrmModule.forFeature([
       ApplicationStatus,
-      ApplicationType,
-      ApplicationDecisionMaker,
       Application,
       ApplicationHistory,
       ApplicationPaused,
     ]),
+    ApplicationCodeModule,
     BusinessDayModule,
   ],
   providers: [
     ApplicationService,
     ApplicationStatusService,
-    ApplicationTypeService,
-    ApplicationDecisionMakerService,
     ApplicationTimeTrackingService,
     ApplicationSubscriber,
     {
@@ -46,12 +38,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     },
     ApplicationProfile,
   ],
-  controllers: [
-    ApplicationController,
-    ApplicationStatusController,
-    ApplicationTypeController,
-    ApplicationDecisionMakerController,
-  ],
+  controllers: [ApplicationController, ApplicationStatusController],
   exports: [ApplicationService, ApplicationTimeTrackingService],
 })
 export class ApplicationModule {}

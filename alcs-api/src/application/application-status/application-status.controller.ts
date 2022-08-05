@@ -9,14 +9,6 @@ import { ApplicationStatusService } from './application-status.service';
 export class ApplicationStatusController {
   constructor(private applicationStatusService: ApplicationStatusService) {}
 
-  @Get()
-  async getAll(): Promise<ApplicationStatusDto[]> {
-    const applications = await this.applicationStatusService.getAll();
-    return applications.map<ApplicationStatusDto>((app) => {
-      return { code: app.code, description: app.description, label: app.label };
-    });
-  }
-
   @Post()
   async add(
     @Body() application: ApplicationStatusDto,
