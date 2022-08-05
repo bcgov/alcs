@@ -80,14 +80,4 @@ describe('ApplicationStatusController', () => {
       applicationStatusDto,
     );
   });
-
-  it('should getall', async () => {
-    const result: ApplicationStatusDto[] = [applicationStatusDto];
-
-    jest
-      .spyOn(applicationStatusService, 'getAll')
-      .mockImplementation(async () => [mockApplicationStatusEntity]);
-
-    expect(await controller.getAll()).toStrictEqual(result);
-  });
 });

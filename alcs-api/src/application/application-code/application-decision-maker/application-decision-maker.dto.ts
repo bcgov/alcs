@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { BaseCodeDto } from '../../../common/dtos/base.dto';
 
 export class ApplicationDecisionMakerDto extends BaseCodeDto {
   @AutoMap()

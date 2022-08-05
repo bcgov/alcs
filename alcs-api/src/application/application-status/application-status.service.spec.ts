@@ -85,12 +85,6 @@ describe('ApplicationStatusService', () => {
     ).toStrictEqual(applicationStatusMockEntity);
   });
 
-  it('should getall application statuses', async () => {
-    expect(await applicationStatusService.getAll()).toStrictEqual([
-      applicationStatusMockEntity,
-    ]);
-  });
-
   it('should delete application status', async () => {
     await applicationStatusService.delete('app_1');
 

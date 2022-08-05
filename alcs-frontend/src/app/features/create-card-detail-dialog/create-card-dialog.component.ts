@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionMakerDto } from '../../services/application/application-decision-maker.dto';
-import { ApplicationTypeDto } from '../../services/application/application-type.dto';
+import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';

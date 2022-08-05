@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationTypeDto } from '../../services/application/application-type.dto';
+import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';

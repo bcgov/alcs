@@ -9,11 +9,11 @@ import {
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
-import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationType } from './application-type/application-type.entity';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
 
 @Entity()
 export class Application extends Base {

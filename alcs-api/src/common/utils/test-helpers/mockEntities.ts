@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
-import { ApplicationType } from '../../../application/application-type/application-type.entity';
+import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
 import { Application } from '../../../application/application.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';

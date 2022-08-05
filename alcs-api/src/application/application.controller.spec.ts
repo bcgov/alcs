@@ -14,15 +14,13 @@ import {
   mockKeyCloakProviders,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
-import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
+import { ApplicationCodeService } from './application-code/application-code.service';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationStatusService } from './application-status/application-status.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
-import { ApplicationType } from './application-type/application-type.entity';
-import { ApplicationTypeService } from './application-type/application-type.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
@@ -35,10 +33,8 @@ jest.mock('../common/authorization/role.guard', () => ({
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: DeepMocked<ApplicationService>;
-  let applicationTypeService: DeepMocked<ApplicationTypeService>;
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
-  let mockDecisionMakerService: DeepMocked<ApplicationDecisionMakerService>;
-  const applicationStatusService = createMock<ApplicationStatusService>();
+  let applicationCodeService: DeepMocked<ApplicationCodeService>;
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
@@ -56,9 +52,8 @@ describe('ApplicationController', () => {
 
   beforeEach(async () => {
     mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
-    applicationTypeService = createMock<ApplicationTypeService>();
     applicationService = createMock<ApplicationService>();
-    mockDecisionMakerService = createMock<ApplicationDecisionMakerService>();
+    applicationCodeService = createMock<ApplicationCodeService>();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController, ApplicationProfile, UserProfile],
@@ -68,20 +63,12 @@ describe('ApplicationController', () => {
           useValue: applicationService,
         },
         {
-          provide: ApplicationStatusService,
-          useValue: applicationStatusService,
-        },
-        {
           provide: ApplicationTimeTrackingService,
           useValue: mockApplicationTimeService,
         },
         {
-          provide: ApplicationTypeService,
-          useValue: applicationTypeService,
-        },
-        {
-          provide: ApplicationDecisionMakerService,
-          useValue: mockDecisionMakerService,
+          provide: ApplicationCodeService,
+          useValue: applicationCodeService,
         },
         {
           provide: getRepositoryToken(Application),
@@ -95,7 +82,7 @@ describe('ApplicationController', () => {
         }),
       ],
     }).compile();
-    applicationStatusService.fetchStatus.mockResolvedValue(
+    applicationCodeService.fetchStatus.mockResolvedValue(
       createMock<ApplicationStatus>(),
     );
     controller = module.get<ApplicationController>(ApplicationController);
@@ -128,7 +115,7 @@ describe('ApplicationController', () => {
   it('should return the entity after create', async () => {
     applicationService.createOrUpdate.mockResolvedValue(mockApplicationEntity);
 
-    applicationTypeService.get.mockResolvedValue({
+    applicationCodeService.fetchType.mockResolvedValue({
       uuid: 'fake-uuid',
       code: 'fake-code',
     } as ApplicationType);
@@ -188,7 +175,7 @@ describe('ApplicationController', () => {
       status: mockStatus,
     };
 
-    applicationStatusService.fetchStatus.mockResolvedValue({
+    applicationCodeService.fetchStatus.mockResolvedValue({
       uuid: mockUuid,
       code: mockStatus,
     } as ApplicationStatus);
@@ -219,7 +206,7 @@ describe('ApplicationController', () => {
       type: mockType,
     };
 
-    applicationTypeService.get.mockResolvedValue({
+    applicationCodeService.fetchType.mockResolvedValue({
       uuid: mockUuid,
       code: mockType,
     } as ApplicationType);
