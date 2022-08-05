@@ -1,0 +1,31 @@
+<div *ngIf="comment" class="comment">
+  <div class="header">
+    <div class="made-by">{{ comment.author }}</div>
+    <div class="created-at">
+      {{ commentDate }}
+    </div>
+  </div>
+  <div class="body">
+    <div [hidden]="!isEditing">
+      <mat-form-field class="comment-input" appearance="fill">
+        <textarea #textarea cdkTextareaAutosize [(ngModel)]="editComment" matInput placeholder=""></textarea>
+      </mat-form-field>
+      <div class="edit-buttons">
+        <button (click)="onCancel()">Cancel</button>
+        <button (click)="onSave()">Save</button>
+      </div>
+    </div>
+    <div *ngIf="!isEditing" class="content">
+      {{ comment.body }}
+    </div>
+    <div class="footer" *ngIf="!isEditing">
+      <div>
+        <span class="edited" *ngIf="comment.edited">(edited) </span>
+      </div>
+      <div>
+        <button *ngIf="comment.isEditable" (click)="onDelete()" mat-button>delete</button>
+        <button *ngIf="comment.isEditable" (click)="onEdit()" mat-button>edit</button>
+      </div>
+    </div>
+  </div>
+</div>

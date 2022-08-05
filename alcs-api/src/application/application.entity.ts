@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 import { ApplicationHistory } from './application-history.entity';
@@ -78,4 +79,8 @@ export class Application extends Base {
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
   pauses: ApplicationPaused[];
+
+  @AutoMap()
+  @OneToMany(() => Comment, (comment) => comment.application)
+  comments: Comment[];
 }

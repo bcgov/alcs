@@ -76,7 +76,9 @@
   </div>
   <div class="card-comments-wrapper">
     <mat-label>Comments</mat-label>
-    <p>Placeholder comments</p>
+    <div>
+      <app-comments [fileNumber]="currentCard.fileNumber"></app-comments>
+    </div>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
