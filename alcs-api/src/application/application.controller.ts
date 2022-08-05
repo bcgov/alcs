@@ -16,6 +16,8 @@ import { RoleGuard } from '../common/authorization/role.guard';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
@@ -38,6 +40,7 @@ export class ApplicationController {
     private applicationService: ApplicationService,
     private applicationStatusService: ApplicationStatusService,
     private applicationTypeService: ApplicationTypeService,
+    private applicationDecisionMakerService: ApplicationDecisionMakerService,
     private applicationPausedService: ApplicationTimeTrackingService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
@@ -58,6 +61,7 @@ export class ApplicationController {
       ...mappedApplication[0],
       statusDetails: application.status,
       typeDetails: application.type,
+      decisionMakerDetails: application.decisionMaker,
     };
   }
 
@@ -67,11 +71,15 @@ export class ApplicationController {
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
     const type = await this.applicationTypeService.get(application.type);
+    const decisionMaker = application.decisionMaker
+      ? await this.applicationDecisionMakerService.get(
+          application.decisionMaker,
+        )
+      : undefined;
     const app = await this.applicationService.createOrUpdate({
       ...application,
       type,
-      typeUuid: type.uuid,
-      title: 'Do we still need title?',
+      decisionMaker,
     });
     const mappedApps = await this.mapApplicationsToDtos([app]);
     return mappedApps[0];
@@ -107,12 +115,23 @@ export class ApplicationController {
       type = await this.applicationTypeService.get(application.type);
     }
 
+    let decisionMaker: ApplicationDecisionMaker | undefined;
+    if (
+      application.decisionMaker &&
+      (!existingApplication.decisionMaker ||
+        application.decisionMaker != existingApplication.decisionMaker.code)
+    ) {
+      decisionMaker = await this.applicationDecisionMakerService.get(
+        application.decisionMaker,
+      );
+    }
+
     const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
-      title: application.title,
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
       typeUuid: type ? type.uuid : undefined,
+      decisionMakerUuid: decisionMaker ? decisionMaker.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
     });

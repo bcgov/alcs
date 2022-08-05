@@ -14,6 +14,7 @@ import {
   mockKeyCloakProviders,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
+import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import {
@@ -36,16 +37,17 @@ describe('ApplicationController', () => {
   let applicationService: DeepMocked<ApplicationService>;
   let applicationTypeService: DeepMocked<ApplicationTypeService>;
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
+  let mockDecisionMakerService: DeepMocked<ApplicationDecisionMakerService>;
   const applicationStatusService = createMock<ApplicationStatusService>();
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
-    title: mockApplicationEntity.title,
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
     status: mockApplicationEntity.status.code,
     type: mockApplicationEntity.type.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
+    decisionMaker: undefined,
     assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
@@ -56,6 +58,7 @@ describe('ApplicationController', () => {
     mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
     applicationTypeService = createMock<ApplicationTypeService>();
     applicationService = createMock<ApplicationService>();
+    mockDecisionMakerService = createMock<ApplicationDecisionMakerService>();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController, ApplicationProfile, UserProfile],
@@ -75,6 +78,10 @@ describe('ApplicationController', () => {
         {
           provide: ApplicationTypeService,
           useValue: applicationTypeService,
+        },
+        {
+          provide: ApplicationDecisionMakerService,
+          useValue: mockDecisionMakerService,
         },
         {
           provide: getRepositoryToken(Application),
@@ -219,7 +226,7 @@ describe('ApplicationController', () => {
     applicationService.get.mockResolvedValue(mockApplicationEntity);
     applicationService.createOrUpdate.mockResolvedValue({
       ...mockApplicationEntity,
-      status: {
+      type: {
         code: mockType,
         label: '',
         description: '',
@@ -228,7 +235,7 @@ describe('ApplicationController', () => {
 
     const res = await controller.update(mockUpdate);
 
-    expect(res.status).toEqual(mockUpdate.type);
+    expect(res.type).toEqual(mockUpdate.type);
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
 
     const savedData = applicationService.createOrUpdate.mock.calls[0][0];

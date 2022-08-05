@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { BusinessDayModule } from '../providers/business-days/business-day.module';
+import { ApplicationDecisionMakerController } from './application-decision-maker/application-decision-maker.controller';
+import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatusController } from './application-status/application-status.controller';
@@ -23,6 +26,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     TypeOrmModule.forFeature([
       ApplicationStatus,
       ApplicationType,
+      ApplicationDecisionMaker,
       Application,
       ApplicationHistory,
       ApplicationPaused,
@@ -33,6 +37,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationService,
     ApplicationStatusService,
     ApplicationTypeService,
+    ApplicationDecisionMakerService,
     ApplicationTimeTrackingService,
     ApplicationSubscriber,
     {
@@ -45,6 +50,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationController,
     ApplicationStatusController,
     ApplicationTypeController,
+    ApplicationDecisionMakerController,
   ],
   exports: [ApplicationService, ApplicationTimeTrackingService],
 })
