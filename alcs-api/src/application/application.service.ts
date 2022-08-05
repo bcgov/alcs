@@ -1,15 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
+import {
+  ApplicationTimeData,
+  ApplicationTimeTrackingService,
+} from './application-time-tracking.service';
 import { Application } from './application.entity';
+
+export const APPLICATION_EXPIRATION_DAY_RANGES = {
+  ACTIVE_DAYS_START: 55,
+  ACTIVE_DAYS_END: 60,
+};
 
 @Injectable()
 export class ApplicationService {
   private DEFAULT_RELATIONS = ['status', 'type', 'assignee'];
+  private logger = new Logger(ApplicationService.name);
 
   constructor(
     @InjectRepository(Application)
-    private readonly applicationRepository: Repository<Application>,
+    private applicationRepository: Repository<Application>,
+    private applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
 
   async resetApplicationStatus(
@@ -82,5 +93,37 @@ export class ApplicationService {
       },
       relations: this.DEFAULT_RELATIONS,
     });
+  }
+
+  async getApplicationsNearExpiryDates(startDate: Date, endDate: Date) {
+    const applications = await this.applicationRepository.find({
+      where: {
+        createdAt: Between(startDate, endDate),
+      },
+    });
+
+    let applicationsProcessingTimes: Map<string, ApplicationTimeData>;
+
+    if (applications && applications.length > 0) {
+      applicationsProcessingTimes =
+        await this.applicationTimeTrackingService.fetchApplicationActiveTimes(
+          applications,
+        );
+    }
+
+    const applicationsToProcess: Application[] = [];
+
+    applicationsProcessingTimes.forEach((val, key) => {
+      if (
+        val.activeDays >= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_START &&
+        val.activeDays <= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_END
+      ) {
+        applicationsToProcess.push(applications.find((ap) => ap.uuid === key));
+      } else {
+        applicationsProcessingTimes.delete(key);
+      }
+    });
+
+    return applicationsToProcess;
   }
 }

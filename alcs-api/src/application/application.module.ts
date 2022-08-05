@@ -46,6 +46,6 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationStatusController,
     ApplicationTypeController,
   ],
-  exports: [ApplicationService],
+  exports: [ApplicationService, ApplicationTimeTrackingService],
 })
 export class ApplicationModule {}

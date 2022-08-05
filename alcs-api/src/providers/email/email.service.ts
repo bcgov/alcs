@@ -5,11 +5,11 @@ import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 
 @Injectable()
 export class EmailService {
-  private readonly logger: Logger = new Logger(EmailService.name);
+  private logger: Logger = new Logger(EmailService.name);
 
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
-    private readonly httpService: HttpService,
+    private httpService: HttpService,
   ) {}
 
   private token = '';
@@ -67,6 +67,13 @@ export class EmailService {
     const token = await this.getToken();
 
     try {
+      if (this.config.get<string>('CHES.MODE') !== 'production') {
+        this.logger.log(
+          { to, body, subject, cc, bcc },
+          'EmailService did not send the email. Set CHES.MODE to production if you need to send an email.',
+        );
+        return;
+      }
       const res = await firstValueFrom(
         this.httpService.post(
           `${serviceUrl}/api/v1/email`,

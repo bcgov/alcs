@@ -2,11 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationTypeDto } from '../../services/application/application-type.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -26,7 +26,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
-    private readonly userService: UserService,
+    private userService: UserService,
     private applicationService: ApplicationService,
     private toastService: ToastService
   ) {}

@@ -7,6 +7,7 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../../common/utils/test-helpers/mockTypes';
+import { ApplicationTimeTrackingService } from '../application-time-tracking.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationStatusDto } from './application-status.dto';
@@ -34,6 +35,10 @@ describe('ApplicationStatusService', () => {
         providers: [
           ApplicationStatusService,
           ApplicationService,
+          {
+            provide: ApplicationTimeTrackingService,
+            useValue: {},
+          },
           {
             provide: getRepositoryToken(ApplicationStatus),
             useFactory: repositoryMockFactory,

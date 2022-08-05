@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
@@ -6,11 +6,11 @@ import { HealthCheck } from './healthcheck/healthcheck.entity';
 
 @Injectable()
 export class AppService {
-  private readonly logger: Logger = new Logger(AppService.name);
+  private logger: Logger = new Logger(AppService.name);
 
   constructor(
     @InjectRepository(HealthCheck)
-    private readonly healthCheckRepository: Repository<HealthCheck>,
+    private healthCheckRepository: Repository<HealthCheck>,
   ) {}
 
   private async canReadDb(): Promise<boolean> {

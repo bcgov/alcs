@@ -1,13 +1,15 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { initApplicationStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 import { repositoryMockFactory } from '../../common/utils/test-helpers/mockTypes';
+import { ApplicationTimeTrackingService } from '../application-time-tracking.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationStatusController } from './application-status.controller';
+import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatus } from './application-status.entity';
 import { ApplicationStatusService } from './application-status.service';
-import { ApplicationStatusDto } from './application-status.dto';
-import { initApplicationStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 
 describe('ApplicationStatusController', () => {
   let controller: ApplicationStatusController;
@@ -18,13 +20,24 @@ describe('ApplicationStatusController', () => {
     description: mockApplicationStatusEntity.description,
     label: mockApplicationStatusEntity.label,
   };
+  let applicationService: DeepMocked<ApplicationService>;
+  let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
 
   beforeEach(async () => {
+    applicationService = createMock<ApplicationService>();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationStatusController],
       providers: [
         ApplicationStatusService,
-        ApplicationService,
+        {
+          provide: ApplicationService,
+          useValue: applicationService,
+        },
+        {
+          provide: ApplicationTimeTrackingService,
+          useValue: mockApplicationTimeService,
+        },
         {
           provide: getRepositoryToken(ApplicationStatus),
           useFactory: repositoryMockFactory,
