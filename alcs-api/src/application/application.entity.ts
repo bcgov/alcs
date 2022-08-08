@@ -10,6 +10,7 @@ import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
+import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -75,6 +76,17 @@ export class Application extends Base {
     nullable: true,
   })
   decisionMakerUuid: string;
+
+  @ManyToOne((decisionMaker) => ApplicationRegion, {
+    nullable: true,
+  })
+  region: ApplicationRegion;
+
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  regionUuid: string;
 
   @AutoMap()
   @ManyToOne((assignee) => User, { nullable: true })

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BusinessDayModule } from '../../providers/business-days/business-day.module';
 import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
 import { ApplicationStatus } from '../application-status/application-status.entity';
+import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';
 import { ApplicationCodeController } from './application-code.controller';
 import { ApplicationCodeService } from './application-code.service';
@@ -13,6 +14,7 @@ import { ApplicationCodeService } from './application-code.service';
       ApplicationStatus,
       ApplicationType,
       ApplicationDecisionMaker,
+      ApplicationRegion,
     ]),
     BusinessDayModule,
   ],

@@ -18,6 +18,8 @@ import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
+import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
+import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
@@ -58,6 +60,7 @@ export class ApplicationController {
       statusDetails: application.status,
       typeDetails: application.type,
       decisionMakerDetails: application.decisionMaker,
+      regionDetails: application.region,
     };
   }
 
@@ -70,10 +73,16 @@ export class ApplicationController {
     const decisionMaker = application.decisionMaker
       ? await this.codeService.fetchDecisionMaker(application.decisionMaker)
       : undefined;
+
+    const region = application.region
+      ? await this.codeService.fetchRegion(application.region)
+      : undefined;
+
     const app = await this.applicationService.createOrUpdate({
       ...application,
       type,
       decisionMaker,
+      region,
     });
     const mappedApps = await this.mapApplicationsToDtos([app]);
     return mappedApps[0];
@@ -118,12 +127,22 @@ export class ApplicationController {
       );
     }
 
+    let region: ApplicationRegion | undefined;
+    if (
+      application.region &&
+      (!existingApplication.region ||
+        application.region != existingApplication.region.code)
+    ) {
+      region = await this.codeService.fetchRegion(application.region);
+    }
+
     const app = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
       typeUuid: type ? type.uuid : undefined,
       decisionMakerUuid: decisionMaker ? decisionMaker.uuid : undefined,
+      regionUuid: region ? region.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
     });

@@ -1,7 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import {
+  ApplicationDecisionMakerDto,
+  ApplicationRegionDto,
+  ApplicationTypeDto,
+} from '../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -19,9 +23,12 @@ export class CardDetailDialogComponent implements OnInit {
   selectedAssigneeName?: string;
   selectedApplicationType = '';
   selectedDecisionMaker?: string;
+  selectedRegion?: string;
+
   currentCard: ApplicationDetailedDto = this.data;
   applicationTypes: ApplicationTypeDto[] = [];
   decisionMakers: ApplicationDecisionMakerDto[] = [];
+  regions: ApplicationRegionDto[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
@@ -36,6 +43,8 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedAssigneeName = this.selectedAssignee?.name;
     this.selectedApplicationType = this.data.typeDetails.code;
     this.selectedDecisionMaker = this.data.decisionMakerDetails?.code;
+    this.selectedRegion = this.data.regionDetails?.code;
+
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
     this.applicationService.$applicationTypes.subscribe((types) => {
@@ -43,6 +52,9 @@ export class CardDetailDialogComponent implements OnInit {
     });
     this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
       this.decisionMakers = dms;
+    });
+    this.applicationService.$applicationRegions.subscribe((regions) => {
+      this.regions = regions;
     });
   }
 
@@ -72,6 +84,13 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedDecisionMaker = decisionMaker.code;
     this.updateCard({
       decisionMaker: decisionMaker.code,
+    });
+  }
+
+  onRegionSelected(region: ApplicationRegionDto) {
+    this.selectedRegion = region.code;
+    this.updateCard({
+      region: region.code,
     });
   }
 

@@ -8,6 +8,8 @@ import { ApplicationStatus } from '../application-status/application-status.enti
 import { ApplicationMasterCodesDto } from './application-code.dto';
 import { ApplicationDecisionMakerDto } from './application-decision-maker/application-decision-maker.dto';
 import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
+import { ApplicationRegionDto } from './application-region/application-region.dto';
+import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationTypeDto } from './application-type/application-type.dto';
 import { ApplicationType } from './application-type/application-type.entity';
 import { ApplicationCodeService } from './application-code.service';
@@ -39,6 +41,11 @@ export class ApplicationCodeController {
         appTypes.decisionMaker,
         ApplicationDecisionMaker,
         ApplicationDecisionMakerDto,
+      ),
+      region: this.applicationMapper.mapArray(
+        appTypes.region,
+        ApplicationRegion,
+        ApplicationRegionDto,
       ),
     };
   }
