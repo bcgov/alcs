@@ -2,6 +2,8 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationCodeController } from './application-code.controller';
 import { ApplicationCodeService } from './application-code.service';
 
@@ -21,6 +23,11 @@ describe('ApplicationCodeController', () => {
           provide: ApplicationCodeService,
           useValue: createMock<ApplicationCodeService>(),
         },
+        {
+          provide: ClsService,
+          useValue: {},
+        },
+        ...mockKeyCloakProviders,
       ],
     }).compile();
 
