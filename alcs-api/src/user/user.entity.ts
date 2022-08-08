@@ -7,11 +7,6 @@ export class User extends Base {
   @AutoMap()
   @Column({ unique: true })
   email: string;
-
-  @AutoMap()
-  @Column()
-  name: string;
-
   @AutoMap()
   @Column()
   displayName: string;
@@ -25,11 +20,15 @@ export class User extends Base {
   preferredUsername: string;
 
   @AutoMap()
-  @Column()
-  givenName: string;
+  @Column({ nullable: true })
+  name?: string;
 
   @AutoMap()
-  @Column()
+  @Column({ nullable: true })
+  givenName?: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
   familyName: string;
 
   @AutoMap()
@@ -39,4 +38,12 @@ export class User extends Base {
   @AutoMap()
   @Column({ nullable: true })
   idirUserName: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
+  bceidGuid: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
+  bceidUserName: string;
 }

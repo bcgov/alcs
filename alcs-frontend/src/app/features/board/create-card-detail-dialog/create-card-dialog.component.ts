@@ -5,11 +5,11 @@ import {
   ApplicationDecisionMakerDto,
   ApplicationRegionDto,
   ApplicationTypeDto,
-} from '../../services/application/application-code.dto';
-import { ApplicationDetailedDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
-import { ToastService } from '../../services/toast/toast.service';
-import { BaseCodeDto } from '../../shared/dto/base.dto';
+} from '../../../services/application/application-code.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
+import { ToastService } from '../../../services/toast/toast.service';
+import { BaseCodeDto } from '../../../shared/dto/base.dto';
 
 @Component({
   selector: 'app-create-card-dialog',

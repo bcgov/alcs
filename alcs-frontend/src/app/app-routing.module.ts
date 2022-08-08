@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
+import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 
 const routes: Routes = [
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'authorized',
     component: AuthorizationComponent,
+  },
+  {
+    path: 'provision',
+    component: ProvisionComponent,
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },

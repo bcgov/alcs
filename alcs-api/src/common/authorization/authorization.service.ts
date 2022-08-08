@@ -22,16 +22,28 @@ export type TokenResponse = {
   scope: string;
 };
 
-export type UserFromToken = {
-  email: string;
-  name: string;
-  display_name: string;
+type BaseToken = {
   identity_provider: string;
   preferred_username: string;
+  display_name: string;
+  email: string;
+  email_verified: boolean;
+  client_roles?: string[];
+};
+
+export type IdirToken = BaseToken & {
+  name: string;
+  identity_provider: 'idir';
   given_name: string;
   family_name: string;
   idir_user_guid?: string;
   idir_username?: string;
+};
+
+export type BCeIDBasicToken = BaseToken & {
+  identity_provider: 'bceidboth';
+  bceid_user_guid: string;
+  bceid_username: string;
 };
 
 @Injectable()
@@ -58,7 +70,7 @@ export class AuthorizationService {
     this.jwks = await JWK.asKeyStore(res.data);
   }
 
-  async exchangeCodeForToken(code: string): Promise<TokenResponse> {
+  async exchangeCodeForToken(code: string) {
     const baseUrl = this.config.get<string>('BASE_URL');
     const secret = this.config.get<string>('KEYCLOAK.SECRET');
     const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
@@ -82,8 +94,17 @@ export class AuthorizationService {
     //Make sure token is legit, the Authguard will only do this on the next request
     const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
     if (payload) {
-      this.registerUser(payload.payload);
-      return res.data;
+      const decodedToken = JSON.parse(
+        Buffer.from(payload.payload).toString(),
+      ) as BaseToken;
+      this.logger.debug(decodedToken);
+
+      this.registerUser(decodedToken);
+
+      return {
+        token: res.data,
+        roles: decodedToken.client_roles,
+      };
     } else {
       throw new UnauthorizedException();
     }
@@ -110,31 +131,40 @@ export class AuthorizationService {
   }
 
   // FIXME: this will be replaced with automapper
-  private mapUserFromTokenToCreateDto(
-    user: UserFromToken,
-  ): CreateOrUpdateUserDto {
-    return {
-      email: user.email,
-      name: user.name,
-      displayName: user.display_name,
-      identityProvider: user.identity_provider,
-      preferredUsername: user.preferred_username,
-      givenName: user.given_name,
-      familyName: user.family_name,
-      idirUserGuid: user.idir_user_guid,
-      idirUserName: user.idir_username,
-    };
+  private mapUserFromTokenToCreateDto(user: BaseToken): CreateOrUpdateUserDto {
+    if (user.identity_provider === 'idir') {
+      const idirToken = user as IdirToken;
+      return {
+        email: idirToken.email,
+        name: idirToken.name,
+        displayName: idirToken.display_name,
+        identityProvider: idirToken.identity_provider,
+        preferredUsername: idirToken.preferred_username,
+        givenName: idirToken.given_name,
+        familyName: idirToken.family_name,
+        idirUserGuid: idirToken.idir_user_guid,
+        idirUserName: idirToken.idir_username,
+      };
+    }
+    if (user.identity_provider === 'bceidboth') {
+      const bceidToken = user as BCeIDBasicToken;
+      return {
+        email: bceidToken.email,
+        displayName: bceidToken.display_name,
+        identityProvider: bceidToken.identity_provider,
+        preferredUsername: bceidToken.preferred_username,
+        bceidGuid: bceidToken.bceid_user_guid,
+        bceidUserName: bceidToken.bceid_username,
+      };
+    }
   }
 
-  private async registerUser(payload: Buffer) {
-    const decodedToken = JSON.parse(
-      Buffer.from(payload).toString(),
-    ) as UserFromToken;
-    this.logger.debug(decodedToken);
-    const existingUser = await this.userService.getUser(decodedToken.email);
+  private async registerUser(payload: BaseToken) {
+    const existingUser = await this.userService.getUser(payload.email);
     if (!existingUser) {
+      console.log(payload);
       await this.userService.createUser(
-        this.mapUserFromTokenToCreateDto(decodedToken),
+        this.mapUserFromTokenToCreateDto(payload),
       );
     }
   }

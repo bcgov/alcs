@@ -3,14 +3,26 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { FastifyReply } from 'fastify';
 import { CONFIG_TOKEN } from '../config/config.module';
+import { AUTH_ROLE } from '../enum';
 import { AuthorizationController } from './authorization.controller';
 import { AuthorizationService } from './authorization.service';
 
 describe('AuthorizationController', () => {
   let controller: AuthorizationController;
   let mockService: DeepMocked<AuthorizationService>;
+
   const fakeToken = 'fake-token';
   const fakeRefreshToken = 'fake-refresh';
+  const mockToken = {
+    access_token: fakeToken,
+    refresh_token: fakeRefreshToken,
+    id_token: '',
+    expires_in: 1,
+    session_state: '',
+    token_type: 'mock',
+    refresh_expires_in: 1,
+    scope: '',
+  };
 
   beforeEach(async () => {
     mockService = createMock<AuthorizationService>();
@@ -30,18 +42,10 @@ describe('AuthorizationController', () => {
 
     controller = module.get<AuthorizationController>(AuthorizationController);
 
-    const mockToken = {
-      access_token: fakeToken,
-      refresh_token: fakeRefreshToken,
-      id_token: '',
-      expires_in: 1,
-      session_state: '',
-      token_type: 'mock',
-      refresh_expires_in: 1,
-      scope: '',
-    };
-
-    mockService.exchangeCodeForToken.mockResolvedValue(mockToken);
+    mockService.exchangeCodeForToken.mockResolvedValue({
+      token: mockToken,
+      roles: [AUTH_ROLE.LUP],
+    });
     mockService.refreshToken.mockResolvedValue(mockToken);
   });
 
@@ -58,6 +62,23 @@ describe('AuthorizationController', () => {
     expect(res.status).toHaveBeenCalledWith(302);
     expect(res.redirect).toHaveBeenCalledWith(
       `${frontEndUrl}/authorized?t=${fakeToken}&r=${fakeRefreshToken}`,
+    );
+  });
+
+  it('should set noroles flag when user has no roles', async () => {
+    mockService.exchangeCodeForToken.mockResolvedValue({
+      token: mockToken,
+      roles: [],
+    });
+
+    const res = createMock<FastifyReply>();
+    await controller.handleAuth('code', res);
+
+    const frontEndUrl = config.get('FRONTEND_ROOT');
+
+    expect(res.status).toHaveBeenCalledWith(302);
+    expect(res.redirect).toHaveBeenCalledWith(
+      `${frontEndUrl}/authorized?t=${fakeToken}&r=${fakeRefreshToken}&noroles=true`,
     );
   });
 
