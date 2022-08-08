@@ -16,6 +16,7 @@ import {
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
+import { UserService } from '../../user/user.service';
 import { AUTH_ROLE } from '../enum';
 
 @Injectable()
@@ -35,6 +36,7 @@ export class RoleGuard implements CanActivate {
     private multiTenant: KeycloakMultiTenantService,
     private reflector: Reflector,
     private cls: ClsService,
+    private userService: UserService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
@@ -79,7 +81,11 @@ export class RoleGuard implements CanActivate {
       );
     }
 
-    //If user has at least one matching role, allow them through
-    return matchingRoles.length > 0;
+    if (matchingRoles.length > 0) {
+      request.user.entity = await this.userService.getUser(email);
+      return true;
+    }
+
+    return false;
   }
 }

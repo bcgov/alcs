@@ -54,9 +54,10 @@ export class BoardComponent implements OnInit {
 
       this.dialog.open(CardDetailDialogComponent, {
         minHeight: '500px',
-        minWidth: '250px',
+        minWidth: '600px',
+        maxWidth: '800px',
         height: '80%',
-        width: '40%',
+        width: '70%',
         data: application,
       });
     } catch (err) {
@@ -67,9 +68,10 @@ export class BoardComponent implements OnInit {
   async onCreate() {
     this.dialog.open(CreateCardDialogComponent, {
       minHeight: '500px',
-      minWidth: '250px',
+      minWidth: '600px',
+      maxWidth: '800px',
       height: '80%',
-      width: '40%',
+      width: '70%',
       data: {},
     });
   }
