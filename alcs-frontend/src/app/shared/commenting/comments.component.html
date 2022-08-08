@@ -5,12 +5,33 @@
   <div [hidden]="!isEditing">
     <mat-form-field class="comment-input" appearance="fill">
       <mat-label>Add a comment</mat-label>
-      <textarea #textarea cdkTextareaAutosize [disabled]="isSaving" [(ngModel)]="newComment" matInput placeholder=""></textarea>
+      <textarea
+        #textarea
+        cdkTextareaAutosize
+        [disabled]="isSaving"
+        [(ngModel)]="newComment"
+        matInput
+        placeholder=""
+        [mentionConfig]="{ items: users, labelKey: 'mentionName' }"
+        [mentionListTemplate]="mentionListTemplate"
+        (itemSelected)="onMentionUserSelected($event)"
+      ></textarea>
     </mat-form-field>
     <div class="edit-buttons">
       <button (click)="onCancel()">Cancel</button>
       <button (click)="onSave()">Save</button>
     </div>
   </div>
-  <app-comment *ngFor="let comment of comments" [comment]="comment" (edit)="onEditComment($event)" (delete)="onDeleteComment($event)"></app-comment>
+  <app-comment
+    *ngFor="let comment of comments"
+    [comment]="comment"
+    (edit)="onEditComment($event)"
+    (delete)="onDeleteComment($event)"
+    [users]="users"
+  ></app-comment>
 </div>
+
+<ng-template #mentionListTemplate let-item="item">
+  <p>{{ item.mentionName }}</p>
+  <p>{{ item.email }}</p>
+</ng-template>

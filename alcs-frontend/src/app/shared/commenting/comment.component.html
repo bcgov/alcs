@@ -15,9 +15,7 @@
         <button (click)="onSave()">Save</button>
       </div>
     </div>
-    <div *ngIf="!isEditing" class="content">
-      {{ comment.body }}
-    </div>
+    <div *ngIf="!isEditing" class="content" [innerHtml]="highlightMentions(comment.body)"></div>
     <div class="footer" *ngIf="!isEditing">
       <div>
         <span class="edited" *ngIf="comment.edited">(edited) </span>

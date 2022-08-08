@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterModule, Routes } from '@angular/router';
-import { AppModule } from '../../app.module';
+import { MentionModule } from 'angular-mentions';
 import { CardComponent } from '../../shared/card/card.component';
 import { CommentComponent } from '../../shared/commenting/comment.component';
 import { CommentsComponent } from '../../shared/commenting/comments.component';
@@ -33,8 +33,16 @@ const routes: Routes = [
     InlineEditComponent,
     CommentComponent,
     CommentsComponent,
+
   ],
-  imports: [CommonModule, SharedModule, DragDropModule, MatGridListModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    SharedModule,
+    DragDropModule,
+    MatGridListModule,
+    RouterModule.forChild(routes),
+    MentionModule,
+  ],
   providers: [],
 })
 export class BoardModule {}

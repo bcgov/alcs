@@ -28,7 +28,7 @@
     "PASSWORD": ""
   },
   "REDIS": {
-    "URL": "redis://redis:@localhost:6379"
+    "URL": "redis://:redis@localhost:6379"
   },
   "EMAIL": {
     "DEFAULT_ADMINS": [""]
