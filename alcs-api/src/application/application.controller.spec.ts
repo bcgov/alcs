@@ -44,6 +44,7 @@ describe('ApplicationController', () => {
     type: mockApplicationEntity.type.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
     decisionMaker: undefined,
+    region: undefined,
     assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,

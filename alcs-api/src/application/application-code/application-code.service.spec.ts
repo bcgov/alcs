@@ -2,10 +2,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { repositoryMockFactory } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationStatus } from '../application-status/application-status.entity';
 import { ApplicationCodeService } from './application-code.service';
 import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
+import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';
 
 describe('ApplicationCodeService', () => {
@@ -14,6 +14,7 @@ describe('ApplicationCodeService', () => {
   let mockDecisionMakerRepository: DeepMocked<
     Repository<ApplicationDecisionMaker>
   >;
+  let mockRegionRepository: DeepMocked<Repository<ApplicationRegion>>;
 
   let service: ApplicationCodeService;
 
@@ -22,6 +23,7 @@ describe('ApplicationCodeService', () => {
     mockStatusRepository = createMock<Repository<ApplicationStatus>>();
     mockDecisionMakerRepository =
       createMock<Repository<ApplicationDecisionMaker>>();
+    mockRegionRepository = createMock<Repository<ApplicationRegion>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -38,6 +40,10 @@ describe('ApplicationCodeService', () => {
           provide: getRepositoryToken(ApplicationDecisionMaker),
           useValue: mockDecisionMakerRepository,
         },
+        {
+          provide: getRepositoryToken(ApplicationRegion),
+          useValue: mockRegionRepository,
+        },
       ],
     }).compile();
 
@@ -52,12 +58,14 @@ describe('ApplicationCodeService', () => {
     mockTypeRepository.find.mockResolvedValue([]);
     mockStatusRepository.find.mockResolvedValue([]);
     mockDecisionMakerRepository.find.mockResolvedValue([]);
+    mockRegionRepository.find.mockResolvedValue([]);
 
-    const res = await service.getAllCodes();
+    await service.getAllCodes();
 
     expect(mockTypeRepository.find).toHaveBeenCalled();
     expect(mockStatusRepository.find).toHaveBeenCalled();
     expect(mockDecisionMakerRepository.find).toHaveBeenCalled();
+    expect(mockRegionRepository.find).toHaveBeenCalled();
   });
 
   it('should map the repos to the right response keys', async () => {
@@ -86,11 +94,21 @@ describe('ApplicationCodeService', () => {
       mockDecisionMakers as ApplicationDecisionMaker[],
     );
 
+    const mockRegions = [
+      {
+        uuid: '4',
+      },
+    ];
+    mockRegionRepository.find.mockResolvedValue(
+      mockRegions as ApplicationRegion[],
+    );
+
     const res = await service.getAllCodes();
 
     expect(res.type).toEqual(mockTypes);
     expect(res.status).toEqual(mockStatuses);
     expect(res.decisionMaker).toEqual(mockDecisionMakers);
+    expect(res.region).toEqual(mockRegions);
   });
 
   it('should call the type repo for types', async () => {
@@ -131,5 +149,19 @@ describe('ApplicationCodeService', () => {
 
     expect(mockDecisionMakerRepository.findOne).toHaveBeenCalled();
     expect(res).toEqual(mockDecisionMaker);
+  });
+
+  it('should call the region repo for decision makers', async () => {
+    const mockRegion = {
+      uuid: '1',
+    };
+    mockRegionRepository.findOne.mockResolvedValue(
+      mockRegion as ApplicationRegion,
+    );
+
+    const res = await service.fetchRegion('code');
+
+    expect(mockRegionRepository.findOne).toHaveBeenCalled();
+    expect(res).toEqual(mockRegion);
   });
 });

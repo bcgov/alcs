@@ -92,6 +92,8 @@ describe('CardDetailDialogComponent', () => {
     expect(compiled.querySelector('.card-applicant')).toBeTruthy();
     expect(compiled.querySelector('.card-type')).toBeTruthy();
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();
+    expect(compiled.querySelector('.card-decision-maker')).toBeTruthy();
+    expect(compiled.querySelector('.card-region')).toBeTruthy();
     expect(compiled.querySelector('.card-active-days').textContent).toEqual(`${mockCardDetail.activeDays}`);
     expect(compiled.querySelector('.card-paused-days').textContent).toEqual(`${mockCardDetail.pausedDays}`);
     expect(compiled.querySelector('.card-state-btn').textContent.trim()).toEqual('Activate');

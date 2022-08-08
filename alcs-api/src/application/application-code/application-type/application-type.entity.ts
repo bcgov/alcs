@@ -6,10 +6,6 @@ import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 export class ApplicationType extends BaseCodeEntity {
   @AutoMap()
   @Column()
-  label: string;
-
-  @AutoMap()
-  @Column()
   shortLabel: string;
 
   @AutoMap()
@@ -19,8 +15,4 @@ export class ApplicationType extends BaseCodeEntity {
   @AutoMap()
   @Column()
   textColor: string;
-
-  //TODO: Why is this not getting mapped from the inherited class?
-  @AutoMap()
-  description: string;
 }
