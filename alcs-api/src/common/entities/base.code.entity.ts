@@ -13,5 +13,5 @@ export abstract class BaseCodeEntity extends Base {
 
   @AutoMap()
   @Column({ type: 'text', nullable: false, unique: true })
-  description;
+  description: string;
 }

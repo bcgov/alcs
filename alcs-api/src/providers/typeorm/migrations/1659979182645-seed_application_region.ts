@@ -14,6 +14,6 @@ export class seedApplicationRegion1659979182645 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`delete from public.application_decision_maker`);
+    await queryRunner.query(`delete from public.application_region`);
   }
 }
