@@ -1,12 +1,13 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationCodeService } from '../../application/application-code/application-code.service';
+import { ApplicationDecisionMakerDto } from '../../application/application-code/application-decision-maker/application-decision-maker.dto';
+import { ApplicationDecisionMaker } from '../../application/application-code/application-decision-maker/application-decision-maker.entity';
+import { ApplicationTypeDto } from '../../application/application-code/application-type/application-type.dto';
+import { ApplicationType } from '../../application/application-code/application-type/application-type.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
-import { ApplicationStatusService } from '../../application/application-status/application-status.service';
-import { ApplicationTypeDto } from '../../application/application-type/application-type.dto';
-import { ApplicationType } from '../../application/application-type/application-type.entity';
-import { ApplicationTypeService } from '../../application/application-type/application-type.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -17,8 +18,7 @@ import { Application } from '../../application/application.entity';
 export class ApplicationProfile extends AutomapperProfile {
   constructor(
     @InjectMapper() mapper: Mapper,
-    private applicationStatusService: ApplicationStatusService,
-    private applicationTypeService: ApplicationTypeService,
+    private codeService: ApplicationCodeService,
   ) {
     super(mapper);
   }
@@ -28,6 +28,7 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationStatus, ApplicationStatusDto);
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationStatusDto, ApplicationStatus);
+      createMap(mapper, ApplicationDecisionMaker, ApplicationDecisionMakerDto);
 
       createMap(
         mapper,
@@ -40,6 +41,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.type,
           mapFrom((a) => a.type.code),
+        ),
+        forMember(
+          (ad) => ad.decisionMaker,
+          mapFrom((a) => (a.decisionMaker ? a.decisionMaker.code : undefined)),
         ),
       );
 
@@ -59,6 +64,16 @@ export class ApplicationProfile extends AutomapperProfile {
             this.mapper.map(a.type, ApplicationType, ApplicationTypeDto),
           ),
         ),
+        forMember(
+          (ad) => ad.decisionMakerDetails,
+          mapFrom((a) =>
+            this.mapper.map(
+              a.type,
+              ApplicationDecisionMaker,
+              ApplicationDecisionMakerDto,
+            ),
+          ),
+        ),
       );
 
       createMap(
@@ -68,13 +83,23 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           async (a) => a.status,
           mapFrom(async (ad) => {
-            return await this.applicationStatusService.fetchStatus(ad.status);
+            return await this.codeService.fetchStatus(ad.status);
           }),
         ),
         forMember(
           async (a) => a.type,
           mapFrom(async (ad) => {
-            return await this.applicationTypeService.get(ad.type);
+            return await this.codeService.fetchType(ad.type);
+          }),
+        ),
+        forMember(
+          async (a) => a.decisionMaker,
+          mapFrom(async (ad) => {
+            if (ad.decisionMaker) {
+              return await this.codeService.fetchDecisionMaker(
+                ad.decisionMaker,
+              );
+            }
           }),
         ),
       );

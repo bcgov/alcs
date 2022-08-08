@@ -9,5 +9,12 @@
   "VERBOSE": "false",
   "KEYCLOAK": {
     "SCOPES": ["openid"]
+  },
+  "CHES": {
+    "MODE": "production",
+    "FROM": "fake.email@wdawdajhlwdj",
+    "TOKEN_URL": "https://token-url",
+    "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
+    "PASSWORD": "fake-password"
   }
 }

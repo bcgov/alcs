@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../common/exceptions/base.exception';
@@ -13,13 +13,10 @@ export const defaultApplicationStatus = {
 
 @Injectable()
 export class ApplicationStatusService {
-  private readonly logger: Logger = new Logger(ApplicationStatusService.name);
-
   constructor(
     @InjectRepository(ApplicationStatus)
-    private readonly applicationStatusRepository: Repository<ApplicationStatus>,
-    @Inject(ApplicationService)
-    private readonly applicationService: ApplicationService,
+    private applicationStatusRepository: Repository<ApplicationStatus>,
+    private applicationService: ApplicationService,
   ) {}
 
   async create(application: ApplicationStatusDto): Promise<ApplicationStatus> {
@@ -29,14 +26,6 @@ export class ApplicationStatusService {
     applicationEntity.description = application.description;
 
     return await this.applicationStatusRepository.save(applicationEntity);
-  }
-
-  async fetchStatus(statusCode: string) {
-    return await this.applicationStatusRepository.findOneOrFail({
-      where: {
-        code: statusCode,
-      },
-    });
   }
 
   async delete(applicationStatusCode: string): Promise<void> {
@@ -59,9 +48,5 @@ export class ApplicationStatusService {
 
     await this.applicationStatusRepository.softRemove([applicationStatus]);
     return;
-  }
-
-  async getAll(): Promise<ApplicationStatus[]> {
-    return this.applicationStatusRepository.find();
   }
 }

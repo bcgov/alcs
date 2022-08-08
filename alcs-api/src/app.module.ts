@@ -5,10 +5,10 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
-import * as config from 'config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApplicationModule } from './application/application.module';
@@ -18,8 +18,11 @@ import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
+import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
+import { CommentModule } from './comment/comment.module';
+import { ApplicationCodeModule } from './application/application-code/application-code.module';
 
 @Module({
   imports: [
@@ -31,6 +34,8 @@ import { UserService } from './user/user.service';
       middleware: { mount: true },
     }),
     ApplicationModule,
+    CommentModule,
+    ConfigModule,
     AuthorizationModule,
     RedisModule,
     AutomapperModule.forRoot({
@@ -54,6 +59,7 @@ import { UserService } from './user/user.service';
             : undefined,
       },
     }),
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [

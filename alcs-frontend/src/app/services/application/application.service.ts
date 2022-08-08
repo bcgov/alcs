@@ -3,8 +3,12 @@ import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationStatusDto } from './application-status.dto';
-import { ApplicationTypeDto } from './application-type.dto';
+import {
+  ApplicationDecisionMakerDto,
+  ApplicationMasterCodesDto,
+  ApplicationStatusDto,
+  ApplicationTypeDto,
+} from './application-code.dto';
 import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
 
 @Injectable({
@@ -16,18 +20,19 @@ export class ApplicationService implements OnInit {
   public $applications = new BehaviorSubject<ApplicationDto[]>([]);
   public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
+  public $applicationDecisionMakers = new BehaviorSubject<ApplicationDecisionMakerDto[]>([]);
 
   private applications: ApplicationDto[] = [];
   private applicationStatuses: ApplicationStatusDto[] = [];
   private applicationTypes: ApplicationTypeDto[] = [];
+  private applicationDecisionMakers: ApplicationDecisionMakerDto[] = [];
 
   ngOnInit(): void {}
 
-  refreshApplications() {
+  async refreshApplications() {
     //Don't load applications till we have status & type
-    Promise.all([this.fetchApplicationStatuses(), this.fetchApplicationTypes()]).then(() => {
-      this.fetchApplications();
-    });
+    await this.fetchCodes();
+    await this.fetchApplications();
   }
 
   private async fetchApplications() {
@@ -35,18 +40,18 @@ export class ApplicationService implements OnInit {
     this.$applications.next(this.applications);
   }
 
-  private async fetchApplicationStatuses() {
-    this.applicationStatuses = await firstValueFrom(
-      this.http.get<ApplicationStatusDto[]>(`${environment.apiRoot}/application-status`)
+  private async fetchCodes() {
+    const codes = await firstValueFrom(
+      this.http.get<ApplicationMasterCodesDto>(`${environment.apiRoot}/application-code`)
     );
+    this.applicationStatuses = codes.status;
     this.$applicationStatuses.next(this.applicationStatuses);
-  }
 
-  private async fetchApplicationTypes() {
-    this.applicationTypes = await firstValueFrom(
-      this.http.get<ApplicationTypeDto[]>(`${environment.apiRoot}/application-types`)
-    );
+    this.applicationTypes = codes.type;
     this.$applicationTypes.next(this.applicationTypes);
+
+    this.applicationDecisionMakers = codes.decisionMaker;
+    this.$applicationDecisionMakers.next(this.applicationDecisionMakers);
   }
 
   async updateApplication(application: ApplicationPartialDto) {

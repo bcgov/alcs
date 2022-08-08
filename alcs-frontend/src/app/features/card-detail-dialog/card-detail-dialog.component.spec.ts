@@ -8,9 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApplicationTypeDto } from '../../services/application/application-type.dto';
+import { ApplicationStatusDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { UserDto } from '../../services/user/user.dto';
-import { ApplicationStatusDto } from '../../services/application/application-status.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
@@ -49,7 +48,6 @@ describe('CardDetailDialogComponent', () => {
     typeDetails: mockApplicationType,
     type: 'TYPE',
     fileNumber: '1111',
-    title: '111 title',
     applicant: 'I am an applicant',
     status: 'STATUS',
     assignee: mockAssignee,
@@ -89,10 +87,8 @@ describe('CardDetailDialogComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.card-title').textContent).toEqual(mockCardDetail.title);
     expect(compiled.querySelector('.card-status-label').textContent).toEqual(mockCardDetail.statusDetails.label);
     expect(compiled.querySelector('.card-state').textContent).toEqual('Paused');
-    expect(compiled.querySelector('.card-file-number').textContent).toEqual(mockCardDetail.fileNumber);
     expect(compiled.querySelector('.card-applicant')).toBeTruthy();
     expect(compiled.querySelector('.card-type')).toBeTruthy();
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();

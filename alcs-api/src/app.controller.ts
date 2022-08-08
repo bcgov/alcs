@@ -9,7 +9,7 @@ import { UserRoles } from './common/authorization/roles.decorator';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private appService: AppService) {}
 
   @Get()
   @Public()

@@ -7,8 +7,9 @@ import {
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
 import { UserDto } from '../user/user.dto';
+import { ApplicationDecisionMakerDto } from './application-code/application-decision-maker/application-decision-maker.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
-import { ApplicationTypeDto } from './application-type/application-type.dto';
+import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
 
 export class CreateApplicationDto {
   @AutoMap()
@@ -24,6 +25,10 @@ export class CreateApplicationDto {
   @IsNotEmpty()
   @IsString()
   type: string;
+
+  @IsString()
+  @IsOptional()
+  decisionMaker?: string;
 }
 
 export class ApplicationDto {
@@ -31,11 +36,6 @@ export class ApplicationDto {
   @IsNotEmpty()
   @IsString()
   fileNumber: string;
-
-  @AutoMap()
-  @IsNotEmpty()
-  @IsString()
-  title: string;
 
   @AutoMap()
   @IsNotEmpty()
@@ -66,6 +66,9 @@ export class ApplicationDto {
   @IsNotEmpty()
   @IsString()
   type: string;
+
+  @IsString()
+  decisionMaker?: string;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
@@ -74,6 +77,9 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
   @AutoMap()
   typeDetails: ApplicationTypeDto;
+
+  @AutoMap()
+  decisionMakerDetails: ApplicationDecisionMakerDto;
 }
 
 export class ApplicationUpdateDto {
@@ -85,17 +91,17 @@ export class ApplicationUpdateDto {
   @AutoMap()
   @IsOptional()
   @IsString()
-  title?: string;
-
-  @AutoMap()
-  @IsOptional()
-  @IsString()
   applicant?: string;
 
   @AutoMap()
   @IsOptional()
   @IsString()
   type?: string;
+
+  @AutoMap()
+  @IsOptional()
+  @IsString()
+  decisionMaker?: string;
 
   @AutoMap()
   @IsOptional()

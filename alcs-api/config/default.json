@@ -18,7 +18,18 @@
     "CLIENT_ID": "",
     "SECRET": ""
   },
+  "CHES": {
+    "MODE": "production",
+    "URL": "",
+    "FROM": "",
+    "TOKEN_URL": "",
+    "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
+    "PASSWORD": ""
+  },
   "REDIS": {
     "URL": "redis://:redis@localhost:6379"
+  },
+  "EMAIL": {
+    "DEFAULT_ADMINS": [""]
   }
 }

@@ -1,16 +1,10 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  Logger,
-  Inject,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { BaseErrorResponseModel, BaseServiceException } from './base.exception';
 
 @Catch(BaseServiceException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  constructor(@Inject(Logger) private readonly logger: Logger) {}
+  constructor(private logger: Logger) {}
 
   catch(exception: BaseServiceException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

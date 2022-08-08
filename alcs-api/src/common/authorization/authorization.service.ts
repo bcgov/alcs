@@ -5,11 +5,11 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
-import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 import { JWK, JWS } from 'node-jose';
-import { UserService } from '../../user/user.service';
+import { firstValueFrom } from 'rxjs';
 import { CreateOrUpdateUserDto } from '../../user/user.dto';
+import { UserService } from '../../user/user.service';
+import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
 export type TokenResponse = {
   access_token: string;
@@ -37,12 +37,12 @@ export type UserFromToken = {
 @Injectable()
 export class AuthorizationService {
   private jwks: JWK.KeyStore;
-  private readonly logger: Logger = new Logger(AuthorizationService.name);
+  private logger: Logger = new Logger(AuthorizationService.name);
 
   constructor(
-    private readonly httpService: HttpService,
+    private httpService: HttpService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
-    @Inject(UserService) private readonly userService: UserService,
+    private userService: UserService,
   ) {
     this.initKeys();
   }

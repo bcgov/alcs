@@ -87,6 +87,11 @@ Postgres unit tests are implemented using pgTap.
 docker-compose up pgtap --build
 ```
 
+## Queues
+
+nestjs Bull
+use this link for validating/generating cron expressions [crontab.cronhub.io](https://crontab.cronhub.io/)
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

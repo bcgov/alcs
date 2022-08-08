@@ -3,8 +3,8 @@ import {
   DataSource,
   EntitySubscriberInterface,
   EventSubscriber,
-  UpdateEvent,
   IsNull,
+  UpdateEvent,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -18,7 +18,7 @@ export class ApplicationSubscriber
 {
   constructor(
     private dataSource: DataSource,
-    private readonly cls: ClsService,
+    private cls: ClsService,
     private userService: UserService,
   ) {
     dataSource.subscribers.push(this);

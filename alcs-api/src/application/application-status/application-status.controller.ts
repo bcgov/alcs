@@ -1,23 +1,13 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import * as config from 'config';
 import { ApplicationStatusDto } from './application-status.dto';
 import { ApplicationStatusService } from './application-status.service';
-import * as config from 'config';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-status')
 export class ApplicationStatusController {
-  constructor(
-    private readonly applicationStatusService: ApplicationStatusService,
-  ) {}
-
-  @Get()
-  async getAll(): Promise<ApplicationStatusDto[]> {
-    const applications = await this.applicationStatusService.getAll();
-    return applications.map<ApplicationStatusDto>((app) => {
-      return { code: app.code, description: app.description, label: app.label };
-    });
-  }
+  constructor(private applicationStatusService: ApplicationStatusService) {}
 
   @Post()
   async add(

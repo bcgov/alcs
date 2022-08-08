@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationTypeDto } from '../../services/application/application-type.dto';
+import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -18,15 +18,14 @@ export class CardDetailDialogComponent implements OnInit {
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
   selectedApplicationType = '';
+  selectedDecisionMaker?: string;
   currentCard: ApplicationDetailedDto = this.data;
-  applicationTypes: {
-    label: string;
-    code: string;
-  }[] = [];
+  applicationTypes: ApplicationTypeDto[] = [];
+  decisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
-    private readonly userService: UserService,
+    private userService: UserService,
     private applicationService: ApplicationService,
     private toastService: ToastService
   ) {}
@@ -36,13 +35,14 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
     this.selectedApplicationType = this.data.typeDetails.code;
+    this.selectedDecisionMaker = this.data.decisionMakerDetails?.code;
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
     this.applicationService.$applicationTypes.subscribe((types) => {
-      this.applicationTypes = types.map((type) => ({
-        label: type.label,
-        code: type.code,
-      }));
+      this.applicationTypes = types;
+    });
+    this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
+      this.decisionMakers = dms;
     });
   }
 
@@ -65,6 +65,13 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedApplicationType = applicationType.code;
     this.updateCard({
       type: applicationType.code,
+    });
+  }
+
+  onDecisionMakerSelected(decisionMaker: ApplicationDecisionMakerDto) {
+    this.selectedDecisionMaker = decisionMaker.code;
+    this.updateCard({
+      decisionMaker: decisionMaker.code,
     });
   }
 
