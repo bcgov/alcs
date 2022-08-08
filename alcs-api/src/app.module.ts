@@ -22,6 +22,7 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { CommentModule } from './comment/comment.module';
 import { ApplicationCodeModule } from './application/application-code/application-code.module';
+import { LogoutController } from './logout/logout.controller';
 
 @Module({
   imports: [
@@ -59,7 +60,7 @@ import { ApplicationCodeModule } from './application/application-code/applicatio
     }),
     SchedulerModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, LogoutController],
   providers: [
     AppService,
     UserService,
