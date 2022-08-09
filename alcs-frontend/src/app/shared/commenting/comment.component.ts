@@ -9,6 +9,7 @@ import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto
 })
 export class CommentComponent implements OnInit {
   @Input() comment!: CommentDto;
+  @Input() fileNumber!: string;
 
   @Input()
   users: any[] = [];
@@ -39,7 +40,7 @@ export class CommentComponent implements OnInit {
     this.isEditing = true;
     this.editComment = this.comment.body;
     this.mentionsList = this.getAllMentions(this.editComment);
-    console.log('onEdit', this.mentionsList);
+    console.log('onEdit', this.mentionsList, this.isEditing);
 
     setTimeout(() => {
       this.textAreaDiv.nativeElement.focus();
@@ -53,13 +54,15 @@ export class CommentComponent implements OnInit {
 
   onCancel() {
     this.isEditing = false;
+    console.log('CommentComponent onCancel', this.isEditing);
   }
 
-  onSave() {
+  onSave(comment: UpdateCommentDto) {
+    this.isEditing = false;
     this.edit.emit({
-      uuid: this.comment.uuid,
-      body: this.editComment,
-      mentionsList: [...this.mentionsList],
+      uuid: comment.uuid,
+      body: comment.body,
+      mentionsList: comment.mentionsList,
     });
   }
 
@@ -67,7 +70,6 @@ export class CommentComponent implements OnInit {
     const mentions = this.getAllMentions(value);
 
     for (let mention of mentions) {
-      console.log('highlightMentions', mention, this.users);
       const rgx = new RegExp('@' + mention, 'g');
       if (this.users.some((u: { mentionName: string }) => u.mentionName === mention)) {
         value = value.replace(rgx, () => `<span class="mention green">@${mention}</span> &nbsp`);
@@ -78,14 +80,4 @@ export class CommentComponent implements OnInit {
 
     return value;
   }
-
-  // private getMentionsList() {
-  //   const mentionsList: string[] = [];
-
-  //   this.selectedUsers.forEach((u) => {
-  //     mentionsList.push(u.email);
-  //   });
-
-  //   return mentionsList;
-  // }
 }

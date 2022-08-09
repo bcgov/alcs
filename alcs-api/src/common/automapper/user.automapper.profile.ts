@@ -25,6 +25,16 @@ export class UserProfile extends AutomapperProfile {
               u.familyName?.charAt(0).toUpperCase(),
           ),
         ),
+        forMember(
+          (ud) => ud.mentionName,
+          mapFrom(
+            (u) =>
+              u.givenName.charAt(0).toUpperCase() +
+              u.givenName.slice(1) +
+              u.familyName.charAt(0).toUpperCase() +
+              u.familyName.slice(1),
+          ),
+        ),
       );
     };
   }

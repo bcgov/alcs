@@ -18,13 +18,23 @@ export class CommentService implements OnInit {
   }
 
   async createComment(comment: CreateCommentDto) {
-    const createdComment = firstValueFrom(this.http.post<CommentDto>(`${environment.apiRoot}/comment`, comment));
+    const createdComment = firstValueFrom(
+      this.http.post<CommentDto>(`${environment.apiRoot}/comment`, {
+        ...comment,
+        mentionsList: [...comment.mentionsList],
+      })
+    );
     this.toastService.showSuccessToast('Comment created');
     return createdComment;
   }
 
   async updateComment(comment: UpdateCommentDto) {
-    const updatedComment = firstValueFrom(this.http.patch<CommentDto>(`${environment.apiRoot}/comment`, comment));
+    const updatedComment = firstValueFrom(
+      this.http.patch<CommentDto>(`${environment.apiRoot}/comment`, {
+        ...comment,
+        mentionsList: [...comment.mentionsList],
+      })
+    );
     this.toastService.showSuccessToast('Comment updated');
     return updatedComment;
   }

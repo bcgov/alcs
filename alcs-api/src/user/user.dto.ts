@@ -47,4 +47,8 @@ export class UserDto extends CreateOrUpdateUserDto {
   @AutoMap()
   @IsString()
   initials?: string;
+
+  @AutoMap()
+  @IsString()
+  mentionName: string;
 }

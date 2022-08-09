@@ -7,13 +7,13 @@
   </div>
   <div class="body">
     <div [hidden]="!isEditing">
-      <mat-form-field class="comment-input" appearance="fill">
-        <textarea #textarea cdkTextareaAutosize [(ngModel)]="editComment" matInput placeholder=""></textarea>
-      </mat-form-field>
-      <div class="edit-buttons">
-        <button (click)="onCancel()">Cancel</button>
-        <button (click)="onSave()">Save</button>
-      </div>
+      <app-mention-textarea
+        [fileNumber]="fileNumber"
+        [comment]="comment"
+        (cancel)="onCancel()"
+        (save)="onSave($event)"
+        [isEditing]="isEditing"
+      ></app-mention-textarea>
     </div>
     <div *ngIf="!isEditing" class="content" [innerHtml]="highlightMentions(comment.body)"></div>
     <div class="footer" *ngIf="!isEditing">
