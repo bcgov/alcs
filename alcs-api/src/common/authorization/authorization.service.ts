@@ -130,7 +130,6 @@ export class AuthorizationService {
     return res.data;
   }
 
-  // FIXME: this will be replaced with automapper
   private mapUserFromTokenToCreateDto(user: BaseToken): CreateOrUpdateUserDto {
     if (user.identity_provider === 'idir') {
       const idirToken = user as IdirToken;
