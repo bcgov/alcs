@@ -35,6 +35,13 @@ export class AuthenticationService implements OnInit {
     return valid;
   }
 
+  clearTokens() {
+    this.token = undefined;
+    this.refreshToken = undefined;
+    localStorage.removeItem(JWT_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+  }
+
   async getToken() {
     if (this.token && this.refreshToken && this.expires && this.expires < Date.now()) {
       //Clear token to prevent infinite loop from interceptor
@@ -50,6 +57,14 @@ export class AuthenticationService implements OnInit {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     return this.setTokens(existingToken || '', refreshToken || '');
+  }
+
+  async logout() {
+    const logoutUrl = await this.getLogoutUrl();
+    if (logoutUrl) {
+      this.clearTokens();
+      window.location.href = logoutUrl.url;
+    }
   }
 
   private async isTokenValid(token: string) {
@@ -81,5 +96,9 @@ export class AuthenticationService implements OnInit {
       }>(`${environment.apiRoot}/authorize/refresh?r=${refreshToken}`)
     );
     return res;
+  }
+
+  private async getLogoutUrl() {
+    return firstValueFrom(this.http.get<{ url: string }>(`${environment.apiRoot}/logout`));
   }
 }

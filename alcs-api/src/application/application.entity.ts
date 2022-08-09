@@ -9,10 +9,12 @@ import {
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
+import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
+import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationType } from './application-type/application-type.entity';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
 
 @Entity()
 export class Application extends Base {
@@ -23,10 +25,6 @@ export class Application extends Base {
   @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
-
-  @AutoMap()
-  @Column()
-  title: string;
 
   @AutoMap()
   @Column()
@@ -67,6 +65,28 @@ export class Application extends Base {
     type: 'uuid',
   })
   typeUuid: string;
+
+  @ManyToOne((decisionMaker) => ApplicationDecisionMaker, {
+    nullable: true,
+  })
+  decisionMaker: ApplicationDecisionMaker;
+
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  decisionMakerUuid: string;
+
+  @ManyToOne((decisionMaker) => ApplicationRegion, {
+    nullable: true,
+  })
+  region: ApplicationRegion;
+
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  regionUuid: string;
 
   @AutoMap()
   @ManyToOne((assignee) => User, { nullable: true })

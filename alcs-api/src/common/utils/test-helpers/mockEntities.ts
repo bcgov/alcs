@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
-import { ApplicationType } from '../../../application/application-type/application-type.entity';
+import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
 import { Application } from '../../../application/application.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
@@ -50,7 +50,6 @@ const initAssigneeMockEntity = (): User => {
 
 const initApplicationMockEntity = (): Application => {
   const applicationEntity = new Application();
-  applicationEntity.title = 'app_1';
   applicationEntity.fileNumber = 'app_1';
   applicationEntity.applicant = 'applicant 1';
   applicationEntity.uuid = '1111-1111-1111-1111';

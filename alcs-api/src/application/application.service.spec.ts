@@ -95,7 +95,6 @@ describe('ApplicationService', () => {
       .mockReturnValueOnce(applicationMockEntity);
 
     const payload: Partial<Application> = {
-      title: applicationMockEntity.title,
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
       statusUuid: applicationMockEntity.statusUuid,
@@ -112,7 +111,6 @@ describe('ApplicationService', () => {
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
 
     const payload: Partial<Application> = {
-      title: applicationMockEntity.title,
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
       statusUuid: applicationMockEntity.statusUuid,
