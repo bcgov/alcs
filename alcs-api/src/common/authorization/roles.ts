@@ -1,7 +1,7 @@
 export enum AUTH_ROLE {
   ADMIN = 'Admin',
   APP_SPECIALIST = 'Application Specialist',
-  CEO = 'CEO',
+  MANAGEMENT = 'MANAGEMENT',
   LUP = 'LUP',
   SENIOR_LUP = 'Senior Lup',
 }

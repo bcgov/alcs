@@ -3,9 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { FastifyReply } from 'fastify';
 import { CONFIG_TOKEN } from '../config/config.module';
-import { AUTH_ROLE } from '../enum';
 import { AuthorizationController } from './authorization.controller';
 import { AuthorizationService } from './authorization.service';
+import { AUTH_ROLE } from './roles';
 
 describe('AuthorizationController', () => {
   let controller: AuthorizationController;
