@@ -11,4 +11,8 @@ snack-bar-container.warning {
 snack-bar-container.error {
   background: $error-color;
   color: #fff;
+
+  .mat-simple-snackbar-action {
+    color: #ccc;
+  }
 }
