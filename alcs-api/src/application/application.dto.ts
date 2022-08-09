@@ -8,6 +8,7 @@ import {
 import { AutoMap } from '@automapper/classes';
 import { UserDto } from '../user/user.dto';
 import { ApplicationDecisionMakerDto } from './application-code/application-decision-maker/application-decision-maker.dto';
+import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
 
@@ -29,6 +30,10 @@ export class CreateApplicationDto {
   @IsString()
   @IsOptional()
   decisionMaker?: string;
+
+  @IsString()
+  @IsOptional()
+  region?: string;
 }
 
 export class ApplicationDto {
@@ -69,6 +74,9 @@ export class ApplicationDto {
 
   @IsString()
   decisionMaker?: string;
+
+  @IsString()
+  region?: string;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
@@ -80,6 +88,9 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
   @AutoMap()
   decisionMakerDetails: ApplicationDecisionMakerDto;
+
+  @AutoMap()
+  regionDetails: ApplicationRegionDto;
 }
 
 export class ApplicationUpdateDto {
@@ -102,6 +113,11 @@ export class ApplicationUpdateDto {
   @IsOptional()
   @IsString()
   decisionMaker?: string;
+
+  @AutoMap()
+  @IsOptional()
+  @IsString()
+  region?: string;
 
   @AutoMap()
   @IsOptional()

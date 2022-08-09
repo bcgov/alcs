@@ -25,10 +25,14 @@ describe('CommentController', () => {
     user = {
       name: 'Bruce Wayne',
       email: 'fake-email',
+      uuid: 'user-uuid',
     };
 
     request = {
-      user,
+      user: {
+        ...user,
+        entity: user,
+      },
     };
 
     comment = new Comment({
@@ -72,6 +76,7 @@ describe('CommentController', () => {
     mockCommentService.fetchComments.mockResolvedValue([comment]);
 
     const comments = await controller.get('file-number', request);
+
     expect(comments.length).toEqual(1);
     expect(comments[0].author).toEqual(user.name);
     expect(comments[0].isEditable).toEqual(true);
@@ -80,10 +85,13 @@ describe('CommentController', () => {
   it('should pass the new comment to the service', async () => {
     mockCommentService.create.mockResolvedValue(comment);
 
-    await controller.create({
-      fileNumber: 'file-number',
-      body: 'comment-body',
-    });
+    await controller.create(
+      {
+        fileNumber: 'file-number',
+        body: 'comment-body',
+      },
+      request,
+    );
 
     expect(mockCommentService.create).toHaveBeenCalled();
     const passedData = mockCommentService.create.mock.calls[0];
@@ -131,7 +139,9 @@ describe('CommentController', () => {
     mockCommentService.update.mockResolvedValue(comment);
     request.user = {
       ...user,
-      email: 'a different email',
+      entity: {
+        uuid: 'another-user-uuid',
+      },
     };
 
     await expect(
@@ -170,12 +180,14 @@ describe('CommentController', () => {
     expect(mockCommentService.delete).not.toHaveBeenCalled();
   });
 
-  it('should throw a forbidden exception when trying to update another users comment', async () => {
+  it('should throw a forbidden exception when trying to delete another users comment', async () => {
     mockCommentService.get.mockResolvedValue(comment);
     mockCommentService.delete.mockResolvedValue(comment);
     request.user = {
       ...user,
-      email: 'a different email',
+      entity: {
+        uuid: 'another-user-uuid',
+      },
     };
 
     await expect(controller.softDelete('uuid', request)).rejects.toMatchObject(

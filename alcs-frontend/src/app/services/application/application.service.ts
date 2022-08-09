@@ -6,6 +6,7 @@ import { ToastService } from '../toast/toast.service';
 import {
   ApplicationDecisionMakerDto,
   ApplicationMasterCodesDto,
+  ApplicationRegionDto,
   ApplicationStatusDto,
   ApplicationTypeDto,
 } from './application-code.dto';
@@ -21,11 +22,13 @@ export class ApplicationService implements OnInit {
   public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationDecisionMakers = new BehaviorSubject<ApplicationDecisionMakerDto[]>([]);
+  public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
   private applications: ApplicationDto[] = [];
-  private applicationStatuses: ApplicationStatusDto[] = [];
-  private applicationTypes: ApplicationTypeDto[] = [];
-  private applicationDecisionMakers: ApplicationDecisionMakerDto[] = [];
+  private statuses: ApplicationStatusDto[] = [];
+  private types: ApplicationTypeDto[] = [];
+  private decisionMakers: ApplicationDecisionMakerDto[] = [];
+  private regions: ApplicationRegionDto[] = [];
 
   ngOnInit(): void {}
 
@@ -44,14 +47,17 @@ export class ApplicationService implements OnInit {
     const codes = await firstValueFrom(
       this.http.get<ApplicationMasterCodesDto>(`${environment.apiRoot}/application-code`)
     );
-    this.applicationStatuses = codes.status;
-    this.$applicationStatuses.next(this.applicationStatuses);
+    this.statuses = codes.status;
+    this.$applicationStatuses.next(this.statuses);
 
-    this.applicationTypes = codes.type;
-    this.$applicationTypes.next(this.applicationTypes);
+    this.types = codes.type;
+    this.$applicationTypes.next(this.types);
 
-    this.applicationDecisionMakers = codes.decisionMaker;
-    this.$applicationDecisionMakers.next(this.applicationDecisionMakers);
+    this.decisionMakers = codes.decisionMaker;
+    this.$applicationDecisionMakers.next(this.decisionMakers);
+
+    this.regions = codes.region;
+    this.$applicationRegions.next(this.regions);
   }
 
   async updateApplication(application: ApplicationPartialDto) {

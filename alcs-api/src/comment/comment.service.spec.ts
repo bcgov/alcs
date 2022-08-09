@@ -1,10 +1,9 @@
 import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
-import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
 
@@ -12,16 +11,12 @@ describe('CommentService', () => {
   let service: CommentService;
   let mockApplicationService;
   let mockCommentRepository;
-  let mockUserService;
-  let mockClsService;
 
   let comment;
 
   beforeEach(async () => {
     mockCommentRepository = createMock<Repository<Comment>>();
     mockApplicationService = createMock<ApplicationService>();
-    mockUserService = createMock<UserService>();
-    mockClsService = createMock<ClsService>();
 
     comment = new Comment({
       body: 'body',
@@ -46,14 +41,6 @@ describe('CommentService', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
-        },
-        {
-          provide: UserService,
-          useValue: mockUserService,
-        },
-        {
-          provide: ClsService,
-          useValue: mockClsService,
         },
       ],
     }).compile();
@@ -94,10 +81,9 @@ describe('CommentService', () => {
       uuid: 'fake-application',
     };
     mockApplicationService.get.mockResolvedValue(fakeApplication);
-    mockUserService.getUser.mockResolvedValue(fakeUser);
     mockCommentRepository.save.mockResolvedValue({});
 
-    await service.create('file-number', 'new-comment');
+    await service.create('file-number', 'new-comment', fakeUser as User);
 
     expect(mockCommentRepository.save).toHaveBeenCalled();
     const savedData = mockCommentRepository.save.mock.calls[0][0];
@@ -110,7 +96,7 @@ describe('CommentService', () => {
     mockApplicationService.get.mockResolvedValue(undefined);
 
     await expect(
-      service.create('file-number', 'new-comment'),
+      service.create('file-number', 'new-comment', {} as User),
     ).rejects.toMatchObject(new Error(`Unable to find application`));
   });
 

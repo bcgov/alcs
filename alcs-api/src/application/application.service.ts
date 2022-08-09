@@ -14,7 +14,13 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 
 @Injectable()
 export class ApplicationService {
-  private DEFAULT_RELATIONS = ['status', 'type', 'assignee', 'decisionMaker'];
+  private DEFAULT_RELATIONS = [
+    'status',
+    'type',
+    'assignee',
+    'decisionMaker',
+    'region',
+  ];
   private logger = new Logger(ApplicationService.name);
 
   constructor(
@@ -56,6 +62,8 @@ export class ApplicationService {
     applicationEntity.paused = application.paused;
     applicationEntity.decisionMaker = application.decisionMaker;
     applicationEntity.decisionMakerUuid = application.decisionMakerUuid;
+    applicationEntity.region = application.region;
+    applicationEntity.regionUuid = application.regionUuid;
 
     await this.applicationRepository.save(applicationEntity);
 

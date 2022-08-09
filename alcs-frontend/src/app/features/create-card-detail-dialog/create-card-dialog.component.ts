@@ -1,10 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import {
+  ApplicationDecisionMakerDto,
+  ApplicationRegionDto,
+  ApplicationTypeDto,
+} from '../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { BaseCodeDto } from '../../shared/dto/base.dto';
 
 @Component({
   selector: 'app-create-card-dialog',
@@ -14,12 +19,14 @@ import { ToastService } from '../../services/toast/toast.service';
 export class CreateCardDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   decisionMakers: ApplicationDecisionMakerDto[] = [];
+  regions: ApplicationRegionDto[] = [];
 
   createForm = new FormGroup({
     fileNumber: new FormControl('', [Validators.required]),
     applicant: new FormControl('', [Validators.required]),
     type: new FormControl('', [Validators.required]),
     decisionMaker: new FormControl(''),
+    region: new FormControl(''),
   });
 
   constructor(
@@ -37,17 +44,15 @@ export class CreateCardDialogComponent implements OnInit {
     this.applicationService.$applicationDecisionMakers.subscribe((decisionMakers) => {
       this.decisionMakers = decisionMakers;
     });
-  }
 
-  onSelectApplicationType(type: ApplicationTypeDto) {
-    this.createForm.patchValue({
-      type: type.code,
+    this.applicationService.$applicationRegions.subscribe((regions) => {
+      this.regions = regions;
     });
   }
 
-  onSelectDecisionMaker(decisionMaker: ApplicationDecisionMakerDto) {
+  onSelectDtoDropdown(field: string, value: BaseCodeDto) {
     this.createForm.patchValue({
-      decisionMaker: decisionMaker.code,
+      [field]: value.code,
     });
   }
 
@@ -57,7 +62,8 @@ export class CreateCardDialogComponent implements OnInit {
       type: formValues.type!,
       applicant: formValues.applicant!,
       fileNumber: formValues.fileNumber!.toString(),
-      decisionMaker: formValues.decisionMaker ? formValues.decisionMaker : undefined,
+      decisionMaker: formValues.decisionMaker || undefined,
+      region: formValues.region || undefined,
     });
     this.dialogRef.close();
     this.toastService.showSuccessToast('Application Created');

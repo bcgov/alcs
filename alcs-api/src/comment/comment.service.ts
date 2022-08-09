@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
+import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { Comment } from './comment.entity';
 
@@ -12,8 +13,6 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
     private applicationService: ApplicationService,
-    private userService: UserService,
-    private cls: ClsService,
   ) {}
 
   async fetchComments(fileNumber: string) {
@@ -38,19 +37,16 @@ export class CommentService {
     });
   }
 
-  async create(fileNumber: string, commentBody: string) {
+  async create(fileNumber: string, commentBody: string, author: User) {
     const application = await this.applicationService.get(fileNumber);
     if (!application) {
       throw new NotFoundException('Unable to find application');
     }
 
-    const userEmail = this.cls.get('userEmail');
-    const user = await this.userService.getUser(userEmail);
-
     const comment = new Comment({
       body: commentBody,
       application,
-      author: user,
+      author,
     });
     return this.commentRepository.save(comment);
   }

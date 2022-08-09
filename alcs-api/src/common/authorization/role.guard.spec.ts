@@ -1,11 +1,19 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { ExecutionContext, Logger } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoleGuard as KeyCloakRoleGuard } from 'nest-keycloak-connect';
+import {
+  KEYCLOAK_CONNECT_OPTIONS,
+  KEYCLOAK_INSTANCE,
+  KEYCLOAK_LOGGER,
+  RoleGuard as KeyCloakRoleGuard,
+} from 'nest-keycloak-connect';
+import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
+import { User } from '../../user/user.entity';
+import { UserService } from '../../user/user.service';
 import { AUTH_ROLE } from '../enum';
-import { mockKeyCloakProviders } from '../utils/test-helpers/mockTypes';
+import { mockAppLoggerService } from '../utils/test-helpers/mockLogger';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {
@@ -13,6 +21,9 @@ describe('RoleGuard', () => {
   let reflector: DeepMocked<Reflector>;
   let mockContext;
   let mockClsService: DeepMocked<ClsService>;
+  let mockUserService: DeepMocked<UserService>;
+
+  const mockUser = {};
 
   const mockHttpContext = {
     getRequest: () => ({
@@ -31,11 +42,30 @@ describe('RoleGuard', () => {
     reflector.get.mockReturnValue([AUTH_ROLE.ADMIN, AUTH_ROLE.LUP]);
 
     mockClsService = createMock<ClsService>();
+    mockUserService = createMock<UserService>();
+
+    mockUserService.getUser.mockResolvedValue(mockUser as User);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RoleGuard,
-        ...mockKeyCloakProviders,
+        {
+          provide: KEYCLOAK_INSTANCE,
+          useValue: {},
+        },
+        {
+          provide: KEYCLOAK_CONNECT_OPTIONS,
+          useValue: {},
+        },
+        {
+          provide: KEYCLOAK_LOGGER,
+          useValue: mockAppLoggerService,
+        },
+        KeycloakMultiTenantService,
+        {
+          provide: UserService,
+          useValue: mockUserService,
+        },
         {
           provide: ClsService,
           useValue: mockClsService,

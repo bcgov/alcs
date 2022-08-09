@@ -60,19 +60,31 @@
         bindLabel="label"
         bindValue="code"
         [clearable]="false"
-        (change)="onSelectApplicationType($event)"
+        (change)="onSelectDtoDropdown('type', $event)"
       >
       </ng-select>
     </div>
     <div>
       <ng-select
-        class="card-type"
+        class="card-decision-maker"
         [items]="decisionMakers"
         appendTo="body"
         placeholder="Decision Maker"
         bindLabel="label"
         bindValue="code"
-        (change)="onSelectDecisionMaker($event)"
+        (change)="onSelectDtoDropdown('decisionMaker', $event)"
+      >
+      </ng-select>
+    </div>
+    <div>
+      <ng-select
+        class="card-region"
+        [items]="regions"
+        appendTo="body"
+        placeholder="Region"
+        bindLabel="label"
+        bindValue="code"
+        (change)="onSelectDtoDropdown('region', $event)"
       >
       </ng-select>
     </div>

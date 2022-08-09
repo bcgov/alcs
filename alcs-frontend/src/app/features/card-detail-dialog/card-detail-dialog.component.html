@@ -47,6 +47,20 @@
 
   <div>
     <ng-select
+      class="card-region"
+      [items]="regions"
+      placeholder="Region"
+      bindLabel="label"
+      bindValue="code"
+      [clearable]="false"
+      [(ngModel)]="selectedRegion"
+      (change)="onRegionSelected($event)"
+    >
+    </ng-select>
+  </div>
+
+  <div>
+    <ng-select
       class="card-assignee"
       [items]="$users | async"
       placeholder="Assignee"
