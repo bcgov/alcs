@@ -1,4 +1,4 @@
-@import '../../../styles/colors';
+@import '../../../../styles/colors';
 
 div {
   margin: 10px 0;
@@ -47,12 +47,12 @@ div {
   }
 }
 
-.high-priority {
+.filled-priority {
   font-size: 1.6em;
   color: $error-color;
 }
 
-.low-priority {
+.empty-priority {
   font-size: 1.6em;
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke-width: 1px;

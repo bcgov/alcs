@@ -5,13 +5,13 @@ import {
   ApplicationDecisionMakerDto,
   ApplicationRegionDto,
   ApplicationTypeDto,
-} from '../../services/application/application-code.dto';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
-import { ToastService } from '../../services/toast/toast.service';
-import { UserDto } from '../../services/user/user.dto';
-import { UserService } from '../../services/user/user.service';
-import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
+} from '../../../services/application/application-code.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
+import { ToastService } from '../../../services/toast/toast.service';
+import { UserDto } from '../../../services/user/user.dto';
+import { UserService } from '../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-card-detail-dialog',

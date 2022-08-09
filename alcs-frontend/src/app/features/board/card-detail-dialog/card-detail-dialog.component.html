@@ -11,9 +11,10 @@
       <button (click)="onTogglePriority()" mat-icon-button>
         <span
           [ngClass]="{
-            'high-priority': currentCard.highPriority,
-            'low-priority': !currentCard.highPriority
-          }">!</span
+            'filled-priority': currentCard.highPriority,
+            'empty-priority': !currentCard.highPriority
+          }"
+          >!</span
         >
       </button>
     </div>
