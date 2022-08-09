@@ -46,31 +46,20 @@ export class ApplicationService {
   async createOrUpdate(
     application: Partial<Application>,
   ): Promise<Application> {
-    let applicationEntity = await this.applicationRepository.findOne({
+    const existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
 
-    // TODO: replace with AutoMapper
-    applicationEntity = applicationEntity ?? new Application();
-    applicationEntity.fileNumber = application.fileNumber;
-    applicationEntity.applicant = application.applicant;
-    applicationEntity.status = application.status;
-    applicationEntity.statusUuid = application.statusUuid;
-    applicationEntity.type = application.type;
-    applicationEntity.typeUuid = application.typeUuid;
-    applicationEntity.assigneeUuid = application.assigneeUuid;
-    applicationEntity.paused = application.paused;
-    applicationEntity.decisionMaker = application.decisionMaker;
-    applicationEntity.decisionMakerUuid = application.decisionMakerUuid;
-    applicationEntity.region = application.region;
-    applicationEntity.regionUuid = application.regionUuid;
-
-    await this.applicationRepository.save(applicationEntity);
+    const updatedApp = Object.assign(
+      existingApplication || new Application(),
+      application,
+    );
+    await this.applicationRepository.save(updatedApp);
 
     //Save does not return the full entity in case of update
     return this.applicationRepository.findOne({
       where: {
-        uuid: applicationEntity.uuid,
+        uuid: updatedApp.uuid,
       },
       relations: this.DEFAULT_RELATIONS,
     });

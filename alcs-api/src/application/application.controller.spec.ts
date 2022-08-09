@@ -49,6 +49,7 @@ describe('ApplicationController', () => {
     activeDays: 2,
     pausedDays: 0,
     paused: mockApplicationEntity.paused,
+    highPriority: mockApplicationEntity.highPriority,
   };
 
   beforeEach(async () => {

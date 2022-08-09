@@ -23,6 +23,7 @@ describe('DragDropBoardComponent', () => {
     title: 'Im Title',
     activeDays: 2,
     paused: false,
+    highPriority: true,
   };
 
   beforeEach(async () => {

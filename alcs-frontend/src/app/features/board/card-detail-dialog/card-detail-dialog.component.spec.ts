@@ -1,16 +1,17 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApplicationStatusDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
-import { UserDto } from '../../../services/user/user.dto';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationStatusDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationDetailedDto } from '../../services/application/application.dto';
+import { UserDto } from '../../services/user/user.dto';
+import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
@@ -54,6 +55,7 @@ describe('CardDetailDialogComponent', () => {
     activeDays: 10,
     pausedDays: 5,
     paused: true,
+    highPriority: false,
   };
 
   beforeEach(async () => {
@@ -69,7 +71,10 @@ describe('CardDetailDialogComponent', () => {
         BrowserAnimationsModule,
         MatSnackBarModule,
       ],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ConfirmationDialogService, useValue: {} },
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 

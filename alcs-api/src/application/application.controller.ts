@@ -145,6 +145,7 @@ export class ApplicationController {
       regionUuid: region ? region.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
+      highPriority: application.highPriority,
     });
 
     const mappedApps = await this.mapApplicationsToDtos([app]);

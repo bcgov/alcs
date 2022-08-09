@@ -62,6 +62,7 @@ const initApplicationMockEntity = (): Application => {
   applicationEntity.assignee = initAssigneeMockEntity();
   applicationEntity.paused = false;
   applicationEntity.type = initApplicationTypeMockEntity();
+  applicationEntity.highPriority = false;
 
   return applicationEntity;
 };

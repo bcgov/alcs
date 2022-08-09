@@ -6,7 +6,10 @@
   (click)="onClick(cardData.id)"
 >
   <div class="card-content">
-    <div>{{ cardData.title }}</div>
+    <div class="upper-card">
+      {{ cardData.title }}
+      <span class="high-priority" *ngIf="cardData.highPriority">!</span>
+    </div>
     <div class="lower-card">
       <div>
         <div class="active-days center">

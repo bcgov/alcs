@@ -1,13 +1,24 @@
+@import '../../../styles/colors';
+
 div {
-    margin: 10px 0;
+  margin: 10px 0;
+}
+
+.header {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .full-width {
-    width: 100%;
-  }
+  width: 100%;
+}
 
 .pull-right {
   float: right;
+  display: flex;
+  align-items: center;
 }
 
 .flex-container {
@@ -18,7 +29,7 @@ div {
 .flex-child {
   flex: 1 0 auto;
   .small {
-      flex: 2 4 auto;
+    flex: 2 4 auto;
   }
 }
 
@@ -34,4 +45,16 @@ div {
   .assignee-card-email {
     font-size: 0.9em !important;
   }
+}
+
+.high-priority {
+  font-size: 1.6em;
+  color: $error-color;
+}
+
+.low-priority {
+  font-size: 1.6em;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #333;
 }

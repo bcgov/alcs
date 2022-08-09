@@ -5,12 +5,13 @@ import {
   ApplicationDecisionMakerDto,
   ApplicationRegionDto,
   ApplicationTypeDto,
-} from '../../../services/application/application-code.dto';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { ToastService } from '../../../services/toast/toast.service';
-import { UserDto } from '../../../services/user/user.dto';
-import { UserService } from '../../../services/user/user.service';
+} from '../../services/application/application-code.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
+import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -34,7 +35,8 @@ export class CardDetailDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
     private userService: UserService,
     private applicationService: ApplicationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +109,7 @@ export class CardDetailDialogComponent implements OnInit {
         ...changes,
         fileNumber: this.currentCard.fileNumber,
       })
-      .then((r) => {
+      .then(() => {
         this.toastService.showSuccessToast('Application Updated');
       });
   }
@@ -118,7 +120,7 @@ export class CardDetailDialogComponent implements OnInit {
         fileNumber: this.currentCard.fileNumber,
         paused: !this.currentCard.paused,
       })
-      .then((r) => {
+      .then(() => {
         this.currentCard.paused = !this.currentCard.paused;
         if (this.currentCard.paused) {
           this.toastService.showSuccessToast('Application Paused');
@@ -126,5 +128,25 @@ export class CardDetailDialogComponent implements OnInit {
           this.toastService.showSuccessToast('Application Activated');
         }
       });
+  }
+
+  onTogglePriority() {
+    const answer = this.confirmationDialogService.openDialog({
+      body: this.currentCard.highPriority
+        ? 'Remove priority from this Application?'
+        : 'Add priority to this application?',
+    });
+    answer.subscribe((answer) => {
+      if (answer) {
+        this.applicationService
+          .updateApplication({
+            fileNumber: this.currentCard.fileNumber,
+            highPriority: !this.currentCard.highPriority,
+          })
+          .then(() => {
+            this.currentCard.highPriority = !this.currentCard.highPriority;
+          });
+      }
+    });
   }
 }
