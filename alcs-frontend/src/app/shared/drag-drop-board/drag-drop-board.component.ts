@@ -35,7 +35,6 @@ export class DragDropBoardComponent {
       return;
     }
 
-    debugger;
     if (targetColumn.status === 'RELE' && selectedCard.paused) {
       this.toastService.showErrorToast(
         "Paused cards cannot be moved to the 'Decision Released' column. Please unpause the card first and try again"
