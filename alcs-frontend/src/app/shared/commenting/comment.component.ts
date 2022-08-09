@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as dayjs from 'dayjs';
 import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 
@@ -20,7 +20,7 @@ export class CommentComponent implements OnInit {
   // TODO: create am interface for this
   @Output() mentionsList: Set<string> = new Set();
 
-  @ViewChild('textarea') private textAreaDiv!: ElementRef;
+  // @ViewChild('textarea') private textAreaDiv!: ElementRef;
 
   commentDate = '';
   editComment = '';
@@ -29,6 +29,7 @@ export class CommentComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    console.log('comment ngOnInit', this.comment);
     this.commentDate = dayjs(this.comment.createdAt).format('MMM D, h:mm a');
   }
 
@@ -40,11 +41,12 @@ export class CommentComponent implements OnInit {
     this.isEditing = true;
     this.editComment = this.comment.body;
     this.mentionsList = this.getAllMentions(this.editComment);
-    console.log('onEdit', this.mentionsList, this.isEditing);
 
-    setTimeout(() => {
-      this.textAreaDiv.nativeElement.focus();
-    });
+    console.log('onEdit', this.mentionsList, this.isEditing, this.comment);
+
+    // setTimeout(() => {
+    //   this.textAreaDiv.nativeElement.focus();
+    // });
   }
 
   private getAllMentions(value: string): Set<string> {
@@ -58,11 +60,12 @@ export class CommentComponent implements OnInit {
   }
 
   onSave(comment: UpdateCommentDto) {
+    console.log('onSave', comment);
     this.isEditing = false;
     this.edit.emit({
       uuid: comment.uuid,
       body: comment.body,
-      mentionsList: comment.mentionsList,
+      mentions: comment.mentions,
     });
   }
 

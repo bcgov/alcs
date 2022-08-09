@@ -9,17 +9,17 @@ export interface CommentDto {
   edited: boolean;
   createdAt: number;
   isEditable: boolean;
-  mentionsList: Set<MentionDto>;
+  mentions: MentionDto[];
 }
 
 export interface CreateCommentDto {
   fileNumber: string;
   body: string;
-  mentionsList: Set<MentionDto>;
+  mentions: Map<string, MentionDto>;
 }
 
 export interface UpdateCommentDto {
   uuid: string;
   body: string;
-  mentionsList: Set<MentionDto>;
+  mentions: Map<string, MentionDto>;
 }

@@ -21,6 +21,8 @@ import { ANY_AUTH_ROLE } from '../common/enum';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
 import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
+import { CommentMentionDto } from './mention/comment-mention.dto';
+import { CommentMention } from './mention/comment-mention.entity';
 
 @Controller('comment')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -51,6 +53,7 @@ export class CommentController {
       comment.fileNumber,
       comment.body,
       req.user.entity,
+      await this.mapMentions(comment),
     );
     return this.autoMapper.map(newComment, Comment, CommentDto);
   }
@@ -71,6 +74,7 @@ export class CommentController {
       const updatedComment = await this.commentService.update(
         comment.uuid,
         comment.body,
+        await this.mapMentions(comment),
       );
       return this.autoMapper.map(updatedComment, Comment, CommentDto);
     } else {
@@ -102,5 +106,15 @@ export class CommentController {
       ...this.autoMapper.map(comment, Comment, CommentDto),
       isEditable: comment.author.uuid === userUuid,
     }));
+  }
+
+  private async mapMentions(comment: CreateCommentDto | UpdateCommentDto) {
+    return comment.mentions && comment.mentions.length > 0
+      ? await this.autoMapper.mapArrayAsync(
+          comment.mentions,
+          CommentMentionDto,
+          CommentMention,
+        )
+      : [];
   }
 }

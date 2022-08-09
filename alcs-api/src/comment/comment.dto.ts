@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { CommentMentionDto } from './mention/comment-mention.dto';
 
 export class CommentDto {
   @AutoMap()
@@ -18,6 +19,10 @@ export class CommentDto {
   createdAt: number;
 
   isEditable = false;
+
+  @AutoMap()
+  @IsArray()
+  mentions: CommentMentionDto[];
 }
 
 export class CreateCommentDto {
@@ -28,6 +33,9 @@ export class CreateCommentDto {
   @IsString()
   @IsNotEmpty()
   body: string;
+
+  @IsArray()
+  mentions: CommentMentionDto[];
 }
 
 export class UpdateCommentDto {
@@ -38,4 +46,7 @@ export class UpdateCommentDto {
   @IsString()
   @IsNotEmpty()
   body: string;
+
+  @IsArray()
+  mentions: CommentMentionDto[];
 }

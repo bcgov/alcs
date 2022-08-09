@@ -19,7 +19,7 @@ export class MentionTextareaComponent implements OnInit {
     edited: false,
     createdAt: 0,
     isEditable: false,
-    mentionsList: new Set<MentionDto>(),
+    mentions: [],
   };
 
   @Output() save = new EventEmitter<UpdateCommentDto>();
@@ -29,7 +29,7 @@ export class MentionTextareaComponent implements OnInit {
 
   @ViewChild('textarea') private textAreaDiv!: ElementRef;
 
-  mentionList: Set<MentionDto> = new Set();
+  mentionList: Map<string, MentionDto> = new Map<string, MentionDto>();
   users: any[] = [];
 
   constructor(private userService: UserService) {}
@@ -38,6 +38,12 @@ export class MentionTextareaComponent implements OnInit {
     this.userService.$users.subscribe((users) => {
       this.users = users;
     });
+
+    if (this.comment.mentions) {
+      for (let mention of this.comment.mentions) {
+        this.mentionList.set(mention.userUuid, mention);
+      }
+    }
   }
 
   onSave() {
@@ -50,18 +56,19 @@ export class MentionTextareaComponent implements OnInit {
       this.create.emit({
         fileNumber: this.fileNumber,
         body: this.comment.body,
-        mentionsList: this.mentionList,
+        mentions: this.mentionList,
       });
     } else {
       this.save.emit({
         uuid: this.comment.uuid,
         body: this.comment.body,
-        mentionsList: this.mentionList,
+        mentions: this.mentionList,
       });
     }
 
     this.isSaving = false;
     this.isEditing = false;
+    this.mentionList = new Map<string, MentionDto>();
 
     if (this.isNewComment) {
       this.comment.body = '';
@@ -84,18 +91,22 @@ export class MentionTextareaComponent implements OnInit {
   }
 
   onMentionUserSelected(selectedUser: any) {
-    this.mentionList.add(<MentionDto>{
+    // avoid adding duplicates
+    if (this.mentionList.has(selectedUser.uuid)) {
+      return;
+    }
+
+    this.mentionList.set(selectedUser.uuid, {
       mentionName: selectedUser.mentionName,
       userUuid: selectedUser.uuid,
     });
-
-    console.log('onMentionUserSelected', selectedUser, this.mentionList);
   }
 
   private cleanUpSelectedUsers(commentBody: string) {
+    // cleanup selected users list based on the comment body
     for (let user of this.mentionList) {
-      if (commentBody.indexOf(user.mentionName) === -1) {
-        this.mentionList.delete(user);
+      if (user[0] && user[1]?.mentionName && commentBody.indexOf(user[1].mentionName) === -1) {
+        this.mentionList.delete(user[0]);
       }
     }
   }

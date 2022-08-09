@@ -21,7 +21,7 @@ export class CommentsComponent implements OnInit {
   users: Array<any> = [];
   comment: CommentDto = {
     body: '',
-    mentionsList: new Set(),
+    mentions: [],
     uuid: '',
     author: '',
     edited: false,

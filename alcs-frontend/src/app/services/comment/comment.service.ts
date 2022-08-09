@@ -21,7 +21,7 @@ export class CommentService implements OnInit {
     const createdComment = firstValueFrom(
       this.http.post<CommentDto>(`${environment.apiRoot}/comment`, {
         ...comment,
-        mentionsList: [...comment.mentionsList],
+        mentions: [...comment.mentions.values()],
       })
     );
     this.toastService.showSuccessToast('Comment created');
@@ -32,7 +32,7 @@ export class CommentService implements OnInit {
     const updatedComment = firstValueFrom(
       this.http.patch<CommentDto>(`${environment.apiRoot}/comment`, {
         ...comment,
-        mentionsList: [...comment.mentionsList],
+        mentions: [...comment.mentions.values()],
       })
     );
     this.toastService.showSuccessToast('Comment updated');

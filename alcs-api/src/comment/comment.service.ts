@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
 import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
 import { Comment } from './comment.entity';
+import { CommentMention } from './mention/comment-mention.entity';
+import { CommentMentionService } from './mention/comment-mention.service';
 
 @Injectable()
 export class CommentService {
@@ -13,6 +13,7 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
     private applicationService: ApplicationService,
+    private commentMentionService: CommentMentionService,
   ) {}
 
   async fetchComments(fileNumber: string) {
@@ -21,7 +22,7 @@ export class CommentService {
       where: {
         applicationUuid: application.uuid,
       },
-      relations: ['author'],
+      relations: ['author', 'mentions'],
       order: {
         createdAt: 'DESC',
       },
@@ -33,11 +34,16 @@ export class CommentService {
       where: {
         uuid: commentUuid,
       },
-      relations: ['author'],
+      relations: ['author', 'mentions'],
     });
   }
 
-  async create(fileNumber: string, commentBody: string, author: User) {
+  async create(
+    fileNumber: string,
+    commentBody: string,
+    author: User,
+    mentions: CommentMention[],
+  ) {
     const application = await this.applicationService.get(fileNumber);
     if (!application) {
       throw new NotFoundException('Unable to find application');
@@ -48,7 +54,14 @@ export class CommentService {
       application,
       author,
     });
-    return this.commentRepository.save(comment);
+
+    const createComment = await this.commentRepository.save(comment);
+    this.commentMentionService.updateMentionsOnComment(
+      createComment.uuid,
+      mentions,
+    );
+
+    return createComment;
   }
 
   async delete(uuid: string): Promise<void> {
@@ -57,10 +70,11 @@ export class CommentService {
     });
 
     await this.commentRepository.softRemove([comment]);
+    await this.commentMentionService.deleteMentionsOnComment(uuid);
     return;
   }
 
-  async update(uuid: string, body: string) {
+  async update(uuid: string, body: string, mentions: CommentMention[]) {
     const comment = await this.commentRepository.findOne({
       where: { uuid },
     });
@@ -69,6 +83,14 @@ export class CommentService {
     comment.body = body;
 
     await this.commentRepository.save(comment);
+
+    if (mentions) {
+      await this.commentMentionService.updateMentionsOnComment(
+        comment.uuid,
+        mentions,
+      );
+    }
+
     return;
   }
 }
