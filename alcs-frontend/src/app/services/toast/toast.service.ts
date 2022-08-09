@@ -23,7 +23,7 @@ export class ToastService {
     });
   }
 
-  showErrorToast(text: string, action: string = '') {
+  showErrorToast(text: string, action: string = 'Dismiss') {
     this.snackBar.open(text, action, {
       panelClass: 'error',
     });

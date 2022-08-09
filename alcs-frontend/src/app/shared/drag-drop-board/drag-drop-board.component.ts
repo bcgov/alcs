@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../card/card.component';
 import { DragDropColumn } from './drag-drop-column.interface';
 
@@ -18,6 +19,8 @@ export class DragDropBoardComponent {
   }>();
   @Output() cardSelected = new EventEmitter<string>();
 
+  constructor(private toastService: ToastService) {}
+
   predicateGenerator(column: DragDropColumn) {
     return (item: CdkDrag<CardData>) => {
       return column.allowedTransitions.includes(item.data.status);
@@ -29,6 +32,14 @@ export class DragDropBoardComponent {
 
     if (!selectedCard) {
       console.error(`Failed to find card with id ${event.item.data.id}`);
+      return;
+    }
+
+    debugger;
+    if (targetColumn.status === 'RELE' && selectedCard.paused) {
+      this.toastService.showErrorToast(
+        "Paused cards cannot be moved to the 'Decision Released' column. Please unpause the card first and try again"
+      );
       return;
     }
 
