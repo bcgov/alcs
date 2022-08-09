@@ -1,9 +1,24 @@
-<div mat-dialog-title>
-  <h2 class="card-title">{{ currentCard.fileNumber }} ({{ currentCard.applicant }})</h2>
-  <span>
-    in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
-  </span>
-  <span class="pull-right card-state">{{ currentCard.paused ? 'Paused' : 'Active' }}</span>
+<div mat-dialog-title class="header">
+  <div>
+    <h2 class="card-title">{{ currentCard.fileNumber }} ({{ currentCard.applicant }})</h2>
+    <span>
+      in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
+    </span>
+  </div>
+  <div class="center">
+    <div class="card-state">{{ currentCard.paused ? 'Paused' : 'Active' }}</div>
+    <div>
+      <button (click)="onTogglePriority()" mat-icon-button>
+        <span
+          [ngClass]="{
+            'filled-priority': currentCard.highPriority,
+            'empty-priority': !currentCard.highPriority
+          }"
+          >!</span
+        >
+      </button>
+    </div>
+  </div>
 </div>
 <mat-dialog-content>
   <div>
@@ -16,7 +31,6 @@
       ></app-inline-edit>
     </div>
   </div>
-
   <div>
     <ng-select
       class="card-type"
@@ -30,7 +44,6 @@
     >
     </ng-select>
   </div>
-
   <div>
     <ng-select
       class="card-decision-maker"
@@ -44,7 +57,6 @@
     >
     </ng-select>
   </div>
-
   <div>
     <ng-select
       class="card-region"
@@ -58,7 +70,6 @@
     >
     </ng-select>
   </div>
-
   <div>
     <ng-select
       class="card-assignee"

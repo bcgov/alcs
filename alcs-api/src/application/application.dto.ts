@@ -68,6 +68,10 @@ export class ApplicationDto {
   @IsBoolean()
   paused: boolean;
 
+  @AutoMap()
+  @IsBoolean()
+  highPriority: boolean;
+
   @IsNotEmpty()
   @IsString()
   type: string;
@@ -133,4 +137,9 @@ export class ApplicationUpdateDto {
   @IsBoolean()
   @IsOptional()
   paused?: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsOptional()
+  highPriority?: boolean;
 }

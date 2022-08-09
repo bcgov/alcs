@@ -1,3 +1,5 @@
+@import './colors';
+
 snack-bar-container.success {
   background: $success-color;
   color: #fff;
@@ -18,11 +20,11 @@ snack-bar-container.error {
   }
 
   .mat-simple-snack-bar-content {
-    border-right: 2px solid #fff;
     padding: 14px 8px 14px 14px;
   }
 
   .mat-simple-snackbar-action {
+    border-left: 2px solid #fff;
     color: #fff;
     padding: 0;
     margin: 0;
