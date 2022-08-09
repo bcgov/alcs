@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../card/card.component';
 
 import { DragDropBoardComponent } from './drag-drop-board.component';
@@ -26,6 +27,7 @@ describe('DragDropBoardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [{ provide: ToastService, useValue: {} }],
       declarations: [DragDropBoardComponent, StatusFilterPipe],
     }).compileComponents();
 
