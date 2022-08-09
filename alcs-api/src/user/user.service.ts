@@ -27,9 +27,7 @@ export class UserService {
       throw new Error(`Email already exists: ${dto.email}`);
     }
 
-    let user = new User();
-    user = await this.userMapper.mapAsync(dto, UserDto, User);
-
+    const user = await this.userMapper.mapAsync(dto, UserDto, User);
     return this.userRepository.save(user);
   }
 

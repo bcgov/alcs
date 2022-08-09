@@ -8,10 +8,6 @@ export class CreateOrUpdateUserDto {
 
   @AutoMap()
   @IsString()
-  name: string;
-
-  @AutoMap()
-  @IsString()
   displayName: string;
 
   @AutoMap()
@@ -24,11 +20,15 @@ export class CreateOrUpdateUserDto {
 
   @AutoMap()
   @IsString()
-  givenName: string;
+  name?: string;
 
   @AutoMap()
   @IsString()
-  familyName: string;
+  givenName?: string;
+
+  @AutoMap()
+  @IsString()
+  familyName?: string;
 
   @AutoMap()
   @IsString()
@@ -37,6 +37,14 @@ export class CreateOrUpdateUserDto {
   @AutoMap()
   @IsString()
   idirUserName?: string;
+
+  @AutoMap()
+  @IsString()
+  bceidGuid?: string;
+
+  @AutoMap()
+  @IsString()
+  bceidUserName?: string;
 }
 
 export class UserDto extends CreateOrUpdateUserDto {
