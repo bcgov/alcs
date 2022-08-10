@@ -88,6 +88,8 @@ export class MentionTextareaComponent implements OnInit {
     setTimeout(() => {
       this.textAreaDiv.nativeElement.focus();
     });
+
+    this.edit.emit();
   }
 
   onMentionUserSelected(selectedUser: any) {

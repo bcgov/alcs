@@ -20,8 +20,6 @@ export class CommentComponent implements OnInit {
   // TODO: create am interface for this
   @Output() mentionsList: Set<string> = new Set();
 
-  // @ViewChild('textarea') private textAreaDiv!: ElementRef;
-
   commentDate = '';
   editComment = '';
   isEditing = false;
@@ -40,13 +38,6 @@ export class CommentComponent implements OnInit {
   onEdit() {
     this.isEditing = true;
     this.editComment = this.comment.body;
-    this.mentionsList = this.getAllMentions(this.editComment);
-
-    console.log('onEdit', this.mentionsList, this.isEditing, this.comment);
-
-    // setTimeout(() => {
-    //   this.textAreaDiv.nativeElement.focus();
-    // });
   }
 
   private getAllMentions(value: string): Set<string> {
@@ -75,9 +66,9 @@ export class CommentComponent implements OnInit {
     for (let mention of mentions) {
       const rgx = new RegExp('@' + mention, 'g');
       if (this.users.some((u: { mentionName: string }) => u.mentionName === mention)) {
-        value = value.replace(rgx, () => `<span class="mention green">@${mention}</span> &nbsp`);
+        value = value.replace(rgx, () => ` <span class="mention green">@${mention}</span> `);
       } else {
-        value = value.replace(rgx, () => `<span class="mention grey">@${mention}</span> &nbsp`);
+        value = value.replace(rgx, () => ` <span class="mention grey">@${mention}</span> `);
       }
     }
 

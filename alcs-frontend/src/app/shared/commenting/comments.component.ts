@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 import { CommentService } from '../../services/comment/comment.service';
 import { UserService } from '../../services/user/user.service';
@@ -11,8 +11,6 @@ import { UserService } from '../../services/user/user.service';
 })
 export class CommentsComponent implements OnInit {
   @Input() fileNumber: string = '';
-
-  @ViewChild('textarea') private textAreaDiv!: ElementRef;
 
   comments: CommentDto[] = [];
   isEditing = false;
@@ -44,9 +42,6 @@ export class CommentsComponent implements OnInit {
 
   onEdit() {
     this.isEditing = true;
-    setTimeout(() => {
-      this.textAreaDiv.nativeElement.focus();
-    });
   }
 
   private async loadComments(fileNumber: string) {
