@@ -6,13 +6,12 @@
     </div>
   </div>
   <div class="body">
-    <div [hidden]="!isEditing">
+    <div *ngIf="isEditing">
       <app-mention-textarea
         [fileNumber]="fileNumber"
         [comment]="comment"
         (cancel)="onCancel()"
         (save)="onSave($event)"
-        [isEditing]="isEditing"
         labelText="Edit comment"
       ></app-mention-textarea>
     </div>
