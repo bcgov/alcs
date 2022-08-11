@@ -60,6 +60,7 @@ export class CommentService {
       createComment.uuid,
       mentions,
     );
+    this.commentMentionService.notifyRecipientsOnComment(comment, application);
 
     return createComment;
   }

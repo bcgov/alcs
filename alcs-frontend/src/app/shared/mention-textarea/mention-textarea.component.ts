@@ -12,6 +12,7 @@ export class MentionTextareaComponent implements OnInit {
   @Input() isSaving = false;
   @Input() isEditing = false;
   @Input() isNewComment = false;
+  @Input() labelText = '';
   @Input() comment: CommentDto = {
     body: '',
     uuid: '',

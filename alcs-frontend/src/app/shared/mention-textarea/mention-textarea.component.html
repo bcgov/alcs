@@ -1,6 +1,6 @@
 <div [hidden]="!isEditing">
   <mat-form-field class="comment-input" appearance="fill" (click)="onEdit()">
-    <mat-label>Add a comment</mat-label>
+    <mat-label [hidden]="!labelText">{{labelText}}</mat-label>
     <textarea
       #textarea
       cdkTextareaAutosize

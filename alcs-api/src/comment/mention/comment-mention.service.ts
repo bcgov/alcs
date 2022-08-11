@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Application } from '../../application/application.entity';
+import { EmailService } from '../../providers/email/email.service';
+import { Comment } from '../comment.entity';
 import { CommentMention } from './comment-mention.entity';
 
 @Injectable()
@@ -8,6 +11,7 @@ export class CommentMentionService {
   constructor(
     @InjectRepository(CommentMention)
     private commentMentionRepository: Repository<CommentMention>,
+    private emailService: EmailService,
   ) {}
 
   async updateMentionsOnComment(
@@ -40,6 +44,28 @@ export class CommentMentionService {
   private async getMentionsOnComment(commentUuid: string) {
     return await this.commentMentionRepository.find({
       where: { commentUuid },
+    });
+  }
+
+  async fetchMentionsForComment(commentUuid: string) {
+    return await this.commentMentionRepository.find({
+      where: { commentUuid },
+      relations: ['user', 'comment'],
+    });
+  }
+
+  async notifyRecipientsOnComment(comment: Comment, application: Application) {
+    const mentionsEntities = await this.fetchMentionsForComment(comment.uuid);
+    const recipients = mentionsEntities.map((m) => m.user.email);
+    // TODO: provide link to the card
+
+    const message = `${comment.author.name} as tagged you on the card for ${application.fileNumber}(${application.applicant}).
+    ${comment.body}`;
+
+    await this.emailService.sendEmail({
+      subject: `You've been tagged on ${application.fileNumber}(${application.applicant})`,
+      to: recipients,
+      body: message,
     });
   }
 }

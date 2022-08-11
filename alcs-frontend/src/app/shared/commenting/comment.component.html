@@ -13,6 +13,7 @@
         (cancel)="onCancel()"
         (save)="onSave($event)"
         [isEditing]="isEditing"
+        labelText="Edit comment"
       ></app-mention-textarea>
     </div>
     <div *ngIf="!isEditing" class="content" [innerHtml]="highlightMentions(comment.body)"></div>
