@@ -3,12 +3,11 @@
     <input matInput placeholder="Add a comment..." />
   </mat-form-field>
   <app-mention-textarea
+    *ngIf="isEditing"
     (create)="onSave($event)"
-    [fileNumber]="fileNumber"
     [fileNumber]="fileNumber"
     [comment]="comment"
     (cancel)="onCancel()"
-    [isEditing]="isEditing"
     [isNewComment]="true"
     labelText="Add a comment"
   >

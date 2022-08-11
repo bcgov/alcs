@@ -10,7 +10,6 @@ import { UserService } from '../../services/user/user.service';
 export class MentionTextareaComponent implements OnInit {
   @Input() fileNumber!: string;
   @Input() isSaving = false;
-  @Input() isEditing = false;
   @Input() isNewComment = false;
   @Input() labelText = '';
   @Input() comment: CommentDto = {
@@ -26,7 +25,6 @@ export class MentionTextareaComponent implements OnInit {
   @Output() save = new EventEmitter<UpdateCommentDto>();
   @Output() create = new EventEmitter<CreateCommentDto>();
   @Output() cancel = new EventEmitter<string>();
-  @Output() edit = new EventEmitter<string>();
 
   @ViewChild('textarea') private textAreaDiv!: ElementRef;
 
@@ -45,6 +43,11 @@ export class MentionTextareaComponent implements OnInit {
         this.mentionList.set(mention.userUuid, mention);
       }
     }
+
+    setTimeout(() => {
+      debugger;
+      this.textAreaDiv.nativeElement.focus();
+    });
   }
 
   onSave() {
@@ -67,9 +70,12 @@ export class MentionTextareaComponent implements OnInit {
       });
     }
 
+    this.clear();
+  }
+
+  private clear() {
     this.isSaving = false;
-    this.isEditing = false;
-    this.mentionList = new Map<string, MentionDto>();
+    this.mentionList.clear();
 
     if (this.isNewComment) {
       this.comment.body = '';
@@ -77,20 +83,8 @@ export class MentionTextareaComponent implements OnInit {
   }
 
   onCancel() {
-    console.log('MentionTextareaComponent onCancel');
-    this.isEditing = false;
+    this.clear();
     this.cancel.emit();
-  }
-
-  onEdit() {
-    this.isEditing = true;
-    console.log('MentionTextareaComponent onEdit', this.isEditing);
-
-    setTimeout(() => {
-      this.textAreaDiv.nativeElement.focus();
-    });
-
-    this.edit.emit();
   }
 
   onMentionUserSelected(selectedUser: any) {
