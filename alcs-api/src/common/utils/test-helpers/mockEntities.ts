@@ -62,6 +62,7 @@ const initApplicationMockEntity = (): Application => {
   applicationEntity.assignee = initAssigneeMockEntity();
   applicationEntity.paused = false;
   applicationEntity.type = initApplicationTypeMockEntity();
+  applicationEntity.highPriority = false;
 
   return applicationEntity;
 };
@@ -82,6 +83,8 @@ const initAssigneeMockDto = (assignee?: User): UserDto => {
   userDto.initials =
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
+  userDto.bceidUserName = undefined;
+  userDto.bceidGuid = undefined;
   return userDto;
 };
 

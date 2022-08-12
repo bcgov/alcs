@@ -45,6 +45,14 @@ export class Application extends Base {
   })
   paused: boolean;
 
+  @AutoMap()
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  highPriority: boolean;
+
   @ManyToOne((status) => ApplicationStatus, {
     nullable: false,
   })

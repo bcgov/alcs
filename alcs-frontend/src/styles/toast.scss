@@ -1,3 +1,5 @@
+@import './colors';
+
 snack-bar-container.success {
   background: $success-color;
   color: #fff;
@@ -11,4 +13,25 @@ snack-bar-container.warning {
 snack-bar-container.error {
   background: $error-color;
   color: #fff;
+  padding: 0;
+
+  .mat-simple-snackbar {
+    align-items: stretch;
+  }
+
+  .mat-simple-snack-bar-content {
+    padding: 14px 8px 14px 14px;
+  }
+
+  .mat-simple-snackbar-action {
+    border-left: 2px solid #fff;
+    color: #fff;
+    padding: 0;
+    margin: 0;
+  }
+
+  button {
+    height: 100%;
+    max-height: unset;
+  }
 }

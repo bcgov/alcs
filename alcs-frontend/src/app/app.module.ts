@@ -13,9 +13,12 @@ import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { ToastService } from './services/toast/toast.service';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
+import { ProvisionComponent } from './features/provision/provision.component';
 
 @NgModule({
   declarations: [
@@ -25,11 +28,14 @@ import { SharedModule } from './shared/shared.module';
     FooterComponent,
     NotFoundComponent,
     AuthorizationComponent,
+    ProvisionComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule, AppRoutingModule, BoardModule],
   providers: [
     AuthenticationService,
     ToastService,
+    ConfirmationDialogService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
   ],

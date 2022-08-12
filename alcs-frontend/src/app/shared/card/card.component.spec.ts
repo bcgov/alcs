@@ -26,6 +26,7 @@ describe('CardComponent', () => {
       title: 'Title',
       activeDays: 2,
       paused: false,
+      highPriority: false,
     };
 
     fixture.detectChanges();
@@ -62,6 +63,7 @@ describe('CardComponent', () => {
       title: 'Title',
       activeDays: 2,
       paused: true,
+      highPriority: false,
     };
     fixture.detectChanges();
 

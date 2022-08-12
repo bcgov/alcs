@@ -6,8 +6,8 @@ import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
-import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
-import { CreateCardDialogComponent } from '../create-card-detail-dialog/create-card-dialog.component';
+import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
+import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 
 @Component({
   selector: 'app-board',
@@ -99,6 +99,7 @@ export class BoardComponent implements OnInit {
       type: mappedType!,
       activeDays: application.activeDays,
       paused: application.paused,
+      highPriority: application.highPriority,
     };
   }
 }

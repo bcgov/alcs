@@ -1,0 +1,60 @@
+@import '../../../../styles/colors';
+
+div {
+  margin: 10px 0;
+}
+
+.header {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.pull-right {
+  float: right;
+  display: flex;
+  align-items: center;
+}
+
+.flex-container {
+  display: flex;
+  margin: 0;
+}
+
+.flex-child {
+  flex: 1 0 auto;
+  .small {
+    flex: 2 4 auto;
+  }
+}
+
+.italic {
+  font-style: italic;
+}
+
+.card-assignee {
+  .assignee-card-name {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+  }
+  .assignee-card-email {
+    font-size: 0.9em !important;
+  }
+}
+
+.filled-priority {
+  font-size: 1.6em;
+  color: $error-color;
+}
+
+.empty-priority {
+  font-size: 1.6em;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #333;
+}

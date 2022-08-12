@@ -17,7 +17,7 @@ import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
 import { UserService } from '../../user/user.service';
-import { AUTH_ROLE } from '../enum';
+import { AUTH_ROLE } from './roles';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
