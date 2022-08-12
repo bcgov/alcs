@@ -87,14 +87,16 @@ const initAssigneeMockDto = (assignee?: User): UserDto => {
   return userDto;
 };
 
-const initCommentMock = (): Comment => {
+const initCommentMock = (author?: any): Comment => {
   const comment = new Comment({
     body: 'body',
-    author: {
-      uuid: 'aaaaaaaaaaaaaaaa',
-      email: 'fake-email',
-      name: 'fake-name',
-    } as any,
+    author:
+      author ??
+      ({
+        uuid: 'aaaaaaaaaaaaaaaa',
+        email: 'fake-email',
+        name: 'fake-name',
+      } as any),
     createdAt: new Date(),
     application: initApplicationMockEntity('file-number'),
     applicationUuid: 'file-number',

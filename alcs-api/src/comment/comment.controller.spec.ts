@@ -5,9 +5,9 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { CommentProfile } from '../common/automapper/comment.automapper.profile';
+import { initCommentMock } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { CommentController } from './comment.controller';
-import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
 
 describe('CommentController', () => {
@@ -35,14 +35,15 @@ describe('CommentController', () => {
       },
     };
 
-    comment = new Comment({
-      body: 'body',
-      author: user as any,
-      createdAt: new Date(),
-      applicationUuid: 'file-number',
-      edited: false,
-      uuid: 'fake-uuid',
-    });
+    comment = initCommentMock(user);
+    // new Comment({
+    //   body: 'body',
+    //   author: user as any,
+    //   createdAt: new Date(),
+    //   applicationUuid: 'file-number',
+    //   edited: false,
+    //   uuid: 'fake-uuid',
+    // });
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -78,7 +79,7 @@ describe('CommentController', () => {
     const comments = await controller.get('file-number', request);
 
     expect(comments.length).toEqual(1);
-    expect(comments[0].author).toEqual(user.name);
+    expect(comments[0].author).toStrictEqual(comment.author.name);
     expect(comments[0].isEditable).toEqual(true);
   });
 
@@ -89,6 +90,7 @@ describe('CommentController', () => {
       {
         fileNumber: 'file-number',
         body: 'comment-body',
+        mentions: comment.mentions,
       },
       request,
     );
@@ -107,6 +109,7 @@ describe('CommentController', () => {
       {
         body: 'new-body',
         uuid: 'uuid',
+        mentions: comment.mentions,
       },
       request,
     );
@@ -126,6 +129,7 @@ describe('CommentController', () => {
         {
           body: 'new-body',
           uuid: 'uuid',
+          mentions: comment.mentions,
         },
         request,
       ),
@@ -149,6 +153,7 @@ describe('CommentController', () => {
         {
           body: 'new-body',
           uuid: 'uuid',
+          mentions: comment.mentions,
         },
         request,
       ),
