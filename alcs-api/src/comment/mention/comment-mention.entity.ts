@@ -6,6 +6,7 @@ import { Comment } from '../comment.entity';
 
 @Entity()
 export class CommentMention extends Base {
+  @AutoMap()
   @Column()
   commentUuid: string;
 

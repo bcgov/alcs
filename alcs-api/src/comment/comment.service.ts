@@ -7,6 +7,7 @@ import { Comment } from './comment.entity';
 import { CommentMention } from './mention/comment-mention.entity';
 import { CommentMentionService } from './mention/comment-mention.service';
 
+const DEFAULT_COMMENT_RELATIONS = ['author', 'mentions'];
 @Injectable()
 export class CommentService {
   constructor(
@@ -22,7 +23,7 @@ export class CommentService {
       where: {
         applicationUuid: application.uuid,
       },
-      relations: ['author', 'mentions'],
+      relations: DEFAULT_COMMENT_RELATIONS,
       order: {
         createdAt: 'DESC',
       },
@@ -34,7 +35,7 @@ export class CommentService {
       where: {
         uuid: commentUuid,
       },
-      relations: ['author', 'mentions'],
+      relations: DEFAULT_COMMENT_RELATIONS,
     });
   }
 
@@ -56,11 +57,14 @@ export class CommentService {
     });
 
     const createComment = await this.commentRepository.save(comment);
-    this.commentMentionService.updateMentionsOnComment(
+    await this.commentMentionService.updateMentionsOnComment(
       createComment.uuid,
       mentions,
     );
-    this.commentMentionService.notifyRecipientsOnComment(comment, application);
+    await this.commentMentionService.notifyRecipientsOnComment(
+      comment,
+      application,
+    );
 
     return createComment;
   }
@@ -78,6 +82,7 @@ export class CommentService {
   async update(uuid: string, body: string, mentions: CommentMention[]) {
     const comment = await this.commentRepository.findOne({
       where: { uuid },
+      relations: [...DEFAULT_COMMENT_RELATIONS, 'application'],
     });
 
     comment.edited = true;
@@ -86,9 +91,18 @@ export class CommentService {
     await this.commentRepository.save(comment);
 
     if (mentions) {
+      const application = await this.applicationService.get(
+        comment.application.fileNumber,
+      );
+
       await this.commentMentionService.updateMentionsOnComment(
         comment.uuid,
         mentions,
+      );
+
+      await this.commentMentionService.notifyRecipientsOnComment(
+        comment,
+        application,
       );
     }
 

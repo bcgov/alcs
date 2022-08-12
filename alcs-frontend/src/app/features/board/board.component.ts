@@ -51,6 +51,12 @@ export class BoardComponent implements OnInit {
     });
 
     this.applicationService.refreshApplications();
+
+    // open card if application number present in url
+    const app = this.activatedRoute.snapshot.queryParamMap.get('app');
+    if (app) {
+      await this.onSelected(app);
+    }
   }
 
   async onSelected(id: string) {
