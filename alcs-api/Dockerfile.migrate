@@ -3,7 +3,7 @@
 # https://www.tomray.dev/nestjs-docker-production
 ###################
 
-FROM node:18-alpine As development
+FROM node:16.15-alpine As development
 
 WORKDIR /usr/src/app
 

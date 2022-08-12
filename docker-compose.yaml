@@ -6,6 +6,7 @@ services:
     container_name: alcs_api
     build:
       context: alcs-api
+      dockerfile: Dockerfile.local
     ports:
       - 8080:8080
     depends_on:
@@ -13,7 +14,7 @@ services:
       - redis
       # - migrate
     healthcheck:
-      test: [ "CMD", "curl", "localhost:5000/" ]
+      test: [ "CMD", "curl", "localhost:8080/" ]
       interval: 5s
       timeout: 5s
       retries: 5
