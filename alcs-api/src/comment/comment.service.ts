@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
@@ -58,14 +59,7 @@ export class CommentService {
     });
 
     const createComment = await this.commentRepository.save(comment);
-    await this.commentMentionService.updateMentionsOnComment(
-      createComment.uuid,
-      mentions,
-    );
-    await this.commentMentionService.notifyRecipientsOnComment(
-      comment,
-      application,
-    );
+    await this.processMentions(mentions, comment, application);
 
     return createComment;
   }
@@ -100,10 +94,20 @@ export class CommentService {
 
     await this.commentRepository.save(comment);
 
-    if (mentions) {
-      const application = await this.applicationService.get(
-        comment.application.fileNumber,
-      );
+    await this.processMentions(mentions, comment);
+
+    return;
+  }
+
+  private async processMentions(
+    mentions: CommentMention[],
+    comment: Comment,
+    application?: Application,
+  ) {
+    if (mentions && mentions.length > 0) {
+      const applicationEntity =
+        application ??
+        (await this.applicationService.get(comment.application.fileNumber));
 
       await this.commentMentionService.updateMentionsOnComment(
         comment.uuid,
@@ -112,10 +116,8 @@ export class CommentService {
 
       await this.commentMentionService.notifyRecipientsOnComment(
         comment,
-        application,
+        applicationEntity,
       );
     }
-
-    return;
   }
 }

@@ -25,6 +25,10 @@ export class CommentMentionService {
 
     await this.commentMentionRepository.remove(currentMentions);
 
+    if (mentions.length === 0) {
+      return commentMentions;
+    }
+
     for (const mention of mentions) {
       const newMention = new CommentMention();
       newMention.commentUuid = commentUuid;
