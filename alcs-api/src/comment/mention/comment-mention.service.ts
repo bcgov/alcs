@@ -23,7 +23,7 @@ export class CommentMentionService {
     const commentMentions = [];
     const currentMentions = await this.getMentionsOnComment(commentUuid);
 
-    this.commentMentionRepository.remove(currentMentions);
+    await this.commentMentionRepository.remove(currentMentions);
 
     for (const mention of mentions) {
       const newMention = new CommentMention();
@@ -59,6 +59,10 @@ export class CommentMentionService {
   async notifyRecipientsOnComment(comment: Comment, application: Application) {
     const mentionsEntities = await this.fetchMentionsForComment(comment.uuid);
     const recipients = mentionsEntities.map((m) => m.user.email);
+
+    if (recipients.length <= 0) {
+      return;
+    }
 
     const frontEndUrl = this.config.get('FRONTEND_ROOT');
     const message = `${comment.author.name} has tagged you on the card for <a href="${frontEndUrl}/admin?app=${application.fileNumber}">${application.fileNumber}(${application.applicant})</a>. <br/>

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
 import { CommentMention } from './mention/comment-mention.entity';
@@ -84,6 +85,15 @@ export class CommentService {
       where: { uuid },
       relations: [...DEFAULT_COMMENT_RELATIONS, 'application'],
     });
+
+    if (body.trim() === '') {
+      throw new ServiceValidationException('Comment body must be filled.');
+    }
+
+    if (comment.body.trim() === body.trim()) {
+      // do not preform update if nothing changed
+      return;
+    }
 
     comment.edited = true;
     comment.body = body;
