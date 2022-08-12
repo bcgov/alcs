@@ -84,6 +84,11 @@ const initAssigneeMockDto = (assignee?: User): UserDto => {
   userDto.initials =
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
+  userDto.mentionName =
+    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.givenName.slice(1) +
+    userEntity.familyName.charAt(0).toUpperCase() +
+    userEntity.familyName.slice(1);
   return userDto;
 };
 
