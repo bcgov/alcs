@@ -58,5 +58,5 @@ export class UserDto extends CreateOrUpdateUserDto {
 
   @AutoMap()
   @IsString()
-  mentionName: string;
+  mentionLabel: string;
 }

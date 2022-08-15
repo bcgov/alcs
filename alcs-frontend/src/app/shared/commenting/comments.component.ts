@@ -34,7 +34,7 @@ export class CommentsComponent implements OnInit {
 
     this.userService.$users.subscribe((users) => {
       this.users = users.map((user) => ({
-        mentionName: user.mentionName,
+        mentionLabel: user.mentionLabel,
         email: user.email,
       }));
     });

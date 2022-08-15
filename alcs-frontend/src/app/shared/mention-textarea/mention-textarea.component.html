@@ -8,7 +8,7 @@
       [disabled]="isSaving"
       matInput
       placeholder=""
-      [mentionConfig]="{ items: users, labelKey: 'mentionName' }"
+      [mentionConfig]="{ items: users, labelKey: 'mentionLabel' }"
       [mentionListTemplate]="mentionListTemplate2"
       (itemSelected)="onMentionUserSelected($event)"
     ></textarea>
@@ -20,6 +20,6 @@
 </div>
 
 <ng-template #mentionListTemplate2 let-item="item">
-  <p>{{ item.mentionName }}</p>
+  <p>{{ item.mentionLabel }}</p>
   <p>{{ item.email }}</p>
 </ng-template>

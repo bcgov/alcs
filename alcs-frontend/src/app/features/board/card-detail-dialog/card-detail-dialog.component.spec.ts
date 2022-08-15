@@ -26,7 +26,7 @@ describe('CardDetailDialogComponent', () => {
     preferredUsername: 'Dart Placeholder',
     givenName: 'Dart',
     familyName: 'Placeholder',
-    mentionName: 'DartPlaceholder',
+    mentionLabel: 'DartPlaceholder',
   };
 
   const mockApplicationStatusDetails: ApplicationStatusDto = {

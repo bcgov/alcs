@@ -44,7 +44,7 @@ describe('UserController', () => {
       idirUserGuid: '001bat',
       idirUserName: 'bat',
       initials: 'BW',
-      mentionName: 'BruceWayne',
+      mentionLabel: 'BruceWayne',
       uuid: undefined,
     };
 

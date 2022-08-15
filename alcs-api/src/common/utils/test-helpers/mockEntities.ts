@@ -87,7 +87,7 @@ const initAssigneeMockDto = (assignee?: User): UserDto => {
     userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
   userDto.bceidGuid = undefined;
-  userDto.mentionName =
+  userDto.mentionLabel =
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.givenName.slice(1) +
     userEntity.familyName.charAt(0).toUpperCase() +

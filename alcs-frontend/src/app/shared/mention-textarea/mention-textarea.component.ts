@@ -45,7 +45,6 @@ export class MentionTextareaComponent implements OnInit {
     }
 
     setTimeout(() => {
-      debugger;
       this.textAreaDiv.nativeElement.focus();
     });
   }
@@ -93,7 +92,7 @@ export class MentionTextareaComponent implements OnInit {
     }
 
     this.mentionList.set(selectedUser.uuid, {
-      mentionName: selectedUser.mentionName,
+      mentionLabel: selectedUser.mentionLabel,
       userUuid: selectedUser.uuid,
     });
   }
@@ -101,7 +100,7 @@ export class MentionTextareaComponent implements OnInit {
   private cleanUpSelectedUsers(commentBody: string) {
     // cleanup selected users list based on the comment body
     for (let user of this.mentionList) {
-      if (user[0] && user[1]?.mentionName && commentBody.indexOf(user[1].mentionName) === -1) {
+      if (user[0] && user[1]?.mentionLabel && commentBody.indexOf(user[1].mentionLabel) === -1) {
         this.mentionList.delete(user[0]);
       }
     }

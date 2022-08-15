@@ -61,7 +61,7 @@ export class CommentComponent implements OnInit {
     for (let mention of mentions) {
       const rgx = new RegExp('@' + mention + '\\b', 'g');
 
-      if (this.mentions.some((u: { mentionName: string }) => u.mentionName === mention)) {
+      if (this.mentions.some((u: { mentionLabel: string }) => u.mentionLabel === mention)) {
         value = value.replace(rgx, () => ` <span class="mention green">@${mention}</span> `);
       } else {
         value = value.replace(rgx, () => ` <span class="mention grey">@${mention}</span> `);

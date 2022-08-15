@@ -19,5 +19,5 @@ export interface UserDto {
 
   idirUserName?: string;
 
-  mentionName: string;
+  mentionLabel: string;
 }

@@ -26,7 +26,7 @@ export class UserProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ud) => ud.mentionName,
+          (ud) => ud.mentionLabel,
           mapFrom(
             (u) =>
               u.givenName.charAt(0).toUpperCase() +

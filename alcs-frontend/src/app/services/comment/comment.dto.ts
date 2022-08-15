@@ -1,5 +1,5 @@
 export interface MentionDto {
-  mentionName: string;
+  mentionLabel: string;
   userUuid: string;
 }
 export interface CommentDto {
