@@ -3,6 +3,8 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { CommentDto } from '../../comment/comment.dto';
 import { Comment } from '../../comment/comment.entity';
+import { CommentMentionDto } from '../../comment/mention/comment-mention.dto';
+import { CommentMention } from '../../comment/mention/comment-mention.entity';
 
 @Injectable()
 export class CommentProfile extends AutomapperProfile {
@@ -21,7 +23,13 @@ export class CommentProfile extends AutomapperProfile {
           (ud) => ud.author,
           mapFrom((u) => u.author.name),
         ),
+        forMember(
+          (cd) => cd.mentions,
+          mapFrom((c) => c.mentions),
+        ),
       );
+      createMap(mapper, CommentMention, CommentMentionDto);
+      createMap(mapper, CommentMentionDto, CommentMention);
     };
   }
 }

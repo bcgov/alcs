@@ -44,6 +44,8 @@ describe('UserController', () => {
       idirUserGuid: '001bat',
       idirUserName: 'bat',
       initials: 'BW',
+      mentionLabel: 'BruceWayne',
+      uuid: undefined,
     };
 
     controller = module.get<UserController>(UserController);

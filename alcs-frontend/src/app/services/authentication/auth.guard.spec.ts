@@ -12,8 +12,13 @@ describe('AuthGuard', () => {
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', ['getToken']);
+    mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', [
+      'getToken',
+      'loadTokenFromStorage',
+    ]);
+
     mockAuthService.getToken.and.resolveTo('valid-token');
+    mockAuthService.loadTokenFromStorage.and.resolveTo(true);
 
     mockRouter = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 

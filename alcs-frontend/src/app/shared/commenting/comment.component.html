@@ -6,18 +6,15 @@
     </div>
   </div>
   <div class="body">
-    <div [hidden]="!isEditing">
-      <mat-form-field class="comment-input" appearance="fill">
-        <textarea #textarea cdkTextareaAutosize [(ngModel)]="editComment" matInput placeholder=""></textarea>
-      </mat-form-field>
-      <div class="edit-buttons">
-        <button (click)="onCancel()">Cancel</button>
-        <button (click)="onSave()">Save</button>
-      </div>
+    <div *ngIf="isEditing">
+      <app-mention-textarea
+        [comment]="comment"
+        (cancel)="onCancel()"
+        (save)="onSave($event)"
+        labelText="Edit comment"
+      ></app-mention-textarea>
     </div>
-    <div *ngIf="!isEditing" class="content">
-      {{ comment.body }}
-    </div>
+    <div *ngIf="!isEditing" class="content" [innerHtml]="highlightMentions(comment.body)"></div>
     <div class="footer" *ngIf="!isEditing">
       <div>
         <span class="edited" *ngIf="comment.edited">(edited) </span>

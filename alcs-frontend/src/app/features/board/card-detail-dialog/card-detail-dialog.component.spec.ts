@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,6 +27,7 @@ describe('CardDetailDialogComponent', () => {
     preferredUsername: 'Dart Placeholder',
     givenName: 'Dart',
     familyName: 'Placeholder',
+    mentionLabel: 'DartPlaceholder',
   };
 
   const mockApplicationStatusDetails: ApplicationStatusDto = {

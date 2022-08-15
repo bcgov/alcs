@@ -20,6 +20,7 @@ describe('CommentComponent', () => {
       edited: false,
       isEditable: false,
       createdAt: Date.now(),
+      mentions: [],
     };
     fixture.detectChanges();
   });

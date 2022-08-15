@@ -18,4 +18,6 @@ export interface UserDto {
   idirUserGuid?: string;
 
   idirUserName?: string;
+
+  mentionLabel: string;
 }
