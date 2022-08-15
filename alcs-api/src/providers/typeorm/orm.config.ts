@@ -15,7 +15,7 @@ export const getTypeOrmModuleOptions = (
   entities: [join(__dirname, '**', '*.entity.{ts,js}')],
   /* Note : it is unsafe to use synchronize: true for schema synchronization
       on production once you get data in your database. */
-  synchronize: true,
+  synchronize: false,
   autoLoadEntities: true,
   namingStrategy: new SnakeNamingStrategy(),
   uuidExtension: 'pgcrypto',
