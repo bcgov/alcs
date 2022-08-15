@@ -51,7 +51,6 @@ export class MentionTextareaComponent implements OnInit {
   }
 
   onSave() {
-    console.log('MentionTextareaComponent onSave', this.comment);
     this.isSaving = true;
 
     this.cleanUpSelectedUsers(this.comment.body);

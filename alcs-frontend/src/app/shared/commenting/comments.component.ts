@@ -56,7 +56,6 @@ export class CommentsComponent implements OnInit {
   async onSave(comment: CreateCommentDto) {
     this.isSaving = true;
 
-    console.log('Comments on save', comment);
     await this.commentService.createComment(comment);
 
     this.isSaving = false;

@@ -12,7 +12,7 @@ export class CommentComponent implements OnInit {
   @Input() fileNumber!: string;
 
   @Input()
-  users: any[] = [];
+  mentions: any[] = [];
 
   @Output() delete = new EventEmitter<string>();
   @Output() edit = new EventEmitter<UpdateCommentDto>();
@@ -27,7 +27,6 @@ export class CommentComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('comment ngOnInit', this.comment);
     this.commentDate = dayjs(this.comment.createdAt).format('MMM D, h:mm a');
   }
 
@@ -47,11 +46,9 @@ export class CommentComponent implements OnInit {
 
   onCancel() {
     this.isEditing = false;
-    console.log('CommentComponent onCancel', this.isEditing);
   }
 
   onSave(comment: UpdateCommentDto) {
-    console.log('onSave', comment);
     this.isEditing = false;
     this.edit.emit({
       uuid: comment.uuid,
@@ -64,8 +61,9 @@ export class CommentComponent implements OnInit {
     const mentions = this.getAllMentions(value);
 
     for (let mention of mentions) {
-      const rgx = new RegExp('@' + mention, 'g');
-      if (this.users.some((u: { mentionName: string }) => u.mentionName === mention)) {
+      const rgx = new RegExp('@' + mention + '\\b', 'g');
+
+      if (this.mentions.some((u: { mentionName: string }) => u.mentionName === mention)) {
         value = value.replace(rgx, () => ` <span class="mention green">@${mention}</span> `);
       } else {
         value = value.replace(rgx, () => ` <span class="mention grey">@${mention}</span> `);
