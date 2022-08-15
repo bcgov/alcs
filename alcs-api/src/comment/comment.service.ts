@@ -70,7 +70,7 @@ export class CommentService {
     });
 
     await this.commentRepository.softRemove([comment]);
-    await this.commentMentionService.deleteMentionsOnComment(uuid);
+    await this.commentMentionService.removeMentionsOnComment(uuid);
     return;
   }
 
@@ -104,20 +104,18 @@ export class CommentService {
     comment: Comment,
     application?: Application,
   ) {
-    if (mentions && mentions.length > 0) {
-      const applicationEntity =
-        application ??
-        (await this.applicationService.get(comment.application.fileNumber));
+    const applicationEntity =
+      application ??
+      (await this.applicationService.get(comment.application.fileNumber));
 
-      await this.commentMentionService.updateMentionsOnComment(
-        comment.uuid,
-        mentions,
-      );
+    await this.commentMentionService.updateMentionsOnComment(
+      comment.uuid,
+      mentions,
+    );
 
-      await this.commentMentionService.notifyRecipientsOnComment(
-        comment,
-        applicationEntity,
-      );
-    }
+    await this.commentMentionService.notifyRecipientsOnComment(
+      comment,
+      applicationEntity,
+    );
   }
 }

@@ -26,6 +26,7 @@ describe('CommentService', () => {
     mockCommentMentionService.updateMentionsOnComment.mockResolvedValue({});
     mockCommentMentionService.notifyRecipientsOnComment.mockResolvedValue({});
     mockCommentMentionService.deleteMentionsOnComment.mockResolvedValue({});
+    mockCommentMentionService.removeMentionsOnComment.mockResolvedValue({});
 
     comment = initCommentMock();
 
