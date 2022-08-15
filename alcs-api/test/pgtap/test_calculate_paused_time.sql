@@ -24,10 +24,10 @@ SELECT lives_ok('insert_application_status_in_test_calculate_paused', 'should in
 
 -- create application
 prepare insert_application_in_test_calculate_paused AS 
-INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,title,status_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid) VALUES
-	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','file_num_title_1','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-28 17:37:06.292','2022-07-28 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111'),
-	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','file_num_title_1','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-28 17:37:06.292','2022-07-28 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111'),
-	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','file_num_title_1','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-28 17:37:06.292','2022-07-28 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111');
+INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,status_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid) VALUES
+	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-28 17:37:06.292','2022-07-28 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111'),
+	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-28 17:37:06.292','2022-07-28 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111'),
+	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-28 17:37:06.292','2022-07-28 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111');
 SELECT lives_ok('insert_application_in_test_calculate_paused', 'should insert application');
 
 -- create application paused
