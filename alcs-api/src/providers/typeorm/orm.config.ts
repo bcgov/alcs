@@ -13,8 +13,6 @@ export const getTypeOrmModuleOptions = (
   password: config.get<string>('DATABASE_PASSWORD'),
   database: config.get<string>('DATABASE_NAME'),
   entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-  /* Note : it is unsafe to use synchronize: true for schema synchronization
-      on production once you get data in your database. */
   synchronize: false,
   autoLoadEntities: true,
   namingStrategy: new SnakeNamingStrategy(),
