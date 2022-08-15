@@ -13,8 +13,8 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from '../common/authorization/role.guard';
+import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { ANY_AUTH_ROLE } from '../common/enum';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
@@ -144,6 +144,7 @@ export class ApplicationController {
       regionUuid: region ? region.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
+      highPriority: application.highPriority,
     });
 
     const mappedApps = await this.mapApplicationsToDtos([app]);

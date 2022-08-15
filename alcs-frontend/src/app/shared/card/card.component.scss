@@ -1,3 +1,5 @@
+@import '../../../styles/colors';
+
 .card {
   border: 1px solid #ccc;
   height: 70px;
@@ -16,10 +18,16 @@
   height: 100%;
 }
 
-.lower-card {
+.lower-card, .upper-card {
   display: flex;
   justify-content: space-between;
   align-content: center;
+}
+
+.high-priority {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: $error-color;
 }
 
 .lower-card > div {

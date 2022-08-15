@@ -55,6 +55,7 @@ describe('CardDetailDialogComponent', () => {
     activeDays: 10,
     pausedDays: 5,
     paused: true,
+    highPriority: false,
   };
 
   beforeEach(async () => {
@@ -70,7 +71,10 @@ describe('CardDetailDialogComponent', () => {
         BrowserAnimationsModule,
         MatSnackBarModule,
       ],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: {} }],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ConfirmationDialogService, useValue: {} },
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 

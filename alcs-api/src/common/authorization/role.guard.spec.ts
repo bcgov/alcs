@@ -12,9 +12,9 @@ import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycl
 import { ClsService } from 'nestjs-cls';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
-import { AUTH_ROLE } from '../enum';
 import { mockAppLoggerService } from '../utils/test-helpers/mockLogger';
 import { RoleGuard } from './role.guard';
+import { AUTH_ROLE } from './roles';
 
 describe('RoleGuard', () => {
   let guard: RoleGuard;

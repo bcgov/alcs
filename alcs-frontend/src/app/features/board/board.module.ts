@@ -12,9 +12,9 @@ import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pip
 import { InlineEditComponent } from '../../shared/inline-edit/inline-edit.component';
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
-import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
-import { CreateCardDialogComponent } from '../create-card-detail-dialog/create-card-dialog.component';
 import { BoardComponent } from './board.component';
+import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
+import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 
 const routes: Routes = [
   {

@@ -123,6 +123,7 @@ export class BoardComponent implements OnInit {
       type: mappedType!,
       activeDays: application.activeDays,
       paused: application.paused,
+      highPriority: application.highPriority,
     };
   }
 }
