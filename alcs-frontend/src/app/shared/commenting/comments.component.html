@@ -5,7 +5,6 @@
   <app-mention-textarea
     *ngIf="isEditing"
     (create)="onSave($event)"
-    [fileNumber]="fileNumber"
     [comment]="comment"
     (cancel)="onCancel()"
     [isNewComment]="true"

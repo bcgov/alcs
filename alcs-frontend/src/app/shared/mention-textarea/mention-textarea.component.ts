@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CommentDto, CreateCommentDto, MentionDto, UpdateCommentDto } from '../../services/comment/comment.dto';
+import { CommentDto, MentionDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
@@ -8,8 +8,6 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./mention-textarea.component.scss'],
 })
 export class MentionTextareaComponent implements OnInit {
-  @Input() fileNumber!: string;
-  @Input() isSaving = false;
   @Input() isNewComment = false;
   @Input() labelText = '';
   @Input() comment: CommentDto = {
@@ -23,11 +21,12 @@ export class MentionTextareaComponent implements OnInit {
   };
 
   @Output() save = new EventEmitter<UpdateCommentDto>();
-  @Output() create = new EventEmitter<CreateCommentDto>();
+  @Output() create = new EventEmitter();
   @Output() cancel = new EventEmitter<string>();
 
   @ViewChild('textarea') private textAreaDiv!: ElementRef;
 
+  isSaving = false;
   mentionList: Map<string, MentionDto> = new Map<string, MentionDto>();
   users: any[] = [];
 
@@ -56,7 +55,6 @@ export class MentionTextareaComponent implements OnInit {
 
     if (this.isNewComment) {
       this.create.emit({
-        fileNumber: this.fileNumber,
         body: this.comment.body,
         mentions: this.mentionList,
       });

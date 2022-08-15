@@ -8,7 +8,6 @@
   <div class="body">
     <div *ngIf="isEditing">
       <app-mention-textarea
-        [fileNumber]="fileNumber"
         [comment]="comment"
         (cancel)="onCancel()"
         (save)="onSave($event)"

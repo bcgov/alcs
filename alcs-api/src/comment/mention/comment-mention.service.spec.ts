@@ -63,7 +63,7 @@ describe('CommentMentionService', () => {
   it('should delete mentions on comment', async () => {
     mockCommentMentionRepository.find.mockReturnValueOnce(comment.mentions);
 
-    await service.removeMentionsOnComment(comment.uuid);
+    await service.removeMentions(comment.uuid);
     expect(mockCommentMentionRepository.softRemove).toBeCalledTimes(1);
     expect(mockCommentMentionRepository.softRemove).toBeCalledWith(
       comment.mentions,
@@ -73,7 +73,7 @@ describe('CommentMentionService', () => {
   it('should return mentions on comment', async () => {
     mockCommentMentionRepository.find.mockReturnValueOnce(comment.mentions);
 
-    const mentions = await service.fetchMentionsForComment(comment.uuid);
+    const mentions = await service.fetchMentions(comment.uuid);
 
     expect(mentions).toStrictEqual(comment.mentions);
   });
@@ -81,7 +81,7 @@ describe('CommentMentionService', () => {
   it('should return empty array if no mentions attached to comment', async () => {
     mockCommentMentionRepository.find.mockReturnValueOnce([]);
 
-    const mentions = await service.fetchMentionsForComment('uuid');
+    const mentions = await service.fetchMentions('uuid');
 
     expect(mentions).toStrictEqual([]);
   });
@@ -94,7 +94,7 @@ describe('CommentMentionService', () => {
     const body = `${comment.author.name} has tagged you on the card for <a href="${frontEndUrl}/admin?app=${application.fileNumber}">${application.fileNumber}(${application.applicant})</a>. <br/>
     "${comment.body}"`;
 
-    await service.notifyRecipientsOnComment(comment, application);
+    await service.notifyRecipients(comment, application);
 
     expect(mockEmailService.sendEmail).toBeCalledTimes(1);
     expect(mockEmailService.sendEmail).toBeCalledWith({ subject, to, body });
@@ -102,7 +102,7 @@ describe('CommentMentionService', () => {
 
   it('should not notify recipients if mentions are empty', async () => {
     comment.mentions = [];
-    await service.notifyRecipientsOnComment(comment, application);
+    await service.notifyRecipients(comment, application);
 
     expect(mockEmailService.sendEmail).toBeCalledTimes(0);
   });
@@ -110,7 +110,7 @@ describe('CommentMentionService', () => {
   it('should remove mentions if non passed', async () => {
     mockCommentMentionRepository.find.mockReturnValue([...comment.mentions]);
     const mentions = [];
-    await service.updateMentionsOnComment(comment.uuid, mentions);
+    await service.updateMentions(comment.uuid, mentions);
 
     expect(mockCommentMentionRepository.save).toBeCalledTimes(0);
     expect(mockCommentMentionRepository.remove).toBeCalledTimes(1);
@@ -121,7 +121,7 @@ describe('CommentMentionService', () => {
 
   it('should keep existing mentions if nothing changed', async () => {
     const mentions = [...comment.mentions];
-    await service.updateMentionsOnComment(comment.uuid, mentions);
+    await service.updateMentions(comment.uuid, mentions);
 
     expect(mockCommentMentionRepository.save).toBeCalledTimes(1);
     expect(mockCommentMentionRepository.remove).toBeCalledTimes(0);
@@ -134,7 +134,7 @@ describe('CommentMentionService', () => {
     mention.user.uuid = '2222222';
 
     const mentions = [mention];
-    await service.updateMentionsOnComment(comment.uuid, mentions);
+    await service.updateMentions(comment.uuid, mentions);
 
     expect(mockCommentMentionRepository.save).toBeCalledTimes(1);
     expect(mockCommentMentionRepository.remove).toBeCalledTimes(1);

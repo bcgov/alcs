@@ -70,7 +70,7 @@ export class CommentService {
     });
 
     await this.commentRepository.softRemove([comment]);
-    await this.commentMentionService.removeMentionsOnComment(uuid);
+    await this.commentMentionService.removeMentions(uuid);
     return;
   }
 
@@ -108,12 +108,9 @@ export class CommentService {
       application ??
       (await this.applicationService.get(comment.application.fileNumber));
 
-    await this.commentMentionService.updateMentionsOnComment(
-      comment.uuid,
-      mentions,
-    );
+    await this.commentMentionService.updateMentions(comment.uuid, mentions);
 
-    await this.commentMentionService.notifyRecipientsOnComment(
+    await this.commentMentionService.notifyRecipients(
       comment,
       applicationEntity,
     );

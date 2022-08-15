@@ -23,10 +23,9 @@ describe('CommentService', () => {
     mockApplicationService = createMock<ApplicationService>();
     mockCommentMentionService = createMock<CommentMentionService>();
 
-    mockCommentMentionService.updateMentionsOnComment.mockResolvedValue({});
-    mockCommentMentionService.notifyRecipientsOnComment.mockResolvedValue({});
-    mockCommentMentionService.deleteMentionsOnComment.mockResolvedValue({});
-    mockCommentMentionService.removeMentionsOnComment.mockResolvedValue({});
+    mockCommentMentionService.updateMentions.mockResolvedValue({});
+    mockCommentMentionService.notifyRecipients.mockResolvedValue({});
+    mockCommentMentionService.removeMentions.mockResolvedValue({});
 
     comment = initCommentMock();
 
@@ -99,12 +98,8 @@ describe('CommentService', () => {
     expect(savedData.author).toEqual(fakeUser);
     expect(savedData.application).toEqual(fakeApplication);
     expect(savedData.body).toEqual('new-comment');
-    expect(mockCommentMentionService.updateMentionsOnComment).toBeCalledTimes(
-      1,
-    );
-    expect(mockCommentMentionService.notifyRecipientsOnComment).toBeCalledTimes(
-      1,
-    );
+    expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
+    expect(mockCommentMentionService.notifyRecipients).toBeCalledTimes(1);
   });
 
   it('throw an exception when saving a comment to a non-existing application', async () => {
@@ -142,12 +137,8 @@ describe('CommentService', () => {
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.body).toEqual('new-body');
     expect(savedData.edited).toBeTruthy();
-    expect(mockCommentMentionService.updateMentionsOnComment).toBeCalledTimes(
-      1,
-    );
-    expect(mockCommentMentionService.notifyRecipientsOnComment).toBeCalledTimes(
-      1,
-    );
+    expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
+    expect(mockCommentMentionService.notifyRecipients).toBeCalledTimes(1);
   });
 
   it('throw an exception when updating a comment body with empty string', async () => {

@@ -55,6 +55,7 @@ export class CommentsComponent implements OnInit {
 
   async onSave(comment: CreateCommentDto) {
     this.isSaving = true;
+    comment.fileNumber = this.fileNumber;
 
     await this.commentService.createComment(comment);
 

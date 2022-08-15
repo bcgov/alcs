@@ -16,10 +16,7 @@ export class CommentMentionService {
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 
-  async updateMentionsOnComment(
-    commentUuid: string,
-    mentions: CommentMention[],
-  ) {
+  async updateMentions(commentUuid: string, mentions: CommentMention[]) {
     const currentMentions = await this.getMentionsOnComment(commentUuid);
 
     await this.cleanExistingMentions(mentions, currentMentions);
@@ -73,7 +70,7 @@ export class CommentMentionService {
     return addedMentions;
   }
 
-  async removeMentionsOnComment(commentUuid: string) {
+  async removeMentions(commentUuid: string) {
     const mentions = await this.getMentionsOnComment(commentUuid);
     await this.commentMentionRepository.softRemove(mentions);
   }
@@ -84,15 +81,15 @@ export class CommentMentionService {
     });
   }
 
-  fetchMentionsForComment(commentUuid: string) {
+  fetchMentions(commentUuid: string) {
     return this.commentMentionRepository.find({
       where: { commentUuid: commentUuid },
       relations: ['user', 'comment'],
     });
   }
 
-  async notifyRecipientsOnComment(comment: Comment, application: Application) {
-    const mentionsEntities = await this.fetchMentionsForComment(comment.uuid);
+  async notifyRecipients(comment: Comment, application: Application) {
+    const mentionsEntities = await this.fetchMentions(comment.uuid);
     const recipients = mentionsEntities.map((m) => m.user.email);
 
     if (recipients.length <= 0) {
