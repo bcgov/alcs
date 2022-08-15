@@ -125,7 +125,7 @@ const initCommentMentionMock = (
   mention.auditUpdatedAt = 111111111;
   mention.commentUuid = commentEntity.uuid;
   mention.user = userEntity;
-  mention.mentionName = 'TestMentionName';
+  mention.mentionLabel = 'TestMentionName';
 
   return mention;
 };

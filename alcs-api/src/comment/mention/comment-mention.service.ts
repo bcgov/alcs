@@ -65,7 +65,7 @@ export class CommentMentionService {
       const newMention = new CommentMention();
       newMention.commentUuid = commentUuid;
       newMention.userUuid = mention.userUuid;
-      newMention.mentionName = mention.mentionName;
+      newMention.mentionLabel = mention.mentionLabel;
       addedMentions.push(newMention);
     }
 

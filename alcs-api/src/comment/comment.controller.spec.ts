@@ -36,14 +36,6 @@ describe('CommentController', () => {
     };
 
     comment = initCommentMock(user);
-    // new Comment({
-    //   body: 'body',
-    //   author: user as any,
-    //   createdAt: new Date(),
-    //   applicationUuid: 'file-number',
-    //   edited: false,
-    //   uuid: 'fake-uuid',
-    // });
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [

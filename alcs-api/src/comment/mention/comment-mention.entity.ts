@@ -14,10 +14,9 @@ export class CommentMention extends Base {
   @Column()
   userUuid: string;
 
-  // TODO: rename all mentionName to mentionLabel
   @AutoMap()
   @Column()
-  mentionName: string;
+  mentionLabel: string;
 
   @AutoMap()
   @ManyToOne(() => Comment, (comment) => comment.mentions)

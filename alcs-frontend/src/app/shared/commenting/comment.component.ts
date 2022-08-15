@@ -16,8 +16,6 @@ export class CommentComponent implements OnInit {
 
   @Output() delete = new EventEmitter<string>();
   @Output() edit = new EventEmitter<UpdateCommentDto>();
-
-  // TODO: create am interface for this
   @Output() mentionsList: Set<string> = new Set();
 
   commentDate = '';

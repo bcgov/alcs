@@ -9,8 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApplicationStatusDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
-import { UserDto } from '../../services/user/user.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
+import { UserDto } from '../../services/user/user.dto';
 import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
@@ -26,6 +26,7 @@ describe('CardDetailDialogComponent', () => {
     preferredUsername: 'Dart Placeholder',
     givenName: 'Dart',
     familyName: 'Placeholder',
+    mentionName: 'DartPlaceholder',
   };
 
   const mockApplicationStatusDetails: ApplicationStatusDto = {

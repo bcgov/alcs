@@ -13,6 +13,15 @@ describe('CommentComponent', () => {
 
     fixture = TestBed.createComponent(CommentComponent);
     component = fixture.componentInstance;
+    component.comment = {
+      uuid: 'fake-uuid',
+      body: 'fake-body',
+      author: 'fake-author',
+      edited: false,
+      isEditable: false,
+      createdAt: Date.now(),
+      mentions: [],
+    };
     fixture.detectChanges();
   });
 
