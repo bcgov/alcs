@@ -8,8 +8,8 @@ import { ApplicationService } from '../../services/application/application.servi
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { CardDetailDialogComponent } from '../card-detail-dialog/card-detail-dialog.component';
-import { CreateCardDialogComponent } from '../create-card-detail-dialog/create-card-dialog.component';
+import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
+import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 
 @Component({
   selector: 'app-board',
