@@ -1,0 +1,39 @@
+name: Generate Schemaspy Docs
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate_schemaspy:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16
+      - name: Setup Database
+        run: |
+          npm install
+          npm run typeorm migration:run
+        working-directory: alcs-api
+      - name: Create Output Folder
+        run: |
+          mkdir output
+          chmod a+rwx -R output
+      - name: Run Schemaspy
+        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres
+      - name: Deploy to Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: output
