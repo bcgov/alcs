@@ -6,13 +6,13 @@ services:
     container_name: alcs_api
     build:
       context: alcs-api
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - 8080:8080
     depends_on:
       - db
       - redis
-      # - migrate
+      - migrate
     healthcheck:
       test: [ "CMD", "curl", "localhost:8080/" ]
       interval: 5s
@@ -25,18 +25,16 @@ services:
     restart: always
     build:
       context: alcs-frontend
-    # volumes:
-    #   - ./services/core-web/src:/app/src
     ports:
       - 8081:80
-    # depends_on:
-    #   - api
-    # healthcheck:
-    #   test: [ "CMD", "curl", "localhost:4200/" ]
-    #   interval: 15s
-    #   timeout: 5s
-    #   retries: 5
-    #   start_period: 30s
+    depends_on:
+      - api
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:80/" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   ##################### Database ####################
   db:
@@ -49,7 +47,7 @@ services:
     ports:
       - '5432:5432'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -31,7 +31,7 @@ COPY --chown=node:node . .
 
 RUN npm run build
 
-ENV NODE_ENV production
+
 
 RUN npm ci --only=production && npm cache clean --force
 
@@ -43,8 +43,11 @@ USER node
 
 FROM node:16.15-alpine As production
 
+ARG environment=production
+ENV NODE_ENV ${environment}
+
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-COPY --chown=node:node ./config/production.json /usr/src/app/config/production.json
+COPY --chown=node:node ./config/ /config/
 
 CMD [ "node", "dist/main.js" ]
