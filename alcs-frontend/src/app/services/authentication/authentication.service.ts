@@ -14,10 +14,13 @@ export class AuthenticationService implements OnInit {
   private token: string | undefined;
   private refreshToken: string | undefined;
   private expires: number | undefined;
+  isInitialized = false;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTokenFromStorage();
+  }
 
   async setTokens(token: string, refreshToken: string) {
     const valid = await this.isTokenValid(token);
@@ -56,7 +59,9 @@ export class AuthenticationService implements OnInit {
   async loadTokenFromStorage() {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-    return this.setTokens(existingToken || '', refreshToken || '');
+    const res = this.setTokens(existingToken || '', refreshToken || '');
+    this.isInitialized = true;
+    return res;
   }
 
   async logout() {

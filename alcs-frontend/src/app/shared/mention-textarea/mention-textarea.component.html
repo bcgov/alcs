@@ -1,0 +1,25 @@
+<div>
+  <mat-form-field class="comment-input" appearance="fill">
+    <mat-label [hidden]="!labelText">{{ labelText }}</mat-label>
+    <textarea
+      #textarea
+      cdkTextareaAutosize
+      [(ngModel)]="comment.body"
+      [disabled]="isSaving"
+      matInput
+      placeholder=""
+      [mentionConfig]="{ items: users, labelKey: 'mentionLabel' }"
+      [mentionListTemplate]="mentionListTemplate2"
+      (itemSelected)="onMentionUserSelected($event)"
+    ></textarea>
+  </mat-form-field>
+  <div class="edit-buttons">
+    <button (click)="onCancel()">Cancel</button>
+    <button (click)="onSave()">Save</button>
+  </div>
+</div>
+
+<ng-template #mentionListTemplate2 let-item="item">
+  <p>{{ item.mentionLabel }}</p>
+  <p>{{ item.email }}</p>
+</ng-template>

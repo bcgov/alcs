@@ -1,11 +1,13 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { ApplicationDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 
@@ -23,7 +25,10 @@ export class BoardComponent implements OnInit {
   constructor(
     private applicationService: ApplicationService,
     public dialog: MatDialog,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
+    private router: Router
   ) {}
 
   async ngOnInit() {
@@ -46,13 +51,21 @@ export class BoardComponent implements OnInit {
     });
 
     this.applicationService.refreshApplications();
+
+    // open card if application number present in url
+    const app = this.activatedRoute.snapshot.queryParamMap.get('app');
+    if (app) {
+      await this.onSelected(app);
+    }
   }
 
   async onSelected(id: string) {
     try {
+      this.setUrl(id);
+
       const application = await this.applicationService.fetchApplication(id);
 
-      this.dialog.open(CardDetailDialogComponent, {
+      const dialogRef = this.dialog.open(CardDetailDialogComponent, {
         minHeight: '500px',
         minWidth: '600px',
         maxWidth: '800px',
@@ -60,9 +73,20 @@ export class BoardComponent implements OnInit {
         width: '70%',
         data: application,
       });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.setUrl();
+      });
     } catch (err) {
       console.log(err);
     }
+  }
+
+  private setUrl(id: string = '') {
+    const url = this.router
+      .createUrlTree([], { relativeTo: this.activatedRoute, queryParams: id ? { app: id } : {} })
+      .toString();
+    this.location.go(url);
   }
 
   async onCreate() {

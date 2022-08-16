@@ -1,33 +1,47 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChild } from '@angular/core';
-import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { CommentDto, CreateCommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 import { CommentService } from '../../services/comment/comment.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CommentsComponent implements OnInit {
   @Input() fileNumber: string = '';
-
-  @ViewChild('textarea') private textAreaDiv!: ElementRef;
 
   comments: CommentDto[] = [];
   isEditing = false;
   isSaving = false;
   newComment = '';
+  users: Array<any> = [];
+  comment: CommentDto = {
+    body: '',
+    mentions: [],
+    uuid: '',
+    author: '',
+    edited: false,
+    createdAt: 0,
+    isEditable: false,
+  };
 
-  constructor(private commentService: CommentService) {}
+  constructor(private commentService: CommentService, private userService: UserService) {}
 
   ngOnInit(): void {
     this.loadComments(this.fileNumber);
+
+    this.userService.$users.subscribe((users) => {
+      this.users = users.map((user) => ({
+        mentionLabel: user.mentionLabel,
+        email: user.email,
+      }));
+    });
   }
 
   onEdit() {
     this.isEditing = true;
-    setTimeout(() => {
-      this.textAreaDiv.nativeElement.focus();
-    });
   }
 
   private async loadComments(fileNumber: string) {
@@ -39,12 +53,12 @@ export class CommentsComponent implements OnInit {
     this.newComment = '';
   }
 
-  async onSave() {
+  async onSave(comment: CreateCommentDto) {
     this.isSaving = true;
-    await this.commentService.createComment({
-      fileNumber: this.fileNumber,
-      body: this.newComment,
-    });
+    comment.fileNumber = this.fileNumber;
+
+    await this.commentService.createComment(comment);
+
     this.isSaving = false;
     await this.loadComments(this.fileNumber);
     this.isEditing = false;

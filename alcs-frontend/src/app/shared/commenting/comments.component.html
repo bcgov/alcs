@@ -2,15 +2,25 @@
   <mat-form-field *ngIf="!isEditing" class="placeholder-input" appearance="fill" (click)="onEdit()">
     <input matInput placeholder="Add a comment..." />
   </mat-form-field>
-  <div [hidden]="!isEditing">
-    <mat-form-field class="comment-input" appearance="fill">
-      <mat-label>Add a comment</mat-label>
-      <textarea #textarea cdkTextareaAutosize [disabled]="isSaving" [(ngModel)]="newComment" matInput placeholder=""></textarea>
-    </mat-form-field>
-    <div class="edit-buttons">
-      <button (click)="onCancel()">Cancel</button>
-      <button (click)="onSave()">Save</button>
-    </div>
-  </div>
-  <app-comment *ngFor="let comment of comments" [comment]="comment" (edit)="onEditComment($event)" (delete)="onDeleteComment($event)"></app-comment>
+  <app-mention-textarea
+    *ngIf="isEditing"
+    (create)="onSave($event)"
+    [comment]="comment"
+    (cancel)="onCancel()"
+    [isNewComment]="true"
+    labelText="Add a comment"
+  >
+  </app-mention-textarea>
+  <app-comment
+    *ngFor="let comment of comments"
+    [comment]="comment"
+    (edit)="onEditComment($event)"
+    (delete)="onDeleteComment($event)"
+    [mentions]="comment.mentions"
+  ></app-comment>
 </div>
+
+<ng-template #mentionListTemplate let-item="item">
+  <p>{{ item.mentionLabel }}</p>
+  <p>{{ item.email }}</p>
+</ng-template>

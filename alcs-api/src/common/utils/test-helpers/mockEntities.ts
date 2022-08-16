@@ -1,6 +1,8 @@
-import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
+import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
+import { Comment } from '../../../comment/comment.entity';
+import { CommentMention } from '../../../comment/mention/comment-mention.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
@@ -48,9 +50,9 @@ const initAssigneeMockEntity = (): User => {
   return user;
 };
 
-const initApplicationMockEntity = (): Application => {
+const initApplicationMockEntity = (fileNumber?: string): Application => {
   const applicationEntity = new Application();
-  applicationEntity.fileNumber = 'app_1';
+  applicationEntity.fileNumber = fileNumber ?? 'app_1';
   applicationEntity.applicant = 'applicant 1';
   applicationEntity.uuid = '1111-1111-1111-1111';
   applicationEntity.auditDeletedDateAt = 111111111;
@@ -85,7 +87,50 @@ const initAssigneeMockDto = (assignee?: User): UserDto => {
     userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
   userDto.bceidGuid = undefined;
+  userDto.mentionLabel =
+    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.givenName.slice(1) +
+    userEntity.familyName.charAt(0).toUpperCase() +
+    userEntity.familyName.slice(1);
   return userDto;
+};
+
+const initCommentMock = (author?: any): Comment => {
+  const comment = new Comment({
+    body: 'body',
+    author:
+      author ??
+      ({
+        uuid: 'aaaaaaaaaaaaaaaa',
+        email: 'fake-email',
+        name: 'fake-name',
+      } as any),
+    createdAt: new Date(),
+    application: initApplicationMockEntity('file-number'),
+    applicationUuid: 'file-number',
+    edited: false,
+    uuid: '11111111111111111',
+  });
+
+  comment.mentions = [initCommentMentionMock(comment)];
+
+  return comment;
+};
+
+const initCommentMentionMock = (
+  comment?: Comment,
+  user?: User,
+): CommentMention => {
+  const mention = new CommentMention();
+  const commentEntity = comment ?? initCommentMock();
+  const userEntity = user ?? initAssigneeMockEntity();
+  mention.auditCreatedAt = 111111111;
+  mention.auditUpdatedAt = 111111111;
+  mention.commentUuid = commentEntity.uuid;
+  mention.user = userEntity;
+  mention.mentionLabel = 'TestMentionName';
+
+  return mention;
 };
 
 export {
@@ -93,4 +138,6 @@ export {
   initApplicationMockEntity,
   initAssigneeMockDto,
   initApplicationTypeMockEntity,
+  initCommentMentionMock,
+  initCommentMock,
 };

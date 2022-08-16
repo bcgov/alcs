@@ -65,3 +65,17 @@ button {
   @extend .button-text;
   padding: 8px 16px;
 }
+
+.mention {
+  border-radius: 8px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.mention.grey {
+  background-color: #f3aaaa !important;
+}
+
+.mention.green {
+  background-color: #b2ff59 !important;
+}

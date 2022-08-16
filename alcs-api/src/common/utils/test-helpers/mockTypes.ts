@@ -4,7 +4,6 @@ import {
   KEYCLOAK_LOGGER,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
-import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { UserService } from '../../../user/user.service';
 import { mockAppLoggerService } from './mockLogger';
@@ -21,6 +20,7 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
     find: jest.fn((entity) => [entity]),
     update: jest.fn((entity) => [entity]),
     softRemove: jest.fn((entity) => [entity]),
+    remove: jest.fn((entity) => [entity]),
   }),
 );
 
