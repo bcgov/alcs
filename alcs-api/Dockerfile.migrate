@@ -1,0 +1,22 @@
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+# https://www.tomray.dev/nestjs-docker-production
+###################
+
+FROM node:16.15-alpine As development
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+RUN npm ci
+
+ARG environment=production
+
+ENV NODE_ENV ${environment}
+
+COPY --chown=node:node . .
+
+USER node
+
+CMD [ "npm", "run", "migration:run" ]

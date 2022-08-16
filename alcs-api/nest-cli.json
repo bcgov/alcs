@@ -4,6 +4,9 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "plugins": ["@nestjs/swagger", "@automapper/classes/transformer-plugin"],
-    "assets": ["common/envs/*"]
+    "assets": [
+      "common/envs/*",
+      { "include": "../config/*.json", "outDir": "./dist/config" }
+    ]
   }
 }
