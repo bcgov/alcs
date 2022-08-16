@@ -1,0 +1,37 @@
+version: "3.6"
+services:
+  metabase-app:
+    image: metabase/metabase
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - /metabase-data
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: postgres
+      MB_DB_PASS: postgres
+      MB_DB_HOST: metabase-db
+    depends_on:
+      - metabase-db
+    links:
+      - metabase-db
+
+  metabase-db:
+    image: postgres
+    restart: always
+    expose:
+      - 5432
+    environment:
+      POSTGRES_DB: metabase
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d metabase"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
