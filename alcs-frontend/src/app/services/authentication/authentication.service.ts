@@ -7,6 +7,11 @@ import { environment } from '../../../environments/environment';
 const JWT_TOKEN_KEY = 'jwt_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
+export interface ICurrentUser {
+  name: string;
+  email: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -15,6 +20,7 @@ export class AuthenticationService implements OnInit {
   private refreshToken: string | undefined;
   private expires: number | undefined;
   isInitialized = false;
+  currentUser!: ICurrentUser;
 
   constructor(private http: HttpClient) {}
 
@@ -31,6 +37,7 @@ export class AuthenticationService implements OnInit {
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 
       const decodedToken = jwtDecode<JwtPayload>(token);
+      this.currentUser = decodedToken as ICurrentUser;
 
       //Convert to MS for JS consistency
       this.expires = decodedToken.exp! * 1000;
@@ -106,4 +113,6 @@ export class AuthenticationService implements OnInit {
   private async getLogoutUrl() {
     return firstValueFrom(this.http.get<{ url: string }>(`${environment.apiRoot}/logout`));
   }
+
+  getCurrentUser = () => this.currentUser;
 }

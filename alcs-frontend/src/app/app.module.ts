@@ -19,6 +19,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
 import { ProvisionComponent } from './features/provision/provision.component';
+import { HomeComponent } from './features/home/home.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ProvisionComponent } from './features/provision/provision.component';
     AuthorizationComponent,
     ProvisionComponent,
     ConfirmationDialogComponent,
+    HomeComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule, AppRoutingModule, BoardModule],
   providers: [
