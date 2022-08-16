@@ -7,8 +7,6 @@ import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 
-export const HOME_URL = '/home';
-
 const routes: Routes = [
   {
     path: 'admin',

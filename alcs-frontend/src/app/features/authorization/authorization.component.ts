@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class AuthorizationComponent implements OnInit {
       if (noRoles) {
         await this.router.navigateByUrl('/provision');
       } else {
-        await this.router.navigateByUrl('/admin');
+        await this.router.navigateByUrl(environment.homeUrl);
       }
     } else {
       console.error('Failed to receive tokens from redirect');

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HOME_URL } from '../../app-routing.module';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
 
   async ngOnInit() {
     if (await this.authenticationService.loadTokenFromStorage()) {
-      this.router.navigateByUrl(HOME_URL);
+      this.router.navigateByUrl(environment.homeUrl);
     }
   }
 }
