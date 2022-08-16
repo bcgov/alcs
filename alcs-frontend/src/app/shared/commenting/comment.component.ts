@@ -64,7 +64,7 @@ export class CommentComponent implements OnInit {
       if (this.mentions.some((u: { mentionLabel: string }) => u.mentionLabel === mention)) {
         value = value.replace(rgx, () => ` <span class="mention green">@${mention}</span> `);
       } else {
-        value = value.replace(rgx, () => ` <span class="mention grey">@${mention}</span> `);
+        value = value.replace(rgx, () => ` <span class="mention red"><del>@${mention}</del></span> `);
       }
     }
 
