@@ -1,9 +1,10 @@
 migrations
 holiday_entity
 health_check
-comment
+comment_mention
 application_paused
 application_history
+comment
 application
 application_type
 application_status

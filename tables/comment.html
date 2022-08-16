@@ -117,6 +117,10 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="comment_mention.comment_uuid references comment.uuid via FK_e93e63158f6402819a1bcf77216"><a href='comment_mention.html'>comment_mention</a><span class='relatedKey'>.comment_uuid</span></td>
+                                                <td class="constraint detail">FK_e93e63158f6402819a1bcf77216<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -368,23 +372,25 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="273,151,497,444">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,316,229,463">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="273,68,497,361">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,339,229,485">
 <area shape="rect" id="node3" href="comment.html" target="_top" title="comment" alt="" coords="541,5,920,397">
+<area shape="rect" id="node4" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="964,148,1195,324">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/comment.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="349,431,519,519">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="98,268,213,356">
-<area shape="rect" id="node3" href="application_decision_maker.html" target="_top" title="application_decision_maker" alt="" coords="5,689,305,777">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="42,373,269,461">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="43,479,268,567">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="49,584,261,672">
-<area shape="rect" id="node7" href="application_history.html" target="_top" title="application_history" alt="" coords="636,527,868,615">
-<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="635,421,869,509">
-<area shape="rect" id="node9" href="comment.html" target="_top" title="comment" alt="" coords="563,5,941,397">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="349,451,519,539">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="98,238,213,326">
+<area shape="rect" id="node3" href="application_decision_maker.html" target="_top" title="application_decision_maker" alt="" coords="5,659,305,747">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="42,343,269,431">
+<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="43,449,268,537">
+<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="49,554,261,642">
+<area shape="rect" id="node7" href="application_history.html" target="_top" title="application_history" alt="" coords="636,449,868,537">
+<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="635,554,869,642">
+<area shape="rect" id="node9" href="comment.html" target="_top" title="comment" alt="" coords="563,39,941,431">
+<area shape="rect" id="node10" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="985,9,1216,97">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/comment.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

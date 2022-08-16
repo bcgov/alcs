@@ -4,9 +4,10 @@ application_region
 application_status
 application_type
 application
+comment
 application_history
 application_paused
-comment
+comment_mention
 health_check
 holiday_entity
 migrations
