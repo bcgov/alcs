@@ -7,6 +7,7 @@
   "DATABASE_NAME": "postgres",
   "DATABASE_USER": "postgres",
   "DATABASE_PASSWORD": "postgres",
+  "DATABASE_MIGRATION_TABLE": "migrations",
   "LOG_LEVEL": "error",
   "FRONTEND_ROOT": "http://localhost:4200",
   "KEYCLOAK": {

@@ -17,8 +17,9 @@ import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dial
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'CEOP', pathMatch: 'full' }, //TODO: TEMPORARY REDIRECT UNTIL WE HAVE NAVIGATION
   {
-    path: '',
+    path: ':dmCode',
     component: BoardComponent,
   },
 ];
