@@ -129,12 +129,6 @@ export class BoardComponent implements OnInit {
       });
   }
 
-  onSelectBoard(event: Event) {
-    //@ts-ignore TODO: TEMPORARY CODE TO BE DELETED WHEN HEADER ADDED
-    const newCode = event.currentTarget.value;
-    this.router.navigateByUrl(`/admin/${newCode}`);
-  }
-
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
     const mappedType = this.applicationTypes.find((type) => type.code === application.type);
     return {
