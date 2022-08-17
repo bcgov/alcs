@@ -57,6 +57,7 @@ describe('CardDetailDialogComponent', () => {
     pausedDays: 5,
     paused: true,
     highPriority: false,
+    decisionMaker: 'dm',
   };
 
   beforeEach(async () => {

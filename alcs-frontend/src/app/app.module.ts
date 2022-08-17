@@ -31,7 +31,6 @@ import { SharedModule } from './shared/shared.module';
     AuthorizationComponent,
     ProvisionComponent,
     ConfirmationDialogComponent,
-    HomeComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule, AppRoutingModule, BoardModule],
   providers: [

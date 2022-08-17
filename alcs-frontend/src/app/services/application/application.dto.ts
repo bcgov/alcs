@@ -19,7 +19,7 @@ export interface ApplicationDto {
   applicant: string;
   status: string;
   type: string;
-  decisionMaker?: string;
+  decisionMaker: string;
   region?: string;
   assignee?: UserDto;
   activeDays: number;

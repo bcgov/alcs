@@ -77,7 +77,7 @@ export class ApplicationDto {
   type: string;
 
   @IsString()
-  decisionMaker?: string;
+  decisionMaker: string;
 
   @IsString()
   region?: string;
