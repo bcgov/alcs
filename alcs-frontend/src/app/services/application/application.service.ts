@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
@@ -15,7 +15,7 @@ import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateAp
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationService implements OnInit {
+export class ApplicationService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   public $applications = new BehaviorSubject<ApplicationDto[]>([]);
@@ -29,18 +29,56 @@ export class ApplicationService implements OnInit {
   private types: ApplicationTypeDto[] = [];
   private decisionMakers: ApplicationDecisionMakerDto[] = [];
   private regions: ApplicationRegionDto[] = [];
+  private isInitialized = false;
 
-  ngOnInit(): void {}
+  private selectedDecisionMaker?: string;
 
-  async refreshApplications() {
-    //Don't load applications till we have status & type
-    await this.fetchCodes();
-    await this.fetchApplications();
+  setDecisionMaker(dmCode?: string) {
+    this.selectedDecisionMaker = dmCode;
   }
 
-  private async fetchApplications() {
-    this.applications = await firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiRoot}/application`));
+  async fetchApplications() {
+    await this.setup();
+
+    const url = this.selectedDecisionMaker
+      ? `${environment.apiRoot}/application?dm=${this.selectedDecisionMaker}`
+      : `${environment.apiRoot}/application?`;
+
+    this.applications = await firstValueFrom(this.http.get<ApplicationDto[]>(url));
     this.$applications.next(this.applications);
+  }
+
+  async updateApplication(application: ApplicationPartialDto) {
+    await this.setup();
+    try {
+      await firstValueFrom(this.http.patch<ApplicationDto>(`${environment.apiRoot}/application`, application));
+      await this.fetchApplications();
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to update Application');
+    }
+  }
+
+  async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
+    await this.setup();
+    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiRoot}/application/${fileNumber}`));
+  }
+
+  async createApplication(application: CreateApplicationDto) {
+    await this.setup();
+    const res = await firstValueFrom(
+      this.http.post<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+    );
+    if (!this.selectedDecisionMaker || application.decisionMaker === this.selectedDecisionMaker) {
+      this.fetchApplications();
+    }
+    return res;
+  }
+
+  private async setup() {
+    if (!this.isInitialized) {
+      await this.fetchCodes();
+      this.isInitialized = true;
+    }
   }
 
   private async fetchCodes() {
@@ -58,33 +96,5 @@ export class ApplicationService implements OnInit {
 
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
-  }
-
-  async updateApplication(application: ApplicationPartialDto) {
-    try {
-      const updatedApplication = await firstValueFrom(
-        this.http.patch<ApplicationDto>(`${environment.apiRoot}/application`, application)
-      );
-      this.applications.forEach((app) => {
-        if (app.fileNumber === updatedApplication.fileNumber) {
-          Object.assign(app, updatedApplication);
-        }
-      });
-      this.$applications.next(this.applications);
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to update Application');
-    }
-  }
-
-  async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
-    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiRoot}/application/${fileNumber}`));
-  }
-
-  async createApplication(application: CreateApplicationDto) {
-    return firstValueFrom(
-      this.http.post<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
-    ).then(() => {
-      this.fetchApplications();
-    });
   }
 }

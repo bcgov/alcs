@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsOrder, Repository } from 'typeorm';
+import { BaseCodeEntity } from '../../common/entities/base.code.entity';
 import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
 import { ApplicationStatus } from '../application-status/application-status.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
@@ -20,11 +21,17 @@ export class ApplicationCodeService {
   ) {}
 
   async getAllCodes() {
+    const alphabeticalSort: FindOptionsOrder<BaseCodeEntity> = {
+      label: 'ASC',
+    };
+    const alphabeticalFindOptions = {
+      order: alphabeticalSort,
+    };
     const values = await Promise.all([
-      this.typeRepository.find(),
-      this.statusRepository.find(),
-      this.decisionMakerRepository.find(),
-      this.regionRepository.find(),
+      this.typeRepository.find(alphabeticalFindOptions),
+      this.statusRepository.find(), //Status is not alphabetical
+      this.decisionMakerRepository.find(alphabeticalFindOptions),
+      this.regionRepository.find(alphabeticalFindOptions),
     ]);
 
     return {

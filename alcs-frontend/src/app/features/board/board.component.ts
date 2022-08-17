@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -17,10 +17,13 @@ import { CreateCardDialogComponent } from './create-card-detail-dialog/create-ca
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit {
-  public cards: CardData[] = [];
-  public columns: DragDropColumn[] = [];
+  cards: CardData[] = [];
+  columns: DragDropColumn[] = [];
+  boardTitle = 'All Applications';
 
   private applicationTypes: ApplicationTypeDto[] = [];
+  private decisionMakerCode?: string;
+  decisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
     private applicationService: ApplicationService,
@@ -31,7 +34,24 @@ export class BoardComponent implements OnInit {
     private router: Router
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((params) => {
+      const decisionMakerCode = params['dmCode'];
+      if (decisionMakerCode) {
+        this.decisionMakerCode = decisionMakerCode;
+        this.applicationService.setDecisionMaker(decisionMakerCode);
+        this.applicationService.fetchApplications();
+      }
+    });
+
+    this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
+      this.decisionMakers = dms;
+      const decisionMaker = dms.find((dm) => dm.code === this.decisionMakerCode);
+      if (decisionMaker) {
+        this.boardTitle = decisionMaker.label;
+      }
+    });
+
     this.applicationService.$applicationStatuses.subscribe((statuses) => {
       const allStatuses = statuses.map((status) => status.code);
 
@@ -50,12 +70,10 @@ export class BoardComponent implements OnInit {
       this.cards = applications.map(this.mapApplicationDtoToCard.bind(this));
     });
 
-    this.applicationService.refreshApplications();
-
     // open card if application number present in url
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
     if (app) {
-      await this.onSelected(app);
+      this.onSelected(app);
     }
   }
 
@@ -109,6 +127,12 @@ export class BoardComponent implements OnInit {
       .then((r) => {
         this.toastService.showSuccessToast('Application Updated');
       });
+  }
+
+  onSelectBoard(event: Event) {
+    //@ts-ignore TODO: TEMPORARY CODE TO BE DELETED WHEN HEADER ADDED
+    const newCode = event.currentTarget.value;
+    this.router.navigateByUrl(`/admin/${newCode}`);
   }
 
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
