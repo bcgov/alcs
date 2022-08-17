@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit {
   onSelectBoard(event: Event) {
     //@ts-ignore
     const newCode = event.currentTarget.value;
-    this.router.navigateByUrl(`/admin/${newCode}`);
+    this.router.navigateByUrl(`/board/${newCode}`);
   }
 
   onLogout() {

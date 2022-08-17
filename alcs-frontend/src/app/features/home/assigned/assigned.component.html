@@ -1,0 +1,27 @@
+<div class="assignee">
+  <h4>Assigned Applications: {{ applications.length }}</h4>
+  <table class="assigned-table">
+    <thead>
+      <td style="padding: 4px"></td>
+      <td class="header">Application</td>
+      <td class="header">Active Days</td>
+      <td class="header">Status</td>
+    </thead>
+    <tbody class="assigned-body">
+      <tr
+        [ngClass]="{
+          paused: application.paused
+        }"
+        (click)="onSelectCard(application.fileNumber, application.decisionMaker)"
+        *ngFor="let application of applications"
+      >
+        <td class="center" style="padding: 4px">
+          <span class="high-priority" *ngIf="application.highPriority">!</span>
+        </td>
+        <td>{{ application.fileNumber }} ({{ application.applicant }})</td>
+        <td>{{ application.activeDays }}</td>
+        <td>{{ application.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

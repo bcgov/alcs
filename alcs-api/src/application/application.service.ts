@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
@@ -6,6 +8,7 @@ import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
+import { ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -28,6 +31,7 @@ export class ApplicationService {
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
+    @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
   async resetApplicationStatus(
@@ -75,12 +79,19 @@ export class ApplicationService {
     return;
   }
 
-  async getAll(
-    decisionMaker?: ApplicationDecisionMaker,
-  ): Promise<Application[]> {
-    let whereClause: FindOptionsWhere<Application> = {};
+  async getAll({
+    decisionMaker,
+    assigneeUuid,
+  }: {
+    decisionMaker?: ApplicationDecisionMaker;
+    assigneeUuid?: string;
+  }): Promise<Application[]> {
+    const whereClause: FindOptionsWhere<Application> = {};
     if (decisionMaker) {
-      whereClause = { decisionMakerUuid: decisionMaker.uuid };
+      whereClause.decisionMakerUuid = decisionMaker.uuid;
+    }
+    if (assigneeUuid) {
+      whereClause.assigneeUuid = assigneeUuid;
     }
 
     return await this.applicationRepository.find({
@@ -128,5 +139,20 @@ export class ApplicationService {
     });
 
     return applicationsToProcess;
+  }
+
+  async mapApplicationsToDtos(
+    applications: Application[],
+  ): Promise<ApplicationDto[]> {
+    const appTimeMap =
+      await this.applicationTimeTrackingService.fetchApplicationActiveTimes(
+        applications,
+      );
+
+    return applications.map((app) => ({
+      ...this.applicationMapper.map(app, Application, ApplicationDto),
+      activeDays: appTimeMap.get(app.uuid).activeDays || 0,
+      pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
+    }));
   }
 }

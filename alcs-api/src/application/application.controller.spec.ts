@@ -34,7 +34,6 @@ jest.mock('../common/authorization/role.guard', () => ({
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: DeepMocked<ApplicationService>;
-  let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
   let applicationCodeService: DeepMocked<ApplicationCodeService>;
   const mockApplicationEntity = initApplicationMockEntity();
 
@@ -54,7 +53,6 @@ describe('ApplicationController', () => {
   };
 
   beforeEach(async () => {
-    mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
     applicationService = createMock<ApplicationService>();
     applicationCodeService = createMock<ApplicationCodeService>();
 
@@ -64,10 +62,6 @@ describe('ApplicationController', () => {
         {
           provide: ApplicationService,
           useValue: applicationService,
-        },
-        {
-          provide: ApplicationTimeTrackingService,
-          useValue: mockApplicationTimeService,
         },
         {
           provide: ApplicationCodeService,
@@ -95,9 +89,10 @@ describe('ApplicationController', () => {
       activeDays: 2,
       pausedDays: 0,
     });
-    mockApplicationTimeService.fetchApplicationActiveTimes.mockResolvedValue(
-      mockTimesMap,
-    );
+
+    applicationService.mapApplicationsToDtos.mockResolvedValue([
+      mockApplicationDto,
+    ]);
   });
 
   it('should be defined', () => {
@@ -129,17 +124,6 @@ describe('ApplicationController', () => {
     expect(res).toStrictEqual(mockApplicationDto);
   });
 
-  it('should add active and paused days to getAll', async () => {
-    applicationService.getAll.mockResolvedValue([mockApplicationEntity]);
-
-    const res = await controller.getAll();
-
-    expect(res[0].pausedDays).toEqual(0);
-    expect(
-      mockApplicationTimeService.fetchApplicationActiveTimes,
-    ).toHaveBeenCalled();
-  });
-
   it('should apply the dm filter in getAll', async () => {
     const mockDecisionMaker = createMock<ApplicationDecisionMaker>();
     applicationCodeService.fetchDecisionMaker.mockResolvedValue(
@@ -155,9 +139,9 @@ describe('ApplicationController', () => {
     );
 
     expect(applicationService.getAll).toHaveBeenCalled();
-    expect(applicationService.getAll.mock.calls[0][0]).toEqual(
-      mockDecisionMaker,
-    );
+    expect(applicationService.getAll.mock.calls[0][0]).toEqual({
+      decisionMaker: mockDecisionMaker,
+    });
   });
 
   it('should throw an exception when application is not found during update', async () => {
@@ -181,7 +165,12 @@ describe('ApplicationController', () => {
     applicationService.createOrUpdate.mockResolvedValue({
       ...mockApplicationEntity,
       applicant: mockUpdate.applicant,
-    } as Application);
+    } as unknown as Application);
+    applicationService.mapApplicationsToDtos.mockResolvedValue([
+      {
+        applicant: mockUpdate.applicant,
+      } as unknown as ApplicationDto,
+    ]);
 
     const res = await controller.update(mockUpdate);
 
@@ -212,11 +201,9 @@ describe('ApplicationController', () => {
       },
     } as Application);
 
-    const res = await controller.update(mockUpdate);
+    await controller.update(mockUpdate);
 
-    expect(res.status).toEqual(mockUpdate.status);
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
-
     const savedData = applicationService.createOrUpdate.mock.calls[0][0];
     expect(savedData.statusUuid).toEqual(mockUuid);
   });
@@ -243,11 +230,9 @@ describe('ApplicationController', () => {
       },
     } as Application);
 
-    const res = await controller.update(mockUpdate);
+    await controller.update(mockUpdate);
 
-    expect(res.type).toEqual(mockUpdate.type);
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
-
     const savedData = applicationService.createOrUpdate.mock.calls[0][0];
     expect(savedData.typeUuid).toEqual(mockUuid);
   });

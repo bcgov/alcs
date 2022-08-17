@@ -1,3 +1,5 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -26,6 +28,11 @@ describe('ApplicationService', () => {
     mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ApplicationService,
         {
@@ -58,16 +65,18 @@ describe('ApplicationService', () => {
   });
 
   it('should getall applications', async () => {
-    expect(await applicationService.getAll()).toStrictEqual([
+    expect(await applicationService.getAll({})).toStrictEqual([
       applicationMockEntity,
     ]);
   });
 
   it('should getall applications by decision maker', async () => {
     const mockDecisionMaker = createMock<ApplicationDecisionMaker>();
-    expect(await applicationService.getAll(mockDecisionMaker)).toStrictEqual([
-      applicationMockEntity,
-    ]);
+    expect(
+      await applicationService.getAll({
+        decisionMaker: mockDecisionMaker,
+      }),
+    ).toStrictEqual([applicationMockEntity]);
   });
 
   it('should delete application', async () => {

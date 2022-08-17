@@ -23,6 +23,7 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { CommentModule } from './comment/comment.module';
 import { LogoutController } from './logout/logout.controller';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { LogoutController } from './logout/logout.controller';
       },
     }),
     SchedulerModule,
+    HomeModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [
