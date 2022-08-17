@@ -19,7 +19,7 @@ import { CreateCardDialogComponent } from './create-card-detail-dialog/create-ca
 export class BoardComponent implements OnInit {
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
-  boardTitle = '';
+  boardTitle = 'All Applications';
 
   private applicationTypes: ApplicationTypeDto[] = [];
   private decisionMakerCode?: string;
@@ -49,8 +49,6 @@ export class BoardComponent implements OnInit {
       const decisionMaker = dms.find((dm) => dm.code === this.decisionMakerCode);
       if (decisionMaker) {
         this.boardTitle = decisionMaker.label;
-      } else {
-        this.boardTitle = 'All Applications';
       }
     });
 
