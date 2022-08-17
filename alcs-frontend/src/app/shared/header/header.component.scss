@@ -24,20 +24,13 @@
     height: 100%;
   }
 }
-
 .flex-grid {
-  display: flex;
-}
-.flex-grid .col {
-  flex: 1;
-}
-.flex-grid-thirds {
   display: flex;
   justify-content: space-between;
 }
 
-.flex-grid-thirds .col {
-  width: 100%;
+.flex-grid .col {
+  width: 80%;
 }
 
 .right {
