@@ -1,6 +1,34 @@
 <header>
-  <h1>ALCS - Permit Tracking System</h1>
-  <div class="right">
-    <button mat-flat-button color="primary" (click)="onLogout()">Logout</button>
+  <div class="flex-grid-thirds">
+    <mat-toolbar>
+      <div class="col">
+        <a class="logo" href="{{ homeUrl }}">
+          <img alt="ALCS - Permit Tracking System" src="/assets/images/ALC-logo.svg" />
+        </a>
+      </div>
+      <div class="col right">
+        <div>
+          <a href="{{ homeUrl }}">
+            <button class="menu-item">Home</button>
+          </a>
+        </div>
+      </div>
+      <div class="col">
+        <button class="menu-item" [matMenuTriggerFor]="menu">Board</button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item></button>
+        </mat-menu>
+      </div>
+      <div class="col right">
+        <button mat-icon-button>
+          <mat-icon>notifications</mat-icon>
+        </button>
+
+        <button mat-flat-button color="primary" (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </div>
+    </mat-toolbar>
   </div>
 </header>
