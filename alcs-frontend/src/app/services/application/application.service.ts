@@ -74,7 +74,7 @@ export class ApplicationService {
     return res;
   }
 
-  private async setup() {
+  async setup() {
     if (!this.isInitialized) {
       await this.fetchCodes();
       this.isInitialized = true;

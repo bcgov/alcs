@@ -16,7 +16,9 @@
       <div class="col">
         <button class="menu-item" [matMenuTriggerFor]="menu">Board</button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item></button>
+          <button mat-menu-item *ngFor="let dm of decisionMakers" [value]="dm.code" (click)="onSelectBoard($event)">
+            {{ dm.label }}
+          </button>
         </mat-menu>
       </div>
       <div class="col right">
