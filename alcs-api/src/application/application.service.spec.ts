@@ -7,6 +7,7 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
+import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import {
   ApplicationTimeData,
@@ -62,10 +63,11 @@ describe('ApplicationService', () => {
     ]);
   });
 
-  it('should getall applications by status', async () => {
-    expect(
-      await applicationService.getAll([applicationMockEntity.statusUuid]),
-    ).toStrictEqual([applicationMockEntity]);
+  it('should getall applications by decision maker', async () => {
+    const mockDecisionMaker = createMock<ApplicationDecisionMaker>();
+    expect(await applicationService.getAll(mockDecisionMaker)).toStrictEqual([
+      applicationMockEntity,
+    ]);
   });
 
   it('should delete application', async () => {

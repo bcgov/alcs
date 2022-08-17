@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, In, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
+import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -74,10 +75,12 @@ export class ApplicationService {
     return;
   }
 
-  async getAll(statusIds?: string[]): Promise<Application[]> {
-    let whereClause = {};
-    if (statusIds && statusIds.length > 0) {
-      whereClause = { statusId: In(statusIds) };
+  async getAll(
+    decisionMaker?: ApplicationDecisionMaker,
+  ): Promise<Application[]> {
+    let whereClause: FindOptionsWhere<Application> = {};
+    if (decisionMaker) {
+      whereClause = { decisionMakerUuid: decisionMaker.uuid };
     }
 
     return await this.applicationRepository.find({
