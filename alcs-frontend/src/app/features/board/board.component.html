@@ -1,13 +1,6 @@
 <div style="margin: 32px 8px">
   <div style="display: flex; justify-content: space-between; margin: 12px 18px">
     <div>
-      <mat-form-field>
-        <select matNativeControl (change)="onSelectBoard($event)" required>
-          <option *ngFor="let dm of decisionMakers" [value]="dm.code">{{ dm.label }}</option>
-        </select>
-      </mat-form-field>
-    </div>
-    <div>
       <button mat-flat-button color="primary" (click)="onCreate()">+ New Card</button>
     </div>
   </div>

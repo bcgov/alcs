@@ -22,14 +22,12 @@ import { ApplicationDecisionMaker } from './application-code/application-decisio
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
   ApplicationUpdateDto,
   CreateApplicationDto,
 } from './application.dto';
-import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -39,7 +37,6 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private codeService: ApplicationCodeService,
-    private applicationPausedService: ApplicationTimeTrackingService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -50,15 +47,18 @@ export class ApplicationController {
     if (dm) {
       decisionMaker = await this.codeService.fetchDecisionMaker(dm);
     }
-    const applications = await this.applicationService.getAll(decisionMaker);
-    return this.mapApplicationsToDtos(applications);
+    const applications = await this.applicationService.getAll({
+      decisionMaker,
+    });
+    return this.applicationService.mapApplicationsToDtos(applications);
   }
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
-    const mappedApplication = await this.mapApplicationsToDtos([application]);
+    const mappedApplication =
+      await this.applicationService.mapApplicationsToDtos([application]);
     return {
       ...mappedApplication[0],
       statusDetails: application.status,
@@ -88,7 +88,9 @@ export class ApplicationController {
       decisionMaker,
       region,
     });
-    const mappedApps = await this.mapApplicationsToDtos([app]);
+    const mappedApps = await this.applicationService.mapApplicationsToDtos([
+      app,
+    ]);
     return mappedApps[0];
   }
 
@@ -152,7 +154,9 @@ export class ApplicationController {
       highPriority: application.highPriority,
     });
 
-    const mappedApps = await this.mapApplicationsToDtos([app]);
+    const mappedApps = await this.applicationService.mapApplicationsToDtos([
+      app,
+    ]);
     return mappedApps[0];
   }
 
@@ -160,30 +164,5 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
-  }
-
-  private async mapToEntity(
-    application: ApplicationDto,
-  ): Promise<Partial<Application>> {
-    return this.applicationMapper.mapAsync(
-      application,
-      ApplicationDto,
-      Application,
-    );
-  }
-
-  private async mapApplicationsToDtos(
-    applications: Application[],
-  ): Promise<ApplicationDto[]> {
-    const appTimeMap =
-      await this.applicationPausedService.fetchApplicationActiveTimes(
-        applications,
-      );
-
-    return applications.map((app) => ({
-      ...this.applicationMapper.map(app, Application, ApplicationDto),
-      activeDays: appTimeMap.get(app.uuid).activeDays || 0,
-      pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
-    }));
   }
 }

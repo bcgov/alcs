@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,11 +31,16 @@ describe('ApplicationStatusService', () => {
   const applicationStatusMockEntity = initApplicationStatusMockEntity();
 
   beforeEach(async () => {
+    applicationService = createMock<ApplicationService>();
+
     const applicationStatusModule: TestingModule =
       await Test.createTestingModule({
         providers: [
           ApplicationStatusService,
-          ApplicationService,
+          {
+            provide: ApplicationService,
+            useValue: applicationService,
+          },
           {
             provide: ApplicationTimeTrackingService,
             useValue: {},

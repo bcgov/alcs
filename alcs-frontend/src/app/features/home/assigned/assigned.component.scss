@@ -1,0 +1,38 @@
+@import '../../../../styles/colors';
+
+.assignee {
+  margin: 18px;
+}
+
+.assigned-table {
+  max-width: 800px;
+  margin-top: 12px;
+  padding: 0;
+  border-collapse: collapse;
+
+  .header {
+    font-weight: bold;
+  }
+
+  .paused {
+    opacity: 0.6;
+    background-color: #efefef;
+  }
+
+  td {
+    margin: 0;
+    border: 0;
+    padding: 4px 28px 4px 4px;
+  }
+
+  tr:hover {
+    box-shadow: 0 0 0 1px rgba($primary-color, .9);
+    cursor: pointer;
+  }
+}
+
+.high-priority {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: $error-color;
+}
