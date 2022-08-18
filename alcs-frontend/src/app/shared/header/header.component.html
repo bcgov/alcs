@@ -2,13 +2,13 @@
   <div class="flex-grid">
     <mat-toolbar>
       <div class="col">
-        <a class="logo" href="{{ homeUrl }}">
+        <a class="logo" [routerLink]="homeUrl">
           <img alt="ALCS - Permit Tracking System" src="/assets/images/ALC-logo.svg" />
         </a>
       </div>
       <div class="col right">
         <div>
-          <a href="{{ homeUrl }}">
+          <a [routerLink]="homeUrl"">
             <button class="menu-item">Home</button>
           </a>
         </div>
