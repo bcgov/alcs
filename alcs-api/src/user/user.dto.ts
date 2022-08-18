@@ -66,10 +66,6 @@ export class CreateOrUpdateUserDto {
 export class UserDto extends CreateOrUpdateUserDto {
   @AutoMap()
   @IsString()
-  uuid: string;
-
-  @AutoMap()
-  @IsString()
   initials?: string;
 
   @AutoMap()

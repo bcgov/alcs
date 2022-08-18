@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { CreateOrUpdateUserDto, UserDto } from './user.dto';
 import { User } from './user.entity';
 
@@ -35,7 +36,9 @@ export class UserService {
     const existingUser = await this.getUser(email);
 
     if (!existingUser) {
-      throw new Error('User not found');
+      throw new ServiceNotFoundException(
+        `User with provided email not found ${email}`,
+      );
     }
 
     return this.userRepository.softRemove(existingUser);
@@ -58,14 +61,14 @@ export class UserService {
   }
 
   async update(user: Partial<User>) {
-    const existingUser = await this.userRepository.findOne({
-      where: { uuid: user.uuid },
-    });
+    const existingUser = await this.getUserByUuid(user.uuid);
+
+    if (!existingUser) {
+      throw new ServiceNotFoundException(`User not found ${user}`);
+    }
 
     const updatedUser = Object.assign(existingUser, user);
 
-    await this.userRepository.save(updatedUser);
-
-    return this.getUserByUuid(updatedUser.uuid);
+    return this.userRepository.save(updatedUser);
   }
 }

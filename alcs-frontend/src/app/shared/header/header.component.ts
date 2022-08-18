@@ -30,10 +30,9 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.loadTokenFromStorage().then(() => {
-      this.applicationService.setup();
-      this.userService.fetchUsers();
+    this.applicationService.setup().then(() => {
       this.currentUser = this.authService.getCurrentUser();
+      this.userService.fetchUsers();
     });
 
     this.userService.$users.subscribe((users) => {
@@ -83,9 +82,12 @@ export class HeaderComponent implements OnInit {
 
   async onFavoriteClicked(event: any, dm: ApplicationDecisionMakerDto) {
     event.stopPropagation();
-    console.log(dm);
     if (!this.currentUserProfile) {
       return;
+    }
+
+    if (!this.currentUserProfile?.settings?.favoriteBoards) {
+      this.currentUserProfile.settings = { favoriteBoards: [] };
     }
 
     const favoriteBoards = [...this.currentUserProfile.settings.favoriteBoards];
@@ -106,9 +108,5 @@ export class HeaderComponent implements OnInit {
     } catch {
       this.toastService.showErrorToast('Failed to set favorites');
     }
-  }
-
-  handleClick() {
-    console.log('here');
   }
 }

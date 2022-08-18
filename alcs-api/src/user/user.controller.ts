@@ -48,12 +48,12 @@ export class UserController {
     const existingUser = await this.userService.getUser(user.email);
 
     if (!existingUser) {
-      throw new NotFoundException(`User not found`);
+      throw new NotFoundException(`User not found.`);
     }
 
     if (user.uuid !== req.user.entity.uuid) {
       throw new MethodNotAllowedException(
-        'You can update only your user details ',
+        'You can update only your user details.',
       );
     }
 
