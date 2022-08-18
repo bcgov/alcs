@@ -12,6 +12,11 @@
   cursor: pointer;
 }
 
+button.mat-menu-item {
+  width: auto;
+  display: inline-block
+}
+
 .logo {
   display: inline-block;
   position: fixed;
@@ -37,4 +42,12 @@
   display: flex;
   align-items: right;
   justify-content: right;
+}
+
+.grey-star {
+  color: lightgrey
+}
+
+.gold-star {
+  color: gold
 }

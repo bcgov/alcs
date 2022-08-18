@@ -16,9 +16,18 @@
       <div class="col">
         <button class="menu-item" [matMenuTriggerFor]="menu">Board</button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item *ngFor="let dm of decisionMakers" [value]="dm.code" (click)="onSelectBoard($event)">
-            {{ dm.label }}
-          </button>
+          <div *ngFor="let dm of decisionMakers">
+            <button
+              [ngClass]="isFavorite(dm) ? 'gold-star' : 'grey-star'"
+              mat-icon-button
+              (click)="onFavoriteClicked($event, dm)"
+            >
+              <mat-icon>star</mat-icon>
+            </button>
+            <button mat-menu-item [value]="dm.code" (click)="onSelectBoard($event)">
+              {{ dm.label }}
+            </button>
+          </div>
         </mat-menu>
       </div>
       <div class="col right">

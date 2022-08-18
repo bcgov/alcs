@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { UserSettings } from './user.entity';
 
 export class CreateOrUpdateUserDto {
   @AutoMap()
@@ -49,6 +50,9 @@ export class CreateOrUpdateUserDto {
   @AutoMap()
   @IsString()
   bceidUserName?: string;
+
+  @AutoMap()
+  settings?: UserSettings;
 }
 
 export class UserDto extends CreateOrUpdateUserDto {

@@ -18,4 +18,8 @@ export class UserService {
     this.users = await firstValueFrom(this.http.get<UserDto[]>(`${environment.apiRoot}/user`));
     this.$users.next(this.users);
   }
+
+  public async updateUser(user: UserDto) {
+    console.log('updateUser', user.settings);
+  }
 }

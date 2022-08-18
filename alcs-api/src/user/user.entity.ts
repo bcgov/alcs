@@ -3,6 +3,10 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { CommentMention } from '../comment/mention/comment-mention.entity';
 import { Base } from '../common/entities/base.entity';
 
+export class UserSettings {
+  favoriteBoards: string[];
+}
+
 @Entity()
 export class User extends Base {
   @AutoMap()
@@ -50,7 +54,7 @@ export class User extends Base {
 
   @AutoMap()
   @Column({ type: 'jsonb', nullable: true })
-  settings: any;
+  settings: UserSettings;
 
   @AutoMap()
   @OneToMany(() => CommentMention, (mention) => mention.user)
