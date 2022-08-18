@@ -16,12 +16,10 @@ button.mat-menu-item:hover {
 
 .logo {
   display: inline-block;
-  position: fixed;
-  top:0;
-  left: 10px;
   width: 100px;
+  padding: 10px 4px 4px 4px;
 
-  image {
+  img {
     width: 100%;
     height: 100%;
   }

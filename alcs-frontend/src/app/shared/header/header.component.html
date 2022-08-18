@@ -1,4 +1,4 @@
-<header>
+<header style="border-bottom: 1px solid">
   <div class="flex-grid">
     <mat-toolbar>
       <div class="col">
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="col">
-        <button class="menu-item" [matMenuTriggerFor]="menu">Board</button>
+        <button class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
         <mat-menu #menu="matMenu">
           <div class="board-item menu-item" *ngFor="let dm of $sortedDecisionMakers | async" (click)="onSelectBoard(dm.code)">
             <button

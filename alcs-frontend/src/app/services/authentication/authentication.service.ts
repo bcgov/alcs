@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -15,7 +15,7 @@ export interface ICurrentUser {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthenticationService implements OnInit {
+export class AuthenticationService {
   private token: string | undefined;
   private refreshToken: string | undefined;
   private expires: number | undefined;
@@ -24,25 +24,17 @@ export class AuthenticationService implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-    this.loadTokenFromStorage();
-  }
-
   async setTokens(token: string, refreshToken: string) {
-    const valid = await this.isTokenValid(token);
-    if (valid) {
-      this.token = token;
-      this.refreshToken = refreshToken;
-      localStorage.setItem(JWT_TOKEN_KEY, token);
-      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    this.token = token;
+    this.refreshToken = refreshToken;
+    localStorage.setItem(JWT_TOKEN_KEY, token);
+    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 
-      const decodedToken = jwtDecode<JwtPayload>(token);
-      this.currentUser = decodedToken as ICurrentUser;
+    const decodedToken = jwtDecode<JwtPayload>(token);
+    this.currentUser = decodedToken as ICurrentUser;
 
-      //Convert to MS for JS consistency
-      this.expires = decodedToken.exp! * 1000;
-    }
-    return valid;
+    //Convert to MS for JS consistency
+    this.expires = decodedToken.exp! * 1000;
   }
 
   clearTokens() {
@@ -53,6 +45,11 @@ export class AuthenticationService implements OnInit {
   }
 
   async getToken() {
+    if (!this.isInitialized) {
+      this.isInitialized = true;
+      await this.loadTokenFromStorage();
+    }
+
     if (this.token && this.refreshToken && this.expires && this.expires < Date.now()) {
       //Clear token to prevent infinite loop from interceptor
       this.token = undefined;
@@ -63,12 +60,14 @@ export class AuthenticationService implements OnInit {
     return this.token;
   }
 
-  async loadTokenFromStorage() {
+  private async loadTokenFromStorage() {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-    const res = this.setTokens(existingToken || '', refreshToken || '');
-    this.isInitialized = true;
-    return res;
+
+    const valid = await this.isTokenValid(existingToken || '');
+    if (valid) {
+      await this.setTokens(existingToken || '', refreshToken || '');
+    }
   }
 
   async logout() {
@@ -94,6 +93,8 @@ export class AuthenticationService implements OnInit {
       if (e instanceof HttpErrorResponse && e.status === 401) {
         //Take user to login
         //TODO: Can we use something other than e.error?
+        const targetUrl = window.location.href;
+        localStorage.setItem('targetUrl', targetUrl);
         window.location.href = e.error;
       }
       throw e;
