@@ -16,15 +16,15 @@
       <div class="col">
         <button class="menu-item" [matMenuTriggerFor]="menu">Board</button>
         <mat-menu #menu="matMenu">
-          <div class="board-item" *ngFor="let dm of $sortedDecisionMakers | async">
+          <div class="board-item menu-item" *ngFor="let dm of $sortedDecisionMakers | async" (click)="onSelectBoard(dm.code)">
             <button
-              [ngClass]="{ 'gold-star': dm.isFavorite, 'favorite-btn': true }"
+              [ngClass]="{ gold: dm.isFavorite, 'favorite-btn': true }"
               mat-icon-button
               (click)="onFavoriteClicked($event, dm)"
             >
               <mat-icon>star</mat-icon>
             </button>
-            <button mat-menu-item [value]="dm.code" (click)="onSelectBoard($event)">
+            <button mat-menu-item>
               {{ dm.label }}
             </button>
           </div>

@@ -6,11 +6,12 @@
 
 button.mat-menu-item {
   width: auto;
-  display: inline-block
+  display: inline-block;
+  padding-left: 0px !important;
 }
 
-button.mat-menu-item {
-  padding-left: 0px !important;
+button.mat-menu-item:hover {
+  background-color: inherit;
 }
 
 .logo {
@@ -29,10 +30,10 @@ button.mat-menu-item {
 .flex-grid {
   display: flex;
   justify-content: space-between;
-}
-
-.flex-grid .col {
-  width: 80%;
+ 
+  .col {
+    width: 80%;
+  }
 }
 
 .right {
@@ -41,26 +42,27 @@ button.mat-menu-item {
   justify-content: right;
 }
 
-.grey-star {
-  color: lightgrey
-}
-
-.favorite-btn.gold-star {
-  color: gold;
-  visibility: visible !important;
-}
-
 .favorite-btn {
   visibility: hidden;
+  color: #d3d3d3;
+  
   mat-icon {
     padding-bottom: 5px ;
   }
-  
+}
+
+.favorite-btn.gold {
+  color: #ffd700;
+  visibility: visible !important;
 }
 
 .board-item .favorite-btn {
   visibility: hidden;
 }
-.board-item:hover .favorite-btn  {
-  visibility: visible;
+
+.board-item:hover {
+  background-color: #f8f3f3;
+  .favorite-btn  {
+    visibility: visible;
+  }
 }

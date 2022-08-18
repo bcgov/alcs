@@ -73,10 +73,8 @@ export class HeaderComponent implements OnInit {
     return 0;
   }
 
-  onSelectBoard(event: Event) {
-    //@ts-ignore
-    const newCode = event.currentTarget.value;
-    this.router.navigateByUrl(`/board/${newCode}`);
+  onSelectBoard(dmCode: string) {
+    this.router.navigateByUrl(`/board/${dmCode}`);
   }
 
   onLogout() {
@@ -108,5 +106,9 @@ export class HeaderComponent implements OnInit {
     } catch {
       this.toastService.showErrorToast('Failed to set favorites');
     }
+  }
+
+  handleClick() {
+    console.log('here');
   }
 }
