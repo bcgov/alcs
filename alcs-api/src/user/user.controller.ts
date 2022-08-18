@@ -51,7 +51,7 @@ export class UserController {
       throw new NotFoundException(`User not found`);
     }
 
-    if (user.uuid === req.user.entity.uuid) {
+    if (user.uuid !== req.user.entity.uuid) {
       throw new MethodNotAllowedException(
         'You can update only your user details ',
       );

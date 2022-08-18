@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationDecisionMakerDto } from '../../services/application/application-code.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 
@@ -14,13 +16,15 @@ import { UserService } from '../../services/user/user.service';
 })
 export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
-  decisionMakers: ApplicationDecisionMakerDto[] = [];
   currentUser!: ICurrentUser;
   currentUserProfile?: UserDto;
+  private decisionMakers: ApplicationDecisionMakerDto[] = [];
+  $sortedDecisionMakers!: Observable<ApplicationDecisionMakerDto[]>;
 
   constructor(
     private authService: AuthenticationService,
     private applicationService: ApplicationService,
+    private toastService: ToastService,
     private userService: UserService,
     private router: Router
   ) {}
@@ -36,9 +40,37 @@ export class HeaderComponent implements OnInit {
       this.currentUserProfile = users.find((u) => u.email === this.currentUser.email);
     });
 
-    this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
-      this.decisionMakers = dms;
-    });
+    this.$sortedDecisionMakers = this.applicationService.$applicationDecisionMakers.pipe(
+      map((dms) => this.transformDecisionMakers(dms))
+    );
+  }
+
+  private transformDecisionMakers(dms: ApplicationDecisionMakerDto[]) {
+    this.decisionMakers = dms
+      .map((dm) => {
+        return {
+          ...dm,
+          isFavorite: this.currentUserProfile?.settings?.favoriteBoards?.includes(dm.code),
+        };
+      })
+      .sort((x, y) => this.sortDecisionMakers(x, y));
+    return this.decisionMakers;
+  }
+
+  private sortDecisionMakers(x: ApplicationDecisionMakerDto, y: ApplicationDecisionMakerDto) {
+    if (x.isFavorite && !y.isFavorite) {
+      return -1;
+    }
+
+    if (y.isFavorite && !x.isFavorite) {
+      return 1;
+    }
+
+    if (x.isFavorite === y.isFavorite) {
+      if (x.label > y.label) return 1;
+      if (x.label < y.label) return -1;
+    }
+    return 0;
   }
 
   onSelectBoard(event: Event) {
@@ -51,11 +83,7 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
   }
 
-  isFavorite(dm: ApplicationDecisionMakerDto) {
-    return this.currentUserProfile?.settings?.favoriteBoards.includes(dm.code);
-  }
-
-  onFavoriteClicked(event: any, dm: ApplicationDecisionMakerDto) {
+  async onFavoriteClicked(event: any, dm: ApplicationDecisionMakerDto) {
     event.stopPropagation();
     console.log(dm);
     if (!this.currentUserProfile) {
@@ -73,8 +101,12 @@ export class HeaderComponent implements OnInit {
       this.currentUserProfile.settings.favoriteBoards.push(dm.code);
     }
 
-    this.userService.updateUser(this.currentUserProfile).then(() => {
-      // this.userService.fetchUsers();
-    });
+    try {
+      await this.userService.updateUser(this.currentUserProfile);
+      await this.userService.fetchUsers();
+      this.applicationService.$applicationDecisionMakers.next(this.decisionMakers);
+    } catch {
+      this.toastService.showErrorToast('Failed to set favorites');
+    }
   }
 }

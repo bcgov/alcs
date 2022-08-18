@@ -1,7 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 
 export interface ApplicationDecisionMakerDto extends BaseCodeDto {
-  isFavorite: boolean;
+  isFavorite?: boolean;
 }
 export interface ApplicationStatusDto extends BaseCodeDto {}
 export interface ApplicationRegionDto extends BaseCodeDto {}

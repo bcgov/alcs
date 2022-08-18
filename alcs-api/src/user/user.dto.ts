@@ -1,6 +1,10 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { UserSettings } from './user.entity';
+import { Type } from 'class-transformer';
+import { IsDefined, IsEmail, IsOptional, IsString } from 'class-validator';
+
+export class UserSettingsDto {
+  favoriteBoards: string[];
+}
 
 export class CreateOrUpdateUserDto {
   @AutoMap()
@@ -45,14 +49,18 @@ export class CreateOrUpdateUserDto {
 
   @AutoMap()
   @IsString()
+  @IsOptional()
   bceidGuid?: string;
 
   @AutoMap()
   @IsString()
+  @IsOptional()
   bceidUserName?: string;
 
   @AutoMap()
-  settings?: UserSettings;
+  @Type(() => UserSettingsDto)
+  @IsDefined()
+  settings?: UserSettingsDto;
 }
 
 export class UserDto extends CreateOrUpdateUserDto {

@@ -48,6 +48,18 @@ button.mat-menu-item {
   color: lightgrey
 }
 
-.gold-star {
-  color: gold
+.favorite-btn.gold-star {
+  color: gold;
+  visibility: visible !important;
+}
+
+.favorite-btn {
+  visibility: hidden;
+}
+
+.board-item .favorite-btn {
+  visibility: hidden;
+}
+.board-item:hover .favorite-btn  {
+  visibility: visible;
 }
