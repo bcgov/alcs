@@ -48,4 +48,24 @@ export class UserService {
       },
     });
   }
+
+  async getUserByUuid(uuid: string) {
+    return await this.userRepository.findOne({
+      where: {
+        uuid,
+      },
+    });
+  }
+
+  async update(user: Partial<User>) {
+    const existingUser = await this.userRepository.findOne({
+      where: { uuid: user.uuid },
+    });
+
+    const updatedUser = Object.assign(existingUser, user);
+
+    await this.userRepository.save(updatedUser);
+
+    return this.getUserByUuid(updatedUser.uuid);
+  }
 }

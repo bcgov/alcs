@@ -49,6 +49,10 @@ export class User extends Base {
   bceidUserName: string;
 
   @AutoMap()
+  @Column({ type: 'jsonb', nullable: true })
+  settings: any;
+
+  @AutoMap()
   @OneToMany(() => CommentMention, (mention) => mention.user)
   mentions: CommentMention[];
 }

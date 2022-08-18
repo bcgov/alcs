@@ -1,7 +1,11 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class CreateOrUpdateUserDto {
+  @AutoMap()
+  @IsOptional()
+  uuid?: string;
+
   @AutoMap()
   @IsEmail()
   email: string;
