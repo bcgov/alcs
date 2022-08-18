@@ -161,7 +161,7 @@ export class AuthorizationService {
   private async registerUser(payload: BaseToken) {
     const existingUser = await this.userService.getUser(payload.email);
     if (!existingUser) {
-      console.log(payload);
+      this.logger.debug(payload);
       await this.userService.createUser(
         this.mapUserFromTokenToCreateDto(payload),
       );
