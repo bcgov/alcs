@@ -17,8 +17,12 @@ export class AuthorizationComponent implements OnInit {
     if (token && refreshToken) {
       await this.authService.setTokens(token, refreshToken);
 
+      const targetUrl = localStorage.getItem('targetUrl');
+
       if (noRoles) {
         await this.router.navigateByUrl('/provision');
+      } else if (targetUrl) {
+        window.location.href = targetUrl;
       } else {
         await this.router.navigateByUrl(environment.homeUrl);
       }

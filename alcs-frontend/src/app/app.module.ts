@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { BoardModule } from './features/board/board.module';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
-import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';

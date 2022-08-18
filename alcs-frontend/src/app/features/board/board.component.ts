@@ -41,6 +41,11 @@ export class BoardComponent implements OnInit {
         this.decisionMakerCode = decisionMakerCode;
         this.applicationService.setDecisionMaker(decisionMakerCode);
         this.applicationService.fetchApplications();
+
+        const decisionMaker = this.decisionMakers.find((dm) => dm.code === this.decisionMakerCode);
+        if (decisionMaker) {
+          this.boardTitle = decisionMaker.label;
+        }
       }
     });
 
