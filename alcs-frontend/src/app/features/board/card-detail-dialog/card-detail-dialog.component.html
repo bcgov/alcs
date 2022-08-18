@@ -1,6 +1,8 @@
 <div mat-dialog-title class="header">
   <div>
-    <h2 class="card-title">{{ currentCard.fileNumber }} ({{ currentCard.applicant }})</h2>
+    <a href="application/{{currentCard.fileNumber}}" target="_blank" rel="noreferrer">
+      <h2 class="card-title">{{ currentCard.fileNumber }} ({{ currentCard.applicant }})</h2>
+    </a>
     <span>
       in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
     </span>

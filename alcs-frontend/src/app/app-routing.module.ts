@@ -18,6 +18,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/home/home.module').then((m) => m.HomeModule),
   },
   {
+    path: 'application',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/application/application.module').then((m) => m.ApplicationModule),
+  },
+  {
     path: 'login',
     component: LoginComponent,
   },

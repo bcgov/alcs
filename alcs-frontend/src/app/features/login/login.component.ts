@@ -11,7 +11,8 @@ export class LoginComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   async ngOnInit() {
-    if (await this.authenticationService.loadTokenFromStorage()) {
+    const hasToken = await this.authenticationService.getToken();
+    if (hasToken) {
       this.router.navigateByUrl(environment.homeUrl);
     }
   }

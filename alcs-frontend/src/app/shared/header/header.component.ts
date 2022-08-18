@@ -21,19 +21,15 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.loadTokenFromStorage().then(() => {
-      this.applicationService.setup();
-    });
-
     this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
       this.decisionMakers = dms;
     });
   }
 
-  onSelectBoard(event: Event) {
-    //@ts-ignore
-    const newCode = event.currentTarget.value;
-    this.router.navigateByUrl(`/board/${newCode}`);
+  onSelectBoard(event: MouseEvent) {
+    const target = event.currentTarget as HTMLInputElement;
+    const boardCode = target.value;
+    this.router.navigateByUrl(`/board/${boardCode}`);
   }
 
   onLogout() {
