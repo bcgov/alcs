@@ -30,9 +30,13 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationService.setup().then(() => {
-      this.currentUser = this.authService.getCurrentUser();
-      this.userService.fetchUsers();
+    this.authService.isAuthenticated.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.currentUser = this.authService.getCurrentUser();
+
+        this.userService.fetchUsers();
+        this.applicationService.setup();
+      }
     });
 
     this.userService.$users.subscribe((users) => {
