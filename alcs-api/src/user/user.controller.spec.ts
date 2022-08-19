@@ -94,7 +94,7 @@ describe('UserController', () => {
     const mockUserDto = initAssigneeMockDto();
 
     await expect(controller.update(mockUserDto, request)).rejects.toMatchObject(
-      new Error('User not found.'),
+      new Error(`User with provided email not found ${mockUserDto.email}`),
     );
   });
 

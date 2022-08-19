@@ -48,7 +48,9 @@ export class UserController {
     const existingUser = await this.userService.getUser(user.email);
 
     if (!existingUser) {
-      throw new NotFoundException(`User not found.`);
+      throw new NotFoundException(
+        `User with provided email not found ${user.email}`,
+      );
     }
 
     if (user.uuid !== req.user.entity.uuid) {

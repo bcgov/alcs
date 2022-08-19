@@ -36,10 +36,10 @@ export class AuthenticationService {
 
     const decodedToken = jwtDecode<JwtPayload>(token);
     this.currentUser = decodedToken as ICurrentUser;
-    this.isAuthenticated.emit(true);
 
     //Convert to MS for JS consistency
     this.expires = decodedToken.exp! * 1000;
+    this.isAuthenticated.emit(true);
   }
 
   clearTokens() {

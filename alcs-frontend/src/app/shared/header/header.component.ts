@@ -84,8 +84,7 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
   }
 
-  async onFavoriteClicked(event: any, dm: ApplicationDecisionMakerDto) {
-    event.stopPropagation();
+  private updateFavoriteBoardsList(dm: ApplicationDecisionMakerDto) {
     if (!this.currentUserProfile) {
       return;
     }
@@ -104,6 +103,15 @@ export class HeaderComponent implements OnInit {
     } else {
       this.currentUserProfile.settings.favoriteBoards.push(dm.code);
     }
+  }
+
+  async onFavoriteClicked(event: any, dm: ApplicationDecisionMakerDto) {
+    event.stopPropagation();
+    if (!this.currentUserProfile) {
+      return;
+    }
+
+    this.updateFavoriteBoardsList(dm);
 
     try {
       await this.userService.updateUser(this.currentUserProfile);
