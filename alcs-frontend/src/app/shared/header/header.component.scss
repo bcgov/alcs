@@ -1,3 +1,5 @@
+@import '../../../styles/colors';
+
 .menu-item {
   border: none;
   background: inherit;
@@ -50,7 +52,7 @@ button.mat-menu-item:hover {
 }
 
 .favorite-btn.gold {
-  color: #ffd700;
+  color: $favorite-star;
   visibility: visible !important;
 }
 

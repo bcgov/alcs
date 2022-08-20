@@ -16,7 +16,7 @@
       <div class="col">
         <button class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
         <mat-menu #menu="matMenu">
-          <div class="board-item menu-item" *ngFor="let dm of $sortedDecisionMakers | async" (click)="onSelectBoard(dm.code)">
+          <div class="board-item menu-item" *ngFor="let dm of sortedDecisionMakers" (click)="onSelectBoard(dm.code)">
             <button
               [ngClass]="{ gold: dm.isFavorite, 'favorite-btn': true }"
               mat-icon-button

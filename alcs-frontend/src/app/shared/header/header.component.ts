@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationDecisionMakerDto } from '../../services/application/application-code.dto';
 import { ApplicationService } from '../../services/application/application.service';
@@ -18,8 +17,7 @@ export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
   currentUser!: ICurrentUser;
   currentUserProfile?: UserDto;
-  private decisionMakers: ApplicationDecisionMakerDto[] = [];
-  $sortedDecisionMakers!: Observable<ApplicationDecisionMakerDto[]>;
+  sortedDecisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
     private authService: AuthenticationService,
@@ -43,21 +41,9 @@ export class HeaderComponent implements OnInit {
       this.currentUserProfile = users.find((u) => u.email === this.currentUser.email);
     });
 
-    this.$sortedDecisionMakers = this.applicationService.$applicationDecisionMakers.pipe(
-      map((dms) => this.transformDecisionMakers(dms))
+    this.applicationService.$applicationDecisionMakers.subscribe(
+      (dms) => (this.sortedDecisionMakers = dms.sort((x, y) => this.sortDecisionMakers(x, y)))
     );
-  }
-
-  private transformDecisionMakers(dms: ApplicationDecisionMakerDto[]) {
-    this.decisionMakers = dms
-      .map((dm) => {
-        return {
-          ...dm,
-          isFavorite: this.currentUserProfile?.settings?.favoriteBoards?.includes(dm.code),
-        };
-      })
-      .sort((x, y) => this.sortDecisionMakers(x, y));
-    return this.decisionMakers;
   }
 
   private sortDecisionMakers(x: ApplicationDecisionMakerDto, y: ApplicationDecisionMakerDto) {
@@ -115,8 +101,6 @@ export class HeaderComponent implements OnInit {
 
     try {
       await this.userService.updateUser(this.currentUserProfile);
-      await this.userService.fetchUsers();
-      this.applicationService.$applicationDecisionMakers.next(this.decisionMakers);
     } catch {
       this.toastService.showErrorToast('Failed to set favorites');
     }

@@ -1,7 +1,7 @@
 <div style="margin: 32px 8px">
   <div style="display: flex; justify-content: space-between; margin: 12px 18px">
     <div>
-      <h2>{{boardTitle}}</h2>
+      <h2><mat-icon *ngIf="boardIsFavorite" [ngClass]="{ gold: boardIsFavorite }">star</mat-icon> {{ boardTitle }}</h2>
     </div>
     <div>
       <button mat-flat-button color="primary" (click)="onCreate()">+ New Card</button>
