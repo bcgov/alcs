@@ -2,7 +2,7 @@
 
 .board-title:hover app-favorite-button {
     ::ng-deep .favorite-btn {
-    visibility: visible ;
+    visibility: visible;
     color: $pending-star ;
   }  
 }
