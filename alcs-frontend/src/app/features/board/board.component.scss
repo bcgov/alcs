@@ -1,0 +1,12 @@
+@import '../../../styles/colors';
+
+.board-title:hover app-favorite-button {
+    ::ng-deep .favorite-btn {
+    visibility: visible;
+    color: $pending-star ;
+  }  
+}
+
+.board-title app-favorite-button ::ng-deep .favorite-btn mat-icon {
+  margin-right: 2px;
+}

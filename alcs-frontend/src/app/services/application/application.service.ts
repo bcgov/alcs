@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
+import { UserDto } from '../user/user.dto';
+import { UserService } from '../user/user.service';
 import {
   ApplicationDecisionMakerDto,
   ApplicationMasterCodesDto,
@@ -16,7 +18,11 @@ import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateAp
   providedIn: 'root',
 })
 export class ApplicationService {
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(private http: HttpClient, private toastService: ToastService, private userService: UserService) {
+    this.userService.$currentUserProfile.subscribe((user) => {
+      this.fetchCodes(user);
+    });
+  }
 
   public $applications = new BehaviorSubject<ApplicationDto[]>([]);
   public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
@@ -81,7 +87,7 @@ export class ApplicationService {
     }
   }
 
-  private async fetchCodes() {
+  private async fetchCodes(currentUserProfile?: UserDto) {
     const codes = await firstValueFrom(
       this.http.get<ApplicationMasterCodesDto>(`${environment.apiRoot}/application-code`)
     );
@@ -91,7 +97,14 @@ export class ApplicationService {
     this.types = codes.type;
     this.$applicationTypes.next(this.types);
 
-    this.decisionMakers = codes.decisionMaker;
+    if (currentUserProfile) {
+      this.decisionMakers = codes.decisionMaker.map((dm) => {
+        return {
+          ...dm,
+          isFavorite: currentUserProfile.settings?.favoriteBoards?.includes(dm.code) ?? false,
+        };
+      });
+    }
     this.$applicationDecisionMakers.next(this.decisionMakers);
 
     this.regions = codes.region;

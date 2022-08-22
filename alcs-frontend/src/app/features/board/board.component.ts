@@ -20,9 +20,10 @@ export class BoardComponent implements OnInit {
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
   boardTitle = 'All Applications';
+  boardIsFavorite: boolean = false;
 
   private applicationTypes: ApplicationTypeDto[] = [];
-  private decisionMakerCode?: string;
+  decisionMakerCode?: string;
   decisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
@@ -45,6 +46,7 @@ export class BoardComponent implements OnInit {
         const decisionMaker = this.decisionMakers.find((dm) => dm.code === this.decisionMakerCode);
         if (decisionMaker) {
           this.boardTitle = decisionMaker.label;
+          this.boardIsFavorite = decisionMaker.isFavorite;
         }
       }
     });
@@ -54,6 +56,7 @@ export class BoardComponent implements OnInit {
       const decisionMaker = dms.find((dm) => dm.code === this.decisionMakerCode);
       if (decisionMaker) {
         this.boardTitle = decisionMaker.label;
+        this.boardIsFavorite = decisionMaker.isFavorite;
       }
     });
 

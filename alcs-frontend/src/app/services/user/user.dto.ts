@@ -20,4 +20,10 @@ export interface UserDto {
   idirUserName?: string;
 
   mentionLabel: string;
+
+  settings: IUserSettings;
+}
+
+export interface IUserSettings {
+  favoriteBoards: string[];
 }

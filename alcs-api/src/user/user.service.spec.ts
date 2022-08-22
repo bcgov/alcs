@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
+import { initAssigneeMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -13,17 +14,8 @@ describe('UserService', () => {
   let repositoryMock = createMock<Repository<User>>();
 
   const email = 'bruce.wayne@gotham.com';
-  const mockUser: User = {
-    email,
-    name: 'test_name',
-    displayName: 'test_displayName',
-    identityProvider: 'test_identityProvider',
-    preferredUsername: 'test_preferredUsername',
-    givenName: 'test_givenName',
-    familyName: 'test_familyName',
-    idirUserGuid: 'test_idirUserGuid',
-    idirUserName: 'test_idirUserName',
-  } as unknown as User;
+  const mockUser = initAssigneeMockEntity();
+  mockUser.email = email;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -93,7 +85,27 @@ describe('UserService', () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
       await expect(service.deleteUser(mockUser.email)).rejects.toMatchObject(
-        new Error('User not found'),
+        new Error(`User with provided email not found ${mockUser.email}`),
+      );
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should update existing user', async () => {
+      const mockUserEntity = initAssigneeMockEntity();
+      mockUserEntity.settings = { favoriteBoards: ['CEO', 'SOI'] };
+      mockUserEntity.email = 'some test email';
+
+      const result = await service.update(mockUserEntity);
+
+      expect(result).toStrictEqual(mockUserEntity);
+    });
+
+    it('should fail when user does not exist', async () => {
+      repositoryMock.findOne.mockResolvedValue(undefined);
+
+      await expect(service.update(mockUser)).rejects.toMatchObject(
+        new Error(`User not found ${mockUser}`),
       );
     });
   });

@@ -28,6 +28,7 @@ describe('CardDetailDialogComponent', () => {
     givenName: 'Dart',
     familyName: 'Placeholder',
     mentionLabel: 'DartPlaceholder',
+    settings: { favoriteBoards: [] },
   };
 
   const mockApplicationStatusDetails: ApplicationStatusDto = {

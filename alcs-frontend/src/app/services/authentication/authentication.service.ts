@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -22,7 +22,11 @@ export class AuthenticationService {
   isInitialized = false;
   currentUser!: ICurrentUser;
 
-  constructor(private http: HttpClient) {}
+  isAuthenticated = new EventEmitter<boolean>();
+
+  constructor(private http: HttpClient) {
+    this.isAuthenticated.emit(false);
+  }
 
   async setTokens(token: string, refreshToken: string) {
     this.token = token;
@@ -35,6 +39,7 @@ export class AuthenticationService {
 
     //Convert to MS for JS consistency
     this.expires = decodedToken.exp! * 1000;
+    this.isAuthenticated.emit(true);
   }
 
   clearTokens() {
