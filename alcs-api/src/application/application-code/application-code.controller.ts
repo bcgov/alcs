@@ -29,7 +29,7 @@ export class ApplicationCodeController {
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
   async getAll(): Promise<ApplicationMasterCodesDto> {
-    const appTypes = await this.codeService.getAllCodes();
+    const appTypes = await this.codeService.getAll();
 
     return {
       status: this.applicationMapper.mapArray(

@@ -6,8 +6,8 @@ import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
-import { ApplicationSubscriber } from './application.subscriber';
 import { Application } from './application.entity';
+import { ApplicationSubscriber } from './application.subscriber';
 
 describe('ApplicationSubscriber', () => {
   let applicationSubscriber: ApplicationSubscriber;
@@ -36,7 +36,7 @@ describe('ApplicationSubscriber', () => {
     mockUserService = createMock<UserService>();
     subscribersArray = [];
 
-    mockUserService.getUser.mockResolvedValue({
+    mockUserService.get.mockResolvedValue({
       uuid: 'fake-uuid',
     } as User);
     updateEvent = createMock<UpdateEvent<Application>>();
@@ -94,7 +94,7 @@ describe('ApplicationSubscriber', () => {
   });
 
   it('should throw an error if user is not found', async () => {
-    mockUserService.getUser.mockResolvedValue(undefined);
+    mockUserService.get.mockResolvedValue(undefined);
 
     await expect(
       applicationSubscriber.beforeUpdate(updateEvent),

@@ -60,7 +60,7 @@ describe('ApplicationCodeService', () => {
     mockDecisionMakerRepository.find.mockResolvedValue([]);
     mockRegionRepository.find.mockResolvedValue([]);
 
-    await service.getAllCodes();
+    await service.getAll();
 
     expect(mockTypeRepository.find).toHaveBeenCalled();
     expect(mockStatusRepository.find).toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe('ApplicationCodeService', () => {
       mockRegions as ApplicationRegion[],
     );
 
-    const res = await service.getAllCodes();
+    const res = await service.getAll();
 
     expect(res.type).toEqual(mockTypes);
     expect(res.status).toEqual(mockStatuses);

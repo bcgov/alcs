@@ -4,6 +4,7 @@ import { CommentMention } from '../comment/mention/comment-mention.entity';
 import { Base } from '../common/entities/base.entity';
 
 export class UserSettings {
+  @AutoMap()
   favoriteBoards: string[];
 }
 
@@ -12,6 +13,7 @@ export class User extends Base {
   @AutoMap()
   @Column({ unique: true })
   email: string;
+
   @AutoMap()
   @Column()
   displayName: string;

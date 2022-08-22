@@ -34,7 +34,7 @@ export class ApplicationService {
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
-  async resetApplicationStatus(
+  async resetStatus(
     sourceStatusId: string,
     targetStatusId: string,
   ): Promise<void> {
@@ -109,7 +109,7 @@ export class ApplicationService {
     });
   }
 
-  async getApplicationsNearExpiryDates(startDate: Date, endDate: Date) {
+  async getAllNearExpiryDates(startDate: Date, endDate: Date) {
     const applications = await this.applicationRepository.find({
       where: {
         createdAt: Between(startDate, endDate),
@@ -120,7 +120,7 @@ export class ApplicationService {
 
     if (applications && applications.length > 0) {
       applicationsProcessingTimes =
-        await this.applicationTimeTrackingService.fetchApplicationActiveTimes(
+        await this.applicationTimeTrackingService.fetchActiveTimes(
           applications,
         );
     }
@@ -141,13 +141,9 @@ export class ApplicationService {
     return applicationsToProcess;
   }
 
-  async mapApplicationsToDtos(
-    applications: Application[],
-  ): Promise<ApplicationDto[]> {
+  async mapToDtos(applications: Application[]): Promise<ApplicationDto[]> {
     const appTimeMap =
-      await this.applicationTimeTrackingService.fetchApplicationActiveTimes(
-        applications,
-      );
+      await this.applicationTimeTrackingService.fetchActiveTimes(applications);
 
     return applications.map((app) => ({
       ...this.applicationMapper.map(app, Application, ApplicationDto),

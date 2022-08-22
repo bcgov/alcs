@@ -65,22 +65,22 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
   it('should call listUser on the service', async () => {
-    mockService.listUsers.mockResolvedValue([mockRes]);
+    mockService.getAll.mockResolvedValue([mockRes]);
     const res = await controller.getUsers();
     expect(res).toEqual([mockRes]);
-    expect(mockService.listUsers).toHaveBeenCalled();
+    expect(mockService.getAll).toHaveBeenCalled();
   });
 
   it('should call deleteUser on the service', async () => {
-    mockService.deleteUser.mockResolvedValue(mockRes);
+    mockService.delete.mockResolvedValue(mockRes);
     const res = await controller.deleteUser('');
     expect(res).toEqual(mockRes);
-    expect(mockService.deleteUser).toHaveBeenCalled();
+    expect(mockService.delete).toHaveBeenCalled();
   });
 
   it('should call update user on the service', async () => {
     const mockUserDto = initAssigneeMockDto();
-    mockService.getUser.mockResolvedValueOnce(mockRes);
+    mockService.get.mockResolvedValueOnce(mockRes);
     mockService.update.mockResolvedValueOnce(undefined);
     request.user.entity.uuid = mockRes.uuid = mockUserDto.uuid;
 
@@ -90,7 +90,7 @@ describe('UserController', () => {
   });
 
   it('should fail on user update if user not found', async () => {
-    mockService.getUser.mockResolvedValueOnce(undefined);
+    mockService.get.mockResolvedValueOnce(undefined);
     const mockUserDto = initAssigneeMockDto();
 
     await expect(controller.update(mockUserDto, request)).rejects.toMatchObject(
@@ -100,7 +100,7 @@ describe('UserController', () => {
 
   it('should fail on user update if current user does not mach updating user', async () => {
     const mockUserDto = initAssigneeMockDto();
-    mockService.getUser.mockResolvedValueOnce(mockRes);
+    mockService.get.mockResolvedValueOnce(mockRes);
     mockService.update.mockResolvedValueOnce(undefined);
 
     await expect(controller.update(mockUserDto, request)).rejects.toMatchObject(

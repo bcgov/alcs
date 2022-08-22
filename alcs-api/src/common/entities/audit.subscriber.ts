@@ -43,7 +43,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
   }
 
   private async fetchUserUuid(userEmail: string) {
-    const user = await this.userService.getUser(userEmail);
+    const user = await this.userService.get(userEmail);
     if (!user) {
       throw new Error('User not found from token! Has their email changed?');
     }

@@ -75,9 +75,7 @@ describe('ApplicationStatusService', () => {
     applicationsStatusRepositoryMock.find.mockReturnValue([
       applicationStatusMockEntity,
     ]);
-    jest
-      .spyOn(applicationService, 'resetApplicationStatus')
-      .mockImplementation();
+    jest.spyOn(applicationService, 'resetStatus').mockImplementation();
   });
 
   it('should be defined', () => {
@@ -94,9 +92,7 @@ describe('ApplicationStatusService', () => {
   it('should delete application status', async () => {
     await applicationStatusService.delete('app_1');
 
-    expect(
-      await applicationService.resetApplicationStatus,
-    ).toHaveBeenCalledTimes(1);
+    expect(await applicationService.resetStatus).toHaveBeenCalledTimes(1);
   });
 
   it('should not fail if application status does not exist', async () => {
@@ -104,9 +100,7 @@ describe('ApplicationStatusService', () => {
 
     await applicationStatusService.delete('app_2');
 
-    expect(
-      await applicationService.resetApplicationStatus,
-    ).toHaveBeenCalledTimes(0);
+    expect(await applicationService.resetStatus).toHaveBeenCalledTimes(0);
   });
 
   it('should not delete default application status', async () => {
@@ -117,8 +111,6 @@ describe('ApplicationStatusService', () => {
     ).rejects.toMatchObject(
       new ServiceValidationException('You cannot delete default status'),
     );
-    expect(
-      await applicationService.resetApplicationStatus,
-    ).toHaveBeenCalledTimes(0);
+    expect(await applicationService.resetStatus).toHaveBeenCalledTimes(0);
   });
 });

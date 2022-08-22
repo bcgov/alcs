@@ -53,7 +53,7 @@ export class SchedulerConsumerService {
       'day',
     );
 
-    return this.applicationService.getApplicationsNearExpiryDates(
+    return this.applicationService.getAllNearExpiryDates(
       startDate.toDate(),
       endDate.toDate(),
     );

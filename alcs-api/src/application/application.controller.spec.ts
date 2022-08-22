@@ -18,10 +18,7 @@ import { ApplicationCodeService } from './application-code/application-code.serv
 import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import {
-  ApplicationTimeData,
-  ApplicationTimeTrackingService,
-} from './application-time-tracking.service';
+import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
@@ -90,9 +87,7 @@ describe('ApplicationController', () => {
       pausedDays: 0,
     });
 
-    applicationService.mapApplicationsToDtos.mockResolvedValue([
-      mockApplicationDto,
-    ]);
+    applicationService.mapToDtos.mockResolvedValue([mockApplicationDto]);
   });
 
   it('should be defined', () => {
@@ -166,7 +161,7 @@ describe('ApplicationController', () => {
       ...mockApplicationEntity,
       applicant: mockUpdate.applicant,
     } as unknown as Application);
-    applicationService.mapApplicationsToDtos.mockResolvedValue([
+    applicationService.mapToDtos.mockResolvedValue([
       {
         applicant: mockUpdate.applicant,
       } as unknown as ApplicationDto,

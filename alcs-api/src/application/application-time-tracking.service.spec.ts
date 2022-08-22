@@ -47,7 +47,7 @@ describe('ApplicationTimeTrackingService', () => {
     ]);
     mockBusinessDayService.calculateDays.mockReturnValue(activeTime);
 
-    const res = await applicationPausedService.fetchApplicationActiveTimes([
+    const res = await applicationPausedService.fetchActiveTimes([
       { uuid: fakeUuid, auditCreatedAt: Date.now() } as Application,
     ]);
 
@@ -63,7 +63,7 @@ describe('ApplicationTimeTrackingService', () => {
     applicationRepositoryMock.query.mockResolvedValue([]);
     mockBusinessDayService.calculateDays.mockReturnValue(activeTime);
 
-    const res = await applicationPausedService.fetchApplicationActiveTimes([
+    const res = await applicationPausedService.fetchActiveTimes([
       { uuid: fakeUuid, createdAt: new Date() } as Application,
     ]);
 
@@ -82,7 +82,7 @@ describe('ApplicationTimeTrackingService', () => {
       { application_uuid: fakeUuid, days: 1 } as any,
     ]);
 
-    const res = await applicationPausedService.fetchApplicationActiveTimes([
+    const res = await applicationPausedService.fetchActiveTimes([
       { uuid: fakeUuid, createdAt: new Date() } as Application,
     ]);
 
@@ -102,7 +102,7 @@ describe('ApplicationTimeTrackingService', () => {
     ]);
     mockBusinessDayService.calculateDays.mockReturnValue(activeTime);
 
-    const res = await applicationPausedService.fetchApplicationActiveTimes([
+    const res = await applicationPausedService.fetchActiveTimes([
       { uuid: fakeUuid1, auditCreatedAt: Date.now() } as Application,
       { uuid: fakeUuid2, auditCreatedAt: Date.now() } as Application,
     ]);

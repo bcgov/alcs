@@ -17,12 +17,12 @@ export class UserService {
     @InjectMapper() private userMapper: Mapper,
   ) {}
 
-  async listUsers() {
+  async getAll() {
     return this.userRepository.find();
   }
 
-  async createUser(dto: CreateOrUpdateUserDto) {
-    const existingUser = await this.getUser(dto.email);
+  async create(dto: CreateOrUpdateUserDto) {
+    const existingUser = await this.get(dto.email);
 
     if (existingUser) {
       throw new Error(`Email already exists: ${dto.email}`);
@@ -32,8 +32,8 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async deleteUser(email: string) {
-    const existingUser = await this.getUser(email);
+  async delete(email: string) {
+    const existingUser = await this.get(email);
 
     if (!existingUser) {
       throw new ServiceNotFoundException(
@@ -44,7 +44,7 @@ export class UserService {
     return this.userRepository.softRemove(existingUser);
   }
 
-  async getUser(email: string) {
+  async get(email: string) {
     return await this.userRepository.findOne({
       where: {
         email,
@@ -52,7 +52,7 @@ export class UserService {
     });
   }
 
-  async getUserByUuid(uuid: string) {
+  async getByUuid(uuid: string) {
     return await this.userRepository.findOne({
       where: {
         uuid,
@@ -61,7 +61,7 @@ export class UserService {
   }
 
   async update(user: Partial<User>) {
-    const existingUser = await this.getUserByUuid(user.uuid);
+    const existingUser = await this.getByUuid(user.uuid);
 
     if (!existingUser) {
       throw new ServiceNotFoundException(`User not found ${user}`);

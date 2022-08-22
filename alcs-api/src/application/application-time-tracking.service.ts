@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BusinessDayService } from '../providers/business-days/business-day.service';
@@ -18,9 +18,9 @@ export class ApplicationTimeTrackingService {
     private businessDayService: BusinessDayService,
   ) {}
 
-  async fetchApplicationActiveTimes(applications: Application[]) {
+  async fetchActiveTimes(applications: Application[]) {
     const appUuids = applications.map((app) => app.uuid);
-    const pausedTimes = await this.getApplicationPausedTimes(appUuids);
+    const pausedTimes = await this.getPausedTimes(appUuids);
 
     const resultMap = new Map<string, ApplicationTimeData>();
 
@@ -40,7 +40,7 @@ export class ApplicationTimeTrackingService {
     return resultMap;
   }
 
-  private async getApplicationPausedTimes(applicationUuids: string[]) {
+  private async getPausedTimes(applicationUuids: string[]) {
     const pausedTimes = (await this.applicationPausedRepository.query(
       `
         SELECT * from calculate_paused_time($1)`,

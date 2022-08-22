@@ -29,7 +29,7 @@ describe('HomeController', () => {
     controller = module.get<HomeController>(HomeController);
 
     mockApplicationService.getAll.mockResolvedValue([]);
-    mockApplicationService.mapApplicationsToDtos.mockResolvedValue([]);
+    mockApplicationService.mapToDtos.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -38,7 +38,6 @@ describe('HomeController', () => {
 
   it('should call ApplicationService with the correct filter', async () => {
     const userId = 'fake-user-id';
-    mockApplicationService.map;
     await controller.getAssignedToMe({
       user: {
         entity: {

@@ -4,8 +4,8 @@ import { ClsService } from 'nestjs-cls';
 import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
+import { AuditSubscriber, SYSTEM_ID } from './audit.subscriber';
 import { Base } from './base.entity';
-import { SYSTEM_ID, AuditSubscriber } from './audit.subscriber';
 
 describe('AuditSubscriber', () => {
   let updatedBySubscriber: AuditSubscriber;
@@ -26,7 +26,7 @@ describe('AuditSubscriber', () => {
     mockUserService = createMock<UserService>();
     subscribersArray = [];
 
-    mockUserService.getUser.mockResolvedValue({
+    mockUserService.get.mockResolvedValue({
       uuid: fakeUserId,
     } as User);
     updateEvent = createMock<UpdateEvent<any>>();
@@ -78,7 +78,7 @@ describe('AuditSubscriber', () => {
     });
 
     it('should throw an error if user is not found in beforeUpdate', async () => {
-      mockUserService.getUser.mockResolvedValue(undefined);
+      mockUserService.get.mockResolvedValue(undefined);
 
       await expect(
         updatedBySubscriber.beforeInsert(updateEvent),
@@ -108,7 +108,7 @@ describe('AuditSubscriber', () => {
     });
 
     it('should throw an error if user is not found in beforeUpdate', async () => {
-      mockUserService.getUser.mockResolvedValue(undefined);
+      mockUserService.get.mockResolvedValue(undefined);
 
       await expect(
         updatedBySubscriber.beforeUpdate(updateEvent),

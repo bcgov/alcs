@@ -32,20 +32,20 @@ export class UserController {
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
   async getUsers() {
-    const users = await this.userService.listUsers();
+    const users = await this.userService.getAll();
     return this.userMapper.mapArrayAsync(users, User, UserDto);
   }
 
   @Delete()
   @UserRoles(AUTH_ROLE.ADMIN)
   deleteUser(@Body() email: string) {
-    return this.userService.deleteUser(email);
+    return this.userService.delete(email);
   }
 
   @Patch()
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(@Body() user: CreateOrUpdateUserDto, @Req() req) {
-    const existingUser = await this.userService.getUser(user.email);
+    const existingUser = await this.userService.get(user.email);
 
     if (!existingUser) {
       throw new NotFoundException(

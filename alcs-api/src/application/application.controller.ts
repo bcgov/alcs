@@ -50,15 +50,16 @@ export class ApplicationController {
     const applications = await this.applicationService.getAll({
       decisionMaker,
     });
-    return this.applicationService.mapApplicationsToDtos(applications);
+    return this.applicationService.mapToDtos(applications);
   }
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
-    const mappedApplication =
-      await this.applicationService.mapApplicationsToDtos([application]);
+    const mappedApplication = await this.applicationService.mapToDtos([
+      application,
+    ]);
     return {
       ...mappedApplication[0],
       statusDetails: application.status,
@@ -88,9 +89,7 @@ export class ApplicationController {
       decisionMaker,
       region,
     });
-    const mappedApps = await this.applicationService.mapApplicationsToDtos([
-      app,
-    ]);
+    const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
   }
 
@@ -154,9 +153,7 @@ export class ApplicationController {
       highPriority: application.highPriority,
     });
 
-    const mappedApps = await this.applicationService.mapApplicationsToDtos([
-      app,
-    ]);
+    const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
   }
 
