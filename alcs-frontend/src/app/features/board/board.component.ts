@@ -6,6 +6,8 @@ import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
@@ -20,10 +22,11 @@ export class BoardComponent implements OnInit {
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
   boardTitle = 'All Applications';
-  boardIsFavorite: boolean | undefined;
+  boardIsFavorite?: boolean = false;
+  currentUserProfile?: UserDto;
 
   private applicationTypes: ApplicationTypeDto[] = [];
-  private decisionMakerCode?: string;
+  decisionMakerCode?: string;
   decisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
@@ -32,7 +35,8 @@ export class BoardComponent implements OnInit {
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -83,6 +87,10 @@ export class BoardComponent implements OnInit {
     if (app) {
       this.onSelected(app);
     }
+
+    this.userService.$currentUserProfile.subscribe((user) => {
+      this.currentUserProfile = user;
+    });
   }
 
   async onSelected(id: string) {

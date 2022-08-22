@@ -42,27 +42,23 @@ button.mat-menu-item:hover {
   justify-content: right;
 }
 
-.favorite-btn {
-  visibility: hidden;
-  color: #d3d3d3;
-  
-  mat-icon {
-    margin-bottom: 5px;
-  }
-}
-
-.favorite-btn.gold {
-  color: $favorite-star;
-  visibility: visible !important;
-}
-
-.board-item .favorite-btn {
-  visibility: hidden;
+div.board-item {
+  ::ng-deep .favorite-btn {
+    visibility: hidden;
+    color: $pending-star;
+    
+    mat-icon {
+      height: inherit;
+      position: relative;
+      top:4px;
+      margin: 0 2px 0 2px;
+    }
+  } 
 }
 
 .board-item:hover {
   background-color: #f8f3f3;
-  .favorite-btn  {
+  ::ng-deep .favorite-btn  {
     visibility: visible;
   }
 }

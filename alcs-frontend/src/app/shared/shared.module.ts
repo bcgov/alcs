@@ -14,10 +14,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [],
+  declarations: [FavoriteButtonComponent],
+  imports: [CommonModule, MatIconModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -35,6 +36,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     MatSnackBarModule,
     MatToolbarModule,
     MatMenuModule,
+    FavoriteButtonComponent,
   ],
 })
 export class SharedModule {}

@@ -30,15 +30,13 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.authService.isAuthenticated.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
-        this.currentUser = this.authService.getCurrentUser();
-
         this.userService.fetchUsers();
         this.applicationService.setup();
       }
     });
 
-    this.userService.$users.subscribe((users) => {
-      this.currentUserProfile = users.find((u) => u.email === this.currentUser.email);
+    this.userService.$currentUserProfile.subscribe((user) => {
+      this.currentUserProfile = user;
     });
 
     this.applicationService.$applicationDecisionMakers.subscribe(
@@ -68,41 +66,5 @@ export class HeaderComponent implements OnInit {
 
   onLogout() {
     this.authService.logout();
-  }
-
-  private updateFavoriteBoardsList(dm: ApplicationDecisionMakerDto) {
-    if (!this.currentUserProfile) {
-      return;
-    }
-
-    if (!this.currentUserProfile?.settings?.favoriteBoards) {
-      this.currentUserProfile.settings = { favoriteBoards: [] };
-    }
-
-    const favoriteBoards = [...this.currentUserProfile.settings.favoriteBoards];
-    if (favoriteBoards.includes(dm.code)) {
-      const index = favoriteBoards.indexOf(dm.code);
-      if (index > -1) {
-        favoriteBoards.splice(index, 1);
-      }
-      this.currentUserProfile.settings.favoriteBoards = favoriteBoards;
-    } else {
-      this.currentUserProfile.settings.favoriteBoards.push(dm.code);
-    }
-  }
-
-  async onFavoriteClicked(event: any, dm: ApplicationDecisionMakerDto) {
-    event.stopPropagation();
-    if (!this.currentUserProfile) {
-      return;
-    }
-
-    this.updateFavoriteBoardsList(dm);
-
-    try {
-      await this.userService.updateUser(this.currentUserProfile);
-    } catch {
-      this.toastService.showErrorToast('Failed to set favorites');
-    }
   }
 }
