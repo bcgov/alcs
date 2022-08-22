@@ -24,6 +24,7 @@ import { UserService } from './user/user.service';
 import { CommentModule } from './comment/comment.module';
 import { LogoutController } from './logout/logout.controller';
 import { HomeModule } from './home/home.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { HomeModule } from './home/home.module';
     }),
     SchedulerModule,
     HomeModule,
+    NotificationModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [

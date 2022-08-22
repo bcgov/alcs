@@ -49,12 +49,14 @@ export class CommentController {
     @Body() comment: CreateCommentDto,
     @Req() req,
   ): Promise<CommentDto> {
+    const mappedMentions = await this.mapMentions(comment);
     const newComment = await this.commentService.create(
       comment.fileNumber,
       comment.body,
       req.user.entity,
-      await this.mapMentions(comment),
+      mappedMentions,
     );
+
     return this.autoMapper.map(newComment, Comment, CommentDto);
   }
 

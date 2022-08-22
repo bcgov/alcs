@@ -20,7 +20,7 @@
             <app-favorite-button
               [dmCode]="dm.code"
               [isFavorite]="dm.isFavorite"
-              [currentUserProfile]="currentUserProfile" 
+              [currentUserProfile]="currentUserProfile"
             ></app-favorite-button>
             <button mat-menu-item>
               {{ dm.label }}
@@ -28,11 +28,8 @@
           </div>
         </mat-menu>
       </div>
-      <div class="col right">
-        <button mat-icon-button>
-          <mat-icon>notifications</mat-icon>
-        </button>
-
+      <div *ngIf="currentUserProfile" class="col right">
+        <app-notifications></app-notifications>
         <button mat-flat-button color="primary" (click)="onLogout()">
           <mat-icon>logout</mat-icon>
           Logout

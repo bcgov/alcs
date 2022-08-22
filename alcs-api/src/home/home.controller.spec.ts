@@ -41,7 +41,7 @@ describe('HomeController', () => {
     await controller.getAssignedToMe({
       user: {
         entity: {
-          id: userId,
+          uuid: userId,
         },
       },
     });

@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
@@ -37,6 +39,7 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private codeService: ApplicationCodeService,
+    private notificationService: NotificationService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -97,6 +100,7 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
     @Body() application: ApplicationUpdateDto,
+    @Req() req,
   ): Promise<ApplicationDto> {
     const existingApplication = await this.applicationService.get(
       application.fileNumber,
@@ -153,7 +157,18 @@ export class ApplicationController {
       highPriority: application.highPriority,
     });
 
-    const mappedApps = await this.applicationService.mapToDtos([app]);
+    if (app.assigneeUuid !== existingApplication.assigneeUuid) {
+      this.notificationService.createForApplication(
+        req.user.entity,
+        app.assigneeUuid,
+        "You've been assigned",
+        app,
+      );
+    }
+
+    const mappedApps = await this.applicationService.mapToDtos([
+      app,
+    ]);
     return mappedApps[0];
   }
 

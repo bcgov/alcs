@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { ApplicationDecisionMakerDto } from '../../services/application/application-code.dto';
 import { ApplicationService } from '../../services/application/application.service';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { NotificationDto } from '../../services/notification/notification.dto';
+import { NotificationService } from '../../services/notification/notification.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
@@ -15,16 +17,17 @@ import { UserService } from '../../services/user/user.service';
 })
 export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
-  currentUser!: ICurrentUser;
-  currentUserProfile!: UserDto;
+  currentUserProfile?: UserDto;
   sortedDecisionMakers: ApplicationDecisionMakerDto[] = [];
+  notifications: NotificationDto[] = [];
 
   constructor(
     private authService: AuthenticationService,
     private applicationService: ApplicationService,
     private toastService: ToastService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +35,7 @@ export class HeaderComponent implements OnInit {
       if (isAuthenticated) {
         this.userService.fetchUsers();
         this.applicationService.setup();
+        this.loadNotifications();
       }
     });
 
@@ -62,6 +66,10 @@ export class HeaderComponent implements OnInit {
 
   onSelectBoard(dmCode: string) {
     this.router.navigateByUrl(`/board/${dmCode}`);
+  }
+
+  private async loadNotifications() {
+    this.notifications = await this.notificationService.fetchMyNotifications();
   }
 
   onLogout() {

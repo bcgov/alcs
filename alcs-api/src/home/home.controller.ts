@@ -16,10 +16,14 @@ export class HomeController {
   @Get('/assigned')
   @UserRoles(...ANY_AUTH_ROLE)
   async getAssignedToMe(@Req() req): Promise<ApplicationDto[]> {
-    const userId = req.user.entity.id;
-    const applications = await this.applicationService.getAll({
-      assigneeUuid: userId,
-    });
-    return this.applicationService.mapToDtos(applications);
+    const userId = req.user.entity.uuid;
+    if (userId) {
+      const applications = await this.applicationService.getAll({
+        assigneeUuid: userId,
+      });
+      return this.applicationService.mapToDtos(applications);
+    } else {
+      return [];
+    }
   }
 }

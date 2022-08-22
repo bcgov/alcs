@@ -11,9 +11,9 @@ export interface UserDto {
 
   preferredUsername: string;
 
-  givenName: string;
+  givenName?: string;
 
-  familyName: string;
+  familyName?: string;
 
   idirUserGuid?: string;
 
