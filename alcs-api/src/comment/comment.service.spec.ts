@@ -58,7 +58,7 @@ describe('CommentService', () => {
     mockApplicationService.get.mockResolvedValue({});
     mockCommentRepository.find.mockResolvedValue([comment]);
 
-    const comments = await service.fetchComments('file-number');
+    const comments = await service.fetch('file-number');
 
     expect(mockApplicationService.get).toHaveBeenCalled();
     expect(mockCommentRepository.find).toHaveBeenCalled();

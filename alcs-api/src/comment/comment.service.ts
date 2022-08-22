@@ -19,7 +19,7 @@ export class CommentService {
     private commentMentionService: CommentMentionService,
   ) {}
 
-  async fetchComments(fileNumber: string) {
+  async fetch(fileNumber: string) {
     const application = await this.applicationService.get(fileNumber);
     return this.commentRepository.find({
       where: {

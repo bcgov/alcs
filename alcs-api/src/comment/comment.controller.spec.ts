@@ -66,7 +66,7 @@ describe('CommentController', () => {
   });
 
   it('should correctly map the author and editable fields', async () => {
-    mockCommentService.fetchComments.mockResolvedValue([comment]);
+    mockCommentService.fetch.mockResolvedValue([comment]);
 
     const comments = await controller.get('file-number', request);
 

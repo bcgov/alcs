@@ -39,7 +39,7 @@ export class CommentController {
     @Param('fileNumber') fileNumber,
     @Req() req,
   ): Promise<CommentDto[]> {
-    const comments = await this.commentService.fetchComments(fileNumber);
+    const comments = await this.commentService.fetch(fileNumber);
     return this.mapToDto(comments, req.user.entity.uuid);
   }
 
