@@ -87,10 +87,6 @@ export class BoardComponent implements OnInit {
     if (app) {
       this.onSelected(app);
     }
-
-    this.userService.$currentUserProfile.subscribe((user) => {
-      this.currentUserProfile = user;
-    });
   }
 
   async onSelected(id: string) {

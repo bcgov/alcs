@@ -101,7 +101,7 @@ export class ApplicationService {
       this.decisionMakers = codes.decisionMaker.map((dm) => {
         return {
           ...dm,
-          isFavorite: currentUserProfile.settings.favoriteBoards?.includes(dm.code),
+          isFavorite: currentUserProfile.settings?.favoriteBoards?.includes(dm.code),
         };
       });
     }

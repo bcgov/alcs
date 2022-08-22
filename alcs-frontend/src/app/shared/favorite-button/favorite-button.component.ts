@@ -12,7 +12,7 @@ export class FavoriteButtonComponent implements OnInit {
   @Input()
   currentUserProfile?: UserDto;
   @Input()
-  dmCode: string | undefined;
+  dmCode?: string;
   @Input()
   isFavorite?: boolean = false;
 
@@ -23,8 +23,7 @@ export class FavoriteButtonComponent implements OnInit {
       this.currentUserProfile = user;
 
       if (this.dmCode && this.currentUserProfile) {
-        this.isFavorite = user.settings.favoriteBoards.includes(this.dmCode);
-        console.log(this.dmCode, this.isFavorite);
+        this.isFavorite = user.settings?.favoriteBoards.includes(this.dmCode);
       }
     });
   }
@@ -38,7 +37,7 @@ export class FavoriteButtonComponent implements OnInit {
       this.currentUserProfile.settings = { favoriteBoards: [] };
     }
 
-    const favoriteBoards = [...this.currentUserProfile.settings.favoriteBoards];
+    const favoriteBoards = [...this.currentUserProfile.settings?.favoriteBoards];
     if (favoriteBoards.includes(dmCode)) {
       const index = favoriteBoards.indexOf(dmCode);
       if (index > -1) {
