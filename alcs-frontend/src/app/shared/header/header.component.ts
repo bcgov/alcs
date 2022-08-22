@@ -16,7 +16,7 @@ import { UserService } from '../../services/user/user.service';
 export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
   currentUser!: ICurrentUser;
-  currentUserProfile?: UserDto;
+  currentUserProfile!: UserDto;
   sortedDecisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
