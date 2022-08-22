@@ -3,7 +3,6 @@ import { Type } from 'class-transformer';
 import { IsDefined, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class UserSettingsDto {
-  @AutoMap()
   favoriteBoards: string[];
 }
 

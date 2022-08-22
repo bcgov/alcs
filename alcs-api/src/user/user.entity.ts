@@ -4,7 +4,6 @@ import { CommentMention } from '../comment/mention/comment-mention.entity';
 import { Base } from '../common/entities/base.entity';
 
 export class UserSettings {
-  @AutoMap()
   favoriteBoards: string[];
 }
 
