@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
@@ -15,6 +17,7 @@ export class NotificationService {
     @InjectRepository(Notification)
     private notificationRepository: Repository<Notification>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
+    @InjectMapper() private autoMapper: Mapper,
   ) {}
 
   async list(userUuid: string) {
@@ -87,23 +90,17 @@ export class NotificationService {
   }
 
   async cleanUp(olderThan: Date, read = true) {
-    const res = await this.notificationRepository.delete({
+    return await this.notificationRepository.delete({
       createdAt: LessThan(olderThan),
       read,
     });
-    return res;
   }
 
   private mapToDto(notifications: Notification[]): NotificationDto[] {
-    //TODO: Automapper
-    return notifications.map((notification) => ({
-      title: notification.title,
-      body: notification.body,
-      createdAt: notification.createdAt.getTime(),
-      targetType: notification.targetType,
-      read: notification.read,
-      link: notification.link,
-      uuid: notification.uuid,
-    }));
+    return this.autoMapper.mapArray(
+      notifications,
+      Notification,
+      NotificationDto,
+    );
   }
 }

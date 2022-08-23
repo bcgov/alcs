@@ -20,7 +20,6 @@ export class Notification {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 

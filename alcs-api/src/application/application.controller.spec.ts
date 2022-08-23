@@ -3,7 +3,6 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Not } from 'typeorm';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
