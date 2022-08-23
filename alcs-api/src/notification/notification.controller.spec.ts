@@ -1,6 +1,9 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { NotificationProfile } from '../common/automapper/notification.automapper.profile';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
@@ -14,8 +17,14 @@ describe('NotificationController', () => {
     notificationService = createMock<NotificationService>();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [NotificationController],
       providers: [
+        NotificationProfile,
         {
           provide: ClsService,
           useValue: {},
@@ -35,8 +44,13 @@ describe('NotificationController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call list for getAll', async () => {
-    notificationService.list.mockResolvedValue([]);
+  it('should map createdAt to number for getAll', async () => {
+    const date = new Date();
+    notificationService.list.mockResolvedValue([
+      {
+        createdAt: date,
+      } as Notification,
+    ]);
 
     const res = await controller.getMyNotifications({
       user: {
@@ -46,7 +60,8 @@ describe('NotificationController', () => {
       },
     });
 
-    expect(res).toEqual([]);
+    expect(res.length).toEqual(1);
+    expect(res[0].createdAt).toEqual(date.getTime());
     expect(notificationService.list).toHaveBeenCalled();
     expect(notificationService.list.mock.calls[0][0]).toEqual('fake-user');
   });

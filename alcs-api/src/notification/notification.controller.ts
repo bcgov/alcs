@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import {
   Controller,
   Get,
@@ -13,20 +15,25 @@ import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { NotificationDto } from './notification.dto';
+import { Notification } from './notification.entity';
 import { NotificationService } from './notification.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notification')
 @UseGuards(RoleGuard)
 export class NotificationController {
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    @InjectMapper() private autoMapper: Mapper,
+  ) {}
 
-  @Get('')
+  @Get()
   @UserRoles(...ANY_AUTH_ROLE)
   async getMyNotifications(@Req() req): Promise<NotificationDto[]> {
     const userId = req.user.entity.uuid;
     if (userId) {
-      return await this.notificationService.list(userId);
+      const notifications = await this.notificationService.list(userId);
+      return this.mapToDto(notifications);
     } else {
       return [];
     }
@@ -49,5 +56,13 @@ export class NotificationController {
     } else {
       throw new NotFoundException('Failed to find notification');
     }
+  }
+
+  private mapToDto(notifications: Notification[]): NotificationDto[] {
+    return this.autoMapper.mapArray(
+      notifications,
+      Notification,
+      NotificationDto,
+    );
   }
 }

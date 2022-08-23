@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
@@ -8,7 +6,6 @@ import { Application } from '../application/application.entity';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
-import { NotificationDto } from './notification.dto';
 import { Notification } from './notification.entity';
 
 @Injectable()
@@ -17,11 +14,10 @@ export class NotificationService {
     @InjectRepository(Notification)
     private notificationRepository: Repository<Notification>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
-    @InjectMapper() private autoMapper: Mapper,
   ) {}
 
   async list(userUuid: string) {
-    const notifications = await this.notificationRepository.find({
+    return await this.notificationRepository.find({
       where: {
         receiver: {
           uuid: userUuid,
@@ -31,7 +27,6 @@ export class NotificationService {
         createdAt: 'DESC',
       },
     });
-    return this.mapToDto(notifications);
   }
 
   async get(uuid: string, receiverUuid: string) {
@@ -94,13 +89,5 @@ export class NotificationService {
       createdAt: LessThan(olderThan),
       read,
     });
-  }
-
-  private mapToDto(notifications: Notification[]): NotificationDto[] {
-    return this.autoMapper.mapArray(
-      notifications,
-      Notification,
-      NotificationDto,
-    );
   }
 }

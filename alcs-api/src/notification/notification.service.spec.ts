@@ -7,7 +7,6 @@ import * as config from 'config';
 import { Repository, UpdateResult } from 'typeorm';
 import { NotificationProfile } from '../common/automapper/notification.automapper.profile';
 import { CONFIG_TOKEN } from '../common/config/config.module';
-import { NotificationDto } from './notification.dto';
 import { NotificationService } from './notification.service';
 import { Notification } from './notification.entity';
 
@@ -31,14 +30,8 @@ describe('NotificationService', () => {
     } as Notification;
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        AutomapperModule.forRoot({
-          strategyInitializer: classes(),
-        }),
-      ],
       providers: [
         NotificationService,
-        NotificationProfile,
         {
           provide: getRepositoryToken(Notification),
           useValue: mockRepository,
@@ -62,9 +55,7 @@ describe('NotificationService', () => {
 
     const notifications = await service.list('fake-user');
     expect(notifications.length).toEqual(1);
-    expect(notifications[0].createdAt).toEqual(
-      fakeNotification.createdAt.getTime(),
-    );
+    expect(notifications[0]).toEqual(fakeNotification);
   });
 
   it('should call update with correct uuid when marking read', async () => {
