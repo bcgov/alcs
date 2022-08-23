@@ -157,7 +157,10 @@ export class ApplicationController {
       highPriority: application.highPriority,
     });
 
-    if (app.assigneeUuid !== existingApplication.assigneeUuid) {
+    if (
+      app.assigneeUuid !== existingApplication.assigneeUuid &&
+      app.assigneeUuid !== req.user.entity.uuid
+    ) {
       this.notificationService.createForApplication(
         req.user.entity,
         app.assigneeUuid,
@@ -166,9 +169,7 @@ export class ApplicationController {
       );
     }
 
-    const mappedApps = await this.applicationService.mapToDtos([
-      app,
-    ]);
+    const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
   }
 

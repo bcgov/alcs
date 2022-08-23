@@ -282,4 +282,33 @@ describe('ApplicationController', () => {
       assigneeUuid: mockUserUuid,
     });
   });
+
+  it('should not call notification service when assignee is changed to user who changed it', async () => {
+    const mockUserUuid = 'fake-author';
+    const mockUpdate = {
+      fileNumber: '11',
+      assigneeUuid: mockUserUuid,
+    };
+
+    const fakeAuthor = {
+      uuid: mockUserUuid,
+    };
+
+    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.createOrUpdate.mockResolvedValue({
+      ...mockApplicationEntity,
+      assigneeUuid: mockUserUuid,
+    } as Application);
+
+    await controller.update(mockUpdate, {
+      user: {
+        entity: fakeAuthor,
+      },
+    });
+
+    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+    expect(notificationService.createForApplication).not.toHaveBeenCalled();
+    const savedData = applicationService.createOrUpdate.mock.calls[0][0];
+    expect(savedData.assigneeUuid).toEqual(mockUserUuid);
+  });
 });

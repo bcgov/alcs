@@ -19,6 +19,8 @@ export interface UserDto {
 
   idirUserName?: string;
 
+  initials: string;
+
   mentionLabel: string;
 
   settings: IUserSettings;

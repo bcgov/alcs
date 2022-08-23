@@ -10,15 +10,15 @@ import { NotificationDto } from './notification.dto';
 export class NotificationService {
   constructor(private http: HttpClient) {}
 
-  async fetchMyNotifications() {
-    return await firstValueFrom(this.http.get<NotificationDto[]>(`${environment.apiRoot}/notification`));
+  fetchMyNotifications() {
+    return firstValueFrom(this.http.get<NotificationDto[]>(`${environment.apiRoot}/notification`));
   }
 
-  async markRead(uuid: string) {
-    return await firstValueFrom(this.http.post<void>(`${environment.apiRoot}/notification/${uuid}`, {}));
+  markRead(uuid: string) {
+    return firstValueFrom(this.http.post<void>(`${environment.apiRoot}/notification/${uuid}`, {}));
   }
 
-  async markAllRead() {
-    return await firstValueFrom(this.http.post<void>(`${environment.apiRoot}/notification`, {}));
+  markAllRead() {
+    return firstValueFrom(this.http.post<void>(`${environment.apiRoot}/notification`, {}));
   }
 }
