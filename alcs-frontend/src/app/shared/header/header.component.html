@@ -7,14 +7,14 @@
         </a>
       </div>
       <div class="col right">
-        <div>
+        <div *ngIf="hasRoles">
           <a [routerLink]="homeUrl">
             <button class="menu-item">Home</button>
           </a>
         </div>
       </div>
       <div class="col">
-        <button class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
+        <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
         <mat-menu #menu="matMenu">
           <div class="board-item menu-item" *ngFor="let dm of sortedDecisionMakers" (click)="onSelectBoard(dm.code)">
             <app-favorite-button
@@ -28,8 +28,8 @@
           </div>
         </mat-menu>
       </div>
-      <div *ngIf="currentUserProfile" class="col right">
-        <app-notifications></app-notifications>
+      <div *ngIf="currentUser" class="col right">
+        <app-notifications *ngIf="hasRoles"></app-notifications>
         <button mat-flat-button color="primary" (click)="onLogout()">
           <mat-icon>logout</mat-icon>
           Logout

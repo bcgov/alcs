@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { ApplicationDecisionMakerDto } from '../../services/application/application-code.dto';
 import { ApplicationService } from '../../services/application/application.service';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { NotificationService } from '../../services/notification/notification.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -18,6 +18,8 @@ import { UserService } from '../../services/user/user.service';
 export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
   currentUserProfile?: UserDto;
+  currentUser?: ICurrentUser;
+  hasRoles = false;
   sortedDecisionMakers: ApplicationDecisionMakerDto[] = [];
   notifications: NotificationDto[] = [];
 
@@ -31,8 +33,11 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.isAuthenticated.subscribe((isAuthenticated) => {
-      if (isAuthenticated) {
+    this.authService.$currentUser.subscribe((currentUser) => {
+      this.currentUser = currentUser;
+      this.hasRoles = !!currentUser.client_roles;
+
+      if (this.hasRoles) {
         this.userService.fetchUsers();
         this.applicationService.setup();
         this.loadNotifications();
