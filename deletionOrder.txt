@@ -1,6 +1,7 @@
 migrations
 holiday_entity
 health_check
+notification
 comment_mention
 application_paused
 application_history

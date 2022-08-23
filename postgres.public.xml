@@ -248,11 +248,32 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
+      <table name="notification" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="receiver_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_b776eec36c2a6b6879c14241e91" implied="false" onDeleteCascade="false" schema="public" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="title" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="body" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="5" name="read" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="target_type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="link" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="actor_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_fc0e9a26b0a8f7c76658ca1c6ca" implied="false" onDeleteCascade="false" schema="public" table="user"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_b9fa421f94f7707ba109bf73b82" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
       <table name="user" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="assignee_uuid" foreignKey="FK_49d8a9170a71a2e7a9e386c945e" implied="false" onDeleteCascade="false" schema="public" table="application"/>
             <child column="author_uuid" foreignKey="FK_f2d86184a78b855225c1395dfd3" implied="false" onDeleteCascade="false" schema="public" table="comment"/>
             <child column="user_uuid" foreignKey="FK_15ec79570aca5e00f9c102ae1a0" implied="false" onDeleteCascade="false" schema="public" table="comment_mention"/>
+            <child column="actor_uuid" foreignKey="FK_fc0e9a26b0a8f7c76658ca1c6ca" implied="false" onDeleteCascade="false" schema="public" table="notification"/>
+            <child column="receiver_uuid" foreignKey="FK_b776eec36c2a6b6879c14241e91" implied="false" onDeleteCascade="false" schema="public" table="notification"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -270,6 +291,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="idir_user_name" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="bceid_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="bceid_user_name" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="settings" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_a95e949168be7b7ece1a2382fed" unique="true">
             <column ascending="true" name="uuid"/>

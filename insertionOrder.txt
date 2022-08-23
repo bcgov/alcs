@@ -8,6 +8,7 @@ comment
 application_history
 application_paused
 comment_mention
+notification
 health_check
 holiday_entity
 migrations
