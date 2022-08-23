@@ -23,7 +23,7 @@ export class FavoriteButtonComponent implements OnInit {
       this.currentUserProfile = user;
 
       if (this.dmCode && this.currentUserProfile) {
-        this.isFavorite = user.settings?.favoriteBoards.includes(this.dmCode);
+        this.isFavorite = user.settings?.favoriteBoards?.includes(this.dmCode);
       }
     });
   }

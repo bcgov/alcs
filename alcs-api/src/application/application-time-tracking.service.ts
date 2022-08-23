@@ -16,7 +16,7 @@ export class ApplicationTimeTrackingService {
     private applicationPausedRepository: Repository<ApplicationPaused>,
   ) {}
 
-  async fetchApplicationActiveTimes(applications: Application[]) {
+  async fetchActiveTimes(applications: Application[]) {
     const appUuids = applications.map((app) => app.uuid);
     return await this.getTimes(appUuids);
   }

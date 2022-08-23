@@ -20,7 +20,6 @@ export class ApplicationStatusService {
   ) {}
 
   async create(application: ApplicationStatusDto): Promise<ApplicationStatus> {
-    // TODO: replace with AutoMapper
     const applicationEntity = new ApplicationStatus();
     applicationEntity.code = application.code;
     applicationEntity.description = application.description;
@@ -41,7 +40,7 @@ export class ApplicationStatusService {
       return;
     }
 
-    await this.applicationService.resetApplicationStatus(
+    await this.applicationService.resetStatus(
       applicationStatus.uuid,
       defaultApplicationStatus.id,
     );

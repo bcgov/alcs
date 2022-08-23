@@ -44,14 +44,14 @@ describe('UserService', () => {
   });
 
   it('should return the users from the repository', async () => {
-    const users = await service.listUsers();
+    const users = await service.getAll();
 
     expect(users.length).toEqual(1);
     expect(users[0]).toEqual(mockUser);
   });
 
   it('should return the user by email from the repository', async () => {
-    const user = await service.getUser(mockUser.email);
+    const user = await service.get(mockUser.email);
 
     expect(user).toStrictEqual(mockUser);
   });
@@ -60,14 +60,14 @@ describe('UserService', () => {
     it('should save a user when user does not exist', async () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
-      const user = await service.createUser(mockUser);
+      const user = await service.create(mockUser);
 
       expect(user).toEqual(mockUser);
       expect(repositoryMock.save).toHaveBeenCalled();
     });
 
     it('should reject if user already exists', async () => {
-      await expect(service.createUser(mockUser)).rejects.toMatchObject(
+      await expect(service.create(mockUser)).rejects.toMatchObject(
         new Error(`Email already exists: ${mockUser.email}`),
       );
     });
@@ -75,7 +75,7 @@ describe('UserService', () => {
 
   describe('deleteUser', () => {
     it('should call delete user on the repository', async () => {
-      await service.deleteUser(mockUser.email);
+      await service.delete(mockUser.email);
 
       expect(repositoryMock.softRemove).toHaveBeenCalled();
       expect(repositoryMock.softRemove).toHaveBeenCalledWith(mockUser);
@@ -84,7 +84,7 @@ describe('UserService', () => {
     it('should reject when user does not exist', async () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
-      await expect(service.deleteUser(mockUser.email)).rejects.toMatchObject(
+      await expect(service.delete(mockUser.email)).rejects.toMatchObject(
         new Error(`User with provided email not found ${mockUser.email}`),
       );
     });

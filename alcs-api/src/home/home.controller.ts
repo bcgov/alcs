@@ -20,6 +20,6 @@ export class HomeController {
     const applications = await this.applicationService.getAll({
       assigneeUuid: userId,
     });
-    return this.applicationService.mapApplicationsToDtos(applications);
+    return this.applicationService.mapToDtos(applications);
   }
 }

@@ -82,7 +82,7 @@ export class RoleGuard implements CanActivate {
     }
 
     if (matchingRoles.length > 0) {
-      request.user.entity = await this.userService.getUser(email);
+      request.user.entity = await this.userService.get(email);
       return true;
     }
 

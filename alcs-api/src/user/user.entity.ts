@@ -12,6 +12,7 @@ export class User extends Base {
   @AutoMap()
   @Column({ unique: true })
   email: string;
+
   @AutoMap()
   @Column()
   displayName: string;

@@ -43,7 +43,7 @@ describe('ApplicationTimeTrackingService', () => {
       } as any,
     ]);
 
-    const res = await applicationPausedService.fetchApplicationActiveTimes([
+    const res = await applicationPausedService.fetchActiveTimes([
       { uuid: fakeUuid, auditCreatedAt: Date.now() } as Application,
     ]);
 
