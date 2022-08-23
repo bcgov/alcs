@@ -1,6 +1,6 @@
 
 BEGIN;
--- preapre pgtap 
+-- prepare pgtap
 SELECT * from plan(8);
 
 SELECT has_table('application_status');
