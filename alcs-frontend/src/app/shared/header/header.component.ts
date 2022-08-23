@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
   currentUserProfile?: UserDto;
   currentUser?: ICurrentUser;
+  hasRoles = false;
   sortedDecisionMakers: ApplicationDecisionMakerDto[] = [];
   notifications: NotificationDto[] = [];
 
@@ -33,8 +34,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.$currentUser.subscribe((currentUser) => {
-      if (currentUser && !!currentUser.client_roles) {
-        this.currentUser = currentUser;
+      this.currentUser = currentUser;
+      this.hasRoles = !!currentUser.client_roles;
+
+      if (this.hasRoles) {
         this.userService.fetchUsers();
         this.applicationService.setup();
         this.loadNotifications();
