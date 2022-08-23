@@ -42,10 +42,7 @@ describe('AuthorizationController', () => {
 
     controller = module.get<AuthorizationController>(AuthorizationController);
 
-    mockService.exchangeCodeForToken.mockResolvedValue({
-      token: mockToken,
-      roles: [AUTH_ROLE.LUP],
-    });
+    mockService.exchangeCodeForToken.mockResolvedValue(mockToken);
     mockService.refreshToken.mockResolvedValue(mockToken);
   });
 
@@ -62,23 +59,6 @@ describe('AuthorizationController', () => {
     expect(res.status).toHaveBeenCalledWith(302);
     expect(res.redirect).toHaveBeenCalledWith(
       `${frontEndUrl}/authorized?t=${fakeToken}&r=${fakeRefreshToken}`,
-    );
-  });
-
-  it('should set noroles flag when user has no roles', async () => {
-    mockService.exchangeCodeForToken.mockResolvedValue({
-      token: mockToken,
-      roles: [],
-    });
-
-    const res = createMock<FastifyReply>();
-    await controller.handleAuth('code', res);
-
-    const frontEndUrl = config.get('FRONTEND_ROOT');
-
-    expect(res.status).toHaveBeenCalledWith(302);
-    expect(res.redirect).toHaveBeenCalledWith(
-      `${frontEndUrl}/authorized?t=${fakeToken}&r=${fakeRefreshToken}&noroles=true`,
     );
   });
 

@@ -101,10 +101,7 @@ export class AuthorizationService {
 
       this.registerUser(decodedToken);
 
-      return {
-        token: res.data,
-        roles: decodedToken.client_roles,
-      };
+      return res.data;
     } else {
       throw new UnauthorizedException();
     }

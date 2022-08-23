@@ -7,14 +7,14 @@
         </a>
       </div>
       <div class="col right">
-        <div>
+        <div *ngIf="currentUser">
           <a [routerLink]="homeUrl">
             <button class="menu-item">Home</button>
           </a>
         </div>
       </div>
       <div class="col">
-        <button class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
+        <button  *ngIf="currentUser" class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
         <mat-menu #menu="matMenu">
           <div class="board-item menu-item" *ngFor="let dm of sortedDecisionMakers" (click)="onSelectBoard(dm.code)">
             <app-favorite-button

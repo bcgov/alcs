@@ -71,7 +71,7 @@ describe('AuthorizationService', () => {
   });
 
   it('should call out to keycloak when exchanging a code for token', async () => {
-    const { token } = await service.exchangeCodeForToken('fake-code');
+    const token = await service.exchangeCodeForToken('fake-code');
 
     expect(token).toEqual({ id_token: fakeToken });
     expect(mockHttpService.post).toHaveBeenCalled();

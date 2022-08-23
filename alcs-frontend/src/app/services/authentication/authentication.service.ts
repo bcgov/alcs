@@ -10,6 +10,7 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
 export interface ICurrentUser {
   name: string;
   email: string;
+  client_roles?: string[];
 }
 
 @Injectable({
@@ -19,13 +20,13 @@ export class AuthenticationService {
   private token: string | undefined;
   private refreshToken: string | undefined;
   private expires: number | undefined;
-  isInitialized = false;
-  currentUser!: ICurrentUser;
 
-  isAuthenticated = new EventEmitter<boolean>();
+  isInitialized = false;
+  $currentUser = new EventEmitter<ICurrentUser>();
+  currentUser: ICurrentUser | undefined;
 
   constructor(private http: HttpClient) {
-    this.isAuthenticated.emit(false);
+    this.$currentUser.emit(undefined);
   }
 
   async setTokens(token: string, refreshToken: string) {
@@ -39,7 +40,7 @@ export class AuthenticationService {
 
     //Convert to MS for JS consistency
     this.expires = decodedToken.exp! * 1000;
-    this.isAuthenticated.emit(true);
+    this.$currentUser.emit(this.currentUser);
   }
 
   clearTokens() {
