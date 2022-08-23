@@ -28,6 +28,7 @@ describe('CardDetailDialogComponent', () => {
     givenName: 'Dart',
     familyName: 'Placeholder',
     mentionLabel: 'DartPlaceholder',
+    initials: 'DP',
     settings: { favoriteBoards: [] },
   };
 

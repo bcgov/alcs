@@ -1,18 +1,20 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { CommentProfile } from '../common/automapper/comment.automapper.profile';
 import { initCommentMock } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { NotificationService } from '../notification/notification.service';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 
 describe('CommentController', () => {
   let controller: CommentController;
-  let mockCommentService;
+  let mockCommentService: DeepMocked<CommentService>;
+  let mockNotificationService: DeepMocked<NotificationService>;
 
   let comment;
   let user;
@@ -21,6 +23,7 @@ describe('CommentController', () => {
 
   beforeEach(async () => {
     mockCommentService = createMock<CommentService>();
+    mockNotificationService = createMock<NotificationService>();
 
     user = {
       name: 'Bruce Wayne',
@@ -37,6 +40,8 @@ describe('CommentController', () => {
 
     comment = initCommentMock(user);
 
+    mockNotificationService.createForApplication.mockResolvedValue();
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         AutomapperModule.forRoot({
@@ -48,6 +53,10 @@ describe('CommentController', () => {
         {
           provide: CommentService,
           useValue: mockCommentService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
         },
         {
           provide: ClsService,

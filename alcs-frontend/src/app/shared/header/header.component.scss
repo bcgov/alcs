@@ -1,5 +1,13 @@
 @import '../../../styles/colors';
 
+.menu-items-container {
+  width: 100%;
+  .menu-item:hover {
+    background: rgb(244, 238, 238);
+    border-radius: 8px;
+  }
+}
+
 .menu-item {
   border: none;
   background: inherit;
@@ -30,7 +38,7 @@ button.mat-menu-item:hover {
 .flex-grid {
   display: flex;
   justify-content: space-between;
- 
+
   .col {
     width: 80%;
   }
@@ -38,7 +46,7 @@ button.mat-menu-item:hover {
 
 .right {
   display: flex;
-  align-items: right;
+  align-items: flex-end;
   justify-content: right;
 }
 
@@ -46,19 +54,19 @@ div.board-item {
   ::ng-deep .favorite-btn {
     visibility: hidden;
     color: $pending-star;
-    
+
     mat-icon {
       height: inherit;
       position: relative;
-      top:4px;
+      top: 4px;
       margin: 0 2px 0 2px;
     }
-  } 
+  }
 }
 
 .board-item:hover {
   background-color: #f8f3f3;
-  ::ng-deep .favorite-btn  {
+  ::ng-deep .favorite-btn {
     visibility: visible;
   }
 }

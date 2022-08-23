@@ -1,0 +1,30 @@
+<button mat-icon-button [matMenuTriggerFor]="notificationMenu">
+  <mat-icon
+    [ngClass]="{
+      'unread-notifications': hasUnread
+    }"
+    >notifications</mat-icon
+  >
+</button>
+<mat-menu #notificationMenu="matMenu">
+  <div class="notifications-header">
+    <div class="subheading2">Notifications</div>
+    <div class="notifications-header-menu">
+      <div>{{ unreadCount }} Unread</div>
+      <button class="unread-button" mat-flat-button (click)="onMarkAllRead($event)">Mark all as read</button>
+    </div>
+  </div>
+
+  <button
+    mat-button
+    class="notification"
+    [ngClass]="{ unread: !notification.read }"
+    *ngFor="let notification of formattedNotifications"
+    (click)="onSelectNotification(notification)"
+  >
+    <div class="header">{{ notification.title }}</div>
+    <div class="body">{{ notification.body }}</div>
+    <div class="date">{{ notification.createdAt }}</div>
+  </button>
+  <div class="no-notifications" *ngIf="formattedNotifications.length === 0">No notifications</div>
+</mat-menu>

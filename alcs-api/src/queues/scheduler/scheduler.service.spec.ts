@@ -2,16 +2,29 @@ import { BullModule, getQueueToken } from '@nestjs/bull';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '../../common/config/config.module';
 import { BullConfigService } from '../bullConfig.service';
-import { SchedulerService } from './scheduler.service';
+import {
+  EVERYDAY_MIDNIGHT,
+  MONDAY_TO_FRIDAY_AT_2AM,
+  QUEUES,
+  SchedulerService,
+} from './scheduler.service';
 
 describe('SchedulerService', () => {
   let schedulerService: SchedulerService;
-  let mockQueue;
+  let mockAppExpiryQueue;
+  let mockNotificationCleanUpQueue;
 
   beforeEach(async () => {
-    mockQueue = {
+    mockAppExpiryQueue = {
       add: jest.fn(),
       process: jest.fn(),
+      empty: jest.fn(),
+    };
+
+    mockNotificationCleanUpQueue = {
+      add: jest.fn(),
+      process: jest.fn(),
+      empty: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -20,15 +33,20 @@ describe('SchedulerService', () => {
         BullModule.forRootAsync({
           useClass: BullConfigService,
         }),
-        BullModule.registerQueue({
-          name: 'SchedulerQueue',
-        }),
       ],
-      providers: [SchedulerService, BullConfigService],
-    })
-      .overrideProvider(getQueueToken('SchedulerQueue'))
-      .useValue(mockQueue)
-      .compile();
+      providers: [
+        SchedulerService,
+        BullConfigService,
+        {
+          provide: getQueueToken(QUEUES.APP_EXPIRY),
+          useValue: mockAppExpiryQueue,
+        },
+        {
+          provide: getQueueToken(QUEUES.CLEANUP_NOTIFICATIONS),
+          useValue: mockNotificationCleanUpQueue,
+        },
+      ],
+    }).compile();
 
     schedulerService = module.get<SchedulerService>(SchedulerService);
   });
@@ -37,12 +55,23 @@ describe('SchedulerService', () => {
     expect(schedulerService).toBeDefined();
   });
 
-  it('should call add once on scheduleApplicationExpiry', () => {
-    schedulerService.scheduleApplicationExpiry();
-    expect(mockQueue.add).toBeCalledTimes(1);
-    expect(mockQueue.add).toBeCalledWith(
+  it('should call add for scheduleApplicationExpiry', async () => {
+    await schedulerService.setup();
+    expect(mockAppExpiryQueue.empty).toBeCalledTimes(1);
+    expect(mockAppExpiryQueue.add).toBeCalledTimes(1);
+    expect(mockAppExpiryQueue.add).toBeCalledWith(
       {},
-      { repeat: { cron: '0 0 2 * * 1-5' } },
+      { repeat: { cron: MONDAY_TO_FRIDAY_AT_2AM } },
+    );
+  });
+
+  it('should call add for notification cleanup', async () => {
+    await schedulerService.setup();
+    expect(mockNotificationCleanUpQueue.empty).toBeCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.add).toBeCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.add).toBeCalledWith(
+      {},
+      { repeat: { cron: EVERYDAY_MIDNIGHT } },
     );
   });
 });
