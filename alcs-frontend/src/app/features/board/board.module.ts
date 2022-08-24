@@ -18,7 +18,7 @@ import { CreateCardDialogComponent } from './create-card-detail-dialog/create-ca
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':dmCode',
     component: BoardComponent,
   },
 ];

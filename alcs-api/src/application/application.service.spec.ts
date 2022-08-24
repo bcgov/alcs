@@ -1,3 +1,5 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -7,6 +9,7 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
+import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import {
   ApplicationTimeData,
@@ -25,6 +28,11 @@ describe('ApplicationService', () => {
     mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ApplicationService,
         {
@@ -57,14 +65,17 @@ describe('ApplicationService', () => {
   });
 
   it('should getall applications', async () => {
-    expect(await applicationService.getAll()).toStrictEqual([
+    expect(await applicationService.getAll({})).toStrictEqual([
       applicationMockEntity,
     ]);
   });
 
-  it('should getall applications by status', async () => {
+  it('should getall applications by decision maker', async () => {
+    const mockDecisionMaker = createMock<ApplicationDecisionMaker>();
     expect(
-      await applicationService.getAll([applicationMockEntity.statusUuid]),
+      await applicationService.getAll({
+        decisionMaker: mockDecisionMaker,
+      }),
     ).toStrictEqual([applicationMockEntity]);
   });
 
@@ -73,14 +84,14 @@ describe('ApplicationService', () => {
     expect(applicationService.delete).toBeDefined();
   });
 
-  it('should call update when resetApplicationStatus is performed', async () => {
+  it('should call update when resetStatus is performed', async () => {
     const targetStatusId = 'app_st_2';
     jest
       .spyOn(applicationService, 'getAll')
       .mockImplementation(async () => [applicationMockEntity]);
     jest.spyOn(applicationService, 'createOrUpdate').mockImplementation();
 
-    await applicationService.resetApplicationStatus(
+    await applicationService.resetStatus(
       applicationMockEntity.statusUuid,
       targetStatusId,
     );
@@ -142,19 +153,17 @@ describe('ApplicationService', () => {
       pausedDays: 50,
     });
 
-    mockApplicationTimeService.fetchApplicationActiveTimes.mockResolvedValue(
+    mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(
       mockApplicationTimeMap,
     );
 
-    const result = await applicationService.getApplicationsNearExpiryDates(
+    const result = await applicationService.getAllNearExpiryDates(
       new Date(10, 5),
       new Date(11, 6),
     );
 
     expect(result).toStrictEqual([applicationMockEntity]);
-    expect(
-      mockApplicationTimeService.fetchApplicationActiveTimes,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationTimeService.fetchActiveTimes).toBeCalledTimes(1);
   });
 
   it('should not return applications near expiry', async () => {
@@ -162,18 +171,16 @@ describe('ApplicationService', () => {
 
     applicationRepositoryMock.find.mockReturnValue([applicationMockEntity]);
 
-    mockApplicationTimeService.fetchApplicationActiveTimes.mockResolvedValue(
+    mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(
       new Map<string, ApplicationTimeData>(),
     );
 
-    const result = await applicationService.getApplicationsNearExpiryDates(
+    const result = await applicationService.getAllNearExpiryDates(
       new Date(10, 5),
       new Date(11, 6),
     );
 
     expect(result).toStrictEqual([]);
-    expect(
-      mockApplicationTimeService.fetchApplicationActiveTimes,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationTimeService.fetchActiveTimes).toBeCalledTimes(1);
   });
 });

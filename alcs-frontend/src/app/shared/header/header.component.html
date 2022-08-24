@@ -1,6 +1,40 @@
-<header>
-  <h1>ALCS - Permit Tracking System</h1>
-  <div class="right">
-    <button mat-flat-button color="primary" (click)="onLogout()">Logout</button>
+<header style="border-bottom: 1px solid">
+  <div class="flex-grid">
+    <mat-toolbar>
+      <div class="col">
+        <a class="logo" [routerLink]="homeUrl">
+          <img alt="ALCS - Permit Tracking System" src="/assets/images/ALC-logo.svg" />
+        </a>
+      </div>
+      <div class="col right">
+        <div *ngIf="hasRoles">
+          <a [routerLink]="homeUrl">
+            <button class="menu-item">Home</button>
+          </a>
+        </div>
+      </div>
+      <div class="col">
+        <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
+        <mat-menu #menu="matMenu">
+          <div class="board-item menu-item" *ngFor="let dm of sortedDecisionMakers" (click)="onSelectBoard(dm.code)">
+            <app-favorite-button
+              [dmCode]="dm.code"
+              [isFavorite]="dm.isFavorite"
+              [currentUserProfile]="currentUserProfile"
+            ></app-favorite-button>
+            <button mat-menu-item>
+              {{ dm.label }}
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+      <div *ngIf="currentUser" class="col right">
+        <app-notifications *ngIf="hasRoles"></app-notifications>
+        <button mat-flat-button color="primary" (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </div>
+    </mat-toolbar>
   </div>
 </header>

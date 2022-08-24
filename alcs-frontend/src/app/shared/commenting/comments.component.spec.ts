@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommentService } from '../../services/comment/comment.service';
 import { CommentsComponent } from './comments.component';
 
@@ -16,7 +17,7 @@ describe('CommentsComponent', () => {
         },
       ],
       declarations: [CommentsComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, MatSnackBarModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CommentsComponent);

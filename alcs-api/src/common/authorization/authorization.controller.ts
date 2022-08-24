@@ -17,21 +17,16 @@ export class AuthorizationController {
   @Public()
   async handleAuth(@Query('code') authCode: string, @Res() res: FastifyReply) {
     try {
-      const { token, roles } =
-        await this.authorizationService.exchangeCodeForToken(authCode);
+      const token = await this.authorizationService.exchangeCodeForToken(
+        authCode,
+      );
 
       const frontEndUrl = this.config.get('FRONTEND_ROOT');
 
       res.status(302);
-      if (roles && roles.length > 0) {
-        res.redirect(
-          `${frontEndUrl}/authorized?t=${token.access_token}&r=${token.refresh_token}`,
-        );
-      } else {
-        res.redirect(
-          `${frontEndUrl}/authorized?t=${token.access_token}&r=${token.refresh_token}&noroles=true`,
-        );
-      }
+      res.redirect(
+        `${frontEndUrl}/authorized?t=${token.access_token}&r=${token.refresh_token}`,
+      );
     } catch (e) {
       console.log(e);
     }

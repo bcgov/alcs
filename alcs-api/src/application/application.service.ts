@@ -1,10 +1,14 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, In, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
+import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
+import { ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -27,9 +31,10 @@ export class ApplicationService {
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
+    @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
-  async resetApplicationStatus(
+  async resetStatus(
     sourceStatusId: string,
     targetStatusId: string,
   ): Promise<void> {
@@ -74,10 +79,19 @@ export class ApplicationService {
     return;
   }
 
-  async getAll(statusIds?: string[]): Promise<Application[]> {
-    let whereClause = {};
-    if (statusIds && statusIds.length > 0) {
-      whereClause = { statusId: In(statusIds) };
+  async getAll({
+    decisionMaker,
+    assigneeUuid,
+  }: {
+    decisionMaker?: ApplicationDecisionMaker;
+    assigneeUuid?: string;
+  }): Promise<Application[]> {
+    const whereClause: FindOptionsWhere<Application> = {};
+    if (decisionMaker) {
+      whereClause.decisionMakerUuid = decisionMaker.uuid;
+    }
+    if (assigneeUuid) {
+      whereClause.assigneeUuid = assigneeUuid;
     }
 
     return await this.applicationRepository.find({
@@ -95,7 +109,7 @@ export class ApplicationService {
     });
   }
 
-  async getApplicationsNearExpiryDates(startDate: Date, endDate: Date) {
+  async getAllNearExpiryDates(startDate: Date, endDate: Date) {
     const applications = await this.applicationRepository.find({
       where: {
         createdAt: Between(startDate, endDate),
@@ -106,7 +120,7 @@ export class ApplicationService {
 
     if (applications && applications.length > 0) {
       applicationsProcessingTimes =
-        await this.applicationTimeTrackingService.fetchApplicationActiveTimes(
+        await this.applicationTimeTrackingService.fetchActiveTimes(
           applications,
         );
     }
@@ -125,5 +139,16 @@ export class ApplicationService {
     });
 
     return applicationsToProcess;
+  }
+
+  async mapToDtos(applications: Application[]): Promise<ApplicationDto[]> {
+    const appTimeMap =
+      await this.applicationTimeTrackingService.fetchActiveTimes(applications);
+
+    return applications.map((app) => ({
+      ...this.applicationMapper.map(app, Application, ApplicationDto),
+      activeDays: appTimeMap.get(app.uuid).activeDays || 0,
+      pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
+    }));
   }
 }

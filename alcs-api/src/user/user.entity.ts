@@ -3,11 +3,16 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { CommentMention } from '../comment/mention/comment-mention.entity';
 import { Base } from '../common/entities/base.entity';
 
+export class UserSettings {
+  favoriteBoards: string[];
+}
+
 @Entity()
 export class User extends Base {
   @AutoMap()
   @Column({ unique: true })
   email: string;
+
   @AutoMap()
   @Column()
   displayName: string;
@@ -47,6 +52,10 @@ export class User extends Base {
   @AutoMap()
   @Column({ nullable: true })
   bceidUserName: string;
+
+  @AutoMap()
+  @Column({ type: 'jsonb', nullable: true })
+  settings: UserSettings;
 
   @AutoMap()
   @OneToMany(() => CommentMention, (mention) => mention.user)

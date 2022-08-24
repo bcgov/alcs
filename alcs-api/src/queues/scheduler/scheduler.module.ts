@@ -1,10 +1,12 @@
 import { BullModule } from '@nestjs/bull';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ApplicationModule } from '../../application/application.module';
+import { NotificationModule } from '../../notification/notification.module';
 import { EmailModule } from '../../providers/email/email.module';
 import { BullConfigService } from '../bullConfig.service';
-import { SchedulerConsumerService } from './scheduler.consumer.service';
-import { SchedulerService } from './scheduler.service';
+import { ApplicationExpiryConsumer } from './applicationExpiry.consumer';
+import { CleanUpNotificationsConsumer } from './cleanUpNotifications.consumer';
+import { QUEUES, SchedulerService } from './scheduler.service';
 
 @Module({
   imports: [
@@ -12,17 +14,25 @@ import { SchedulerService } from './scheduler.service';
       useClass: BullConfigService,
     }),
     BullModule.registerQueue({
-      name: 'SchedulerQueue',
+      name: QUEUES.APP_EXPIRY,
+    }),
+    BullModule.registerQueue({
+      name: QUEUES.CLEANUP_NOTIFICATIONS,
     }),
     EmailModule,
     ApplicationModule,
+    NotificationModule,
   ],
-  providers: [SchedulerService, SchedulerConsumerService],
+  providers: [
+    SchedulerService,
+    ApplicationExpiryConsumer,
+    CleanUpNotificationsConsumer,
+  ],
   exports: [SchedulerService],
 })
 export class SchedulerModule implements OnApplicationBootstrap {
   async onApplicationBootstrap() {
-    this.schedulerService.scheduleApplicationExpiry();
+    await this.schedulerService.setup();
   }
 
   constructor(private schedulerService: SchedulerService) {}

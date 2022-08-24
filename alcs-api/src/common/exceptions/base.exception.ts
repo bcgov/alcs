@@ -23,3 +23,9 @@ export class ServiceValidationException extends BaseServiceException {
     super(error, HttpStatus.BAD_REQUEST);
   }
 }
+
+export class ServiceNotFoundException extends BaseServiceException {
+  constructor(error: string | Record<string, any>) {
+    super(error, HttpStatus.NOT_FOUND);
+  }
+}

@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
+import { initAssigneeMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -13,17 +14,8 @@ describe('UserService', () => {
   let repositoryMock = createMock<Repository<User>>();
 
   const email = 'bruce.wayne@gotham.com';
-  const mockUser: User = {
-    email,
-    name: 'test_name',
-    displayName: 'test_displayName',
-    identityProvider: 'test_identityProvider',
-    preferredUsername: 'test_preferredUsername',
-    givenName: 'test_givenName',
-    familyName: 'test_familyName',
-    idirUserGuid: 'test_idirUserGuid',
-    idirUserName: 'test_idirUserName',
-  } as unknown as User;
+  const mockUser = initAssigneeMockEntity();
+  mockUser.email = email;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -52,14 +44,14 @@ describe('UserService', () => {
   });
 
   it('should return the users from the repository', async () => {
-    const users = await service.listUsers();
+    const users = await service.getAll();
 
     expect(users.length).toEqual(1);
     expect(users[0]).toEqual(mockUser);
   });
 
   it('should return the user by email from the repository', async () => {
-    const user = await service.getUser(mockUser.email);
+    const user = await service.get(mockUser.email);
 
     expect(user).toStrictEqual(mockUser);
   });
@@ -68,14 +60,14 @@ describe('UserService', () => {
     it('should save a user when user does not exist', async () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
-      const user = await service.createUser(mockUser);
+      const user = await service.create(mockUser);
 
       expect(user).toEqual(mockUser);
       expect(repositoryMock.save).toHaveBeenCalled();
     });
 
     it('should reject if user already exists', async () => {
-      await expect(service.createUser(mockUser)).rejects.toMatchObject(
+      await expect(service.create(mockUser)).rejects.toMatchObject(
         new Error(`Email already exists: ${mockUser.email}`),
       );
     });
@@ -83,7 +75,7 @@ describe('UserService', () => {
 
   describe('deleteUser', () => {
     it('should call delete user on the repository', async () => {
-      await service.deleteUser(mockUser.email);
+      await service.delete(mockUser.email);
 
       expect(repositoryMock.softRemove).toHaveBeenCalled();
       expect(repositoryMock.softRemove).toHaveBeenCalledWith(mockUser);
@@ -92,8 +84,28 @@ describe('UserService', () => {
     it('should reject when user does not exist', async () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
-      await expect(service.deleteUser(mockUser.email)).rejects.toMatchObject(
-        new Error('User not found'),
+      await expect(service.delete(mockUser.email)).rejects.toMatchObject(
+        new Error(`User with provided email not found ${mockUser.email}`),
+      );
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should update existing user', async () => {
+      const mockUserEntity = initAssigneeMockEntity();
+      mockUserEntity.settings = { favoriteBoards: ['CEO', 'SOI'] };
+      mockUserEntity.email = 'some test email';
+
+      const result = await service.update(mockUserEntity);
+
+      expect(result).toStrictEqual(mockUserEntity);
+    });
+
+    it('should fail when user does not exist', async () => {
+      repositoryMock.findOne.mockResolvedValue(undefined);
+
+      await expect(service.update(mockUser)).rejects.toMatchObject(
+        new Error(`User not found ${mockUser}`),
       );
     });
   });

@@ -1,7 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEmail, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDefined, IsEmail, IsOptional, IsString } from 'class-validator';
+
+export class UserSettingsDto {
+  favoriteBoards: string[];
+}
 
 export class CreateOrUpdateUserDto {
+  @AutoMap()
+  @IsOptional()
+  uuid?: string;
+
   @AutoMap()
   @IsEmail()
   email: string;
@@ -40,18 +49,21 @@ export class CreateOrUpdateUserDto {
 
   @AutoMap()
   @IsString()
+  @IsOptional()
   bceidGuid?: string;
 
   @AutoMap()
   @IsString()
+  @IsOptional()
   bceidUserName?: string;
+
+  @AutoMap()
+  @Type(() => UserSettingsDto)
+  @IsDefined()
+  settings?: UserSettingsDto;
 }
 
 export class UserDto extends CreateOrUpdateUserDto {
-  @AutoMap()
-  @IsString()
-  uuid: string;
-
   @AutoMap()
   @IsString()
   initials?: string;

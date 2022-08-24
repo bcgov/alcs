@@ -28,6 +28,8 @@ describe('CardDetailDialogComponent', () => {
     givenName: 'Dart',
     familyName: 'Placeholder',
     mentionLabel: 'DartPlaceholder',
+    initials: 'DP',
+    settings: { favoriteBoards: [] },
   };
 
   const mockApplicationStatusDetails: ApplicationStatusDto = {
@@ -57,6 +59,7 @@ describe('CardDetailDialogComponent', () => {
     pausedDays: 5,
     paused: true,
     highPriority: false,
+    decisionMaker: 'dm',
   };
 
   beforeEach(async () => {

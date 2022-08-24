@@ -1,5 +1,72 @@
-header {
-  margin: 12px;
+@import '../../../styles/colors';
+
+.menu-items-container {
+  width: 100%;
+  .menu-item:hover {
+    background: rgb(244, 238, 238);
+    border-radius: 8px;
+  }
+}
+
+.menu-item {
+  border: none;
+  background: inherit;
+  cursor: pointer;
+}
+
+button.mat-menu-item {
+  width: auto;
+  display: inline-block;
+  padding-left: 0px !important;
+}
+
+button.mat-menu-item:hover {
+  background-color: inherit;
+}
+
+.logo {
+  display: inline-block;
+  width: 100px;
+  padding: 10px 4px 4px 4px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.flex-grid {
   display: flex;
   justify-content: space-between;
+
+  .col {
+    width: 80%;
+  }
+}
+
+.right {
+  display: flex;
+  align-items: flex-end;
+  justify-content: right;
+}
+
+div.board-item {
+  ::ng-deep .favorite-btn {
+    visibility: hidden;
+    color: $pending-star;
+
+    mat-icon {
+      height: inherit;
+      position: relative;
+      top: 4px;
+      margin: 0 2px 0 2px;
+    }
+  }
+}
+
+.board-item:hover {
+  background-color: #f8f3f3;
+  ::ng-deep .favorite-btn {
+    visibility: visible;
+  }
 }

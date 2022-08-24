@@ -11,13 +11,21 @@ export interface UserDto {
 
   preferredUsername: string;
 
-  givenName: string;
+  givenName?: string;
 
-  familyName: string;
+  familyName?: string;
 
   idirUserGuid?: string;
 
   idirUserName?: string;
 
+  initials: string;
+
   mentionLabel: string;
+
+  settings: IUserSettings;
+}
+
+export interface IUserSettings {
+  favoriteBoards: string[];
 }

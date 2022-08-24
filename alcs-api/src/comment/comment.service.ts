@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
 import { CommentMention } from './mention/comment-mention.entity';
@@ -17,9 +17,10 @@ export class CommentService {
     private commentRepository: Repository<Comment>,
     private applicationService: ApplicationService,
     private commentMentionService: CommentMentionService,
+    private notificationService: NotificationService,
   ) {}
 
-  async fetchComments(fileNumber: string) {
+  async fetch(fileNumber: string) {
     const application = await this.applicationService.get(fileNumber);
     return this.commentRepository.find({
       where: {
@@ -59,7 +60,7 @@ export class CommentService {
     });
 
     const createComment = await this.commentRepository.save(comment);
-    await this.processMentions(mentions, comment, application);
+    await this.processMentions(mentions, comment);
 
     return createComment;
   }
@@ -93,26 +94,21 @@ export class CommentService {
     comment.body = body;
 
     await this.commentRepository.save(comment);
-
     await this.processMentions(mentions, comment);
 
     return;
   }
 
-  private async processMentions(
-    mentions: CommentMention[],
-    comment: Comment,
-    application?: Application,
-  ) {
-    const applicationEntity =
-      application ??
-      (await this.applicationService.get(comment.application.fileNumber));
-
+  private async processMentions(mentions: CommentMention[], comment: Comment) {
     await this.commentMentionService.updateMentions(comment.uuid, mentions);
 
-    await this.commentMentionService.notifyRecipients(
-      comment,
-      applicationEntity,
-    );
+    mentions.forEach((mention) => {
+      this.notificationService.createForApplication(
+        comment.author,
+        mention.userUuid,
+        `${comment.author.name} mentioned you in a comment`,
+        comment.application,
+      );
+    });
   }
 }

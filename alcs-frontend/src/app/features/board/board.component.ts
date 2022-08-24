@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -17,10 +17,14 @@ import { CreateCardDialogComponent } from './create-card-detail-dialog/create-ca
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit {
-  public cards: CardData[] = [];
-  public columns: DragDropColumn[] = [];
+  cards: CardData[] = [];
+  columns: DragDropColumn[] = [];
+  boardTitle = 'All Applications';
+  boardIsFavorite: boolean = false;
 
   private applicationTypes: ApplicationTypeDto[] = [];
+  decisionMakerCode?: string;
+  decisionMakers: ApplicationDecisionMakerDto[] = [];
 
   constructor(
     private applicationService: ApplicationService,
@@ -31,7 +35,31 @@ export class BoardComponent implements OnInit {
     private router: Router
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((params) => {
+      const decisionMakerCode = params['dmCode'];
+      if (decisionMakerCode) {
+        this.decisionMakerCode = decisionMakerCode;
+        this.applicationService.setDecisionMaker(decisionMakerCode);
+        this.applicationService.fetchApplications();
+
+        const decisionMaker = this.decisionMakers.find((dm) => dm.code === this.decisionMakerCode);
+        if (decisionMaker) {
+          this.boardTitle = decisionMaker.label;
+          this.boardIsFavorite = decisionMaker.isFavorite;
+        }
+      }
+    });
+
+    this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
+      this.decisionMakers = dms;
+      const decisionMaker = dms.find((dm) => dm.code === this.decisionMakerCode);
+      if (decisionMaker) {
+        this.boardTitle = decisionMaker.label;
+        this.boardIsFavorite = decisionMaker.isFavorite;
+      }
+    });
+
     this.applicationService.$applicationStatuses.subscribe((statuses) => {
       const allStatuses = statuses.map((status) => status.code);
 
@@ -50,12 +78,10 @@ export class BoardComponent implements OnInit {
       this.cards = applications.map(this.mapApplicationDtoToCard.bind(this));
     });
 
-    this.applicationService.refreshApplications();
-
     // open card if application number present in url
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
     if (app) {
-      await this.onSelected(app);
+      this.onSelected(app);
     }
   }
 
@@ -116,9 +142,7 @@ export class BoardComponent implements OnInit {
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.applicant})`,
-      assigneeInitials: application.assignee
-        ? `${application.assignee?.givenName.charAt(0)}${application.assignee?.familyName.charAt(0)}`
-        : undefined,
+      assigneeInitials: application.assignee?.initials,
       id: application.fileNumber,
       type: mappedType!,
       activeDays: application.activeDays,

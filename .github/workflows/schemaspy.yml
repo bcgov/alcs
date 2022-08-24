@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+env:
+  NODE_ENV: test
+
 jobs:
   generate_schemaspy:
     runs-on: ubuntu-latest

@@ -44,7 +44,7 @@ describe('RoleGuard', () => {
     mockClsService = createMock<ClsService>();
     mockUserService = createMock<UserService>();
 
-    mockUserService.getUser.mockResolvedValue(mockUser as User);
+    mockUserService.get.mockResolvedValue(mockUser as User);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

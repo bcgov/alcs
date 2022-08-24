@@ -20,12 +20,13 @@ export class CreateCardDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   decisionMakers: ApplicationDecisionMakerDto[] = [];
   regions: ApplicationRegionDto[] = [];
+  decisionMaker?: ApplicationDecisionMakerDto;
 
   createForm = new FormGroup({
     fileNumber: new FormControl('', [Validators.required]),
     applicant: new FormControl('', [Validators.required]),
     type: new FormControl('', [Validators.required]),
-    decisionMaker: new FormControl(''),
+    decisionMaker: new FormControl('', [Validators.required]),
     region: new FormControl(''),
   });
 
@@ -43,6 +44,10 @@ export class CreateCardDialogComponent implements OnInit {
 
     this.applicationService.$applicationDecisionMakers.subscribe((decisionMakers) => {
       this.decisionMakers = decisionMakers;
+
+      if (this.data.decisionMaker) {
+        this.decisionMaker = this.decisionMakers.find((dm) => dm.code === this.data.decisionMaker);
+      }
     });
 
     this.applicationService.$applicationRegions.subscribe((regions) => {

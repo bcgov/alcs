@@ -5,12 +5,23 @@ import { NotFoundComponent } from './features/errors/not-found/not-found.compone
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthGuard } from './services/authentication/auth.guard';
+import { HasRolesGuard } from './services/authentication/hasRoles.guard';
 
 const routes: Routes = [
   {
-    path: 'admin',
-    canActivate: [AuthGuard],
+    path: 'board',
+    canActivate: [HasRolesGuard],
     loadChildren: () => import('./features/board/board.module').then((m) => m.BoardModule),
+  },
+  {
+    path: 'home',
+    canActivate: [HasRolesGuard],
+    loadChildren: () => import('./features/home/home.module').then((m) => m.HomeModule),
+  },
+  {
+    path: 'application',
+    canActivate: [HasRolesGuard],
+    loadChildren: () => import('./features/application/application.module').then((m) => m.ApplicationModule),
   },
   {
     path: 'login',
@@ -23,6 +34,7 @@ const routes: Routes = [
   {
     path: 'provision',
     component: ProvisionComponent,
+    canActivate: [AuthGuard],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },

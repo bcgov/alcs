@@ -137,6 +137,7 @@ export {
   initApplicationStatusMockEntity,
   initApplicationMockEntity,
   initAssigneeMockDto,
+  initAssigneeMockEntity,
   initApplicationTypeMockEntity,
   initCommentMentionMock,
   initCommentMock,
