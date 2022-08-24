@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ApplicationDecisionMeetingDto } from '../../../../services/application/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CreateDecisionMeetingDialogComponent } from '../create-decision-meeting-dialog/create-decision-meeting-dialog.component';
-
-const ELEMENT_DATA: any[] = [{ date: new Date() }];
 
 @Component({
   selector: 'app-decision-meeting',
@@ -11,26 +12,59 @@ const ELEMENT_DATA: any[] = [{ date: new Date() }];
 })
 export class DecisionMeetingComponent implements OnInit {
   displayedColumns: string[] = ['date', 'action'];
-  dataSource = ELEMENT_DATA;
+  decisionMeetings: ApplicationDecisionMeetingDto[] = [];
 
-  constructor(public dialog: MatDialog) {}
+  @Input()
+  fileNumber: string = '';
 
-  ngOnInit(): void {}
+  constructor(
+    public dialog: MatDialog,
+    public decisionMeetingService: ApplicationDecisionMeetingService,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {}
+
+  ngOnInit(): void {
+    this.decisionMeetingService.fetch(this.fileNumber);
+    this.decisionMeetingService.$decisionMeetings.subscribe(
+      (meetings) => (this.decisionMeetings = meetings.sort((a, b) => (a.date >= b.date ? -1 : 1)))
+    );
+  }
 
   async onCreate() {
     this.dialog.open(CreateDecisionMeetingDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
-      data: {},
+      data: {
+        fileNumber: this.fileNumber,
+      },
     });
   }
 
-  async onEdit() {
-    console.log('onEdit');
+  async onEdit(uuid: string) {
+    const meeting = await this.decisionMeetingService.fetchOne(uuid);
+    this.dialog.open(CreateDecisionMeetingDialogComponent, {
+      minWidth: '600px',
+      maxWidth: '800px',
+      width: '70%',
+      data: {
+        fileNumber: this.fileNumber,
+        uuid: meeting.uuid,
+        date: meeting.date,
+      },
+    });
   }
 
-  async onDelete() {
-    console.log('onDelete');
+  async onDelete(uuid: string) {
+    const answer = this.confirmationDialogService.openDialog({
+      body: 'Are you sure you want to delete meeting?',
+    });
+    answer.subscribe((answer) => {
+      if (answer) {
+        this.decisionMeetingService.delete(uuid).then(() => {
+          this.decisionMeetingService.fetch(this.fileNumber);
+        });
+      }
+    });
   }
 }

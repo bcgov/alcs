@@ -33,7 +33,16 @@ export class ApplicationDecisionMeetingService {
   }
 
   async createOrUpdate(decisionMeeting: Partial<ApplicationDecisionMeeting>) {
-    const existingMeeting = await this.get(decisionMeeting.uuid);
+    let existingMeeting;
+    if (decisionMeeting.uuid) {
+      existingMeeting = await this.get(decisionMeeting.uuid);
+      if (!existingMeeting) {
+        throw new ServiceNotFoundException(
+          `Decision meeting not found ${decisionMeeting.uuid}`,
+        );
+      }
+    }
+
     const updatedMeeting = Object.assign(
       existingMeeting || new ApplicationDecisionMeeting(),
       decisionMeeting,

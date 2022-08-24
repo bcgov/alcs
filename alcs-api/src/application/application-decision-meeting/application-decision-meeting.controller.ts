@@ -16,7 +16,11 @@ import * as config from 'config';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ApplicationDecisionMeetingDto } from './application-decision-meeting.dto';
+import { ApplicationService } from '../application.service';
+import {
+  ApplicationDecisionMeetingDto,
+  CreateApplicationDecisionMeetingDto,
+} from './application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 
@@ -26,12 +30,13 @@ import { ApplicationDecisionMeetingService } from './application-decision-meetin
 export class ApplicationDecisionMeetingController {
   constructor(
     private appDecisionMeetingService: ApplicationDecisionMeetingService,
+    private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get()
+  @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async get(
+  async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationDecisionMeetingDto[]> {
     const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
@@ -44,17 +49,43 @@ export class ApplicationDecisionMeetingController {
     );
   }
 
-  @Delete()
+  @Get('/meeting/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async delete(@Body() uuid: string) {
+  async get(
+    @Param('uuid') uuid: string,
+  ): Promise<ApplicationDecisionMeetingDto> {
+    const meeting = await this.appDecisionMeetingService.get(uuid);
+    return this.mapper.mapAsync(
+      meeting,
+      ApplicationDecisionMeeting,
+      ApplicationDecisionMeetingDto,
+    );
+  }
+
+  @Delete('/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async delete(@Param('uuid') uuid: string) {
     return this.appDecisionMeetingService.delete(uuid);
   }
 
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
-  async create(@Body() date: number): Promise<ApplicationDecisionMeetingDto> {
+  async create(
+    @Body() meeting: CreateApplicationDecisionMeetingDto,
+  ): Promise<ApplicationDecisionMeetingDto> {
+    const application = await this.applicationService.get(
+      meeting.applicationFileNumber,
+    );
+
+    if (!application) {
+      throw new NotFoundException(
+        `Application not found ${meeting.applicationFileNumber}`,
+      );
+    }
+
     const newMeeting = await this.appDecisionMeetingService.createOrUpdate({
-      date: new Date(date),
+      date: new Date(meeting.date),
+      application_uuid: application.uuid,
     });
 
     return this.mapper.map(
@@ -69,15 +100,11 @@ export class ApplicationDecisionMeetingController {
   async update(
     @Body() appDecMeeting: ApplicationDecisionMeetingDto,
   ): Promise<ApplicationDecisionMeetingDto> {
-    const existingMeeting = await this.appDecisionMeetingService.get(
-      appDecMeeting.uuid,
-    );
-
-    if (!existingMeeting) {
-      throw new NotFoundException(
-        `Decision meeting not found ${appDecMeeting.uuid}`,
-      );
-    }
+    // if (!existingMeeting) {
+    //   throw new NotFoundException(
+    //     `Decision meeting not found ${appDecMeeting.uuid}`,
+    //   );
+    // }
 
     const appDecEntity = this.mapper.map(
       appDecMeeting,

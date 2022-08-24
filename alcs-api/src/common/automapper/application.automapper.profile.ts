@@ -43,6 +43,10 @@ export class ApplicationProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionMeetingDto,
         ApplicationDecisionMeeting,
+        forMember(
+          (a) => a.date,
+          mapFrom((ad) => new Date(ad.date)),
+        ),
       );
 
       createMap(

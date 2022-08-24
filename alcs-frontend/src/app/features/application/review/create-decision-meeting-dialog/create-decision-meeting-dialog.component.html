@@ -1,20 +1,20 @@
 <div mat-dialog-title>
   <h2 class="card-title">Create Decision Meeting</h2>
 </div>
-<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
   <mat-dialog-content style="height: 100%">
     <mat-form-field appearance="fill">
       <mat-label>Choose a date</mat-label>
-      <input matInput [matDatepicker]="pdd" formControlName="date" />
+      <input matInput [matDatepicker]="pdd" [(ngModel)]="model.date" name="date" required />
       <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
       <mat-datepicker #pdd type="date"> </mat-datepicker>
-      <mat-hint>{{ createForm.value.date | date: 'mediumDate' }}</mat-hint>
+      <mat-hint>{{ model.date | date: 'mediumDate' }}</mat-hint>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div>
       <button mat-button mat-dialog-close>Close</button>
-      <button mat-button type="submit" [disabled]="!createForm.valid">Save</button>
+      <button mat-button type="submit" [disabled]="!meetingForm.form.valid">Save</button>
     </div>
   </mat-dialog-actions>
 </form>

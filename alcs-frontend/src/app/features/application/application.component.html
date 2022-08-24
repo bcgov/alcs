@@ -5,7 +5,7 @@
   <div class="application">
     <h2>{{ application.fileNumber }} ({{ application.applicant }})</h2>
     <div class="child-content">
-      <router-outlet></router-outlet>
+      <router-outlet (activate)="onOutletLoaded($event)"></router-outlet>
     </div>
   </div>
 </div>
