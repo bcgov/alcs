@@ -2,7 +2,7 @@ version: "3.6"
 services:
   minio:
     image: quay.io/minio/minio
-    command: ["server", "/data"]
+    command: server /data --console-address ":9001"
     restart: always
     ports:
       - 9000:9000
