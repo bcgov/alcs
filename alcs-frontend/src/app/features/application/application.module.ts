@@ -6,6 +6,9 @@ import { ApplicationComponent } from './application.component';
 import { NavComponent } from './nav/nav.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ProcessingComponent } from './processing/processing.component';
+import { CreateDecisionMeetingDialogComponent } from './review/create-decision-meeting-dialog/create-decision-meeting-dialog.component';
+import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
+import { ReviewComponent } from './review/review.component';
 
 const routes: Routes = [
   {
@@ -20,12 +23,24 @@ const routes: Routes = [
         path: 'processing',
         component: ProcessingComponent,
       },
+      {
+        path: 'review',
+        component: ReviewComponent,
+      },
     ],
   },
 ];
 
 @NgModule({
-  declarations: [ApplicationComponent, NavComponent, OverviewComponent, ProcessingComponent],
+  declarations: [
+    ApplicationComponent,
+    NavComponent,
+    OverviewComponent,
+    ProcessingComponent,
+    ReviewComponent,
+    CreateDecisionMeetingDialogComponent,
+    DecisionMeetingComponent,
+  ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
 export class ApplicationModule {}

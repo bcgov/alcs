@@ -1,0 +1,37 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Create Decision Meeting</h2>
+</div>
+<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content style="height: 100%">
+    <div>
+      <label for="fileNumber">Date: </label>
+      <div>
+        <input
+          id="fileNumber"
+          formControlName="fileNumber"
+          type="number"
+          [class.valid]="
+            createForm.get('fileNumber')!.valid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('fileNumber')!.invalid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+        />
+        <small
+          class="text-danger"
+          *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
+        >
+          This field is required.
+        </small>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div>
+      <button mat-button mat-dialog-close>Close</button>
+      <button mat-button type="submit" [disabled]="!createForm.valid">Save</button>
+    </div>
+  </mat-dialog-actions>
+</form>

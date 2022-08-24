@@ -5,6 +5,13 @@ import { Application } from '../application.entity';
 
 @Entity()
 export class ApplicationDecisionMeeting extends Base {
+  constructor(data?: Partial<ApplicationDecisionMeeting>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;

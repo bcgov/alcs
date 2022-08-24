@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -37,6 +38,7 @@ import { FavoriteButtonComponent } from './favorite-button/favorite-button.compo
     MatToolbarModule,
     MatMenuModule,
     FavoriteButtonComponent,
+    MatTableModule,
   ],
 })
 export class SharedModule {}
