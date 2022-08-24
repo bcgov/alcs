@@ -6,6 +6,8 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { BoardStatus } from '../board/board-status.entity';
+import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
@@ -53,18 +55,18 @@ export class Application extends Base {
   })
   highPriority: boolean;
 
-  @ManyToOne((status) => ApplicationStatus, {
+  @ManyToOne(() => ApplicationStatus, {
     nullable: false,
   })
   status: ApplicationStatus;
 
   @Column({
     type: 'uuid',
-    default: 'e6ddd1af-1cb9-4e45-962a-92e8d532b149',
+    default: 'f9f4244f-9741-45f0-9724-ce13e8aa09eb',
   })
   statusUuid: string;
 
-  @ManyToOne((type) => ApplicationType, {
+  @ManyToOne(() => ApplicationType, {
     nullable: false,
   })
   type: ApplicationType;
@@ -74,10 +76,19 @@ export class Application extends Base {
   })
   typeUuid: string;
 
-  @ManyToOne((decisionMaker) => ApplicationDecisionMaker, {
+  @ManyToOne(() => ApplicationDecisionMaker, {
     nullable: true,
   })
   decisionMaker: ApplicationDecisionMaker;
+
+  @ManyToOne(() => Board)
+  board: Board;
+
+  @Column({
+    type: 'uuid',
+    default: 'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2',
+  })
+  boardUuid: string;
 
   @Column({
     type: 'uuid',
@@ -85,7 +96,7 @@ export class Application extends Base {
   })
   decisionMakerUuid: string;
 
-  @ManyToOne((decisionMaker) => ApplicationRegion, {
+  @ManyToOne(() => ApplicationRegion, {
     nullable: true,
   })
   region: ApplicationRegion;
@@ -97,7 +108,7 @@ export class Application extends Base {
   regionUuid: string;
 
   @AutoMap()
-  @ManyToOne((assignee) => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   assignee: User;
 
   @AutoMap()
