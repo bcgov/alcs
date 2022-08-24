@@ -608,12 +608,16 @@ docker() {
   local _arguments=()
   local _action=
   local _metabase=false
+  local _minio=false
 
   for __arg in "${@:-}"
   do
     case ${__arg} in
       --metabase)
         _metabase=true
+        ;;
+      --minio)
+        _minio=true
         ;;
       -*)
         _exit_1 printf "Unexpected option: %s\\n" "${__arg}"
@@ -634,6 +638,10 @@ docker() {
   if [ $_metabase ]
   then
     _files+=("docker/metabase-compose.yaml")
+  fi
+  if [ $_minio ]
+  then
+    _files+=("docker/minio-compose.yaml")
   fi
 
   for file in ${_files[@]}
