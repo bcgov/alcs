@@ -13,6 +13,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDatepickerModule } from '@matheo/datepicker';
+import { MatNativeDateModule } from '@matheo/datepicker/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
@@ -39,6 +41,8 @@ import { FavoriteButtonComponent } from './favorite-button/favorite-button.compo
     MatMenuModule,
     FavoriteButtonComponent,
     MatTableModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
 })
 export class SharedModule {}
