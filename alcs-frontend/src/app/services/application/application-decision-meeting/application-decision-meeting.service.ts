@@ -43,7 +43,7 @@ export class ApplicationDecisionMeetingService {
 
   async create(decisionMeeting: CreateApplicationDecisionMeetingDto) {
     try {
-      const meeting = await firstValueFrom(
+      await firstValueFrom(
         this.http.post<ApplicationDecisionMeetingDto>(this.url, {
           ...decisionMeeting,
           date: dayjs(decisionMeeting.date).startOf('day').add(12, 'hours').valueOf(),
