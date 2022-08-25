@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingDto } from '../../../../services/application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { CreateDecisionMeetingDialogComponent } from '../create-decision-meeting-dialog/create-decision-meeting-dialog.component';
+import { DecisionMeetingDialogComponent } from '../decision-meeting-dialog/decision-meeting-dialog.component';
 
 @Component({
   selector: 'app-decision-meeting',
@@ -31,7 +31,7 @@ export class DecisionMeetingComponent implements OnInit {
   }
 
   async onCreate() {
-    this.dialog.open(CreateDecisionMeetingDialogComponent, {
+    this.dialog.open(DecisionMeetingDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
@@ -43,7 +43,7 @@ export class DecisionMeetingComponent implements OnInit {
 
   async onEdit(uuid: string) {
     const meeting = await this.decisionMeetingService.fetchOne(uuid);
-    this.dialog.open(CreateDecisionMeetingDialogComponent, {
+    this.dialog.open(DecisionMeetingDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',

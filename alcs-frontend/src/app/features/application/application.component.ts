@@ -30,9 +30,6 @@ export class ApplicationComponent implements OnInit {
   onOutletLoaded(component: ReviewComponent | ProcessingComponent) {
     if (component instanceof ReviewComponent) {
       component.fileNumber = this.application?.fileNumber || '';
-    } else if (component instanceof ProcessingComponent) {
-      // TODO: this is just an example, delete once not needed
-      console.log('place parameters for processing here');
     }
   }
 }

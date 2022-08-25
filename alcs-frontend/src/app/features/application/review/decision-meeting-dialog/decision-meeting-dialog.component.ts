@@ -1,26 +1,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 export class ApplicationDecisionMeetingForm {
   constructor(public fileNumber: string, public date: Date, public uuid: string | undefined = undefined) {}
 }
 
 @Component({
-  selector: 'app-create-decision-meeting-dialog',
-  templateUrl: './create-decision-meeting-dialog.component.html',
-  styleUrls: ['./create-decision-meeting-dialog.component.scss'],
+  selector: 'app-decision-meeting-dialog',
+  templateUrl: './decision-meeting-dialog.component.html',
+  styleUrls: ['./decision-meeting-dialog.component.scss'],
 })
-export class CreateDecisionMeetingDialogComponent implements OnInit {
+export class DecisionMeetingDialogComponent implements OnInit {
   model: ApplicationDecisionMeetingForm;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDecisionMeetingForm,
-    private dialogRef: MatDialogRef<CreateDecisionMeetingDialogComponent>,
-    public decisionMeetingService: ApplicationDecisionMeetingService
+    private dialogRef: MatDialogRef<DecisionMeetingDialogComponent>,
+    public decisionMeetingService: ApplicationDecisionMeetingService,
+    private toastService: ToastService
   ) {
     if (data.uuid) {
-      // fetch meeting for edit
       this.model = {
         ...data,
         date: new Date(data.date),
@@ -49,6 +50,7 @@ export class CreateDecisionMeetingDialogComponent implements OnInit {
 
       await this.decisionMeetingService.fetch(this.data.fileNumber);
       this.dialogRef.close();
+      this.toastService.showSuccessToast('Meeting created.');
     }
   }
 }

@@ -6,7 +6,7 @@ import { ApplicationComponent } from './application.component';
 import { NavComponent } from './nav/nav.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ProcessingComponent } from './processing/processing.component';
-import { CreateDecisionMeetingDialogComponent } from './review/create-decision-meeting-dialog/create-decision-meeting-dialog.component';
+import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
 
@@ -38,7 +38,7 @@ const routes: Routes = [
     OverviewComponent,
     ProcessingComponent,
     ReviewComponent,
-    CreateDecisionMeetingDialogComponent,
+    DecisionMeetingDialogComponent,
     DecisionMeetingComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
