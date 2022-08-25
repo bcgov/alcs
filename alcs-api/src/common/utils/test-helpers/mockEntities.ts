@@ -1,4 +1,5 @@
 import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
+import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
 import { Comment } from '../../../comment/comment.entity';
@@ -133,6 +134,18 @@ const initCommentMentionMock = (
   return mention;
 };
 
+const initApplicationDecisionMeetingMock = (
+  application?: Application,
+): ApplicationDecisionMeeting => {
+  const meeting = new ApplicationDecisionMeeting();
+  meeting.application = application ?? initApplicationMockEntity();
+  meeting.uuid = '11111111';
+  meeting.date = new Date(2022, 1, 1, 1, 1, 1, 1);
+  meeting.application_uuid = application.uuid;
+
+  return meeting;
+};
+
 export {
   initApplicationStatusMockEntity,
   initApplicationMockEntity,
@@ -141,4 +154,5 @@ export {
   initApplicationTypeMockEntity,
   initCommentMentionMock,
   initCommentMock,
+  initApplicationDecisionMeetingMock,
 };
