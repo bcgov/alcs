@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { ApplicationCodeModule } from './application-code/application-code.module';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
 import { ApplicationHistory } from './application-history.entity';
@@ -17,7 +17,6 @@ import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 import { ApplicationSubscriber } from './application.subscriber';
-import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 
 @Module({
   imports: [
@@ -42,7 +41,11 @@ import { ApplicationDecisionMeetingController } from './application-decision-mee
     ApplicationProfile,
     ApplicationDecisionMeetingService,
   ],
-  controllers: [ApplicationController, ApplicationStatusController, ApplicationDecisionMeetingController],
+  controllers: [
+    ApplicationController,
+    ApplicationStatusController,
+    ApplicationDecisionMeetingController,
+  ],
   exports: [ApplicationService, ApplicationTimeTrackingService],
 })
 export class ApplicationModule {}

@@ -100,12 +100,6 @@ export class ApplicationDecisionMeetingController {
   async update(
     @Body() appDecMeeting: ApplicationDecisionMeetingDto,
   ): Promise<ApplicationDecisionMeetingDto> {
-    // if (!existingMeeting) {
-    //   throw new NotFoundException(
-    //     `Decision meeting not found ${appDecMeeting.uuid}`,
-    //   );
-    // }
-
     const appDecEntity = this.mapper.map(
       appDecMeeting,
       ApplicationDecisionMeetingDto,
