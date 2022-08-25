@@ -19,7 +19,7 @@ export class DecisionMeetingComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
-    public decisionMeetingService: ApplicationDecisionMeetingService,
+    private decisionMeetingService: ApplicationDecisionMeetingService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
 

@@ -12,7 +12,7 @@ export class ApplicationDecisionMeetingService {
     private applicationService: ApplicationService,
   ) {}
 
-  async getByAppFileNumber(number) {
+  async getByAppFileNumber(number: string) {
     const application = await this.applicationService.get(number);
 
     if (!application) {
@@ -48,7 +48,7 @@ export class ApplicationDecisionMeetingService {
       decisionMeeting,
     );
 
-    return await this.appDecisionMeetingRepository.save(updatedMeeting);
+    return this.appDecisionMeetingRepository.save(updatedMeeting);
   }
 
   async delete(uuid) {

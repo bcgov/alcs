@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -12,7 +12,7 @@ export class ApplicationDecisionMeetingForm {
   templateUrl: './decision-meeting-dialog.component.html',
   styleUrls: ['./decision-meeting-dialog.component.scss'],
 })
-export class DecisionMeetingDialogComponent implements OnInit {
+export class DecisionMeetingDialogComponent {
   model: ApplicationDecisionMeetingForm;
 
   constructor(
@@ -30,8 +30,6 @@ export class DecisionMeetingDialogComponent implements OnInit {
       this.model = new ApplicationDecisionMeetingForm(data.fileNumber, new Date());
     }
   }
-
-  ngOnInit(): void {}
 
   async onSubmit() {
     if (this.model) {

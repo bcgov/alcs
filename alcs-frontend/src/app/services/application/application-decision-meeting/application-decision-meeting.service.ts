@@ -10,13 +10,13 @@ import { ApplicationDecisionMeetingDto, CreateApplicationDecisionMeetingDto } fr
   providedIn: 'root',
 })
 export class ApplicationDecisionMeetingService {
-  public $decisionMeetings = new BehaviorSubject<ApplicationDecisionMeetingDto[]>([]);
+  $decisionMeetings = new BehaviorSubject<ApplicationDecisionMeetingDto[]>([]);
   private url = `${environment.apiRoot}/application-decision-meeting`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   async fetch(fileNumber: string) {
-    let meetings = [] as ApplicationDecisionMeetingDto[];
+    let meetings: ApplicationDecisionMeetingDto[] = [];
 
     try {
       meetings = await firstValueFrom(this.http.get<ApplicationDecisionMeetingDto[]>(`${this.url}/${fileNumber}`));
@@ -42,44 +42,34 @@ export class ApplicationDecisionMeetingService {
   }
 
   async create(decisionMeeting: CreateApplicationDecisionMeetingDto) {
-    let meeting;
     try {
-      meeting = await firstValueFrom(
+      const meeting = await firstValueFrom(
         this.http.post<ApplicationDecisionMeetingDto>(this.url, {
           ...decisionMeeting,
           date: dayjs(decisionMeeting.date).startOf('day').add(12, 'hours').valueOf(),
         })
       );
-      await this.fetch(decisionMeeting.applicationFileNumber);
+      return await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {
       this.toastService.showErrorToast('Failed to create decision meeting');
     }
-
-    return meeting;
   }
 
-  async fetchOne(uuid: string) {
-    let meeting = {} as ApplicationDecisionMeetingDto;
-
+  fetchOne(uuid: string) {
     try {
-      meeting = await firstValueFrom(this.http.get<ApplicationDecisionMeetingDto>(`${this.url}/meeting/${uuid}`));
+      return firstValueFrom(this.http.get<ApplicationDecisionMeetingDto>(`${this.url}/meeting/${uuid}`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decision meetings');
     }
-
-    return meeting;
+    return;
   }
 
   async delete(uuid: string) {
-    let meeting = {} as ApplicationDecisionMeetingDto;
-
     try {
-      meeting = await firstValueFrom(this.http.delete<ApplicationDecisionMeetingDto>(`${this.url}/${uuid}`));
+      await firstValueFrom(this.http.delete<ApplicationDecisionMeetingDto>(`${this.url}/${uuid}`));
       this.toastService.showSuccessToast('Meeting deleted');
     } catch (err) {
       this.toastService.showErrorToast('Failed to delete meeting');
     }
-
-    return meeting;
   }
 }
