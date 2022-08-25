@@ -15,8 +15,6 @@ export class BoardStatus extends Base {
   order: number;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationStatus, {
-    eager: true,
-  })
+  @ManyToOne(() => ApplicationStatus, { eager: true })
   status: ApplicationStatus;
 }

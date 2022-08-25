@@ -19,7 +19,9 @@ export class Board extends Base {
   decisionMaker: string;
 
   @AutoMap()
-  @OneToMany(() => BoardStatus, (status) => status.board)
+  @OneToMany(() => BoardStatus, (status) => status.board, {
+    eager: true,
+  })
   statuses: BoardStatus[];
 
   @OneToMany(() => Application, (app) => app.board)

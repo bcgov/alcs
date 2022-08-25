@@ -1,27 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Application } from '../application/application.entity';
+import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { ApplicationService } from '../application/application.service';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { Board } from './board.entity';
 
 @Injectable()
 export class BoardService {
+  private DEFAULT_RELATIONS: FindOptionsRelations<Board> = {
+    statuses: {
+      status: true,
+    },
+  };
+
   constructor(
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
     private applicationService: ApplicationService,
   ) {}
 
-  list() {
-    return this.boardRepository.find({
-      relations: ['statuses'],
-      order: {
-        statuses: {
-          order: 'ASC',
-        },
-      },
+  async list() {
+    const boards = await this.boardRepository.find({
+      relations: this.DEFAULT_RELATIONS,
+    });
+    //Sort board statuses
+    return boards.map((board) => {
+      board.statuses.sort((statusA, statusB) => {
+        return statusA.order - statusB.order;
+      });
+      return board;
     });
   }
 
@@ -43,7 +51,7 @@ export class BoardService {
       where: {
         code,
       },
-      relations: ['statuses'],
+      relations: this.DEFAULT_RELATIONS,
     });
     if (!board) {
       throw new ServiceNotFoundException('Board not found');

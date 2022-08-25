@@ -20,11 +20,10 @@ import { CreateCardDialogComponent } from './create-card-detail-dialog/create-ca
 export class BoardComponent implements OnInit {
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
-  boardTitle = 'All Applications';
+  boardTitle = '';
   boardIsFavourite: boolean = false;
 
   private applicationTypes: ApplicationTypeDto[] = [];
-  private applications: ApplicationDto[] = [];
   selectedBoardCode?: string;
   boards: BoardWithFavourite[] = [];
 
@@ -85,7 +84,6 @@ export class BoardComponent implements OnInit {
 
   private async loadApplications(boardCode: string) {
     const apps = await this.boardService.fetchApplications(boardCode);
-    this.applications = apps;
     this.cards = apps.map(this.mapApplicationDtoToCard.bind(this));
   }
 
@@ -112,7 +110,8 @@ export class BoardComponent implements OnInit {
         }
       });
     } catch (err) {
-      console.log(err);
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
     }
   }
 
