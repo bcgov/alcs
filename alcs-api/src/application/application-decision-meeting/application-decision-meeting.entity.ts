@@ -18,7 +18,7 @@ export class ApplicationDecisionMeeting extends Base {
 
   @AutoMap()
   @Column()
-  application_uuid: string;
+  applicationUuid: string;
 
   @AutoMap()
   @ManyToOne(() => Application)

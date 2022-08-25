@@ -85,7 +85,7 @@ export class ApplicationDecisionMeetingController {
 
     const newMeeting = await this.appDecisionMeetingService.createOrUpdate({
       date: new Date(meeting.date),
-      application_uuid: application.uuid,
+      applicationUuid: application.uuid,
     });
 
     return this.mapper.map(

@@ -1,4 +1,4 @@
-import { createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,7 +20,7 @@ describe('ApplicationDecisionMeetingService', () => {
   let mockAppDecisionMeetingRepository: MockType<
     Repository<ApplicationDecisionMeeting>
   >;
-  let mockApplicationService;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   let mockApplication;
   let mockMeeting;

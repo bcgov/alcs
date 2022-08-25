@@ -22,7 +22,7 @@ export class ApplicationDecisionMeetingService {
     }
 
     return this.appDecisionMeetingRepository.find({
-      where: { application_uuid: application.uuid },
+      where: { applicationUuid: application.uuid },
     });
   }
 

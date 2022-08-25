@@ -141,7 +141,7 @@ const initApplicationDecisionMeetingMock = (
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
   meeting.date = new Date(2022, 1, 1, 1, 1, 1, 1);
-  meeting.application_uuid = application.uuid;
+  meeting.applicationUuid = application.uuid;
 
   return meeting;
 };

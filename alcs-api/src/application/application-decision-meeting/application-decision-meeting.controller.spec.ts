@@ -102,7 +102,7 @@ describe('ApplicationDecisionMeetingController', () => {
     expect(mockMeetingService.createOrUpdate).toBeCalledTimes(1);
     expect(mockMeetingService.createOrUpdate).toBeCalledWith({
       date: new Date(meetingToUpdate.date),
-      application_uuid: appMock.uuid,
+      applicationUuid: appMock.uuid,
     });
   });
 
