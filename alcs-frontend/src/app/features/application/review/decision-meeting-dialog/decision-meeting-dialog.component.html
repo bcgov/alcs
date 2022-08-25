@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-  <h2 class="card-title">Create Decision Meeting</h2>
+  <h2 class="card-title">{{ model.uuid ? 'Update' : 'Create' }} Decision Meeting</h2>
 </div>
 <form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
   <mat-dialog-content style="height: 100%">
