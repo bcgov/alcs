@@ -26,15 +26,32 @@ export class BoardService {
   }
 
   getApplicationsByCode(code: string) {
-    return this.boardRepository.findOne({
-      where: {
+    return this.applicationService.getAll({
+      board: {
         code,
       },
-      relations: ['applications'],
     });
   }
 
-  changeBoard(application: Application, board: Board) {
-    //DO LOGIC HERE
+  async changeBoard(fileNumber: string, code: string) {
+    const application = await this.applicationService.get(fileNumber);
+    if (!application) {
+      throw new ServiceNotFoundException('Failed to find application');
+    }
+
+    const board = await this.boardRepository.findOne({
+      where: {
+        code,
+      },
+      relations: ['statuses'],
+    });
+    if (!board) {
+      throw new ServiceNotFoundException('Board not found');
+    }
+
+    const initialStatus = board.statuses.find((status) => status.order === 0);
+    application.status = initialStatus.status;
+    application.board = board;
+    return this.applicationService.createOrUpdate(application);
   }
 }

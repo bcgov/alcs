@@ -16,7 +16,6 @@ import {
 } from '../common/utils/test-helpers/mockTypes';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationTimeData } from './application-time-tracking.service';
@@ -42,7 +41,7 @@ describe('ApplicationController', () => {
     status: mockApplicationEntity.status.code,
     type: mockApplicationEntity.type.code,
     assigneeUuid: mockApplicationEntity.assigneeUuid,
-    decisionMaker: undefined,
+    board: undefined,
     region: undefined,
     assignee: initAssigneeMockDto(),
     activeDays: 2,
@@ -124,26 +123,6 @@ describe('ApplicationController', () => {
 
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
     expect(res).toStrictEqual(mockApplicationDto);
-  });
-
-  it('should apply the dm filter in getAll', async () => {
-    const mockDecisionMaker = createMock<ApplicationDecisionMaker>();
-    applicationCodeService.fetchDecisionMaker.mockResolvedValue(
-      mockDecisionMaker,
-    );
-    applicationService.getAll.mockResolvedValue([mockApplicationEntity]);
-
-    await controller.getAll('dm');
-
-    expect(applicationCodeService.fetchDecisionMaker).toHaveBeenCalled();
-    expect(applicationCodeService.fetchDecisionMaker.mock.calls[0][0]).toEqual(
-      'dm',
-    );
-
-    expect(applicationService.getAll).toHaveBeenCalled();
-    expect(applicationService.getAll.mock.calls[0][0]).toEqual({
-      decisionMaker: mockDecisionMaker,
-    });
   });
 
   it('should throw an exception when application is not found during update', async () => {

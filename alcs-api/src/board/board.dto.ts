@@ -1,6 +1,4 @@
 import { AutoMap } from '@automapper/classes';
-import { Column } from 'typeorm';
-import { BoardStatus } from './board-status.entity';
 
 export class BoardDto {
   @AutoMap()

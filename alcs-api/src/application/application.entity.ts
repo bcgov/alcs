@@ -6,12 +6,10 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { BoardStatus } from '../board/board-status.entity';
 import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
@@ -76,11 +74,6 @@ export class Application extends Base {
   })
   typeUuid: string;
 
-  @ManyToOne(() => ApplicationDecisionMaker, {
-    nullable: true,
-  })
-  decisionMaker: ApplicationDecisionMaker;
-
   @ManyToOne(() => Board)
   board: Board;
 
@@ -89,12 +82,6 @@ export class Application extends Base {
     default: 'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2',
   })
   boardUuid: string;
-
-  @Column({
-    type: 'uuid',
-    nullable: true,
-  })
-  decisionMakerUuid: string;
 
   @ManyToOne(() => ApplicationRegion, {
     nullable: true,

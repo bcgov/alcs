@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationService } from '../application/application.service';
@@ -31,7 +31,18 @@ export class BoardController {
   @Get('/:boardCode')
   @UserRoles(...ANY_AUTH_ROLE)
   async getApplications(@Param('boardCode') boardCode: string) {
-    const board = await this.boardService.getApplicationsByCode(boardCode);
-    return this.applicationService.mapToDtos(board.applications);
+    const applications = await this.boardService.getApplicationsByCode(
+      boardCode,
+    );
+    return this.applicationService.mapToDtos(applications);
+  }
+
+  @Post('/change')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async changeApplicationBoard(
+    @Body()
+    { fileNumber, boardCode }: { fileNumber: string; boardCode: string },
+  ) {
+    return this.boardService.changeBoard(fileNumber, boardCode);
   }
 }

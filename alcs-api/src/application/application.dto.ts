@@ -7,7 +7,6 @@ import {
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
 import { UserDto } from '../user/user.dto';
-import { ApplicationDecisionMakerDto } from './application-code/application-decision-maker/application-decision-maker.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
@@ -26,10 +25,6 @@ export class CreateApplicationDto {
   @IsNotEmpty()
   @IsString()
   type: string;
-
-  @IsString()
-  @IsOptional()
-  decisionMaker?: string;
 
   @IsString()
   @IsOptional()
@@ -76,8 +71,9 @@ export class ApplicationDto {
   @IsString()
   type: string;
 
+  @IsNotEmpty()
   @IsString()
-  decisionMaker: string;
+  board: string;
 
   @IsString()
   region?: string;
@@ -89,9 +85,6 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
   @AutoMap()
   typeDetails: ApplicationTypeDto;
-
-  @AutoMap()
-  decisionMakerDetails: ApplicationDecisionMakerDto;
 
   @AutoMap()
   regionDetails: ApplicationRegionDto;
@@ -112,11 +105,6 @@ export class ApplicationUpdateDto {
   @IsOptional()
   @IsString()
   type?: string;
-
-  @AutoMap()
-  @IsOptional()
-  @IsString()
-  decisionMaker?: string;
 
   @AutoMap()
   @IsOptional()

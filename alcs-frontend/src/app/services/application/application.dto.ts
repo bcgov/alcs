@@ -1,16 +1,11 @@
+import { BoardDto } from '../board/board.dto';
 import { UserDto } from '../user/user.dto';
-import {
-  ApplicationDecisionMakerDto,
-  ApplicationRegionDto,
-  ApplicationStatusDto,
-  ApplicationTypeDto,
-} from './application-code.dto';
+import { ApplicationRegionDto, ApplicationStatusDto, ApplicationTypeDto } from './application-code.dto';
 
 export interface CreateApplicationDto {
   fileNumber: string;
   applicant: string;
   type: string;
-  decisionMaker?: string;
   region?: string;
 }
 
@@ -19,7 +14,7 @@ export interface ApplicationDto {
   applicant: string;
   status: string;
   type: string;
-  decisionMaker: string;
+  board: string;
   region?: string;
   assignee?: UserDto;
   activeDays: number;
@@ -32,7 +27,6 @@ export interface ApplicationPartialDto {
   fileNumber: string;
   applicant?: string;
   status?: string;
-  decisionMaker?: string;
   region?: string;
   type?: string;
   assigneeUuid?: string | null;
@@ -44,6 +38,6 @@ export interface ApplicationPartialDto {
 export interface ApplicationDetailedDto extends ApplicationDto {
   statusDetails: ApplicationStatusDto;
   typeDetails: ApplicationTypeDto;
-  decisionMakerDetails?: ApplicationDecisionMakerDto;
   regionDetails?: ApplicationRegionDto;
+  boardDetails?: BoardDto;
 }

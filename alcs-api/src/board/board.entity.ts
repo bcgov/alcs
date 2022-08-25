@@ -18,6 +18,7 @@ export class Board extends Base {
   @Column()
   decisionMaker: string;
 
+  @AutoMap()
   @OneToMany(() => BoardStatus, (status) => status.board)
   statuses: BoardStatus[];
 
