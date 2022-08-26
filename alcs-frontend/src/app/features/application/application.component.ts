@@ -2,6 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
+import { IntakeComponent } from './intake/intake.component';
+import { OverviewComponent } from './overview/overview.component';
+import { ProcessingComponent } from './processing/processing.component';
+import { ReviewComponent } from './review/review.component';
+
+export const childRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    component: OverviewComponent,
+  },
+  {
+    path: 'intake',
+    menuTitle: 'ALC Intake',
+    component: IntakeComponent,
+  },
+  {
+    path: 'processing',
+    menuTitle: 'Processing',
+    component: ProcessingComponent,
+  },
+  {
+    path: 'review',
+    menuTitle: 'Review',
+    component: ReviewComponent,
+  },
+];
 
 @Component({
   selector: 'app-application',
@@ -12,6 +39,8 @@ export class ApplicationComponent implements OnInit {
   application?: ApplicationDetailedDto;
   fileNumber?: string;
 
+  childRoutes = childRoutes;
+
   constructor(private applicationDetailService: ApplicationDetailService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -20,6 +49,7 @@ export class ApplicationComponent implements OnInit {
       this.fileNumber = fileNumber;
       this.loadApplication();
     });
+
     this.applicationDetailService.$application.subscribe((application) => {
       this.application = application;
     });

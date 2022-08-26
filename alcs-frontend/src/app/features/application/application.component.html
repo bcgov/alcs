@@ -1,9 +1,19 @@
 <div *ngIf="application" class="layout">
   <div>
-    <application-nav></application-nav>
+    <div class="nav">
+      <div *ngFor="let route of childRoutes" class="section">
+        <div
+          [routerLink]="route.path ? route.path : './'"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          {{ route.menuTitle }}
+        </div>
+      </div>
+    </div>
   </div>
   <div class="application">
-    <h2>{{ application.fileNumber }} ({{ application.applicant }})</h2>
+    <h2>{{ application?.fileNumber }} ({{ application?.applicant }})</h2>
     <div class="child-content">
       <router-outlet></router-outlet>
     </div>
