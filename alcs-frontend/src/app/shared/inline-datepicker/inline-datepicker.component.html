@@ -1,11 +1,11 @@
 <div>
   <span *ngIf="!isEditing">
-    <span style="color: #666; font-style: italic" *ngIf="!selectedValue"> Not set </span>
+    <span class="not-set" *ngIf="!selectedValue"> Not set </span>
     <span *ngIf="selectedValue">
       {{ formattedDate }}
     </span>
-    <button style="height: 24px; width: 24px" mat-icon-button (click)="toggleEdit()">
-      <mat-icon style="font-size: inherit; line-height: 22px">edit</mat-icon>
+    <button class="edit-button" mat-icon-button (click)="toggleEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
     </button>
   </span>
   <div class="editing" [ngClass]="{
@@ -19,7 +19,7 @@
         <mat-datepicker #pdd type="date"> </mat-datepicker>
       </mat-form-field>
     </form>
-    <div style="display: flex; justify-content: flex-end">
+    <div class="button-container">
       <button mat-button (click)="toggleEdit()">Cancel</button>
       <button mat-button style="margin-right: 8px" (click)="onSave()">Save</button>
     </div>
