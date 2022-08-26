@@ -1,6 +1,7 @@
 import {
   IsBoolean,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
@@ -25,6 +26,10 @@ export class CreateApplicationDto {
   @IsNotEmpty()
   @IsString()
   type: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  dateReceived: number;
 
   @IsString()
   @IsOptional()
@@ -74,6 +79,10 @@ export class ApplicationDto {
   @IsNotEmpty()
   @IsString()
   board: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  dateReceived: number;
 
   @IsString()
   region?: string;
@@ -125,6 +134,10 @@ export class ApplicationUpdateDto {
   @IsBoolean()
   @IsOptional()
   paused?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  dateReceived?: number;
 
   @AutoMap()
   @IsBoolean()

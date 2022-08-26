@@ -91,7 +91,9 @@ describe('BoardsService', () => {
     await expect(
       service.changeBoard('file-number', 'board-code'),
     ).rejects.toMatchObject(
-      new ServiceNotFoundException(`Failed to find application`),
+      new ServiceNotFoundException(
+        `Failed to find application with fileNumber file-number`,
+      ),
     );
   });
 
@@ -101,6 +103,8 @@ describe('BoardsService', () => {
 
     await expect(
       service.changeBoard('file-number', 'board-code'),
-    ).rejects.toMatchObject(new ServiceNotFoundException(`Board not found`));
+    ).rejects.toMatchObject(
+      new ServiceNotFoundException(`Failed to find Board with code board-code`),
+    );
   });
 });
