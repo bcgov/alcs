@@ -9,6 +9,10 @@ export interface CreateApplicationDto {
   region?: string;
 }
 
+export interface ApplicationDecisionMeetingDto {
+  date: Date;
+}
+
 export interface ApplicationDto {
   fileNumber: string;
   applicant: string;
@@ -21,6 +25,7 @@ export interface ApplicationDto {
   pausedDays: number;
   paused: boolean;
   highPriority: boolean;
+  decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
 export interface ApplicationPartialDto {

@@ -1,3 +1,5 @@
+import { AutoMap } from '@automapper/classes';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -5,11 +7,11 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { AutoMap } from '@automapper/classes';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
-import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
+import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationStatusDto } from './application-status/application-status.dto';
 
 export class CreateApplicationDto {
   @AutoMap()
@@ -77,6 +79,10 @@ export class ApplicationDto {
 
   @IsString()
   region?: string;
+
+  @AutoMap()
+  @Type(() => ApplicationDecisionMeetingDto)
+  decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {

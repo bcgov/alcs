@@ -66,6 +66,16 @@ export class ApplicationProfile extends AutomapperProfile {
           (ad) => ad.region,
           mapFrom((a) => (a.region ? a.region.code : undefined)),
         ),
+        forMember(
+          (ad) => ad.decisionMeetings,
+          mapFrom((a) =>
+            this.mapper.mapArray(
+              a.decisionMeetings,
+              ApplicationDecisionMeeting,
+              ApplicationDecisionMeetingDto,
+            ),
+          ),
+        ),
       );
 
       createMap(

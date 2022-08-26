@@ -1,21 +1,20 @@
+<div *ngIf="cardData.latestDecisionDate" class="decision-date-info">
+  {{ cardData.latestDecisionDate | date: 'EEE yyyy-MMM-dd' }}
+</div>
 <mat-card
-  class="card"
-  [ngClass]="{ paused: cardData.paused }"
+  class="card body1-text"
+  [ngClass]="{ paused: cardData.paused, 'decision-date': cardData.latestDecisionDate }"
   cdkDrag
   [cdkDragData]="cardData"
   (click)="onClick(cardData.id)"
 >
   <div class="card-content">
     <div class="upper-card">
-      {{ cardData.title }}
-      <span class="high-priority" *ngIf="cardData.highPriority">!</span>
-    </div>
-    <div class="lower-card">
-      <div>
-        <div class="active-days center">
-          <span class="center">{{ cardData.activeDays }}</span>
-          <mat-icon title="Active Days">calendar_today</mat-icon>
-        </div>
+      <div class="row">
+        {{ cardData.title }}
+        <span class="high-priority" *ngIf="cardData.highPriority">!</span>
+      </div>
+      <div class="row">
         <div
           class="type"
           [ngStyle]="{ backgroundColor: cardData.type.backgroundColor, color: cardData.type.textColor }"
@@ -23,7 +22,15 @@
           <span class="center">{{ cardData.type.shortLabel }}</span>
         </div>
       </div>
-      <div>
+    </div>
+    <div class="lower-card">
+      <div class="row">
+        <div class="active-days center">
+          <mat-icon title="Active Days">calendar_today</mat-icon>
+          <span class="center">{{ cardData.activeDays }}</span>
+        </div>
+      </div>
+      <div class="row">
         <div *ngIf="cardData.assigneeInitials" class="assignee">
           <span class="center">{{ cardData.assigneeInitials }}</span>
         </div>

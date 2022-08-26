@@ -162,6 +162,7 @@ export class BoardComponent implements OnInit {
       activeDays: application.activeDays,
       paused: application.paused,
       highPriority: application.highPriority,
+      decisionMeetings: application.decisionMeetings,
     };
   }
 }
