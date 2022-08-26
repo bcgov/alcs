@@ -29,10 +29,13 @@ export class ApplicationService {
   async updateApplication(application: ApplicationPartialDto) {
     await this.setup();
     try {
-      await firstValueFrom(this.http.patch<ApplicationDto>(`${environment.apiRoot}/application`, application));
+      return await firstValueFrom(
+        this.http.patch<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+      );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
     }
+    return;
   }
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {

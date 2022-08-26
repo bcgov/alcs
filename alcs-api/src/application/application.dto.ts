@@ -86,6 +86,22 @@ export class ApplicationDto {
   @IsNumber()
   dateReceived: number;
 
+  @IsNumber()
+  datePaid?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedIncomplete?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateReceivedAllItems?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedComplete?: number;
+
+  @IsOptional()
   @IsString()
   region?: string;
 
@@ -144,6 +160,22 @@ export class ApplicationUpdateDto {
   @IsOptional()
   @IsNumber()
   dateReceived?: number;
+
+  @IsOptional()
+  @IsNumber()
+  datePaid?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedIncomplete?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateReceivedAllItems?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedComplete?: number;
 
   @AutoMap()
   @IsBoolean()

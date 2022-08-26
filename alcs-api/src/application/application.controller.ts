@@ -89,7 +89,7 @@ export class ApplicationController {
   async update(
     @Body() application: ApplicationUpdateDto,
     @Req() req,
-  ): Promise<ApplicationDto> {
+  ): Promise<ApplicationDetailedDto> {
     const existingApplication = await this.applicationService.get(
       application.fileNumber,
     );
@@ -122,7 +122,7 @@ export class ApplicationController {
       region = await this.codeService.fetchRegion(application.region);
     }
 
-    const app = await this.applicationService.createOrUpdate({
+    const updatedApplication = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
@@ -131,27 +131,54 @@ export class ApplicationController {
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
       highPriority: application.highPriority,
+      datePaid: this.formatIncomingDate(application.datePaid),
+      dateAcknowledgedIncomplete: this.formatIncomingDate(
+        application.dateAcknowledgedIncomplete,
+      ),
+      dateReceivedAllItems: this.formatIncomingDate(
+        application.dateReceivedAllItems,
+      ),
+      dateAcknowledgedComplete: this.formatIncomingDate(
+        application.dateAcknowledgedComplete,
+      ),
     });
 
     if (
-      app.assigneeUuid !== existingApplication.assigneeUuid &&
-      app.assigneeUuid !== req.user.entity.uuid
+      updatedApplication.assigneeUuid !== existingApplication.assigneeUuid &&
+      updatedApplication.assigneeUuid !== req.user.entity.uuid
     ) {
       this.notificationService.createForApplication(
         req.user.entity,
-        app.assigneeUuid,
+        updatedApplication.assigneeUuid,
         "You've been assigned",
-        app,
+        updatedApplication,
       );
     }
 
-    const mappedApps = await this.applicationService.mapToDtos([app]);
-    return mappedApps[0];
+    const mappedApps = await this.applicationService.mapToDtos([
+      updatedApplication,
+    ]);
+    return {
+      ...mappedApps[0],
+      statusDetails: updatedApplication.status,
+      typeDetails: updatedApplication.type,
+      regionDetails: updatedApplication.region,
+    };
   }
 
   @Delete()
   @UserRoles(...ANY_AUTH_ROLE)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
+  }
+
+  private formatIncomingDate(date?: number) {
+    if (date) {
+      return new Date(date);
+    } else if (date === null) {
+      return null;
+    } else {
+      return undefined;
+    }
   }
 }

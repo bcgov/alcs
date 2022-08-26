@@ -21,6 +21,10 @@ export interface ApplicationDto {
   type: string;
   board: string;
   dateReceived: number;
+  datePaid?: number;
+  dateAcknowledgedIncomplete?: number;
+  dateReceivedAllItems?: number;
+  dateAcknowledgedComplete?: number;
   region?: string;
   assignee?: UserDto;
   activeDays: number;
@@ -36,6 +40,10 @@ export interface ApplicationPartialDto {
   status?: string;
   region?: string;
   dateReceived?: number;
+  datePaid?: number;
+  dateAcknowledgedIncomplete?: number;
+  dateReceivedAllItems?: number;
+  dateAcknowledgedComplete?: number;
   type?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 
 import { OverviewComponent } from './overview.component';
 
@@ -8,9 +9,14 @@ describe('OverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OverviewComponent ]
-    })
-    .compileComponents();
+      providers: [
+        {
+          provide: ApplicationDetailService,
+          useValue: jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', ['loadApplication']),
+        },
+      ],
+      declarations: [OverviewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewComponent);
     component = fixture.componentInstance;
