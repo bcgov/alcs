@@ -36,6 +36,7 @@
          <column autoUpdated="false" defaultValue="'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2'::uuid" digits="0" id="15" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_fe6c9e8b98e3f649b598710dfce" implied="false" onDeleteCascade="false" schema="public" table="board"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="16" name="date_received" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
