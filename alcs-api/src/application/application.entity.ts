@@ -33,15 +33,7 @@ export class Application extends Base {
 
   @AutoMap()
   @Column({
-    type: 'uuid',
-    nullable: true,
-  })
-  assigneeUuid: string;
-
-  @AutoMap()
-  @Column({
     type: 'boolean',
-    nullable: false,
     default: false,
   })
   paused: boolean;
@@ -49,10 +41,15 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'boolean',
-    nullable: false,
     default: false,
   })
   highPriority: boolean;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+  })
+  dateReceived: Date;
 
   @ManyToOne(() => ApplicationStatus, {
     nullable: false,
@@ -98,6 +95,13 @@ export class Application extends Base {
   @AutoMap()
   @ManyToOne(() => User, { nullable: true })
   assignee: User;
+
+  @AutoMap()
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  assigneeUuid: string;
 
   @AutoMap()
   @OneToMany(() => ApplicationHistory, (appHistory) => appHistory.application)

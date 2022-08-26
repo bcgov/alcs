@@ -61,6 +61,7 @@ describe('CardDetailDialogComponent', () => {
     highPriority: false,
     board: 'board',
     decisionMeetings: [],
+    dateReceived: Date.now(),
   };
 
   beforeEach(async () => {

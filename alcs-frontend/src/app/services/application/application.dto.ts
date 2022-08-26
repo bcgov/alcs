@@ -6,6 +6,7 @@ export interface CreateApplicationDto {
   fileNumber: string;
   applicant: string;
   type: string;
+  dateReceived: number;
   region?: string;
 }
 
@@ -19,6 +20,7 @@ export interface ApplicationDto {
   status: string;
   type: string;
   board: string;
+  dateReceived: number;
   region?: string;
   assignee?: UserDto;
   activeDays: number;
@@ -33,6 +35,7 @@ export interface ApplicationPartialDto {
   applicant?: string;
   status?: string;
   region?: string;
+  dateReceived?: number;
   type?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;

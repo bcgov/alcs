@@ -44,7 +44,9 @@ export class BoardService {
   async changeBoard(fileNumber: string, code: string) {
     const application = await this.applicationService.get(fileNumber);
     if (!application) {
-      throw new ServiceNotFoundException('Failed to find application');
+      throw new ServiceNotFoundException(
+        `Failed to find application with fileNumber ${fileNumber}`,
+      );
     }
 
     const board = await this.boardRepository.findOne({
@@ -54,7 +56,9 @@ export class BoardService {
       relations: this.DEFAULT_RELATIONS,
     });
     if (!board) {
-      throw new ServiceNotFoundException('Board not found');
+      throw new ServiceNotFoundException(
+        `Failed to find Board with code ${code}`,
+      );
     }
 
     const initialStatus = board.statuses.find((status) => status.order === 0);

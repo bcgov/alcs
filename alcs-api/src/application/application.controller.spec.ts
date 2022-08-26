@@ -49,6 +49,7 @@ describe('ApplicationController', () => {
     paused: mockApplicationEntity.paused,
     highPriority: mockApplicationEntity.highPriority,
     decisionMeetings: [],
+    dateReceived: Date.now(),
   };
 
   beforeEach(async () => {
