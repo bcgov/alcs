@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FindOptionsRelations } from 'typeorm/browser';
 import { ApplicationService } from '../application/application.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
@@ -9,9 +10,13 @@ import { Comment } from './comment.entity';
 import { CommentMention } from './mention/comment-mention.entity';
 import { CommentMentionService } from './mention/comment-mention.service';
 
-const DEFAULT_COMMENT_RELATIONS = ['author', 'mentions'];
 @Injectable()
 export class CommentService {
+  private DEFAULT_COMMENT_RELATIONS: FindOptionsRelations<Comment> = {
+    author: true,
+    mentions: true,
+  };
+
   constructor(
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
@@ -26,7 +31,7 @@ export class CommentService {
       where: {
         applicationUuid: application.uuid,
       },
-      relations: DEFAULT_COMMENT_RELATIONS,
+      relations: this.DEFAULT_COMMENT_RELATIONS,
       order: {
         createdAt: 'DESC',
       },
@@ -38,7 +43,7 @@ export class CommentService {
       where: {
         uuid: commentUuid,
       },
-      relations: DEFAULT_COMMENT_RELATIONS,
+      relations: this.DEFAULT_COMMENT_RELATIONS,
     });
   }
 
@@ -78,7 +83,7 @@ export class CommentService {
   async update(uuid: string, body: string, mentions: CommentMention[]) {
     const comment = await this.commentRepository.findOne({
       where: { uuid },
-      relations: [...DEFAULT_COMMENT_RELATIONS, 'application'],
+      relations: { ...this.DEFAULT_COMMENT_RELATIONS, application: true },
     });
 
     if (body.trim() === '') {

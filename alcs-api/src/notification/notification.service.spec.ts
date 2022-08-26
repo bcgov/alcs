@@ -1,14 +1,11 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository, UpdateResult } from 'typeorm';
-import { NotificationProfile } from '../common/automapper/notification.automapper.profile';
 import { CONFIG_TOKEN } from '../common/config/config.module';
-import { NotificationService } from './notification.service';
 import { Notification } from './notification.entity';
+import { NotificationService } from './notification.service';
 
 describe('NotificationService', () => {
   let service: NotificationService;

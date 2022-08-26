@@ -1,13 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  ApplicationDecisionMakerDto,
-  ApplicationRegionDto,
-  ApplicationTypeDto,
-} from '../../../services/application/application-code.dto';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
@@ -23,28 +20,31 @@ export class CardDetailDialogComponent implements OnInit {
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
   selectedApplicationType = '';
-  selectedDecisionMaker?: string;
+  selectedBoard?: string;
   selectedRegion?: string;
 
-  currentCard: ApplicationDetailedDto = this.data;
+  application: ApplicationDetailedDto = this.data;
   applicationTypes: ApplicationTypeDto[] = [];
-  decisionMakers: ApplicationDecisionMakerDto[] = [];
+  boards: BoardWithFavourite[] = [];
   regions: ApplicationRegionDto[] = [];
+
+  isApplicationDirty = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
     private userService: UserService,
     private applicationService: ApplicationService,
+    private boardService: BoardService,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
-    this.currentCard = this.data;
+    this.application = this.data;
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
     this.selectedApplicationType = this.data.typeDetails.code;
-    this.selectedDecisionMaker = this.data.decisionMakerDetails?.code;
+    this.selectedBoard = this.data.board;
     this.selectedRegion = this.data.regionDetails?.code;
 
     this.$users = this.userService.$users;
@@ -52,8 +52,9 @@ export class CardDetailDialogComponent implements OnInit {
     this.applicationService.$applicationTypes.subscribe((types) => {
       this.applicationTypes = types;
     });
-    this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
-      this.decisionMakers = dms;
+
+    this.boardService.$boards.subscribe((boards) => {
+      this.boards = boards;
     });
     this.applicationService.$applicationRegions.subscribe((regions) => {
       this.regions = regions;
@@ -69,7 +70,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   onAssigneeSelected(assignee: UserDto) {
     this.selectedAssignee = assignee;
-    this.currentCard.assignee = assignee;
+    this.application.assignee = assignee;
     this.updateCard({
       assigneeUuid: assignee.uuid,
     });
@@ -82,10 +83,11 @@ export class CardDetailDialogComponent implements OnInit {
     });
   }
 
-  onDecisionMakerSelected(decisionMaker: ApplicationDecisionMakerDto) {
-    this.selectedDecisionMaker = decisionMaker.code;
-    this.updateCard({
-      decisionMaker: decisionMaker.code,
+  async onBoardSelected(board: BoardWithFavourite) {
+    this.selectedBoard = board.code;
+    await this.boardService.changeBoard(this.application.fileNumber, board.code).then(() => {
+      this.isApplicationDirty = true;
+      this.toastService.showSuccessToast(`Application moved to ${board.title}`);
     });
   }
 
@@ -107,9 +109,10 @@ export class CardDetailDialogComponent implements OnInit {
     this.applicationService
       .updateApplication({
         ...changes,
-        fileNumber: this.currentCard.fileNumber,
+        fileNumber: this.application.fileNumber,
       })
       .then(() => {
+        this.isApplicationDirty = true;
         this.toastService.showSuccessToast('Application Updated');
       });
   }
@@ -117,12 +120,13 @@ export class CardDetailDialogComponent implements OnInit {
   onToggleActive() {
     this.applicationService
       .updateApplication({
-        fileNumber: this.currentCard.fileNumber,
-        paused: !this.currentCard.paused,
+        fileNumber: this.application.fileNumber,
+        paused: !this.application.paused,
       })
       .then(() => {
-        this.currentCard.paused = !this.currentCard.paused;
-        if (this.currentCard.paused) {
+        this.isApplicationDirty = true;
+        this.application.paused = !this.application.paused;
+        if (this.application.paused) {
           this.toastService.showSuccessToast('Application Paused');
         } else {
           this.toastService.showSuccessToast('Application Activated');
@@ -132,7 +136,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.currentCard.highPriority
+      body: this.application.highPriority
         ? 'Remove priority from this Application?'
         : 'Add priority to this application?',
     });
@@ -140,11 +144,12 @@ export class CardDetailDialogComponent implements OnInit {
       if (answer) {
         this.applicationService
           .updateApplication({
-            fileNumber: this.currentCard.fileNumber,
-            highPriority: !this.currentCard.highPriority,
+            fileNumber: this.application.fileNumber,
+            highPriority: !this.application.highPriority,
           })
           .then(() => {
-            this.currentCard.highPriority = !this.currentCard.highPriority;
+            this.isApplicationDirty = true;
+            this.application.highPriority = !this.application.highPriority;
           });
       }
     });

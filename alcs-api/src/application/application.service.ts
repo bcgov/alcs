@@ -3,7 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
+import { FindOptionsRelations } from 'typeorm/browser';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -18,13 +18,13 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 
 @Injectable()
 export class ApplicationService {
-  private DEFAULT_RELATIONS = [
-    'status',
-    'type',
-    'assignee',
-    'decisionMaker',
-    'region',
-  ];
+  private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
+    status: true,
+    type: true,
+    assignee: true,
+    board: true,
+    region: true,
+  };
   private logger = new Logger(ApplicationService.name);
 
   constructor(
@@ -79,23 +79,11 @@ export class ApplicationService {
     return;
   }
 
-  async getAll({
-    decisionMaker,
-    assigneeUuid,
-  }: {
-    decisionMaker?: ApplicationDecisionMaker;
-    assigneeUuid?: string;
-  }): Promise<Application[]> {
-    const whereClause: FindOptionsWhere<Application> = {};
-    if (decisionMaker) {
-      whereClause.decisionMakerUuid = decisionMaker.uuid;
-    }
-    if (assigneeUuid) {
-      whereClause.assigneeUuid = assigneeUuid;
-    }
-
+  async getAll(
+    findOptions?: FindOptionsWhere<Application>,
+  ): Promise<Application[]> {
     return await this.applicationRepository.find({
-      where: whereClause,
+      where: findOptions,
       relations: this.DEFAULT_RELATIONS,
     });
   }

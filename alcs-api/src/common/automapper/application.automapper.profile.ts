@@ -2,8 +2,6 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationCodeService } from '../../application/application-code/application-code.service';
-import { ApplicationDecisionMakerDto } from '../../application/application-code/application-decision-maker/application-decision-maker.dto';
-import { ApplicationDecisionMaker } from '../../application/application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegionDto } from '../../application/application-code/application-region/application-region.dto';
 import { ApplicationRegion } from '../../application/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../application/application-code/application-type/application-type.dto';
@@ -30,7 +28,6 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationStatus, ApplicationStatusDto);
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationStatusDto, ApplicationStatus);
-      createMap(mapper, ApplicationDecisionMaker, ApplicationDecisionMakerDto);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
 
       createMap(
@@ -46,8 +43,8 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((a) => a.type.code),
         ),
         forMember(
-          (ad) => ad.decisionMaker,
-          mapFrom((a) => (a.decisionMaker ? a.decisionMaker.code : undefined)),
+          (ad) => ad.board,
+          mapFrom((a) => a.board.code),
         ),
         forMember(
           (ad) => ad.region,
@@ -72,16 +69,6 @@ export class ApplicationProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.decisionMakerDetails,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.type,
-              ApplicationDecisionMaker,
-              ApplicationDecisionMakerDto,
-            ),
-          ),
-        ),
-        forMember(
           (ad) => ad.regionDetails,
           mapFrom((a) =>
             this.mapper.map(a.type, ApplicationRegion, ApplicationRegionDto),
@@ -103,16 +90,6 @@ export class ApplicationProfile extends AutomapperProfile {
           async (a) => a.type,
           mapFrom(async (ad) => {
             return await this.codeService.fetchType(ad.type);
-          }),
-        ),
-        forMember(
-          async (a) => a.decisionMaker,
-          mapFrom(async (ad) => {
-            if (ad.decisionMaker) {
-              return await this.codeService.fetchDecisionMaker(
-                ad.decisionMaker,
-              );
-            }
           }),
         ),
         forMember(

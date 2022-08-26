@@ -54,7 +54,7 @@ export class NotificationService {
     const notification = new Notification({
       body,
       title: `${application.fileNumber} (${application.applicant})`,
-      link: `${frontEnd}/board/${application.decisionMaker.code}?app=${application.fileNumber}`,
+      link: `${frontEnd}/board/${application.board.code}?app=${application.fileNumber}`,
       targetType: 'application',
       actor,
       receiverUuid,

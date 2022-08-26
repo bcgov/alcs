@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { ApplicationDecisionMakerDto } from '../../services/application/application-code.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { NotificationService } from '../../services/notification/notification.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -20,12 +20,13 @@ export class HeaderComponent implements OnInit {
   currentUserProfile?: UserDto;
   currentUser?: ICurrentUser;
   hasRoles = false;
-  sortedDecisionMakers: ApplicationDecisionMakerDto[] = [];
+  sortedBoards: BoardWithFavourite[] = [];
   notifications: NotificationDto[] = [];
 
   constructor(
     private authService: AuthenticationService,
     private applicationService: ApplicationService,
+    private boardService: BoardService,
     private toastService: ToastService,
     private userService: UserService,
     private router: Router,
@@ -48,23 +49,27 @@ export class HeaderComponent implements OnInit {
       this.currentUserProfile = user;
     });
 
-    this.applicationService.$applicationDecisionMakers.subscribe(
-      (dms) => (this.sortedDecisionMakers = dms.sort((x, y) => this.sortDecisionMakers(x, y)))
+    this.boardService.$boards.subscribe(
+      (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y)))
     );
   }
 
-  private sortDecisionMakers(x: ApplicationDecisionMakerDto, y: ApplicationDecisionMakerDto) {
-    if (x.isFavorite && !y.isFavorite) {
+  private sortDecisionMakers(x: BoardWithFavourite, y: BoardWithFavourite) {
+    if (x.isFavourite && !y.isFavourite) {
       return -1;
     }
 
-    if (y.isFavorite && !x.isFavorite) {
+    if (y.isFavourite && !x.isFavourite) {
       return 1;
     }
 
-    if (x.isFavorite === y.isFavorite) {
-      if (x.label > y.label) return 1;
-      if (x.label < y.label) return -1;
+    if (x.isFavourite === y.isFavourite) {
+      if (x.title > y.title) {
+        return 1;
+      }
+      if (x.title < y.title) {
+        return -1;
+      }
     }
     return 0;
   }

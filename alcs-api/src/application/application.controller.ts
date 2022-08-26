@@ -20,7 +20,6 @@ import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -45,14 +44,8 @@ export class ApplicationController {
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
-  async getAll(@Query('dm') dm?: string): Promise<ApplicationDto[]> {
-    let decisionMaker;
-    if (dm) {
-      decisionMaker = await this.codeService.fetchDecisionMaker(dm);
-    }
-    const applications = await this.applicationService.getAll({
-      decisionMaker,
-    });
+  async getAll(): Promise<ApplicationDto[]> {
+    const applications = await this.applicationService.getAll();
     return this.applicationService.mapToDtos(applications);
   }
 
@@ -67,7 +60,6 @@ export class ApplicationController {
       ...mappedApplication[0],
       statusDetails: application.status,
       typeDetails: application.type,
-      decisionMakerDetails: application.decisionMaker,
       regionDetails: application.region,
     };
   }
@@ -78,9 +70,6 @@ export class ApplicationController {
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
     const type = await this.codeService.fetchType(application.type);
-    const decisionMaker = application.decisionMaker
-      ? await this.codeService.fetchDecisionMaker(application.decisionMaker)
-      : undefined;
 
     const region = application.region
       ? await this.codeService.fetchRegion(application.region)
@@ -89,7 +78,6 @@ export class ApplicationController {
     const app = await this.applicationService.createOrUpdate({
       ...application,
       type,
-      decisionMaker,
       region,
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
@@ -125,17 +113,6 @@ export class ApplicationController {
       type = await this.codeService.fetchType(application.type);
     }
 
-    let decisionMaker: ApplicationDecisionMaker | undefined;
-    if (
-      application.decisionMaker &&
-      (!existingApplication.decisionMaker ||
-        application.decisionMaker != existingApplication.decisionMaker.code)
-    ) {
-      decisionMaker = await this.codeService.fetchDecisionMaker(
-        application.decisionMaker,
-      );
-    }
-
     let region: ApplicationRegion | undefined;
     if (
       application.region &&
@@ -150,7 +127,6 @@ export class ApplicationController {
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
       typeUuid: type ? type.uuid : undefined,
-      decisionMakerUuid: decisionMaker ? decisionMaker.uuid : undefined,
       regionUuid: region ? region.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,

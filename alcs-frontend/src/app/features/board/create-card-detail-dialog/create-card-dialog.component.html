@@ -66,18 +66,6 @@
     </div>
     <div>
       <ng-select
-        class="card-decision-maker"
-        [items]="decisionMakers"
-        appendTo="body"
-        placeholder="Decision Maker"
-        bindLabel="label"
-        bindValue="code"
-        (change)="onSelectDtoDropdown('decisionMaker', $event)"
-      >
-      </ng-select>
-    </div>
-    <div>
-      <ng-select
         class="card-region"
         [items]="regions"
         appendTo="body"
@@ -91,7 +79,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div>
-      <button mat-button mat-dialog-close>Close</button>
+      <button mat-button [mat-dialog-close]="false">Close</button>
       <button mat-button type="submit" [disabled]="!createForm.valid">Save</button>
     </div>
   </mat-dialog-actions>
