@@ -37,6 +37,10 @@
             <parent column="uuid" foreignKey="FK_fe6c9e8b98e3f649b598710dfce" implied="false" onDeleteCascade="false" schema="public" table="board"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="16" name="date_received" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="17" name="date_paid" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="18" name="date_acknowledged_incomplete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="19" name="date_received_all_items" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="20" name="date_acknowledged_complete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
