@@ -34,7 +34,6 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'boolean',
-    nullable: false,
     default: false,
   })
   paused: boolean;
@@ -42,7 +41,6 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'boolean',
-    nullable: false,
     default: false,
   })
   highPriority: boolean;
@@ -50,7 +48,6 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'timestamptz',
-    nullable: false,
   })
   dateReceived: Date;
 
