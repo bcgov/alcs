@@ -10,30 +10,19 @@
 >
   <div class="card-content">
     <div class="upper-card">
-      <div class="row">
-        {{ cardData.title }}
-        <span class="high-priority" *ngIf="cardData.highPriority">!</span>
-      </div>
-      <div class="row">
-        <div
-          class="type"
-          [ngStyle]="{ backgroundColor: cardData.type.backgroundColor, color: cardData.type.textColor }"
-        >
-          <span class="center">{{ cardData.type.shortLabel }}</span>
-        </div>
+      {{ cardData.title }}
+      <span class="high-priority" *ngIf="cardData.highPriority">!</span>
+      <div class="type" [ngStyle]="{ backgroundColor: cardData.type.backgroundColor, color: cardData.type.textColor }">
+        <span class="center">{{ cardData.type.shortLabel }}</span>
       </div>
     </div>
     <div class="lower-card">
-      <div class="row">
-        <div class="active-days center">
-          <mat-icon title="Active Days">calendar_today</mat-icon>
-          <span class="center">{{ cardData.activeDays }}</span>
-        </div>
+      <div class="active-days center">
+        <mat-icon title="Active Days">calendar_today</mat-icon>
+        <span class="center">{{ cardData.activeDays }}</span>
       </div>
-      <div class="row">
-        <div *ngIf="cardData.assigneeInitials" class="assignee">
-          <span class="center">{{ cardData.assigneeInitials }}</span>
-        </div>
+      <div *ngIf="cardData.assigneeInitials" class="assignee">
+        <span class="center">{{ cardData.assigneeInitials }}</span>
       </div>
     </div>
   </div>
