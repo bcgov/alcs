@@ -3,12 +3,13 @@ holiday_entity
 health_check
 notification
 comment_mention
+board_status
 application_paused
 application_history
 comment
 application
 application_type
-application_status
 application_region
-application_decision_maker
+board
+application_status
 user

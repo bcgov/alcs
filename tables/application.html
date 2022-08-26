@@ -334,7 +334,7 @@
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
-                                    <td>&#39;e6ddd1af-1cb9-4e45-962a-92e8d532b149&#39;::uuid</td>
+                                    <td>&#39;f9f4244f-9741-45f0-9724-ce13e8aa09eb&#39;::uuid</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
@@ -371,27 +371,6 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="decision_maker_uuid">decision_maker_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application.decision_maker_uuid references application_decision_maker.uuid via FK_a14367bd796b759f907518c5e18"><a href='application_decision_maker.html'>application_decision_maker</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_a14367bd796b759f907518c5e18<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="region_uuid">region_uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
@@ -407,6 +386,27 @@
                                             <tr>
                                                 <td title="application.region_uuid references application_region.uuid via FK_8b7f8f8a39a6142e0f7c5ad86f5"><a href='application_region.html'>application_region</a><span class='relatedKey'>.uuid</span></td>
                                                 <td class="constraint detail">FK_8b7f8f8a39a6142e0f7c5ad86f5<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="board_uuid">board_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>&#39;bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2&#39;::uuid</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application.board_uuid references board.uuid via FK_fe6c9e8b98e3f649b598710dfce"><a href='board.html'>board</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_fe6c9e8b98e3f649b598710dfce<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -477,31 +477,32 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="349,217,728,756">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="43,97,267,244">
-<area shape="rect" id="node3" href="application_decision_maker.html" target="_top" title="application_decision_maker" alt="" coords="5,661,305,837">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="42,855,269,1031">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="43,275,268,451">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="43,468,267,644">
-<area shape="rect" id="node7" href="application_history.html" target="_top" title="application_history" alt="" coords="773,363,1005,509">
-<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="772,199,1005,345">
-<area shape="rect" id="node9" href="comment.html" target="_top" title="comment" alt="" coords="777,5,1001,181">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,217,655,756">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="7,97,231,244">
+<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="7,855,231,1001">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,661,232,837">
+<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,275,231,451">
+<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="7,468,231,644">
+<area shape="rect" id="node7" href="application_history.html" target="_top" title="application_history" alt="" coords="699,363,931,509">
+<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="699,199,932,345">
+<area shape="rect" id="node9" href="comment.html" target="_top" title="comment" alt="" coords="703,5,927,181">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="349,184,728,723">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="98,81,213,169">
-<area shape="rect" id="node3" href="application_decision_maker.html" target="_top" title="application_decision_maker" alt="" coords="5,679,305,855">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="42,872,269,1048">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="43,292,268,468">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="43,485,267,661">
-<area shape="rect" id="node7" href="application_history.html" target="_top" title="application_history" alt="" coords="773,152,1005,299">
-<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="772,316,1005,463">
-<area shape="rect" id="node9" href="comment.html" target="_top" title="comment" alt="" coords="811,43,967,131">
-<area shape="rect" id="node10" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1049,5,1280,93">
-<area shape="rect" id="node11" href="notification.html" target="_top" title="notification" alt="" coords="452,79,625,167">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,184,655,723">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,81,176,169">
+<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="7,857,231,1004">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,664,232,840">
+<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,471,231,647">
+<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="7,277,231,453">
+<area shape="rect" id="node7" href="application_history.html" target="_top" title="application_history" alt="" coords="699,152,931,299">
+<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="699,316,932,463">
+<area shape="rect" id="node9" href="board_status.html" target="_top" title="board_status" alt="" coords="374,767,557,855">
+<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="737,43,893,131">
+<area shape="rect" id="node11" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="976,5,1207,93">
+<area shape="rect" id="node12" href="notification.html" target="_top" title="notification" alt="" coords="379,79,552,167">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

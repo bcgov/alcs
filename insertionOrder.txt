@@ -1,12 +1,13 @@
 user
-application_decision_maker
-application_region
 application_status
+board
+application_region
 application_type
 application
 comment
 application_history
 application_paused
+board_status
 comment_mention
 notification
 health_check
