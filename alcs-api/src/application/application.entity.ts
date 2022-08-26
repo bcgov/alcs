@@ -11,10 +11,11 @@ import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
+import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationType } from './application-code/application-type/application-type.entity';
 
 @Entity()
 export class Application extends Base {
@@ -109,4 +110,11 @@ export class Application extends Base {
   @AutoMap()
   @OneToMany(() => Comment, (comment) => comment.application)
   comments: Comment[];
+
+  @AutoMap()
+  @OneToMany(
+    () => ApplicationDecisionMeeting,
+    (appDecMeeting) => appDecMeeting.application,
+  )
+  decisionMeetings: ApplicationDecisionMeeting[];
 }

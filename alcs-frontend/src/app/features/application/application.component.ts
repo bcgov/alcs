@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { ProcessingComponent } from './processing/processing.component';
+import { ReviewComponent } from './review/review.component';
 
 @Component({
   selector: 'app-application',
@@ -23,5 +25,11 @@ export class ApplicationComponent implements OnInit {
       }
       this.application = application;
     });
+  }
+
+  onOutletLoaded(component: ReviewComponent | ProcessingComponent) {
+    if (component instanceof ReviewComponent) {
+      component.fileNumber = this.application?.fileNumber || '';
+    }
   }
 }

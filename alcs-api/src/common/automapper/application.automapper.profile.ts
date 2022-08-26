@@ -6,6 +6,8 @@ import { ApplicationRegionDto } from '../../application/application-code/applica
 import { ApplicationRegion } from '../../application/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../application/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../application/application-code/application-type/application-type.entity';
+import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
 import {
@@ -29,6 +31,20 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationStatusDto, ApplicationStatus);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
+      createMap(
+        mapper,
+        ApplicationDecisionMeeting,
+        ApplicationDecisionMeetingDto,
+      );
+      createMap(
+        mapper,
+        ApplicationDecisionMeetingDto,
+        ApplicationDecisionMeeting,
+        forMember(
+          (a) => a.date,
+          mapFrom((ad) => new Date(ad.date)),
+        ),
+      );
 
       createMap(
         mapper,
