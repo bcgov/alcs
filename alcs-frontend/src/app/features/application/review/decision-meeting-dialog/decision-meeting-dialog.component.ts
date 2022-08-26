@@ -18,7 +18,7 @@ export class DecisionMeetingDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDecisionMeetingForm,
     private dialogRef: MatDialogRef<DecisionMeetingDialogComponent>,
-    public decisionMeetingService: ApplicationDecisionMeetingService,
+    private decisionMeetingService: ApplicationDecisionMeetingService,
     private toastService: ToastService
   ) {
     if (data.uuid) {
