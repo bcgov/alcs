@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import * as dayjs from 'dayjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -20,6 +21,7 @@ export class CreateCardDialogComponent implements OnInit {
     fileNumber: new FormControl('', [Validators.required]),
     applicant: new FormControl('', [Validators.required]),
     type: new FormControl('', [Validators.required]),
+    receivedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
     region: new FormControl(''),
   });
 
@@ -53,6 +55,7 @@ export class CreateCardDialogComponent implements OnInit {
       applicant: formValues.applicant!,
       fileNumber: formValues.fileNumber!.toString(),
       region: formValues.region || undefined,
+      dateReceived: dayjs(formValues.receivedDate).startOf('day').add(12, 'hours').valueOf(),
     });
     this.dialogRef.close(true);
     this.toastService.showSuccessToast('Application Created');

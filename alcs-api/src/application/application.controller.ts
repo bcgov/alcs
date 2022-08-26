@@ -79,6 +79,7 @@ export class ApplicationController {
       ...application,
       type,
       region,
+      dateReceived: new Date(application.dateReceived),
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
