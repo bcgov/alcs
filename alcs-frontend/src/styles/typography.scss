@@ -50,7 +50,7 @@ p,
 
 .body2-text {
   @include typography-style(14px, 400);
-  line-height: 20px;
+  line-height: 24px;
 }
 
 .button-text {
@@ -61,12 +61,12 @@ p,
 
 .label-text {
   @include typography-style(14px, 700);
-  line-height: 20px;
+  line-height: 24px;
 }
 
 .subtitle {
   @include typography-style(18px, 700);
-  line-height: 28px;
+  line-height: 32px;
 }
 
 button {

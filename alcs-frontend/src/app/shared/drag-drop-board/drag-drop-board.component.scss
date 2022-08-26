@@ -15,13 +15,14 @@
   background-color: #fff;
   z-index: 1000;
   text-align: center;
-  align-content: center;
-  height: 55px;
+  font-size: 18px;
+  padding: 4px 8px;
+  height: 64px;
 }
 
 .column {
-  margin: 0 16px;
-  min-width: 270px;
+  margin: 0 8px;
+  min-width: 304px;
   display: flex;
   flex-direction: column;
 }
@@ -29,6 +30,6 @@
 .card-container {
   border: 1px solid #999;
   height: 100%;
-  padding: 1rem;
+  padding: 11px;
   min-height: 400px;
 }

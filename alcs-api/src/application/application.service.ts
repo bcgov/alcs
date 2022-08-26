@@ -24,6 +24,7 @@ export class ApplicationService {
     assignee: true,
     board: true,
     region: true,
+    decisionMeetings: true,
   };
   private logger = new Logger(ApplicationService.name);
 

@@ -2,9 +2,11 @@
 
 .card {
   border: 1px solid #ccc;
-  height: 90px;
+  height: 160px;
   margin-bottom: 1rem;
   cursor: grab;
+  width: 280px;
+  font-size: 16px;
 }
 
 .card.paused {
@@ -15,24 +17,26 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  flex-wrap: wrap;
   height: 100%;
 }
 
-.lower-card, .upper-card {
+.lower-card {
   display: flex;
   justify-content: space-between;
   align-content: center;
+}
+
+.lower-card > div {
+  display: flex;
+  align-items: center;
 }
 
 .high-priority {
   font-size: 1.4em;
   font-weight: bold;
   color: $error-color;
-}
-
-.lower-card > div {
-  display: flex;
-  align-items: center;
+  float: right;
 }
 
 .assignee {
@@ -42,7 +46,7 @@
 }
 
 .active-days {
-  padding: 6px;
+  padding: 6px 0;
 
   mat-icon {
     color: #ccc;
@@ -52,13 +56,38 @@
 }
 
 .type {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  padding: 4px;
+  margin-top: 8px;
   border-radius: 8px;
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+  height: 24px;
+  font-size: 11px;
+  letter-spacing: 0.03em;
 }
 
 .cdk-drag-placeholder {
   opacity: 0.6;
+}
+
+.decision-date-info {
+  text-align: center;
+  position: relative;
+  background-color: #efefef;
+  border: 1px solid #929292;
+  font-size: 16px;
+  width: 280px;
+  padding: 8px 0px;
+}
+
+.read-card {
+  height: 110px;
+}
+
+mat-card.decision-date {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
 }

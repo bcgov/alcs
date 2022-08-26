@@ -27,6 +27,7 @@ describe('CardComponent', () => {
       activeDays: 2,
       paused: false,
       highPriority: false,
+      decisionMeetings: [],
     };
 
     fixture.detectChanges();
@@ -64,6 +65,7 @@ describe('CardComponent', () => {
       activeDays: 2,
       paused: true,
       highPriority: false,
+      decisionMeetings: [],
     };
     fixture.detectChanges();
 
