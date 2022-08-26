@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
-import { ProcessingComponent } from './processing/processing.component';
-import { ReviewComponent } from './review/review.component';
 
 @Component({
   selector: 'app-application',
@@ -12,24 +10,22 @@ import { ReviewComponent } from './review/review.component';
 })
 export class ApplicationComponent implements OnInit {
   application?: ApplicationDetailedDto;
+  fileNumber?: string;
 
-  constructor(private applicationService: ApplicationService, private route: ActivatedRoute) {}
+  constructor(private applicationDetailService: ApplicationDetailService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(async (routeParams) => {
       const { fileNumber } = routeParams;
-      const application = await this.applicationService.fetchApplication(fileNumber);
-
-      if (!application) {
-        //WHAT DO?
-      }
+      this.fileNumber = fileNumber;
+      this.loadApplication();
+    });
+    this.applicationDetailService.$application.subscribe((application) => {
       this.application = application;
     });
   }
 
-  onOutletLoaded(component: ReviewComponent | ProcessingComponent) {
-    if (component instanceof ReviewComponent) {
-      component.fileNumber = this.application?.fileNumber || '';
-    }
+  async loadApplication() {
+    await this.applicationDetailService.loadApplication(this.fileNumber!);
   }
 }

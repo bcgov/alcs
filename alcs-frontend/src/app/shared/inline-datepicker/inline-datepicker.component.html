@@ -1,0 +1,27 @@
+<div>
+  <span *ngIf="!isEditing">
+    <span class="not-set" *ngIf="!selectedValue"> Not set </span>
+    <span *ngIf="selectedValue">
+      {{ formattedDate }}
+    </span>
+    <button class="edit-button" mat-icon-button (click)="toggleEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
+    </button>
+  </span>
+  <div class="editing" [ngClass]="{
+  'hidden': !isEditing
+  }">
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="pdd" formControlName="date" />
+        <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
+        <mat-datepicker #pdd type="date"> </mat-datepicker>
+      </mat-form-field>
+    </form>
+    <div class="button-container">
+      <button mat-button (click)="toggleEdit()">Cancel</button>
+      <button mat-button style="margin-right: 8px" (click)="onSave()">Save</button>
+    </div>
+  </div>
+</div>

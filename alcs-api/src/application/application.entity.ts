@@ -51,6 +51,34 @@ export class Application extends Base {
   })
   dateReceived: Date;
 
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  datePaid?: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateAcknowledgedIncomplete?: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateReceivedAllItems?: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateAcknowledgedComplete?: Date;
+
   @ManyToOne(() => ApplicationStatus, {
     nullable: false,
   })
