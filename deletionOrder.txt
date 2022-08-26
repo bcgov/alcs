@@ -6,6 +6,7 @@ comment_mention
 board_status
 application_paused
 application_history
+application_decision_meeting
 comment
 application
 application_type

@@ -67,7 +67,7 @@ digraph "compactRelationshipsDiagram" {
       <TR><TD PORT="region_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">region_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="board_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">board_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 5</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 5</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR>
     </TABLE>>
     URL="tables/application.html"
     target="_top"
@@ -113,6 +113,19 @@ digraph "compactRelationshipsDiagram" {
     URL="tables/notification.html"
     target="_top"
     tooltip="notification"
+  ];
+  "application_decision_meeting" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="176" HEIGHT="16"><B>application_decision_meeting</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="176" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="176" HEIGHT="16">application_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="tables/application_decision_meeting.html"
+    target="_top"
+    tooltip="application_decision_meeting"
   ];
   "board_status" [
    label=<
@@ -173,6 +186,7 @@ digraph "compactRelationshipsDiagram" {
   "application":"region_uuid":w -> "application_region":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"status_uuid":w -> "application_status":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"type_uuid":w -> "application_type":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision_meeting":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_history":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_paused":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "board_status":"board_uuid":w -> "board":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];

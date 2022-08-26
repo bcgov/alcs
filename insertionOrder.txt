@@ -5,6 +5,7 @@ application_region
 application_type
 application
 comment
+application_decision_meeting
 application_history
 application_paused
 board_status

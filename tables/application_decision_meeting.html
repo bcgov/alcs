@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>application_status - postgres Database</title>
+        <title>application_decision_meeting - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_status</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>application_decision_meeting</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,14 +117,6 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application.status_uuid references application_status.uuid via FK_5b6c6dffed9d8dd24903be05473"><a href='application.html'>application</a><span class='relatedKey'>.status_uuid</span></td>
-                                                <td class="constraint detail">FK_5b6c6dffed9d8dd24903be05473<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="board_status.status_uuid references application_status.uuid via FK_97cd2800c2e17e3cb8c24c78987"><a href='board_status.html'>board_status</a><span class='relatedKey'>.status_uuid</span></td>
-                                                <td class="constraint detail">FK_97cd2800c2e17e3cb8c24c78987<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -219,12 +211,12 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="label">label</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
+                                    <td><span id="date">date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
                                     <td title=''></td>
                                     <td title=''></td>
-                                    <td>null</td>
+                                    <td>now()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
@@ -236,8 +228,8 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="code">code</span></td>
-                                    <td>text</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_uuid">application_uuid</span></td>
+                                    <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
@@ -248,23 +240,10 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="description">description</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_decision_meeting.application_uuid references application.uuid via FK_8629d5787d89267d417dcbb369b"><a href='application.html'>application</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_8629d5787d89267d417dcbb369b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -300,22 +279,10 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_5b6c6dffed9d8dd24903be05473</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_f8239cd4da09e40ee76649bf85a</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_0c826eba913d2983a4ef7a0af79</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>code</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_ceabbf8054480a33932d3b6bbbc</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>description</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -340,27 +307,25 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,5,652,299">
-<area shape="rect" id="node2" href="application_status.html" target="_top" title="application_status" alt="" coords="5,232,384,565">
-<area shape="rect" id="node3" href="board_status.html" target="_top" title="board_status" alt="" coords="428,316,652,492">
+<area shape="rect" id="node1" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="273,5,712,309">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,213,229,507">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_status.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_decision_meeting.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,308,652,601">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="137,5,252,93">
-<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="131,672,258,760">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="81,567,308,655">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="5,111,384,444">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="89,461,301,549">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="696,205,1011,293">
-<area shape="rect" id="node8" href="application_history.html" target="_top" title="application_history" alt="" coords="737,311,969,399">
-<area shape="rect" id="node9" href="application_paused.html" target="_top" title="application_paused" alt="" coords="737,416,970,504">
-<area shape="rect" id="node10" href="board_status.html" target="_top" title="board_status" alt="" coords="428,633,652,809">
-<area shape="rect" id="node11" href="comment.html" target="_top" title="comment" alt="" coords="775,43,931,131">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,319,500,612">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,144,176,232">
+<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="55,612,182,700">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,507,232,595">
+<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,296,231,384">
+<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="13,401,225,489">
+<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="544,111,983,415">
+<area shape="rect" id="node8" href="application_history.html" target="_top" title="application_history" alt="" coords="647,432,879,520">
+<area shape="rect" id="node9" href="application_paused.html" target="_top" title="application_paused" alt="" coords="647,537,880,625">
+<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="685,5,841,93">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_status.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_decision_meeting.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
