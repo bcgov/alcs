@@ -21,6 +21,14 @@ RUN npm run build --  --output-path=dist --output-hashing=all
 ######  Use Nginx alpine image  ###### 
 FROM nginx:stable-alpine
 
+### OpenShift fixes ####
+# https://torstenwalter.de/openshift/nginx/2017/08/04/nginx-on-openshift.html
+# support running as arbitrary user which belogs to the root group
+RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
+
+# use a non 80 port
+EXPOSE 8081
+
 # Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
@@ -30,5 +38,6 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 # Copy dist folder fro build stage to nginx public folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Start Nginx service
-CMD ["nginx", "-g", "daemon off;"]
+# Dynamically update environment values
+# When the container starts, replace the env.js with values from environment variables
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]

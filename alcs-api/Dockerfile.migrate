@@ -1,11 +1,10 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-# https://www.tomray.dev/nestjs-docker-production
-###################
+#####################
+# DATABASE MIGRATION 
+#####################
 
 FROM node:16.15-alpine As development
 
-WORKDIR /usr/src/app
+WORKDIR /opt/app-root/
 
 COPY --chown=node:node package*.json ./
 

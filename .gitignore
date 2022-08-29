@@ -4,3 +4,6 @@
 #VSCode
 .vscode
 *.code-workspace
+
+openshift/**/charts
+openshift/**/*.json

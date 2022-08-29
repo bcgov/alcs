@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: a5cf88-dev
+commonLabels:
+  app: alcs
+bases:
+- ../../components/api/base
+- ../../components/frontend/base
+- ../../components/meta/base
+
+patches:
+- routes_patch.yaml
+- env-variable_patch.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: alcs-api
+  files:
+  - production.json

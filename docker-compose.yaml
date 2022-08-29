@@ -35,6 +35,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+    environment:
+      - API_ROOT=http://localhost:8080
 
   ##################### Database ####################
   db:

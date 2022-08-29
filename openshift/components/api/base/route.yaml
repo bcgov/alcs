@@ -1,0 +1,8 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: alcs-api
+spec:
+  to:
+    kind: Service
+    name: alcs-api

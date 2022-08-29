@@ -1,7 +1,7 @@
 FROM node:16.15-alpine As development
 
-WORKDIR /app
-RUN chown node:node /app 
+WORKDIR /opt/app-root/
+RUN chown node:node /opt/app-root/
 
 COPY --chown=node:node package*.json ./
 

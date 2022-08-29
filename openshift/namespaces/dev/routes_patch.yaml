@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: alcs-web
+spec:
+  host: alcs-dev.apps.silver.devops.gov.bc.ca
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: alcs-api
+spec:
+  host: api.alcs-dev.apps.silver.devops.gov.bc.ca
