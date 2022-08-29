@@ -54,7 +54,7 @@ p,
 }
 
 .button-text {
-  @include typography-style(14px, 700);
+  @include typography-style(14px, 400);
   line-height: 24px;
   letter-spacing: 1px;
 }
@@ -72,6 +72,10 @@ p,
 button {
   @extend .button-text;
   padding: 8px 16px;
+}
+
+.mat-flat-button, .mat-stroked-button {
+  font-weight: 700 !important;
 }
 
 .mention {
