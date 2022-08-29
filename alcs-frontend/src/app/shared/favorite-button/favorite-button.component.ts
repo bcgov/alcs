@@ -12,7 +12,7 @@ export class FavoriteButtonComponent implements OnInit {
   @Input()
   currentUserProfile?: UserDto;
   @Input()
-  dmCode?: string;
+  boardCode?: string;
   @Input()
   isFavorite?: boolean = false;
 
@@ -22,8 +22,8 @@ export class FavoriteButtonComponent implements OnInit {
     this.userService.$currentUserProfile.subscribe((user) => {
       this.currentUserProfile = user;
 
-      if (this.dmCode && this.currentUserProfile) {
-        this.isFavorite = user.settings?.favoriteBoards?.includes(this.dmCode);
+      if (this.boardCode && this.currentUserProfile) {
+        this.isFavorite = user.settings?.favoriteBoards?.includes(this.boardCode);
       }
     });
   }
@@ -54,11 +54,11 @@ export class FavoriteButtonComponent implements OnInit {
   async onFavoriteClicked(event: any) {
     event.stopPropagation();
 
-    if (!this.currentUserProfile || !this.dmCode) {
+    if (!this.currentUserProfile || !this.boardCode) {
       return;
     }
 
-    this.updateFavoriteBoardsList(this.dmCode);
+    this.updateFavoriteBoardsList(this.boardCode);
 
     try {
       await this.userService.updateUser(this.currentUserProfile);

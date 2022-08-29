@@ -1,0 +1,37 @@
+<br />
+
+<div class="flex-container">
+  <div class="col-40">
+    <h4>Decision Meeting Dates</h4>
+  </div>
+  <div class="pull-right">
+    <button mat-flat-button color="primary" class="pull-right" (click)="onCreate()">+ New meeting</button>
+  </div>
+</div>
+
+<br />
+
+<table mat-table [dataSource]="decisionMeetings" class="mat-elevation-z8 width-100">
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Date</th>
+    <td mat-cell *matCellDef="let element">{{ element.date | date: 'mediumDate' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>User Action</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button class="action-btn" (click)="onEdit(element.uuid)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr class="mat-row center" *matNoDataRow>
+    No data
+  </tr>
+</table>

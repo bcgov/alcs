@@ -59,7 +59,9 @@ describe('CardDetailDialogComponent', () => {
     pausedDays: 5,
     paused: true,
     highPriority: false,
-    decisionMaker: 'dm',
+    board: 'board',
+    decisionMeetings: [],
+    dateReceived: Date.now(),
   };
 
   beforeEach(async () => {

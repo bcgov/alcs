@@ -25,6 +25,7 @@ import { CommentModule } from './comment/comment.module';
 import { LogoutController } from './logout/logout.controller';
 import { HomeModule } from './home/home.module';
 import { NotificationModule } from './notification/notification.module';
+import { BoardModule } from './board/board.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { NotificationModule } from './notification/notification.module';
     SchedulerModule,
     HomeModule,
     NotificationModule,
+    BoardModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [

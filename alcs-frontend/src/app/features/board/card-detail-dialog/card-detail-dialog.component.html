@@ -1,20 +1,20 @@
 <div mat-dialog-title class="header">
   <div>
-    <a href="application/{{currentCard.fileNumber}}" target="_blank" rel="noreferrer">
-      <h2 class="card-title">{{ currentCard.fileNumber }} ({{ currentCard.applicant }})</h2>
+    <a href="application/{{application.fileNumber}}" target="_blank" rel="noreferrer">
+      <h2 class="card-title">{{ application.fileNumber }} ({{ application.applicant }})</h2>
     </a>
     <span>
-      in <span class="italic card-status-label">{{ currentCard.statusDetails.label }}</span>
+      in <span class="italic card-status-label">{{ application.statusDetails.label }}</span>
     </span>
   </div>
   <div class="center">
-    <div class="card-state">{{ currentCard.paused ? 'Paused' : 'Active' }}</div>
+    <div class="card-state">{{ application.paused ? 'Paused' : 'Active' }}</div>
     <div>
       <button (click)="onTogglePriority()" mat-icon-button>
         <span
           [ngClass]="{
-            'filled-priority': currentCard.highPriority,
-            'empty-priority': !currentCard.highPriority
+            'filled-priority': application.highPriority,
+            'empty-priority': !application.highPriority
           }"
           >!</span
         >
@@ -28,7 +28,7 @@
     <div>
       <app-inline-edit
         class="card-applicant"
-        value="{{ currentCard.applicant }}"
+        value="{{ application.applicant }}"
         (save)="onUpdateTextField('applicant', $event)"
       ></app-inline-edit>
     </div>
@@ -49,13 +49,13 @@
   <div>
     <ng-select
       class="card-decision-maker"
-      [items]="decisionMakers"
+      [items]="boards"
       placeholder="Decision Maker"
-      bindLabel="label"
+      bindLabel="decisionMaker"
       bindValue="code"
       [clearable]="false"
-      [(ngModel)]="selectedDecisionMaker"
-      (change)="onDecisionMakerSelected($event)"
+      [(ngModel)]="selectedBoard"
+      (change)="onBoardSelected($event)"
     >
     </ng-select>
   </div>
@@ -95,16 +95,16 @@
   <div class="flex-container">
     <div class="flex-child">
       <mat-label>Active days:</mat-label>
-      <p class="card-active-days">{{ currentCard.activeDays }}</p>
+      <p class="card-active-days">{{ application.activeDays }}</p>
     </div>
     <div class="flex-child">
       <mat-label>Paused days:</mat-label>
-      <p class="card-paused-days">{{ currentCard.pausedDays }}</p>
+      <p class="card-paused-days">{{ application.pausedDays }}</p>
     </div>
     <div class="flex-child small">
       <mat-label></mat-label>
       <button class="card-state-btn pull-right" (click)="onToggleActive()">
-        {{ currentCard.paused ? 'Activate' : 'Pause' }}
+        {{ application.paused ? 'Activate' : 'Pause' }}
       </button>
     </div>
   </div>
@@ -114,12 +114,12 @@
   <div class="card-comments-wrapper">
     <mat-label>Comments</mat-label>
     <div>
-      <app-comments [fileNumber]="currentCard.fileNumber"></app-comments>
+      <app-comments [fileNumber]="application.fileNumber"></app-comments>
     </div>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <div>
-    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button [mat-dialog-close]="isApplicationDirty">Close</button>
   </div>
 </mat-dialog-actions>

@@ -10,8 +10,6 @@ import { ApplicationStatusDto } from '../application-status/application-status.d
 import { ApplicationStatus } from '../application-status/application-status.entity';
 import { ApplicationMasterCodesDto } from './application-code.dto';
 import { ApplicationCodeService } from './application-code.service';
-import { ApplicationDecisionMakerDto } from './application-decision-maker/application-decision-maker.dto';
-import { ApplicationDecisionMaker } from './application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegionDto } from './application-region/application-region.dto';
 import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationTypeDto } from './application-type/application-type.dto';
@@ -41,11 +39,6 @@ export class ApplicationCodeController {
         appTypes.type,
         ApplicationType,
         ApplicationTypeDto,
-      ),
-      decisionMaker: this.applicationMapper.mapArray(
-        appTypes.decisionMaker,
-        ApplicationDecisionMaker,
-        ApplicationDecisionMakerDto,
       ),
       region: this.applicationMapper.mapArray(
         appTypes.region,

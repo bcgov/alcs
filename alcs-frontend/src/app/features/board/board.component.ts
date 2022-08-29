@@ -2,9 +2,10 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApplicationDecisionMakerDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
@@ -19,15 +20,16 @@ import { CreateCardDialogComponent } from './create-card-detail-dialog/create-ca
 export class BoardComponent implements OnInit {
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
-  boardTitle = 'All Applications';
-  boardIsFavorite: boolean = false;
+  boardTitle = '';
+  boardIsFavourite: boolean = false;
 
   private applicationTypes: ApplicationTypeDto[] = [];
-  decisionMakerCode?: string;
-  decisionMakers: ApplicationDecisionMakerDto[] = [];
+  selectedBoardCode?: string;
+  boards: BoardWithFavourite[] = [];
 
   constructor(
     private applicationService: ApplicationService,
+    private boardService: BoardService,
     public dialog: MatDialog,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
@@ -37,45 +39,27 @@ export class BoardComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params) => {
-      const decisionMakerCode = params['dmCode'];
-      if (decisionMakerCode) {
-        this.decisionMakerCode = decisionMakerCode;
-        this.applicationService.setDecisionMaker(decisionMakerCode);
-        this.applicationService.fetchApplications();
+      const boardCode = params['boardCode'];
+      if (boardCode) {
+        this.selectedBoardCode = boardCode;
+        const selectedBoard = this.boards.find((board) => board.code === this.selectedBoardCode);
 
-        const decisionMaker = this.decisionMakers.find((dm) => dm.code === this.decisionMakerCode);
-        if (decisionMaker) {
-          this.boardTitle = decisionMaker.label;
-          this.boardIsFavorite = decisionMaker.isFavorite;
+        if (selectedBoard) {
+          this.setupBoard(selectedBoard);
         }
       }
     });
 
-    this.applicationService.$applicationDecisionMakers.subscribe((dms) => {
-      this.decisionMakers = dms;
-      const decisionMaker = dms.find((dm) => dm.code === this.decisionMakerCode);
-      if (decisionMaker) {
-        this.boardTitle = decisionMaker.label;
-        this.boardIsFavorite = decisionMaker.isFavorite;
+    this.boardService.$boards.subscribe((boards) => {
+      this.boards = boards;
+      const selectedBoard = boards.find((board) => board.code === this.selectedBoardCode);
+      if (selectedBoard) {
+        this.setupBoard(selectedBoard);
       }
-    });
-
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
-      const allStatuses = statuses.map((status) => status.code);
-
-      this.columns = statuses.map((status) => ({
-        status: status.code,
-        name: status.label,
-        allowedTransitions: allStatuses,
-      }));
     });
 
     this.applicationService.$applicationTypes.subscribe((types) => {
       this.applicationTypes = types;
-    });
-
-    this.applicationService.$applications.subscribe((applications) => {
-      this.cards = applications.map(this.mapApplicationDtoToCard.bind(this));
     });
 
     // open card if application number present in url
@@ -83,6 +67,24 @@ export class BoardComponent implements OnInit {
     if (app) {
       this.onSelected(app);
     }
+  }
+
+  private setupBoard(board: BoardWithFavourite) {
+    this.loadApplications(board.code);
+    this.boardTitle = board.title;
+    this.boardIsFavourite = board.isFavourite;
+    const allStatuses = board.statuses.map((status) => status.statusCode);
+
+    this.columns = board.statuses.map((status) => ({
+      status: status.statusCode,
+      name: status.label,
+      allowedTransitions: allStatuses,
+    }));
+  }
+
+  private async loadApplications(boardCode: string) {
+    const apps = await this.boardService.fetchApplications(boardCode);
+    this.cards = apps.map(this.mapApplicationDtoToCard.bind(this));
   }
 
   async onSelected(id: string) {
@@ -100,11 +102,16 @@ export class BoardComponent implements OnInit {
         data: application,
       });
 
-      dialogRef.afterClosed().subscribe(() => {
+      dialogRef.afterClosed().subscribe((isDirty) => {
         this.setUrl();
+
+        if (isDirty && this.selectedBoardCode) {
+          this.loadApplications(this.selectedBoardCode);
+        }
       });
     } catch (err) {
-      console.log(err);
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
     }
   }
 
@@ -116,14 +123,21 @@ export class BoardComponent implements OnInit {
   }
 
   async onCreate() {
-    this.dialog.open(CreateCardDialogComponent, {
-      minHeight: '500px',
-      minWidth: '600px',
-      maxWidth: '800px',
-      height: '80%',
-      width: '70%',
-      data: {},
-    });
+    this.dialog
+      .open(CreateCardDialogComponent, {
+        minHeight: '500px',
+        minWidth: '600px',
+        maxWidth: '800px',
+        height: '80%',
+        width: '70%',
+        data: {},
+      })
+      .afterClosed()
+      .subscribe((didCreate) => {
+        if (didCreate && this.selectedBoardCode) {
+          this.loadApplications(this.selectedBoardCode);
+        }
+      });
   }
 
   onDropped($event: { id: string; status: string }) {
@@ -148,6 +162,7 @@ export class BoardComponent implements OnInit {
       activeDays: application.activeDays,
       paused: application.paused,
       highPriority: application.highPriority,
+      decisionMeetings: application.decisionMeetings,
     };
   }
 }

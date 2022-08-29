@@ -6,15 +6,16 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
+import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationType } from './application-code/application-type/application-type.entity';
 
 @Entity()
 export class Application extends Base {
@@ -32,15 +33,7 @@ export class Application extends Base {
 
   @AutoMap()
   @Column({
-    type: 'uuid',
-    nullable: true,
-  })
-  assigneeUuid: string;
-
-  @AutoMap()
-  @Column({
     type: 'boolean',
-    nullable: false,
     default: false,
   })
   paused: boolean;
@@ -48,23 +41,56 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'boolean',
-    nullable: false,
     default: false,
   })
   highPriority: boolean;
 
-  @ManyToOne((status) => ApplicationStatus, {
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+  })
+  dateReceived: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  datePaid?: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateAcknowledgedIncomplete?: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateReceivedAllItems?: Date;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateAcknowledgedComplete?: Date;
+
+  @ManyToOne(() => ApplicationStatus, {
     nullable: false,
   })
   status: ApplicationStatus;
 
   @Column({
     type: 'uuid',
-    default: 'e6ddd1af-1cb9-4e45-962a-92e8d532b149',
+    default: 'f9f4244f-9741-45f0-9724-ce13e8aa09eb',
   })
   statusUuid: string;
 
-  @ManyToOne((type) => ApplicationType, {
+  @ManyToOne(() => ApplicationType, {
     nullable: false,
   })
   type: ApplicationType;
@@ -74,18 +100,16 @@ export class Application extends Base {
   })
   typeUuid: string;
 
-  @ManyToOne((decisionMaker) => ApplicationDecisionMaker, {
-    nullable: true,
-  })
-  decisionMaker: ApplicationDecisionMaker;
+  @ManyToOne(() => Board)
+  board: Board;
 
   @Column({
     type: 'uuid',
-    nullable: true,
+    default: 'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2',
   })
-  decisionMakerUuid: string;
+  boardUuid: string;
 
-  @ManyToOne((decisionMaker) => ApplicationRegion, {
+  @ManyToOne(() => ApplicationRegion, {
     nullable: true,
   })
   region: ApplicationRegion;
@@ -97,8 +121,15 @@ export class Application extends Base {
   regionUuid: string;
 
   @AutoMap()
-  @ManyToOne((assignee) => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   assignee: User;
+
+  @AutoMap()
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  assigneeUuid: string;
 
   @AutoMap()
   @OneToMany(() => ApplicationHistory, (appHistory) => appHistory.application)
@@ -111,4 +142,11 @@ export class Application extends Base {
   @AutoMap()
   @OneToMany(() => Comment, (comment) => comment.application)
   comments: Comment[];
+
+  @AutoMap()
+  @OneToMany(
+    () => ApplicationDecisionMeeting,
+    (appDecMeeting) => appDecMeeting.application,
+  )
+  decisionMeetings: ApplicationDecisionMeeting[];
 }

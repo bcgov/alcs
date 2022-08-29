@@ -24,6 +24,7 @@ describe('DragDropBoardComponent', () => {
     activeDays: 2,
     paused: false,
     highPriority: true,
+    decisionMeetings: [],
   };
 
   beforeEach(async () => {

@@ -1,0 +1,27 @@
+.editing {
+  display: inline-block;
+}
+
+.editing.hidden {
+  display: none;
+}
+
+.edit-button {
+  height: 24px;
+  width: 24px;
+}
+
+.edit-icon {
+  font-size: inherit;
+  line-height: 22px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.not-set {
+  color: #666;
+  font-style: italic;
+}

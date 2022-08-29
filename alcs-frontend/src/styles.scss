@@ -1,13 +1,15 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
+@use '@matheo/datepicker/theming' as datepicker;
+
 // Plus imports for other components in your app.
 @import 'styles/colors';
 @import 'styles/typography';
 @import 'styles/toast';
 
 // ng-select
-@import "~@ng-select/ng-select/themes/material.theme.css";
+@import '~@ng-select/ng-select/themes/material.theme.css';
 @import 'styles/ngselect.scss';
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -47,8 +49,8 @@ $mat-custom-primary: (
     A100: $dark-contrast-text,
     A200: $dark-contrast-text,
     A400: $dark-contrast-text,
-    A700: $dark-contrast-text
-  )
+    A700: $dark-contrast-text,
+  ),
 );
 
 $mat-custom-accent: (
@@ -80,8 +82,8 @@ $mat-custom-accent: (
     A100: $dark-contrast-text,
     A200: $dark-contrast-text,
     A400: $dark-contrast-text,
-    A700: $light-contrast-text
-  )
+    A700: $light-contrast-text,
+  ),
 );
 
 $mat-custom-warn: (
@@ -113,8 +115,8 @@ $mat-custom-warn: (
     A100: $dark-contrast-text,
     A200: $dark-contrast-text,
     A400: $dark-contrast-text,
-    A700: $dark-contrast-text
-  )
+    A700: $dark-contrast-text,
+  ),
 );
 
 $alcs-primary: mat.define-palette($mat-custom-primary);
@@ -130,8 +132,8 @@ $alcs-theme: mat.define-light-theme(
     color: (
       primary: $alcs-primary,
       accent: $alcs-accent,
-      warn: $alcs-warn
-    )
+      warn: $alcs-warn,
+    ),
   )
 );
 
@@ -139,6 +141,8 @@ $alcs-theme: mat.define-light-theme(
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($alcs-theme);
+
+@include datepicker.theme($alcs-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -180,4 +184,8 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+.mat-custom-controls {
+  color: white;
 }

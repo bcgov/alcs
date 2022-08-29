@@ -1,16 +1,18 @@
+import { AutoMap } from '@automapper/classes';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
 } from 'class-validator';
-import { AutoMap } from '@automapper/classes';
 import { UserDto } from '../user/user.dto';
-import { ApplicationDecisionMakerDto } from './application-code/application-decision-maker/application-decision-maker.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
-import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
+import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationStatusDto } from './application-status/application-status.dto';
 
 export class CreateApplicationDto {
   @AutoMap()
@@ -27,9 +29,9 @@ export class CreateApplicationDto {
   @IsString()
   type: string;
 
-  @IsString()
-  @IsOptional()
-  decisionMaker?: string;
+  @IsNotEmpty()
+  @IsNumber()
+  dateReceived: number;
 
   @IsString()
   @IsOptional()
@@ -76,11 +78,36 @@ export class ApplicationDto {
   @IsString()
   type: string;
 
+  @IsNotEmpty()
   @IsString()
-  decisionMaker: string;
+  board: string;
 
+  @IsNotEmpty()
+  @IsNumber()
+  dateReceived: number;
+
+  @IsNumber()
+  datePaid?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedIncomplete?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateReceivedAllItems?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedComplete?: number;
+
+  @IsOptional()
   @IsString()
   region?: string;
+
+  @AutoMap()
+  @Type(() => ApplicationDecisionMeetingDto)
+  decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
@@ -89,9 +116,6 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
   @AutoMap()
   typeDetails: ApplicationTypeDto;
-
-  @AutoMap()
-  decisionMakerDetails: ApplicationDecisionMakerDto;
 
   @AutoMap()
   regionDetails: ApplicationRegionDto;
@@ -116,11 +140,6 @@ export class ApplicationUpdateDto {
   @AutoMap()
   @IsOptional()
   @IsString()
-  decisionMaker?: string;
-
-  @AutoMap()
-  @IsOptional()
-  @IsString()
   region?: string;
 
   @AutoMap()
@@ -137,6 +156,26 @@ export class ApplicationUpdateDto {
   @IsBoolean()
   @IsOptional()
   paused?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  dateReceived?: number;
+
+  @IsOptional()
+  @IsNumber()
+  datePaid?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedIncomplete?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateReceivedAllItems?: number;
+
+  @IsOptional()
+  @IsNumber()
+  dateAcknowledgedComplete?: number;
 
   @AutoMap()
   @IsBoolean()

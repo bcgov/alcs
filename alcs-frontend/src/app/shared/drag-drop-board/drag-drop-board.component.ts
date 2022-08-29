@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../card/card.component';
 import { DragDropColumn } from './drag-drop-column.interface';
@@ -31,6 +31,7 @@ export class DragDropBoardComponent {
     const selectedCard = this.cards.find((card) => card.id === event.item.data.id);
 
     if (!selectedCard) {
+      this.toastService.showErrorToast('Something went wrong, please refresh the page and try again.');
       console.error(`Failed to find card with id ${event.item.data.id}`);
       return;
     }

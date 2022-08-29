@@ -16,14 +16,14 @@
       <div class="col">
         <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
         <mat-menu #menu="matMenu">
-          <div class="board-item menu-item" *ngFor="let dm of sortedDecisionMakers" (click)="onSelectBoard(dm.code)">
+          <div class="board-item menu-item" *ngFor="let board of sortedBoards" (click)="onSelectBoard(board.code)">
             <app-favorite-button
-              [dmCode]="dm.code"
-              [isFavorite]="dm.isFavorite"
+              [boardCode]="board.code"
+              [isFavorite]="board.isFavourite"
               [currentUserProfile]="currentUserProfile"
             ></app-favorite-button>
             <button mat-menu-item>
-              {{ dm.label }}
+              {{ board.title }}
             </button>
           </div>
         </mat-menu>

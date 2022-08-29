@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
 
 @Component({
   selector: 'app-application',
@@ -10,18 +10,22 @@ import { ApplicationService } from '../../services/application/application.servi
 })
 export class ApplicationComponent implements OnInit {
   application?: ApplicationDetailedDto;
+  fileNumber?: string;
 
-  constructor(private applicationService: ApplicationService, private route: ActivatedRoute) {}
+  constructor(private applicationDetailService: ApplicationDetailService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(async (routeParams) => {
       const { fileNumber } = routeParams;
-      const application = await this.applicationService.fetchApplication(fileNumber);
-
-      if (!application) {
-        //WHAT DO?
-      }
+      this.fileNumber = fileNumber;
+      this.loadApplication();
+    });
+    this.applicationDetailService.$application.subscribe((application) => {
       this.application = application;
     });
+  }
+
+  async loadApplication() {
+    await this.applicationDetailService.loadApplication(this.fileNumber!);
   }
 }

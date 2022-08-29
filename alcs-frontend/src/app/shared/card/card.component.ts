@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationDecisionMeetingDto } from '../../services/application/application.dto';
 
 export interface CardData {
   id: string;
@@ -10,6 +11,8 @@ export interface CardData {
   activeDays: number;
   paused: boolean;
   highPriority: boolean;
+  decisionMeetings: ApplicationDecisionMeetingDto[];
+  latestDecisionDate?: Date;
 }
 
 @Component({
@@ -28,5 +31,23 @@ export class CardComponent implements OnInit {
     this.cardSelected.emit(cardId);
   }
 
-  ngOnInit(): void {}
+  private getLatestDecisionDate() {
+    return new Date(
+      Math.max(
+        ...this.cardData.decisionMeetings.map((element) => {
+          return new Date(element.date).valueOf();
+        })
+      )
+    );
+  }
+
+  ngOnInit(): void {
+    this.cardData.latestDecisionDate = undefined;
+
+    if (this.cardData.status === 'READ') {
+      if (this.cardData.decisionMeetings.length > 0) {
+        this.cardData.latestDecisionDate = this.getLatestDecisionDate();
+      }
+    }
+  }
 }

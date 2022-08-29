@@ -4,7 +4,7 @@
 <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content style="height: 100%">
     <div>
-      <label for="fileNumber">File number: </label>
+      <label for="fileNumber">File number: *</label>
       <div>
         <input
           id="fileNumber"
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div>
-      <label for="applicant">Applicant: </label>
+      <label for="applicant">Applicant: *</label>
       <div>
         <input
           id="applicant"
@@ -64,18 +64,12 @@
       >
       </ng-select>
     </div>
-    <div>
-      <ng-select
-        class="card-decision-maker"
-        [items]="decisionMakers"
-        appendTo="body"
-        placeholder="Decision Maker"
-        bindLabel="label"
-        bindValue="code"
-        (change)="onSelectDtoDropdown('decisionMaker', $event)"
-      >
-      </ng-select>
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Date Submitted to ALC</mat-label>
+      <input matInput [matDatepicker]="pdd" formControlName="receivedDate" required />
+      <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
+      <mat-datepicker #pdd type="date"> </mat-datepicker>
+    </mat-form-field>
     <div>
       <ng-select
         class="card-region"
@@ -91,7 +85,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div>
-      <button mat-button mat-dialog-close>Close</button>
+      <button mat-button [mat-dialog-close]="false">Close</button>
       <button mat-button type="submit" [disabled]="!createForm.valid">Save</button>
     </div>
   </mat-dialog-actions>

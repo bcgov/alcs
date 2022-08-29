@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -20,7 +19,6 @@ import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
-import { ApplicationDecisionMaker } from './application-code/application-decision-maker/application-decision-maker.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -45,14 +43,8 @@ export class ApplicationController {
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
-  async getAll(@Query('dm') dm?: string): Promise<ApplicationDto[]> {
-    let decisionMaker;
-    if (dm) {
-      decisionMaker = await this.codeService.fetchDecisionMaker(dm);
-    }
-    const applications = await this.applicationService.getAll({
-      decisionMaker,
-    });
+  async getAll(): Promise<ApplicationDto[]> {
+    const applications = await this.applicationService.getAll();
     return this.applicationService.mapToDtos(applications);
   }
 
@@ -67,7 +59,6 @@ export class ApplicationController {
       ...mappedApplication[0],
       statusDetails: application.status,
       typeDetails: application.type,
-      decisionMakerDetails: application.decisionMaker,
       regionDetails: application.region,
     };
   }
@@ -78,9 +69,6 @@ export class ApplicationController {
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
     const type = await this.codeService.fetchType(application.type);
-    const decisionMaker = application.decisionMaker
-      ? await this.codeService.fetchDecisionMaker(application.decisionMaker)
-      : undefined;
 
     const region = application.region
       ? await this.codeService.fetchRegion(application.region)
@@ -89,8 +77,8 @@ export class ApplicationController {
     const app = await this.applicationService.createOrUpdate({
       ...application,
       type,
-      decisionMaker,
       region,
+      dateReceived: new Date(application.dateReceived),
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
@@ -101,7 +89,7 @@ export class ApplicationController {
   async update(
     @Body() application: ApplicationUpdateDto,
     @Req() req,
-  ): Promise<ApplicationDto> {
+  ): Promise<ApplicationDetailedDto> {
     const existingApplication = await this.applicationService.get(
       application.fileNumber,
     );
@@ -125,17 +113,6 @@ export class ApplicationController {
       type = await this.codeService.fetchType(application.type);
     }
 
-    let decisionMaker: ApplicationDecisionMaker | undefined;
-    if (
-      application.decisionMaker &&
-      (!existingApplication.decisionMaker ||
-        application.decisionMaker != existingApplication.decisionMaker.code)
-    ) {
-      decisionMaker = await this.codeService.fetchDecisionMaker(
-        application.decisionMaker,
-      );
-    }
-
     let region: ApplicationRegion | undefined;
     if (
       application.region &&
@@ -145,37 +122,63 @@ export class ApplicationController {
       region = await this.codeService.fetchRegion(application.region);
     }
 
-    const app = await this.applicationService.createOrUpdate({
+    const updatedApplication = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
       statusUuid: status ? status.uuid : undefined,
       typeUuid: type ? type.uuid : undefined,
-      decisionMakerUuid: decisionMaker ? decisionMaker.uuid : undefined,
       regionUuid: region ? region.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
       paused: application.paused,
       highPriority: application.highPriority,
+      datePaid: this.formatIncomingDate(application.datePaid),
+      dateAcknowledgedIncomplete: this.formatIncomingDate(
+        application.dateAcknowledgedIncomplete,
+      ),
+      dateReceivedAllItems: this.formatIncomingDate(
+        application.dateReceivedAllItems,
+      ),
+      dateAcknowledgedComplete: this.formatIncomingDate(
+        application.dateAcknowledgedComplete,
+      ),
     });
 
     if (
-      app.assigneeUuid !== existingApplication.assigneeUuid &&
-      app.assigneeUuid !== req.user.entity.uuid
+      updatedApplication.assigneeUuid !== existingApplication.assigneeUuid &&
+      updatedApplication.assigneeUuid !== req.user.entity.uuid
     ) {
       this.notificationService.createForApplication(
         req.user.entity,
-        app.assigneeUuid,
+        updatedApplication.assigneeUuid,
         "You've been assigned",
-        app,
+        updatedApplication,
       );
     }
 
-    const mappedApps = await this.applicationService.mapToDtos([app]);
-    return mappedApps[0];
+    const mappedApps = await this.applicationService.mapToDtos([
+      updatedApplication,
+    ]);
+    return {
+      ...mappedApps[0],
+      statusDetails: updatedApplication.status,
+      typeDetails: updatedApplication.type,
+      regionDetails: updatedApplication.region,
+    };
   }
 
   @Delete()
   @UserRoles(...ANY_AUTH_ROLE)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
+  }
+
+  private formatIncomingDate(date?: number) {
+    if (date) {
+      return new Date(date);
+    } else if (date === null) {
+      return null;
+    } else {
+      return undefined;
+    }
   }
 }

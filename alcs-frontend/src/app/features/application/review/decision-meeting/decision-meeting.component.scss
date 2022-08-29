@@ -1,0 +1,33 @@
+@import '../../../../../styles/colors.scss';
+
+.action-btn.edit {
+  color: $error-color;
+}
+
+.action-btn.delete {
+  color: $error-color;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .col-40 {
+    width: 40%;
+  }
+
+  .pull-right {
+    float: right;
+  }
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.mat-column-action {
+  width: 16%;
+  text-align: center;
+}

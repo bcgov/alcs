@@ -12,7 +12,7 @@
         [ngClass]="{
           paused: application.paused
         }"
-        (click)="onSelectCard(application.fileNumber, application.decisionMaker)"
+        (click)="onSelectCard(application.fileNumber, application.board)"
         *ngFor="let application of applications"
       >
         <td class="center" style="padding: 4px">
