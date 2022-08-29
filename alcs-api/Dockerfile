@@ -41,15 +41,19 @@ USER node
 
 FROM node:16.15-alpine As production
 
+# Init 
+RUN apk add --no-cache tini
+ENTRYPOINT ["/sbin/tini", "--"]
+
 WORKDIR /opt/app-root/
 
-RUN chmod g+rwx /opt/app-root/ /var/run
+RUN chmod og+rwx /opt/app-root/ /var/run
 
 ARG environment=production
 ENV NODE_ENV ${environment}
 
 COPY --from=build /opt/app-root/node_modules ./node_modules
 COPY --from=build /opt/app-root/dist ./dist
-COPY ./config/ ./config/
+COPY ./config/ /opt/app-root/config/
 
 CMD [ "node", "dist/main.js" ]

@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    template.alpha.openshift.io/wait-for-ready: 'true'
+  name: {{ include "redis.fullname" . }}
+  labels: {{ include "redis.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "redis.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "redis.fullname" . }}
+  template:
+    metadata:
+      labels: {{ include "redis.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.podSecurityContext }}
+      securityContext: {{ toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+      - name: redis
+        {{- with .Values.securityContext }}
+        securityContext: {{ toYaml . | nindent 12 }}
+        {{- end }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: {{ include "redis.fullname" . }}
+        {{- if .Values.probes.liveness.enabled }}
+        livenessProbe:
+          initialDelaySeconds: 30
+          tcpSocket:
+            port: 6379
+          timeoutSeconds: 1
+        {{- end }}
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        {{- if .Values.probes.readiness.enabled }}
+        readinessProbe:
+          exec:
+            command:
+            - "/bin/sh"
+            - "-i"
+            - "-c"
+            - test "$(redis-cli -h 127.0.0.1 -a $REDIS_PASSWORD ping)" == "PONG"
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 3
+        {{- end}}
+        resources: {{ toYaml .Values.resources | nindent 12 }}
+        terminationMessagePath: "/dev/termination-log"
+        volumeMounts:
+        - mountPath: {{ .Values.persistentVolume.mountPath }}
+          name: "redis"
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 15
+      volumes:
+      - name: redis
+        {{- if .Values.persistentVolume.enabled }}
+        persistentVolumeClaim:
+          claimName: redis
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+  updateStrategy:
+    type: RollingUpdate
+  {{- if .Values.persistentVolume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        annotations:
+          volume.beta.kubernetes.io/storage-class: {{ .Values.persistentVolume.storageClass }}
+          {{- with .Values.persistentVolume.annotations }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        labels: {{ include "redis.selectorLabels" . | nindent 10 }}
+        name: redis
+      spec:
+        accessModes: {{ toYaml .Values.persistentVolume.accessModes | nindent 10 }}
+        resources:
+          requests:
+            storage: {{ .Values.persistentVolume.size }}
+        storageClassName: {{ .Values.persistentVolume.storageClass }}
+  {{- end }}
+

@@ -1,0 +1,27 @@
+apiVersion: v2
+name: redis
+version: 0.0.1
+kubeVersion: ">= 1.13.0"
+description: A Helm chart for a standalone Redis with persistence
+type: application
+keywords:
+  - redis
+  - cache
+  - database
+sources:
+  - https://github.com/bcgov/alcs/openshift/charts/redis
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+dependencies: []
+maintainers:
+  - name: BIT3 Consulting Ltd.
+    email: paul@bit3.ca
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes. This should match the intended image tag.
+appVersion: "centos7"
+deprecated: false
+annotations: {}

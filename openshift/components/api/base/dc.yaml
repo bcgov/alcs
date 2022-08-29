@@ -42,7 +42,7 @@ spec:
         env: []
         volumeMounts:
         - name: config-volume
-          mountPath: /config
+          mountPath: /opt/app-root/config
         resources:
           limits:
             cpu: 100m

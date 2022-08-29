@@ -8,5 +8,5 @@ spec:
       containers:
         - name: alcs-web
           env:
-          - name: API_ROOT
+          - name: API_URL
             value: api.alcs-dev.apps.silver.devops.gov.bc.ca
