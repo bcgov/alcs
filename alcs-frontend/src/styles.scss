@@ -183,6 +183,13 @@ body {
   align-items: center;
 }
 
+.left {
+  display: flex;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 * {
   box-sizing: border-box;
 }

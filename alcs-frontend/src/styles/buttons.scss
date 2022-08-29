@@ -3,6 +3,7 @@
 .mat-flat-button.mat-primary {
   .mat-button-wrapper {
     color: #fff;
+    text-transform: uppercase;
   }
 
   &:not(.mat-button-disabled):hover {
@@ -24,6 +25,7 @@
 
 .mat-flat-button.mat-accent {
   .mat-button-wrapper {
+    text-transform: uppercase;
     color: #fff;
   }
 
@@ -50,6 +52,7 @@
   }
 
   .mat-button-wrapper {
+    text-transform: uppercase;
     color: $primary-color;
   }
 
@@ -77,6 +80,7 @@
   }
 
   .mat-button-wrapper {
+    text-transform: uppercase;
     color: $accent-color;
   }
 
