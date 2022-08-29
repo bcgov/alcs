@@ -4,9 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline-datepicker.component';
 import { SharedModule } from '../../shared/shared.module';
-import { ApplicationComponent } from './application.component';
+import { ApplicationComponent, childRoutes } from './application.component';
 import { IntakeComponent } from './intake/intake.component';
-import { NavComponent } from './nav/nav.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ProcessingComponent } from './processing/processing.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
@@ -17,24 +16,7 @@ const routes: Routes = [
   {
     path: ':fileNumber',
     component: ApplicationComponent,
-    children: [
-      {
-        path: '',
-        component: OverviewComponent,
-      },
-      {
-        path: 'processing',
-        component: ProcessingComponent,
-      },
-      {
-        path: 'review',
-        component: ReviewComponent,
-      },
-      {
-        path: 'intake',
-        component: IntakeComponent,
-      },
-    ],
+    children: childRoutes,
   },
 ];
 
@@ -42,7 +24,6 @@ const routes: Routes = [
   providers: [ApplicationDetailService],
   declarations: [
     ApplicationComponent,
-    NavComponent,
     OverviewComponent,
     ProcessingComponent,
     ReviewComponent,
