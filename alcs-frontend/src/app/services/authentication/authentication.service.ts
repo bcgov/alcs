@@ -3,7 +3,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { SettingsService } from '../settings/settings.service';
 
 const JWT_TOKEN_KEY = 'jwt_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
@@ -26,7 +25,7 @@ export class AuthenticationService {
   $currentUser = new EventEmitter<ICurrentUser>();
   currentUser: ICurrentUser | undefined;
 
-  constructor(private http: HttpClient, private settingsService:SettingsService) {
+  constructor(private http: HttpClient) {
     this.$currentUser.emit(undefined);
   }
 
@@ -88,7 +87,7 @@ export class AuthenticationService {
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
-        this.http.get(`${this.settingsService.settings.apiUrl}/admin`, {
+        this.http.get(`${environment.apiRoot}/admin`, {
           responseType: 'text',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -113,13 +112,13 @@ export class AuthenticationService {
       this.http.get<{
         refresh_token: string;
         token: string;
-      }>(`${this.settingsService.settings.apiUrl}/authorize/refresh?r=${refreshToken}`)
+      }>(`${environment.apiRoot}/authorize/refresh?r=${refreshToken}`)
     );
     return res;
   }
 
   private async getLogoutUrl() {
-    return firstValueFrom(this.http.get<{ url: string }>(`${this.settingsService.settings.apiUrl}/logout`));
+    return firstValueFrom(this.http.get<{ url: string }>(`${environment.apiRoot}/logout`));
   }
 
   getCurrentUser = () => this.currentUser;

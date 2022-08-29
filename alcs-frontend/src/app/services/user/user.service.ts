@@ -3,7 +3,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService, ICurrentUser } from '../authentication/authentication.service';
-import { SettingsService } from '../settings/settings.service';
 import { ToastService } from '../toast/toast.service';
 import { UserDto } from './user.dto';
 
@@ -20,8 +19,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private toastService: ToastService,
-    private authService: AuthenticationService,
-    private settingsService: SettingsService
+    private authService: AuthenticationService
   ) {
     this.authService.$currentUser.subscribe((currentUser) => {
       this.currentUser = currentUser;
@@ -42,13 +40,13 @@ export class UserService {
   }
 
   public async fetchUsers() {
-    this.users = await firstValueFrom(this.http.get<UserDto[]>(`${this.settingsService.settings.apiUrl}/user`));
+    this.users = await firstValueFrom(this.http.get<UserDto[]>(`${environment.apiRoot}/user`));
     this.$users.next(this.users);
   }
 
   public async updateUser(user: UserDto) {
     try {
-      await firstValueFrom(this.http.patch<UserDto>(`${this.settingsService.settings.apiUrl}/user`, user));
+      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiRoot}/user`, user));
       await this.fetchUsers();
     } catch (e) {
       this.toastService.showErrorToast('Failed to update User');
