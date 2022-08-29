@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as dayjs from 'dayjs';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { SettingsService } from '../../settings/settings.service';
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDecisionMeetingDto, CreateApplicationDecisionMeetingDto } from './application-decision-meeting.dto';
 
@@ -11,9 +12,9 @@ import { ApplicationDecisionMeetingDto, CreateApplicationDecisionMeetingDto } fr
 })
 export class ApplicationDecisionMeetingService {
   $decisionMeetings = new BehaviorSubject<ApplicationDecisionMeetingDto[]>([]);
-  private url = `${environment.apiRoot}/application-decision-meeting`;
+  private url = `${this.settingsService.settings.apiUrl}/application-decision-meeting`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(private http: HttpClient, private toastService: ToastService, private settingsService: SettingsService) {}
 
   async fetch(fileNumber: string) {
     let meetings: ApplicationDecisionMeetingDto[] = [];

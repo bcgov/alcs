@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,7 +22,11 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
+import { SettingsHttpService } from './services/settings/settings-http.service';
 
+export function appInit(settingsHttpService: SettingsHttpService) {
+  return () => settingsHttpService.initializeApp();
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +48,7 @@ import { NotificationsComponent } from './shared/header/notifications/notificati
     BoardService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
+    { provide: APP_INITIALIZER, useFactory: appInit, deps: [SettingsHttpService], multi: true }
   ],
   bootstrap: [AppComponent],
 })

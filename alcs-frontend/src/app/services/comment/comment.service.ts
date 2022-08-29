@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { SettingsService } from '../settings/settings.service';
 import { ToastService } from '../toast/toast.service';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
 
@@ -9,17 +10,17 @@ import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
   providedIn: 'root',
 })
 export class CommentService implements OnInit {
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(private http: HttpClient, private toastService: ToastService, private settingsService: SettingsService) {}
 
   ngOnInit(): void {}
 
   async fetchComments(fileNumber: string) {
-    return firstValueFrom(this.http.get<CommentDto[]>(`${environment.apiRoot}/comment/${fileNumber}`));
+    return firstValueFrom(this.http.get<CommentDto[]>(`${this.settingsService.settings.apiUrl}/comment/${fileNumber}`));
   }
 
   async createComment(comment: CreateCommentDto) {
     const createdComment = firstValueFrom(
-      this.http.post<CommentDto>(`${environment.apiRoot}/comment`, {
+      this.http.post<CommentDto>(`${this.settingsService.settings.apiUrl}/comment`, {
         ...comment,
         mentions: [...comment.mentions.values()],
       })
@@ -30,7 +31,7 @@ export class CommentService implements OnInit {
 
   async updateComment(comment: UpdateCommentDto) {
     const updatedComment = firstValueFrom(
-      this.http.patch<CommentDto>(`${environment.apiRoot}/comment`, {
+      this.http.patch<CommentDto>(`${this.settingsService.settings.apiUrl}/comment`, {
         ...comment,
         mentions: [...comment.mentions.values()],
       })
@@ -40,7 +41,7 @@ export class CommentService implements OnInit {
   }
 
   async deleteComment(commentId: string) {
-    const deleted = firstValueFrom(this.http.delete<CommentDto>(`${environment.apiRoot}/comment/${commentId}`));
+    const deleted = firstValueFrom(this.http.delete<CommentDto>(`${this.settingsService.settings.apiUrl}/comment/${commentId}`));
     this.toastService.showSuccessToast('Comment deleted');
     return deleted;
   }

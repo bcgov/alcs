@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { SettingsService } from '../settings/settings.service';
 import { ToastService } from '../toast/toast.service';
 import {
   ApplicationMasterCodesDto,
@@ -15,7 +16,7 @@ import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateAp
   providedIn: 'root',
 })
 export class ApplicationService {
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(private http: HttpClient, private toastService: ToastService, private settingsService: SettingsService) {}
 
   public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
@@ -30,7 +31,7 @@ export class ApplicationService {
     await this.setup();
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+        this.http.patch<ApplicationDetailedDto>(`${this.settingsService.settings.apiUrl}/application`, application)
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
@@ -40,13 +41,13 @@ export class ApplicationService {
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
     await this.setup();
-    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiRoot}/application/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${this.settingsService.settings.apiUrl}/application/${fileNumber}`));
   }
 
   async createApplication(application: CreateApplicationDto) {
     await this.setup();
     return await firstValueFrom(
-      this.http.post<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+      this.http.post<ApplicationDetailedDto>(`${this.settingsService.settings.apiUrl}/application`, application)
     );
   }
 
@@ -59,7 +60,7 @@ export class ApplicationService {
 
   private async fetchCodes() {
     const codes = await firstValueFrom(
-      this.http.get<ApplicationMasterCodesDto>(`${environment.apiRoot}/application-code`)
+      this.http.get<ApplicationMasterCodesDto>(`${this.settingsService.settings.apiUrl}/application-code`)
     );
     this.statuses = codes.status;
     this.$applicationStatuses.next(this.statuses);

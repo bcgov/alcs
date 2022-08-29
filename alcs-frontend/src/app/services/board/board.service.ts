@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationDto } from '../application/application.dto';
+import { SettingsService } from '../settings/settings.service';
 import { UserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import { BoardDto } from './board.dto';
@@ -20,7 +21,7 @@ export class BoardService {
   private boardsEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
   $boards = this.boardsEmitter.asObservable();
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(private http: HttpClient, private userService: UserService, private settingsService: SettingsService) {
     this.userService.$currentUserProfile.subscribe((user) => {
       this.userProfile = user;
       this.publishBoards();
@@ -30,7 +31,7 @@ export class BoardService {
   private async publishBoards() {
     if (this.userProfile !== undefined) {
       if (!this.boards) {
-        this.boards = await firstValueFrom(this.http.get<BoardDto[]>(`${environment.apiRoot}/board`));
+        this.boards = await firstValueFrom(this.http.get<BoardDto[]>(`${this.settingsService.settings.apiUrl}/board`));
       }
       const mappedBoards = this.boards.map((board) => ({
         ...board,
@@ -42,12 +43,12 @@ export class BoardService {
   }
 
   fetchApplications(boardCode: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiRoot}/board/${boardCode}`));
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.settingsService.settings.apiUrl}/board/${boardCode}`));
   }
 
   changeBoard(fileNumber: string, boardCode: string) {
     return firstValueFrom(
-      this.http.post<ApplicationDto>(`${environment.apiRoot}/board/change`, {
+      this.http.post<ApplicationDto>(`${this.settingsService.settings.apiUrl}/board/change`, {
         fileNumber,
         boardCode,
       })
