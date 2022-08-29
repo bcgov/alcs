@@ -17,10 +17,11 @@ import { MatDatepickerModule } from '@matheo/datepicker';
 import { MatNativeDateModule } from '@matheo/datepicker/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 
 @NgModule({
-  declarations: [FavoriteButtonComponent],
+  declarations: [FavoriteButtonComponent, AvatarCircleComponent],
   imports: [CommonModule, MatIconModule],
   exports: [
     CommonModule,
@@ -40,6 +41,7 @@ import { FavoriteButtonComponent } from './favorite-button/favorite-button.compo
     MatToolbarModule,
     MatMenuModule,
     FavoriteButtonComponent,
+    AvatarCircleComponent,
     MatTableModule,
     MatNativeDateModule,
     MatDatepickerModule,
