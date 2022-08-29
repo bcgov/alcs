@@ -46,7 +46,7 @@ button.mat-menu-item:hover {
 
 .right {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: right;
 }
 
@@ -58,8 +58,8 @@ div.board-item {
     mat-icon {
       height: inherit;
       position: relative;
-      top: 4px;
-      margin: 0 2px 0 2px;
+      top: 7px;
+      margin: 0 2px;
     }
   }
 }
@@ -68,5 +68,41 @@ div.board-item {
   background-color: #f8f3f3;
   ::ng-deep .favorite-btn {
     visibility: visible;
+  }
+}
+
+.name-text {
+  padding: 8px 16px;
+}
+
+.avatar-menu-items {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    text-align: left;
+  }
+
+  button:hover {
+    background-color: #f8f3f3;
+  }
+}
+
+.avatar-menu {
+  display: flex;
+  align-items: center;
+
+  .avatar-menu-arrow {
+    margin-left: 4px;
+    display: inline-block;
+    transform: rotate(0deg);
+    transition: transform 0.15s linear;
+  }
+}
+
+.avatar-menu.open {
+  .avatar-menu-arrow {
+    transform: rotate(180deg);
+    transition: transform 0.15s linear;
   }
 }

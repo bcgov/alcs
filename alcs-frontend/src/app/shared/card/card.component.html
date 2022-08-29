@@ -21,9 +21,7 @@
         <mat-icon title="Active Days">calendar_today</mat-icon>
         <span class="center">{{ cardData.activeDays }}</span>
       </div>
-      <div *ngIf="cardData.assigneeInitials" class="assignee">
-        <span class="center">{{ cardData.assigneeInitials }}</span>
-      </div>
+      <app-avatar-circle *ngIf="cardData.assigneeInitials" [initials]="cardData.assigneeInitials"></app-avatar-circle>
     </div>
   </div>
 </mat-card>
