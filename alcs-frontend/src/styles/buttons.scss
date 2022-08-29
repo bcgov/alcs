@@ -1,0 +1,99 @@
+@import './colors';
+
+.mat-flat-button.mat-primary {
+  .mat-button-wrapper {
+    color: #fff;
+  }
+
+  &:not(.mat-button-disabled):hover {
+    background-color: $primary-color-light;
+
+    .mat-button-wrapper {
+      color: $primary-color;
+    }
+  }
+
+  &:active {
+    background-color: $primary-color-dark;
+
+    .mat-button-wrapper {
+      color: #fff;
+    }
+  }
+}
+
+.mat-flat-button.mat-accent {
+  .mat-button-wrapper {
+    color: #fff;
+  }
+
+  &:not(.mat-button-disabled):hover {
+    background-color: $accent-color-light;
+
+    .mat-button-wrapper {
+      color: $accent-color;
+    }
+  }
+
+  &:active {
+    background-color: $accent-color-dark;
+
+    .mat-button-wrapper {
+      color: #fff;
+    }
+  }
+}
+
+.mat-stroked-button.mat-primary {
+  &:not(.mat-button-disabled) {
+    border-color: $primary-color-dark;
+  }
+
+  .mat-button-wrapper {
+    color: $primary-color;
+  }
+
+  &:not(.mat-button-disabled):hover {
+    background-color: $primary-color-light;
+
+    .mat-button-wrapper {
+      color: $primary-color;
+    }
+  }
+
+  &:active {
+    background-color: $primary-color-dark;
+
+    .mat-button-wrapper {
+      color: #fff;
+    }
+  }
+}
+
+
+.mat-stroked-button.mat-accent {
+  &:not(.mat-button-disabled) {
+    border-color: $accent-color-dark;
+  }
+
+  .mat-button-wrapper {
+    color: $accent-color;
+  }
+
+  &:not(.mat-button-disabled):hover {
+    border-color: $accent-color-dark;
+    background-color: $accent-color-light;
+
+    .mat-button-wrapper {
+      color: $accent-color-dark;
+    }
+  }
+
+  &:active {
+    background-color: $accent-color-dark;
+
+    .mat-button-wrapper {
+      color: $white;
+    }
+  }
+}

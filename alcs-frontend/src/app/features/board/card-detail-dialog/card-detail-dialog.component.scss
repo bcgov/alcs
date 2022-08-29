@@ -57,4 +57,14 @@ div {
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #333;
+
+  &:hover {
+    -webkit-text-fill-color: rgba($error-color, 0.7);
+    color: rgba($error-color, 0.7);
+  }
+}
+
+.card-comments-wrapper {
+  max-height: 350px;
+  overflow-y: auto;
 }
