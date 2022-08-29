@@ -190,3 +190,12 @@ body {
 .mat-custom-controls {
   color: white;
 }
+
+.button-container {
+  display: flex;
+  justify-content: end;
+
+  button:not(:last-child) {
+    margin-right: 24px !important;
+  }
+}
