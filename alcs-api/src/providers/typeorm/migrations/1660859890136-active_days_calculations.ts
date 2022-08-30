@@ -45,7 +45,7 @@ export class activeDaysCalculations1660859890136 implements MigrationInterface {
       $$;
     `);
 
-    await queryRunner.query(`DROP function calculate_paused_time;`);
+    await queryRunner.query(`DROP function IF EXISTS calculate_paused_time;`);
     await queryRunner.query(`
       CREATE OR REPLACE FUNCTION calculate_paused_time (p_ids uuid [])
           RETURNS TABLE (
@@ -53,8 +53,8 @@ export class activeDaysCalculations1660859890136 implements MigrationInterface {
           AS $$
       SELECT
           application_uuid,
-          SUM(pause_weekdays) AS paused_weekdays,
-          SUM(pause_holidays) AS paused_holidays
+          SUM(pause_weekdays)::INT AS paused_weekdays,
+          SUM(pause_holidays)::INT AS paused_holidays
       FROM ( --Load each pause for application with each having its own count of weekdays and holidays
           SELECT
               application_uuid,

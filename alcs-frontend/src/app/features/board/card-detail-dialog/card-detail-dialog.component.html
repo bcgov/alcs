@@ -102,8 +102,7 @@
       <p class="card-paused-days">{{ application.pausedDays }}</p>
     </div>
     <div class="flex-child small">
-      <mat-label></mat-label>
-      <button class="card-state-btn pull-right" (click)="onToggleActive()">
+      <button mat-flat-button color="primary" class="card-state-btn pull-right" (click)="onToggleActive()">
         {{ application.paused ? 'Activate' : 'Pause' }}
       </button>
     </div>
@@ -120,6 +119,6 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <div>
-    <button mat-button [mat-dialog-close]="isApplicationDirty">Close</button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="isApplicationDirty">Close</button>
   </div>
 </mat-dialog-actions>

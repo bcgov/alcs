@@ -1,6 +1,6 @@
 .comment {
   width: 100%;
-  margin: 8px 4px 16px 4px;
+  margin: 8px 0 16px;
 
   .header {
     display: flex;
@@ -30,11 +30,6 @@
   host::ng-deep .mat-form-field-infix {
     border-top-width: 0;
   }
-}
-
-.edit-buttons {
-  display: flex;
-  justify-content: end;
 }
 
 .footer {

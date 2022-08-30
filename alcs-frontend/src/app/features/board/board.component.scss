@@ -1,10 +1,27 @@
 @import '../../../styles/colors';
 
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 80px 12px 76px;
+}
+
+.board-content {
+  display: flex;
+  flex-grow: 1;
+}
+
 .board-title:hover app-favorite-button {
     ::ng-deep .favorite-btn {
     visibility: visible;
     color: $pending-star ;
-  }  
+  }
 }
 
 .board-title app-favorite-button ::ng-deep .favorite-btn mat-icon {

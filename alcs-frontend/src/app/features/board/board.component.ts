@@ -97,7 +97,6 @@ export class BoardComponent implements OnInit {
         minHeight: '500px',
         minWidth: '600px',
         maxWidth: '800px',
-        height: '80%',
         width: '70%',
         data: application,
       });
@@ -128,7 +127,6 @@ export class BoardComponent implements OnInit {
         minHeight: '500px',
         minWidth: '600px',
         maxWidth: '800px',
-        height: '80%',
         width: '70%',
         data: {},
       })

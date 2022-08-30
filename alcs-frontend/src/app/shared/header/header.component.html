@@ -1,4 +1,4 @@
-<header style="border-bottom: 1px solid">
+<header class="header">
   <div class="flex-grid">
     <mat-toolbar>
       <div class="col">
@@ -14,8 +14,8 @@
         </div>
       </div>
       <div class="col">
-        <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="menu">Boards ▾</button>
-        <mat-menu #menu="matMenu">
+        <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="navigationMenu">Boards ▾</button>
+        <mat-menu #navigationMenu="matMenu">
           <div class="board-item menu-item" *ngFor="let board of sortedBoards" (click)="onSelectBoard(board.code)">
             <app-favorite-button
               [boardCode]="board.code"
@@ -28,12 +28,28 @@
           </div>
         </mat-menu>
       </div>
-      <div *ngIf="currentUser" class="col right">
+      <div *ngIf="currentUserProfile" class="col right">
         <app-notifications *ngIf="hasRoles"></app-notifications>
-        <button mat-flat-button color="primary" (click)="onLogout()">
-          <mat-icon>logout</mat-icon>
-          Logout
+        <button
+          [class.open]="menuTrigger.menuOpen"
+          *ngIf="hasRoles"
+          class="menu-item avatar-menu"
+          #menuTrigger="matMenuTrigger"
+          [matMenuTriggerFor]="avatarMenu"
+        >
+          <app-avatar-circle [initials]="currentUserProfile.initials"></app-avatar-circle>
+          <span class="avatar-menu-arrow">▾</span>
         </button>
+        <mat-menu #avatarMenu="matMenu" xPosition="before">
+          <div class="name-text">
+            Signed in as <br />
+            <strong>{{ currentUserProfile.idirUserName }}{{ currentUserProfile.bceidUserName }}</strong>
+          </div>
+          <hr />
+          <div class="avatar-menu-items">
+            <button class="menu-item" (click)="onLogout()">Log Out</button>
+          </div>
+        </mat-menu>
       </div>
     </mat-toolbar>
   </div>

@@ -19,6 +19,8 @@ export interface UserDto {
 
   idirUserName?: string;
 
+  bceidUserName?: string;
+
   initials: string;
 
   mentionLabel: string;
