@@ -40,7 +40,7 @@
           <app-avatar-circle [initials]="currentUserProfile.initials"></app-avatar-circle>
           <span class="avatar-menu-arrow">▾</span>
         </button>
-        <mat-menu #avatarMenu="matMenu">
+        <mat-menu #avatarMenu="matMenu" xPosition="before">
           <div class="name-text">
             Signed in as <br />
             <strong>{{ currentUserProfile.idirUserName }}{{ currentUserProfile.bceidUserName }}</strong>
