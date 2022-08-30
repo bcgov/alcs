@@ -39,5 +39,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Dynamically update environment values
+RUN chmod -R go+rwx /usr/share/nginx/html/assets
+
 # When the container starts, replace the settings.json with values from environment variables
 CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]

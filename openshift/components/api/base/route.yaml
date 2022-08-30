@@ -6,3 +6,9 @@ spec:
   to:
     kind: Service
     name: alcs-api
+  port:
+    targetPort: web
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

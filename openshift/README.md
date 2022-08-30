@@ -5,7 +5,7 @@ https://github.com/kubeflow/manifests/blob/master/docs/KustomizeBestPractices.md
 
 
 ## Redis
-`helm install -f redis-values.yaml alcs-redis bitnami/redis`
+`helm install -f redis-values.yaml alcs-redis ../..//redis`
 
 To get your password run:
 

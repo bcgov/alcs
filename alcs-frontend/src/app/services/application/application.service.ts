@@ -30,7 +30,7 @@ export class ApplicationService {
     await this.setup();
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+        this.http.patch<ApplicationDetailedDto>(`${environment.apiUrl}/application`, application)
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
@@ -40,13 +40,13 @@ export class ApplicationService {
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
     await this.setup();
-    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiRoot}/application/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiUrl}/application/${fileNumber}`));
   }
 
   async createApplication(application: CreateApplicationDto) {
     await this.setup();
     return await firstValueFrom(
-      this.http.post<ApplicationDetailedDto>(`${environment.apiRoot}/application`, application)
+      this.http.post<ApplicationDetailedDto>(`${environment.apiUrl}/application`, application)
     );
   }
 
@@ -59,7 +59,7 @@ export class ApplicationService {
 
   private async fetchCodes() {
     const codes = await firstValueFrom(
-      this.http.get<ApplicationMasterCodesDto>(`${environment.apiRoot}/application-code`)
+      this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/application-code`)
     );
     this.statuses = codes.status;
     this.$applicationStatuses.next(this.statuses);

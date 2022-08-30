@@ -10,4 +10,4 @@ kind: Route
 metadata:
   name: alcs-api
 spec:
-  host: api.alcs-dev.apps.silver.devops.gov.bc.ca
+  host: alcs-dev-api.apps.silver.devops.gov.bc.ca

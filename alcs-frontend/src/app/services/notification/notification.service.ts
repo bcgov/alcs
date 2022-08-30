@@ -11,14 +11,14 @@ export class NotificationService {
   constructor(private http: HttpClient) {}
 
   fetchMyNotifications() {
-    return firstValueFrom(this.http.get<NotificationDto[]>(`${environment.apiRoot}/notification`));
+    return firstValueFrom(this.http.get<NotificationDto[]>(`${environment.apiUrl}/notification`));
   }
 
   markRead(uuid: string) {
-    return firstValueFrom(this.http.post<void>(`${environment.apiRoot}/notification/${uuid}`, {}));
+    return firstValueFrom(this.http.post<void>(`${environment.apiUrl}/notification/${uuid}`, {}));
   }
 
   markAllRead() {
-    return firstValueFrom(this.http.post<void>(`${environment.apiRoot}/notification`, {}));
+    return firstValueFrom(this.http.post<void>(`${environment.apiUrl}/notification`, {}));
   }
 }

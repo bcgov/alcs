@@ -8,14 +8,6 @@ spec:
     deploymentconfig: alcs-api
   strategy:
     type: Recreate
-    # recreateParams:
-    #   pre:
-    #     failurePolicy: Abort
-    #     execNewPod:
-    #       containerName: alcs-migrate
-    #       image: image-registry.apps.silver.devops.gov.bc.ca/a5cf88-dev/alcs-migrate:latest
-    #       command: npm run migration:run
-    #       env: []
   template:
     metadata:
       labels:

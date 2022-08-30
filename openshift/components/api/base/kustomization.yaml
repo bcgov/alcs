@@ -6,3 +6,4 @@ resources:
 - route.yaml
 - svc.yaml
 - is.yaml
+- job.yaml

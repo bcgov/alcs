@@ -6,7 +6,12 @@ FROM node:16.15-alpine As development
 
 WORKDIR /opt/app-root/
 
-COPY --chown=node:node package*.json ./
+# OpenShift fixes
+RUN chmod og+rwx /opt/app-root/ /var/run
+ENV NPM_CONFIG_USERCONFIG=/opt/app-root/.npmrc
+RUN npm config set cache $/opt/app-root/.npm
+
+COPY package*.json ./
 
 RUN npm ci
 
@@ -14,8 +19,6 @@ ARG environment=production
 
 ENV NODE_ENV ${environment}
 
-COPY --chown=node:node . .
+COPY . .
 
-USER node
-
-CMD [ "npm", "run", "migration:run" ]
+CMD [ "./migrate.sh" ]

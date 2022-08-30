@@ -9,4 +9,4 @@ spec:
         - name: alcs-web
           env:
           - name: API_URL
-            value: api.alcs-dev.apps.silver.devops.gov.bc.ca
+            value: https://alcs-dev-api.apps.silver.devops.gov.bc.ca

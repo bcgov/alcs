@@ -11,6 +11,6 @@ export class HomeService {
   constructor(private http: HttpClient) {}
 
   async fetchAssignedToMe() {
-    return await firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiRoot}/home/assigned`));
+    return await firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/home/assigned`));
   }
 }

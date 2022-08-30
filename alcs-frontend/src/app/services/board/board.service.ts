@@ -30,7 +30,7 @@ export class BoardService {
   private async publishBoards() {
     if (this.userProfile !== undefined) {
       if (!this.boards) {
-        this.boards = await firstValueFrom(this.http.get<BoardDto[]>(`${environment.apiRoot}/board`));
+        this.boards = await firstValueFrom(this.http.get<BoardDto[]>(`${environment.apiUrl}/board`));
       }
       const mappedBoards = this.boards.map((board) => ({
         ...board,
@@ -42,12 +42,12 @@ export class BoardService {
   }
 
   fetchApplications(boardCode: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiRoot}/board/${boardCode}`));
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/board/${boardCode}`));
   }
 
   changeBoard(fileNumber: string, boardCode: string) {
     return firstValueFrom(
-      this.http.post<ApplicationDto>(`${environment.apiRoot}/board/change`, {
+      this.http.post<ApplicationDto>(`${environment.apiUrl}/board/change`, {
         fileNumber,
         boardCode,
       })
