@@ -1,5 +1,5 @@
-<div style="margin: 32px 8px">
-  <div style="display: flex; justify-content: space-between; margin: 12px 18px">
+<div class="layout">
+  <div class="board-header">
     <div>
       <h2 class="board-title">
         <app-favorite-button [boardCode]="selectedBoardCode" [isFavorite]="boardIsFavourite"></app-favorite-button
@@ -10,7 +10,7 @@
       <button mat-flat-button color="primary" (click)="onCreate()">+ New Card</button>
     </div>
   </div>
-  <div>
+  <div class="board-content">
     <app-drag-drop-board
       [cards]="cards"
       [columns]="columns"

@@ -11,6 +11,7 @@
 // ng-select
 @import '~@ng-select/ng-select/themes/material.theme.css';
 @import 'styles/ngselect.scss';
+@import 'styles/buttons.scss';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -182,10 +183,26 @@ body {
   align-items: center;
 }
 
+.left {
+  display: flex;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 * {
   box-sizing: border-box;
 }
 
 .mat-custom-controls {
   color: white;
+}
+
+.button-container {
+  display: flex;
+  justify-content: end;
+
+  button:not(:last-child) {
+    margin-right: 24px !important;
+  }
 }

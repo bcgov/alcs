@@ -1,22 +1,19 @@
-<div>
-  <div class="container" cdkDropListGroup>
-    <div class="column" [id]="'column-' + column.status" *ngFor="let column of columns">
-      <div
-        class="card-container"
-        cdkDropList
-        (cdkDropListDropped)="drop($event, column)"
-        [cdkDropListEnterPredicate]="predicateGenerator(column)"
+<div class="container" cdkDropListGroup>
+  <div class="column" [id]="'column-' + column.status" *ngFor="let column of columns">
+    <div
+      class="card-container"
+      cdkDropList
+      (cdkDropListDropped)="drop($event, column)"
+      [cdkDropListEnterPredicate]="predicateGenerator(column)"
+    >
+      <div class="column-header" [innerHtml]="column.name"></div>
+      <app-card
+        [id]="'card-' + card.id"
+        *ngFor="let card of cards | statusfilter: column.status"
+        [cardData]="card"
+        (cardSelected)="cardClicked($event)"
       >
-        <div class="column-header" [innerHtml]="column.name">
-        </div>
-        <app-card
-          [id]="'card-' + card.id"
-          *ngFor="let card of cards | statusfilter: column.status"
-          [cardData]="card"
-          (cardSelected)="cardClicked($event)"
-        >
-        </app-card>
-      </div>
+      </app-card>
     </div>
   </div>
 </div>
