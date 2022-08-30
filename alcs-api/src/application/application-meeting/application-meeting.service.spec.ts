@@ -96,7 +96,7 @@ describe('ApplicationMeetingService', () => {
   });
 
   it('should delete meeting with uuid', async () => {
-    await service.delete(mockMeeting.uuid);
+    await service.remove(mockMeeting.uuid);
 
     expect(mockAppMeetingRepository.softRemove).toBeCalledTimes(1);
   });

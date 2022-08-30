@@ -38,7 +38,7 @@ export class ApplicationMeetingService {
         this.http.patch<ApplicationMeetingDto>(this.url, {
           ...meeting,
           startDate: meeting.startDate.valueOf(),
-          endDate: meeting.endDate.valueOf(),
+          endDate: meeting.endDate?.valueOf(),
         })
       );
       await this.fetch(meeting.applicationFileNumber);

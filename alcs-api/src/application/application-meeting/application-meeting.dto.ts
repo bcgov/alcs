@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApplicationMeetingTypeDto } from '../application-code/application-meeting-type/application-meeting-type.dto';
 
 export class CreateApplicationMeetingDto {
@@ -9,7 +9,8 @@ export class CreateApplicationMeetingDto {
 
   @AutoMap()
   @IsNumber()
-  endDate: number;
+  @IsOptional()
+  endDate: number = null;
 
   @AutoMap()
   @IsString()
@@ -18,6 +19,11 @@ export class CreateApplicationMeetingDto {
   @AutoMap()
   @IsString()
   meetingTypeCode: string;
+
+  @AutoMap()
+  @IsString()
+  @IsOptional()
+  description: string;
 }
 
 export class ApplicationMeetingDto extends CreateApplicationMeetingDto {

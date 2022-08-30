@@ -46,6 +46,7 @@ export class ApplicationMeetingDialogComponent {
           endDate: this.model.endDate,
           applicationFileNumber: this.data.fileNumber,
           meetingTypeCode: this.data.meetingType.code,
+          description: '',
         });
       } else {
         this.meetingService.create({
@@ -53,6 +54,7 @@ export class ApplicationMeetingDialogComponent {
           endDate: this.model.endDate,
           applicationFileNumber: this.data.fileNumber,
           meetingTypeCode: this.data.meetingType.code,
+          description: '',
         });
       }
 

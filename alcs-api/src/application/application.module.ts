@@ -18,6 +18,7 @@ import { ApplicationMeetingController } from './application-meeting/application-
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
+import { ApplicationPausedService } from './application-paused/application-paused.service';
 import { ApplicationStatusController } from './application-status/application-status.controller';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
@@ -61,8 +62,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationSubtaskProfile,
     ApplicationDecisionMeetingService,
     ApplicationMeetingService,
-    ApplicationDocumentService,
-    ApplicationSubtaskService,
+    ApplicationPausedService,
   ],
   controllers: [
     ApplicationController,
