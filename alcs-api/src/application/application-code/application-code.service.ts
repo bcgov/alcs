@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
 import { ApplicationStatus } from '../application-status/application-status.entity';
+import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';
 
@@ -15,6 +16,8 @@ export class ApplicationCodeService {
     private statusRepository: Repository<ApplicationStatus>,
     @InjectRepository(ApplicationRegion)
     private regionRepository: Repository<ApplicationRegion>,
+    @InjectRepository(ApplicationMeetingType)
+    private meetingTypesRepository: Repository<ApplicationMeetingType>,
   ) {}
 
   async getAll() {
@@ -28,12 +31,14 @@ export class ApplicationCodeService {
       this.typeRepository.find(alphabeticalFindOptions),
       this.statusRepository.find(), //Status is not alphabetical
       this.regionRepository.find(alphabeticalFindOptions),
+      this.meetingTypesRepository.find(alphabeticalFindOptions),
     ]);
 
     return {
       type: values[0],
       status: values[1],
       region: values[2],
+      meetingTypes: values[3],
     };
   }
 
@@ -55,6 +60,14 @@ export class ApplicationCodeService {
 
   async fetchRegion(code: string): Promise<ApplicationRegion> {
     return this.regionRepository.findOne({
+      where: {
+        code,
+      },
+    });
+  }
+
+  async fetchMeetingType(code: string): Promise<ApplicationRegion> {
+    return this.meetingTypesRepository.findOne({
       where: {
         code,
       },

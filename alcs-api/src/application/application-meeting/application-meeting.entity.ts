@@ -1,11 +1,12 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { ApplicationMeetingType } from '../application-code/application-meeting-type/application-meeting-type.entity';
 import { Application } from '../application.entity';
 
 @Entity()
-export class ApplicationDecisionMeeting extends Base {
-  constructor(data?: Partial<ApplicationDecisionMeeting>) {
+export class ApplicationMeeting extends Base {
+  constructor(data?: Partial<ApplicationMeeting>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -14,7 +15,21 @@ export class ApplicationDecisionMeeting extends Base {
 
   @AutoMap()
   @Column({ type: 'timestamptz' })
-  date: Date;
+  startDate: Date;
+
+  @AutoMap()
+  @Column({ type: 'timestamptz' })
+  endDate: Date;
+
+  @Column({
+    type: 'uuid',
+  })
+  typeUuid: string;
+
+  @ManyToOne(() => ApplicationMeetingType, {
+    nullable: false,
+  })
+  type: ApplicationMeetingType;
 
   @AutoMap()
   @Column()

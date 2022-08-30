@@ -12,20 +12,20 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApplicationModule } from './application/application.module';
+import { BoardModule } from './board/board.module';
+import { CommentModule } from './comment/comment.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
+import { HomeModule } from './home/home.module';
+import { LogoutController } from './logout/logout.controller';
+import { NotificationModule } from './notification/notification.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
-import { CommentModule } from './comment/comment.module';
-import { LogoutController } from './logout/logout.controller';
-import { HomeModule } from './home/home.module';
-import { NotificationModule } from './notification/notification.module';
-import { BoardModule } from './board/board.module';
 
 @Module({
   imports: [

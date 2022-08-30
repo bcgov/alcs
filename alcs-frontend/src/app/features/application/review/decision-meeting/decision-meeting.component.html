@@ -31,7 +31,7 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  <tr class="mat-row center" *matNoDataRow>
-    No data
+  <tr class="mat-row" *matNoDataRow>
+    <td class="text-center" colspan="3">No data</td>
   </tr>
 </table>

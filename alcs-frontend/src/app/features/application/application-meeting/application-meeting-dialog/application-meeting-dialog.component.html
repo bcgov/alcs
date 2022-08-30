@@ -1,0 +1,33 @@
+<div mat-dialog-title>
+  <!--TODO: set title based on the button clicked -->
+  <h2 class="card-title">{{ model.uuid ? 'Update' : 'Create' }} {{ model.meetingType?.label }}</h2>
+</div>
+<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
+  <mat-dialog-content style="height: 100%">
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a start date</mat-label>
+        <input matInput [matDatepicker]="startDate" [(ngModel)]="model.startDate" name="startDate" required />
+        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+        <mat-datepicker #startDate type="date"> </mat-datepicker>
+        <mat-hint>{{ model.startDate | date: 'mediumDate' }}</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Choose an end date</mat-label>
+        <input matInput [matDatepicker]="endDate" [(ngModel)]="model.endDate" name="endDate" required />
+        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+        <mat-datepicker #endDate type="date"> </mat-datepicker>
+        <mat-hint>{{ model.endDate | date: 'mediumDate' }}</mat-hint>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div>
+      <button mat-button mat-dialog-close>Close</button>
+      <button mat-button type="submit" [disabled]="!meetingForm.form.valid">Save</button>
+    </div>
+  </mat-dialog-actions>
+</form>

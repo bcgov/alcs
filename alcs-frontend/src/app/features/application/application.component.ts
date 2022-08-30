@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
+import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ProcessingComponent } from './processing/processing.component';
@@ -27,6 +28,11 @@ export const childRoutes = [
     path: 'review',
     menuTitle: 'Review',
     component: ReviewComponent,
+  },
+  {
+    path: 'site-visit-applicant',
+    menuTitle: 'Site Visit / Applicant Meeting',
+    component: ApplicationMeetingComponent,
   },
 ];
 

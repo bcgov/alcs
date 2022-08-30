@@ -20,8 +20,8 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
-import { SharedModule } from './shared/shared.module';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
