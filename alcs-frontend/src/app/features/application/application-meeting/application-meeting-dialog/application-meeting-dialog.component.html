@@ -1,5 +1,4 @@
 <div mat-dialog-title>
-  <!--TODO: set title based on the button clicked -->
   <h2 class="card-title">{{ model.uuid ? 'Update' : 'Create' }} {{ model.meetingType?.label }}</h2>
 </div>
 <form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
@@ -7,7 +6,14 @@
     <div>
       <mat-form-field appearance="fill">
         <mat-label>Choose a start date</mat-label>
-        <input matInput [matDatepicker]="startDate" [(ngModel)]="model.startDate" name="startDate" required />
+        <input
+          matInput
+          [matDatepicker]="startDate"
+          [(ngModel)]="model.startDate"
+          name="startDate"
+          required
+          (dateChange)="startDateSelected()"
+        />
         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
         <mat-datepicker #startDate type="date"> </mat-datepicker>
         <mat-hint>{{ model.startDate | date: 'mediumDate' }}</mat-hint>
@@ -17,7 +23,14 @@
     <div>
       <mat-form-field appearance="fill">
         <mat-label>Choose an end date</mat-label>
-        <input matInput [matDatepicker]="endDate" [(ngModel)]="model.endDate" name="endDate" required />
+        <input
+          matInput
+          [matDatepicker]="endDate"
+          [(ngModel)]="model.endDate"
+          name="endDate"
+          required
+          [min]="model.startDate"
+        />
         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
         <mat-datepicker #endDate type="date"> </mat-datepicker>
         <mat-hint>{{ model.endDate | date: 'mediumDate' }}</mat-hint>

@@ -62,4 +62,10 @@ export class ApplicationMeetingDialogComponent {
       this.dialogRef.close();
     }
   }
+
+  startDateSelected() {
+    if (this.model.startDate && this.model.startDate > this.model.endDate) {
+      this.model.endDate = this.model.startDate;
+    }
+  }
 }
