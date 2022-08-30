@@ -8,7 +8,7 @@
   "DATABASE_USER": "postgres",
   "DATABASE_PASSWORD": "postgres",
   "DATABASE_MIGRATION_TABLE": "migrations",
-  "LOG_LEVEL": "debug",
+  "LOG_LEVEL": "info",
   "FRONTEND_ROOT": "http://localhost:4200",
   "KEYCLOAK": {
     "AUTH_SERVER": "dev.loginproxy.gov.bc.ca",
