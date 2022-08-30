@@ -8,7 +8,6 @@ export class ApplicationMeetingForm {
     public fileNumber: string,
     public startDate: Date,
     public endDate: Date,
-    public meetingTypeCode: string,
     public meetingType: ApplicationMeetingTypeDto,
     public uuid: string | undefined = undefined
   ) {}
@@ -34,8 +33,7 @@ export class ApplicationMeetingDialogComponent {
         endDate: new Date(data.endDate),
       };
     } else {
-      // TODO: accept type as input parameter
-      this.model = new ApplicationMeetingForm(data.fileNumber, new Date(), new Date(), 'AM', data.meetingType);
+      this.model = new ApplicationMeetingForm(data.fileNumber, new Date(), new Date(), data.meetingType);
     }
   }
 
