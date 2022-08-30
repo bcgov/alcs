@@ -4,7 +4,6 @@ export interface ApplicationMeetingDto {
   endDate: Date;
   applicationFileNumber: string;
   meetingType: ApplicationMeetingTypeDto;
-  meetingTypeCode: string;
 }
 
 export interface ApplicationMeetingTypeDto {

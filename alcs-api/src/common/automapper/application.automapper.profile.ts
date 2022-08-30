@@ -135,20 +135,6 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationMeetingDto,
-        ApplicationMeeting,
-        forMember(
-          (a) => a.startDate,
-          mapFrom((ad) => new Date(ad.startDate)),
-        ),
-        forMember(
-          (a) => a.endDate,
-          mapFrom((ad) => new Date(ad.endDate)),
-        ),
-      );
-
-      createMap(
-        mapper,
         ApplicationMeeting,
         ApplicationMeetingDto,
         forMember(
@@ -164,6 +150,19 @@ export class ApplicationProfile extends AutomapperProfile {
               ApplicationMeetingTypeDto,
             ),
           ),
+        ),
+      );
+      createMap(
+        mapper,
+        ApplicationMeetingDto,
+        ApplicationMeeting,
+        forMember(
+          (a) => a.startDate,
+          mapFrom((ad) => new Date(ad.startDate)),
+        ),
+        forMember(
+          (a) => a.endDate,
+          mapFrom((ad) => new Date(ad.endDate)),
         ),
       );
     };

@@ -36,11 +36,11 @@ export class ApplicationMeetingComponent implements OnInit {
         this.meetingService.fetch(this.fileNumber);
         this.meetingService.$meetings.subscribe((meetings) => {
           this.siteVisits = meetings
-            .filter((m) => m.meetingTypeCode === 'SV')
+            .filter((m) => m.meetingType.code === 'SV')
             .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
 
           this.applicantMeetings = meetings
-            .filter((m) => m.meetingTypeCode === 'AM')
+            .filter((m) => m.meetingType.code === 'AM')
             .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
         });
       }
@@ -72,7 +72,7 @@ export class ApplicationMeetingComponent implements OnInit {
           uuid: meeting.uuid,
           startDate: meeting.startDate,
           endDate: meeting.endDate,
-          meetingTypeCode: meeting.meetingTypeCode,
+          meetingTypeCode: meeting.meetingType.code,
           meetingType: meeting.meetingType,
         },
       });

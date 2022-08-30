@@ -47,14 +47,14 @@ export class ApplicationMeetingDialogComponent {
           startDate: this.model.startDate,
           endDate: this.model.endDate,
           applicationFileNumber: this.data.fileNumber,
-          meetingTypeCode: this.data.meetingTypeCode,
+          meetingTypeCode: this.data.meetingType.code,
         });
       } else {
         this.meetingService.create({
           startDate: this.model.startDate,
           endDate: this.model.endDate,
           applicationFileNumber: this.data.fileNumber,
-          meetingTypeCode: this.data.meetingTypeCode,
+          meetingTypeCode: this.data.meetingType.code,
         });
       }
 

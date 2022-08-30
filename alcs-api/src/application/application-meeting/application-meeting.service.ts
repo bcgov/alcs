@@ -20,7 +20,7 @@ export class ApplicationMeetingService {
     private applicationService: ApplicationService,
   ) {}
 
-  async getByAppFileNumber(number: string) {
+  async getByAppFileNumber(number: string): Promise<ApplicationMeeting[]> {
     const application = await this.applicationService.get(number);
 
     if (!application) {

@@ -30,7 +30,7 @@ import { ApplicationMeetingService } from './application-meeting.service';
 @UseGuards(RoleGuard)
 export class ApplicationMeetingController {
   constructor(
-    private appDecisionMeetingService: ApplicationMeetingService,
+    private appMeetingService: ApplicationMeetingService,
     private applicationService: ApplicationService,
     private applicationCodeService: ApplicationCodeService,
     @InjectMapper() private mapper: Mapper,
@@ -39,10 +39,9 @@ export class ApplicationMeetingController {
   @Get(':fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async getAllForApplication(
-    @Param('meetingType') meetingTypeCode,
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationMeetingDto[]> {
-    const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
+    const meetings = await this.appMeetingService.getByAppFileNumber(
       fileNumber,
     );
 
@@ -56,7 +55,7 @@ export class ApplicationMeetingController {
   @Get('/meeting/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('uuid') uuid: string): Promise<ApplicationMeetingDto> {
-    const meeting = await this.appDecisionMeetingService.get(uuid);
+    const meeting = await this.appMeetingService.get(uuid);
     return this.mapper.mapAsync(
       meeting,
       ApplicationMeeting,
@@ -67,7 +66,7 @@ export class ApplicationMeetingController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
-    return this.appDecisionMeetingService.delete(uuid);
+    return this.appMeetingService.delete(uuid);
   }
 
   @Post()
@@ -95,14 +94,12 @@ export class ApplicationMeetingController {
       );
     }
 
-    const newMeeting = await this.appDecisionMeetingService.createOrUpdate({
+    const newMeeting = await this.appMeetingService.createOrUpdate({
       startDate: new Date(meeting.startDate),
       endDate: new Date(meeting.endDate),
       applicationUuid: application.uuid,
       typeUuid: applicationType.uuid,
     });
-
-    console.log(newMeeting, newMeeting);
 
     return this.mapper.map(
       newMeeting,
@@ -121,7 +118,7 @@ export class ApplicationMeetingController {
       ApplicationMeetingDto,
       ApplicationMeeting,
     );
-    const updatedMeeting = await this.appDecisionMeetingService.createOrUpdate(
+    const updatedMeeting = await this.appMeetingService.createOrUpdate(
       appDecEntity,
     );
     return this.mapper.map(
