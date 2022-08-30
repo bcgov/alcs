@@ -1,5 +1,3 @@
-<br />
-
 <div class="flex-container">
   <div class="col-40">
     <h4>Site Visit Dates</h4>
@@ -11,9 +9,7 @@
   </div>
 </div>
 
-<br />
-
-<table mat-table [dataSource]="siteVisits" class="mat-elevation-z8 width-100">
+<table mat-table [dataSource]="siteVisits" class="mat-elevation-z8 width-100 section">
   <ng-container matColumnDef="startDate">
     <th mat-header-cell *matHeaderCellDef>Start Date</th>
     <td mat-cell *matCellDef="let element">{{ element.startDate | date: 'mediumDate' }}</td>
@@ -43,11 +39,7 @@
   </tr>
 </table>
 
-<!-- TODO: replace this with styles -->
-<br />
-<br />
-
-<div class="flex-container">
+<div class="flex-container section">
   <div class="col-40">
     <h4>Applicant Meeting Dates</h4>
   </div>
@@ -63,9 +55,7 @@
   </div>
 </div>
 
-<br />
-
-<table mat-table [dataSource]="applicantMeetings" class="mat-elevation-z8 width-100">
+<table mat-table [dataSource]="applicantMeetings" class="mat-elevation-z8 width-100 section">
   <ng-container matColumnDef="startDate">
     <th mat-header-cell *matHeaderCellDef>Start Date</th>
     <td mat-cell *matCellDef="let element">{{ element.startDate | date: 'mediumDate' }}</td>

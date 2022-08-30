@@ -3,8 +3,8 @@
 </div>
 <form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
   <mat-dialog-content style="height: 100%">
-    <div>
-      <mat-form-field appearance="fill">
+    <div class="flex-container">
+      <mat-form-field appearance="fill" class="flex-child">
         <mat-label>Choose a start date</mat-label>
         <input
           matInput
@@ -18,10 +18,8 @@
         <mat-datepicker #startDate type="date"> </mat-datepicker>
         <mat-hint>{{ model.startDate | date: 'mediumDate' }}</mat-hint>
       </mat-form-field>
-    </div>
 
-    <div>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="fill" class="flex-child">
         <mat-label>Choose an end date</mat-label>
         <input
           matInput
