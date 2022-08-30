@@ -2,7 +2,11 @@
 
 .avatar-circle {
   border-radius: 50%;
-  padding: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: $accent-color-dark;
   color: $white;
 }
