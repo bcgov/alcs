@@ -8,8 +8,8 @@ declare global {
 
 export const environment = {
   production: false,
-  apiUrl: window.env["apiUrl"] || 'http://localhost:8080',
-  homeUrl: window.env["homeUrl"] || '/home'
+  apiUrl: window?.env["apiUrl"] || 'http://localhost:8080',
+  homeUrl: window?.env["homeUrl"] || '/home'
 };
 
 /*
