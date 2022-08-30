@@ -1,5 +1,7 @@
+import { ApplicationMeetingType } from '../../../application/application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
 import { Comment } from '../../../comment/comment.entity';
@@ -146,6 +148,28 @@ const initApplicationDecisionMeetingMock = (
   return meeting;
 };
 
+const initApplicationMeetingMock = (
+  application?: Application,
+  meetingType?: ApplicationMeetingType,
+): ApplicationMeeting => {
+  const meeting = new ApplicationMeeting();
+  meeting.application = application ?? initApplicationMockEntity();
+  meeting.uuid = '11111111';
+  meeting.startDate = new Date(2022, 1, 1, 1, 1, 1, 1);
+  meeting.endDate = new Date(2022, 2, 2, 2, 2, 2, 2);
+  meeting.applicationUuid = application.uuid;
+  if (meetingType) {
+    meeting.type = meetingType;
+  } else {
+    meeting.type = new ApplicationMeetingType();
+    meeting.type.code = meeting.type.code = 'FC';
+    meeting.type.label = 'Fake code';
+    meeting.type.description = 'Fake description';
+  }
+
+  return meeting;
+};
+
 export {
   initApplicationStatusMockEntity,
   initApplicationMockEntity,
@@ -155,4 +179,5 @@ export {
   initCommentMentionMock,
   initCommentMock,
   initApplicationDecisionMeetingMock,
+  initApplicationMeetingMock,
 };

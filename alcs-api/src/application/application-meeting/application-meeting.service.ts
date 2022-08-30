@@ -47,9 +47,7 @@ export class ApplicationMeetingService {
     if (meeting.uuid) {
       existingMeeting = await this.get(meeting.uuid);
       if (!existingMeeting) {
-        throw new ServiceNotFoundException(
-          `Decision meeting not found ${meeting.uuid}`,
-        );
+        throw new ServiceNotFoundException(`Meeting not found ${meeting.uuid}`);
       }
     }
 
