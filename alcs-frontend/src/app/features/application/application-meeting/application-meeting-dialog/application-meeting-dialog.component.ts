@@ -62,12 +62,4 @@ export class ApplicationMeetingDialogComponent {
       this.dialogRef.close();
     }
   }
-
-  validateDates() {
-    if (this.model.startDate && this.model.endDate && this.data.startDate > this.data.endDate) {
-      return false;
-    }
-
-    return true;
-  }
 }

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations } from 'typeorm';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
 import { ApplicationMeeting } from './application-meeting.entity';
 
@@ -50,6 +53,8 @@ export class ApplicationMeetingService {
       }
     }
 
+    this.validateDateRange(meeting.startDate, meeting.endDate);
+
     const updatedMeeting = Object.assign(
       existingMeeting || new ApplicationMeeting(),
       meeting,
@@ -63,5 +68,13 @@ export class ApplicationMeetingService {
   async delete(uuid) {
     const meeting = await this.get(uuid);
     return this.appMeetingRepository.softRemove([meeting]);
+  }
+
+  private validateDateRange(startDate: Date, endDate: Date) {
+    if (startDate > endDate) {
+      throw new ServiceValidationException(
+        'Start Date must be smaller that End Date.',
+      );
+    }
   }
 }
