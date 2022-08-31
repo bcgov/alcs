@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationStatus } from '../application-status/application-status.entity';
 import { ApplicationCodeService } from './application-code.service';
+import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';
 
@@ -11,6 +12,7 @@ describe('ApplicationCodeService', () => {
   let mockTypeRepository: DeepMocked<Repository<ApplicationType>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
   let mockRegionRepository: DeepMocked<Repository<ApplicationRegion>>;
+  let mockMeetingRepository: DeepMocked<Repository<ApplicationMeetingType>>;
 
   let service: ApplicationCodeService;
 
@@ -18,6 +20,7 @@ describe('ApplicationCodeService', () => {
     mockTypeRepository = createMock<Repository<ApplicationType>>();
     mockStatusRepository = createMock<Repository<ApplicationStatus>>();
     mockRegionRepository = createMock<Repository<ApplicationRegion>>();
+    mockMeetingRepository = createMock<Repository<ApplicationMeetingType>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -34,6 +37,10 @@ describe('ApplicationCodeService', () => {
           provide: getRepositoryToken(ApplicationRegion),
           useValue: mockRegionRepository,
         },
+        {
+          provide: getRepositoryToken(ApplicationMeetingType),
+          useValue: mockMeetingRepository,
+        },
       ],
     }).compile();
 
@@ -48,12 +55,14 @@ describe('ApplicationCodeService', () => {
     mockTypeRepository.find.mockResolvedValue([]);
     mockStatusRepository.find.mockResolvedValue([]);
     mockRegionRepository.find.mockResolvedValue([]);
+    mockMeetingRepository.find.mockResolvedValue([]);
 
     await service.getAll();
 
     expect(mockTypeRepository.find).toHaveBeenCalled();
     expect(mockStatusRepository.find).toHaveBeenCalled();
     expect(mockRegionRepository.find).toHaveBeenCalled();
+    expect(mockMeetingRepository.find).toHaveBeenCalled();
   });
 
   it('should map the repos to the right response keys', async () => {
@@ -82,11 +91,21 @@ describe('ApplicationCodeService', () => {
       mockRegions as ApplicationRegion[],
     );
 
+    const mockMeetingTypes = [
+      {
+        uuid: '4',
+      },
+    ];
+    mockMeetingRepository.find.mockResolvedValue(
+      mockMeetingTypes as ApplicationMeetingType[],
+    );
+
     const res = await service.getAll();
 
     expect(res.type).toEqual(mockTypes);
     expect(res.status).toEqual(mockStatuses);
     expect(res.region).toEqual(mockRegions);
+    expect(res.meetingTypes).toEqual(mockMeetingTypes);
   });
 
   it('should call the type repo for types', async () => {
@@ -127,5 +146,19 @@ describe('ApplicationCodeService', () => {
 
     expect(mockRegionRepository.findOne).toHaveBeenCalled();
     expect(res).toEqual(mockRegion);
+  });
+
+  it('should call the meeting type repo for application meeting types', async () => {
+    const mockMeetingType = {
+      uuid: '1',
+    };
+    mockMeetingRepository.findOne.mockResolvedValue(
+      mockMeetingType as ApplicationMeetingType,
+    );
+
+    const res = await service.fetchMeetingType('code');
+
+    expect(mockMeetingRepository.findOne).toHaveBeenCalled();
+    expect(res).toEqual(mockMeetingType);
   });
 });
