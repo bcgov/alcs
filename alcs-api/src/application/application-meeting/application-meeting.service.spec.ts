@@ -153,7 +153,7 @@ describe('ApplicationMeetingService', () => {
     expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
     await expect(service.createOrUpdate(meetingToUpdate)).rejects.toMatchObject(
       new ServiceValidationException(
-        'Start Date must be smaller that End Date.',
+        'Start Date must be smaller than End Date.',
       ),
     );
   });
