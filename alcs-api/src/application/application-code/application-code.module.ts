@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationStatus } from '../application-status/application-status.entity';
 import { ApplicationCodeController } from './application-code.controller';
 import { ApplicationCodeService } from './application-code.service';
+import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';
 
@@ -12,6 +13,7 @@ import { ApplicationType } from './application-type/application-type.entity';
       ApplicationStatus,
       ApplicationType,
       ApplicationRegion,
+      ApplicationMeetingType,
     ]),
   ],
   providers: [ApplicationCodeService],

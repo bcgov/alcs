@@ -9,6 +9,9 @@ import { ApplicationDecisionMeetingController } from './application-decision-mee
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
 import { ApplicationHistory } from './application-history.entity';
+import { ApplicationMeetingController } from './application-meeting/application-meeting.controller';
+import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
+import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatusController } from './application-status/application-status.controller';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -26,6 +29,7 @@ import { ApplicationSubscriber } from './application.subscriber';
       Application,
       ApplicationHistory,
       ApplicationPaused,
+      ApplicationMeeting,
       ApplicationDecisionMeeting,
     ]),
     ApplicationCodeModule,
@@ -42,11 +46,13 @@ import { ApplicationSubscriber } from './application.subscriber';
     },
     ApplicationProfile,
     ApplicationDecisionMeetingService,
+    ApplicationMeetingService,
   ],
   controllers: [
     ApplicationController,
     ApplicationStatusController,
     ApplicationDecisionMeetingController,
+    ApplicationMeetingController,
   ],
   exports: [ApplicationService, ApplicationTimeTrackingService],
 })
