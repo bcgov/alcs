@@ -1,6 +1,7 @@
 user
 application_status
 board
+application_meeting_type
 application_region
 application_type
 application
@@ -8,6 +9,7 @@ comment
 application_decision_meeting
 application_history
 application_paused
+application_meeting
 board_status
 comment_mention
 notification

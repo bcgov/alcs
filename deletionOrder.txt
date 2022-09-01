@@ -4,6 +4,7 @@ health_check
 notification
 comment_mention
 board_status
+application_meeting
 application_paused
 application_history
 application_decision_meeting
@@ -11,6 +12,7 @@ comment
 application
 application_type
 application_region
+application_meeting_type
 board
 application_status
 user
