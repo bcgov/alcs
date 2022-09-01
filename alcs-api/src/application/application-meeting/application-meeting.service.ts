@@ -71,7 +71,7 @@ export class ApplicationMeetingService {
   private validateDateRange(startDate: Date, endDate: Date) {
     if (startDate > endDate) {
       throw new ServiceValidationException(
-        'Start Date must be smaller that End Date.',
+        'Start Date must be smaller than End Date.',
       );
     }
   }
