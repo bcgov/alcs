@@ -15,9 +15,9 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
   applicationStatus.label = 'app_label';
-  applicationStatus.auditDeletedDateAt = 11111111;
-  applicationStatus.auditCreatedAt = 111111111;
-  applicationStatus.auditUpdatedAt = 111111111;
+  applicationStatus.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationStatus.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationStatus.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationStatus;
 };
@@ -29,9 +29,9 @@ const initApplicationTypeMockEntity = (): ApplicationType => {
   applicationType.uuid = '1111-1111-1111-1111';
   applicationType.label = 'app_label';
   applicationType.shortLabel = 'short_label';
-  applicationType.auditDeletedDateAt = 11111111;
-  applicationType.auditCreatedAt = 111111111;
-  applicationType.auditUpdatedAt = 111111111;
+  applicationType.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationType.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationType.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationType;
 };
@@ -48,8 +48,8 @@ const initAssigneeMockEntity = (): User => {
   user.preferredUsername = 'preferredUsername';
   user.idirUserGuid = 'idirUserGuid';
   user.idirUserName = 'idirUserName';
-  user.auditCreatedAt = 111111111;
-  user.auditUpdatedAt = 111111111;
+  user.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  user.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   return user;
 };
 
@@ -58,9 +58,9 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.fileNumber = fileNumber ?? 'app_1';
   applicationEntity.applicant = 'applicant 1';
   applicationEntity.uuid = '1111-1111-1111-1111';
-  applicationEntity.auditDeletedDateAt = 111111111;
-  applicationEntity.auditCreatedAt = 111111111;
-  applicationEntity.auditUpdatedAt = 111111111;
+  applicationEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.status = initApplicationStatusMockEntity();
   applicationEntity.statusUuid = applicationEntity.status.uuid;
   applicationEntity.assigneeUuid = '1111-1111-1111';
@@ -127,8 +127,8 @@ const initCommentMentionMock = (
   const mention = new CommentMention();
   const commentEntity = comment ?? initCommentMock();
   const userEntity = user ?? initAssigneeMockEntity();
-  mention.auditCreatedAt = 111111111;
-  mention.auditUpdatedAt = 111111111;
+  mention.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  mention.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   mention.commentUuid = commentEntity.uuid;
   mention.user = userEntity;
   mention.mentionLabel = 'TestMentionName';

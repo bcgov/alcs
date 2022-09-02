@@ -44,7 +44,7 @@ describe('ApplicationTimeTrackingService', () => {
     ]);
 
     const res = await applicationPausedService.fetchActiveTimes([
-      { uuid: fakeUuid, auditCreatedAt: Date.now() } as Application,
+      { uuid: fakeUuid, auditCreatedAt: new Date() } as Application,
     ]);
 
     expect(res.size).toEqual(1);
