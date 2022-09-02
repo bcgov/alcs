@@ -47,7 +47,7 @@ describe('ApplicationSubscriber', () => {
     mockDataSource.subscribers = subscribersArray;
 
     oldApplication.statusUuid = oldStatus;
-    oldApplication.auditUpdatedAt = 10001;
+    oldApplication.auditUpdatedAt = new Date(2, 2, 2, 2, 2, 2, 2);
     oldApplication.paused = false;
     newApplication.statusUuid = newStatus;
     newApplication.paused = false;
@@ -105,7 +105,7 @@ describe('ApplicationSubscriber', () => {
 
   describe('ApplicationHistory', () => {
     it('should create a new history application when status is changed', async () => {
-      const endDate = Date.now();
+      const endDate = new Date(1, 1, 1, 1, 1, 1, 1);
 
       await applicationSubscriber.beforeUpdate(updateEvent);
 
@@ -120,7 +120,7 @@ describe('ApplicationSubscriber', () => {
     it('should fallback to createdAt if old entity has no updatedAt', async () => {
       updateEvent.databaseEntity = {
         auditUpdatedAt: null,
-        auditCreatedAt: 10002,
+        auditCreatedAt: new Date(3, 3, 3, 3, 3, 3, 3),
       } as Application;
 
       await applicationSubscriber.beforeUpdate(updateEvent);
@@ -128,7 +128,7 @@ describe('ApplicationSubscriber', () => {
       expect(mockManager.save).toHaveBeenCalled();
       const savedValue = mockManager.save.mock
         .calls[0][0] as unknown as ApplicationHistory;
-      expect(savedValue.startDate).toEqual(10002);
+      expect(savedValue.startDate).toEqual(new Date(3, 3, 3, 3, 3, 3, 3));
     });
 
     it('should not save anything if status is the same', async () => {

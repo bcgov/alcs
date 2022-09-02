@@ -12,13 +12,13 @@ export class ApplicationPaused extends Base {
   }
 
   @Column({
-    type: 'date',
+    type: 'timestamptz',
     default: () => 'NOW()',
   })
   startDate: Date;
 
   @Column({
-    type: 'date',
+    type: 'timestamptz',
     nullable: true,
   })
   endDate?: Date;

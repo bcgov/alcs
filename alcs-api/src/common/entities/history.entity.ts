@@ -1,14 +1,12 @@
 import { Column } from 'typeorm';
-import { Base, getTimestampColumnsOptions } from './base.entity';
+import { Base } from './base.entity';
 
 export class EntityHistory extends Base {
-  @Column({ ...getTimestampColumnsOptions() })
-  startDate: number;
+  @Column({ type: 'timestamptz' })
+  startDate: Date;
 
-  @Column({
-    ...getTimestampColumnsOptions(),
-  })
-  endDate: number;
+  @Column({ type: 'timestamptz' })
+  endDate: Date;
 
   @Column()
   userId: string;
