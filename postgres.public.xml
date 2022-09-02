@@ -135,11 +135,11 @@
          <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="now()" digits="0" id="6" name="start_date" nullable="false" remarks="" size="13" type="date" typeCode="91"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="end_date" nullable="true" remarks="" size="13" type="date" typeCode="91"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_57e39f7c811d07c646fc04e8bdf" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="start_date" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="end_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_95172cd91291d9e80bbebe2c1d6" unique="true">
             <column ascending="true" name="uuid"/>
@@ -239,7 +239,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_status" numRows="125" remarks="" schema="public" type="TABLE">
+      <table name="board_status" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
