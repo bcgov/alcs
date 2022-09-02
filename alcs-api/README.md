@@ -84,7 +84,7 @@ Postgres unit tests are implemented using pgTap.
 
 ```bash
 # run tests
-docker-compose up pgtap --build
+docker-compose up --build pgtap 
 ```
 
 ## Queues
