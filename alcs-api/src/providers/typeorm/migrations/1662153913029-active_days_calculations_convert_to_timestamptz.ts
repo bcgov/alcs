@@ -21,7 +21,7 @@ export class activeDaysCalculationsConvertToTimestamptz1662153913029
                       1
                   END) INTO weekday_count
           FROM
-              generate_series(start_date, end_date, '1 day'::interval) s;
+              generate_series(start_date::DATE, end_date::DATE, '1 day'::interval) s;
           RETURN weekday_count;
       END;
       $$;
@@ -40,8 +40,8 @@ export class activeDaysCalculationsConvertToTimestamptz1662153913029
           FROM
               holiday_entity
           WHERE
-              holiday_entity. "day" BETWEEN start_date
-              AND end_date;
+              holiday_entity. "day" BETWEEN start_date::DATE
+              AND end_date::DATE;
           RETURN holiday_count;
       END;
       $$;
