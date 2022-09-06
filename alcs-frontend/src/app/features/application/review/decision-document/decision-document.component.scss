@@ -1,27 +1,16 @@
 @import '../../../../../styles/colors.scss';
 
-.action-btn.edit {
-  color: $error-color;
-}
-
 .action-btn.delete {
   color: $error-color;
 }
 
-.flex-container {
+.table-header {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-
-  .col-40 {
-    width: 40%;
-  }
-
-  .pull-right {
-    float: right;
-  }
+  margin-bottom: 16px;
 }
 
 .width-100 {
@@ -29,6 +18,16 @@
 }
 
 .mat-column-action {
-  width: 16%;
+  width: 8%;
   text-align: right;
+}
+
+a {
+  font-size: 14px !important;
+  cursor: pointer;
+}
+
+.spinner {
+  display: inline-block;
+  margin-right: 4px;
 }

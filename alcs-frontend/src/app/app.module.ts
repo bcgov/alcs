@@ -18,7 +18,6 @@ import { NotificationService } from './services/notification/notification.servic
 import { ToastService } from './services/toast/toast.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
-import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SharedModule } from './shared/shared.module';
@@ -28,7 +27,6 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    FooterComponent,
     NotFoundComponent,
     AuthorizationComponent,
     ProvisionComponent,

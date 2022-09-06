@@ -27,6 +27,12 @@
     "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
     "PASSWORD": ""
   },
+  "STORAGE": {
+    "URL": "http://localhost",
+    "ACCESS_KEY": "minio",
+    "SECRET_KEY": "miniopassword",
+    "BUCKET": "data"
+  },
   "REDIS": {
     "URL": "redis://:redis@redis:6379"
   },

@@ -10,6 +10,7 @@ import * as config from 'config';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
+import fastifyMultipart from '@fastify/multipart';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -72,6 +73,19 @@ function registerPipes(app: NestFastifyApplication) {
   );
 }
 
+async function registerMultiPart(app: NestFastifyApplication) {
+  await app.register(fastifyMultipart, {
+    limits: {
+      fieldNameSize: 100, // Max field name size in bytes
+      fieldSize: 100, // Max field value size in bytes
+      fields: 10, // Max number of non-file fields
+      fileSize: 100000000, // For multipart forms, the max file size in bytes
+      files: 1, // Max number of file fields
+      headerPairs: 2000, // Max number of header key=>value pairs
+    },
+  });
+}
+
 async function bootstrap() {
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -90,6 +104,7 @@ async function bootstrap() {
   registerSwagger(app);
   await registerHelmet(app);
   registerGlobalFilters(app);
+  registerMultiPart(app);
   registerPipes(app);
 
   // start app n port

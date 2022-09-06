@@ -210,3 +210,8 @@ body {
 .text-center {
   text-align: center;
 }
+
+a {
+  color: $link-color;
+  text-decoration: underline;
+}

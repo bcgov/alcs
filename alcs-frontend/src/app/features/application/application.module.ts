@@ -10,6 +10,7 @@ import { ApplicationComponent, childRoutes } from './application.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ProcessingComponent } from './processing/processing.component';
+import { DecisionDocumentComponent } from './review/decision-document/decision-document.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
@@ -31,6 +32,7 @@ const routes: Routes = [
     ReviewComponent,
     DecisionMeetingDialogComponent,
     DecisionMeetingComponent,
+    DecisionDocumentComponent,
     IntakeComponent,
     InlineDatepickerComponent,
     ApplicationMeetingComponent,
