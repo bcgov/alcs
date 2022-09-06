@@ -8,12 +8,10 @@ import {
   Param,
   Post,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { FastifyReply } from 'fastify';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';

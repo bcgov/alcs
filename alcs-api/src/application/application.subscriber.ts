@@ -3,13 +3,11 @@ import {
   DataSource,
   EntitySubscriberInterface,
   EventSubscriber,
-  IsNull,
   UpdateEvent,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { ApplicationHistory } from './application-history.entity';
-import { ApplicationPaused } from './application-paused.entity';
 import { Application } from './application.entity';
 
 @EventSubscriber()
@@ -38,7 +36,6 @@ export class ApplicationSubscriber
       throw new Error('User not found from token! Has their email changed?');
     }
 
-    await this.trackPaused(oldApplication, newApplication, event, user);
     await this.trackHistory(oldApplication, newApplication, event, user);
   }
 
@@ -59,36 +56,6 @@ export class ApplicationSubscriber
       history.auditCreatedBy = user.uuid;
 
       await event.manager.save(history);
-    }
-  }
-
-  private async trackPaused(
-    oldApplication: Application,
-    newApplication: Application,
-    event: UpdateEvent<Application>,
-    user: User,
-  ) {
-    if (!oldApplication.paused && newApplication.paused) {
-      const pausedStatus = new ApplicationPaused({
-        application: newApplication,
-        auditCreatedBy: user.uuid,
-      });
-      await event.manager.save(pausedStatus);
-    }
-
-    if (oldApplication.paused && !newApplication.paused) {
-      const repository =
-        event.manager.getRepository<ApplicationPaused>(ApplicationPaused);
-      await repository.update(
-        {
-          applicationUuid: oldApplication.uuid,
-          endDate: IsNull(),
-        },
-        {
-          auditUpdatedBy: user.uuid,
-          endDate: new Date(),
-        },
-      );
     }
   }
 }

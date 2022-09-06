@@ -46,7 +46,7 @@ describe('ApplicationController', () => {
     assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
-    paused: mockApplicationEntity.paused,
+    paused: false,
     highPriority: mockApplicationEntity.highPriority,
     decisionMeetings: [],
     dateReceived: Date.now(),

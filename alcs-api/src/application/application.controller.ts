@@ -131,7 +131,7 @@ export class ApplicationController {
       typeUuid: type ? type.uuid : undefined,
       regionUuid: region ? region.uuid : undefined,
       assigneeUuid: application.assigneeUuid,
-      paused: application.paused,
+      
       highPriority: application.highPriority,
       datePaid: this.formatIncomingDate(application.datePaid),
       dateAcknowledgedIncomplete: this.formatIncomingDate(

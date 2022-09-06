@@ -63,6 +63,8 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationDecisionMeetingService,
     ApplicationMeetingService,
     ApplicationPausedService,
+    ApplicationDocumentService,
+    ApplicationSubtaskService,
   ],
   controllers: [
     ApplicationController,

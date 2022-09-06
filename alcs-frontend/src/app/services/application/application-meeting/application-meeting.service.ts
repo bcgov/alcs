@@ -54,7 +54,7 @@ export class ApplicationMeetingService {
         this.http.post<ApplicationMeetingDto>(this.url, {
           ...meeting,
           startDate: formatDateForApi(meeting.startDate),
-          endDate: formatDateForApi(meeting.endDate),
+          endDate: meeting.endDate ? formatDateForApi(meeting.endDate) : meeting.endDate,
         })
       );
       this.toastService.showSuccessToast('Meeting created.');

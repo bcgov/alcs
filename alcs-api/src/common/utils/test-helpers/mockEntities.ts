@@ -65,7 +65,6 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.statusUuid = applicationEntity.status.uuid;
   applicationEntity.assigneeUuid = '1111-1111-1111';
   applicationEntity.assignee = initAssigneeMockEntity();
-  applicationEntity.paused = false;
   applicationEntity.type = initApplicationTypeMockEntity();
   applicationEntity.highPriority = false;
 
