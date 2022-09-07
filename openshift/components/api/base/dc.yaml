@@ -1,0 +1,59 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: alcs-api
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: alcs-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: alcs
+        deploymentconfig: alcs-api
+    spec:
+      containers:
+      - image: " "
+        name: alcs-api
+        ports:
+        - containerPort: 8080
+          readinessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 3
+            httpGet:
+              path: "/"
+              port: 8080
+          livenessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 30
+            httpGet:
+              path: "/"
+              port: 8080
+        env: []
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/app-root/config
+        resources:
+          limits:
+            cpu: 100m
+            memory: 384Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+      volumes:
+      - name: config-volume
+        configMap:
+          name: alcs-api
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - alcs-api
+      from:
+        kind: ImageStreamTag
+        name: "alcs-api:latest"
+

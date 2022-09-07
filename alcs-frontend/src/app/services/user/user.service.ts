@@ -40,13 +40,13 @@ export class UserService {
   }
 
   public async fetchUsers() {
-    this.users = await firstValueFrom(this.http.get<UserDto[]>(`${environment.apiRoot}/user`));
+    this.users = await firstValueFrom(this.http.get<UserDto[]>(`${environment.apiUrl}/user`));
     this.$users.next(this.users);
   }
 
   public async updateUser(user: UserDto) {
     try {
-      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiRoot}/user`, user));
+      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user`, user));
       await this.fetchUsers();
     } catch (e) {
       this.toastService.showErrorToast('Failed to update User');

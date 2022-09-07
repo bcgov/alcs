@@ -26,15 +26,17 @@ services:
     build:
       context: alcs-frontend
     ports:
-      - 8081:80
+      - 8081:8081
     depends_on:
       - api
     healthcheck:
-      test: [ "CMD", "curl", "localhost:80/" ]
+      test: [ "CMD", "curl", "localhost:8081/" ]
       interval: 15s
       timeout: 5s
       retries: 5
       start_period: 30s
+    environment:
+      - API_URL=http://localhost:8080
 
   ##################### Database ####################
   db:

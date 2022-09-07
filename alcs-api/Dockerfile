@@ -5,7 +5,7 @@
 
 FROM node:16.15-alpine As development
 
-WORKDIR /usr/src/app
+WORKDIR /opt/app-root/
 
 COPY --chown=node:node package*.json ./
 
@@ -21,17 +21,15 @@ USER node
 
 FROM node:16.15-alpine As build
 
-WORKDIR /usr/src/app
+WORKDIR /opt/app-root/
 
 COPY --chown=node:node package*.json ./
 
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=development /opt/app-root/node_modules ./node_modules
 
 COPY --chown=node:node . .
 
 RUN npm run build
-
-
 
 RUN npm ci --only=production && npm cache clean --force
 
@@ -43,11 +41,19 @@ USER node
 
 FROM node:16.15-alpine As production
 
+# Init 
+RUN apk add --no-cache tini
+ENTRYPOINT ["/sbin/tini", "--"]
+
+WORKDIR /opt/app-root/
+
+RUN chmod og+rwx /opt/app-root/ /var/run
+
 ARG environment=production
 ENV NODE_ENV ${environment}
 
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-COPY --chown=node:node ./config/ /config/
+COPY --from=build /opt/app-root/node_modules ./node_modules
+COPY --from=build /opt/app-root/dist ./dist
+COPY ./config/ /opt/app-root/config/
 
 CMD [ "node", "dist/main.js" ]

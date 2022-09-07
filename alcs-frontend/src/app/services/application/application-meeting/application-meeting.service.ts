@@ -15,7 +15,7 @@ import {
 })
 export class ApplicationMeetingService {
   $meetings = new BehaviorSubject<ApplicationMeetingDto[]>([]);
-  private url = `${environment.apiRoot}/application-meeting`;
+  private url = `${environment.apiUrl}/application-meeting`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alcs-web
+spec:
+  selector:
+    matchLabels:
+      component: alcs-web
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        component: alcs-web
+    spec:
+      containers:
+        - name: alcs-web
+          image: >-
+            image-registry.apps.silver.devops.gov.bc.ca/a5cf88-dev/alcs-web:latest
+          ports:
+            - containerPort: 8081
+          readinessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 3
+            httpGet:
+              path: "/"
+              port: 8081
+          livenessProbe:
+            timeoutSeconds: 3
+            initialDelaySeconds: 30
+            httpGet:
+              path: "/"
+              port: 8081
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi

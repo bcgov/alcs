@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: alcs-migrate
+spec:
+  parallelism: 1    
+  completions: 1    
+  backoffLimit: 6   
+  template:         
+    metadata:
+      name: alcs-migrate
+    spec:
+      activeDeadlineSeconds: 1800 
+      containers:
+      - name: migrate
+        image: image-registry.apps.silver.devops.gov.bc.ca/a5cf88-dev/alcs-migrate:latest
+        command: ["/opt/app-root/migrate.sh"]
+        # command: ["tail", "-f", "/dev/null"] For when you need to revert?
+        env: []
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+          requests:
+            cpu: 250m
+            memory: 1Gi
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/app-root/config
+      restartPolicy: OnFailure   
+      volumes:
+      - name: config-volume
+        configMap:
+          name: alcs-api
+ 

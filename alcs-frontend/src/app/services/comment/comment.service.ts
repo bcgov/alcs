@@ -14,12 +14,12 @@ export class CommentService implements OnInit {
   ngOnInit(): void {}
 
   async fetchComments(fileNumber: string) {
-    return firstValueFrom(this.http.get<CommentDto[]>(`${environment.apiRoot}/comment/${fileNumber}`));
+    return firstValueFrom(this.http.get<CommentDto[]>(`${environment.apiUrl}/comment/${fileNumber}`));
   }
 
   async createComment(comment: CreateCommentDto) {
     const createdComment = firstValueFrom(
-      this.http.post<CommentDto>(`${environment.apiRoot}/comment`, {
+      this.http.post<CommentDto>(`${environment.apiUrl}/comment`, {
         ...comment,
         mentions: [...comment.mentions.values()],
       })
@@ -30,7 +30,7 @@ export class CommentService implements OnInit {
 
   async updateComment(comment: UpdateCommentDto) {
     const updatedComment = firstValueFrom(
-      this.http.patch<CommentDto>(`${environment.apiRoot}/comment`, {
+      this.http.patch<CommentDto>(`${environment.apiUrl}/comment`, {
         ...comment,
         mentions: [...comment.mentions.values()],
       })
@@ -40,7 +40,7 @@ export class CommentService implements OnInit {
   }
 
   async deleteComment(commentId: string) {
-    const deleted = firstValueFrom(this.http.delete<CommentDto>(`${environment.apiRoot}/comment/${commentId}`));
+    const deleted = firstValueFrom(this.http.delete<CommentDto>(`${environment.apiUrl}/comment/${commentId}`));
     this.toastService.showSuccessToast('Comment deleted');
     return deleted;
   }

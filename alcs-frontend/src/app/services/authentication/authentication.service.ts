@@ -87,7 +87,7 @@ export class AuthenticationService {
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
-        this.http.get(`${environment.apiRoot}/admin`, {
+        this.http.get(`${environment.apiUrl}/admin`, {
           responseType: 'text',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -112,13 +112,13 @@ export class AuthenticationService {
       this.http.get<{
         refresh_token: string;
         token: string;
-      }>(`${environment.apiRoot}/authorize/refresh?r=${refreshToken}`)
+      }>(`${environment.apiUrl}/authorize/refresh?r=${refreshToken}`)
     );
     return res;
   }
 
   private async getLogoutUrl() {
-    return firstValueFrom(this.http.get<{ url: string }>(`${environment.apiRoot}/logout`));
+    return firstValueFrom(this.http.get<{ url: string }>(`${environment.apiUrl}/logout`));
   }
 
   getCurrentUser = () => this.currentUser;

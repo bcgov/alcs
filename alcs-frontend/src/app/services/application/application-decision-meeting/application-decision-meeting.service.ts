@@ -11,7 +11,7 @@ import { ApplicationDecisionMeetingDto, CreateApplicationDecisionMeetingDto } fr
 })
 export class ApplicationDecisionMeetingService {
   $decisionMeetings = new BehaviorSubject<ApplicationDecisionMeetingDto[]>([]);
-  private url = `${environment.apiRoot}/application-decision-meeting`;
+  private url = `${environment.apiUrl}/application-decision-meeting`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 

@@ -1,7 +1,11 @@
+declare global {
+  interface Window { env: any; }
+}
+
 export const environment = {
   production: true,
-  apiRoot: 'http://localhost:8080',
-  homeUrl: '/home',
+  apiUrl: window.env?.["apiUrl"] || 'http://localhost:8080',
+  homeUrl: window.env?.["homeUrl"] || '/home',
   dateFormat: 'YYYY-MMM-dd',
   maxFileSize: 104857600, //should match setting in backend
 };

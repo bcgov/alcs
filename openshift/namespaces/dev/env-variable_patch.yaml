@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alcs-web
+spec:
+  template:
+    spec:
+      containers:
+        - name: alcs-web
+          env:
+          - name: API_URL
+            value: https://alcs-dev-api.apps.silver.devops.gov.bc.ca

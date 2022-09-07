@@ -2,10 +2,14 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+declare global {
+  interface Window { env: any; }
+}
+
 export const environment = {
   production: false,
-  apiRoot: 'http://localhost:8080',
-  homeUrl: '/home',
+  apiUrl: window.env?.["apiUrl"] || 'http://localhost:8080',
+  homeUrl: window.env?.["homeUrl"] || '/home',
   dateFormat: 'YYYY-MMM-dd',
   maxFileSize: 104857600, //should match setting in backend
 };

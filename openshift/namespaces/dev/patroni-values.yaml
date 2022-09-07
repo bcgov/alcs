@@ -1,0 +1,89 @@
+# Default values for patroni.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+
+image:
+  repository: artifacts.developer.gov.bc.ca/bcgov-docker-local
+  pullPolicy: Always
+  # Overrides the image name whose default is the chart name.
+  name: patroni-postgres
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ~
+
+imagePullSecrets: []
+nameOverride: ~
+fullnameOverride: ~
+
+credentials: {}
+  # # Username of replication account
+  # replicationUsername: replication
+  # # Username of superuser account
+  # superuserUsername: postgres
+  # # Application database name
+  # appDbName: app
+  # # Username of application account
+  # appDbUserame: app
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ~
+
+podAnnotations: {}
+
+podAntiAffinity: true
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  enableReadOnly: true
+  # Annotations to add to the service account
+  annotations: {}
+  type: ClusterIP
+  port: 5432
+  portName: db
+
+networkPolicy:
+  enabled: true
+
+probes:
+  liveness:
+    enabled: true
+  readiness:
+    enabled: true
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+persistentVolume:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  annotations: {}
+  mountPath: "/home/postgres/pgdata"
+  size: 256Mi
+  storageClass: "netapp-block-standard"
