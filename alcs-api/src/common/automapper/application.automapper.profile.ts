@@ -12,6 +12,8 @@ import { ApplicationDecisionMeetingDto } from '../../application/application-dec
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeetingDto } from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
+import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
+import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
 import {
@@ -163,6 +165,36 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.endDate,
           mapFrom((ad) => new Date(ad.endDate)),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDocument,
+        ApplicationDocumentDto,
+        forMember(
+          (a) => a.mimeType,
+          mapFrom((ad) => {
+            return ad.document.mimeType;
+          }),
+        ),
+        forMember(
+          (a) => a.fileName,
+          mapFrom((ad) => {
+            return ad.document.fileName;
+          }),
+        ),
+        forMember(
+          (a) => a.uploadedBy,
+          mapFrom((ad) => {
+            return ad.document.uploadedBy.name;
+          }),
+        ),
+        forMember(
+          (a) => a.uploadedAt,
+          mapFrom((ad) => {
+            return ad.document.uploadedAt.getTime();
+          }),
         ),
       );
     };

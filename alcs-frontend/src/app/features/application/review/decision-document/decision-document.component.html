@@ -1,0 +1,51 @@
+<div class="table-header">
+  <div>
+    <h4>Decision Documents</h4>
+  </div>
+  <div>
+    <input hidden type="file" #file (change)="uploadFile($event)" placeholder="Upload file" />
+    <button mat-flat-button color="primary" [disabled]="isUploading" (click)="file.click()">
+      <mat-spinner class="spinner" diameter="20" *ngIf="isUploading"></mat-spinner>
+      {{ isUploading ? 'Uploading' : '+ Add Document' }}
+    </button>
+  </div>
+</div>
+
+<table mat-table [dataSource]="documents" class="mat-elevation-z4 width-100">
+  <ng-container matColumnDef="fileName">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">
+      <a (click)="onDownload(element.uuid, element.fileName)">{{ element.fileName }}</a>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="uploadedAt">
+    <th mat-header-cell *matHeaderCellDef>Upload Date</th>
+    <td mat-cell *matCellDef="let element">{{ element.uploadedAt | date: dateFormat }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="uploadedBy">
+    <th mat-header-cell *matHeaderCellDef>User</th>
+    <td mat-cell *matCellDef="let element">{{ element.uploadedBy }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let element">
+      <button
+        title="Delete"
+        mat-icon-button
+        class="action-btn delete"
+        (click)="onDelete(element.uuid, element.fileName)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr class="mat-row center" *matNoDataRow>
+    <td colspan="4">No files</td>
+  </tr>
+</table>

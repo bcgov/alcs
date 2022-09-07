@@ -3,11 +3,15 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
 import { ApplicationCodeModule } from './application-code/application-code.module';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
+import { ApplicationDocumentController } from './application-document/application-document.controller';
+import { ApplicationDocument } from './application-document/application-document.entity';
+import { ApplicationDocumentService } from './application-document/application-document.service';
 import { ApplicationHistory } from './application-history.entity';
 import { ApplicationMeetingController } from './application-meeting/application-meeting.controller';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
@@ -31,9 +35,11 @@ import { ApplicationSubscriber } from './application.subscriber';
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDecisionMeeting,
+      ApplicationDocument,
     ]),
     ApplicationCodeModule,
     NotificationModule,
+    DocumentModule,
   ],
   providers: [
     ApplicationService,
@@ -47,12 +53,14 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationProfile,
     ApplicationDecisionMeetingService,
     ApplicationMeetingService,
+    ApplicationDocumentService,
   ],
   controllers: [
     ApplicationController,
     ApplicationStatusController,
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
+    ApplicationDocumentController,
   ],
   exports: [ApplicationService, ApplicationTimeTrackingService],
 })

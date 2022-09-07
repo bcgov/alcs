@@ -1,7 +1,9 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { Application } from '../application/application.entity';
 import { CommentMention } from '../comment/mention/comment-mention.entity';
 import { Base } from '../common/entities/base.entity';
+import { Document } from '../document/document.entity';
 
 export class UserSettings {
   favoriteBoards: string[];
@@ -60,4 +62,12 @@ export class User extends Base {
   @AutoMap()
   @OneToMany(() => CommentMention, (mention) => mention.user)
   mentions: CommentMention[];
+
+  @AutoMap()
+  @OneToMany(() => Document, (document) => document.uploadedBy)
+  documents: Document[];
+
+  @AutoMap()
+  @OneToMany(() => Application, (app) => app.assignee)
+  applications: Application[];
 }
