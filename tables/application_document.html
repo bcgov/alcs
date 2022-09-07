@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>board - postgres Database</title>
+        <title>application_document - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>board</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>application_document</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,154 +117,69 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="type">type</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_uuid">application_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application.board_uuid references board.uuid via FK_fe6c9e8b98e3f649b598710dfce"><a href='application.html'>application</a><span class='relatedKey'>.board_uuid</span></td>
-                                                <td class="constraint detail">FK_fe6c9e8b98e3f649b598710dfce<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="application_document.application_uuid references application.uuid via FK_6c496454f95f229c63679bf191e"><a href='application.html'>application</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_6c496454f95f229c63679bf191e<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="document_uuid">document_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="board_status.board_uuid references board.uuid via FK_30cd0aba1ecf48c3687eaa215e1"><a href='board_status.html'>board_status</a><span class='relatedKey'>.board_uuid</span></td>
-                                                <td class="constraint detail">FK_30cd0aba1ecf48c3687eaa215e1<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="application_document.document_uuid references document.uuid via FK_12ae8ee45c8e1f1b074c169a3e5"><a href='document.html'>document</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_12ae8ee45c8e1f1b074c169a3e5<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="audit_deleted_date_at">audit_deleted_date_at</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="audit_created_at">audit_created_at</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>now()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="audit_updated_at">audit_updated_at</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>now()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="audit_created_by">audit_created_by</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="audit_updated_by">audit_updated_by</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="code">code</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="title">title</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="decision_maker">decision_maker</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
                                     <td></td>
@@ -300,16 +215,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_cd77b28e379de081c2b733b3f08</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_87ec4d3edd458858cf7370ddfd3</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
                                 </tr>
                                 <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_677fd48b030e8ba19b2c0f1f8b6</td>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> REL_12ae8ee45c8e1f1b074c169a3e</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>code</td>
+                                    <td>document_uuid</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -334,29 +249,29 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,5,731,299">
-<area shape="rect" id="node2" href="board.html" target="_top" title="board" alt="" coords="5,260,384,593">
-<area shape="rect" id="node3" href="board_status.html" target="_top" title="board_status" alt="" coords="467,316,691,492">
+<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="352,85,733,272">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,5,308,299">
+<area shape="rect" id="node3" href="document.html" target="_top" title="document" alt="" coords="45,316,269,463">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/board.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,213,731,507">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="137,96,252,184">
-<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="5,548,384,881">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="81,441,308,529">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="82,231,307,319">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="89,336,301,424">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="775,321,1089,409">
-<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="803,427,1061,515">
-<area shape="rect" id="node9" href="application_history.html" target="_top" title="application_history" alt="" coords="816,532,1048,620">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="811,111,1053,199">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="815,216,1049,304">
-<area shape="rect" id="node12" href="board_status.html" target="_top" title="board_status" alt="" coords="467,524,691,700">
-<area shape="rect" id="node13" href="comment.html" target="_top" title="comment" alt="" coords="854,5,1010,93">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,339,579,632">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,207,176,295">
+<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="55,648,182,736">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,543,232,631">
+<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,332,231,420">
+<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="13,437,225,525">
+<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="656,420,971,508">
+<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="623,111,1004,297">
+<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="315,175,539,321">
+<area shape="rect" id="node10" href="application_history.html" target="_top" title="application_history" alt="" coords="697,525,929,613">
+<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="693,631,934,719">
+<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="697,315,930,403">
+<area shape="rect" id="node13" href="comment.html" target="_top" title="comment" alt="" coords="735,5,891,93">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/board.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
