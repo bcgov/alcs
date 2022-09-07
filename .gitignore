@@ -6,3 +6,6 @@
 *.code-workspace
 
 openshift/**/*.json
+openshift/tenant-gitops-aa5cf88
+
+openshift/tenant-gitops-aa5cf88.pub
