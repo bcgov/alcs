@@ -5,7 +5,6 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationCodeService } from '../application-code/application-code.service';
 import { ApplicationDocumentController } from './application-document.controller';
@@ -66,7 +65,7 @@ describe('ApplicationDocumentController', () => {
 
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
-    const res = await controller.attachDocument('file', {
+    const res = await controller.attachDocument('file', 'decisionDocument', {
       isMultipart: () => true,
       file: () => mockFile,
       user: {
@@ -93,7 +92,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
     await expect(
-      controller.attachDocument('file', {
+      controller.attachDocument('file', 'decisionDocument', {
         isMultipart: () => false,
         file: () => mockFile,
         user: {
@@ -105,10 +104,34 @@ describe('ApplicationDocumentController', () => {
     );
   });
 
+  it('should throw an exception if pass an invalid document type', async () => {
+    const mockFile = {};
+    const mockUser = {};
+
+    appDocumentService.attachDocument.mockResolvedValue(mockDocument);
+
+    await expect(
+      controller.attachDocument('file', 'invalidDocumentType', {
+        isMultipart: () => true,
+        file: () => mockFile,
+        user: {
+          entity: mockUser,
+        },
+      }),
+    ).rejects.toMatchObject(
+      new BadRequestException(
+        'Invalid document type specified, must be one of decisionDocument, reviewDocument',
+      ),
+    );
+  });
+
   it('should list documents', async () => {
     appDocumentService.list.mockResolvedValue([mockDocument]);
 
-    const res = await controller.listDocuments('fake-number');
+    const res = await controller.listDocuments(
+      'fake-number',
+      'decisionDocument',
+    );
 
     expect(res[0].mimeType).toEqual(mockDocument.document.mimeType);
   });

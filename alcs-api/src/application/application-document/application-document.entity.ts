@@ -11,6 +11,9 @@ import {
 import { Document } from '../../document/document.entity';
 import { Application } from '../application.entity';
 
+export const DOCUMENT_TYPES = ['decisionDocument', 'reviewDocument'] as const;
+export type DOCUMENT_TYPE = 'decisionDocument' | 'reviewDocument';
+
 @Entity()
 export class ApplicationDocument extends BaseEntity {
   constructor(data?: Partial<ApplicationDocument>) {
@@ -25,7 +28,7 @@ export class ApplicationDocument extends BaseEntity {
   uuid: string;
 
   @Column()
-  type: 'decisionDocument';
+  type: string; //TODO: Automapper hates the DOCUMENT_TYPE type
 
   @ManyToOne(() => Application)
   application: Application;

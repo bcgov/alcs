@@ -1,0 +1,10 @@
+<h3>Decision</h3>
+<section>
+  <h4>Decision Date</h4>
+  <div>
+    <app-inline-datepicker [selectedValue]="decisionDate" (save)="setDecisionDate($event)"></app-inline-datepicker>
+  </div>
+</section>
+<section>
+  <app-document [fileNumber]="fileNumber" documentType="decisionDocument" title="Documents"></app-document>
+</section>

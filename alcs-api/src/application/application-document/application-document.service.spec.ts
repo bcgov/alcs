@@ -70,12 +70,16 @@ describe('ApplicationDocumentService', () => {
       fileNumber,
       mockFile as MultipartFile,
       mockUser as User,
+      'decisionDocument',
     );
 
     expect(mockApplicationService.get).toHaveBeenCalled();
     expect(mockDocumentService.create).toHaveBeenCalled();
-    expect(mockDocumentService.create.mock.calls[0][0]).toBe(mockFile);
-    expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockUser);
+    expect(mockDocumentService.create.mock.calls[0][0]).toBe(
+      'application/12345',
+    );
+    expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockFile);
+    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockUser);
 
     expect(mockRepository.save).toHaveBeenCalled();
     expect(mockRepository.save.mock.calls[0][0].application).toBe(
@@ -96,6 +100,7 @@ describe('ApplicationDocumentService', () => {
         fileNumber,
         mockFile as MultipartFile,
         mockUser as User,
+        'decisionDocument',
       ),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`File Number not Found ${fileNumber}`),
@@ -162,7 +167,7 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.list(fileNumber);
+    const res = await service.list(fileNumber, 'decisionDocument');
 
     expect(mockRepository.find).toHaveBeenCalled();
     expect(res[0]).toBe(mockAppDocument);

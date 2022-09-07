@@ -4,13 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline-datepicker.component';
 import { SharedModule } from '../../shared/shared.module';
+import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { ApplicationComponent, childRoutes } from './application.component';
+import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ProcessingComponent } from './processing/processing.component';
-import { DecisionDocumentComponent } from './review/decision-document/decision-document.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
@@ -32,11 +33,12 @@ const routes: Routes = [
     ReviewComponent,
     DecisionMeetingDialogComponent,
     DecisionMeetingComponent,
-    DecisionDocumentComponent,
+    ApplicationDocumentComponent,
     IntakeComponent,
     InlineDatepickerComponent,
     ApplicationMeetingComponent,
     ApplicationMeetingDialogComponent,
+    DecisionComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
