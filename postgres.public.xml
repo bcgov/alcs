@@ -43,6 +43,7 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="18" name="date_acknowledged_incomplete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="19" name="date_received_all_items" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="20" name="date_acknowledged_complete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="21" name="decision_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
@@ -336,6 +337,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="uploaded_by_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_9b9254f412e8a5a07063209a08c" implied="false" onDeleteCascade="false" schema="public" table="user"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="file_key" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_8960855240f8a386eed1d7791c1" unique="true">
             <column ascending="true" name="uuid"/>
