@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application.entity';
 
@@ -13,7 +13,7 @@ export class ApplicationDecisionMeeting extends Base {
   }
 
   @AutoMap()
-  @CreateDateColumn({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz' })
   date: Date;
 
   @AutoMap()

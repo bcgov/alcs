@@ -84,7 +84,7 @@ Postgres unit tests are implemented using pgTap.
 
 ```bash
 # run tests
-docker-compose up pgtap --build
+docker-compose up --build pgtap 
 ```
 
 ## Queues
@@ -105,3 +105,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+# DATES
+
+**_NOTE:_** ALL DATES ON API MUST BE OF TYPE DATE IN UTC  
+**_NOTE:_** ALL DATES IN DB MUST BE TIMESTAMPTZ IN UTC

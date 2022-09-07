@@ -8,7 +8,7 @@
   "DATABASE_USER": "postgres",
   "DATABASE_PASSWORD": "postgres",
   "DATABASE_MIGRATION_TABLE": "migrations",
-  "LOG_LEVEL": "info",
+  "LOG_LEVEL": "warning",
   "FRONTEND_ROOT": "http://localhost:4200",
   "KEYCLOAK": {
     "AUTH_SERVER": "dev.loginproxy.gov.bc.ca",
@@ -26,6 +26,13 @@
     "TOKEN_URL": "",
     "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
     "PASSWORD": ""
+  },
+  "STORAGE": {
+    "URL": "http://localhost",
+    "ACCESS_KEY": "minio",
+    "SECRET_KEY": "miniopassword",
+    "BUCKET": "data",
+    "MAX_FILE_SIZE": 104857600
   },
   "REDIS": {
     "URL": "redis://:redis@redis:6379"

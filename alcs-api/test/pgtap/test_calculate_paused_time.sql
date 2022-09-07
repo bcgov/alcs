@@ -10,9 +10,9 @@ DELETE FROM holiday_entity;
 -- create holidays
 prepare insert_2022_holidays AS
 INSERT INTO "public"."holiday_entity" ("uuid", "name", "day") VALUES
-    ('3fe6132e-ef24-4132-bacf-2a22bdf1a3d1', 'Holiday 1', '2022-07-25'),
-    ('d93e9d9c-c1f6-4f1d-bcce-781d4d5ecd99', 'Holiday 2', '2022-08-01'),
-    ('75579109-7394-4561-8e3a-8acd8472f45e', 'Holiday 3', '2022-08-30');
+    ('3fe6132e-ef24-4132-bacf-2a22bdf1a3d1', 'Holiday 1', TO_TIMESTAMP('2022-07-25', 'YYYY-MM-DD')),
+    ('d93e9d9c-c1f6-4f1d-bcce-781d4d5ecd99', 'Holiday 2', TO_TIMESTAMP('2022-08-01', 'YYYY-MM-DD')),
+    ('75579109-7394-4561-8e3a-8acd8472f45e', 'Holiday 3', TO_TIMESTAMP('2022-08-30', 'YYYY-MM-DD'));
 SELECT lives_ok('insert_2022_holidays', 'should insert holiday_entity');
 
 -- create user
@@ -44,8 +44,8 @@ SELECT lives_ok('insert_application_in_test_calculate_paused', 'should insert ap
 -- create application paused
 prepare insert_application_paused_in_test_calculate_paused AS 
 INSERT INTO public.application_paused (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by, "start_date",end_date,application_uuid) VALUES
-	 ('33333333-3333-3333-3333-333333333333',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap','2022-07-29','2022-08-03','33333333-3333-3333-3333-333333333333'),
-	 ('22222222-2222-2222-2222-222222222222',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap','2022-07-27','2022-07-27','22222222-2222-2222-2222-222222222222');
+	 ('33333333-3333-3333-3333-333333333333',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap',TO_TIMESTAMP('2022-07-29','YYYY-MM-DD'),'2022-08-03','33333333-3333-3333-3333-333333333333'),
+	 ('22222222-2222-2222-2222-222222222222',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap',TO_TIMESTAMP('2022-07-27','YYYY-MM-DD'),'2022-07-27','22222222-2222-2222-2222-222222222222');
 SELECT lives_ok('insert_application_paused_in_test_calculate_paused', 'should insert application_paused');
 
 -- create empty table for return type matching
@@ -57,7 +57,7 @@ CREATE TABLE Empty_Table (
 -- test cases
 
 -- 1 business week with 1 holiday
-SELECT override.freeze_time('2022-08-02');
+SELECT override.freeze_time(TO_TIMESTAMP('2022-08-02','YYYY-MM-DD'));
 PREPARE actual_result_1_week_with_holiday_no_pause AS SELECT * from calculate_active_days('{11111111-1111-1111-1111-111111111111}'::uuid[]);
 PREPARE expected_result_1_week_with_holiday_no_pause AS VALUES ('11111111-1111-1111-1111-111111111111'::uuid,5,0);
 SELECT results_eq('actual_result_1_week_with_holiday_no_pause', 'expected_result_1_week_with_holiday_no_pause', 'Should be 5 active days');

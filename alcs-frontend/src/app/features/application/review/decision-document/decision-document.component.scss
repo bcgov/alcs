@@ -1,0 +1,39 @@
+@import '../../../../../styles/colors.scss';
+
+.action-btn.delete {
+  color: $error-color;
+}
+
+.table-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.mat-column-action {
+  width: 8%;
+  text-align: right;
+}
+
+a {
+  font-size: 14px !important;
+  cursor: pointer;
+}
+
+.spinner {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+:host::ng-deep {
+  .mat-spinner circle {
+    stroke: #fff;
+  }
+}

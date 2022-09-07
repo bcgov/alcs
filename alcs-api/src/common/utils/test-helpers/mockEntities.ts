@@ -1,5 +1,7 @@
+import { ApplicationMeetingType } from '../../../application/application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
 import { Comment } from '../../../comment/comment.entity';
@@ -13,9 +15,9 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
   applicationStatus.label = 'app_label';
-  applicationStatus.auditDeletedDateAt = 11111111;
-  applicationStatus.auditCreatedAt = 111111111;
-  applicationStatus.auditUpdatedAt = 111111111;
+  applicationStatus.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationStatus.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationStatus.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationStatus;
 };
@@ -27,9 +29,9 @@ const initApplicationTypeMockEntity = (): ApplicationType => {
   applicationType.uuid = '1111-1111-1111-1111';
   applicationType.label = 'app_label';
   applicationType.shortLabel = 'short_label';
-  applicationType.auditDeletedDateAt = 11111111;
-  applicationType.auditCreatedAt = 111111111;
-  applicationType.auditUpdatedAt = 111111111;
+  applicationType.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationType.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationType.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationType;
 };
@@ -46,8 +48,8 @@ const initAssigneeMockEntity = (): User => {
   user.preferredUsername = 'preferredUsername';
   user.idirUserGuid = 'idirUserGuid';
   user.idirUserName = 'idirUserName';
-  user.auditCreatedAt = 111111111;
-  user.auditUpdatedAt = 111111111;
+  user.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  user.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   return user;
 };
 
@@ -56,9 +58,9 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.fileNumber = fileNumber ?? 'app_1';
   applicationEntity.applicant = 'applicant 1';
   applicationEntity.uuid = '1111-1111-1111-1111';
-  applicationEntity.auditDeletedDateAt = 111111111;
-  applicationEntity.auditCreatedAt = 111111111;
-  applicationEntity.auditUpdatedAt = 111111111;
+  applicationEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  applicationEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.status = initApplicationStatusMockEntity();
   applicationEntity.statusUuid = applicationEntity.status.uuid;
   applicationEntity.assigneeUuid = '1111-1111-1111';
@@ -125,8 +127,8 @@ const initCommentMentionMock = (
   const mention = new CommentMention();
   const commentEntity = comment ?? initCommentMock();
   const userEntity = user ?? initAssigneeMockEntity();
-  mention.auditCreatedAt = 111111111;
-  mention.auditUpdatedAt = 111111111;
+  mention.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  mention.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   mention.commentUuid = commentEntity.uuid;
   mention.user = userEntity;
   mention.mentionLabel = 'TestMentionName';
@@ -146,6 +148,28 @@ const initApplicationDecisionMeetingMock = (
   return meeting;
 };
 
+const initApplicationMeetingMock = (
+  application?: Application,
+  meetingType?: ApplicationMeetingType,
+): ApplicationMeeting => {
+  const meeting = new ApplicationMeeting();
+  meeting.application = application ?? initApplicationMockEntity();
+  meeting.uuid = '11111111';
+  meeting.startDate = new Date(2022, 1, 1, 1, 1, 1, 1);
+  meeting.endDate = new Date(2022, 2, 2, 2, 2, 2, 2);
+  meeting.applicationUuid = application.uuid;
+  if (meetingType) {
+    meeting.type = meetingType;
+  } else {
+    meeting.type = new ApplicationMeetingType();
+    meeting.type.code = meeting.type.code = 'FC';
+    meeting.type.label = 'Fake code';
+    meeting.type.description = 'Fake description';
+  }
+
+  return meeting;
+};
+
 export {
   initApplicationStatusMockEntity,
   initApplicationMockEntity,
@@ -155,4 +179,5 @@ export {
   initCommentMentionMock,
   initCommentMock,
   initApplicationDecisionMeetingMock,
+  initApplicationMeetingMock,
 };

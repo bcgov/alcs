@@ -206,3 +206,12 @@ body {
     margin-right: 24px !important;
   }
 }
+
+.text-center {
+  text-align: center;
+}
+
+a {
+  color: $link-color;
+  text-decoration: underline;
+}

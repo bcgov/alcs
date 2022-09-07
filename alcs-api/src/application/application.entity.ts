@@ -13,7 +13,9 @@ import { User } from '../user/user.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationHistory } from './application-history.entity';
+import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 
@@ -149,4 +151,15 @@ export class Application extends Base {
     (appDecMeeting) => appDecMeeting.application,
   )
   decisionMeetings: ApplicationDecisionMeeting[];
+
+  @AutoMap()
+  @OneToMany(() => ApplicationMeeting, (appMeeting) => appMeeting.application)
+  applicationMeetings: ApplicationMeeting[];
+
+  @AutoMap()
+  @OneToMany(
+    () => ApplicationDocument,
+    (appDocument) => appDocument.application,
+  )
+  decisionDocuments: ApplicationDocument[];
 }

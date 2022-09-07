@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../../../../environments/environment';
 import { ApplicationDecisionMeetingDto } from '../../../../services/application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -14,6 +15,7 @@ import { DecisionMeetingDialogComponent } from '../decision-meeting-dialog/decis
 export class DecisionMeetingComponent implements OnInit {
   displayedColumns: string[] = ['date', 'action'];
   decisionMeetings: ApplicationDecisionMeetingDto[] = [];
+  dateFormat = environment.dateFormat;
 
   @Input()
   fileNumber: string = '';

@@ -52,7 +52,7 @@ export class ApplicationSubscriber
       const history = new ApplicationHistory();
       history.startDate =
         oldApplication.auditUpdatedAt || oldApplication.auditCreatedAt;
-      history.endDate = Date.now();
+      history.endDate = new Date(1, 1, 1, 1, 1, 1, 1);
       history.statusUuid = oldApplication.statusUuid;
       history.application = event.databaseEntity;
       history.userId = user.uuid;
