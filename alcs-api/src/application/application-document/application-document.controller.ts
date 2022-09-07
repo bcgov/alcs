@@ -75,7 +75,9 @@ export class ApplicationDocumentController {
   ): Promise<ApplicationDocumentDto[]> {
     if (!DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
-        `Invalid document type specified, must be one of decisionDocument`,
+        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
+          ', ',
+        )}`,
       );
     }
 

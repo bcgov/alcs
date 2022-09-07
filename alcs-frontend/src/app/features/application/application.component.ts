@@ -6,7 +6,6 @@ import { ApplicationMeetingComponent } from './application-meeting/application-m
 import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
-import { ProcessingComponent } from './processing/processing.component';
 import { ReviewComponent } from './review/review.component';
 
 export const childRoutes = [
@@ -21,12 +20,7 @@ export const childRoutes = [
     component: IntakeComponent,
   },
   {
-    path: 'processing',
-    menuTitle: 'Processing',
-    component: ProcessingComponent,
-  },
-  {
-    path: 'site-visit-applicant',
+    path: 'site-visit-meeting',
     menuTitle: 'Site Visit / Applicant Meeting',
     component: ApplicationMeetingComponent,
   },
