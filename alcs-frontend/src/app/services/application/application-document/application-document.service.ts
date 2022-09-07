@@ -9,7 +9,7 @@ import { ApplicationDocumentDto } from './application-document.dto';
   providedIn: 'root',
 })
 export class ApplicationDocumentService {
-  private url = `${environment.apiRoot}/application-document`;
+  private url = `${environment.apiUrl}/application-document`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
