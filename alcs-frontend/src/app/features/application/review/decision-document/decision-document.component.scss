@@ -31,3 +31,9 @@ a {
   display: inline-block;
   margin-right: 4px;
 }
+
+:host::ng-deep {
+  .mat-spinner circle {
+    stroke: #fff;
+  }
+}

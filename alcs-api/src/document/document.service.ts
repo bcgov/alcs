@@ -81,7 +81,7 @@ export class DocumentService {
     const command = new GetObjectCommand({
       Bucket: this.config.get('STORAGE.BUCKET'),
       Key: document.uuid,
-      ResponseContentDisposition: `attachment; filename="${document.fileName}"`,
+      ResponseContentDisposition: `inline; filename="${document.fileName}"`,
     });
     return await getSignedUrl(this.dataStore, command, {
       expiresIn: 3600,

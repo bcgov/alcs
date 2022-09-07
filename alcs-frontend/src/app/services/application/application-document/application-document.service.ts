@@ -5,8 +5,6 @@ import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDocumentDto } from './application-document.dto';
 
-const MAX_FILE_SIZE = 104857600;
-
 @Injectable({
   providedIn: 'root',
 })
@@ -20,8 +18,9 @@ export class ApplicationDocumentService {
   }
 
   async upload(fileNumber: string, file: File) {
-    if (file.size > MAX_FILE_SIZE) {
-      this.toastService.showWarningToast('Maximum file size is 100MB, please choose a smaller file');
+    if (file.size > environment.maxFileSize) {
+      const niceSize = environment.maxFileSize / 1048576;
+      this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
       return;
     }
 
@@ -39,11 +38,10 @@ export class ApplicationDocumentService {
   async download(uuid: string, fileName: string) {
     const data = await firstValueFrom(this.http.get<{ url: string }>(`${this.url}/${uuid}`));
     const downloadLink = document.createElement('a');
-    downloadLink.download = fileName;
     downloadLink.href = data.url;
+    downloadLink.download = fileName;
     if (window.webkitURL == null) {
-      // @ts-ignore
-      downloadLink.onclick = document.body.removeChild(event.target);
+      downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
       downloadLink.style.display = 'none';
       document.body.appendChild(downloadLink);
     }

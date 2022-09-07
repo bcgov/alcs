@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 export class DecisionDocumentComponent implements OnInit {
   @Input() fileNumber = '';
 
-  isUploading = true;
+  isUploading = false;
 
   dateFormat = environment.dateFormat;
   displayedColumns: string[] = ['fileName', 'uploadedAt', 'uploadedBy', 'action'];
