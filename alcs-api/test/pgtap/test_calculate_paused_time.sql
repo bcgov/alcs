@@ -35,10 +35,11 @@ SELECT lives_ok('insert_application_status_in_test_calculate_paused', 'should in
 
 -- create application
 prepare insert_application_in_test_calculate_paused AS 
-INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,status_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid,date_received) VALUES
-	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', NOW()),
-	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111', NOW()),
-	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', NOW());
+INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,status_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid,date_received,decision_date) VALUES
+	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393',NULL),
+	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393',NULL),
+	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393',NULL),
+	 ('44444444-4444-4444-4444-444444444444','unit_test','unit_test','44444444-4444-4444-4444-444444444444','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-08-12 13:06:09.393');
 SELECT lives_ok('insert_application_in_test_calculate_paused', 'should insert application');
 
 -- create application paused
@@ -85,6 +86,12 @@ SELECT override.freeze_time('2022-09-06');
 PREPARE actual_result_paused_and_active_holiday AS SELECT * from calculate_active_days('{33333333-3333-3333-3333-333333333333}'::uuid[]);
 PREPARE expected_result_paused_and_active_holiday AS VALUES ('33333333-3333-3333-3333-333333333333'::uuid,26,3);
 SELECT results_eq('actual_result_paused_and_active_holiday','expected_result_paused_and_active_holiday', 'Should have 26 active days and 3 paused');
+
+
+-- application with decision date set
+PREPARE actual_result_with_decision_date AS SELECT * from calculate_active_days('{44444444-4444-4444-4444-444444444444}'::uuid[]);
+PREPARE expected_result_with_decision_date AS VALUES ('44444444-4444-4444-4444-444444444444'::uuid,13,0);
+SELECT results_eq('actual_result_with_decision_date', 'expected_result_with_decision_date', 'Should be 13 active days');
 
 -- properly finish test
 SELECT * FROM finish();
