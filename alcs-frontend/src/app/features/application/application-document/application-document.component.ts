@@ -1,16 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
-import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
-import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { environment } from '../../../../environments/environment';
+import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
+import {
+  ApplicationDocumentService,
+  DOCUMENT_TYPE,
+} from '../../../services/application/application-document/application-document.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-decision-document',
-  templateUrl: './decision-document.component.html',
-  styleUrls: ['./decision-document.component.scss'],
+  selector: 'app-document[title][documentType][fileNumber]',
+  templateUrl: './application-document.component.html',
+  styleUrls: ['./application-document.component.scss'],
 })
-export class DecisionDocumentComponent implements OnInit {
+export class ApplicationDocumentComponent implements OnInit {
   @Input() fileNumber = '';
+  @Input() documentType: DOCUMENT_TYPE = 'decisionDocument';
+  @Input() title = '';
 
   isUploading = false;
 
@@ -28,7 +33,7 @@ export class DecisionDocumentComponent implements OnInit {
   }
 
   async loadDocuments() {
-    this.documents = await this.applicationDocumentService.list(this.fileNumber);
+    this.documents = await this.applicationDocumentService.list(this.fileNumber, this.documentType);
   }
 
   async onDelete(uuid: string, fileName: string) {
@@ -54,7 +59,7 @@ export class DecisionDocumentComponent implements OnInit {
     if (fileList && fileList.length > 0) {
       const file: File = fileList[0];
       this.isUploading = true;
-      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, file);
+      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, this.documentType, file);
       if (uploadedFile) {
         await this.loadDocuments();
       }

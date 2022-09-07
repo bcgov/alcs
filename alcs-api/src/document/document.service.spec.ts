@@ -50,6 +50,7 @@ describe('DocumentService', () => {
     mockRepository.save.mockResolvedValue({} as Document);
 
     const res = await service.create(
+      'dummy/path',
       {
         toBuffer: () => {
           //EMPTY
@@ -77,13 +78,5 @@ describe('DocumentService', () => {
 
     expect(stub.calls().length).toBe(1);
     expect(mockRepository.delete).toHaveBeenCalled();
-  });
-
-  it('should call client to prepare the URL', async () => {
-    const documentUuid = 'fake-uuid';
-
-    const res = await service.getUrl({
-      uuid: documentUuid,
-    } as Document);
   });
 });

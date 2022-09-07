@@ -141,6 +141,7 @@ export class ApplicationController {
       dateAcknowledgedComplete: this.formatIncomingDate(
         application.dateAcknowledgedComplete,
       ),
+      decisionDate: this.formatIncomingDate(application.decisionDate),
     });
 
     if (

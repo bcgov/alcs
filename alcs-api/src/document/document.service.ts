@@ -36,11 +36,11 @@ export class DocumentService {
     });
   }
 
-  async create(file: MultipartFile, user: User) {
-    const fileId = v4();
+  async create(filePath: string, file: MultipartFile, user: User) {
+    const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
       Bucket: this.bucket,
-      Key: fileId,
+      Key: fileKey,
       Body: await file.toBuffer(),
       ACL: 'bucket-owner-full-control',
       ContentType: file.mimetype,
@@ -49,20 +49,20 @@ export class DocumentService {
     await this.dataStore.send(command);
     const document = await this.documentRepository.save(
       new Document({
-        uuid: fileId,
+        fileKey,
         mimeType: file.mimetype,
         uploadedBy: user,
         fileName: file.filename,
       }),
     );
-    this.logger.debug(`File Uploaded with ID ${fileId}`);
+    this.logger.debug(`File Uploaded to ${fileKey}`);
     return document;
   }
 
   async delete(document: Document) {
     const command = new DeleteObjectCommand({
       Bucket: this.bucket,
-      Key: document.uuid,
+      Key: document.fileKey,
     });
 
     await this.dataStore.send(command);
@@ -72,7 +72,7 @@ export class DocumentService {
   download(document: Document) {
     const command = new GetObjectCommand({
       Bucket: this.config.get('STORAGE.BUCKET'),
-      Key: document.uuid,
+      Key: document.fileKey,
     });
     return this.dataStore.send(command);
   }
@@ -80,7 +80,7 @@ export class DocumentService {
   async getUrl(document: Document) {
     const command = new GetObjectCommand({
       Bucket: this.config.get('STORAGE.BUCKET'),
-      Key: document.uuid,
+      Key: document.fileKey,
       ResponseContentDisposition: `inline; filename="${document.fileName}"`,
     });
     return await getSignedUrl(this.dataStore, command, {

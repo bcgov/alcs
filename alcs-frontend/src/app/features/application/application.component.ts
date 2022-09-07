@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
+import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
-import { ProcessingComponent } from './processing/processing.component';
 import { ReviewComponent } from './review/review.component';
 
 export const childRoutes = [
@@ -20,9 +20,9 @@ export const childRoutes = [
     component: IntakeComponent,
   },
   {
-    path: 'processing',
-    menuTitle: 'Processing',
-    component: ProcessingComponent,
+    path: 'site-visit-meeting',
+    menuTitle: 'Site Visit / Applicant Meeting',
+    component: ApplicationMeetingComponent,
   },
   {
     path: 'review',
@@ -30,9 +30,9 @@ export const childRoutes = [
     component: ReviewComponent,
   },
   {
-    path: 'site-visit-applicant',
-    menuTitle: 'Site Visit / Applicant Meeting',
-    component: ApplicationMeetingComponent,
+    path: 'decision',
+    menuTitle: 'Decision',
+    component: DecisionComponent,
   },
 ];
 

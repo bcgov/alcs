@@ -25,6 +25,7 @@ export interface ApplicationDto {
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
+  decisionDate?: number;
   region?: string;
   assignee?: UserDto;
   activeDays: number;
@@ -44,6 +45,7 @@ export interface ApplicationPartialDto {
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
+  decisionDate?: number;
   type?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;

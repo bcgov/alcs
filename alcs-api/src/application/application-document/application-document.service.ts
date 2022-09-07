@@ -6,7 +6,10 @@ import { ServiceNotFoundException } from '../../common/exceptions/base.exception
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from './application-document.entity';
 
 @Injectable()
 export class ApplicationDocumentService {
@@ -21,15 +24,24 @@ export class ApplicationDocumentService {
     private applicationDocumentRepository: Repository<ApplicationDocument>,
   ) {}
 
-  async attachDocument(fileNumber: string, file: MultipartFile, user: User) {
+  async attachDocument(
+    fileNumber: string,
+    file: MultipartFile,
+    user: User,
+    documentType: DOCUMENT_TYPE,
+  ) {
     const application = await this.applicationService.get(fileNumber);
     if (!application) {
       throw new ServiceNotFoundException(`File Number not Found ${fileNumber}`);
     }
 
-    const document = await this.documentService.create(file, user);
+    const document = await this.documentService.create(
+      `application/${fileNumber}`,
+      file,
+      user,
+    );
     const appDocument = new ApplicationDocument({
-      type: 'decisionDocument',
+      type: documentType,
       application,
       document,
     });
@@ -56,9 +68,10 @@ export class ApplicationDocumentService {
     return document;
   }
 
-  async list(fileNumber: string) {
+  async list(fileNumber: string, documentType: DOCUMENT_TYPE) {
     return this.applicationDocumentRepository.find({
       where: {
+        type: documentType,
         application: {
           fileNumber,
         },

@@ -102,6 +102,10 @@ export class ApplicationDto {
   dateAcknowledgedComplete?: number;
 
   @IsOptional()
+  @IsNumber()
+  decisionDate?: number;
+
+  @IsOptional()
   @IsString()
   region?: string;
 
@@ -176,6 +180,10 @@ export class ApplicationUpdateDto {
   @IsOptional()
   @IsNumber()
   dateAcknowledgedComplete?: number;
+
+  @IsOptional()
+  @IsNumber()
+  decisionDate?: number;
 
   @AutoMap()
   @IsBoolean()

@@ -81,6 +81,13 @@ export class Application extends Base {
   })
   dateAcknowledgedComplete?: Date;
 
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  decisionDate?: Date;
+
   @ManyToOne(() => ApplicationStatus, {
     nullable: false,
   })

@@ -18,7 +18,11 @@ import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationDocumentDto } from './application-document.dto';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+  DOCUMENT_TYPES,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -30,20 +34,31 @@ export class ApplicationDocumentController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Post('/application/:fileNumber')
+  @Post('/application/:fileNumber/:documentType')
   @UserRoles(...ANY_AUTH_ROLE)
   async attachDocument(
     @Param('fileNumber') fileNumber: string,
+    @Param('documentType') documentType: string,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
+
+    if (!DOCUMENT_TYPES.includes(documentType as DOCUMENT_TYPE)) {
+      throw new BadRequestException(
+        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
+          ', ',
+        )}`,
+      );
+    }
+
     const file = await req.file();
     const savedDocument = await this.applicationDocumentService.attachDocument(
       fileNumber,
       file,
       req.user.entity,
+      documentType as DOCUMENT_TYPE,
     );
     return this.mapper.map(
       savedDocument,
@@ -52,12 +67,24 @@ export class ApplicationDocumentController {
     );
   }
 
-  @Get('/application/:fileNumber')
+  @Get('/application/:fileNumber/:documentType')
   @UserRoles(...ANY_AUTH_ROLE)
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
+    @Param('documentType') documentType: DOCUMENT_TYPE,
   ): Promise<ApplicationDocumentDto[]> {
-    const documents = await this.applicationDocumentService.list(fileNumber);
+    if (!DOCUMENT_TYPES.includes(documentType)) {
+      throw new BadRequestException(
+        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
+          ', ',
+        )}`,
+      );
+    }
+
+    const documents = await this.applicationDocumentService.list(
+      fileNumber,
+      documentType as DOCUMENT_TYPE,
+    );
     return this.mapper.mapArray(
       documents,
       ApplicationDocument,

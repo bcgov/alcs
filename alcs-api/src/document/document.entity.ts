@@ -12,6 +12,9 @@ export class Document extends Base {
   }
 
   @Column()
+  fileKey: string;
+
+  @Column()
   fileName: string;
 
   @Column()
