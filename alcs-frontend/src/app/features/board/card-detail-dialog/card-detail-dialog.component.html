@@ -1,78 +1,115 @@
-<div mat-dialog-title class="header">
-  <div>
-    <a href="application/{{application.fileNumber}}" target="_blank" rel="noreferrer">
-      <h2 class="card-title">{{ application.fileNumber }} ({{ application.applicant }})</h2>
-    </a>
-    <span>
-      in <span class="italic card-status-label">{{ application.statusDetails.label }}</span>
-    </span>
+<div mat-dialog-title>
+  <div class="close">
+    <button mat-icon-button [mat-dialog-close]="isApplicationDirty">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
-  <div class="center">
-    <div class="card-state">{{ application.paused ? 'Paused' : 'Active' }}</div>
+  <div class="header-row">
+    <div class="left">
+      <h3 class="card-title">{{ application.fileNumber }} ({{ application.applicant }})</h3>
+      <div
+        class="center application-type"
+        [ngStyle]="{
+          backgroundColor: application.typeDetails.backgroundColor,
+          color: application.typeDetails.textColor
+        }"
+      >
+        {{ application.typeDetails.label }}
+      </div>
+    </div>
     <div>
-      <button (click)="onTogglePriority()" mat-icon-button>
-        <span
+      <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
+      <mat-menu xPosition="before" #moreActions="matMenu">
+        <button
+          [mat-dialog-close]="isApplicationDirty"
+          [routerLink]="['application', application.fileNumber]"
+          mat-menu-item
+        >
+          View Detail
+        </button>
+        <button
+          [mat-dialog-close]="isApplicationDirty"
+          [routerLink]="['application', application.fileNumber]"
+          mat-menu-item
+        >
+          Add Info Request
+        </button>
+        <button
+          [mat-dialog-close]="isApplicationDirty"
+          [routerLink]="['application', application.fileNumber, 'site-visit-meeting']"
+          mat-menu-item
+        >
+          Add Site Visit / Meeting
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+  <div>
+    <span class="region">{{ application.regionDetails?.label }} Region</span>
+  </div>
+  <div class="header-row">
+    <div class="left">
+      <div class="body1-text left time-tracking">
+        <div *ngIf="!application.paused"><span class="dot"></span>Active</div>
+        <div *ngIf="application.paused"><span class="dot paused"></span>Paused</div>
+        <div
+          class="card-active-days"
+          [ngClass]="{
+            'inactive-timer': application.paused
+          }"
+        >
+          <mat-icon class="icon">calendar_month</mat-icon>
+          {{ application.activeDays }}
+        </div>
+        <div
+          class="card-paused-days"
+          [ngClass]="{
+            'inactive-timer': !application.paused
+          }"
+        >
+          <mat-icon class="icon">pause</mat-icon>
+          {{ application.pausedDays }}
+        </div>
+      </div>
+    </div>
+    <div style="margin-right: -16px" class="right">
+      <button title="Move board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <mat-icon>move_down</mat-icon>
+      </button>
+      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
+        <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
+          <span class="favourite-board-icon-container"
+            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+          </span>
+          <span>{{ board.title }}</span>
+          <span *ngIf="application.board === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+        </button>
+      </mat-menu>
+      <button class="toggle-priority" title="Change priority" (click)="onTogglePriority()" mat-icon-button>
+        <div
+          class="priority"
           [ngClass]="{
             'filled-priority': application.highPriority,
             'empty-priority': !application.highPriority
           }"
-          >!</span
-        >
+        ></div>
       </button>
     </div>
   </div>
 </div>
 <mat-dialog-content>
-  <div>
-    <mat-label>Applicant:</mat-label>
-    <div>
-      <app-inline-edit
-        class="card-applicant"
-        value="{{ application.applicant }}"
-        (save)="onUpdateTextField('applicant', $event)"
-      ></app-inline-edit>
-    </div>
-  </div>
-  <div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; grid-column-gap: 24px">
     <ng-select
       class="card-type"
-      [items]="applicationTypes"
-      placeholder="Type"
+      [items]="applicationStatuses"
+      placeholder="Workflow Stage"
       bindLabel="label"
       bindValue="code"
       [clearable]="false"
-      [(ngModel)]="selectedApplicationType"
-      (change)="onTypeSelected($event)"
+      [(ngModel)]="selectedApplicationStatus"
+      (change)="onStatusSelected($event)"
     >
     </ng-select>
-  </div>
-  <div>
-    <ng-select
-      class="card-decision-maker"
-      [items]="boards"
-      placeholder="Decision Maker"
-      bindLabel="decisionMaker"
-      bindValue="code"
-      [clearable]="false"
-      [(ngModel)]="selectedBoard"
-      (change)="onBoardSelected($event)"
-    >
-    </ng-select>
-  </div>
-  <div>
-    <ng-select
-      class="card-region"
-      [items]="regions"
-      placeholder="Region"
-      bindLabel="label"
-      bindValue="code"
-      [clearable]="false"
-      [(ngModel)]="selectedRegion"
-      (change)="onRegionSelected($event)"
-    >
-    </ng-select>
-  </div>
-  <div>
     <ng-select
       class="card-assignee"
       [items]="$users | async"
@@ -91,34 +128,7 @@
       </ng-template>
     </ng-select>
   </div>
-
-  <div class="flex-container">
-    <div class="flex-child">
-      <mat-label>Active days:</mat-label>
-      <p class="card-active-days">{{ application.activeDays }}</p>
-    </div>
-    <div class="flex-child">
-      <mat-label>Paused days:</mat-label>
-      <p class="card-paused-days">{{ application.pausedDays }}</p>
-    </div>
-    <div class="flex-child small">
-      <button mat-flat-button color="primary" class="card-state-btn pull-right" (click)="onToggleActive()">
-        {{ application.paused ? 'Activate' : 'Pause' }}
-      </button>
-    </div>
-  </div>
-  <div>
-    <mat-divider></mat-divider>
-  </div>
   <div class="card-comments-wrapper">
-    <mat-label>Comments</mat-label>
-    <div>
-      <app-comments [fileNumber]="application.fileNumber"></app-comments>
-    </div>
+    <app-comments [fileNumber]="application.fileNumber"></app-comments>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <div>
-    <button mat-stroked-button color="primary" [mat-dialog-close]="isApplicationDirty">Close</button>
-  </div>
-</mat-dialog-actions>

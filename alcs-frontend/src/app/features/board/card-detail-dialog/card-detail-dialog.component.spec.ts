@@ -1,17 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApplicationStatusDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { BoardService } from '../../../services/board/board.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SharedModule } from '../../../shared/shared.module';
 import { CardDetailDialogComponent } from './card-detail-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
@@ -65,20 +62,30 @@ describe('CardDetailDialogComponent', () => {
   };
 
   beforeEach(async () => {
+    const mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close', 'afterClosed', 'backdropClick', 'subscribe']);
+    mockDialogRef.backdropClick = () => new EventEmitter();
+
+    const mockBoardService = jasmine.createSpyObj('BoardService', [
+      'close',
+      'afterClosed',
+      'backdropClick',
+      'subscribe',
+    ]);
+    mockBoardService.$boards = new EventEmitter();
+
     await TestBed.configureTestingModule({
       declarations: [CardDetailDialogComponent],
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
-        MatFormFieldModule,
-        MatDividerModule,
-        MatInputModule,
-        MatSelectModule,
-        BrowserAnimationsModule,
-        MatSnackBarModule,
-      ],
+      imports: [HttpClientTestingModule, SharedModule, BrowserAnimationsModule],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
+        {
+          provide: MatDialogRef,
+          useValue: mockDialogRef,
+        },
+        {
+          provide: BoardService,
+          useValue: mockBoardService,
+        },
         { provide: ConfirmationDialogService, useValue: {} },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -98,16 +105,10 @@ describe('CardDetailDialogComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.card-status-label').textContent).toEqual(mockCardDetail.statusDetails.label);
-    expect(compiled.querySelector('.card-state').textContent).toEqual('Paused');
-    expect(compiled.querySelector('.card-applicant')).toBeTruthy();
-    expect(compiled.querySelector('.card-type')).toBeTruthy();
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();
-    expect(compiled.querySelector('.card-decision-maker')).toBeTruthy();
-    expect(compiled.querySelector('.card-region')).toBeTruthy();
-    expect(compiled.querySelector('.card-active-days').textContent).toEqual(`${mockCardDetail.activeDays}`);
-    expect(compiled.querySelector('.card-paused-days').textContent).toEqual(`${mockCardDetail.pausedDays}`);
-    expect(compiled.querySelector('.card-state-btn').textContent.trim()).toEqual('Activate');
+    expect(compiled.querySelector('.region')).toBeTruthy();
+    expect(compiled.querySelector('.card-active-days').textContent).toContain(`${mockCardDetail.activeDays}`);
+    expect(compiled.querySelector('.card-paused-days').textContent).toContain(`${mockCardDetail.pausedDays} `);
     expect(compiled.querySelector('.card-comments-wrapper')).toBeTruthy();
   });
 });
