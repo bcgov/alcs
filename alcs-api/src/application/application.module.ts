@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
@@ -20,6 +21,10 @@ import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationStatusController } from './application-status/application-status.controller';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
+import { ApplicationSubtaskType } from './application-subtask/application-subtask-type.entity';
+import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
+import { ApplicationSubtask } from './application-subtask/application-subtask.entity';
+import { ApplicationSubtaskService } from './application-subtask/application-subtask.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -36,6 +41,8 @@ import { ApplicationSubscriber } from './application.subscriber';
       ApplicationMeeting,
       ApplicationDecisionMeeting,
       ApplicationDocument,
+      ApplicationSubtaskType,
+      ApplicationSubtask,
     ]),
     ApplicationCodeModule,
     NotificationModule,
@@ -51,9 +58,11 @@ import { ApplicationSubscriber } from './application.subscriber';
       useClass: AuthGuard,
     },
     ApplicationProfile,
+    ApplicationSubtaskProfile,
     ApplicationDecisionMeetingService,
     ApplicationMeetingService,
     ApplicationDocumentService,
+    ApplicationSubtaskService,
   ],
   controllers: [
     ApplicationController,
@@ -61,6 +70,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,
+    ApplicationSubtaskController,
   ],
   exports: [ApplicationService, ApplicationTimeTrackingService],
 })

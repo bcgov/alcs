@@ -15,6 +15,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
+import { SubtasksComponent } from './subtasks/subtasks.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     CommentComponent,
     CommentsComponent,
     MentionTextareaComponent,
+    SubtasksComponent,
   ],
   imports: [
     CommonModule,

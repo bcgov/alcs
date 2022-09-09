@@ -59,6 +59,10 @@ p,
   line-height: 16px;
 }
 
+.body-xsmall {
+  @include typography-style(9px, 400);
+}
+
 .button-text {
   @include typography-style(14px, 400);
   letter-spacing: 1px;
