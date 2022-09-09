@@ -258,7 +258,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_status" remarks="" schema="public" type="TABLE">
+      <table name="board_status" numRows="114" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -275,6 +275,10 @@
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_011eeedcd1eb7802ad33e26a32c" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="UQ_3b9caa6927f2f478fa0778fd6d8" unique="true">
+            <column ascending="true" name="board_uuid"/>
+            <column ascending="true" name="status_uuid"/>
          </index>
       </table>
       <table name="comment" remarks="" schema="public" type="TABLE">
