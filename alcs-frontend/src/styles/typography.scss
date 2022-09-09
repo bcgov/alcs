@@ -23,6 +23,7 @@ h2 {
 
 h3 {
   @include typography-style(28px, 700);
+  line-height: 36px !important;
 }
 
 h4 {
@@ -53,9 +54,13 @@ p,
   line-height: 24px;
 }
 
+.body-small {
+  @include typography-style(11px, 400);
+  line-height: 16px;
+}
+
 .button-text {
   @include typography-style(14px, 400);
-  line-height: 24px;
   letter-spacing: 1px;
 }
 
@@ -69,13 +74,14 @@ p,
   line-height: 32px;
 }
 
+.badge {
+  @include typography-style(11px, 700);
+  line-height: 24px;
+}
+
 button {
   @extend .button-text;
   padding: 8px 16px;
-}
-
-.mat-flat-button, .mat-stroked-button {
-  font-weight: 700 !important;
 }
 
 .mention {
@@ -85,9 +91,11 @@ button {
 }
 
 .mention.red {
-  background-color: #f3aaaa !important;
+  color: #DC4146;
+  background: rgba(216, 41, 47, 0.1);
 }
 
 .mention.green {
-  background-color: #b2ff59 !important;
+  color: #073C1D;
+  background: rgba(46, 133, 64, 0.15) !important;
 }

@@ -1,5 +1,9 @@
 @import './colors';
 
+.mat-flat-button, .mat-stroked-button {
+  font-weight: 700 !important;
+}
+
 .mat-flat-button.mat-primary {
   .mat-button-wrapper {
     color: #fff;

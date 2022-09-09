@@ -1,7 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
+import {
+  ApplicationRegionDto,
+  ApplicationStatusDto,
+  ApplicationTypeDto,
+} from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
@@ -19,19 +23,19 @@ export class CardDetailDialogComponent implements OnInit {
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
-  selectedApplicationType = '';
+  selectedApplicationStatus = '';
   selectedBoard?: string;
   selectedRegion?: string;
 
   application: ApplicationDetailedDto = this.data;
-  applicationTypes: ApplicationTypeDto[] = [];
+  applicationStatuses: ApplicationStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
-  regions: ApplicationRegionDto[] = [];
 
   isApplicationDirty = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
+    private dialogRef: MatDialogRef<CardDetailDialogComponent>,
     private userService: UserService,
     private applicationService: ApplicationService,
     private boardService: BoardService,
@@ -43,21 +47,22 @@ export class CardDetailDialogComponent implements OnInit {
     this.application = this.data;
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationType = this.data.typeDetails.code;
+    this.selectedApplicationStatus = this.data.statusDetails.code;
     this.selectedBoard = this.data.board;
     this.selectedRegion = this.data.regionDetails?.code;
 
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
-    this.applicationService.$applicationTypes.subscribe((types) => {
-      this.applicationTypes = types;
-    });
 
     this.boardService.$boards.subscribe((boards) => {
       this.boards = boards;
     });
-    this.applicationService.$applicationRegions.subscribe((regions) => {
-      this.regions = regions;
+    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+      this.applicationStatuses = statuses;
+    });
+
+    this.dialogRef.backdropClick().subscribe(() => {
+      this.dialogRef.close(this.isApplicationDirty);
     });
   }
 
@@ -76,10 +81,10 @@ export class CardDetailDialogComponent implements OnInit {
     });
   }
 
-  onTypeSelected(applicationType: ApplicationTypeDto) {
-    this.selectedApplicationType = applicationType.code;
+  onStatusSelected(applicationStatus: ApplicationStatusDto) {
+    this.selectedApplicationStatus = applicationStatus.code;
     this.updateCard({
-      type: applicationType.code,
+      status: applicationStatus.code,
     });
   }
 
@@ -91,20 +96,6 @@ export class CardDetailDialogComponent implements OnInit {
     });
   }
 
-  onRegionSelected(region: ApplicationRegionDto) {
-    this.selectedRegion = region.code;
-    this.updateCard({
-      region: region.code,
-    });
-  }
-
-  onUpdateTextField(cardProperty: string, newValue: string) {
-    const updateObject = {
-      [cardProperty]: newValue,
-    };
-    this.updateCard(updateObject);
-  }
-
   updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
     this.applicationService
       .updateApplication({
@@ -114,23 +105,6 @@ export class CardDetailDialogComponent implements OnInit {
       .then(() => {
         this.isApplicationDirty = true;
         this.toastService.showSuccessToast('Application Updated');
-      });
-  }
-
-  onToggleActive() {
-    this.applicationService
-      .updateApplication({
-        fileNumber: this.application.fileNumber,
-        paused: !this.application.paused,
-      })
-      .then(() => {
-        this.isApplicationDirty = true;
-        this.application.paused = !this.application.paused;
-        if (this.application.paused) {
-          this.toastService.showSuccessToast('Application Paused');
-        } else {
-          this.toastService.showSuccessToast('Application Activated');
-        }
       });
   }
 

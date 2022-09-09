@@ -190,6 +190,13 @@ body {
   align-items: center;
 }
 
+.right {
+  display: flex;
+  align-content: center;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 * {
   box-sizing: border-box;
 }

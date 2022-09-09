@@ -1,16 +1,10 @@
 .comment {
   width: 100%;
-  margin: 8px 0 16px;
-
-  .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
+  margin: 0 0 8px;
 
   .body {
     margin-bottom: 8px;
-    padding: 6px;
+    padding: 6px 16px;
     border-radius: 6px;
     background-color: #efefef;
     min-height: 28px;
@@ -35,7 +29,7 @@
 .footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 0;
+  margin-top: 8px;
 
   button {
     font-size: 0.6rem !important;
@@ -47,6 +41,8 @@
   }
 
   .edited {
+    display: flex;
+    align-items: center;
     font-size: 0.8em;
     color: #666;
   }
