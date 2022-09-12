@@ -3,6 +3,7 @@ import { environment } from '../../../../environments/environment';
 import { ApplicationSubtaskDto } from '../../../services/application/application-subtask/application-subtask.dto';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
 import { UserService } from '../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-subtasks[fileNumber]',
@@ -17,7 +18,11 @@ export class SubtasksComponent implements OnInit {
   subtasks: ApplicationSubtaskDto[] = [];
   users: Map<string, string> = new Map();
 
-  constructor(private subtaskService: ApplicationSubtaskService, private userService: UserService) {}
+  constructor(
+    private subtaskService: ApplicationSubtaskService,
+    private userService: UserService,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {}
 
   ngOnInit(): void {
     this.loadSubtasks(this.fileNumber);
@@ -40,15 +45,31 @@ export class SubtasksComponent implements OnInit {
   }
 
   async onDelete(uuid: string) {
-    await this.subtaskService.delete(uuid);
-    await this.loadSubtasks(this.fileNumber);
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to delete this Subtask?',
+      })
+      .subscribe(async (yes) => {
+        if (yes) {
+          await this.subtaskService.delete(uuid);
+          await this.loadSubtasks(this.fileNumber);
+        }
+      });
   }
 
   async completeTask(uuid: string) {
-    await this.subtaskService.update(uuid, {
-      completedAt: Date.now(),
-    });
-    await this.loadSubtasks(this.fileNumber);
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to complete this Subtask?',
+      })
+      .subscribe(async (yes) => {
+        if (yes) {
+          await this.subtaskService.update(uuid, {
+            completedAt: Date.now(),
+          });
+          await this.loadSubtasks(this.fileNumber);
+        }
+      });
   }
 
   async uncompleteSubtask(uuid: string) {

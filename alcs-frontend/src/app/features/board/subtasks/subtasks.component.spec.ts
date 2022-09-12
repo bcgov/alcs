@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SubtasksComponent } from './subtasks.component';
 
 describe('SubtasksComponent', () => {
@@ -13,6 +14,10 @@ describe('SubtasksComponent', () => {
       providers: [
         {
           provide: ApplicationSubtaskService,
+          useValue: {},
+        },
+        {
+          provide: ConfirmationDialogService,
           useValue: {},
         },
       ],

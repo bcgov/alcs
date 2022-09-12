@@ -22,7 +22,7 @@ export class ApplicationSubtask extends Base {
   @ManyToOne(() => User)
   assignee: User;
 
-  @Column()
+  @Column({ nullable: true })
   assigneeUuid?: string;
 
   @ManyToOne(() => Application)
