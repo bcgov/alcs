@@ -1,0 +1,13 @@
+<div class="search-bar">
+  <mat-form-field class="search-input" appearance="outline">
+    <input
+      #searchInput
+      (keyup.enter)="onSearch()"
+      (focus)="searchInput.select()"
+      [(ngModel)]="searchText"
+      matInput
+      placeholder="Search"
+    />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+</div>
