@@ -2,7 +2,10 @@
   <div class="welcome-title">
     <h1>Welcome {{ currentUser.name }} to ALCS</h1>
   </div>
-  <div>
+  <div *ngIf="!hasGIS">
     <app-assigned></app-assigned>
+  </div>
+  <div *ngIf="hasGIS">
+    <app-gis-subtasks></app-gis-subtasks>
   </div>
 </div>

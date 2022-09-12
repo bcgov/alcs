@@ -64,6 +64,6 @@ export class UserController {
       CreateOrUpdateUserDto,
       User,
     );
-    return this.userService.update(userEntity);
+    return this.userService.update(userEntity.uuid, userEntity);
   }
 }

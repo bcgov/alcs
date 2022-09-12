@@ -56,6 +56,10 @@ export class User extends Base {
   bceidUserName: string;
 
   @AutoMap()
+  @Column({ default: [], array: true, type: 'text' })
+  clientRoles: string[];
+
+  @AutoMap()
   @Column({ type: 'jsonb', nullable: true })
   settings: UserSettings;
 

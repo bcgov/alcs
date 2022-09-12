@@ -1,0 +1,57 @@
+@import '../../../../styles/colors';
+
+.assignee {
+  margin: 18px 18px 18px 0;
+}
+
+.assigned-table {
+  margin-top: 12px;
+  padding: 0;
+  border-collapse: collapse;
+  width: 100%;
+
+  .header {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .paused {
+    background-color: #efefef;
+  }
+
+  td {
+    margin: 0;
+    border: 0;
+    padding: 4px 28px 4px 4px;
+  }
+
+  td.priority-column {
+    padding: 4px 4px 4px 16px;
+  }
+}
+
+.high-priority {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: $error-color;
+}
+
+.unassigned {
+  font-style: italic;
+  color: $grey;
+}
+
+.subtask-assignee {
+  .assignee-card-name {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+  }
+  .assignee-card-email {
+    font-size: 0.9em !important;
+  }
+}
+
+.action-column {
+  width: 40px;
+  padding: 4px 16px 4px 28px;
+}
