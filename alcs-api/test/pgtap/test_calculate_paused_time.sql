@@ -1,6 +1,6 @@
 BEGIN;
 -- prepare pgtap
-SELECT * from plan(11);
+SELECT * from plan(13);
 
 -- prepare data
 
@@ -35,59 +35,67 @@ SELECT lives_ok('insert_application_status_in_test_calculate_paused', 'should in
 
 -- create application
 prepare insert_application_in_test_calculate_paused AS 
-INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,status_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid,date_received) VALUES
-	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', NOW()),
-	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111', NOW()),
-	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', NOW());
+INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,status_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid,date_received,date_acknowledged_complete,decision_date) VALUES
+	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393',NULL,NULL),
+	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL),
+	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL),
+	 ('44444444-4444-4444-4444-444444444444','unit_test','unit_test','44444444-4444-4444-4444-444444444444','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL),
+	 ('55555555-5555-5555-5555-555555555555','unit_test','unit_test','55555555-5555-5555-5555-555555555555','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393','2022-08-12 13:06:09.393');
 SELECT lives_ok('insert_application_in_test_calculate_paused', 'should insert application');
 
 -- create application paused
 prepare insert_application_paused_in_test_calculate_paused AS 
-INSERT INTO public.application_paused (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by, "start_date",end_date,application_uuid) VALUES
-	 ('33333333-3333-3333-3333-333333333333',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap',TO_TIMESTAMP('2022-07-29','YYYY-MM-DD'),'2022-08-03','33333333-3333-3333-3333-333333333333'),
-	 ('22222222-2222-2222-2222-222222222222',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap',TO_TIMESTAMP('2022-07-27','YYYY-MM-DD'),'2022-07-27','22222222-2222-2222-2222-222222222222');
+INSERT INTO public.application_paused (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,start_date,end_date,application_uuid) VALUES
+	 ('44444444-4444-4444-4444-444444444444',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap','2022-07-29','2022-08-03','44444444-4444-4444-4444-444444444444'),
+	 ('33333333-3333-3333-3333-333333333333',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap','2022-07-27','2022-07-27','33333333-3333-3333-3333-333333333333');
 SELECT lives_ok('insert_application_paused_in_test_calculate_paused', 'should insert application_paused');
-
--- create empty table for return type matching
-CREATE TABLE Empty_Table (
-	application_uuid UUID,
-	"days" INTEGER
-);
 
 -- test cases
 
+-- no dates set yet
+SELECT override.freeze_time('2022-08-02');
+PREPARE actual_result_no_dates AS SELECT * from calculate_active_days('{11111111-1111-1111-1111-111111111111}'::uuid[]);
+PREPARE expected_result_no_dates AS VALUES ('11111111-1111-1111-1111-111111111111'::uuid,0,0);
+SELECT results_eq('actual_result_no_dates', 'expected_result_no_dates', 'Should be 0 active days and 0 paused days');
+
 -- 1 business week with 1 holiday
-SELECT override.freeze_time(TO_TIMESTAMP('2022-08-02','YYYY-MM-DD'));
-PREPARE actual_result_1_week_with_holiday_no_pause AS SELECT * from calculate_active_days('{11111111-1111-1111-1111-111111111111}'::uuid[]);
-PREPARE expected_result_1_week_with_holiday_no_pause AS VALUES ('11111111-1111-1111-1111-111111111111'::uuid,5,0);
-SELECT results_eq('actual_result_1_week_with_holiday_no_pause', 'expected_result_1_week_with_holiday_no_pause', 'Should be 5 active days');
+SELECT override.freeze_time('2022-08-02');
+PREPARE actual_result_1_week_with_holiday_no_pause AS SELECT * from calculate_active_days('{22222222-2222-2222-2222-222222222222}'::uuid[]);
+PREPARE expected_result_1_week_with_holiday_no_pause AS VALUES ('22222222-2222-2222-2222-222222222222'::uuid,4,0);
+SELECT results_eq('actual_result_1_week_with_holiday_no_pause', 'expected_result_1_week_with_holiday_no_pause', 'Should be 4 active days');
 
 -- 1 business week with 1 holiday and 1 pause
 SELECT override.freeze_time('2022-08-02');
-PREPARE actual_result_1_week_with_holiday_with_pause AS SELECT * from calculate_active_days('{22222222-2222-2222-2222-222222222222}'::uuid[]);
-PREPARE expected_result_1_week_with_holiday_with_pause AS VALUES ('22222222-2222-2222-2222-222222222222'::uuid,4,1);
-SELECT results_eq('actual_result_1_week_with_holiday_with_pause', 'expected_result_1_week_with_holiday_with_pause', 'Should be 4 active days with 1 pause day');
+PREPARE actual_result_1_week_with_holiday_with_pause AS SELECT * from calculate_active_days('{33333333-3333-3333-3333-333333333333}'::uuid[]);
+PREPARE expected_result_1_week_with_holiday_with_pause AS VALUES ('33333333-3333-3333-3333-333333333333'::uuid,3,1);
+SELECT results_eq('actual_result_1_week_with_holiday_with_pause', 'expected_result_1_week_with_holiday_with_pause', 'Should be 3 active days with 1 pause day');
 
 -- 1 business week with 1 holiday and 2 overlapping pauses
 
--- add second pause
+-- add overlapping second pause
 prepare insert_application_paused_2 AS
 INSERT INTO public.application_paused (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by, "start_date",end_date,application_uuid) VALUES
-	 ('22222222-2222-2222-2222-222222222223',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap','2022-07-27','2022-07-27','22222222-2222-2222-2222-222222222222');
+	 ('22222222-2222-2222-2222-222222222223',NULL,'2022-07-26 17:23:28.033','2022-07-28 17:23:33.131','pgtap','pgtap','2022-07-27','2022-07-27','33333333-3333-3333-3333-333333333333');
 SELECT lives_ok('insert_application_paused_2', 'should insert application_paused_2');
 
-PREPARE actual_result_1_week_with_holiday_with_overlap_pause AS SELECT * from calculate_active_days('{22222222-2222-2222-2222-222222222222}'::uuid[]);
-PREPARE expected_result_1_week_with_holiday_with_overlap_pause AS VALUES ('22222222-2222-2222-2222-222222222222'::uuid,4,1);
-SELECT results_eq('actual_result_1_week_with_holiday_with_overlap_pause', 'expected_result_1_week_with_holiday_with_overlap_pause', 'Should be 4 active days with 1 pause day');
+PREPARE actual_result_1_week_with_holiday_with_overlap_pause AS SELECT * from calculate_active_days('{33333333-3333-3333-3333-333333333333}'::uuid[]);
+PREPARE expected_result_1_week_with_holiday_with_overlap_pause AS VALUES ('33333333-3333-3333-3333-333333333333'::uuid,3,1);
+SELECT results_eq('actual_result_1_week_with_holiday_with_overlap_pause', 'expected_result_1_week_with_holiday_with_overlap_pause', 'Should be 3 active days with 1 pause day');
 
 -- should not count pause days that are over a holiday (paused Mon - Sunday, but Fri is holiday = 3 paused)
 SELECT override.freeze_time('2022-09-06');
-PREPARE actual_result_paused_and_active_holiday AS SELECT * from calculate_active_days('{33333333-3333-3333-3333-333333333333}'::uuid[]);
-PREPARE expected_result_paused_and_active_holiday AS VALUES ('33333333-3333-3333-3333-333333333333'::uuid,26,3);
-SELECT results_eq('actual_result_paused_and_active_holiday','expected_result_paused_and_active_holiday', 'Should have 26 active days and 3 paused');
+PREPARE actual_result_paused_and_active_holiday AS SELECT * from calculate_active_days('{44444444-4444-4444-4444-444444444444}'::uuid[]);
+PREPARE expected_result_paused_and_active_holiday AS VALUES ('44444444-4444-4444-4444-444444444444'::uuid,25,3);
+SELECT results_eq('actual_result_paused_and_active_holiday','expected_result_paused_and_active_holiday', 'Should have 25 active days and 3 paused');
+
+
+-- application with decision date set
+PREPARE actual_result_with_decision_date AS SELECT * from calculate_active_days('{55555555-5555-5555-5555-555555555555}'::uuid[]);
+PREPARE expected_result_with_decision_date AS VALUES ('55555555-5555-5555-5555-555555555555'::uuid,12,0);
+SELECT results_eq('actual_result_with_decision_date', 'expected_result_with_decision_date', 'Should be 12 active days');
 
 -- properly finish test
 SELECT * FROM finish();
 
--- roallback allchanges
+-- rollback all changes
 ROLLBACK;
