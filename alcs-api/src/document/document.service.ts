@@ -84,7 +84,7 @@ export class DocumentService {
       ResponseContentDisposition: `inline; filename="${document.fileName}"`,
     });
     return await getSignedUrl(this.dataStore, command, {
-      expiresIn: 3600,
+      expiresIn: 60,
     });
   }
 }

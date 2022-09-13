@@ -29,6 +29,7 @@
         </mat-menu>
       </div>
       <div *ngIf="currentUserProfile" class="col right">
+        <app-search-bar></app-search-bar>
         <app-notifications *ngIf="hasRoles"></app-notifications>
         <button
           [class.open]="menuTrigger.menuOpen"

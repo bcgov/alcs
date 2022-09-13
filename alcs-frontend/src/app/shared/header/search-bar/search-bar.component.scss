@@ -1,0 +1,24 @@
+.search-bar {
+  font-size: 14px;
+
+  .mat-icon {
+    font-size: 125%;
+  }
+}
+
+:host ::ng-deep .mat-form-field-wrapper{
+  margin: 0 !important;
+  padding: 0;
+}
+
+:host ::ng-deep .mat-form-field-infix {
+  border-top: none;
+}
+
+:host ::ng-deep  .mat-form-field-appearance-outline .mat-form-field-flex {
+  margin-top: 0;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  top: 0;
+}

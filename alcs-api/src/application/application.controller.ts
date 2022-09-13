@@ -52,15 +52,17 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
-    const mappedApplication = await this.applicationService.mapToDtos([
-      application,
-    ]);
-    return {
-      ...mappedApplication[0],
-      statusDetails: application.status,
-      typeDetails: application.type,
-      regionDetails: application.region,
-    };
+    if (application) {
+      const mappedApplication = await this.applicationService.mapToDtos([
+        application,
+      ]);
+      return {
+        ...mappedApplication[0],
+        statusDetails: application.status,
+        typeDetails: application.type,
+        regionDetails: application.region,
+      };
+    }
   }
 
   @Post()
