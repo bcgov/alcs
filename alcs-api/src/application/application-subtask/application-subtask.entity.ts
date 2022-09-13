@@ -16,7 +16,7 @@ export class ApplicationSubtask extends Base {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'timestamptz' })
   completedAt: Date;
 
   @ManyToOne(() => User)
