@@ -27,7 +27,7 @@ jobs:
       with:
         context: alcs-api
         push: true
-        tags: ${{ github.actor }}/${{ env.API_IMAGE_NAME }}:${{ github.run_number }} ${{ github.actor }}/${{ env.API_IMAGE_NAME }}:latest
+        tags: ${{ github.actor }}/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}, ${{ github.actor }}/${{ env.API_IMAGE_NAME }}:latest
 
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v1  
