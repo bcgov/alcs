@@ -54,7 +54,7 @@ jobs:
       run: |
         DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
         oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }} -n ${{secrets.license_plate}}-tools
-        oc import-image $DOCKER_IMAGE:latest -n ${{secrets.license_plate}}-tools
+        oc import-image $DOCKER_IMAGE:latest -n ${{secrets.license_plate}}-tools --confirm
 
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v1  
