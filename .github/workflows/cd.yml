@@ -11,23 +11,21 @@ env:
   
 jobs:
   build-api:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
 
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Authenticate to OpenShift
+      run: |
+        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
+        docker login -u `oc whoami` -p `oc whoami --show-token` ${{ secrets.registry_url }}
 
     - name: Build and push API
-      uses: docker/build-push-action@v2
-      with:
-        context: alcs-api
-        push: true
-        tags: ${{ github.repository_owner }}/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}, ${{ github.repository_owner }}/${{ env.API_IMAGE_NAME }}:latest
+      run: |
+        IMAGE_NAME=${{ secrets.registry_url }}/${{ secrets.license-plate }}-tools/${{ env.API_IMAGE_NAME }}
+        docker build -t $IMAGE_NAME:${{ github.run_number }} alcs-api
+        docker push $IMAGE_NAME:${{ github.run_number }}
+
 
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v1  
