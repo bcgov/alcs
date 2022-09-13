@@ -8,6 +8,7 @@ env:
   API_IMAGE_NAME: alcs-api
   MIGRATE_IMAGE_NAME: alcs-migrate
   FE_IMAGE_NAME: alcs-frontend
+  GITOPS_REPO: bcgov-c/tenant-gitops-a5cf88
   
 jobs:
   build-api:
@@ -52,13 +53,13 @@ jobs:
     - name: Authenticate to OpenShift
       run: |
         DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
-        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
+        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }} -n ${{secrets.license_plate}}-tools
         oc import-image $DOCKER_IMAGE:latest -n ${{secrets.license_plate}}-tools
 
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v1  
     #   with:
     #     token: ${{ secrets.PAT }}
-    #     repository: ${{ github.actor }}/argocd-node-app-config
-    #     event-type: new-image
-    #     client-payload: '{"image": "${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"}'
+    #     repository: ${{ env.gitops_repo }}
+    #     event-type: deploy-dev
+    #     client-payload: '{"apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:latest"}'
