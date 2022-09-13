@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - cicd
+env:
+  API_IMAGE_NAME: alcs-api
+  MIGRATE_IMAGE_NAME: alcs-migrate
+  FE_IMAGE_NAME: alcs-frontend
+  
+jobs:
+  build-api:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}}}
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: alcs-api
+        push: true
+        tags: ${{ github.actor }}/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}
+
+    # - name: Repository Dispatch
+    #   uses: peter-evans/repository-dispatch@v1  
+    #   with:
+    #     token: ${{ secrets.PAT }}
+    #     repository: ${{ github.actor }}/argocd-node-app-config
+    #     event-type: new-image
+    #     client-payload: '{"image": "${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"}'
