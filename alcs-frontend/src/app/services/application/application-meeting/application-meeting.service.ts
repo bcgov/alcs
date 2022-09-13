@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as dayjs from 'dayjs';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
@@ -32,33 +31,31 @@ export class ApplicationMeetingService {
     this.$meetings.next(meetings);
   }
 
-  async update(meeting: UpdateApplicationMeetingDto) {
+  async update(uuid: string, meeting: UpdateApplicationMeetingDto) {
     try {
       await firstValueFrom(
-        this.http.patch<ApplicationMeetingDto>(this.url, {
+        this.http.patch<ApplicationMeetingDto>(`${this.url}/${uuid}`, {
           ...meeting,
           startDate: meeting.startDate.valueOf(),
           endDate: meeting.endDate?.valueOf(),
         })
       );
-      await this.fetch(meeting.applicationFileNumber);
       this.toastService.showSuccessToast('Meeting updated.');
     } catch (e) {
       this.toastService.showErrorToast('Failed to update meeting');
     }
   }
 
-  async create(meeting: CreateApplicationMeetingDto) {
+  async create(fileNumber: string, meeting: CreateApplicationMeetingDto) {
     try {
       await firstValueFrom(
-        this.http.post<ApplicationMeetingDto>(this.url, {
+        this.http.post<ApplicationMeetingDto>(`${this.url}/${fileNumber}`, {
           ...meeting,
           startDate: formatDateForApi(meeting.startDate),
           endDate: meeting.endDate ? formatDateForApi(meeting.endDate) : meeting.endDate,
         })
       );
       this.toastService.showSuccessToast('Meeting created.');
-      return await this.fetch(meeting.applicationFileNumber);
     } catch (e) {
       this.toastService.showErrorToast('Failed to create meeting');
     }

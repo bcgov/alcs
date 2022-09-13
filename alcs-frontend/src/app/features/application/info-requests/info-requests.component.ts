@@ -30,17 +30,18 @@ export class InfoRequestsComponent implements OnInit {
       if (application) {
         this.fileNumber = application.fileNumber;
         this.meetingService.fetch(this.fileNumber);
-        this.meetingService.$meetings.subscribe((meetings) => {
-          this.infoRequests = meetings
-            .filter((m) => m.meetingType.code === 'IR')
-            .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
-        });
       }
+    });
+
+    this.meetingService.$meetings.subscribe((meetings) => {
+      this.infoRequests = meetings
+        .filter((m) => m.meetingType.code === 'IR')
+        .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
     });
   }
 
   async onCreate(meetingTypeCode: string) {
-    this.dialog.open(InfoRequestDialogComponent, {
+    const dialog = this.dialog.open(InfoRequestDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
@@ -49,13 +50,18 @@ export class InfoRequestsComponent implements OnInit {
         meetingType: { code: meetingTypeCode, reason: REASON_TYPE.DEFAULT },
       },
     });
+    dialog.beforeClosed().subscribe((result) => {
+      if (result) {
+        this.meetingService.fetch(this.fileNumber);
+      }
+    });
   }
 
   async onEdit(uuid: string) {
     const meeting = await this.meetingService.fetchOne(uuid);
 
     if (meeting) {
-      this.dialog.open(InfoRequestDialogComponent, {
+      const dialog = this.dialog.open(InfoRequestDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
@@ -71,6 +77,11 @@ export class InfoRequestsComponent implements OnInit {
               : REASON_TYPE.CUSTOM,
           reasonText: meeting.description === REASON_TYPE.DEFAULT ? null : meeting.description,
         },
+      });
+      dialog.beforeClosed().subscribe((result) => {
+        if (result) {
+          this.meetingService.fetch(this.fileNumber);
+        }
       });
     } else {
       this.toastService.showErrorToast('Failed to open Info Request, please refresh the page.');

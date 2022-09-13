@@ -141,39 +141,6 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationMeeting,
-        ApplicationMeetingDto,
-        forMember(
-          (ad) => ad.meetingTypeCode,
-          mapFrom((a) => a.type.code),
-        ),
-        forMember(
-          (ad) => ad.meetingType,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.type,
-              ApplicationMeetingType,
-              ApplicationMeetingTypeDto,
-            ),
-          ),
-        ),
-      );
-      createMap(
-        mapper,
-        ApplicationMeetingDto,
-        ApplicationMeeting,
-        forMember(
-          (a) => a.startDate,
-          mapFrom((ad) => new Date(ad.startDate)),
-        ),
-        forMember(
-          (a) => a.endDate,
-          mapFrom((ad) => new Date(ad.endDate)),
-        ),
-      );
-
-      createMap(
-        mapper,
         ApplicationDocument,
         ApplicationDocumentDto,
         forMember(
@@ -212,13 +179,12 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.startDate,
-          mapFrom((a) => a.applicationPaused?.startDate.valueOf()),
+          mapFrom((a) => a.applicationPaused.startDate.valueOf()),
         ),
         forMember(
           (ad) => ad.endDate,
-          mapFrom((a) => a.applicationPaused?.endDate?.valueOf()),
+          mapFrom((a) => a.applicationPaused.endDate?.valueOf()),
         ),
-
         forMember(
           (ad) => ad.meetingType,
           mapFrom((a) =>
@@ -228,32 +194,6 @@ export class ApplicationProfile extends AutomapperProfile {
               ApplicationMeetingTypeDto,
             ),
           ),
-        ),
-      );
-      // TODO: ApplicationMeeting mappings will be cleaned up during the ALCS-96
-      createMap(
-        mapper,
-        ApplicationMeetingDto,
-        ApplicationMeeting,
-        forMember(
-          (a) => a.startDate,
-          mapFrom((ad) => this.numberToDateSafe(ad.startDate)),
-        ),
-        forMember(
-          (a) => a.endDate,
-          mapFrom((ad) => this.numberToDateSafe(ad.endDate)),
-        ),
-        forMember(
-          (a) => a.applicationPaused,
-          mapFrom((ad) => {
-            const tmp = {
-              startDate: this.numberToDateSafe(ad.startDate),
-            };
-            if (ad.endDate) {
-              tmp['endDate'] = this.numberToDateSafe(ad.endDate);
-            }
-            return tmp;
-          }),
         ),
       );
 
@@ -268,32 +208,6 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.startDate,
           mapFrom((ad) => this.numberToDateSafe(ad.startDate)),
-        ),
-      );
-
-      createMap(
-        mapper,
-        CreateApplicationMeetingDto,
-        ApplicationMeeting,
-        forMember(
-          (a) => a.endDate,
-          mapFrom((ad) => this.numberToDateSafe(ad.endDate)),
-        ),
-        forMember(
-          (a) => a.startDate,
-          mapFrom((ad) => this.numberToDateSafe(ad.startDate)),
-        ),
-        forMember(
-          (a) => a.applicationPaused,
-          mapFrom((ad) => {
-            const tmp = {
-              startDate: this.numberToDateSafe(ad.startDate),
-            };
-            if (ad.endDate) {
-              tmp['endDate'] = this.numberToDateSafe(ad.endDate);
-            }
-            return tmp;
-          }),
         ),
       );
     };

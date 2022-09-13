@@ -13,6 +13,7 @@
             [matDatepicker]="startDate"
             [(ngModel)]="model.startDate"
             name="startDate"
+            id="startDate"
             required
             (dateChange)="startDateSelected()"
           />
@@ -23,11 +24,12 @@
       </div>
 
       <div class="flex-child">
-        <label for="startDate">Date fulfilled</label>
+        <label for="endDate">Date fulfilled</label>
         <mat-form-field appearance="fill">
           <mat-label>Date fulfilled</mat-label>
           <input
             matInput
+            id="endDate"
             [matDatepicker]="endDate"
             [(ngModel)]="model.endDate"
             name="endDate"

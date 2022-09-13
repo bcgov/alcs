@@ -17,7 +17,7 @@ export class updateApplicationMeeting1662048713744
       `ALTER TABLE "application_meeting" ADD CONSTRAINT "UQ_e527e6d1acc89174494456e0ad3" UNIQUE ("application_paused_uuid")`,
     );
     await queryRunner.query(
-      `ALTER TABLE "application_meeting" ADD CONSTRAINT "FK_e527e6d1acc89174494456e0ad3" FOREIGN KEY ("application_paused_uuid") REFERENCES "application_paused"("uuid") ON DELETE CASCADE ON UPDATE CASCADE`,
+      `ALTER TABLE "application_meeting" ADD CONSTRAINT "FK_e527e6d1acc89174494456e0ad3" FOREIGN KEY ("application_paused_uuid") REFERENCES "application_paused"("uuid") ON UPDATE CASCADE ON DELETE SET NULL`,
     );
     await queryRunner.query(
       `ALTER TABLE "application_meeting" ALTER COLUMN "end_date" DROP NOT NULL`,

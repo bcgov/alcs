@@ -134,10 +134,14 @@ export class ApplicationService {
     const appTimeMap =
       await this.applicationTimeTrackingService.fetchActiveTimes(applications);
 
+    const appPausedMap =
+      await this.applicationTimeTrackingService.getPausedStatus(applications);
+
     return applications.map((app) => ({
       ...this.applicationMapper.map(app, Application, ApplicationDto),
       activeDays: appTimeMap.get(app.uuid).activeDays || 0,
       pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
+      paused: appPausedMap.get(app.uuid) || false,
     }));
   }
 }

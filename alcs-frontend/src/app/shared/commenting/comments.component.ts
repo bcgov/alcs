@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 import { CommentService } from '../../services/comment/comment.service';
 import { UserService } from '../../services/user/user.service';
@@ -7,7 +7,6 @@ import { UserService } from '../../services/user/user.service';
   selector: 'app-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class CommentsComponent implements OnInit {
   @Input() fileNumber: string = '';

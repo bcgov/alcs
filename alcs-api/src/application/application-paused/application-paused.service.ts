@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -10,7 +11,7 @@ import { ApplicationPaused } from '../application-paused.entity';
 export class ApplicationPausedService {
   constructor(
     @InjectRepository(ApplicationPaused)
-    private appPausedRepository,
+    private appPausedRepository: Repository<ApplicationPaused>,
   ) {}
 
   get(uuid) {
@@ -20,8 +21,7 @@ export class ApplicationPausedService {
   }
 
   remove(uuid: string) {
-    const paused = this.get(uuid);
-    return this.appPausedRepository.softRemove(paused);
+    return this.appPausedRepository.delete(uuid);
   }
 
   async createOrUpdate(pause: Partial<ApplicationPaused>) {
@@ -45,29 +45,10 @@ export class ApplicationPausedService {
     return this.get(savedPause.uuid);
   }
 
-  async update(uuid: string, startDate: Date, endDate: Date | null) {
-    const existingPause = await this.get(uuid);
-    if (!existingPause) {
-      throw new ServiceNotFoundException(`Pause not found ${uuid}`);
-    }
-
-    await this.validateDateRange(startDate, endDate);
-
-    const savedPause = await this.appPausedRepository.update(
-      existingPause.uuid,
-      {
-        startDate: startDate,
-        endDate: endDate,
-      },
-    );
-
-    return this.get(savedPause.uuid);
-  }
-
   private validateDateRange(startDate: Date, endDate: Date) {
     if (endDate && startDate > endDate) {
       throw new ServiceValidationException(
-        'Start Date must be smaller(earlier) than End Date.',
+        'Start Date must be smaller(earlier) than End Date',
       );
     }
   }

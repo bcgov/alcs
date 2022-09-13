@@ -15,6 +15,7 @@ import {
   repositoryMockFactory,
 } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationService } from '../application.service';
+import { UpdateApplicationMeetingDto } from './application-meeting.dto';
 import { ApplicationMeeting } from './application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting.service';
 
@@ -96,18 +97,13 @@ describe('ApplicationMeetingService', () => {
   });
 
   it('should delete meeting with uuid', async () => {
-    await service.remove(mockMeeting.uuid);
+    await service.remove(mockMeeting);
 
     expect(mockAppMeetingRepository.softRemove).toBeCalledTimes(1);
   });
 
   it('should create meeting', async () => {
-    const meetingToCreate = {
-      startDate: new Date(2022, 3, 3, 3, 3, 3, 3),
-      endDate: new Date(2022, 4, 4, 4, 4, 4, 4),
-    } as ApplicationMeeting;
-
-    await service.createOrUpdate(meetingToCreate);
+    await service.create({} as ApplicationMeeting);
 
     expect(mockAppMeetingRepository.findOne).toBeCalledTimes(1);
     expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
@@ -116,17 +112,42 @@ describe('ApplicationMeetingService', () => {
   it('should update meeting', async () => {
     const meetingToUpdate = {
       uuid: mockMeeting.uuid,
-      startDate: new Date(2022, 3, 3, 3, 3, 3, 3),
-      endDate: new Date(2022, 4, 4, 4, 4, 4, 4),
     } as ApplicationMeeting;
 
-    await service.createOrUpdate(meetingToUpdate);
+    await service.update(mockMeeting.uuid, {
+      startDate: Date.now(),
+      endDate: Date.now(),
+      description: '',
+    });
 
     expect(mockAppMeetingRepository.findOne).toBeCalledTimes(2);
     expect(mockAppMeetingRepository.findOne).toBeCalledWith({
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
+        applicationPaused: true,
+      },
+    });
+    expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
+  });
+
+  it('should allow setting end date to null', async () => {
+    const meetingToUpdate = {
+      uuid: mockMeeting.uuid,
+    } as ApplicationMeeting;
+
+    await service.update(mockMeeting.uuid, {
+      startDate: Date.now(),
+      endDate: null,
+      description: '',
+    });
+
+    expect(mockAppMeetingRepository.findOne).toBeCalledTimes(2);
+    expect(mockAppMeetingRepository.findOne).toBeCalledWith({
+      where: { uuid: meetingToUpdate.uuid },
+      relations: {
+        type: true,
+        applicationPaused: true,
       },
     });
     expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
@@ -134,26 +155,26 @@ describe('ApplicationMeetingService', () => {
 
   it('should fail on update if meeting not found', async () => {
     mockAppMeetingRepository.findOne.mockReturnValue(undefined);
-    const meetingToUpdate = {
-      uuid: 'non-existing uuid',
-    } as ApplicationMeeting;
 
     expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
-    await expect(service.createOrUpdate(meetingToUpdate)).rejects.toMatchObject(
-      new ServiceNotFoundException(`Meeting not found ${meetingToUpdate.uuid}`),
+    await expect(
+      service.update('fake-uuid', {} as UpdateApplicationMeetingDto),
+    ).rejects.toMatchObject(
+      new ServiceNotFoundException(`Meeting not found fake-uuid`),
     );
   });
 
   it('should fail on update if meeting start date > end date', async () => {
-    const meetingToUpdate = {
-      startDate: new Date(2022, 4, 4, 4, 4, 4, 4),
-      endDate: new Date(2022, 3, 3, 3, 3, 3, 3),
-    } as ApplicationMeeting;
-
     expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
-    await expect(service.createOrUpdate(meetingToUpdate)).rejects.toMatchObject(
+    await expect(
+      service.update('fake-uuid', {
+        startDate: 5,
+        endDate: 1,
+        description: '',
+      }),
+    ).rejects.toMatchObject(
       new ServiceValidationException(
-        'Start Date must be smaller than End Date.',
+        'Start Date must be smaller than End Date',
       ),
     );
   });

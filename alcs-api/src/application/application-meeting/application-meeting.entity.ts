@@ -14,18 +14,10 @@ export class ApplicationMeeting extends Base {
       Object.assign(this, data);
     }
   }
-  // TODO: delete startDate and endDate ALCS-96
-  @AutoMap()
-  @Column({ type: 'timestamptz' })
-  startDate: Date;
 
   @AutoMap()
-  @Column({ type: 'timestamptz', nullable: true })
-  endDate: Date;
-
-  @AutoMap()
-  @Column()
-  description: string;
+  @Column({ nullable: true, type: 'text' })
+  description?: string;
 
   @Column({
     type: 'uuid',
@@ -52,7 +44,7 @@ export class ApplicationMeeting extends Base {
   @AutoMap()
   @OneToOne(() => ApplicationPaused, {
     cascade: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn()

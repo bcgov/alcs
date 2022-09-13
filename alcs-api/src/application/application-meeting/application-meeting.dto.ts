@@ -14,10 +14,6 @@ export class CreateApplicationMeetingDto {
 
   @AutoMap()
   @IsString()
-  applicationFileNumber: string;
-
-  @AutoMap()
-  @IsString()
   meetingTypeCode: string;
 
   @AutoMap()
@@ -33,4 +29,21 @@ export class ApplicationMeetingDto extends CreateApplicationMeetingDto {
 
   @AutoMap()
   meetingType: ApplicationMeetingTypeDto;
+}
+
+export class UpdateApplicationMeetingDto {
+  @AutoMap()
+  @IsOptional()
+  @IsNumber()
+  startDate: number;
+
+  @AutoMap()
+  @IsNumber()
+  @IsOptional()
+  endDate: number = null;
+
+  @AutoMap()
+  @IsString()
+  @IsOptional()
+  description: string;
 }

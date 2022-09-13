@@ -56,29 +56,21 @@ export class InfoRequestDialogComponent {
   }
 
   async onSubmit() {
-    if (this.model) {
-      if (this.model.uuid) {
-        this.meetingService.update({
-          uuid: this.model.uuid as string,
-          startDate: this.model.startDate,
-          endDate: this.model.endDate,
-          applicationFileNumber: this.data.fileNumber,
-          meetingTypeCode: this.data.meetingType.code,
-          description: this.getDescription(),
-        });
-      } else {
-        this.meetingService.create({
-          startDate: this.model.startDate,
-          endDate: this.model.endDate,
-          applicationFileNumber: this.data.fileNumber,
-          meetingTypeCode: this.data.meetingType.code,
-          description: this.getDescription(),
-        });
-      }
-
-      await this.meetingService.fetch(this.data.fileNumber);
-      this.dialogRef.close();
+    if (this.model.uuid) {
+      await this.meetingService.update(this.model.uuid, {
+        startDate: this.model.startDate,
+        endDate: this.model.endDate,
+        description: this.getDescription(),
+      });
+    } else {
+      await this.meetingService.create(this.model.fileNumber, {
+        startDate: this.model.startDate,
+        endDate: this.model.endDate,
+        meetingTypeCode: this.data.meetingType.code,
+        description: this.getDescription(),
+      });
     }
+    this.dialogRef.close(true);
   }
 
   startDateSelected() {
