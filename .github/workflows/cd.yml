@@ -51,6 +51,7 @@ jobs:
 
     - name: Authenticate to OpenShift
       run: |
+        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
         oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
         oc import-image $DOCKER_IMAGE:latest -n ${{secrets.license_plate}}-tools --confirm
 
