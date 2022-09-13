@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as dayjs from 'dayjs';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationMeetingDto,
@@ -52,8 +53,8 @@ export class ApplicationMeetingService {
       await firstValueFrom(
         this.http.post<ApplicationMeetingDto>(this.url, {
           ...meeting,
-          startDate: dayjs(meeting.startDate).startOf('day').add(12, 'hours').valueOf(),
-          endDate: dayjs(meeting.endDate).startOf('day').add(12, 'hours').valueOf(),
+          startDate: formatDateForApi(meeting.startDate),
+          endDate: formatDateForApi(meeting.endDate),
         })
       );
       this.toastService.showSuccessToast('Meeting created.');

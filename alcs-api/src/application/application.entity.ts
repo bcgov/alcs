@@ -11,6 +11,7 @@ import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
+import { ApplicationSubtask } from './application-subtask/application-subtask.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
@@ -169,4 +170,8 @@ export class Application extends Base {
     (appDocument) => appDocument.application,
   )
   decisionDocuments: ApplicationDocument[];
+
+  @AutoMap()
+  @OneToMany(() => ApplicationSubtask, (subtask) => subtask.application)
+  subtasks: ApplicationSubtask[];
 }

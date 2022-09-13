@@ -1,0 +1,62 @@
+@import '../../../../styles/colors';
+
+.header {
+  margin-bottom: 8px !important;
+}
+
+.subtasks {
+  display: grid;
+  grid-template-columns: max-content max-content max-content 1fr 1fr 45px 45px;
+  border-radius: 2px;
+  border: 1px solid #000;
+  border-bottom: none;
+
+  & > div {
+    border-bottom: 1px solid #000;
+    padding: 0 8px;
+    height: 48px;
+  }
+}
+
+.type {
+  padding: 0 12px;
+  border-radius: 3px;
+}
+
+.unassigned-circle {
+
+  ::ng-deep.avatar-circle {
+    background-color: $grey;
+  }
+}
+
+.status {
+  text-transform: uppercase;
+  font-size: 12px !important;
+
+  .mat-icon {
+    margin-right: 4px;
+  }
+
+  .unassigned {
+    color: $grey;
+  }
+
+  .in-progress {
+    color: $secondary-color;
+  }
+
+  .completed {
+    color: $success-color;
+  }
+}
+
+.dates {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.subtext {
+  color: $dark-grey;
+}

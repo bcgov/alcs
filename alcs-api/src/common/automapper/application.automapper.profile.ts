@@ -10,10 +10,10 @@ import { ApplicationTypeDto } from '../../application/application-code/applicati
 import { ApplicationType } from '../../application/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationMeetingDto } from '../../application/application-meeting/application-meeting.dto';
-import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
+import { ApplicationMeetingDto } from '../../application/application-meeting/application-meeting.dto';
+import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
 import {
@@ -127,11 +127,11 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           async (a) => a.region,
-          mapFrom(async (ad) => {
-            if (ad.region) {
-              return await this.codeService.fetchRegion(ad.region);
-            }
-          }),
+          mapFrom(async (ad) =>
+            ad.region
+              ? await this.codeService.fetchRegion(ad.region)
+              : undefined,
+          ),
         ),
       );
 
