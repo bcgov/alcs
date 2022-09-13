@@ -7,6 +7,7 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
+import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 
 @Component({
   selector: 'app-create-card-dialog',
@@ -55,7 +56,7 @@ export class CreateCardDialogComponent implements OnInit {
       applicant: formValues.applicant!,
       fileNumber: formValues.fileNumber!.toString(),
       region: formValues.region || undefined,
-      dateReceived: dayjs(formValues.receivedDate).startOf('day').add(12, 'hours').valueOf(),
+      dateReceived: formatDateForApi(formValues.receivedDate!),
     });
     this.dialogRef.close(true);
     this.toastService.showSuccessToast('Application Created');

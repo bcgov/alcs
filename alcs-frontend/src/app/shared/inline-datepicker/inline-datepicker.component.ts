@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import * as dayjs from 'dayjs';
+import { formatDateForApi } from '../utils/api-date-formatter';
 
 @Component({
   selector: 'app-inline-datepicker',
@@ -38,7 +39,7 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
 
   onSave() {
     const selectedValue = this.form.get('date')!.value;
-    const finalValue = dayjs(selectedValue).startOf('day').add(12, 'hours').valueOf();
+    const finalValue = formatDateForApi(selectedValue);
     this.save.emit(finalValue);
     this.isEditing = false;
   }
