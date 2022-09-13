@@ -49,6 +49,11 @@ jobs:
           org.opencontainers.image.source=${{ github.event.repository.html_url }}
           org.opencontainers.image.revision=${{ github.sha }}
 
+    - name: Authenticate to OpenShift
+      run: |
+        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
+        oc import-image $DOCKER_IMAGE:latest -n ${{secrets.license_plate}}-tools
+
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v1  
     #   with:
