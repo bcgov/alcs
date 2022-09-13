@@ -53,8 +53,9 @@ jobs:
     - name: Authenticate to OpenShift
       run: |
         DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
-        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }} -n ${{secrets.license_plate}}-tools
-        oc tag alcs-api:latest alcs-api:${{ github.run_number }}
+        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
+        oc import-image alcs-api:latest -n ${{secrets.license_plate}}-tools
+        oc tag alcs-api:latest alcs-api:${{ github.run_number }} -n ${{secrets.license_plate}}-tools
 
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v1  
