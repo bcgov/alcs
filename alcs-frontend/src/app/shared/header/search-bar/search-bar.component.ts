@@ -26,7 +26,7 @@ export class SearchBarComponent implements OnInit {
       await this.router.navigate(['application', app.fileNumber]);
       this.searchText = '';
     } else {
-      this.toastService.showWarningToast(`File ID not found, try again`);
+      this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
       const inputElem = <HTMLInputElement>this.input.nativeElement;
       inputElem.select();
     }
