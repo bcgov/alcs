@@ -11,6 +11,7 @@
             <child column="application_uuid" foreignKey="FK_c207c12131344aa91fe4a48d81b" implied="false" onDeleteCascade="false" schema="public" table="application_history"/>
             <child column="application_uuid" foreignKey="FK_4a7e09569765e147304194b63f5" implied="false" onDeleteCascade="false" schema="public" table="application_meeting"/>
             <child column="application_uuid" foreignKey="FK_57e39f7c811d07c646fc04e8bdf" implied="false" onDeleteCascade="false" schema="public" table="application_paused"/>
+            <child column="application_uuid" foreignKey="FK_bf49d4ecd55fb885bd570fa9c47" implied="false" onDeleteCascade="false" schema="public" table="application_subtask"/>
             <child column="application_uuid" foreignKey="FK_fbbc6f68cb51279ecde6d12a890" implied="false" onDeleteCascade="false" schema="public" table="comment"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -211,6 +212,46 @@
             <column ascending="true" name="description"/>
          </index>
       </table>
+      <table name="application_subtask" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="6" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="completed_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="assignee_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_efc3830e9500c96573b1daa7522" implied="false" onDeleteCascade="false" schema="public" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="application_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_bf49d4ecd55fb885bd570fa9c47" implied="false" onDeleteCascade="false" schema="public" table="application"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="type_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_395e8b9da47fe0a88b3fa8f6a53" implied="false" onDeleteCascade="false" schema="public" table="application_subtask_type"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_25ce03514d4bbd0c997cc28955b" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="application_subtask_type" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="type_uuid" foreignKey="FK_395e8b9da47fe0a88b3fa8f6a53" implied="false" onDeleteCascade="false" schema="public" table="application_subtask"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="background_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="text_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_395e8b9da47fe0a88b3fa8f6a53" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
       <table name="application_type" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="type_uuid" foreignKey="FK_b53229d75c2fe5a617ecbff82f3" implied="false" onDeleteCascade="false" schema="public" table="application"/>
@@ -398,6 +439,7 @@
       <table name="user" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="assignee_uuid" foreignKey="FK_49d8a9170a71a2e7a9e386c945e" implied="false" onDeleteCascade="false" schema="public" table="application"/>
+            <child column="assignee_uuid" foreignKey="FK_efc3830e9500c96573b1daa7522" implied="false" onDeleteCascade="false" schema="public" table="application_subtask"/>
             <child column="author_uuid" foreignKey="FK_f2d86184a78b855225c1395dfd3" implied="false" onDeleteCascade="false" schema="public" table="comment"/>
             <child column="user_uuid" foreignKey="FK_15ec79570aca5e00f9c102ae1a0" implied="false" onDeleteCascade="false" schema="public" table="comment_mention"/>
             <child column="uploaded_by_uuid" foreignKey="FK_9b9254f412e8a5a07063209a08c" implied="false" onDeleteCascade="false" schema="public" table="document"/>

@@ -1,6 +1,7 @@
 migrations
 holiday_entity
 health_check
+application_subtask
 notification
 comment_mention
 board_status
@@ -13,6 +14,7 @@ comment
 document
 application
 application_type
+application_subtask_type
 application_region
 application_meeting_type
 board
