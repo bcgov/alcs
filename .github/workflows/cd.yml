@@ -24,7 +24,7 @@ jobs:
     - name: Prepare labels and tags
       id: prep
       run: |
-        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs
+        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
         TAGS="${DOCKER_IMAGE}:${{ github.run_number }},${DOCKER_IMAGE}:latest"
         echo ::set-output name=tags::${TAGS}
         echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
@@ -42,7 +42,7 @@ jobs:
     - name: Build and push alcs-api image
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ./alcs-api
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.prep.outputs.tags }}
         labels: |
