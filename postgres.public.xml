@@ -463,6 +463,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="bceid_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="bceid_user_name" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="settings" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="'{}'::text[]" digits="0" id="18" name="client_roles" nullable="false" remarks="" size="2147483647" type="_text" typeCode="2003"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_a95e949168be7b7ece1a2382fed" unique="true">
             <column ascending="true" name="uuid"/>
