@@ -72,6 +72,12 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationDocumentController,
     ApplicationSubtaskController,
   ],
-  exports: [ApplicationService, ApplicationTimeTrackingService],
+  exports: [
+    ApplicationService,
+    ApplicationTimeTrackingService,
+    ApplicationSubtaskService,
+    ApplicationProfile,
+    ApplicationSubtaskProfile,
+  ],
 })
 export class ApplicationModule {}

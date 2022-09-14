@@ -9,7 +9,7 @@ import { ApplicationSubtaskType } from './application-subtask-type.entity';
 import { ApplicationSubtask } from './application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask.service';
 
-describe('ApplicationStatusService', () => {
+describe('ApplicationSubtaskService', () => {
   let applicationSubtaskService: ApplicationSubtaskService;
   let mockSubtaskRepo: DeepMocked<Repository<ApplicationSubtask>>;
   let mockSubtaskTypeRepo: DeepMocked<Repository<ApplicationSubtaskType>>;
@@ -138,7 +138,15 @@ describe('ApplicationStatusService', () => {
   it('should call through for list', async () => {
     mockSubtaskRepo.find.mockResolvedValue([] as any);
 
-    await applicationSubtaskService.list('fake-file-number');
+    await applicationSubtaskService.listByFileNumber('fake-file-number');
+
+    expect(mockSubtaskRepo.find).toHaveBeenCalled();
+  });
+
+  it('should call through for the other list', async () => {
+    mockSubtaskRepo.find.mockResolvedValue([] as any);
+
+    await applicationSubtaskService.listIncompleteByType('fake-type');
 
     expect(mockSubtaskRepo.find).toHaveBeenCalled();
   });

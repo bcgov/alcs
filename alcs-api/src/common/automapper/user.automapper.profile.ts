@@ -42,6 +42,10 @@ export class UserProfile extends AutomapperProfile {
               u.familyName?.slice(1),
           ),
         ),
+        forMember(
+          (ud) => ud.clientRoles,
+          mapFrom((u) => u.clientRoles),
+        ),
       );
     };
   }

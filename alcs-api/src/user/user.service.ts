@@ -60,15 +60,14 @@ export class UserService {
     });
   }
 
-  async update(user: Partial<User>) {
-    const existingUser = await this.getByUuid(user.uuid);
+  async update(uuid: string, updates: Partial<User>) {
+    const existingUser = await this.getByUuid(uuid);
 
     if (!existingUser) {
-      throw new ServiceNotFoundException(`User not found ${user}`);
+      throw new ServiceNotFoundException(`User not found ${uuid}`);
     }
 
-    const updatedUser = Object.assign(existingUser, user);
-
+    const updatedUser = Object.assign(existingUser, updates);
     return this.userRepository.save(updatedUser);
   }
 }

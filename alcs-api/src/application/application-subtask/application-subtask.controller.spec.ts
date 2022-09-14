@@ -4,7 +4,6 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
-import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationSubtaskType } from './application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask.controller';
@@ -72,11 +71,11 @@ describe('ApplicationSubtaskController', () => {
   });
 
   it('should call through for list', async () => {
-    mockSubtaskService.list.mockResolvedValue([]);
+    mockSubtaskService.listByFileNumber.mockResolvedValue([]);
 
     await controller.list('file-number');
 
-    expect(mockSubtaskService.list).toHaveBeenCalled();
+    expect(mockSubtaskService.listByFileNumber).toHaveBeenCalled();
   });
 
   it('should return the new entity for update', async () => {

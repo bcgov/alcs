@@ -8,11 +8,15 @@ import { AuthenticationService, ICurrentUser } from '../../services/authenticati
 })
 export class HomeComponent implements OnInit {
   currentUser!: ICurrentUser;
+  hasGIS = false;
 
   constructor(private authService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser()!;
+
+    this.hasGIS = this.currentUser.client_roles ? this.currentUser.client_roles.includes('GIS') : false;
+
     this.authService.$currentUser.subscribe((currentUser) => {
       if (currentUser) {
         this.currentUser = currentUser;

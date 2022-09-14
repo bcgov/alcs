@@ -99,7 +99,7 @@ export class AuthorizationService {
       ) as BaseToken;
       this.logger.debug(decodedToken);
 
-      this.registerUser(decodedToken);
+      this.registerOrUpdateUser(decodedToken);
 
       return res.data;
     } else {
@@ -140,6 +140,7 @@ export class AuthorizationService {
         familyName: idirToken.family_name,
         idirUserGuid: idirToken.idir_user_guid,
         idirUserName: idirToken.idir_username,
+        clientRoles: idirToken.client_roles,
       };
     }
     if (user.identity_provider === 'bceidboth') {
@@ -151,13 +152,19 @@ export class AuthorizationService {
         preferredUsername: bceidToken.preferred_username,
         bceidGuid: bceidToken.bceid_user_guid,
         bceidUserName: bceidToken.bceid_username,
+        clientRoles: bceidToken.client_roles,
       };
     }
   }
 
-  private async registerUser(payload: BaseToken) {
+  private async registerOrUpdateUser(payload: BaseToken) {
     const existingUser = await this.userService.get(payload.email);
-    if (!existingUser) {
+    if (existingUser) {
+      await this.userService.update(
+        existingUser.uuid,
+        this.mapUserFromTokenToCreateDto(payload),
+      );
+    } else {
       this.logger.debug(payload);
       await this.userService.create(this.mapUserFromTokenToCreateDto(payload));
     }
