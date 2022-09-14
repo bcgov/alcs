@@ -21,6 +21,8 @@ import {
   ApplicationDto,
 } from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
+import { UserDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -82,6 +84,12 @@ export class ApplicationProfile extends AutomapperProfile {
               ApplicationDecisionMeetingDto,
             ),
           ),
+        ),
+        forMember(
+          (ad) => ad.assignee,
+          mapFrom((a) => {
+            return this.mapper.map(a.assignee, User, UserDto);
+          }),
         ),
       );
 

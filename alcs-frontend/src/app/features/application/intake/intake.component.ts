@@ -16,9 +16,9 @@ export class IntakeComponent implements OnInit {
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 
   ngOnInit(): void {
-    this.dateReceived = dayjs(this.application?.dateReceived).format('YYYY-MMM-DD');
     this.applicationDetailService.$application.subscribe((application) => {
       if (application) {
+        this.dateReceived = dayjs(application.dateReceived).format('YYYY-MMM-DD');
         this.application = application;
       }
     });
