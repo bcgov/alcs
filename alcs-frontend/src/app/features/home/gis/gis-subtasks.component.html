@@ -1,0 +1,57 @@
+<div class="assignee">
+  <h4>GIS Subtasks: {{ subtasks.length }}</h4>
+  <table class="assigned-table">
+    <thead>
+      <th></th>
+      <th class="header">Application</th>
+      <th class="header">Active Days</th>
+      <th class="header">Status</th>
+      <th class="header">Assignee</th>
+      <th class="header action-column">Action</th>
+    </thead>
+    <tbody class="assigned-body">
+      <tr
+        [ngClass]="{
+          paused: subtask.application.paused
+        }"
+        *ngFor="let subtask of subtasks"
+      >
+        <td class="priority-column">
+          <span class="high-priority" *ngIf="subtask.application.highPriority">!</span>
+        </td>
+        <td>{{ subtask.application.fileNumber }} ({{ subtask.application.applicant }})</td>
+        <td>{{ subtask.application.activeDays }}</td>
+        <td>{{ subtask.application.status }}</td>
+        <td>
+          <ng-select
+            class="subtask-assignee"
+            [items]="$users | async"
+            bindLabel="name"
+            bindValue="name"
+            [ngModel]="subtask.assignee"
+            [searchFn]="filterAssigneeList"
+            (change)="onAssigneeSelected($event, subtask.uuid)"
+          >
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+              <div class="assignee-card-body">
+                <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+                <p class="assignee-card-email" [ngOptionHighlight]="search">
+                  {{ item.email }}
+                </p>
+              </div>
+            </ng-template>
+          </ng-select>
+        </td>
+        <td class="action-column">
+          <button
+            (click)="openCard(subtask.application.fileNumber, subtask.application.board)"
+            mat-flat-button
+            color="accent"
+          >
+            View
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

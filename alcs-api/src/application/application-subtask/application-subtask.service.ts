@@ -1,14 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
-import { UpdateApplicationSubtaskDto } from './application-subtask.dto';
 import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { UpdateApplicationSubtaskDto } from './application-subtask.dto';
 import { ApplicationSubtask } from './application-subtask.entity';
 
 @Injectable()
@@ -75,7 +71,7 @@ export class ApplicationSubtaskService {
       existingTask.completedAt = new Date(updates.completedAt);
     }
 
-    if (updates.assignee) {
+    if (updates.assignee !== undefined) {
       existingTask.assigneeUuid = updates.assignee;
     }
 
@@ -95,7 +91,26 @@ export class ApplicationSubtaskService {
     await this.applicationSubtaskRepository.delete(uuid);
   }
 
-  async list(fileNumber: string) {
+  async listIncompleteByType(type: string) {
+    return this.applicationSubtaskRepository.find({
+      where: {
+        type: {
+          type,
+        },
+        completedAt: null,
+      },
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        application: {
+          type: true,
+          board: true,
+          status: true,
+        },
+      },
+    });
+  }
+
+  async listByFileNumber(fileNumber: string) {
     return this.applicationSubtaskRepository.find({
       where: {
         application: {

@@ -70,7 +70,9 @@ export class ApplicationSubtaskController {
   async list(
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationSubtaskDto[]> {
-    const documents = await this.applicationSubtaskService.list(fileNumber);
+    const documents = await this.applicationSubtaskService.listByFileNumber(
+      fileNumber,
+    );
     return this.mapper.mapArray(
       documents,
       ApplicationSubtask,

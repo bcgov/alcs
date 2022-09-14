@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { initAssigneeMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -96,7 +97,7 @@ describe('UserService', () => {
       mockUserEntity.settings = { favoriteBoards: ['CEO', 'SOI'] };
       mockUserEntity.email = 'some test email';
 
-      const result = await service.update(mockUserEntity);
+      const result = await service.update('fake-uuid', mockUserEntity);
 
       expect(result).toStrictEqual(mockUserEntity);
     });
@@ -104,8 +105,8 @@ describe('UserService', () => {
     it('should fail when user does not exist', async () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
-      await expect(service.update(mockUser)).rejects.toMatchObject(
-        new Error(`User not found ${mockUser}`),
+      await expect(service.update('fake-uuid', mockUser)).rejects.toMatchObject(
+        new ServiceNotFoundException(`User not found fake-uuid`),
       );
     });
   });

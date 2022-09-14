@@ -1,17 +1,45 @@
-import { createMock } from '@golevelup/nestjs-testing';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationCodeService } from '../application/application-code/application-code.service';
+import { ApplicationSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
+import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
+import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
+import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
+import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { HomeController } from './home.controller';
 
 describe('HomeController', () => {
   let controller: HomeController;
-  let mockApplicationService;
+  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationSubtaskService: DeepMocked<ApplicationSubtaskService>;
+
+  const mockSubtask: Partial<ApplicationSubtask> = {
+    uuid: 'fake-uuid',
+    createdAt: new Date(1662762964667),
+    type: {
+      type: 'fake-type',
+      backgroundColor: 'back-color',
+      textColor: 'text-color',
+    } as ApplicationSubtaskType,
+  };
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
+    mockApplicationSubtaskService = createMock<ApplicationSubtaskService>();
+
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [HomeController],
       providers: [
         {
@@ -19,9 +47,19 @@ describe('HomeController', () => {
           useValue: mockApplicationService,
         },
         {
+          provide: ApplicationSubtaskService,
+          useValue: mockApplicationSubtaskService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
+        {
+          provide: ApplicationCodeService,
+          useValue: {},
+        },
+        ApplicationProfile,
+        ApplicationSubtaskProfile,
         ...mockKeyCloakProviders,
       ],
     }).compile();
@@ -36,7 +74,7 @@ describe('HomeController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call ApplicationService with the correct filter', async () => {
+  it('should call ApplicationService with the correct filter for assigned', async () => {
     const userId = 'fake-user-id';
     await controller.getAssignedToMe({
       user: {
@@ -49,5 +87,26 @@ describe('HomeController', () => {
     expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual({
       assigneeUuid: userId,
     });
+  });
+
+  it('should call Subtask service and map the types back for type', async () => {
+    const mockApplication = initApplicationMockEntity();
+    mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
+      { ...mockSubtask, application: mockApplication } as ApplicationSubtask,
+    ]);
+
+    mockApplicationService.mapToDtos.mockResolvedValue([
+      mockApplication as any as ApplicationDto,
+    ]);
+    const res = await controller.getIncompleteSubtasksByType();
+
+    expect(res.length).toEqual(1);
+
+    expect(mockApplicationService.mapToDtos).toHaveBeenCalled();
+    expect(
+      mockApplicationSubtaskService.listIncompleteByType,
+    ).toHaveBeenCalled();
+    expect(res[0].type).toEqual(mockSubtask.type.type);
+    expect(res[0].application).toEqual(mockApplication);
   });
 });
