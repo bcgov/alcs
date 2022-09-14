@@ -26,6 +26,8 @@ export interface UserDto {
   mentionLabel: string;
 
   settings: IUserSettings;
+
+  clientRoles: string[];
 }
 
 export interface IUserSettings {
