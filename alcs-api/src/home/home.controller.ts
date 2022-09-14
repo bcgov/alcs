@@ -3,10 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import {
-  ApplicationSubtaskDto,
-  ApplicationSubtaskWithApplicationDTO,
-} from '../application/application-subtask/application-subtask.dto';
+import { ApplicationSubtaskWithApplicationDTO } from '../application/application-subtask/application-subtask.dto';
 import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';

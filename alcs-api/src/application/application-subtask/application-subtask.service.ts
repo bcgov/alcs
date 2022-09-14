@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
 import { ApplicationSubtaskType } from './application-subtask-type.entity';
@@ -97,7 +97,7 @@ export class ApplicationSubtaskService {
         type: {
           type,
         },
-        completedAt: null,
+        completedAt: IsNull(),
       },
       relations: {
         ...this.DEFAULT_RELATIONS,
