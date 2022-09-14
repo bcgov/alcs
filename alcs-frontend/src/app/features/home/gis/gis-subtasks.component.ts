@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationSubtaskWithApplicationDto } from '../../../services/application/application-subtask/application-subtask.dto';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
@@ -16,9 +15,8 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class GisSubtasksComponent implements OnInit {
   subtasks: ApplicationSubtaskWithApplicationDto[] = [];
-  $users: Observable<UserDto[]> | undefined;
   private statuses: ApplicationStatusDto[] = [];
-  private users: UserDto[] = [];
+  public gisUsers: UserDto[] = [];
 
   constructor(
     private homeService: HomeService,
@@ -33,9 +31,8 @@ export class GisSubtasksComponent implements OnInit {
       this.statuses = statuses;
     });
 
-    this.$users = this.userService.$users;
     this.userService.$users.subscribe((users) => {
-      this.users = users;
+      this.gisUsers = users.filter((user) => user.clientRoles.includes('GIS'));
     });
     this.userService.fetchUsers();
 
@@ -46,7 +43,7 @@ export class GisSubtasksComponent implements OnInit {
     const subtasks = await this.homeService.fetchGisSubtasks();
     this.subtasks = subtasks.map((subtask) => {
       const statusDto = this.statuses.find((status) => status.code === subtask.application.status);
-      const userDto = this.users.find((user) => user.uuid === subtask.assignee);
+      const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
       return {
         ...subtask,
         assignee: userDto ? userDto.name : undefined,
