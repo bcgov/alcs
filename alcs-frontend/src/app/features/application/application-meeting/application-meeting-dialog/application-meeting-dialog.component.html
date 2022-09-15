@@ -34,6 +34,13 @@
         <mat-hint>{{ model.endDate | date: 'mediumDate' }}</mat-hint>
       </mat-form-field>
     </div>
+    <div class="reason-wrapper">
+      <label class="radio-group-label" for="reason">Reason <span color="red">*</span></label>
+      <mat-radio-group aria-labelledby="Reason" [(ngModel)]="model.reason" name="reason" required>
+        <mat-radio-button value="{{ reasons.meeting }}">{{ reasons.meeting }}</mat-radio-button>
+        <mat-radio-button value="{{ reasons.report }}">{{ reasons.report }}</mat-radio-button>
+      </mat-radio-group>
+    </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div>

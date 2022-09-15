@@ -48,7 +48,7 @@ export class ApplicationMeetingComponent implements OnInit {
   }
 
   async onCreate(meetingType: ApplicationMeetingTypeDto) {
-    this.dialog.open(ApplicationMeetingDialogComponent, {
+    const dialog = this.dialog.open(ApplicationMeetingDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
@@ -58,12 +58,17 @@ export class ApplicationMeetingComponent implements OnInit {
         meetingType: meetingType,
       },
     });
+    dialog.beforeClosed().subscribe((result) => {
+      if (result) {
+        this.meetingService.fetch(this.fileNumber);
+      }
+    });
   }
 
   async onEdit(uuid: string) {
     const meeting = await this.meetingService.fetchOne(uuid);
     if (meeting) {
-      this.dialog.open(ApplicationMeetingDialogComponent, {
+      const dialog = this.dialog.open(ApplicationMeetingDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
@@ -74,7 +79,13 @@ export class ApplicationMeetingComponent implements OnInit {
           endDate: meeting.endDate,
           meetingTypeCode: meeting.meetingType.code,
           meetingType: meeting.meetingType,
+          reason: meeting.description
         },
+      });
+      dialog.beforeClosed().subscribe((result) => {
+        if (result) {
+          this.meetingService.fetch(this.fileNumber);
+        }
       });
     } else {
       this.toastService.showErrorToast('Failed to open meeting, please refresh the page.');

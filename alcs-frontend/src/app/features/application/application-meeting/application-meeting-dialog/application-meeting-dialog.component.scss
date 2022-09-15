@@ -6,3 +6,24 @@
 .flex-child {
   flex: 1 0 auto;
 }
+
+mat-radio-button {
+  display: block;
+  margin: 4px 0;
+}
+
+.reason-wrapper {
+  margin: 16px 0;
+}
+
+.radio-group-label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+label {
+  font-weight: 500;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+}
