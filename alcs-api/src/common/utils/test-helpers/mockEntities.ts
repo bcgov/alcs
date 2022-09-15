@@ -2,6 +2,7 @@ import { ApplicationMeetingType } from '../../../application/application-code/ap
 import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
+import { ApplicationPaused } from '../../../application/application-paused.entity';
 import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
 import { Comment } from '../../../comment/comment.entity';
@@ -65,7 +66,6 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.statusUuid = applicationEntity.status.uuid;
   applicationEntity.assigneeUuid = '1111-1111-1111';
   applicationEntity.assignee = initAssigneeMockEntity();
-  applicationEntity.paused = false;
   applicationEntity.type = initApplicationTypeMockEntity();
   applicationEntity.highPriority = false;
 
@@ -155,8 +155,6 @@ const initApplicationMeetingMock = (
   const meeting = new ApplicationMeeting();
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
-  meeting.startDate = new Date(2022, 1, 1, 1, 1, 1, 1);
-  meeting.endDate = new Date(2022, 2, 2, 2, 2, 2, 2);
   meeting.applicationUuid = application.uuid;
   if (meetingType) {
     meeting.type = meetingType;
@@ -166,6 +164,10 @@ const initApplicationMeetingMock = (
     meeting.type.label = 'Fake code';
     meeting.type.description = 'Fake description';
   }
+  meeting.applicationPaused = {
+    startDate: new Date(),
+    endDate: new Date(),
+  } as ApplicationPaused;
 
   return meeting;
 };

@@ -23,7 +23,9 @@ export class ApplicationPaused extends Base {
   })
   endDate?: Date;
 
-  @ManyToOne(() => Application, (application) => application.history)
+  @ManyToOne(() => Application, (application) => application.history, {
+    cascade: true,
+  })
   application: Application;
 
   @Column()

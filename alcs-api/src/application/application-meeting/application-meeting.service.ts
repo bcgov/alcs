@@ -1,22 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
+import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationService } from '../application.service';
+import { UpdateApplicationMeetingDto } from './application-meeting.dto';
 import { ApplicationMeeting } from './application-meeting.entity';
 
 const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationMeeting> = {
   type: true,
+  applicationPaused: true,
 };
 
 @Injectable()
 export class ApplicationMeetingService {
   constructor(
     @InjectRepository(ApplicationMeeting)
-    private appMeetingRepository,
+    private appMeetingRepository: Repository<ApplicationMeeting>,
     private applicationService: ApplicationService,
   ) {}
 
@@ -42,37 +45,35 @@ export class ApplicationMeetingService {
     });
   }
 
-  async createOrUpdate(meeting: Partial<ApplicationMeeting>) {
-    let existingMeeting;
-    if (meeting.uuid) {
-      existingMeeting = await this.get(meeting.uuid);
-      if (!existingMeeting) {
-        throw new ServiceNotFoundException(`Meeting not found ${meeting.uuid}`);
-      }
+  async update(uuid: string, meeting: UpdateApplicationMeetingDto) {
+    const existingMeeting = await this.get(uuid);
+    if (!existingMeeting) {
+      throw new ServiceNotFoundException(`Meeting not found ${uuid}`);
     }
 
-    this.validateDateRange(meeting.startDate, meeting.endDate);
+    if (meeting.endDate && meeting.startDate > meeting.endDate) {
+      throw new ServiceValidationException(
+        'Start Date must be smaller than End Date',
+      );
+    }
 
-    const updatedMeeting = Object.assign(
-      existingMeeting || new ApplicationMeeting(),
-      meeting,
-    );
+    existingMeeting.applicationPaused.endDate = new Date(meeting.endDate);
+    existingMeeting.applicationPaused.startDate = new Date(meeting.startDate);
+    existingMeeting.description = meeting.description;
 
-    const savedMeeting = await this.appMeetingRepository.save(updatedMeeting);
+    await this.appMeetingRepository.save(existingMeeting);
+
+    return this.get(uuid);
+  }
+
+  async create(meeting: Partial<ApplicationMeeting>) {
+    const createMeeting = new ApplicationMeeting(meeting);
+    const savedMeeting = await this.appMeetingRepository.save(createMeeting);
 
     return this.get(savedMeeting.uuid);
   }
 
-  async delete(uuid) {
-    const meeting = await this.get(uuid);
-    return this.appMeetingRepository.softRemove([meeting]);
-  }
-
-  private validateDateRange(startDate: Date, endDate: Date) {
-    if (startDate > endDate) {
-      throw new ServiceValidationException(
-        'Start Date must be smaller than End Date.',
-      );
-    }
+  async remove(meeting: ApplicationMeeting) {
+    return this.appMeetingRepository.softRemove(meeting);
   }
 }

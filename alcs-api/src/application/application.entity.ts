@@ -39,13 +39,6 @@ export class Application extends Base {
     type: 'boolean',
     default: false,
   })
-  paused: boolean;
-
-  @AutoMap()
-  @Column({
-    type: 'boolean',
-    default: false,
-  })
   highPriority: boolean;
 
   @AutoMap()

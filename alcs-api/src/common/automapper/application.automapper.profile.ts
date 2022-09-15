@@ -12,8 +12,12 @@ import { ApplicationDecisionMeetingDto } from '../../application/application-dec
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
-import { ApplicationMeetingDto } from '../../application/application-meeting/application-meeting.dto';
+import {
+  ApplicationMeetingDto,
+  CreateApplicationMeetingDto,
+} from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
+import { ApplicationPaused } from '../../application/application-paused.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
 import {
@@ -145,39 +149,6 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationMeeting,
-        ApplicationMeetingDto,
-        forMember(
-          (ad) => ad.meetingTypeCode,
-          mapFrom((a) => a.type.code),
-        ),
-        forMember(
-          (ad) => ad.meetingType,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.type,
-              ApplicationMeetingType,
-              ApplicationMeetingTypeDto,
-            ),
-          ),
-        ),
-      );
-      createMap(
-        mapper,
-        ApplicationMeetingDto,
-        ApplicationMeeting,
-        forMember(
-          (a) => a.startDate,
-          mapFrom((ad) => new Date(ad.startDate)),
-        ),
-        forMember(
-          (a) => a.endDate,
-          mapFrom((ad) => new Date(ad.endDate)),
-        ),
-      );
-
-      createMap(
-        mapper,
         ApplicationDocument,
         ApplicationDocumentDto,
         forMember(
@@ -205,6 +176,52 @@ export class ApplicationProfile extends AutomapperProfile {
           }),
         ),
       );
+
+      createMap(
+        mapper,
+        ApplicationMeeting,
+        ApplicationMeetingDto,
+        forMember(
+          (ad) => ad.meetingTypeCode,
+          mapFrom((a) => a.type.code),
+        ),
+        forMember(
+          (ad) => ad.startDate,
+          mapFrom((a) => a.applicationPaused.startDate.valueOf()),
+        ),
+        forMember(
+          (ad) => ad.endDate,
+          mapFrom((a) => a.applicationPaused.endDate?.valueOf()),
+        ),
+        forMember(
+          (ad) => ad.meetingType,
+          mapFrom((a) =>
+            this.mapper.map(
+              a.type,
+              ApplicationMeetingType,
+              ApplicationMeetingTypeDto,
+            ),
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        CreateApplicationMeetingDto,
+        ApplicationPaused,
+        forMember(
+          (a) => a.endDate,
+          mapFrom((ad) => this.numberToDateSafe(ad.endDate)),
+        ),
+        forMember(
+          (a) => a.startDate,
+          mapFrom((ad) => this.numberToDateSafe(ad.startDate)),
+        ),
+      );
     };
+  }
+
+  private numberToDateSafe(date: number | null): Date | null {
+    return date ? new Date(date) : null;
   }
 }

@@ -1,0 +1,43 @@
+<div class="flex-container">
+  <div class="col-40">
+    <h4>Information Request</h4>
+  </div>
+  <div class="pull-right">
+    <button mat-flat-button color="primary" class="pull-right" (click)="onCreate('IR')">+ New Request</button>
+  </div>
+</div>
+
+<table mat-table [dataSource]="infoRequests" class="mat-elevation-z8 width-100 section">
+  <ng-container matColumnDef="startDate">
+    <th mat-header-cell *matHeaderCellDef>Date Requested</th>
+    <td mat-cell *matCellDef="let element">{{ element.startDate | date: 'mediumDate' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="endDate">
+    <th mat-header-cell *matHeaderCellDef>Date Fulfilled</th>
+    <td mat-cell *matCellDef="let element">{{ element.endDate | date: 'mediumDate' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Reason</th>
+    <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>User Action</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button class="action-btn" (click)="onEdit(element.uuid)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="text-center" colspan="4">No data</td>
+  </tr>
+</table>

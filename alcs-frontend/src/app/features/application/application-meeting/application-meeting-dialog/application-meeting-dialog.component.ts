@@ -40,23 +40,19 @@ export class ApplicationMeetingDialogComponent {
   async onSubmit() {
     if (this.model) {
       if (this.model.uuid) {
-        this.meetingService.update({
-          uuid: this.model.uuid as string,
+        await this.meetingService.update(this.model.uuid, {
           startDate: this.model.startDate,
           endDate: this.model.endDate,
-          applicationFileNumber: this.data.fileNumber,
-          meetingTypeCode: this.data.meetingType.code,
+          description: '',
         });
       } else {
-        this.meetingService.create({
+        await this.meetingService.create(this.data.fileNumber, {
           startDate: this.model.startDate,
           endDate: this.model.endDate,
-          applicationFileNumber: this.data.fileNumber,
           meetingTypeCode: this.data.meetingType.code,
+          description: '',
         });
       }
-
-      await this.meetingService.fetch(this.data.fileNumber);
       this.dialogRef.close();
     }
   }

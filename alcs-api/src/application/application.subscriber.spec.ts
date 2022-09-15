@@ -5,7 +5,6 @@ import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { ApplicationHistory } from './application-history.entity';
-import { ApplicationPaused } from './application-paused.entity';
 import { Application } from './application.entity';
 import { ApplicationSubscriber } from './application.subscriber';
 
@@ -48,9 +47,7 @@ describe('ApplicationSubscriber', () => {
 
     oldApplication.statusUuid = oldStatus;
     oldApplication.auditUpdatedAt = new Date(2, 2, 2, 2, 2, 2, 2);
-    oldApplication.paused = false;
     newApplication.statusUuid = newStatus;
-    newApplication.paused = false;
 
     updateEvent.databaseEntity = oldApplication;
     updateEvent.entity = newApplication;
@@ -137,22 +134,6 @@ describe('ApplicationSubscriber', () => {
 
       await applicationSubscriber.beforeUpdate(updateEvent);
       expect(mockManager.save).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('ApplicationPaused', () => {
-    it('should create a new paused entity when paused is started', async () => {
-      updateEvent.databaseEntity.paused = false;
-      updateEvent.entity.paused = true;
-      updateEvent.entity.statusUuid = oldStatus;
-
-      await applicationSubscriber.beforeUpdate(updateEvent);
-
-      expect(mockManager.save).toHaveBeenCalled();
-      const savedValue = mockManager.save.mock
-        .calls[0][0] as unknown as ApplicationPaused;
-      expect(savedValue.application).toEqual(newApplication);
-      expect(savedValue.auditCreatedBy).toEqual('fake-uuid');
     });
   });
 });

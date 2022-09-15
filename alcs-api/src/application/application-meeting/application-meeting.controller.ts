@@ -5,6 +5,8 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
   Param,
   Patch,
@@ -16,11 +18,16 @@ import * as config from 'config';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationCodeService } from '../application-code/application-code.service';
+import { ApplicationPaused } from '../application-paused.entity';
+import { ApplicationPausedService } from '../application-paused/application-paused.service';
+import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationMeetingDto,
   CreateApplicationMeetingDto,
+  UpdateApplicationMeetingDto,
 } from './application-meeting.dto';
 import { ApplicationMeeting } from './application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting.service';
@@ -29,10 +36,13 @@ import { ApplicationMeetingService } from './application-meeting.service';
 @Controller('application-meeting')
 @UseGuards(RoleGuard)
 export class ApplicationMeetingController {
+  private logger = new Logger(ApplicationMeetingController.name);
+
   constructor(
     private appMeetingService: ApplicationMeetingService,
     private applicationService: ApplicationService,
     private applicationCodeService: ApplicationCodeService,
+    private applicationPausedService: ApplicationPausedService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -66,60 +76,97 @@ export class ApplicationMeetingController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
-    return this.appMeetingService.delete(uuid);
-  }
-
-  @Post()
-  @UserRoles(...ANY_AUTH_ROLE)
-  async create(
-    @Body() meeting: CreateApplicationMeetingDto,
-  ): Promise<ApplicationMeetingDto> {
-    const application = await this.applicationService.get(
-      meeting.applicationFileNumber,
-    );
-
-    if (!application) {
-      throw new NotFoundException(
-        `Application not found ${meeting.applicationFileNumber}`,
+    const appMeeting = await this.appMeetingService.get(uuid);
+    if (!appMeeting) {
+      throw new ServiceNotFoundException(
+        `Failed to find meeting with ID ${uuid}`,
       );
     }
+    await this.applicationPausedService.remove(
+      appMeeting.applicationPaused.uuid,
+    );
+    return this.appMeetingService.remove(appMeeting);
+  }
 
-    const applicationType = await this.applicationCodeService.fetchMeetingType(
+  private async createApplicationPaused(
+    meeting: CreateApplicationMeetingDto,
+    application: Application,
+  ) {
+    const pauseToCreate = this.mapper.map(
+      meeting,
+      CreateApplicationMeetingDto,
+      ApplicationPaused,
+    );
+    return this.applicationPausedService.createOrUpdate({
+      ...pauseToCreate,
+      applicationUuid: application.uuid,
+    });
+  }
+
+  private async validateAndPrepareCreateData(
+    fileNumber: string,
+    meeting: CreateApplicationMeetingDto,
+  ) {
+    const application = await this.applicationService.get(fileNumber);
+
+    if (!application) {
+      throw new NotFoundException(`Application not found ${fileNumber}`);
+    }
+
+    const meetingType = await this.applicationCodeService.fetchMeetingType(
       meeting.meetingTypeCode,
     );
 
-    if (!applicationType) {
+    if (!meetingType) {
       throw new NotFoundException(
         `Application Meeting Type not found ${meeting.meetingTypeCode}`,
       );
     }
 
-    const newMeeting = await this.appMeetingService.createOrUpdate({
-      startDate: new Date(meeting.startDate),
-      endDate: new Date(meeting.endDate),
-      applicationUuid: application.uuid,
-      typeUuid: applicationType.uuid,
-    });
-
-    return this.mapper.map(
-      newMeeting,
-      ApplicationMeeting,
-      ApplicationMeetingDto,
-    );
+    return { application, meetingType };
   }
 
-  @Patch()
+  @Post('/:fileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async create(
+    @Body() meeting: CreateApplicationMeetingDto,
+    @Param('fileNumber') fileNumber: string,
+  ): Promise<ApplicationMeetingDto> {
+    const { application, meetingType } =
+      await this.validateAndPrepareCreateData(fileNumber, meeting);
+
+    const pause = await this.createApplicationPaused(meeting, application);
+
+    try {
+      const newMeeting = await this.appMeetingService.create({
+        application: application,
+        type: meetingType,
+        description: meeting.description,
+        applicationPaused: pause,
+      });
+
+      return this.mapper.map(
+        newMeeting,
+        ApplicationMeeting,
+        ApplicationMeetingDto,
+      );
+    } catch (exc) {
+      this.logger.error(exc);
+      // revert paused changes if insert fails
+      await this.applicationPausedService.remove(pause.uuid);
+      throw new InternalServerErrorException('Failed to create', exc);
+    }
+  }
+
+  @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
-    @Body() appDecMeeting: ApplicationMeetingDto,
+    @Body() meetingUpdates: UpdateApplicationMeetingDto,
+    @Param('uuid') uuid: string,
   ): Promise<ApplicationMeetingDto> {
-    const appDecEntity = this.mapper.map(
-      appDecMeeting,
-      ApplicationMeetingDto,
-      ApplicationMeeting,
-    );
-    const updatedMeeting = await this.appMeetingService.createOrUpdate(
-      appDecEntity,
+    const updatedMeeting = await this.appMeetingService.update(
+      uuid,
+      meetingUpdates,
     );
     return this.mapper.map(
       updatedMeeting,

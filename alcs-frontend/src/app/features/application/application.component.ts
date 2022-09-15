@@ -4,6 +4,7 @@ import { ApplicationDetailService } from '../../services/application/application
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
+import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ReviewComponent } from './review/review.component';
@@ -33,6 +34,11 @@ export const childRoutes = [
     path: 'decision',
     menuTitle: 'Decision',
     component: DecisionComponent,
+  },
+  {
+    path: 'info-request',
+    menuTitle: 'Info Request',
+    component: InfoRequestsComponent,
   },
 ];
 

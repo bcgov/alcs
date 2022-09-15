@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -11,24 +11,30 @@ import {
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationCodeService } from '../application-code/application-code.service';
+import { ApplicationRegion } from '../application-code/application-region/application-region.entity';
+import { ApplicationPaused } from '../application-paused.entity';
+import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { ApplicationService } from '../application.service';
 import { ApplicationMeetingController } from './application-meeting.controller';
 import {
-  ApplicationMeetingDto,
   CreateApplicationMeetingDto,
+  UpdateApplicationMeetingDto,
 } from './application-meeting.dto';
 import { ApplicationMeetingService } from './application-meeting.service';
+import mock = jest.mock;
 
 describe('ApplicationMeetingController', () => {
   let controller: ApplicationMeetingController;
-  let mockMeetingService;
-  let mockApplicationService;
-  let mockApplicationCodeService;
+  let mockMeetingService: DeepMocked<ApplicationMeetingService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationCodeService: DeepMocked<ApplicationCodeService>;
+  let mockPausedService: DeepMocked<ApplicationPausedService>;
 
   beforeEach(async () => {
     mockMeetingService = createMock<ApplicationMeetingService>();
     mockApplicationService = createMock<ApplicationService>();
     mockApplicationCodeService = createMock<ApplicationCodeService>();
+    mockPausedService = createMock<ApplicationPausedService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -51,6 +57,10 @@ describe('ApplicationMeetingController', () => {
           useValue: mockApplicationCodeService,
         },
         {
+          provide: ApplicationPausedService,
+          useValue: mockPausedService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -62,9 +72,9 @@ describe('ApplicationMeetingController', () => {
       ApplicationMeetingController,
     );
 
-    mockApplicationCodeService.fetchMeetingType.mockReturnValue({
+    mockApplicationCodeService.fetchMeetingType.mockResolvedValue({
       uuid: 'fake',
-    });
+    } as ApplicationRegion);
   });
 
   it('should be defined', () => {
@@ -74,7 +84,7 @@ describe('ApplicationMeetingController', () => {
   it('should get all for application', async () => {
     const mockApplication = initApplicationMockEntity();
     const mockMeeting = initApplicationMeetingMock(mockApplication);
-    mockMeetingService.getByAppFileNumber.mockReturnValue([mockMeeting]);
+    mockMeetingService.getByAppFileNumber.mockResolvedValue([mockMeeting]);
     const result = await controller.getAllForApplication('fake-number');
 
     expect(mockMeetingService.getByAppFileNumber).toBeCalledTimes(1);
@@ -82,87 +92,93 @@ describe('ApplicationMeetingController', () => {
   });
 
   it('should delete meeting', async () => {
-    mockMeetingService.delete.mockReturnValue({});
+    const mockApplication = initApplicationMockEntity();
+    const mockMeeting = initApplicationMeetingMock(mockApplication);
+    mockMeetingService.get.mockResolvedValue(mockMeeting);
+    mockMeetingService.remove.mockResolvedValue({} as any);
+    mockPausedService.remove.mockResolvedValue({} as any);
 
     await controller.delete('fake-uuid');
 
-    expect(mockMeetingService.delete).toBeCalledTimes(1);
-    expect(mockMeetingService.delete).toBeCalledWith('fake-uuid');
+    expect(mockMeetingService.remove).toBeCalledTimes(1);
+    expect(mockMeetingService.remove).toBeCalledWith(mockMeeting);
+    expect(mockPausedService.remove).toHaveBeenCalled();
   });
 
   it('should create meeting if application exists', async () => {
     const appMock = initApplicationMockEntity();
     const mockMeeting = initApplicationMeetingMock(appMock);
-    mockApplicationService.get.mockReturnValue(appMock);
-    mockMeetingService.createOrUpdate.mockReturnValue(mockMeeting);
+    const fakePause = {} as ApplicationPaused;
+    mockApplicationService.get.mockResolvedValue(appMock);
+    mockMeetingService.create.mockResolvedValue(mockMeeting);
+    mockPausedService.createOrUpdate.mockResolvedValue(fakePause);
 
-    const meetingToUpdate = {
+    const meetingToUpdate: CreateApplicationMeetingDto = {
       startDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
       endDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      applicationFileNumber: appMock.fileNumber,
-    } as CreateApplicationMeetingDto;
+      meetingTypeCode: 'CODE',
+      description: 'EMPTY',
+    };
 
-    await controller.create(meetingToUpdate);
+    await controller.create(meetingToUpdate, 'file-number');
 
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(1);
-    expect(mockMeetingService.createOrUpdate).toBeCalledWith({
-      startDate: new Date(meetingToUpdate.startDate),
-      endDate: new Date(meetingToUpdate.endDate),
-      applicationUuid: appMock.uuid,
-      typeUuid: 'fake',
-    });
+    expect(mockMeetingService.create).toBeCalledTimes(1);
+    const calledData = mockMeetingService.create.mock.calls[0][0];
+    expect(calledData.application).toEqual(appMock);
+    expect(calledData.applicationPaused).toBe(fakePause);
+    expect(calledData.typeUuid).toBe(mockMeeting.typeUuid);
   });
 
   it('should fail create meeting if application does not exist', async () => {
     mockApplicationService.get.mockReturnValue(undefined);
 
     await expect(
-      controller.create({
-        applicationFileNumber: 'fake-number',
-      } as CreateApplicationMeetingDto),
+      controller.create({} as CreateApplicationMeetingDto, 'file-number'),
     ).rejects.toMatchObject(
-      new NotFoundException('Application not found fake-number'),
+      new NotFoundException('Application not found file-number'),
     );
 
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(0);
+    expect(mockMeetingService.create).toBeCalledTimes(0);
   });
 
   it('should update meeting', async () => {
     const appMock = initApplicationMockEntity();
     const mockMeeting = initApplicationMeetingMock(appMock);
-    mockMeetingService.createOrUpdate.mockReturnValue(mockMeeting);
+    mockMeetingService.update.mockResolvedValue(mockMeeting);
     const meetingToUpdate = {
-      uuid: mockMeeting.uuid,
       startDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
       endDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      applicationFileNumber: appMock.fileNumber,
-    } as ApplicationMeetingDto;
+    } as UpdateApplicationMeetingDto;
 
-    await controller.update(meetingToUpdate);
+    await controller.update(meetingToUpdate, mockMeeting.uuid);
 
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(1);
-    expect(mockMeetingService.createOrUpdate).toBeCalledWith({
-      startDate: new Date(meetingToUpdate.startDate),
-      endDate: new Date(meetingToUpdate.endDate),
-      uuid: mockMeeting.uuid,
+    expect(mockMeetingService.update).toBeCalledTimes(1);
+    expect(mockMeetingService.update).toBeCalledWith(mockMeeting.uuid, {
+      startDate: meetingToUpdate.startDate,
+      endDate: meetingToUpdate.endDate,
     });
   });
 
-  it('should fail create meeting if application type does not exist', async () => {
+  it('should fail create meeting if meeting type does not exist', async () => {
     const appMock = initApplicationMockEntity();
     initApplicationMeetingMock(appMock);
-    mockApplicationService.get.mockReturnValue(appMock);
+    mockApplicationService.get.mockResolvedValueOnce(appMock);
     mockApplicationCodeService.fetchMeetingType.mockReturnValue(undefined);
 
     await expect(
-      controller.create({
-        applicationFileNumber: 'fake-number',
-        meetingTypeCode: 'fake-code',
-      } as CreateApplicationMeetingDto),
+      controller.create(
+        {
+          meetingTypeCode: 'BAD-CODE',
+          description: '',
+          startDate: Date.now(),
+          endDate: null,
+        },
+        'file-number',
+      ),
     ).rejects.toMatchObject(
-      new NotFoundException('Application Meeting Type not found fake-code'),
+      new NotFoundException('Application Meeting Type not found BAD-CODE'),
     );
 
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(0);
+    expect(mockMeetingService.create).toBeCalledTimes(0);
   });
 });

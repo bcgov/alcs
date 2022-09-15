@@ -9,6 +9,8 @@ import { ApplicationMeetingDialogComponent } from './application-meeting/applica
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { ApplicationComponent, childRoutes } from './application.component';
 import { DecisionComponent } from './decision/decision.component';
+import { InfoRequestsComponent } from './info-requests/info-requests.component';
+import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
@@ -37,6 +39,8 @@ const routes: Routes = [
     ApplicationMeetingComponent,
     ApplicationMeetingDialogComponent,
     DecisionComponent,
+    InfoRequestsComponent,
+    InfoRequestDialogComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
