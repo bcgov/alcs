@@ -17,6 +17,12 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:
+    - name: Lowercase repo owner
+      id: lowercase_repo_owner
+      uses: ASzc/change-string-case-action@v1
+      with:
+        string: ${{ github.repository_owner }}
+        
     - name: Authenticate to OpenShift
       run: |
         DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
