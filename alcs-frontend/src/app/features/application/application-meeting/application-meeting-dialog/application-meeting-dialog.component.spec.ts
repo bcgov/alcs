@@ -19,7 +19,7 @@ describe('ApplicationMeetingDialogComponent', () => {
           provide: ApplicationDecisionMeetingService,
           useValue: {},
         },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: { meetingType: { code: 'fake', label: 'fake' } } },
         { provide: MatDialogRef, useValue: {} },
       ],
       imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule],
