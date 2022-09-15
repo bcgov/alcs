@@ -35,7 +35,7 @@ import { SearchBarComponent } from './shared/header/search-bar/search-bar.compon
     NotificationsComponent,
     SearchBarComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, SharedModule, AppRoutingModule, BoardModule],
+  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, BoardModule],
   providers: [
     AuthenticationService,
     ToastService,

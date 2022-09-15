@@ -124,10 +124,9 @@ export class BoardComponent implements OnInit {
   async onCreate() {
     this.dialog
       .open(CreateCardDialogComponent, {
-        minHeight: '500px',
         minWidth: '600px',
-        maxWidth: '800px',
-        width: '70%',
+        maxWidth: '900px',
+        width: '100%',
         data: {},
       })
       .afterClosed()

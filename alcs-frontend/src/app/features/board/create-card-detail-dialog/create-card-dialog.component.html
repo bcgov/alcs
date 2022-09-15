@@ -1,15 +1,16 @@
 <div mat-dialog-title>
   <h2 class="card-title">Create Application</h2>
 </div>
-<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
-  <mat-dialog-content style="height: 100%">
-    <div>
-      <label for="fileNumber">File number: *</label>
-      <div>
+<form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="two-item-row">
+      <mat-form-field appearance="standard">
+        <mat-label>File ID</mat-label>
         <input
           id="fileNumber"
+          matInput
+          placeholder="791262"
           formControlName="fileNumber"
-          type="number"
           [class.valid]="
             createForm.get('fileNumber')!.valid &&
             (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
@@ -19,18 +20,17 @@
             (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
           "
         />
-        <small
+        <mat-error
           class="text-danger"
           *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
         >
           This field is required.
-        </small>
-      </div>
-    </div>
-    <div>
-      <label for="applicant">Applicant: *</label>
-      <div>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="standard">
+        <mat-label>Applicant Last Name</mat-label>
         <input
+          matInput
           id="applicant"
           formControlName="applicant"
           type="text"
@@ -43,50 +43,72 @@
             (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
           "
         />
-        <small
+        <mat-error
           class="text-danger"
           *ngIf="createForm.get('applicant')!.touched && createForm.get('applicant')!.hasError('required')"
         >
           This field is required.
-        </small>
+        </mat-error>
+      </mat-form-field>
+      <div>
+        <ng-select
+          class="card-type"
+          [items]="applicationTypes"
+          appendTo="body"
+          placeholder="Type *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="type"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            <div class="application-type">
+              <div
+                [style]="{
+                  'background-color': item.backgroundColor
+                }"
+                class="application-color"
+              ></div>
+              <span>{{ item.label }}</span>
+            </div>
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item">
+            <div class="application-type">
+              <div
+                [style]="{
+                  'background-color': item.backgroundColor
+                }"
+                class="application-color"
+              ></div>
+              <span>{{ item.label }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          class="card-region"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Region *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="region"
+        >
+        </ng-select>
       </div>
     </div>
-    <div>
-      <ng-select
-        class="card-type"
-        [items]="applicationTypes"
-        appendTo="body"
-        placeholder="Type"
-        bindLabel="label"
-        bindValue="code"
-        [clearable]="false"
-        (change)="onSelectDtoDropdown('type', $event)"
-      >
-      </ng-select>
-    </div>
-    <mat-form-field appearance="fill">
+    <mat-form-field class="date-picker" appearance="standard">
       <mat-label>Date Submitted to ALC</mat-label>
       <input matInput [matDatepicker]="pdd" formControlName="receivedDate" required />
       <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
       <mat-datepicker #pdd type="date"> </mat-datepicker>
     </mat-form-field>
-    <div>
-      <ng-select
-        class="card-region"
-        [items]="regions"
-        appendTo="body"
-        placeholder="Region"
-        bindLabel="label"
-        bindValue="code"
-        (change)="onSelectDtoDropdown('region', $event)"
-      >
-      </ng-select>
-    </div>
   </mat-dialog-content>
+
   <mat-dialog-actions align="end">
-    <div>
-      <button class="button-container" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Save</button>
-    </div>
+    <button class="button-container" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Save</button>
   </mat-dialog-actions>
 </form>

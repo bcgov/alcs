@@ -42,6 +42,6 @@ const routes: Routes = [
     InfoRequestsComponent,
     InfoRequestDialogComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes)],
 })
 export class ApplicationModule {}

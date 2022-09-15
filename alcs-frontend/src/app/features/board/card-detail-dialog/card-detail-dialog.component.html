@@ -45,7 +45,7 @@
     </div>
   </div>
   <div>
-    <span class="region">{{ application.regionDetails?.label }} Region</span>
+    <span class="region">{{ application.regionDetails.label }} Region</span>
   </div>
   <div class="header-row">
     <div class="left">
@@ -120,10 +120,10 @@
       [searchFn]="filterAssigneeList"
       (change)="onAssigneeSelected($event)"
     >
-      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+      <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
         <div class="assignee-card-body">
           <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
-          <p class="assignee-card-email" [ngOptionHighlight]="search" class="assignee-card-email">{{ item.email }}</p>
+          <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
         </div>
       </ng-template>
     </ng-select>

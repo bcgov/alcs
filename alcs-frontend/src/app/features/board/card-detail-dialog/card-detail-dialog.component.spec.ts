@@ -3,7 +3,11 @@ import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApplicationStatusDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
+import {
+  ApplicationRegionDto,
+  ApplicationStatusDto,
+  ApplicationTypeDto,
+} from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { BoardService } from '../../../services/board/board.service';
 import { UserDto } from '../../../services/user/user.dto';
@@ -36,6 +40,12 @@ describe('CardDetailDialogComponent', () => {
     description: 'this is a test status',
   };
 
+  const mockApplicationRegionDetails: ApplicationRegionDto = {
+    label: 'test_st',
+    code: 'STATUS',
+    description: 'this is a test status',
+  };
+
   const mockApplicationType: ApplicationTypeDto = {
     label: 'test_ty',
     code: 'TYPE',
@@ -48,10 +58,12 @@ describe('CardDetailDialogComponent', () => {
   const mockCardDetail: ApplicationDetailedDto = {
     statusDetails: mockApplicationStatusDetails,
     typeDetails: mockApplicationType,
+    regionDetails: mockApplicationRegionDetails,
     type: 'TYPE',
     fileNumber: '1111',
     applicant: 'I am an applicant',
     status: 'STATUS',
+    region: 'REGION',
     assignee: mockAssignee,
     activeDays: 10,
     pausedDays: 5,
