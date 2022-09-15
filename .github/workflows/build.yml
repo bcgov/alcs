@@ -65,8 +65,8 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache 
-  #===============================BUILD WEB===============================#
-  build-web:
+  #===============================BUILD FRONTEND===============================#
+  build-frontend:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
@@ -80,7 +80,7 @@ jobs:
     - name: Prepare labels and tags
       id: prep
       run: |
-        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-web
+        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-frontend
         TAGS="${DOCKER_IMAGE}:${{ github.run_number }},${DOCKER_IMAGE}:latest"
         echo ::set-output name=tags::${TAGS}
         echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
@@ -99,14 +99,14 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-web-${{ github.sha }}
+        key: ${{ runner.os }}-buildx-frontend-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-buildx-web-
+          ${{ runner.os }}-buildx-frontend-
 
-    - name: Build and push alcs-web image
+    - name: Build and push alcs-frontend image
       uses: docker/build-push-action@v2
       with:
-        context: ./alcs-web
+        context: ./alcs-frontend
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.prep.outputs.tags }}
         cache-from: type=local,src=/tmp/.buildx-cache
