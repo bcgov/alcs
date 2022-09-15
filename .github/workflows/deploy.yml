@@ -32,5 +32,5 @@ jobs:
       with:
         token: ${{ secrets.gitops_pat }}
         repository: ${{ env.GITOPS_REPO }}
-        event-type: deploy-dev
+        event-type: deploy-${{ inputs.environment }}
         client-payload: '{"apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}"}'
