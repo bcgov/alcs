@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline-datepicker.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
@@ -41,6 +42,7 @@ const routes: Routes = [
     DecisionComponent,
     InfoRequestsComponent,
     InfoRequestDialogComponent,
+    TimelineComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
