@@ -22,21 +22,21 @@ jobs:
       uses: ASzc/change-string-case-action@v1
       with:
         string: ${{ github.repository_owner }}
-        
+
     - name: Authenticate to OpenShift
       run: |
         DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
-        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
+        oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
         
     - name: Import Image
       run: |
-        oc import-image alcs-api:latest -n ${{secrets.license_plate}}-tools
-        oc tag alcs-migrate:latest alcs-api:${{ github.run_number }} -n ${{secrets.license_plate}}-tools
+        oc import-image alcs-api:latest -n ${{secrets.LICENSE_PLATE}}-tools
+        oc tag alcs-migrate:latest alcs-api:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
 
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
       with:
-        token: ${{ secrets.gitops_pat }}
+        token: ${{ secrets.GITOPS_PAT }}
         repository: ${{ env.GITOPS_REPO }}
         event-type: deploy-${{ inputs.environment }}
         client-payload: '{"apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}"}'
