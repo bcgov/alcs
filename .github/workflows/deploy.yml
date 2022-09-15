@@ -31,7 +31,7 @@ jobs:
     - name: Import Image
       run: |
         oc import-image alcs-api:latest -n ${{secrets.LICENSE_PLATE}}-tools
-        oc tag alcs-migrate:latest alcs-api:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
+        oc tag alcs-api:latest alcs-api:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
 
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
