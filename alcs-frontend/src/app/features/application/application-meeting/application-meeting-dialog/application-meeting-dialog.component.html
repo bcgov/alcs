@@ -21,14 +21,7 @@
 
       <mat-form-field appearance="fill" class="flex-child">
         <mat-label>Choose an end date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="endDate"
-          [(ngModel)]="model.endDate"
-          name="endDate"
-          required
-          [min]="model.startDate"
-        />
+        <input matInput [matDatepicker]="endDate" [(ngModel)]="model.endDate" name="endDate" [min]="model.startDate" />
         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
         <mat-datepicker #endDate type="date"> </mat-datepicker>
         <mat-hint>{{ model.endDate | date: 'mediumDate' }}</mat-hint>

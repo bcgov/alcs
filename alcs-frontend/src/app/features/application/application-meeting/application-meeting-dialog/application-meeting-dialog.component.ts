@@ -7,7 +7,7 @@ export class ApplicationMeetingForm {
   constructor(
     public fileNumber: string,
     public startDate: Date,
-    public endDate: Date,
+    public endDate: Date | null,
     public meetingType: ApplicationMeetingTypeDto,
     public uuid: string | undefined = undefined,
     public reason: string | undefined = undefined
@@ -44,14 +44,13 @@ export class ApplicationMeetingDialogComponent {
     private meetingService: ApplicationMeetingService
   ) {
     if (data.uuid) {
-      console.log(data);
       this.model = {
         ...data,
         startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
+        endDate: data.endDate ? new Date(data.endDate) : null,
       };
     } else {
-      this.model = new ApplicationMeetingForm(data.fileNumber, new Date(), new Date(), data.meetingType);
+      this.model = new ApplicationMeetingForm(data.fileNumber, new Date(), null, data.meetingType);
     }
 
     this.populateReasonsOptions(data);
@@ -93,7 +92,7 @@ export class ApplicationMeetingDialogComponent {
   }
 
   startDateSelected() {
-    if (this.model.startDate && this.model.startDate > this.model.endDate) {
+    if (this.model.startDate && this.model.endDate && this.model.startDate > this.model.endDate) {
       this.model.endDate = this.model.startDate;
     }
   }
