@@ -1,37 +1,35 @@
-div {
-    margin: 10px;
+.content {
+  padding: 0 16px;
 }
 
-.full-width {
-    width: 100%;
+.two-item-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  margin-bottom: 24px;
+  align-items: end;
+}
+
+.date-picker {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  button:not(:last-child) {
+    margin-right: 24px !important;
   }
-
-.pull-right {
-  float: right;
 }
 
-.flex-container {
+.application-type {
   display: flex;
-  margin: 0;
+  align-items: center;
 }
 
-.flex-child {
-  flex: 1 0 auto;
-  .small {
-      flex: 2 4 auto;
-  }
-}
-
-.italic {
-  font-style: italic;
-}
-
-.card-assignee {
-  .assignee-card-name {
-    font-size: 1.2em !important;
-    font-weight: 600 !important;
-  }
-  .assignee-card-email {
-    font-size: 0.9em !important;
-  }
+.application-color {
+  display: inline-block;
+  height: 18px;
+  width: 40px;
+  margin-right: 8px;
+  border-radius: 2px;
 }

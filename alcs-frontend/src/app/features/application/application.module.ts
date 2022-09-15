@@ -44,6 +44,6 @@ const routes: Routes = [
     InfoRequestDialogComponent,
     TimelineComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes)],
 })
 export class ApplicationModule {}

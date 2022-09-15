@@ -112,14 +112,11 @@ export class Application extends Base {
   })
   boardUuid: string;
 
-  @ManyToOne(() => ApplicationRegion, {
-    nullable: true,
-  })
+  @ManyToOne(() => ApplicationRegion)
   region: ApplicationRegion;
 
   @Column({
     type: 'uuid',
-    nullable: true,
   })
   regionUuid: string;
 

@@ -26,7 +26,7 @@ export interface ApplicationDto {
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
   decisionDate?: number;
-  region?: string;
+  region: string;
   assignee?: UserDto;
   activeDays: number;
   pausedDays: number;
@@ -56,6 +56,6 @@ export interface ApplicationPartialDto {
 export interface ApplicationDetailedDto extends ApplicationDto {
   statusDetails: ApplicationStatusDto;
   typeDetails: ApplicationTypeDto;
-  regionDetails?: ApplicationRegionDto;
+  regionDetails: ApplicationRegionDto;
   boardDetails?: BoardDto;
 }

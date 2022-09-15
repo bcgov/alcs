@@ -1,8 +1,12 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Platform } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterModule, Routes } from '@angular/router';
+import { DateAdapter } from '@matheo/datepicker/core';
 import { MentionModule } from 'angular-mentions';
 import { CardComponent } from '../../shared/card/card.component';
 import { CommentComponent } from '../../shared/commenting/comment.component';
@@ -12,6 +16,8 @@ import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pip
 import { InlineEditComponent } from '../../shared/inline-edit/inline-edit.component';
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
+import { DATE_FORMATS } from '../../shared/utils/date-format';
+import { MatheoDatepickerFormatter } from '../../shared/utils/matheo-datepicker-formatter';
 import { BoardComponent } from './board.component';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
@@ -40,12 +46,11 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    SharedModule,
+    SharedModule.forRoot(),
     DragDropModule,
     MatGridListModule,
     RouterModule.forChild(routes),
     MentionModule,
   ],
-  providers: [],
 })
 export class BoardModule {}

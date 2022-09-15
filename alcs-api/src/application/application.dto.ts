@@ -105,9 +105,8 @@ export class ApplicationDto {
   @IsNumber()
   decisionDate?: number;
 
-  @IsOptional()
   @IsString()
-  region?: string;
+  region: string;
 
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)

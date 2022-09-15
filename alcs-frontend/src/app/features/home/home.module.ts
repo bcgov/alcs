@@ -15,7 +15,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [HomeComponent, AssignedComponent, GisSubtasksComponent],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes)],
   providers: [],
 })
 export class HomeModule {}

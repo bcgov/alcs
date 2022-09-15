@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import * as dayjs from 'dayjs';
+import * as moment from 'moment';
+import { environment } from '../../../environments/environment';
 import { formatDateForApi } from '../utils/api-date-formatter';
 
 @Component({
@@ -22,7 +23,7 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.selectedValue) {
-      this.formattedDate = dayjs(this.selectedValue).format('YYYY-MMM-DD');
+      this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
       this.form = this.fb.group({
         date: new Date(this.selectedValue),
       });
@@ -46,7 +47,7 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     if (this.selectedValue && this.form) {
-      this.formattedDate = dayjs(this.selectedValue).format('YYYY-MMM-DD');
+      this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
       this.form.patchValue({
         date: new Date(this.selectedValue),
       });
