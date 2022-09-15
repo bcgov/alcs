@@ -9,6 +9,7 @@ env:
   GITOPS_REPO: bcgov-c/tenant-gitops-a5cf88
   
 jobs:
+  #===============================BUILD API===============================#
   build-api:
     runs-on: ubuntu-22.04
     steps:
@@ -64,6 +65,7 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache 
+  #===============================BUILD WEB===============================#
   build-web:
     runs-on: ubuntu-22.04
     steps:
@@ -101,10 +103,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-web-
 
-    - name: Build and push alcs-api image
+    - name: Build and push alcs-web image
       uses: docker/build-push-action@v2
       with:
-        context: ./alcs-api
+        context: ./alcs-web
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.prep.outputs.tags }}
         cache-from: type=local,src=/tmp/.buildx-cache
@@ -116,7 +118,7 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache 
-
+  #===============================BUILD MIGRATE===============================#
   build-migrate:
     runs-on: ubuntu-22.04
     steps:
@@ -131,7 +133,7 @@ jobs:
     - name: Prepare labels and tags
       id: prep
       run: |
-        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-web
+        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-migrate
         TAGS="${DOCKER_IMAGE}:${{ github.run_number }},${DOCKER_IMAGE}:latest"
         echo ::set-output name=tags::${TAGS}
         echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')

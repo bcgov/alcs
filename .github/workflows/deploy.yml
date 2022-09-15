@@ -1,0 +1,36 @@
+name: build
+
+on: 
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+env:
+  API_IMAGE_NAME: alcs-api
+  MIGRATE_IMAGE_NAME: alcs-migrate
+  FE_IMAGE_NAME: alcs-frontend
+  GITOPS_REPO: bcgov-c/tenant-gitops-a5cf88
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Authenticate to OpenShift
+      run: |
+        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
+        oc login --token=${{ secrets.oc_token }} --server=${{ secrets.oc_server }}
+        
+    - name: Import Image
+      run: |
+        oc import-image alcs-api:latest -n ${{secrets.license_plate}}-tools
+        oc tag alcs-migrate:latest alcs-api:${{ github.run_number }} -n ${{secrets.license_plate}}-tools
+
+    - name: Repository Dispatch
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.gitops_pat }}
+        repository: ${{ env.GITOPS_REPO }}
+        event-type: deploy-dev
+        client-payload: '{"apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}"}'
