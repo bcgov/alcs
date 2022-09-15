@@ -1,9 +1,11 @@
+import { Platform } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,11 +18,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDatepickerModule } from '@matheo/datepicker';
-import { MatNativeDateModule } from '@matheo/datepicker/core';
+import { DateAdapter, MatNativeDateModule } from '@matheo/datepicker/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { DATE_FORMATS } from './utils/date-format';
+import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
 
 @NgModule({
   declarations: [FavoriteButtonComponent, AvatarCircleComponent],
@@ -51,4 +55,14 @@ import { FavoriteButtonComponent } from './favorite-button/favorite-button.compo
     MatRadioModule,
   ],
 })
-export class SharedModule {}
+export class SharedModule {
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [
+        { provide: DateAdapter, useClass: MatheoDatepickerFormatter, deps: [MAT_DATE_LOCALE, Platform] },
+        { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
+      ],
+    };
+  }
+}

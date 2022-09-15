@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as dayjs from 'dayjs';
+import * as moment from 'moment';
+import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -18,7 +19,7 @@ export class IntakeComponent implements OnInit {
   ngOnInit(): void {
     this.applicationDetailService.$application.subscribe((application) => {
       if (application) {
-        this.dateReceived = dayjs(application.dateReceived).format('YYYY-MMM-DD');
+        this.dateReceived = moment(application.dateReceived).format(environment.dateFormat);
         this.application = application;
       }
     });

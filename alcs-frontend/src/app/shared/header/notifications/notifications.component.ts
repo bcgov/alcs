@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import * as dayjs from 'dayjs';
+import * as moment from 'moment';
+import { environment } from '../../../../environments/environment';
 import { NotificationService } from '../../../services/notification/notification.service';
 
 type FormattedNotification = {
@@ -34,7 +35,7 @@ export class NotificationsComponent implements OnInit {
 
     this.formattedNotifications = notifications.map((notification) => ({
       ...notification,
-      createdAt: dayjs(notification.createdAt).format('YYYY-MMM-DD hh:mm:ss a'),
+      createdAt: moment(notification.createdAt).format(environment.longTimeFormat),
     }));
     this.calculateCounts(this.formattedNotifications);
   }

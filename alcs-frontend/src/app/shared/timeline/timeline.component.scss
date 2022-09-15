@@ -1,0 +1,57 @@
+@import '../../../styles/colors';
+@import '../../../styles/typography';
+
+.timeline {
+  padding: 0;
+  border-spacing: 0;
+  width: 100%;
+  max-width: 600px;
+  margin: 16px 32px;
+
+  th {
+    @extend .subheading2;
+    text-align: left;
+  }
+}
+
+.line {
+  width: 1px;
+  border-left: 1px solid #000;
+  padding: 0;
+  height: 40px;
+  margin: -20px 0 0;
+}
+
+.timeline-row:first-child {
+  .line {
+    border-left: 1px solid;
+    border-image: linear-gradient(to bottom, transparent 50%, #000 50%) 1 100%;
+  }
+}
+
+.timeline-row:last-child {
+  .line {
+    border-left: 1px solid;
+    border-image: linear-gradient(to bottom, #000 50%, transparent 50%) 1 100%;
+  }
+}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  background-color: #000;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  margin-left: -6px;
+  margin-right: 16px;
+  border: 2px solid #000;
+}
+
+.dot.hollow-dot {
+  background-color: #fff;
+}
+
+a {
+  font-size: 14px !important;
+}

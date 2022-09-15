@@ -20,8 +20,8 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
 import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
-import { SharedModule } from './shared/shared.module';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +35,7 @@ import { SearchBarComponent } from './shared/header/search-bar/search-bar.compon
     NotificationsComponent,
     SearchBarComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, SharedModule, AppRoutingModule, BoardModule],
+  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, BoardModule],
   providers: [
     AuthenticationService,
     ToastService,

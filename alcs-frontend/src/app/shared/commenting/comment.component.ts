@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as dayjs from 'dayjs';
+import * as moment from 'moment';
+import { environment } from '../../../environments/environment';
 import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 
 @Component({
@@ -25,7 +26,7 @@ export class CommentComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.commentDate = dayjs(this.comment.createdAt).format('MMM D, h:mm a');
+    this.commentDate = moment(this.comment.createdAt).format(environment.shortTimeFormat);
   }
 
   onDelete() {

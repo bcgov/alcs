@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import * as dayjs from 'dayjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -21,9 +20,9 @@ export class CreateCardDialogComponent implements OnInit {
   createForm = new FormGroup({
     fileNumber: new FormControl('', [Validators.required]),
     applicant: new FormControl('', [Validators.required]),
-    type: new FormControl('', [Validators.required]),
+    type: new FormControl(null, [Validators.required]),
+    region: new FormControl(null, [Validators.required]),
     receivedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    region: new FormControl(''),
   });
 
   constructor(
@@ -40,12 +39,6 @@ export class CreateCardDialogComponent implements OnInit {
 
     this.applicationService.$applicationRegions.subscribe((regions) => {
       this.regions = regions;
-    });
-  }
-
-  onSelectDtoDropdown(field: string, value: BaseCodeDto) {
-    this.createForm.patchValue({
-      [field]: value.code,
     });
   }
 

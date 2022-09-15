@@ -1,0 +1,32 @@
+<div>
+  <table class="timeline">
+    <thead>
+      <th></th>
+      <th>Date</th>
+      <th>Fulfillment Date</th>
+      <th>Event</th>
+    </thead>
+    <tbody>
+      <tr class="timeline-row" *ngFor="let event of events">
+        <td class="line">
+          <div
+            [ngClass]="{
+              'hollow-dot': !event.isFulfilled
+            }"
+            class="dot"
+          ></div>
+        </td>
+        <td>{{ event.startDate | date: dateFormat }}</td>
+        <td>
+          <span *ngIf="event.isFulfilled">{{
+            event.fulfilledDate ? (event.fulfilledDate | date: dateFormat) : '-'
+          }}</span>
+          <span *ngIf="!event.isFulfilled">
+            <a [routerLink]="event.link">Add date</a>
+          </span>
+        </td>
+        <td>{{ event.name }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
