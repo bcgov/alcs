@@ -110,11 +110,18 @@
 }
 
 .filled-priority {
-  background-image: url("/assets/icons/priority_high_red.svg");
+  background-image: url('/assets/icons/priority_high_red.svg');
 }
 
 .empty-priority {
-  background-image: url("/assets/icons/priority_empty.svg");
+  background-image: url('/assets/icons/priority_empty.svg');
+}
+
+.select-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  align-items: end;
 }
 
 .subtasks-wrapper {
