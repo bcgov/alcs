@@ -32,7 +32,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="type_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_b53229d75c2fe5a617ecbff82f3" implied="false" onDeleteCascade="false" schema="public" table="application_type"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="region_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="region_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_8b7f8f8a39a6142e0f7c5ad86f5" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
          </column>
          <column autoUpdated="false" defaultValue="'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2'::uuid" digits="0" id="14" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
