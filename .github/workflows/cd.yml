@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - cicd
+      - main
 jobs:
   build:
     uses: ./.github/workflows/build.yml
