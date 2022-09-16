@@ -1,0 +1,51 @@
+name: deploy
+
+on: 
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+env:
+  API_IMAGE_NAME: alcs-api
+  MIGRATE_IMAGE_NAME: alcs-migrate
+  FE_IMAGE_NAME: alcs-frontend
+  GITOPS_REPO: bcgov-c/tenant-gitops-a5cf88
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Lowercase repo owner
+      id: lowercase_repo_owner
+      uses: ASzc/change-string-case-action@v1
+      with:
+        string: ${{ github.repository_owner }}
+
+    - name: Authenticate to OpenShift
+      run: |
+        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
+        oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
+        
+    - name: Import Images
+      run: |
+        oc import-image alcs-api:latest -n ${{secrets.LICENSE_PLATE}}-tools
+        oc tag alcs-api:latest alcs-api:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
+        oc import-image alcs-frontend:latest -n ${{secrets.LICENSE_PLATE}}-tools
+        oc tag alcs-frontend:latest alcs-frontend:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
+        oc import-image alcs-migrate:latest -n ${{secrets.LICENSE_PLATE}}-tools
+        oc tag alcs-migrate:latest alcs-migrate:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
+
+    - name: Repository Dispatch
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.GITOPS_PAT }}
+        repository: ${{ env.GITOPS_REPO }}
+        event-type: deploy-${{ inputs.environment }}
+        client-payload: |
+          {
+            "apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}",
+            "migrateImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.MIGRATE_IMAGE_NAME }}:${{ github.run_number }}",
+            "frontendImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.FE_IMAGE_NAME }}:${{ github.run_number }}"
+          }

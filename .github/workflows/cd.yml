@@ -1,0 +1,15 @@
+name: CD
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+  deploy:
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: dev
+    secrets: inherit
