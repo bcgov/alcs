@@ -45,7 +45,7 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  <tr class="mat-row center" *matNoDataRow>
-    <td colspan="4">No files</td>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="text-center" colspan="4">No files</td>
   </tr>
 </table>
