@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
   ApplicationMeetingDto,
@@ -20,6 +21,7 @@ export class ApplicationMeetingComponent implements OnInit {
   siteVisits: ApplicationMeetingDto[] = [];
   applicantMeetings: ApplicationMeetingDto[] = [];
   fileNumber: string = '';
+  dateFormat = environment.dateFormat;
 
   constructor(
     public dialog: MatDialog,

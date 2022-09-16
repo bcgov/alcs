@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDecisionMeetingDto } from '../../services/application/application.dto';
 
@@ -21,6 +22,8 @@ export interface CardData {
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
+  dateFormat = environment.dateFormat;
+
   @Input() cardData!: CardData;
 
   @Output() cardSelected = new EventEmitter<string>();

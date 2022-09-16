@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -16,6 +17,7 @@ export class InfoRequestsComponent implements OnInit {
   displayedColumns: string[] = ['startDate', 'endDate', 'description', 'action'];
   infoRequests: ApplicationMeetingDto[] = [];
   fileNumber: string = '';
+  dateFormat = environment.dateFormat;
 
   constructor(
     public dialog: MatDialog,

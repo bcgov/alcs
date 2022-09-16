@@ -1,0 +1,12 @@
+<div>
+  <div class="split" *ngFor="let boardMeeting of viewData">
+    <div>
+    <h3>{{ boardMeeting.boardTitle }}</h3>
+    </div>
+    <div>
+      <span *ngIf="boardMeeting.nextMeeting">
+        {{boardMeeting.nextMeeting.meetingDate}}
+      </span>
+    </div>
+  </div>
+</div>
