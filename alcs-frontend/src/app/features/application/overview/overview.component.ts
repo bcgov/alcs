@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { combineLatestWith, merge, tap } from 'rxjs';
+import { combineLatestWith, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -39,8 +39,11 @@ export class OverviewComponent implements OnInit {
   }
 
   mapApplicationToEvents(application: ApplicationDto, meetings: ApplicationMeetingDto[]): TimelineEvent[] {
-    //TODO: Add other meeting types once their pages are ready
-    const editLink = new Map<string, string>([['IR', './info-request']]);
+    const editLink = new Map<string, string>([
+      ['IR', './info-request'],
+      ['AM', './site-visit-meeting'],
+      ['SV', './site-visit-meeting'],
+    ]);
 
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateReceived) {
