@@ -139,7 +139,7 @@ export class BoardComponent implements OnInit {
 
   onDropped($event: { id: string; status: string }) {
     this.applicationService
-      .updateApplication({
+      .updateApplicationCard({
         fileNumber: $event.id,
         status: $event.status,
       })

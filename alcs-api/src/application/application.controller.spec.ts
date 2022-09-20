@@ -3,6 +3,8 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Card } from '../card/card.entity';
+import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
@@ -17,7 +19,7 @@ import {
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
-import { ApplicationStatus } from './application-status/application-status.entity';
+import { CardStatus } from './application-status/application-status.entity';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto } from './application.dto';
@@ -33,21 +35,22 @@ describe('ApplicationController', () => {
   let applicationService: DeepMocked<ApplicationService>;
   let applicationCodeService: DeepMocked<ApplicationCodeService>;
   let notificationService: DeepMocked<NotificationService>;
+  let cardService: DeepMocked<CardService>;
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
-    status: mockApplicationEntity.status.code,
+    status: mockApplicationEntity.card.status.code,
     type: mockApplicationEntity.type.code,
-    assigneeUuid: mockApplicationEntity.assigneeUuid,
+    assigneeUuid: mockApplicationEntity.card.assigneeUuid,
     board: undefined,
     region: undefined,
     assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
     paused: false,
-    highPriority: mockApplicationEntity.highPriority,
+    highPriority: mockApplicationEntity.card.highPriority,
     decisionMeetings: [],
     dateReceived: Date.now(),
   };
@@ -56,6 +59,7 @@ describe('ApplicationController', () => {
     applicationService = createMock<ApplicationService>();
     applicationCodeService = createMock<ApplicationCodeService>();
     notificationService = createMock<NotificationService>();
+    cardService = createMock<CardService>();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController, ApplicationProfile, UserProfile],
@@ -73,6 +77,10 @@ describe('ApplicationController', () => {
           useValue: notificationService,
         },
         {
+          provide: CardService,
+          useValue: cardService,
+        },
+        {
           provide: getRepositoryToken(Application),
           useFactory: repositoryMockFactory,
         },
@@ -85,7 +93,7 @@ describe('ApplicationController', () => {
       ],
     }).compile();
     applicationCodeService.fetchStatus.mockResolvedValue(
-      createMock<ApplicationStatus>(),
+      createMock<CardStatus>(),
     );
     controller = module.get<ApplicationController>(ApplicationController);
 
@@ -166,7 +174,7 @@ describe('ApplicationController', () => {
     expect(applicationService.createOrUpdate).toHaveBeenCalledWith(mockUpdate);
   });
 
-  it('should handle updating status', async () => {
+  it('should handle updating application and not include status', async () => {
     const mockStatus = 'NEW_STATUS';
     const mockUuid = 'uuid';
     const mockUpdate = {
@@ -177,14 +185,17 @@ describe('ApplicationController', () => {
     applicationCodeService.fetchStatus.mockResolvedValue({
       uuid: mockUuid,
       code: mockStatus,
-    } as ApplicationStatus);
+    } as CardStatus);
     applicationService.get.mockResolvedValue(mockApplicationEntity);
     applicationService.createOrUpdate.mockResolvedValue({
       ...mockApplicationEntity,
-      status: {
-        code: mockStatus,
-        label: '',
-        description: '',
+      card: {
+        ...mockApplicationEntity.card,
+        status: {
+          code: mockStatus,
+          label: '',
+          description: '',
+        },
       },
     } as Application);
 
@@ -193,7 +204,7 @@ describe('ApplicationController', () => {
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
     expect(notificationService.createForApplication).not.toHaveBeenCalled();
     const savedData = applicationService.createOrUpdate.mock.calls[0][0];
-    expect(savedData.statusUuid).toEqual(mockUuid);
+    expect(savedData.card).toEqual(undefined);
   });
 
   it('should handle updating type', async () => {
@@ -237,21 +248,26 @@ describe('ApplicationController', () => {
       uuid: 'fake-auther',
     };
 
-    applicationService.get.mockResolvedValue(mockApplicationEntity);
-    applicationService.createOrUpdate.mockResolvedValue({
+    applicationService.get.mockResolvedValue({
       ...mockApplicationEntity,
-      assigneeUuid: mockUserUuid,
+    } as Application);
+    applicationService.getByCard.mockResolvedValue({
+      ...mockApplicationEntity,
     } as Application);
 
-    await controller.update(mockUpdate, {
+    const updatedCard = { ...mockApplicationEntity.card } as Card;
+    updatedCard.assigneeUuid = mockUserUuid;
+    cardService.update.mockResolvedValue(updatedCard);
+
+    await controller.updateCard(mockUpdate, {
       user: {
         entity: fakeAuthor,
       },
     });
 
-    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+    expect(cardService.update).toHaveBeenCalled();
     expect(notificationService.createForApplication).toHaveBeenCalled();
-    const savedData = applicationService.createOrUpdate.mock.calls[0][0];
+    const savedData = cardService.update.mock.calls[0][1];
     expect(savedData.assigneeUuid).toEqual(mockUserUuid);
 
     const notificationArgs =
@@ -260,11 +276,10 @@ describe('ApplicationController', () => {
     expect(notificationArgs[1]).toStrictEqual(mockUserUuid);
     expect(notificationArgs[3]).toStrictEqual({
       ...mockApplicationEntity,
-      assigneeUuid: mockUserUuid,
     });
   });
 
-  it('should not call notification service when assignee is changed to user who changed it', async () => {
+  it('should not update card entity even if passed', async () => {
     const mockUserUuid = 'fake-author';
     const mockUpdate = {
       fileNumber: '11',
@@ -275,11 +290,11 @@ describe('ApplicationController', () => {
       uuid: mockUserUuid,
     };
 
+    const returnedApplication = mockApplicationEntity;
+    returnedApplication.card.assigneeUuid = mockUserUuid;
+
     applicationService.get.mockResolvedValue(mockApplicationEntity);
-    applicationService.createOrUpdate.mockResolvedValue({
-      ...mockApplicationEntity,
-      assigneeUuid: mockUserUuid,
-    } as Application);
+    applicationService.createOrUpdate.mockResolvedValue(returnedApplication);
 
     await controller.update(mockUpdate, {
       user: {
@@ -289,7 +304,8 @@ describe('ApplicationController', () => {
 
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
     expect(notificationService.createForApplication).not.toHaveBeenCalled();
+
     const savedData = applicationService.createOrUpdate.mock.calls[0][0];
-    expect(savedData.assigneeUuid).toEqual(mockUserUuid);
+    expect(savedData.card).toEqual(undefined);
   });
 });

@@ -4,6 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/browser';
+import { Card } from '../card/card.entity';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -19,10 +20,12 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 @Injectable()
 export class ApplicationService {
   private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
-    status: true,
     type: true,
-    assignee: true,
-    board: true,
+    card: {
+      status: true,
+      board: true,
+      assignee: true,
+    },
     region: true,
     decisionMeetings: true,
   };
@@ -35,31 +38,20 @@ export class ApplicationService {
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
-  async resetStatus(
-    sourceStatusId: string,
-    targetStatusId: string,
-  ): Promise<void> {
-    await this.applicationRepository.update(
-      {
-        statusUuid: sourceStatusId,
-      },
-      {
-        statusUuid: targetStatusId,
-      },
-    );
-  }
-
   async createOrUpdate(
     application: Partial<Application>,
   ): Promise<Application> {
-    const existingApplication = await this.applicationRepository.findOne({
+    let existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
 
-    const updatedApp = Object.assign(
-      existingApplication || new Application(),
-      application,
-    );
+    if (!existingApplication) {
+      existingApplication = new Application();
+      existingApplication.card = new Card();
+    }
+
+    const updatedApp = Object.assign(existingApplication, application);
+
     await this.applicationRepository.save(updatedApp);
 
     //Save does not return the full entity in case of update
@@ -93,6 +85,15 @@ export class ApplicationService {
     return this.applicationRepository.findOne({
       where: {
         fileNumber,
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  async getByCard(cardUuid: string) {
+    return this.applicationRepository.findOne({
+      where: {
+        card: { uuid: cardUuid },
       },
       relations: this.DEFAULT_RELATIONS,
     });

@@ -74,21 +74,6 @@ describe('ApplicationService', () => {
     expect(applicationService.delete).toBeDefined();
   });
 
-  it('should call update when resetStatus is performed', async () => {
-    const targetStatusId = 'app_st_2';
-    jest
-      .spyOn(applicationService, 'getAll')
-      .mockImplementation(async () => [applicationMockEntity]);
-    jest.spyOn(applicationService, 'createOrUpdate').mockImplementation();
-
-    await applicationService.resetStatus(
-      applicationMockEntity.statusUuid,
-      targetStatusId,
-    );
-
-    expect(applicationRepositoryMock.update).toBeCalledTimes(1);
-  });
-
   it('should call save when an Application is created', async () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne
@@ -98,7 +83,7 @@ describe('ApplicationService', () => {
     const payload: Partial<Application> = {
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
-      statusUuid: applicationMockEntity.statusUuid,
+      card: applicationMockEntity.card,
     };
 
     expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
@@ -114,7 +99,7 @@ describe('ApplicationService', () => {
     const payload: Partial<Application> = {
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
-      statusUuid: applicationMockEntity.statusUuid,
+      card: applicationMockEntity.card,
     };
 
     expect(await applicationService.createOrUpdate(payload)).toStrictEqual(

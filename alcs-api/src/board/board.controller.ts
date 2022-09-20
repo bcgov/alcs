@@ -18,6 +18,9 @@ export class BoardController {
   constructor(
     private boardService: BoardService,
     private applicationService: ApplicationService,
+    // private cardService: CardService,
+    // private codeService: ApplicationCodeService,
+    // private notificationService: NotificationService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -45,4 +48,44 @@ export class BoardController {
   ) {
     return this.boardService.changeBoard(fileNumber, boardCode);
   }
+
+  // // TODO: move to card controller?
+  // @Patch('/updateCard')
+  // @UserRoles(...ANY_AUTH_ROLE)
+  // async updateCard(@Body() card: CardUpdateDto, @Req() req) {
+  //   const existingCard = await this.cardService.get(card);
+
+  //   if (!existingCard) {
+  //     throw new ServiceValidationException(`Card ${card.uuid} not found`);
+  //   }
+
+  //   let status: CardStatus | undefined;
+  //   if (card.status && card.status != existingCard.status.code) {
+  //     status = await this.codeService.fetchStatus(card.status);
+  //   }
+
+  //   const updatedCard = await this.cardService.update(card.uuid, {
+  //     statusUuid: status ? status.uuid : undefined,
+  //     assigneeUuid: card.assigneeUuid,
+  //     boardUuid: card.boardUuid,
+  //   });
+
+  //   // TODO: move to board service as above
+  //   if (
+  //     updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
+  //     updatedCard.assigneeUuid !== req.user.entity.uuid
+  //   ) {
+  //     const application = await this.applicationService.getByCard(
+  //       updatedCard.uuid,
+  //     );
+  //     this.notificationService.createForApplication(
+  //       req.user.entity,
+  //       updatedCard.assigneeUuid,
+  //       "You've been assigned",
+  //       application,
+  //     );
+  //   }
+
+  //   return;
+  // }
 }

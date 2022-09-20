@@ -28,7 +28,7 @@ export class HomeController {
     const userId = req.user.entity.uuid;
     if (userId) {
       const applications = await this.applicationService.getAll({
-        assigneeUuid: userId,
+        card: { assigneeUuid: userId },
       });
       return this.applicationService.mapToDtos(applications);
     } else {

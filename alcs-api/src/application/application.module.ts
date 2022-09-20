@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { Card } from '../card/card.entity';
+import { CardService } from '../card/card.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
@@ -13,14 +15,14 @@ import { ApplicationDecisionMeetingService } from './application-decision-meetin
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
-import { ApplicationHistory } from './application-history.entity';
+import { CardHistory } from './application-history.entity';
 import { ApplicationMeetingController } from './application-meeting/application-meeting.controller';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
 import { ApplicationStatusController } from './application-status/application-status.controller';
-import { ApplicationStatus } from './application-status/application-status.entity';
+import { CardStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationSubtaskType } from './application-subtask/application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
@@ -30,14 +32,15 @@ import { ApplicationTimeTrackingService } from './application-time-tracking.serv
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import { ApplicationSubscriber } from './application.subscriber';
+import { CardSubscriber } from './card.subscriber';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      ApplicationStatus,
+      CardStatus,
+      Card,
       Application,
-      ApplicationHistory,
+      CardHistory,
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDecisionMeeting,
@@ -53,7 +56,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationService,
     ApplicationStatusService,
     ApplicationTimeTrackingService,
-    ApplicationSubscriber,
+    CardSubscriber,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
@@ -65,6 +68,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationPausedService,
     ApplicationDocumentService,
     ApplicationSubtaskService,
+    CardService,
   ],
   controllers: [
     ApplicationController,
@@ -80,6 +84,7 @@ import { ApplicationSubscriber } from './application.subscriber';
     ApplicationSubtaskService,
     ApplicationProfile,
     ApplicationSubtaskProfile,
+    CardService,
   ],
 })
 export class ApplicationModule {}

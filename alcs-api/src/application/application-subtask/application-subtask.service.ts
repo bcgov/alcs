@@ -103,8 +103,7 @@ export class ApplicationSubtaskService {
         ...this.DEFAULT_RELATIONS,
         application: {
           type: true,
-          board: true,
-          status: true,
+          card: true,
         },
       },
     });

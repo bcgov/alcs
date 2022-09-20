@@ -35,8 +35,8 @@ export class BoardService {
 
   getApplicationsByCode(code: string) {
     return this.applicationService.getAll({
-      board: {
-        code,
+      card: {
+        board: { code },
       },
     });
   }
@@ -62,8 +62,8 @@ export class BoardService {
     }
 
     const initialStatus = board.statuses.find((status) => status.order === 0);
-    application.status = initialStatus.status;
-    application.board = board;
+    application.card.status = initialStatus.status;
+    application.card.board = board;
     return this.applicationService.createOrUpdate(application);
   }
 }

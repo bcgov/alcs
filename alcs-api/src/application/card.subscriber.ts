@@ -5,15 +5,13 @@ import {
   EventSubscriber,
   UpdateEvent,
 } from 'typeorm';
+import { Card } from '../card/card.entity';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { ApplicationHistory } from './application-history.entity';
-import { Application } from './application.entity';
+import { CardHistory } from './application-history.entity';
 
 @EventSubscriber()
-export class ApplicationSubscriber
-  implements EntitySubscriberInterface<Application>
-{
+export class CardSubscriber implements EntitySubscriberInterface<Card> {
   constructor(
     private dataSource: DataSource,
     private cls: ClsService,
@@ -23,12 +21,12 @@ export class ApplicationSubscriber
   }
 
   listenTo() {
-    return Application;
+    return Card;
   }
 
-  async beforeUpdate(event: UpdateEvent<Application>) {
+  async beforeUpdate(event: UpdateEvent<Card>) {
     const oldApplication = event.databaseEntity;
-    const newApplication = event.entity as Application;
+    const newApplication = event.entity as Card;
 
     const userEmail = this.cls.get('userEmail');
     const user = await this.userService.get(userEmail);
@@ -40,18 +38,18 @@ export class ApplicationSubscriber
   }
 
   private async trackHistory(
-    oldApplication: Application,
-    newApplication: Application,
-    event: UpdateEvent<Application>,
+    oldApplication: Card,
+    newApplication: Card,
+    event: UpdateEvent<Card>,
     user: User,
   ) {
     if (oldApplication.statusUuid !== newApplication.statusUuid) {
-      const history = new ApplicationHistory();
+      const history = new CardHistory();
       history.startDate =
         oldApplication.auditUpdatedAt || oldApplication.auditCreatedAt;
       history.endDate = new Date(1, 1, 1, 1, 1, 1, 1);
       history.statusUuid = oldApplication.statusUuid;
-      history.application = event.databaseEntity;
+      history.card = event.databaseEntity;
       history.userId = user.uuid;
       history.auditCreatedBy = user.uuid;
 

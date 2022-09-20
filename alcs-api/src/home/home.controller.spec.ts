@@ -85,7 +85,9 @@ describe('HomeController', () => {
     });
     expect(mockApplicationService.getAll).toHaveBeenCalled();
     expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual({
-      assigneeUuid: userId,
+      card: {
+        assigneeUuid: userId,
+      },
     });
   });
 

@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
@@ -21,7 +22,7 @@ import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
-import { ApplicationStatus } from './application-status/application-status.entity';
+import { CardStatus } from './application-status/application-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -38,6 +39,7 @@ export class ApplicationController {
     private applicationService: ApplicationService,
     private codeService: ApplicationCodeService,
     private notificationService: NotificationService,
+    private cardService: CardService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -58,7 +60,7 @@ export class ApplicationController {
       ]);
       return {
         ...mappedApplication[0],
-        statusDetails: application.status,
+        statusDetails: application.card.status,
         typeDetails: application.type,
         regionDetails: application.region,
       };
@@ -86,6 +88,7 @@ export class ApplicationController {
     return mappedApps[0];
   }
 
+  // TODO: tidy patch methods
   @Patch()
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
@@ -100,14 +103,6 @@ export class ApplicationController {
       throw new ServiceValidationException(
         `File ${application.fileNumber} not found`,
       );
-    }
-
-    let status: ApplicationStatus | undefined;
-    if (
-      application.status &&
-      application.status != existingApplication.status.code
-    ) {
-      status = await this.codeService.fetchStatus(application.status);
     }
 
     let type: ApplicationType | undefined;
@@ -127,12 +122,8 @@ export class ApplicationController {
     const updatedApplication = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
-      statusUuid: status ? status.uuid : undefined,
       typeUuid: type ? type.uuid : undefined,
       regionUuid: region ? region.uuid : undefined,
-      assigneeUuid: application.assigneeUuid,
-      
-      highPriority: application.highPriority,
       datePaid: this.formatIncomingDate(application.datePaid),
       dateAcknowledgedIncomplete: this.formatIncomingDate(
         application.dateAcknowledgedIncomplete,
@@ -146,24 +137,12 @@ export class ApplicationController {
       decisionDate: this.formatIncomingDate(application.decisionDate),
     });
 
-    if (
-      updatedApplication.assigneeUuid !== existingApplication.assigneeUuid &&
-      updatedApplication.assigneeUuid !== req.user.entity.uuid
-    ) {
-      this.notificationService.createForApplication(
-        req.user.entity,
-        updatedApplication.assigneeUuid,
-        "You've been assigned",
-        updatedApplication,
-      );
-    }
-
     const mappedApps = await this.applicationService.mapToDtos([
       updatedApplication,
     ]);
     return {
       ...mappedApps[0],
-      statusDetails: updatedApplication.status,
+      statusDetails: updatedApplication.card.status,
       typeDetails: updatedApplication.type,
       regionDetails: updatedApplication.region,
     };
@@ -183,5 +162,59 @@ export class ApplicationController {
     } else {
       return undefined;
     }
+  }
+  // TODO: should this be generic?
+  @Patch('/updateCard')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateCard(
+    @Body() applicationToUpdate: ApplicationUpdateDto,
+    @Req() req,
+  ) {
+    const existingCard = (
+      await this.applicationService.get(applicationToUpdate.fileNumber)
+    )?.card;
+
+    if (!existingCard) {
+      throw new ServiceValidationException(
+        `Application ${applicationToUpdate.fileNumber} not found`,
+      );
+    }
+
+    let status: CardStatus | undefined;
+    if (
+      applicationToUpdate.status &&
+      applicationToUpdate.status != existingCard.status.code
+    ) {
+      status = await this.codeService.fetchStatus(applicationToUpdate.status);
+    }
+
+    const updatedCard = await this.cardService.update(existingCard.uuid, {
+      statusUuid: status ? status.uuid : undefined,
+      assigneeUuid: applicationToUpdate.assigneeUuid,
+    });
+
+    const application = await this.applicationService.getByCard(
+      updatedCard.uuid,
+    );
+
+    if (
+      updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
+      updatedCard.assigneeUuid !== req.user.entity.uuid
+    ) {
+      this.notificationService.createForApplication(
+        req.user.entity,
+        updatedCard.assigneeUuid,
+        "You've been assigned",
+        application,
+      );
+    }
+
+    const mappedApps = await this.applicationService.mapToDtos([application]);
+    return {
+      ...mappedApps[0],
+      statusDetails: application.card.status,
+      typeDetails: application.type,
+      regionDetails: application.region,
+    };
   }
 }

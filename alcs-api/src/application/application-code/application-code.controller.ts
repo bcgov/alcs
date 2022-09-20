@@ -7,7 +7,7 @@ import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationStatusDto } from '../application-status/application-status.dto';
-import { ApplicationStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../application-status/application-status.entity';
 import { ApplicationMasterCodesDto } from './application-code.dto';
 import { ApplicationCodeService } from './application-code.service';
 import { ApplicationRegionDto } from './application-region/application-region.dto';
@@ -32,7 +32,7 @@ export class ApplicationCodeController {
     return {
       status: this.applicationMapper.mapArray(
         appTypes.status,
-        ApplicationStatus,
+        CardStatus,
         ApplicationStatusDto,
       ),
       type: this.applicationMapper.mapArray(

@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../application-status/application-status.entity';
 import { ApplicationCodeService } from './application-code.service';
 import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
@@ -10,7 +10,7 @@ import { ApplicationType } from './application-type/application-type.entity';
 
 describe('ApplicationCodeService', () => {
   let mockTypeRepository: DeepMocked<Repository<ApplicationType>>;
-  let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
+  let mockStatusRepository: DeepMocked<Repository<CardStatus>>;
   let mockRegionRepository: DeepMocked<Repository<ApplicationRegion>>;
   let mockMeetingRepository: DeepMocked<Repository<ApplicationMeetingType>>;
 
@@ -18,7 +18,7 @@ describe('ApplicationCodeService', () => {
 
   beforeEach(async () => {
     mockTypeRepository = createMock<Repository<ApplicationType>>();
-    mockStatusRepository = createMock<Repository<ApplicationStatus>>();
+    mockStatusRepository = createMock<Repository<CardStatus>>();
     mockRegionRepository = createMock<Repository<ApplicationRegion>>();
     mockMeetingRepository = createMock<Repository<ApplicationMeetingType>>();
 
@@ -30,7 +30,7 @@ describe('ApplicationCodeService', () => {
           useValue: mockTypeRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationStatus),
+          provide: getRepositoryToken(CardStatus),
           useValue: mockStatusRepository,
         },
         {
@@ -78,9 +78,7 @@ describe('ApplicationCodeService', () => {
         uuid: '2',
       },
     ];
-    mockStatusRepository.find.mockResolvedValue(
-      mockStatuses as ApplicationStatus[],
-    );
+    mockStatusRepository.find.mockResolvedValue(mockStatuses as CardStatus[]);
 
     const mockRegions = [
       {
@@ -124,9 +122,7 @@ describe('ApplicationCodeService', () => {
     const mockStatus = {
       uuid: '2',
     };
-    mockStatusRepository.findOne.mockResolvedValue(
-      mockStatus as ApplicationStatus,
-    );
+    mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
 
     const res = await service.fetchStatus('code');
 

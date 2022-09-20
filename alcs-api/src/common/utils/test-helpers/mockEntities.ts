@@ -3,15 +3,16 @@ import { ApplicationType } from '../../../application/application-code/applicati
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
-import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
+import { CardStatus } from '../../../application/application-status/application-status.entity';
 import { Application } from '../../../application/application.entity';
+import { Card } from '../../../card/card.entity';
 import { Comment } from '../../../comment/comment.entity';
 import { CommentMention } from '../../../comment/mention/comment-mention.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
-const initApplicationStatusMockEntity = (): ApplicationStatus => {
-  const applicationStatus = new ApplicationStatus();
+const initApplicationStatusMockEntity = (): CardStatus => {
+  const applicationStatus = new CardStatus();
   applicationStatus.code = 'status_1';
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
@@ -21,6 +22,20 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationStatus;
+};
+
+const initCardMockEntity = (): Card => {
+  const card = new Card();
+  card.highPriority = true;
+  card.status = initApplicationStatusMockEntity();
+  card.statusUuid = '1111-1111-1111-1111';
+  card.uuid = '1111-1111-1111-1111';
+  card.assigneeUuid = '1111-1111-1111';
+  card.assignee = initAssigneeMockEntity();
+  card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+
+  return card;
 };
 
 const initApplicationTypeMockEntity = (): ApplicationType => {
@@ -62,12 +77,9 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  applicationEntity.status = initApplicationStatusMockEntity();
-  applicationEntity.statusUuid = applicationEntity.status.uuid;
-  applicationEntity.assigneeUuid = '1111-1111-1111';
-  applicationEntity.assignee = initAssigneeMockEntity();
+  applicationEntity.card = initCardMockEntity();
   applicationEntity.type = initApplicationTypeMockEntity();
-  applicationEntity.highPriority = false;
+  applicationEntity.card.highPriority = false;
 
   return applicationEntity;
 };
