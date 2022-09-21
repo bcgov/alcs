@@ -27,6 +27,7 @@ import {
   ApplicationDecisionMeetingDto,
   CreateApplicationDecisionMeetingDto,
   UpcomingMeetingBoardMapDto,
+  UpcomingMeetingDto,
 } from './application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
@@ -44,7 +45,7 @@ export class ApplicationDecisionMeetingController {
 
   @Get('/overview/meetings')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getMeetings(): Promise<Record<string, UpcomingMeetingBoardMapDto[]>> {
+  async getMeetings(): Promise<UpcomingMeetingBoardMapDto> {
     const upcomingApps =
       await this.appDecisionMeetingService.getUpcomingMeetings();
     const allAppIds = upcomingApps.map((a) => a.uuid);
@@ -56,7 +57,7 @@ export class ApplicationDecisionMeetingController {
       allFileNumbers,
       'decisionDocument',
     );
-    const mappedApps = allApps.map((app) => {
+    const mappedApps = allApps.map((app): UpcomingMeetingDto => {
       const files = allDocuments.filter(
         (doc) => doc.applicationUuid === app.uuid,
       );
@@ -77,7 +78,7 @@ export class ApplicationDecisionMeetingController {
       };
     });
 
-    const boardCodeToApps = {};
+    const boardCodeToApps: UpcomingMeetingBoardMapDto = {};
     mappedApps.forEach((mappedApp) => {
       const boardMeetings = boardCodeToApps[mappedApp.boardCode] || [];
       boardMeetings.push(mappedApp);

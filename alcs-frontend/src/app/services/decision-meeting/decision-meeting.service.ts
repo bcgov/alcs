@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { UpcomingMeetingBoardMapDto } from './meeting.dto';
+import { UpcomingMeetingBoardMapDto } from './decision-meeting.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MeetingService {
+export class DecisionMeetingService {
   private url = `${environment.apiUrl}/application-decision-meeting`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}

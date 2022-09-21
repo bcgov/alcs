@@ -4,7 +4,7 @@ import { ApplicationDetailService } from '../../../services/application/applicat
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
 import { BoardService } from '../../../services/board/board.service';
-import { MeetingService } from '../../../services/meeting/meeting.service';
+import { DecisionMeetingService } from '../../../services/decision-meeting/decision-meeting.service';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
 
@@ -19,7 +19,7 @@ describe('MeetingOverviewComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: MeetingService,
+          provide: DecisionMeetingService,
           useValue: {},
         },
         {

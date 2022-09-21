@@ -14,7 +14,7 @@ import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { BoardService } from './services/board/board.service';
-import { MeetingService } from './services/meeting/meeting.service';
+import { DecisionMeetingService } from './services/decision-meeting/decision-meeting.service';
 import { NotificationService } from './services/notification/notification.service';
 import { ToastService } from './services/toast/toast.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
@@ -44,7 +44,7 @@ import { MomentPipe } from './shared/utils/moment.pipe';
     ConfirmationDialogService,
     NotificationService,
     BoardService,
-    MeetingService,
+    DecisionMeetingService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
   ],

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../../services/meeting/meeting.dto';
-import { MeetingService } from '../../../services/meeting/meeting.service';
+import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../../services/decision-meeting/decision-meeting.dto';
+import { DecisionMeetingService } from '../../../services/decision-meeting/decision-meeting.service';
 
 type MeetingWithApplications = { meetingDate: number; applications: UpcomingMeeting[] };
 
@@ -30,7 +30,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   viewData: BoardWithDecisionMeetings[] = [];
 
   constructor(
-    private meetingService: MeetingService,
+    private meetingService: DecisionMeetingService,
     private boardService: BoardService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}

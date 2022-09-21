@@ -21,14 +21,13 @@ export class ApplicationDecisionMeetingDto extends CreateApplicationDecisionMeet
   uuid: string;
 }
 
-export type UpcomingMeetingBoardMapDto = Record<
-  string,
-  {
-    meetingDate: number;
-    fileNumber: string;
-    applicant: string;
-    boardCode: string;
-    assignee: UserDto;
-    files: ApplicationDocumentDto[];
-  }
->;
+export type UpcomingMeetingDto = {
+  meetingDate: number;
+  fileNumber: string;
+  applicant: string;
+  boardCode: string;
+  assignee: UserDto;
+  files: ApplicationDocumentDto[];
+};
+
+export type UpcomingMeetingBoardMapDto = Record<string, UpcomingMeetingDto[]>;
