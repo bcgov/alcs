@@ -194,4 +194,5 @@ export {
   initCommentMock,
   initApplicationDecisionMeetingMock,
   initApplicationMeetingMock,
+  initCardMockEntity,
 };

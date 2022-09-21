@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CardUpdateDto } from './card.dto';
 import { Card } from './card.entity';
 
 @Injectable()
@@ -19,19 +20,13 @@ export class CardService {
     return this.cardRepository.findOne({ where: { uuid } });
   }
 
-  async update(cardUuid, card: Partial<Card>) {
+  async update(cardUuid, card: Partial<CardUpdateDto>) {
     const existingCard = await this.cardRepository.findOne({
       where: { uuid: cardUuid },
     });
 
     const updatedCard = Object.assign(existingCard, card);
 
-    await this.cardRepository.save(updatedCard);
-
-    return this.cardRepository.findOne({
-      where: {
-        uuid: updatedCard.uuid,
-      },
-    });
+    return this.cardRepository.save(updatedCard);
   }
 }

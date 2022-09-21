@@ -93,7 +93,6 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
     @Body() application: ApplicationUpdateDto,
-    @Req() req,
   ): Promise<ApplicationDetailedDto> {
     const existingApplication = await this.applicationService.get(
       application.fileNumber,
@@ -119,6 +118,7 @@ export class ApplicationController {
       region = await this.codeService.fetchRegion(application.region);
     }
 
+    // TODO: define DTO model that accepts these specific fields only
     const updatedApplication = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
@@ -163,7 +163,7 @@ export class ApplicationController {
       return undefined;
     }
   }
-  // TODO: should this be generic?
+
   @Patch('/updateCard')
   @UserRoles(...ANY_AUTH_ROLE)
   async updateCard(
@@ -176,7 +176,7 @@ export class ApplicationController {
 
     if (!existingCard) {
       throw new ServiceValidationException(
-        `Application ${applicationToUpdate.fileNumber} not found`,
+        `Card for application with ${applicationToUpdate.fileNumber} not found`,
       );
     }
 
@@ -198,6 +198,7 @@ export class ApplicationController {
     );
 
     if (
+      updatedCard.assigneeUuid &&
       updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
       updatedCard.assigneeUuid !== req.user.entity.uuid
     ) {

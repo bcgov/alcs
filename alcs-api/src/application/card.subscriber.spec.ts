@@ -6,7 +6,6 @@ import { Card } from '../card/card.entity';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { CardHistory } from './application-history.entity';
-import { Application } from './application.entity';
 import { CardSubscriber } from './card.subscriber';
 
 describe('CardSubscriber', () => {

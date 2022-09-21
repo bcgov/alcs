@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationService } from '../application.service';
 import { ApplicationStatusDto } from './application-status.dto';
 import { CardStatus } from './application-status.entity';
 
@@ -15,7 +14,6 @@ export class ApplicationStatusService {
   constructor(
     @InjectRepository(CardStatus)
     private applicationStatusRepository: Repository<CardStatus>,
-    private applicationService: ApplicationService,
   ) {}
 
   async create(application: ApplicationStatusDto): Promise<CardStatus> {
