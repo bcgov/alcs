@@ -19,7 +19,7 @@
         <div class="main-panel-date" *ngIf="boardMeeting.nextMeeting?.meetingDate">
           <mat-icon>event</mat-icon> {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}
         </div>
-        <span class="main-panel-no-meetings" *ngIf="!boardMeeting.nextMeeting?.meetingDate">No upcoming meetings</span>
+        <span class="main-panel-no-meetings" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</span>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="meetings-container">
@@ -40,26 +40,9 @@
               <h5>{{ pastMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-expansion-panel
-            class="application-panel"
-            hideToggle="true"
-            *ngFor="let application of pastMeeting.applications"
-          >
-            <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
-              <mat-panel-title>
-                <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="application-file" *ngFor="let file of application.files">
-              <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
-              <div>
-                <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
-                  <mat-icon>download</mat-icon>
-                </button>
-              </div>
-            </div>
-            <span *ngIf="application.files.length === 0"> No Files </span>
-          </mat-expansion-panel>
+          <ng-container *ngFor="let application of boardMeeting.nextMeeting!.applications">
+            <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
+          </ng-container>
         </mat-expansion-panel>
       </div>
       <div class="next-meeting">
@@ -75,31 +58,14 @@
               <h5>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-expansion-panel
-            class="application-panel"
-            hideToggle="true"
-            *ngFor="let application of boardMeeting.nextMeeting!.applications"
-          >
-            <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
-              <mat-panel-title>
-                <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="application-file" *ngFor="let file of application.files">
-              <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
-              <div>
-                <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
-                  <mat-icon>download</mat-icon>
-                </button>
-              </div>
-            </div>
-            <span *ngIf="application.files.length === 0"> No Files </span>
-          </mat-expansion-panel>
+          <ng-container *ngFor="let application of boardMeeting.nextMeeting!.applications">
+            <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
+          </ng-container>
         </mat-expansion-panel>
       </div>
       <div class="upcoming-meetings">
         <h4>Scheduled Meetings</h4>
-        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">No Meetings</h5>
+        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">None Scheduled</h5>
         <mat-expansion-panel
           class="meeting-panel"
           hideToggle="true"
@@ -114,28 +80,31 @@
               <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-expansion-panel
-            class="application-panel"
-            hideToggle="true"
-            *ngFor="let application of upcomingMeeting.applications"
-          >
-            <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
-              <mat-panel-title>
-                <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="application-file" *ngFor="let file of application.files">
-              <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
-              <div>
-                <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
-                  <mat-icon>download</mat-icon>
-                </button>
-              </div>
-            </div>
-            <span *ngIf="application.files.length === 0"> No Files </span>
-          </mat-expansion-panel>
+          <ng-container *ngFor="let application of upcomingMeeting.applications">
+            <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
+          </ng-container>
         </mat-expansion-panel>
       </div>
     </div>
   </mat-expansion-panel>
 </div>
+
+<ng-template #applicationPanel let-application>
+  <mat-expansion-panel class="application-panel" hideToggle="true">
+    <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
+      <mat-panel-title class="split">
+        <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
+        <app-avatar-circle [initials]="application.assignee.initials" [fullName]="application.assignee.name"></app-avatar-circle>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="application-file" *ngFor="let file of application.files">
+      <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
+      <div>
+        <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
+          <mat-icon>download</mat-icon>
+        </button>
+      </div>
+    </div>
+    <span *ngIf="application.files.length === 0"> No Files </span>
+  </mat-expansion-panel>
+</ng-template>

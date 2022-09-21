@@ -88,6 +88,11 @@ export class ApplicationDocumentService {
           fileNumber: Any(fileNumbers),
         },
       },
+      order: {
+        document: {
+          fileName: 'ASC',
+        },
+      },
       relations: this.DEFAULT_RELATIONS,
     });
   }

@@ -39,6 +39,11 @@ mat-panel-description {
   justify-content: flex-end;
 }
 
+.mat-expansion-panel-header-title {
+  margin-right: 0;
+}
+
+
 .main-panel-description {
   visibility: hidden;
 

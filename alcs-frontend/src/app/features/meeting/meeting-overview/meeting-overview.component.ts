@@ -16,6 +16,8 @@ type BoardWithDecisionMeetings = {
   nextMeeting: MeetingWithApplications | undefined;
 };
 
+const BOARD_CODES_TO_HIDE = ['ceo', 'exec'];
+
 @Component({
   selector: 'app-meeting-overview',
   templateUrl: './meeting-overview.component.html',
@@ -52,28 +54,30 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   }
 
   private populateViewData() {
-    if (this.meetings && this.boards) {
-      this.viewData = this.boards.map((board): BoardWithDecisionMeetings => {
-        let upcomingMeetings: MeetingWithApplications[] = [];
-        let pastMeetings: MeetingWithApplications[] = [];
-        const applications = this.meetings![board.code];
-        if (applications) {
-          this.sortApplications(applications, pastMeetings, upcomingMeetings);
-        }
+    if (this.meetings && this.boards.length > 0) {
+      this.viewData = this.boards
+        .filter((board) => !BOARD_CODES_TO_HIDE.includes(board.code))
+        .map((board): BoardWithDecisionMeetings => {
+          let upcomingMeetings: MeetingWithApplications[] = [];
+          let pastMeetings: MeetingWithApplications[] = [];
+          const applications = this.meetings![board.code];
+          if (applications) {
+            this.sortApplications(applications, pastMeetings, upcomingMeetings);
+          }
 
-        upcomingMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
-        pastMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
+          upcomingMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
+          pastMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
 
-        const nextMeeting = upcomingMeetings.shift();
-        return {
-          boardCode: board.code,
-          boardTitle: board.title,
-          isFavourite: board.isFavourite,
-          pastMeetings,
-          upcomingMeetings,
-          nextMeeting,
-        };
-      });
+          const nextMeeting = upcomingMeetings.shift();
+          return {
+            boardCode: board.code,
+            boardTitle: board.title,
+            isFavourite: board.isFavourite,
+            pastMeetings,
+            upcomingMeetings,
+            nextMeeting,
+          };
+        });
     }
   }
 
