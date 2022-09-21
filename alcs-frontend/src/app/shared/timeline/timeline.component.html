@@ -18,9 +18,7 @@
         </td>
         <td>{{ event.startDate | momentFormat }}</td>
         <td>
-          <span *ngIf="event.isFulfilled">{{
-            event.fulfilledDate ? (event.fulfilledDate | momentFormat) : '-'
-          }}</span>
+          <span *ngIf="event.isFulfilled">{{ event.fulfilledDate | momentFormat }}</span>
           <span *ngIf="!event.isFulfilled">
             <a [routerLink]="event.link">Add date</a>
           </span>
