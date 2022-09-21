@@ -1,0 +1,230 @@
+@import '../../../../styles/colors.scss';
+@import '../../../../styles/typography.scss';
+@import '../../../../styles.scss';
+
+.main-panel-header {
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+
+  &:hover {
+    ::ng-deep .favorite-btn {
+      visibility: visible;
+      color: $grey;
+    }
+  }
+}
+
+.meeting-header {
+  box-shadow: 0 4px 8px 1px rgba(0, 36, 71, 0.15);
+}
+
+.main-panel {
+  margin-bottom: 24px;
+}
+
+
+.main-panel:hover {
+  .main-panel-description {
+    visibility: visible;
+    opacity: 0.6;
+  }
+
+  .main-panel-description.panel-favourite {
+    opacity: 1;
+  }
+}
+
+mat-panel-description {
+  justify-content: flex-end;
+}
+
+.main-panel-description {
+  visibility: hidden;
+
+  &.panel-favourite {
+    visibility: visible;
+  }
+}
+
+.main-panel-date {
+  @extend h4;
+  @extend .center;
+  color: $black;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+:host::ng-deep .mat-expansion-indicator::after {
+  border-width: 0 4px 4px 0;
+  padding: 5px;
+  color: $black;
+}
+
+.main-panel-no-meetings {
+  @extend h4;
+  @extend .center;
+  color: $grey;
+}
+
+.meetings-container {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 24px;
+  text-align: center;
+
+  & > div {
+    border-radius: 4px;
+    padding: 16px 12px;
+
+    & > mat-expansion-panel {
+      margin: 16px 0;
+    }
+  }
+
+  .previous-meetings {
+    background-color: rgba($secondary-color-light, 0.8);
+
+    .meeting-header-previous.mat-expansion-panel-header:hover {
+      border: 2px solid $secondary-color-dark;
+      background-color: #fff;
+
+      mat-panel-title {
+        color: $secondary-color-dark;
+      }
+    }
+
+    .meeting-header-previous.mat-expansion-panel-header.mat-expanded {
+      background-color: $secondary-color-dark;
+
+      &:hover {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+      }
+
+      mat-panel-title {
+        color: #fff;
+      }
+    }
+  }
+
+  .next-meeting {
+    background-color: rgba($primary-color-light, 0.5);
+
+    .meeting-header-next.mat-expansion-panel-header:hover {
+      border: 2px solid $primary-color;
+      background-color: #fff;
+
+      mat-panel-title {
+        color: $primary-color;
+      }
+    }
+
+    .meeting-header-next.mat-expansion-panel-header.mat-expanded {
+      background-color: $primary-color-dark;
+
+      &:hover {
+        background-color: $primary-color;
+        border-color: $primary-color;
+      }
+
+      mat-panel-title {
+        color: #fff;
+      }
+
+    }
+  }
+
+  .upcoming-meetings {
+    background-color: rgba($accent-color-light, 0.5);
+
+    .meeting-header-upcoming.mat-expansion-panel-header:hover {
+      border: 2px solid $accent-color;
+      background-color: #fff;
+
+      mat-panel-title {
+        color: $accent-color;
+      }
+    }
+
+    .meeting-header-upcoming.mat-expansion-panel-header.mat-expanded {
+      background-color: $accent-color;
+
+      &:hover {
+        background-color: $accent-color;
+        border-color: $accent-color;
+      }
+
+      mat-panel-title {
+        color: #fff;
+      }
+
+    }
+  }
+}
+
+:host::ng-deep .meeting-panel {
+  margin-top: 16px;
+
+  & > mat-expansion-panel-header {
+    background: #ffffff;
+    box-shadow: 0px 4px 8px 1px rgba(0, 36, 71, 0.15);
+  }
+
+  .mat-panel-title {
+    justify-content: center;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 16px 8px;
+  }
+}
+
+:host::ng-deep .application-panel {
+  margin-bottom: 16px;
+
+  mat-expansion-panel-header {
+    background-color: #fff;
+  }
+
+  .mat-card-title {
+  }
+
+  .mat-expansion-panel-body {
+    background-color: #fff;
+    padding: 12px 8px 12px 16px;
+    text-align: left;
+  }
+}
+
+.application-header {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+.application-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+    padding: 0 !important;
+  }
+
+  a {
+    cursor: pointer;
+  }
+}
+
+:host::ng-deep .mat-expansion-panel-body {
+  background-color: $grey-light;
+}
+
+.no-meetings {
+  color: $grey;
+  font-style: italic;
+  margin-top: 24px !important;
+}

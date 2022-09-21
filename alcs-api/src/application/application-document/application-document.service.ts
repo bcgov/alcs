@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { Any, FindOptionsRelations, Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
@@ -80,7 +80,23 @@ export class ApplicationDocumentService {
     });
   }
 
+  async listAll(fileNumbers: string[], documentType: DOCUMENT_TYPE) {
+    return this.applicationDocumentRepository.find({
+      where: {
+        type: documentType,
+        application: {
+          fileNumber: Any(fileNumbers),
+        },
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  async getInlineUrl(document: ApplicationDocument) {
+    return this.documentService.getDownloadUrl(document.document, true);
+  }
+
   async getDownloadUrl(document: ApplicationDocument) {
-    return this.documentService.getUrl(document.document);
+    return this.documentService.getDownloadUrl(document.document);
   }
 }

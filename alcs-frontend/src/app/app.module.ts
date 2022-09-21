@@ -14,6 +14,7 @@ import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { BoardService } from './services/board/board.service';
+import { MeetingService } from './services/meeting/meeting.service';
 import { NotificationService } from './services/notification/notification.service';
 import { ToastService } from './services/toast/toast.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
@@ -22,6 +23,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
 import { SharedModule } from './shared/shared.module';
+import { MomentPipe } from './shared/utils/moment.pipe';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { SharedModule } from './shared/shared.module';
     ConfirmationDialogService,
     NotificationService,
     BoardService,
+    MeetingService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
   ],

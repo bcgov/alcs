@@ -24,6 +24,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/application/application.module').then((m) => m.ApplicationModule),
   },
   {
+    path: 'meeting',
+    canActivate: [HasRolesGuard],
+    loadChildren: () => import('./features/meeting/meeting.module').then((m) => m.MeetingModule),
+  },
+  {
     path: 'login',
     component: LoginComponent,
   },

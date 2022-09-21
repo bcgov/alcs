@@ -22,7 +22,7 @@ export class FavoriteButtonComponent implements OnInit {
     this.userService.$currentUserProfile.subscribe((user) => {
       this.currentUserProfile = user;
 
-      if (this.boardCode && this.currentUserProfile) {
+      if (user && this.boardCode && this.currentUserProfile) {
         this.isFavorite = user.settings?.favoriteBoards?.includes(this.boardCode);
       }
     });
@@ -55,6 +55,7 @@ export class FavoriteButtonComponent implements OnInit {
     event.stopPropagation();
 
     if (!this.currentUserProfile || !this.boardCode) {
+      console.warn('Failed to favourite due to missing data');
       return;
     }
 

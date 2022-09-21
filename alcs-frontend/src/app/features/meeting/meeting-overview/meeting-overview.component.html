@@ -1,12 +1,141 @@
 <div>
-  <div class="split" *ngFor="let boardMeeting of viewData">
-    <div>
-    <h3>{{ boardMeeting.boardTitle }}</h3>
+  <mat-expansion-panel class="main-panel" *ngFor="let boardMeeting of viewData">
+    <mat-expansion-panel-header expandedHeight="80px" collapsedHeight="80px" class="main-panel-header">
+      <mat-panel-title>
+        <h3>
+          <app-favorite-button
+            [boardCode]="boardMeeting.boardCode"
+            [isFavorite]="boardMeeting.isFavourite"
+          ></app-favorite-button>
+          {{ boardMeeting.boardTitle }}
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description
+        class="main-panel-description"
+        [ngClass]="{
+          'panel-favourite': boardMeeting.isFavourite
+        }"
+      >
+        <div class="main-panel-date" *ngIf="boardMeeting.nextMeeting?.meetingDate">
+          <mat-icon>event</mat-icon> {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: dateFormat }}
+        </div>
+        <span class="main-panel-no-meetings" *ngIf="!boardMeeting.nextMeeting?.meetingDate">No upcoming meetings</span>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="meetings-container">
+      <div class="previous-meetings">
+        <h4>Previous Meetings</h4>
+        <h5 *ngIf="!boardMeeting.pastMeetings.length" class="no-meetings">No Meetings</h5>
+        <mat-expansion-panel
+          class="meeting-panel"
+          hideToggle="true"
+          *ngFor="let pastMeeting of boardMeeting.pastMeetings"
+        >
+          <mat-expansion-panel-header
+            expandedHeight="54px"
+            collapsedHeight="54px"
+            class="meeting-header meeting-header-previous"
+          >
+            <mat-panel-title class="center">
+              <h5>{{ pastMeeting.meetingDate | momentFormat: dateFormat }}</h5>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-expansion-panel
+            class="application-panel"
+            hideToggle="true"
+            *ngFor="let application of pastMeeting.applications"
+          >
+            <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
+              <mat-panel-title>
+                <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="application-file" *ngFor="let file of application.files">
+              <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
+              <div>
+                <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
+                  <mat-icon>download</mat-icon>
+                </button>
+              </div>
+            </div>
+            <span *ngIf="application.files.length === 0"> No Files </span>
+          </mat-expansion-panel>
+        </mat-expansion-panel>
+      </div>
+      <div class="next-meeting">
+        <h4>Next Meeting</h4>
+        <h5 *ngIf="!boardMeeting.nextMeeting" class="no-meetings">No Meetings</h5>
+        <mat-expansion-panel expanded="true" class="meeting-panel" hideToggle="true" *ngIf="boardMeeting.nextMeeting">
+          <mat-expansion-panel-header
+            expandedHeight="54px"
+            collapsedHeight="54px"
+            class="meeting-header meeting-header-next"
+          >
+            <mat-panel-title class="center">
+              <h5>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: dateFormat }}</h5>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-expansion-panel
+            class="application-panel"
+            hideToggle="true"
+            *ngFor="let application of boardMeeting.nextMeeting!.applications"
+          >
+            <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
+              <mat-panel-title>
+                <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="application-file" *ngFor="let file of application.files">
+              <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
+              <div>
+                <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
+                  <mat-icon>download</mat-icon>
+                </button>
+              </div>
+            </div>
+            <span *ngIf="application.files.length === 0"> No Files </span>
+          </mat-expansion-panel>
+        </mat-expansion-panel>
+      </div>
+      <div class="upcoming-meetings">
+        <h4>Scheduled Meetings</h4>
+        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">No Meetings</h5>
+        <mat-expansion-panel
+          class="meeting-panel"
+          hideToggle="true"
+          *ngFor="let upcomingMeeting of boardMeeting.upcomingMeetings"
+        >
+          <mat-expansion-panel-header
+            expandedHeight="54px"
+            collapsedHeight="54px"
+            class="meeting-header meeting-header-upcoming"
+          >
+            <mat-panel-title class="center">
+              <h5>{{ upcomingMeeting.meetingDate | momentFormat: dateFormat }}</h5>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-expansion-panel
+            class="application-panel"
+            hideToggle="true"
+            *ngFor="let application of upcomingMeeting.applications"
+          >
+            <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
+              <mat-panel-title>
+                <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="application-file" *ngFor="let file of application.files">
+              <a (click)="onOpen(file.uuid, file.fileName)">{{ file.fileName }}</a>
+              <div>
+                <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
+                  <mat-icon>download</mat-icon>
+                </button>
+              </div>
+            </div>
+            <span *ngIf="application.files.length === 0"> No Files </span>
+          </mat-expansion-panel>
+        </mat-expansion-panel>
+      </div>
     </div>
-    <div>
-      <span *ngIf="boardMeeting.nextMeeting">
-        {{boardMeeting.nextMeeting.meetingDate}}
-      </span>
-    </div>
-  </div>
+  </mat-expansion-panel>
 </div>

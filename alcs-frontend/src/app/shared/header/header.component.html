@@ -12,6 +12,11 @@
             <button class="menu-item">Home</button>
           </a>
         </div>
+        <div *ngIf="hasRoles">
+          <a routerLink="/meeting">
+            <button class="menu-item">Meetings</button>
+          </a>
+        </div>
       </div>
       <div class="col">
         <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="navigationMenu">Boards ▾</button>

@@ -1,14 +1,21 @@
 @import '../../../styles/colors.scss';
 
 button.favorite-btn.gold {
-    color: $favorite-star !important;
-    visibility: visible;
-  }
+  color: $favorite-star !important;
+  visibility: visible;
+}
 
 .favorite-btn {
   cursor: pointer;
   padding: 0;
   visibility: hidden;
   background-color: inherit;
-  border:none
+  border: none;
+}
+
+.favorite-btn:hover {
+  visibility: visible;
+  mat-icon {
+    color: $grey-dark;
+  }
 }

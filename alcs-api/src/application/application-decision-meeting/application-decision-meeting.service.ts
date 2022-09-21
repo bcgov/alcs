@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
@@ -8,7 +9,7 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting.entit
 export class ApplicationDecisionMeetingService {
   constructor(
     @InjectRepository(ApplicationDecisionMeeting)
-    private appDecisionMeetingRepository,
+    private appDecisionMeetingRepository: Repository<ApplicationDecisionMeeting>,
     private applicationService: ApplicationService,
   ) {}
 
@@ -54,5 +55,17 @@ export class ApplicationDecisionMeetingService {
   async delete(uuid) {
     const meeting = await this.get(uuid);
     return this.appDecisionMeetingRepository.softRemove([meeting]);
+  }
+
+  async getUpcomingMeetings(): Promise<
+    { uuid: string; next_meeting: string }[]
+  > {
+    return await this.appDecisionMeetingRepository
+      .createQueryBuilder('meeting')
+      .select('application.uuid, MAX(meeting.date) as next_meeting')
+      .leftJoin('meeting.application', 'application')
+      .where('application.decision_date IS NULL')
+      .groupBy('application.uuid')
+      .getRawMany();
   }
 }
