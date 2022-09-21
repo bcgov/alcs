@@ -13,8 +13,6 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 export class SubtasksComponent implements OnInit {
   @Input() fileNumber: string = '';
 
-  dateFormat = environment.dateFormat;
-
   subtasks: ApplicationSubtaskDto[] = [];
   users: Map<string, string> = new Map();
 

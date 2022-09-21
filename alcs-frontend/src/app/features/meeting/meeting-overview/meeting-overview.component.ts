@@ -25,7 +25,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   private boards: BoardWithFavourite[] = [];
   private meetings: UpcomingMeetingBoardMapDto | undefined;
-  dateFormat = 'ddd YYYY-MM-DD';
+  customDateFormat = 'ddd YYYY-MM-DD';
 
   viewData: BoardWithDecisionMeetings[] = [];
 

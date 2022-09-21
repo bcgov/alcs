@@ -31,8 +31,6 @@ const APPLICANT_MEETING = {
 })
 export class ApplicationMeetingDialogComponent {
   model: ApplicationMeetingForm;
-  dateFormat = environment.dateFormat;
-  now = Date.now();
 
   reasons: any = {
     meeting: '',

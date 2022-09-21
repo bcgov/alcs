@@ -14,11 +14,8 @@ export interface TimelineEvent {
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
 })
-export class TimelineComponent implements OnInit {
+export class TimelineComponent {
   @Input() events: TimelineEvent[] = [];
-  dateFormat = environment.dateFormat;
 
   constructor() {}
-
-  ngOnInit(): void {}
 }

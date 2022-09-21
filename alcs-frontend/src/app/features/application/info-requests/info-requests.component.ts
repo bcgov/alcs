@@ -17,7 +17,6 @@ export class InfoRequestsComponent implements OnInit {
   displayedColumns: string[] = ['startDate', 'endDate', 'description', 'action'];
   infoRequests: ApplicationMeetingDto[] = [];
   fileNumber: string = '';
-  dateFormat = environment.dateFormat;
 
   constructor(
     public dialog: MatDialog,

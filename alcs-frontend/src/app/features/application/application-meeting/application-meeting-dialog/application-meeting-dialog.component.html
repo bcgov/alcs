@@ -16,7 +16,6 @@
         />
         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
         <mat-datepicker #startDate type="date"> </mat-datepicker>
-        <mat-hint>{{ model.startDate | momentFormat: dateFormat }}</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="flex-child">
@@ -24,12 +23,11 @@
         <input matInput [matDatepicker]="endDate" [(ngModel)]="model.endDate" name="endDate" [min]="model.startDate" />
         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
         <mat-datepicker #endDate type="date"> </mat-datepicker>
-        <mat-hint>{{ model.endDate || now | momentFormat: dateFormat }}</mat-hint>
       </mat-form-field>
     </div>
     <div class="reason-wrapper">
       <label class="radio-group-label" for="reason">Reason <span color="red">*</span></label>
-      <mat-radio-group aria-labelledby="Reason" [(ngModel)]="model.reason" name="reason" required>
+      <mat-radio-group aria-labelledby="Reason" [(ngModel)]="model.reason" name="reason" id="reason" required>
         <mat-radio-button value="{{ reasons.meeting }}">{{ reasons.meeting }}</mat-radio-button>
         <mat-radio-button value="{{ reasons.report }}">{{ reasons.report }}</mat-radio-button>
       </mat-radio-group>

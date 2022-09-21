@@ -55,7 +55,8 @@ export class FavoriteButtonComponent implements OnInit {
     event.stopPropagation();
 
     if (!this.currentUserProfile || !this.boardCode) {
-      console.warn('Failed to favourite due to missing data');
+      console.warn('Failed to favourite board, missing either user profile or board code');
+      this.toastService.showErrorToast('Failed to set favourites');
       return;
     }
 
@@ -64,7 +65,7 @@ export class FavoriteButtonComponent implements OnInit {
     try {
       await this.userService.updateUser(this.currentUserProfile);
     } catch {
-      this.toastService.showErrorToast('Failed to set favorites');
+      this.toastService.showErrorToast('Failed to set favourites');
     }
   }
 }

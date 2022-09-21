@@ -17,7 +17,7 @@
         }"
       >
         <div class="main-panel-date" *ngIf="boardMeeting.nextMeeting?.meetingDate">
-          <mat-icon>event</mat-icon> {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: dateFormat }}
+          <mat-icon>event</mat-icon> {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}
         </div>
         <span class="main-panel-no-meetings" *ngIf="!boardMeeting.nextMeeting?.meetingDate">No upcoming meetings</span>
       </mat-panel-description>
@@ -37,7 +37,7 @@
             class="meeting-header meeting-header-previous"
           >
             <mat-panel-title class="center">
-              <h5>{{ pastMeeting.meetingDate | momentFormat: dateFormat }}</h5>
+              <h5>{{ pastMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-expansion-panel
@@ -72,7 +72,7 @@
             class="meeting-header meeting-header-next"
           >
             <mat-panel-title class="center">
-              <h5>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: dateFormat }}</h5>
+              <h5>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-expansion-panel
@@ -111,7 +111,7 @@
             class="meeting-header meeting-header-upcoming"
           >
             <mat-panel-title class="center">
-              <h5>{{ upcomingMeeting.meetingDate | momentFormat: dateFormat }}</h5>
+              <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-expansion-panel

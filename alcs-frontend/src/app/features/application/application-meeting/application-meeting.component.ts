@@ -21,7 +21,6 @@ export class ApplicationMeetingComponent implements OnInit {
   siteVisits: ApplicationMeetingDto[] = [];
   applicantMeetings: ApplicationMeetingDto[] = [];
   fileNumber: string = '';
-  dateFormat = environment.dateFormat;
 
   constructor(
     public dialog: MatDialog,
@@ -81,7 +80,7 @@ export class ApplicationMeetingComponent implements OnInit {
           endDate: meeting.endDate,
           meetingTypeCode: meeting.meetingType.code,
           meetingType: meeting.meetingType,
-          reason: meeting.description
+          reason: meeting.description,
         },
       });
       dialog.beforeClosed().subscribe((result) => {

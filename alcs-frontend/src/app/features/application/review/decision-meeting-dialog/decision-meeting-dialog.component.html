@@ -8,7 +8,6 @@
       <input matInput [matDatepicker]="pdd" [(ngModel)]="model.date" name="date" required />
       <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
       <mat-datepicker #pdd type="date"> </mat-datepicker>
-      <mat-hint>{{ model.date | momentFormat: dateFormat }}</mat-hint>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

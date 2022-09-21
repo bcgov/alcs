@@ -16,10 +16,10 @@
             class="dot"
           ></div>
         </td>
-        <td>{{ event.startDate | momentFormat: dateFormat }}</td>
+        <td>{{ event.startDate | momentFormat }}</td>
         <td>
           <span *ngIf="event.isFulfilled">{{
-            event.fulfilledDate ? (event.fulfilledDate | momentFormat: dateFormat) : '-'
+            event.fulfilledDate ? (event.fulfilledDate | momentFormat) : '-'
           }}</span>
           <span *ngIf="!event.isFulfilled">
             <a [routerLink]="event.link">Add date</a>

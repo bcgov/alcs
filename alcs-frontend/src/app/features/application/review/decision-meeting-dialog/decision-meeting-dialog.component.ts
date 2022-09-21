@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { environment } from '../../../../../environments/environment';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
@@ -15,7 +14,6 @@ export class ApplicationDecisionMeetingForm {
 })
 export class DecisionMeetingDialogComponent {
   model: ApplicationDecisionMeetingForm;
-  dateFormat = environment.dateFormat;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDecisionMeetingForm,
