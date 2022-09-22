@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -8,18 +8,27 @@ import { AuthenticationService, ICurrentUser } from '../../services/authenticati
 })
 export class HomeComponent implements OnInit {
   currentUser!: ICurrentUser;
-  hasGIS = false;
+  isOnlyGIS = false;
+  isOnlyCommissioner = false;
 
   constructor(private authService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser()!;
 
-    this.hasGIS = this.currentUser.client_roles ? this.currentUser.client_roles.includes('GIS') : false;
-
     this.authService.$currentUser.subscribe((currentUser) => {
       if (currentUser) {
         this.currentUser = currentUser;
+
+        this.isOnlyGIS =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.GIS)
+            : false;
+
+        this.isOnlyCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
       }
     });
   }

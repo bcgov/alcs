@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 const JWT_TOKEN_KEY = 'jwt_token';
@@ -10,7 +10,15 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
 export interface ICurrentUser {
   name: string;
   email: string;
-  client_roles?: string[];
+  client_roles?: ROLES[];
+}
+
+export enum ROLES {
+  ADMIN = 'Admin',
+  APP_SPECIALIST = 'Application Specialist',
+  COMMISSIONER = 'Commissioner',
+  GIS = 'GIS',
+  LUP = 'LUP',
 }
 
 @Injectable({
@@ -22,12 +30,10 @@ export class AuthenticationService {
   private expires: number | undefined;
 
   isInitialized = false;
-  $currentUser = new EventEmitter<ICurrentUser>();
+  $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
   currentUser: ICurrentUser | undefined;
 
-  constructor(private http: HttpClient) {
-    this.$currentUser.emit(undefined);
-  }
+  constructor(private http: HttpClient) {}
 
   async setTokens(token: string, refreshToken: string) {
     this.token = token;
@@ -40,7 +46,7 @@ export class AuthenticationService {
 
     //Convert to MS for JS consistency
     this.expires = decodedToken.exp! * 1000;
-    this.$currentUser.emit(this.currentUser);
+    this.$currentUser.next(this.currentUser);
   }
 
   clearTokens() {

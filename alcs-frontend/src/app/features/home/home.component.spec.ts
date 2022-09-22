@@ -1,8 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 
 import { HomeComponent } from './home.component';
 
@@ -13,7 +13,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', ['getCurrentUser']);
-    mockAuthService.$currentUser = new EventEmitter();
+    mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     mockAuthService.getCurrentUser.and.returnValue({
       name: 'agent',

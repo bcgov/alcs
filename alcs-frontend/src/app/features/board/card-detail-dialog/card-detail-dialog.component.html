@@ -109,6 +109,9 @@
       [(ngModel)]="selectedApplicationStatus"
       (change)="onStatusSelected($event)"
     >
+      <ng-template ng-option-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
     </ng-select>
     <ng-select
       class="card-assignee"

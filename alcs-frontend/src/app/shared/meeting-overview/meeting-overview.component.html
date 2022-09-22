@@ -2,8 +2,9 @@
   <mat-expansion-panel class="main-panel" *ngFor="let boardMeeting of viewData">
     <mat-expansion-panel-header expandedHeight="80px" collapsedHeight="80px" class="main-panel-header">
       <mat-panel-title>
-        <h3>
+        <h3 class="center">
           <app-favorite-button
+            class="center"
             [boardCode]="boardMeeting.boardCode"
             [isFavorite]="boardMeeting.isFavourite"
           ></app-favorite-button>
@@ -16,10 +17,10 @@
           'panel-favourite': boardMeeting.isFavourite
         }"
       >
-        <div class="main-panel-date" *ngIf="boardMeeting.nextMeeting?.meetingDate">
+        <div class="main-panel-date center" *ngIf="boardMeeting.nextMeeting?.meetingDate">
           <mat-icon>event</mat-icon> {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}
         </div>
-        <span class="main-panel-no-meetings" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</span>
+        <span class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</span>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="meetings-container">
@@ -40,7 +41,7 @@
               <h5>{{ pastMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngFor="let application of boardMeeting.nextMeeting!.applications">
+          <ng-container *ngFor="let application of pastMeeting.applications">
             <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
           </ng-container>
         </mat-expansion-panel>
@@ -94,7 +95,7 @@
     <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
       <mat-panel-title class="split">
         <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
-        <app-avatar-circle [initials]="application.assignee.initials" [fullName]="application.assignee.name"></app-avatar-circle>
+        <app-avatar-circle *ngIf="application.assignee" [initials]="application.assignee.initials" [fullName]="application.assignee.name"></app-avatar-circle>
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="application-file" *ngFor="let file of application.files">

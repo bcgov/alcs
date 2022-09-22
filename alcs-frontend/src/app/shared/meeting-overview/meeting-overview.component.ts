@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
-import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../../services/decision-meeting/decision-meeting.dto';
-import { DecisionMeetingService } from '../../../services/decision-meeting/decision-meeting.service';
+import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
+import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
+import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
+import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 
 type MeetingWithApplications = { meetingDate: number; applications: UpcomingMeeting[] };
 

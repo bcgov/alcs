@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -23,13 +24,14 @@ import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
 import { MomentPipe } from './utils/moment.pipe';
 
 @NgModule({
-  declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe],
-  imports: [CommonModule, MatIconModule],
+  declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe, MeetingOverviewComponent],
+  imports: [CommonModule, MatIconModule, MatExpansionModule, MatButtonModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -55,6 +57,8 @@ import { MomentPipe } from './utils/moment.pipe';
     MatProgressSpinnerModule,
     MatRadioModule,
     MomentPipe,
+    MeetingOverviewComponent,
+    MatExpansionModule,
   ],
 })
 export class SharedModule {

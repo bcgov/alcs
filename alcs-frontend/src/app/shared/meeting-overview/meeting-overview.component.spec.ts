@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
-import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
-import { BoardService } from '../../../services/board/board.service';
-import { DecisionMeetingService } from '../../../services/decision-meeting/decision-meeting.service';
+import { ApplicationDetailService } from '../../services/application/application-detail.service';
+import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
+import { ApplicationMeetingService } from '../../services/application/application-meeting/application-meeting.service';
+import { BoardService } from '../../services/board/board.service';
+import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
 
