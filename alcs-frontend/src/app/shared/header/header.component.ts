@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { ApplicationService } from '../../services/application/application.service';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { NotificationService } from '../../services/notification/notification.service';
@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
   hasRoles = false;
   sortedBoards: BoardWithFavourite[] = [];
   notifications: NotificationDto[] = [];
+  isCommissioner = false;
 
   constructor(
     private authService: AuthenticationService,
@@ -35,13 +36,19 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.$currentUser.subscribe((currentUser) => {
-      this.currentUser = currentUser;
-      this.hasRoles = !!currentUser.client_roles;
+      if (currentUser) {
+        this.currentUser = currentUser;
+        this.hasRoles = !!currentUser.client_roles;
+        this.isCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
 
-      if (this.hasRoles) {
-        this.userService.fetchUsers();
-        this.applicationService.setup();
-        this.loadNotifications();
+        if (this.hasRoles) {
+          this.userService.fetchUsers();
+          this.applicationService.setup();
+          this.loadNotifications();
+        }
       }
     });
 

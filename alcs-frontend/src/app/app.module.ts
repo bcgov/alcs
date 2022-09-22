@@ -7,7 +7,6 @@ import { NgSelectConfig } from '@ng-select/ng-select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
-import { BoardModule } from './features/board/board.module';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
@@ -23,7 +22,6 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
 import { SharedModule } from './shared/shared.module';
-import { MomentPipe } from './shared/utils/moment.pipe';
 
 @NgModule({
   declarations: [
@@ -37,7 +35,7 @@ import { MomentPipe } from './shared/utils/moment.pipe';
     NotificationsComponent,
     SearchBarComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, BoardModule],
+  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule],
   providers: [
     AuthenticationService,
     ToastService,

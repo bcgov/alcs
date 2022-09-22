@@ -1,6 +1,5 @@
-@import '../../../../styles/colors.scss';
-@import '../../../../styles/typography.scss';
-@import '../../../../styles.scss';
+@import '../../../styles/colors';
+@import '../../../styles/typography';
 
 .main-panel-header {
   box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
@@ -54,7 +53,6 @@ mat-panel-description {
 
 .main-panel-date {
   @extend h4;
-  @extend .center;
   color: $black;
 
   mat-icon {
@@ -70,7 +68,6 @@ mat-panel-description {
 
 .main-panel-no-meetings {
   @extend h4;
-  @extend .center;
   color: $grey;
 }
 
