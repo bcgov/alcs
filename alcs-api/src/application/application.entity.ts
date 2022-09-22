@@ -120,5 +120,8 @@ export class Application extends Base {
   card: Card;
 
   @AutoMap()
+  @Column({
+    type: 'uuid',
+  })
   cardUuid: string;
 }
