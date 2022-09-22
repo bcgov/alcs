@@ -40,7 +40,7 @@ export class UpdateApplicationMeetingDto {
   @AutoMap()
   @IsNumber()
   @IsOptional()
-  endDate: number = null;
+  endDate: number | null = null;
 
   @AutoMap()
   @IsString()
