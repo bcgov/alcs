@@ -91,10 +91,6 @@ export class Application extends Base {
   })
   regionUuid: string;
 
-  // @AutoMap()
-  // @OneToMany(() => ApplicationHistory, (appHistory) => appHistory.application)
-  // history: ApplicationHistory[];
-
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
   pauses: ApplicationPaused[];

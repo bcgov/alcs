@@ -121,8 +121,8 @@ const initCommentMock = (author?: any): Comment => {
         name: 'fake-name',
       } as any),
     createdAt: new Date(),
-    application: initApplicationMockEntity('file-number'),
-    applicationUuid: 'file-number',
+    card: initCardMockEntity(),
+    cardUuid: 'file-number',
     edited: false,
     uuid: '11111111111111111',
   });

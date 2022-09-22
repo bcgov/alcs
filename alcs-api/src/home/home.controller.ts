@@ -4,7 +4,7 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationSubtaskWithApplicationDTO } from '../application/application-subtask/application-subtask.dto';
-import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
+import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
@@ -42,20 +42,23 @@ export class HomeController {
     ApplicationSubtaskWithApplicationDTO[]
   > {
     const subtaskTypes = 'GIS';
-    const subtasks = await this.applicationSubtaskService.listIncompleteByType(
-      subtaskTypes,
-    );
+    const applications =
+      await this.applicationService.getAllApplicationsWithIncompleteSubtasks(
+        subtaskTypes,
+      );
     const mappedApps = new Map();
-    for (const subtask of subtasks) {
-      subtask.application.decisionMeetings = [];
-      const mappedApp = await this.applicationService.mapToDtos([
-        subtask.application,
-      ]);
-      mappedApps.set(subtask.uuid, mappedApp[0]);
+    const subtasks: CardSubtask[] = [];
+    for (const application of applications) {
+      application.decisionMeetings = [];
+      const mappedApp = await this.applicationService.mapToDtos([application]);
+      for (const subtask of application.card.subtasks) {
+        mappedApps.set(subtask.uuid, mappedApp[0]);
+        subtasks.push(subtask);
+      }
     }
     const mappedTasks = this.mapper.mapArray(
       subtasks,
-      ApplicationSubtask,
+      CardSubtask,
       ApplicationSubtaskWithApplicationDTO,
     );
     return mappedTasks.map((task) => ({

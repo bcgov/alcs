@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { CardHistory } from '../application/application-history.entity';
 import { CardStatus } from '../application/application-status/application-status.entity';
-import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
+import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
@@ -55,12 +55,12 @@ export class Card extends Base {
   assigneeUuid: string;
 
   @AutoMap()
-  @OneToMany(() => Comment, (comment) => comment.application)
+  @OneToMany(() => Comment, (comment) => comment.card)
   comments: Comment[];
 
   @AutoMap()
-  @OneToMany(() => ApplicationSubtask, (subtask) => subtask.application)
-  subtasks: ApplicationSubtask[];
+  @OneToMany(() => CardSubtask, (subtask) => subtask.card)
+  subtasks: CardSubtask[];
 
   @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })
@@ -69,4 +69,9 @@ export class Card extends Base {
   @AutoMap()
   @OneToMany(() => CardHistory, (cardHistory) => cardHistory.card)
   history: CardHistory[];
+
+  // // Place properties that do not create columns here
+  // @AutoMap()
+  // @OneToOne(() => Application, { nullable: true })
+  // application?: Application;
 }

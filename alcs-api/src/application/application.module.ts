@@ -26,7 +26,7 @@ import { CardStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
 import { ApplicationSubtaskType } from './application-subtask/application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
-import { ApplicationSubtask } from './application-subtask/application-subtask.entity';
+import { CardSubtask } from './application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask/application-subtask.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
@@ -46,7 +46,7 @@ import { CardSubscriber } from './card.subscriber';
       ApplicationDecisionMeeting,
       ApplicationDocument,
       ApplicationSubtaskType,
-      ApplicationSubtask,
+      CardSubtask,
     ]),
     ApplicationCodeModule,
     NotificationModule,

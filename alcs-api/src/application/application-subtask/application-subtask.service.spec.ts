@@ -6,18 +6,18 @@ import { ServiceNotFoundException } from '../../common/exceptions/base.exception
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationSubtaskType } from './application-subtask-type.entity';
-import { ApplicationSubtask } from './application-subtask.entity';
+import { CardSubtask } from './application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask.service';
 
 describe('ApplicationSubtaskService', () => {
   let applicationSubtaskService: ApplicationSubtaskService;
-  let mockSubtaskRepo: DeepMocked<Repository<ApplicationSubtask>>;
+  let mockSubtaskRepo: DeepMocked<Repository<CardSubtask>>;
   let mockSubtaskTypeRepo: DeepMocked<Repository<ApplicationSubtaskType>>;
   let applicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     applicationService = createMock<ApplicationService>();
-    mockSubtaskRepo = createMock<Repository<ApplicationSubtask>>();
+    mockSubtaskRepo = createMock<Repository<CardSubtask>>();
     mockSubtaskTypeRepo = createMock<Repository<ApplicationSubtaskType>>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +28,7 @@ describe('ApplicationSubtaskService', () => {
           useValue: applicationService,
         },
         {
-          provide: getRepositoryToken(ApplicationSubtask),
+          provide: getRepositoryToken(CardSubtask),
           useValue: mockSubtaskRepo,
         },
         {
@@ -50,7 +50,7 @@ describe('ApplicationSubtaskService', () => {
   it('should check application exists and call through to repos for create', async () => {
     const mockSubtask = {
       uuid: 'fake-uuid',
-    } as ApplicationSubtask;
+    } as CardSubtask;
     applicationService.get.mockResolvedValue({} as Application);
     mockSubtaskTypeRepo.findOne.mockResolvedValue({} as ApplicationSubtaskType);
     mockSubtaskRepo.save.mockResolvedValue({} as any);
@@ -95,8 +95,8 @@ describe('ApplicationSubtaskService', () => {
   });
 
   it('should call save and set fields for update', async () => {
-    mockSubtaskRepo.findOne.mockResolvedValue({} as ApplicationSubtask);
-    mockSubtaskRepo.save.mockResolvedValue({} as ApplicationSubtask);
+    mockSubtaskRepo.findOne.mockResolvedValue({} as CardSubtask);
+    mockSubtaskRepo.save.mockResolvedValue({} as CardSubtask);
 
     const fakeTime = 15612312512;
     const fakeAssignee = 'fake-assignee';
@@ -139,14 +139,6 @@ describe('ApplicationSubtaskService', () => {
     mockSubtaskRepo.find.mockResolvedValue([] as any);
 
     await applicationSubtaskService.listByFileNumber('fake-file-number');
-
-    expect(mockSubtaskRepo.find).toHaveBeenCalled();
-  });
-
-  it('should call through for the other list', async () => {
-    mockSubtaskRepo.find.mockResolvedValue([] as any);
-
-    await applicationSubtaskService.listIncompleteByType('fake-type');
 
     expect(mockSubtaskRepo.find).toHaveBeenCalled();
   });

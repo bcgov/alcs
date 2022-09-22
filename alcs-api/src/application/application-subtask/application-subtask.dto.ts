@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsBoolean, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsOptional, IsUUID } from 'class-validator';
 import { ApplicationDto } from '../application.dto';
 
 export class UpdateApplicationSubtaskDto {
@@ -37,5 +37,6 @@ export class ApplicationSubtaskDto {
 }
 
 export class ApplicationSubtaskWithApplicationDTO extends ApplicationSubtaskDto {
+  @AutoMap()
   application: ApplicationDto;
 }

@@ -2,7 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindOptionsWhere, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, IsNull, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/browser';
 import { Card } from '../card/card.entity';
 import {
@@ -28,6 +28,17 @@ export class ApplicationService {
     },
     region: true,
     decisionMeetings: true,
+  };
+  private SUBTASK_RELATIONS: FindOptionsRelations<Application> = {
+    ...this.DEFAULT_RELATIONS,
+    card: {
+      status: true,
+      board: true,
+      assignee: true,
+      subtasks: {
+        type: true,
+      },
+    },
   };
   private logger = new Logger(ApplicationService.name);
 
@@ -86,7 +97,27 @@ export class ApplicationService {
       where: {
         fileNumber,
       },
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        ...this.SUBTASK_RELATIONS,
+      },
+    });
+  }
+
+  async getAllApplicationsWithIncompleteSubtasks(subtaskType: string) {
+    return this.applicationRepository.find({
+      where: {
+        card: {
+          subtasks: {
+            completedAt: IsNull(),
+            type: {
+              type: subtaskType,
+            },
+          },
+        },
+      },
+      relations: {
+        ...this.SUBTASK_RELATIONS,
+      },
     });
   }
 

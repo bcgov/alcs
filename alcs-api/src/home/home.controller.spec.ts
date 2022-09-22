@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationCodeService } from '../application/application-code/application-code.service';
 import { ApplicationSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
-import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
+import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
@@ -20,7 +20,7 @@ describe('HomeController', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationSubtaskService: DeepMocked<ApplicationSubtaskService>;
 
-  const mockSubtask: Partial<ApplicationSubtask> = {
+  const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
     createdAt: new Date(1662762964667),
     type: {
@@ -94,7 +94,7 @@ describe('HomeController', () => {
   it('should call Subtask service and map the types back for type', async () => {
     const mockApplication = initApplicationMockEntity();
     mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
-      { ...mockSubtask, application: mockApplication } as ApplicationSubtask,
+      { ...mockSubtask, application: mockApplication } as CardSubtask,
     ]);
 
     mockApplicationService.mapToDtos.mockResolvedValue([

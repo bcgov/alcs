@@ -1,12 +1,12 @@
 import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
+import { Card } from '../../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
-import { Application } from '../application.entity';
 import { ApplicationSubtaskType } from './application-subtask-type.entity';
 
 @Entity()
-export class ApplicationSubtask extends Base {
-  constructor(data?: Partial<ApplicationSubtask>) {
+export class CardSubtask extends Base {
+  constructor(data?: Partial<CardSubtask>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -25,8 +25,8 @@ export class ApplicationSubtask extends Base {
   @Column({ nullable: true })
   assigneeUuid?: string;
 
-  @ManyToOne(() => Application)
-  application: Application;
+  @ManyToOne(() => Card)
+  card: Card;
 
   @ManyToOne(() => ApplicationSubtaskType)
   type: ApplicationSubtaskType;

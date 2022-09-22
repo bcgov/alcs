@@ -105,7 +105,7 @@ describe('CommentService', () => {
     expect(mockCommentRepository.save).toHaveBeenCalled();
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.author).toEqual(fakeUser);
-    expect(savedData.application).toEqual(fakeApplication);
+    expect(savedData.card).toEqual(fakeApplication);
     expect(savedData.body).toEqual('new-comment');
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
     expect(mockNotificationService.createForApplication).toHaveBeenCalled();

@@ -18,9 +18,6 @@ export class BoardController {
   constructor(
     private boardService: BoardService,
     private applicationService: ApplicationService,
-    // private cardService: CardService,
-    // private codeService: ApplicationCodeService,
-    // private notificationService: NotificationService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
