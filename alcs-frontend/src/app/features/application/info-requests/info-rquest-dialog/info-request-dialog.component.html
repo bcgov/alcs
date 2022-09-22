@@ -44,15 +44,17 @@
       <mat-form-field class="reason-wrapper">
         <label class="radio-group-label" for="reason">Reason <span color="red">*</span></label>
         <mat-radio-group
+          id="reason"
           aria-labelledby="Reason"
           [(ngModel)]="model.reason"
           name="reason"
           (change)="changeReason($event)"
         >
-          <mat-radio-button #defaultReason value="Waiting for additional information from applicant"
+          <mat-radio-button value="Waiting for additional information from applicant"
             >Waiting for additional information from applicant</mat-radio-button
           >
-          <mat-radio-button #customReason value="custom">
+          <mat-radio-button value="custom">
+            Other:
             <input
               #customReasonText
               matInput
