@@ -111,7 +111,6 @@ export class CommentService {
     application: Application,
   ) {
     await this.commentMentionService.updateMentions(comment.uuid, mentions);
-    console.log('here', comment);
 
     mentions.forEach((mention) => {
       this.notificationService.createForApplication(
