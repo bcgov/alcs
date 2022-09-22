@@ -77,7 +77,7 @@ export class ApplicationMeetingDialogComponent {
     if (this.model) {
       const data = {
         startDate: this.model.startDate,
-        endDate: this.model.endDate,
+        endDate: this.model.endDate ? this.model.endDate : null,
         description: this.model.reason,
       };
       if (this.model.uuid) {

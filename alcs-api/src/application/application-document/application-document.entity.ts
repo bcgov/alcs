@@ -30,7 +30,7 @@ export class ApplicationDocument extends BaseEntity {
   @Column()
   type: string; //TODO: Automapper hates the DOCUMENT_TYPE type
 
-  @ManyToOne(() => Application)
+  @ManyToOne(() => Application, { nullable: false })
   application: Application;
 
   @Column()
