@@ -64,13 +64,6 @@ div.board-item {
   ::ng-deep .favorite-btn {
     visibility: hidden;
     color: $pending-star;
-
-    mat-icon {
-      height: inherit;
-      position: relative;
-      top: 7px;
-      margin: 0 2px;
-    }
   }
 }
 

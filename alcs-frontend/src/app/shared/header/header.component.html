@@ -12,9 +12,14 @@
             <button class="menu-item">Home</button>
           </a>
         </div>
+        <div *ngIf="hasRoles && !isCommissioner">
+          <a routerLink="/meeting">
+            <button class="menu-item">Meetings</button>
+          </a>
+        </div>
       </div>
       <div class="col">
-        <button *ngIf="hasRoles" class="menu-item" [matMenuTriggerFor]="navigationMenu">Boards ▾</button>
+        <button *ngIf="hasRoles && !isCommissioner" class="menu-item" [matMenuTriggerFor]="navigationMenu">Boards ▾</button>
         <mat-menu #navigationMenu="matMenu">
           <div class="board-item menu-item" *ngFor="let board of sortedBoards" (click)="onSelectBoard(board.code)">
             <app-favorite-button

@@ -21,6 +21,11 @@ export const childRoutes = [
     component: IntakeComponent,
   },
   {
+    path: 'info-request',
+    menuTitle: 'Info Request',
+    component: InfoRequestsComponent,
+  },
+  {
     path: 'site-visit-meeting',
     menuTitle: 'Site Visit / Applicant Meeting',
     component: ApplicationMeetingComponent,
@@ -34,11 +39,6 @@ export const childRoutes = [
     path: 'decision',
     menuTitle: 'Decision',
     component: DecisionComponent,
-  },
-  {
-    path: 'info-request',
-    menuTitle: 'Info Request',
-    component: InfoRequestsComponent,
   },
 ];
 

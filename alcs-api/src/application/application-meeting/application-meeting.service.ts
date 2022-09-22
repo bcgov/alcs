@@ -57,7 +57,9 @@ export class ApplicationMeetingService {
       );
     }
 
-    existingMeeting.applicationPaused.endDate = new Date(meeting.endDate);
+    existingMeeting.applicationPaused.endDate = meeting.endDate
+      ? new Date(meeting.endDate)
+      : null;
     existingMeeting.applicationPaused.startDate = new Date(meeting.startDate);
     existingMeeting.description = meeting.description;
 

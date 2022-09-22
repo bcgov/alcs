@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { environment } from '../../../../../environments/environment';
 import { ApplicationMeetingTypeDto } from '../../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../../services/application/application-meeting/application-meeting.service';
 
@@ -76,13 +77,13 @@ export class ApplicationMeetingDialogComponent {
     if (this.model) {
       const data = {
         startDate: this.model.startDate,
-        endDate: this.model.endDate,
+        endDate: this.model.endDate ? this.model.endDate : null,
         description: this.model.reason,
       };
       if (this.model.uuid) {
         await this.meetingService.update(this.model.uuid, data);
       } else {
-        await this.meetingService.create(this.data.fileNumber, {
+        await this.meetingService.create(this.data.fileNumber, this.data.meetingType.label, {
           ...data,
           meetingTypeCode: this.data.meetingType.code,
         });

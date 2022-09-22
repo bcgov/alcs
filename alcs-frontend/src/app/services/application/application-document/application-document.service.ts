@@ -40,12 +40,15 @@ export class ApplicationDocumentService {
     return firstValueFrom(this.http.delete<ApplicationDocumentDto[]>(`${this.url}/${documentId}`));
   }
 
-  async download(uuid: string, fileName: string) {
-    const data = await firstValueFrom(this.http.get<{ url: string }>(`${this.url}/${uuid}`));
+  async download(uuid: string, fileName: string, isInline = true) {
+    const url = isInline ? `${this.url}/${uuid}/open` : `${this.url}/${uuid}/download`;
+    const data = await firstValueFrom(this.http.get<{ url: string }>(url));
     const downloadLink = document.createElement('a');
     downloadLink.href = data.url;
     downloadLink.download = fileName;
-    downloadLink.target = '_blank';
+    if (isInline) {
+      downloadLink.target = '_blank';
+    }
     if (window.webkitURL == null) {
       downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
       downloadLink.style.display = 'none';

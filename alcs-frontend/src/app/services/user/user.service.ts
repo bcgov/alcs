@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService, ICurrentUser } from '../authentication/authentication.service';
 import { ToastService } from '../toast/toast.service';
@@ -11,32 +11,29 @@ import { UserDto } from './user.dto';
 })
 export class UserService {
   public $users = new BehaviorSubject<UserDto[]>([]);
-  public $currentUserProfile = new EventEmitter<UserDto>();
+  public $currentUserProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
   private users: UserDto[] = [];
-  private currentUser: ICurrentUser | undefined;
 
   constructor(
     private http: HttpClient,
     private toastService: ToastService,
     private authService: AuthenticationService
   ) {
-    this.authService.$currentUser.subscribe((currentUser) => {
-      this.currentUser = currentUser;
-      if (this.currentUser) {
-        this.populateUserProfile(this.currentUser);
-      }
-    });
-
-    this.$users.subscribe((users) => {
-      if (this.currentUser) {
-        this.populateUserProfile(this.currentUser);
+    this.authService.$currentUser.pipe(combineLatestWith(this.$users)).subscribe(([currentUser, users]) => {
+      if (currentUser && users.length > 0) {
+        this.populateUserProfile(currentUser);
       }
     });
   }
 
   private populateUserProfile(currentUser: ICurrentUser) {
-    this.$currentUserProfile.emit(this.users.find((u) => u.email === currentUser.email));
+    const currentUserDto = this.users.find((u) => u.email === currentUser.email);
+    if (currentUserDto) {
+      this.$currentUserProfile.next(currentUserDto);
+    } else {
+      console.error('Failed to find current user in users');
+    }
   }
 
   public async fetchUsers() {

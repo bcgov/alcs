@@ -28,8 +28,8 @@
       </div>
       <div class="center"></div>
       <div class="dates">
-        <span class="body-small">{{ subtask.createdAt | date: dateFormat }}</span>
-        <div *ngIf="subtask.completedAt" class="body-xsmall subtext">Completed {{ subtask.completedAt | date: dateFormat }}</div>
+        <span class="body-small">{{ subtask.createdAt | momentFormat }}</span>
+        <div *ngIf="subtask.completedAt" class="body-xsmall subtext">Completed {{ subtask.completedAt | momentFormat }}</div>
       </div>
       <div class="center">
         <button title="Complete Task" *ngIf="!subtask.completedAt" mat-icon-button (click)="completeTask(subtask.uuid)">

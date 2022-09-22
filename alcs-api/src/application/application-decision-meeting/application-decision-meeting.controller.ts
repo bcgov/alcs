@@ -13,13 +13,21 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { Any } from 'typeorm';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { UserDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
+import { ApplicationDocumentDto } from '../application-document/application-document.dto';
+import { ApplicationDocument } from '../application-document/application-document.entity';
+import { ApplicationDocumentService } from '../application-document/application-document.service';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationDecisionMeetingDto,
   CreateApplicationDecisionMeetingDto,
+  UpcomingMeetingBoardMapDto,
+  UpcomingMeetingDto,
 } from './application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
@@ -31,8 +39,54 @@ export class ApplicationDecisionMeetingController {
   constructor(
     private appDecisionMeetingService: ApplicationDecisionMeetingService,
     private applicationService: ApplicationService,
+    private appDecDocumentService: ApplicationDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
+
+  @Get('/overview/meetings')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getMeetings(): Promise<UpcomingMeetingBoardMapDto> {
+    const upcomingApps =
+      await this.appDecisionMeetingService.getUpcomingMeetings();
+    const allAppIds = upcomingApps.map((a) => a.uuid);
+    const allApps = await this.applicationService.getAll({
+      uuid: Any(allAppIds),
+    });
+    const allFileNumbers = allApps.map((app) => app.fileNumber);
+    const allDocuments = await this.appDecDocumentService.listAll(
+      allFileNumbers,
+      'decisionDocument',
+    );
+    const mappedApps = allApps.map((app): UpcomingMeetingDto => {
+      const files = allDocuments.filter(
+        (doc) => doc.applicationUuid === app.uuid,
+      );
+      const meetingDate = upcomingApps.find(
+        (meeting) => meeting.uuid === app.uuid,
+      );
+      return {
+        meetingDate: new Date(meetingDate.next_meeting).getTime(),
+        fileNumber: app.fileNumber,
+        applicant: app.applicant,
+        boardCode: app.board.code,
+        assignee: this.mapper.map(app.assignee, User, UserDto),
+        files: this.mapper.mapArray(
+          files,
+          ApplicationDocument,
+          ApplicationDocumentDto,
+        ),
+      };
+    });
+
+    const boardCodeToApps: UpcomingMeetingBoardMapDto = {};
+    mappedApps.forEach((mappedApp) => {
+      const boardMeetings = boardCodeToApps[mappedApp.boardCode] || [];
+      boardMeetings.push(mappedApp);
+      boardCodeToApps[mappedApp.boardCode] = boardMeetings;
+    });
+
+    return boardCodeToApps;
+  }
 
   @Get('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)

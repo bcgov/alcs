@@ -15,7 +15,6 @@ import { DecisionMeetingDialogComponent } from '../decision-meeting-dialog/decis
 export class DecisionMeetingComponent implements OnInit {
   displayedColumns: string[] = ['date', 'action'];
   decisionMeetings: ApplicationDecisionMeetingDto[] = [];
-  dateFormat = environment.dateFormat;
 
   @Input()
   fileNumber: string = '';

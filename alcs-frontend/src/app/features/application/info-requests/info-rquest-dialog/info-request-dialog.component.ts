@@ -63,7 +63,7 @@ export class InfoRequestDialogComponent {
         description: this.getDescription(),
       });
     } else {
-      await this.meetingService.create(this.model.fileNumber, {
+      await this.meetingService.create(this.model.fileNumber, this.data.meetingType.label, {
         startDate: this.model.startDate,
         endDate: this.model.endDate,
         meetingTypeCode: this.data.meetingType.code,

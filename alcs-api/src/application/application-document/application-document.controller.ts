@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
@@ -90,7 +91,17 @@ export class ApplicationDocumentController {
     );
   }
 
-  @Get('/:uuid')
+  @Get('/:uuid/open')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async open(@Param('uuid') fileUuid: string) {
+    const document = await this.applicationDocumentService.get(fileUuid);
+    const url = await this.applicationDocumentService.getInlineUrl(document);
+    return {
+      url,
+    };
+  }
+
+  @Get('/:uuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
   async download(@Param('uuid') fileUuid: string) {
     const document = await this.applicationDocumentService.get(fileUuid);

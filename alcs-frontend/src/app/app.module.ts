@@ -7,13 +7,13 @@ import { NgSelectConfig } from '@ng-select/ng-select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
-import { BoardModule } from './features/board/board.module';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { BoardService } from './services/board/board.service';
+import { DecisionMeetingService } from './services/decision-meeting/decision-meeting.service';
 import { NotificationService } from './services/notification/notification.service';
 import { ToastService } from './services/toast/toast.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
@@ -35,13 +35,14 @@ import { SharedModule } from './shared/shared.module';
     NotificationsComponent,
     SearchBarComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, BoardModule],
+  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule],
   providers: [
     AuthenticationService,
     ToastService,
     ConfirmationDialogService,
     NotificationService,
     BoardService,
+    DecisionMeetingService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
   ],

@@ -36,6 +36,12 @@
   }
 }
 
+.timeline-row:only-child {
+  .line {
+    border-left: none;
+  }
+}
+
 .dot {
   height: 12px;
   width: 12px;

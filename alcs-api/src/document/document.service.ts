@@ -69,21 +69,15 @@ export class DocumentService {
     await this.documentRepository.delete(document.uuid);
   }
 
-  download(document: Document) {
+  getDownloadUrl(document: Document, openInline = false) {
     const command = new GetObjectCommand({
       Bucket: this.config.get('STORAGE.BUCKET'),
       Key: document.fileKey,
+      ResponseContentDisposition: `${
+        openInline ? 'inline' : 'attachment'
+      }; filename="${document.fileName}"`,
     });
-    return this.dataStore.send(command);
-  }
-
-  async getUrl(document: Document) {
-    const command = new GetObjectCommand({
-      Bucket: this.config.get('STORAGE.BUCKET'),
-      Key: document.fileKey,
-      ResponseContentDisposition: `inline; filename="${document.fileName}"`,
-    });
-    return await getSignedUrl(this.dataStore, command, {
+    return getSignedUrl(this.dataStore, command, {
       expiresIn: 60,
     });
   }

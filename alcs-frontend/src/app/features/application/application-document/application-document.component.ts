@@ -19,7 +19,6 @@ export class ApplicationDocumentComponent implements OnInit {
 
   isUploading = false;
 
-  dateFormat = environment.dateFormat;
   displayedColumns: string[] = ['fileName', 'uploadedAt', 'uploadedBy', 'action'];
   documents: ApplicationDocumentDto[] = [];
 
