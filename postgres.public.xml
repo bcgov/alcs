@@ -117,7 +117,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_4a7e09569765e147304194b63f5" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="application_paused_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="application_paused_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_e527e6d1acc89174494456e0ad3" implied="false" onDeleteCascade="false" schema="public" table="application_paused"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
