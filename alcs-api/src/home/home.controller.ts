@@ -5,9 +5,9 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationSubtaskWithApplicationDTO } from '../application/application-subtask/application-subtask.dto';
 import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
-import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
+
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
@@ -18,7 +18,6 @@ import { UserRoles } from '../common/authorization/roles.decorator';
 export class HomeController {
   constructor(
     private applicationService: ApplicationService,
-    private applicationSubtaskService: ApplicationSubtaskService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 

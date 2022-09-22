@@ -4,6 +4,8 @@ import { ApplicationDecisionMeeting } from '../../../application/application-dec
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
 import { CardStatus } from '../../../application/application-status/application-status.entity';
+import { ApplicationSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
+import { CardSubtask } from '../../../application/application-subtask/application-subtask.entity';
 import { Application } from '../../../application/application.entity';
 import { Card } from '../../../card/card.entity';
 import { Comment } from '../../../comment/comment.entity';
@@ -24,6 +26,22 @@ const initApplicationStatusMockEntity = (): CardStatus => {
   return applicationStatus;
 };
 
+const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
+  const subtask = new CardSubtask();
+  (subtask.assignee = initAssigneeMockEntity()), (subtask.uuid = '11111');
+  subtask.assigneeUuid = subtask.assignee.uuid;
+  subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.card = card ?? new Card();
+  subtask.type = new ApplicationSubtaskType();
+  subtask.type.backgroundColor = 'fake-bg-color';
+  subtask.type.textColor = 'fake-color';
+  subtask.type.type = 'fake-type';
+  return subtask;
+};
+
 const initCardMockEntity = (): Card => {
   const card = new Card();
   card.highPriority = true;
@@ -34,6 +52,7 @@ const initCardMockEntity = (): Card => {
   card.assignee = initAssigneeMockEntity();
   card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  card.subtasks = [initCardSubtaskMockEntity(card)];
 
   return card;
 };
@@ -195,4 +214,5 @@ export {
   initApplicationDecisionMeetingMock,
   initApplicationMeetingMock,
   initCardMockEntity,
+  initCardSubtaskMockEntity,
 };

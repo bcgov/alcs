@@ -8,6 +8,7 @@ import { ApplicationSubtaskType } from '../application/application-subtask/appli
 import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
+import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
@@ -91,11 +92,14 @@ describe('HomeController', () => {
     });
   });
 
-  it('should call Subtask service and map the types back for type', async () => {
+  it('should call ApplicationService and map the types back for type', async () => {
     const mockApplication = initApplicationMockEntity();
-    mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
-      { ...mockSubtask, application: mockApplication } as CardSubtask,
-    ]);
+    mockApplicationService.getAllApplicationsWithIncompleteSubtasks.mockResolvedValue(
+      [{ ...mockApplication } as Application],
+    );
+    // mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
+    //   { ...mockSubtask, application: mockApplication } as CardSubtask,
+    // ]);
 
     mockApplicationService.mapToDtos.mockResolvedValue([
       mockApplication as any as ApplicationDto,
@@ -106,8 +110,8 @@ describe('HomeController', () => {
 
     expect(mockApplicationService.mapToDtos).toHaveBeenCalled();
     expect(
-      mockApplicationSubtaskService.listIncompleteByType,
-    ).toHaveBeenCalled();
+      mockApplicationService.getAllApplicationsWithIncompleteSubtasks,
+    ).toBeCalledTimes(1);
     expect(res[0].type).toEqual(mockSubtask.type.type);
     expect(res[0].application).toEqual(mockApplication);
   });

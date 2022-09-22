@@ -5,7 +5,10 @@ import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
-import { initCommentMock } from '../common/utils/test-helpers/mockEntities';
+import {
+  initCardMockEntity,
+  initCommentMock,
+} from '../common/utils/test-helpers/mockEntities';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
@@ -89,6 +92,7 @@ describe('CommentService', () => {
     };
     const fakeApplication = {
       uuid: 'fake-application',
+      card: initCardMockEntity(),
     };
     mockApplicationService.get.mockResolvedValue(
       fakeApplication as Application,
@@ -105,7 +109,7 @@ describe('CommentService', () => {
     expect(mockCommentRepository.save).toHaveBeenCalled();
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.author).toEqual(fakeUser);
-    expect(savedData.card).toEqual(fakeApplication);
+    expect(savedData.card).toEqual(fakeApplication.card);
     expect(savedData.body).toEqual('new-comment');
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
     expect(mockNotificationService.createForApplication).toHaveBeenCalled();
@@ -139,7 +143,7 @@ describe('CommentService', () => {
   it('should set the edited flag when editing', async () => {
     mockCommentRepository.findOne.mockResolvedValue(comment);
     mockCommentRepository.save.mockResolvedValue({} as Comment);
-    mockApplicationService.get.mockResolvedValue({} as Application);
+    mockApplicationService.getByCard.mockResolvedValue({} as Application);
 
     await service.update('comment-uuid', 'new-body', comment.mentions);
 

@@ -88,13 +88,14 @@ export class CommentService {
         ...this.DEFAULT_COMMENT_RELATIONS,
       },
     });
-    const application = await this.applicationService.getByCard(
-      comment.cardUuid,
-    );
 
     if (body.trim() === '') {
       throw new ServiceValidationException('Comment body must be filled.');
     }
+
+    const application = await this.applicationService.getByCard(
+      comment.cardUuid,
+    );
 
     comment.edited = true;
     comment.body = body;

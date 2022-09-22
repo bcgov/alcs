@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+import { ApplicationService } from '../application.service';
 import { ApplicationSubtaskType } from './application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask.controller';
 import { CardSubtask } from './application-subtask.entity';
@@ -13,6 +14,7 @@ import { ApplicationSubtaskService } from './application-subtask.service';
 describe('ApplicationSubtaskController', () => {
   let controller: ApplicationSubtaskController;
   let mockSubtaskService: DeepMocked<ApplicationSubtaskService>;
+  let applicationService: DeepMocked<ApplicationService>;
 
   const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
@@ -25,6 +27,7 @@ describe('ApplicationSubtaskController', () => {
 
   beforeEach(async () => {
     mockSubtaskService = createMock<ApplicationSubtaskService>();
+    applicationService = createMock<ApplicationService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -41,6 +44,10 @@ describe('ApplicationSubtaskController', () => {
         {
           provide: ClsService,
           useValue: {},
+        },
+        {
+          provide: ApplicationService,
+          useValue: applicationService,
         },
         ApplicationSubtaskProfile,
         ...mockKeyCloakProviders,
@@ -66,14 +73,6 @@ describe('ApplicationSubtaskController', () => {
     expect(res.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
     expect(res.textColor).toEqual(mockSubtask.type.textColor);
     expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
-  });
-
-  it('should call through for list', async () => {
-    mockSubtaskService.listByFileNumber.mockResolvedValue([]);
-
-    await controller.list('file-number');
-
-    expect(mockSubtaskService.listByFileNumber).toHaveBeenCalled();
   });
 
   it('should return the new entity for update', async () => {

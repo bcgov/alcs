@@ -68,7 +68,7 @@ describe('ApplicationSubtaskService', () => {
     expect(res).toEqual(mockSubtask);
   });
 
-  it('should throw an exception if application doesnt exist for create', async () => {
+  it("should throw an exception if application doesn't exist for create", async () => {
     applicationService.get.mockResolvedValue(undefined);
 
     await expect(
@@ -133,13 +133,5 @@ describe('ApplicationSubtaskService', () => {
 
     expect(mockSubtaskRepo.delete).toHaveBeenCalled();
     expect(mockSubtaskRepo.delete.mock.calls[0][0]).toEqual('fake-uuid');
-  });
-
-  it('should call through for list', async () => {
-    mockSubtaskRepo.find.mockResolvedValue([] as any);
-
-    await applicationSubtaskService.listByFileNumber('fake-file-number');
-
-    expect(mockSubtaskRepo.find).toHaveBeenCalled();
   });
 });
