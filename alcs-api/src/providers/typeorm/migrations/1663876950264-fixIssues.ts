@@ -5,9 +5,6 @@ export class fixIssues1663876950264 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "application_subtask" DROP COLUMN "in_progress"`,
-    );
-    await queryRunner.query(
       `ALTER TABLE "application_document" DROP CONSTRAINT "FK_6c496454f95f229c63679bf191e"`,
     );
     await queryRunner.query(
@@ -39,9 +36,6 @@ export class fixIssues1663876950264 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "application_document" ADD CONSTRAINT "FK_6c496454f95f229c63679bf191e" FOREIGN KEY ("application_uuid") REFERENCES "application"("uuid") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "application_subtask" ADD "in_progress" boolean NOT NULL DEFAULT false`,
     );
   }
 }
