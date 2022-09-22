@@ -83,7 +83,7 @@ export class ApplicationMeetingDialogComponent {
       if (this.model.uuid) {
         await this.meetingService.update(this.model.uuid, data);
       } else {
-        await this.meetingService.create(this.data.fileNumber, {
+        await this.meetingService.create(this.data.fileNumber, this.data.meetingType.label, {
           ...data,
           meetingTypeCode: this.data.meetingType.code,
         });

@@ -46,7 +46,7 @@ export class ApplicationMeetingService {
     }
   }
 
-  async create(fileNumber: string, meeting: CreateApplicationMeetingDto) {
+  async create(fileNumber: string, typeLabel: string, meeting: CreateApplicationMeetingDto) {
     try {
       await firstValueFrom(
         this.http.post<ApplicationMeetingDto>(`${this.url}/${fileNumber}`, {
@@ -57,7 +57,7 @@ export class ApplicationMeetingService {
       );
       this.toastService.showSuccessToast('Meeting created.');
     } catch (e) {
-      this.toastService.showErrorToast('Failed to create meeting');
+      this.toastService.showErrorToast(`Failed to create ${typeLabel}`);
     }
   }
 

@@ -44,15 +44,17 @@
       <mat-form-field class="reason-wrapper">
         <label class="radio-group-label" for="reason">Reason <span color="red">*</span></label>
         <mat-radio-group
+          id="reason"
           aria-labelledby="Reason"
           [(ngModel)]="model.reason"
           name="reason"
           (change)="changeReason($event)"
         >
-          <mat-radio-button #defaultReason value="Waiting for additional information from applicant"
+          <mat-radio-button value="Waiting for additional information from applicant"
             >Waiting for additional information from applicant</mat-radio-button
           >
-          <mat-radio-button #customReason value="custom">
+          <mat-radio-button value="custom">
+            Other:
             <input
               #customReasonText
               matInput
@@ -68,9 +70,9 @@
     <div class="warning">The application's active day count will be paused until a fulfillment date is provided.</div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <div>
-      <button mat-button mat-dialog-close>Close</button>
-      <button mat-button type="submit" [disabled]="!meetingForm.form.valid">Save</button>
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">Save</button>
     </div>
   </mat-dialog-actions>
 </form>
