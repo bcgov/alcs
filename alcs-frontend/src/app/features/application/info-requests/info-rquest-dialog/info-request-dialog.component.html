@@ -68,9 +68,9 @@
     <div class="warning">The application's active day count will be paused until a fulfillment date is provided.</div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <div>
-      <button mat-button mat-dialog-close>Close</button>
-      <button mat-button type="submit" [disabled]="!meetingForm.form.valid">Save</button>
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">Save</button>
     </div>
   </mat-dialog-actions>
 </form>

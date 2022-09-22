@@ -1,3 +1,5 @@
+@import '../../../../../styles/colors';
+
 .flex-container {
   display: flex;
   gap: 24px;
@@ -26,4 +28,11 @@ label {
   font-size: 16px;
   display: block;
   margin-bottom: 8px;
+}
+
+.warning {
+  padding: 16px 8px;
+  font-size: 16px;
+  background-color: $secondary-color-light;
+  border-radius: 8px;
 }
