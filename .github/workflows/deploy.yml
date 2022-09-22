@@ -47,5 +47,6 @@ jobs:
           {
             "apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}",
             "migrateImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.MIGRATE_IMAGE_NAME }}:${{ github.run_number }}",
-            "frontendImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.FE_IMAGE_NAME }}:${{ github.run_number }}"
+            "frontendImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.FE_IMAGE_NAME }}:${{ github.run_number }}",
+            "commitMessage": "${{ github.event.head_commit.message }}"
           }
