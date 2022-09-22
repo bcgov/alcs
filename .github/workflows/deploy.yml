@@ -37,13 +37,6 @@ jobs:
         oc import-image alcs-migrate:latest -n ${{secrets.LICENSE_PLATE}}-tools
         oc tag alcs-migrate:latest alcs-migrate:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
 
-    - name: Sanitize Commit Message
-      id: sanitize
-      run: |
-        LCOMMIT=${{ github.event.head_commit.message }}
-        SCOMMIT=$(printf $LCOMMIT | head -n 1 | tr -d \")
-        echo ::set-output name=commit::${SCOMMIT}
-
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
       with:
@@ -55,5 +48,5 @@ jobs:
             "apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}",
             "migrateImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.MIGRATE_IMAGE_NAME }}:${{ github.run_number }}",
             "frontendImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.FE_IMAGE_NAME }}:${{ github.run_number }}",
-            "commitMessage": "${{ steps.sanitize.outputs.commit }}"
+            "commitMessage": "${{ github.sha }}"
           }
