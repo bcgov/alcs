@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
   ApplicationMeetingDto,
@@ -79,7 +80,7 @@ export class ApplicationMeetingComponent implements OnInit {
           endDate: meeting.endDate,
           meetingTypeCode: meeting.meetingType.code,
           meetingType: meeting.meetingType,
-          reason: meeting.description
+          reason: meeting.description,
         },
       });
       dialog.beforeClosed().subscribe((result) => {

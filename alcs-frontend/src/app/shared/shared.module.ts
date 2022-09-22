@@ -25,9 +25,10 @@ import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
+import { MomentPipe } from './utils/moment.pipe';
 
 @NgModule({
-  declarations: [FavoriteButtonComponent, AvatarCircleComponent],
+  declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe],
   imports: [CommonModule, MatIconModule],
   exports: [
     CommonModule,
@@ -53,6 +54,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MatDatepickerModule,
     MatProgressSpinnerModule,
     MatRadioModule,
+    MomentPipe,
   ],
 })
 export class SharedModule {

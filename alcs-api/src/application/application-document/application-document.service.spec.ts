@@ -173,6 +173,20 @@ describe('ApplicationDocumentService', () => {
     expect(res[0]).toBe(mockAppDocument);
   });
 
+  it('should call through for listAll', async () => {
+    const mockDocument = {};
+    const mockAppDocument = {
+      uuid: '1',
+      document: mockDocument,
+    } as ApplicationDocument;
+    mockRepository.find.mockResolvedValue([mockAppDocument]);
+
+    const res = await service.listAll([fileNumber], 'decisionDocument');
+
+    expect(mockRepository.find).toHaveBeenCalled();
+    expect(res[0]).toBe(mockAppDocument);
+  });
+
   it('should call through for download', async () => {
     const mockDocument = {};
     const mockAppDocument = {
@@ -181,11 +195,11 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
 
     const fakeUrl = 'mock-url';
-    mockDocumentService.getUrl.mockResolvedValue(fakeUrl);
+    mockDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
 
-    const res = await service.getDownloadUrl(mockAppDocument);
+    const res = await service.getInlineUrl(mockAppDocument);
 
-    expect(mockDocumentService.getUrl).toHaveBeenCalled();
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalled();
     expect(res).toEqual(fakeUrl);
   });
 });

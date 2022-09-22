@@ -10,12 +10,12 @@
 <table mat-table [dataSource]="infoRequests" class="mat-elevation-z8 width-100 section">
   <ng-container matColumnDef="startDate">
     <th mat-header-cell *matHeaderCellDef>Date Requested</th>
-    <td mat-cell *matCellDef="let element">{{ element.startDate | date: 'mediumDate' }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.startDate | momentFormat }}</td>
   </ng-container>
 
   <ng-container matColumnDef="endDate">
     <th mat-header-cell *matHeaderCellDef>Date Fulfilled</th>
-    <td mat-cell *matCellDef="let element">{{ element.endDate | date: 'mediumDate' }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.endDate | momentFormat }}</td>
   </ng-container>
 
   <ng-container matColumnDef="description">

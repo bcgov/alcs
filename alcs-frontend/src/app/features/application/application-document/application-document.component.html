@@ -21,7 +21,7 @@
 
   <ng-container matColumnDef="uploadedAt">
     <th mat-header-cell *matHeaderCellDef>Upload Date</th>
-    <td mat-cell *matCellDef="let element">{{ element.uploadedAt | date: dateFormat }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.uploadedAt | momentFormat }}</td>
   </ng-container>
 
   <ng-container matColumnDef="uploadedBy">

@@ -33,6 +33,9 @@ export class ApplicationDocument extends BaseEntity {
   @ManyToOne(() => Application)
   application: Application;
 
+  @Column()
+  applicationUuid: string;
+
   @OneToOne(() => Document)
   @JoinColumn()
   document: Document;
