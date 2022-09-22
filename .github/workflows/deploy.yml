@@ -40,8 +40,9 @@ jobs:
     - name: Sanitize Commit Message
       id: sanitize
       run: |
-        COMMIT=$(printf ${{ github.event.head_commit.message }} | head -n 1 | tr -d \")
-        echo ::set-output name=commit::${COMMIT}
+        LCOMMIT=${{ github.event.head_commit.message }}
+        SCOMMIT=$(printf $LCOMMIT | head -n 1 | tr -d \")
+        echo ::set-output name=commit::${SCOMMIT}
 
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
