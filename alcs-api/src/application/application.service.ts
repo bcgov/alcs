@@ -37,6 +37,7 @@ export class ApplicationService {
       assignee: true,
       subtasks: {
         type: true,
+        assignee: true,
       },
     },
   };

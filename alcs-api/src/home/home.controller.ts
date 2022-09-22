@@ -46,6 +46,7 @@ export class HomeController {
       await this.applicationService.getAllApplicationsWithIncompleteSubtasks(
         subtaskTypes,
       );
+
     const mappedApps = new Map();
     const subtasks: CardSubtask[] = [];
     for (const application of applications) {
