@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationCodeService } from '../application/application-code/application-code.service';
-import { ApplicationSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
+import { CardSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
 import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
@@ -28,7 +28,7 @@ describe('HomeController', () => {
       type: 'fake-type',
       backgroundColor: 'back-color',
       textColor: 'text-color',
-    } as ApplicationSubtaskType,
+    } as CardSubtaskType,
   };
 
   beforeEach(async () => {

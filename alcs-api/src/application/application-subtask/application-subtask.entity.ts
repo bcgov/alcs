@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
 import { Card } from '../../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
-import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { CardSubtaskType } from './application-subtask-type.entity';
 
 @Entity()
 export class CardSubtask extends Base {
@@ -28,6 +28,6 @@ export class CardSubtask extends Base {
   @ManyToOne(() => Card)
   card: Card;
 
-  @ManyToOne(() => ApplicationSubtaskType)
-  type: ApplicationSubtaskType;
+  @ManyToOne(() => CardSubtaskType)
+  type: CardSubtaskType;
 }

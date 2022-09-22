@@ -13,6 +13,7 @@ import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
+import { CardType } from './card-type/card-type.entity';
 
 @Entity()
 export class Card extends Base {
@@ -70,8 +71,13 @@ export class Card extends Base {
   @OneToMany(() => CardHistory, (cardHistory) => cardHistory.card)
   history: CardHistory[];
 
-  // // Place properties that do not create columns here
-  // @AutoMap()
-  // @OneToOne(() => Application, { nullable: true })
-  // application?: Application;
+  @AutoMap()
+  @ManyToOne(() => CardType)
+  type: CardType;
+
+  @Column({
+    type: 'uuid',
+    default: 'f6df265f-3163-4201-858a-87d4fbd75cbe',
+  })
+  typeUuid: string;
 }

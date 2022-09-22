@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
-import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { CardSubtaskType } from './application-subtask-type.entity';
 import { UpdateApplicationSubtaskDto } from './application-subtask.dto';
 import { CardSubtask } from './application-subtask.entity';
 
@@ -18,8 +18,8 @@ export class ApplicationSubtaskService {
     private applicationService: ApplicationService,
     @InjectRepository(CardSubtask)
     private applicationSubtaskRepository: Repository<CardSubtask>,
-    @InjectRepository(ApplicationSubtaskType)
-    private applicationSubtaskTypeRepository: Repository<ApplicationSubtaskType>,
+    @InjectRepository(CardSubtaskType)
+    private applicationSubtaskTypeRepository: Repository<CardSubtaskType>,
   ) {}
 
   async create(fileNumber: string, type: string) {

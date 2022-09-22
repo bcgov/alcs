@@ -6,7 +6,7 @@ import { ClsService } from 'nestjs-cls';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationService } from '../application.service';
-import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { CardSubtaskType } from './application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask.controller';
 import { CardSubtask } from './application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask.service';
@@ -22,7 +22,7 @@ describe('ApplicationSubtaskController', () => {
     type: {
       backgroundColor: 'back-color',
       textColor: 'text-color',
-    } as ApplicationSubtaskType,
+    } as CardSubtaskType,
   };
 
   beforeEach(async () => {

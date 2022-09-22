@@ -5,20 +5,20 @@ import { Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { CardSubtaskType } from './application-subtask-type.entity';
 import { CardSubtask } from './application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask.service';
 
 describe('ApplicationSubtaskService', () => {
   let applicationSubtaskService: ApplicationSubtaskService;
   let mockSubtaskRepo: DeepMocked<Repository<CardSubtask>>;
-  let mockSubtaskTypeRepo: DeepMocked<Repository<ApplicationSubtaskType>>;
+  let mockSubtaskTypeRepo: DeepMocked<Repository<CardSubtaskType>>;
   let applicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     applicationService = createMock<ApplicationService>();
     mockSubtaskRepo = createMock<Repository<CardSubtask>>();
-    mockSubtaskTypeRepo = createMock<Repository<ApplicationSubtaskType>>();
+    mockSubtaskTypeRepo = createMock<Repository<CardSubtaskType>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -32,7 +32,7 @@ describe('ApplicationSubtaskService', () => {
           useValue: mockSubtaskRepo,
         },
         {
-          provide: getRepositoryToken(ApplicationSubtaskType),
+          provide: getRepositoryToken(CardSubtaskType),
           useValue: mockSubtaskTypeRepo,
         },
       ],
@@ -52,7 +52,7 @@ describe('ApplicationSubtaskService', () => {
       uuid: 'fake-uuid',
     } as CardSubtask;
     applicationService.get.mockResolvedValue({} as Application);
-    mockSubtaskTypeRepo.findOne.mockResolvedValue({} as ApplicationSubtaskType);
+    mockSubtaskTypeRepo.findOne.mockResolvedValue({} as CardSubtaskType);
     mockSubtaskRepo.save.mockResolvedValue({} as any);
     mockSubtaskRepo.findOne.mockResolvedValue(mockSubtask);
 

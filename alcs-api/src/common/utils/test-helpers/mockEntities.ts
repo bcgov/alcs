@@ -4,7 +4,7 @@ import { ApplicationDecisionMeeting } from '../../../application/application-dec
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
 import { CardStatus } from '../../../application/application-status/application-status.entity';
-import { ApplicationSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
+import { CardSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
 import { CardSubtask } from '../../../application/application-subtask/application-subtask.entity';
 import { Application } from '../../../application/application.entity';
 import { Card } from '../../../card/card.entity';
@@ -35,7 +35,7 @@ const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
   subtask.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.card = card ?? new Card();
-  subtask.type = new ApplicationSubtaskType();
+  subtask.type = new CardSubtaskType();
   subtask.type.backgroundColor = 'fake-bg-color';
   subtask.type.textColor = 'fake-color';
   subtask.type.type = 'fake-type';

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
@@ -24,7 +25,7 @@ import { ApplicationPausedService } from './application-paused/application-pause
 import { ApplicationStatusController } from './application-status/application-status.controller';
 import { CardStatus } from './application-status/application-status.entity';
 import { ApplicationStatusService } from './application-status/application-status.service';
-import { ApplicationSubtaskType } from './application-subtask/application-subtask-type.entity';
+import { CardSubtaskType } from './application-subtask/application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
 import { CardSubtask } from './application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask/application-subtask.service';
@@ -34,6 +35,7 @@ import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 import { CardSubscriber } from './card.subscriber';
 
+// TODO: separate card specific types to board or separate module
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -45,8 +47,9 @@ import { CardSubscriber } from './card.subscriber';
       ApplicationMeeting,
       ApplicationDecisionMeeting,
       ApplicationDocument,
-      ApplicationSubtaskType,
+      CardSubtaskType,
       CardSubtask,
+      CardType,
     ]),
     ApplicationCodeModule,
     NotificationModule,
