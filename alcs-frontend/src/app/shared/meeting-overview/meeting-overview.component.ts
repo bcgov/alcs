@@ -16,7 +16,7 @@ type BoardWithDecisionMeetings = {
   nextMeeting: MeetingWithApplications | undefined;
 };
 
-const BOARD_CODES_TO_HIDE = ['ceo', 'exec'];
+const BOARD_CODES_TO_HIDE = ['ceo', 'vett'];
 
 @Component({
   selector: 'app-meeting-overview',

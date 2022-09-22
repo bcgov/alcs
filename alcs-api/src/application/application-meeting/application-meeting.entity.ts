@@ -38,7 +38,7 @@ export class ApplicationMeeting extends Base {
   application: Application;
 
   @AutoMap()
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   applicationPausedUuid: string;
 
   @AutoMap()
