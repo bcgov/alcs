@@ -68,8 +68,8 @@ export class ApplicationDecisionMeetingController {
         meetingDate: new Date(meetingDate.next_meeting).getTime(),
         fileNumber: app.fileNumber,
         applicant: app.applicant,
-        boardCode: app.board.code,
-        assignee: this.mapper.map(app.assignee, User, UserDto),
+        boardCode: app.card.board.code,
+        assignee: this.mapper.map(app.card.assignee, User, UserDto),
         files: this.mapper.mapArray(
           files,
           ApplicationDocument,
