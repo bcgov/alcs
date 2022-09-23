@@ -6,7 +6,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { CardHistory } from '../application/application-history.entity';
+import { CardHistory } from './card-history/card-history.entity';
 import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';

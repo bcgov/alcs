@@ -5,10 +5,11 @@ import {
   EventSubscriber,
   UpdateEvent,
 } from 'typeorm';
-import { Card } from '../card/card.entity';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { CardHistory } from './application-history.entity';
+import { User } from '../../user/user.entity';
+import { UserService } from '../../user/user.service';
+import { Card } from '../card.entity';
+
+import { CardHistory } from './card-history.entity';
 
 @EventSubscriber()
 export class CardSubscriber implements EntitySubscriberInterface<Card> {
@@ -47,7 +48,7 @@ export class CardSubscriber implements EntitySubscriberInterface<Card> {
       const history = new CardHistory();
       history.startDate =
         oldApplication.auditUpdatedAt || oldApplication.auditCreatedAt;
-      history.endDate = new Date(1, 1, 1, 1, 1, 1, 1);
+      history.endDate = new Date();
       history.statusUuid = oldApplication.statusUuid;
       history.card = event.databaseEntity;
       history.userId = user.uuid;

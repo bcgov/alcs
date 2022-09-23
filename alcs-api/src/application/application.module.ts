@@ -14,7 +14,6 @@ import { ApplicationDecisionMeetingService } from './application-decision-meetin
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
-import { CardHistory } from './application-history.entity';
 import { ApplicationMeetingController } from './application-meeting/application-meeting.controller';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
@@ -25,14 +24,11 @@ import { ApplicationTimeTrackingService } from './application-time-tracking.serv
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import { CardSubscriber } from './card.subscriber';
 
-// TODO: separate card specific types to board or separate module
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Application,
-      CardHistory,
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDecisionMeeting,
@@ -46,7 +42,6 @@ import { CardSubscriber } from './card.subscriber';
   providers: [
     ApplicationService,
     ApplicationTimeTrackingService,
-    CardSubscriber,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

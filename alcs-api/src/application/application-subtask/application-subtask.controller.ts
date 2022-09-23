@@ -29,7 +29,7 @@ import {
 @Controller('application-subtask')
 export class ApplicationSubtaskController {
   constructor(
-    private applicationSubtaskService: CardSubtaskService,
+    private cardSubtaskService: CardSubtaskService,
     private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -45,7 +45,7 @@ export class ApplicationSubtaskController {
       throw new ServiceNotFoundException(`File number not found ${fileNumber}`);
     }
 
-    const savedTask = await this.applicationSubtaskService.create(
+    const savedTask = await this.cardSubtaskService.create(
       application.card,
       subtaskType,
     );
@@ -58,10 +58,7 @@ export class ApplicationSubtaskController {
     @Param('uuid') subtaskUuid: string,
     @Body() body: Partial<UpdateApplicationSubtaskDto>,
   ): Promise<ApplicationSubtaskDto> {
-    const savedTask = await this.applicationSubtaskService.update(
-      subtaskUuid,
-      body,
-    );
+    const savedTask = await this.cardSubtaskService.update(subtaskUuid, body);
     return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
   }
 
@@ -81,7 +78,7 @@ export class ApplicationSubtaskController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') subtaskUuid: string) {
-    await this.applicationSubtaskService.delete(subtaskUuid);
+    await this.cardSubtaskService.delete(subtaskUuid);
     return { deleted: true };
   }
 }
