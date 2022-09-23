@@ -3,10 +3,10 @@ import { ApplicationType } from '../../../application/application-code/applicati
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
-import { CardStatus } from '../../../card/card-status/card-status.entity';
-import { CardSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
-import { CardSubtask } from '../../../application/application-subtask/application-subtask.entity';
 import { Application } from '../../../application/application.entity';
+import { CardStatus } from '../../../card/card-status/card-status.entity';
+import { CardSubtaskType } from '../../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
+import { CardSubtask } from '../../../card/card-subtask/card-subtask.entity';
 import { Card } from '../../../card/card.entity';
 import { Comment } from '../../../comment/comment.entity';
 import { CommentMention } from '../../../comment/mention/comment-mention.entity';

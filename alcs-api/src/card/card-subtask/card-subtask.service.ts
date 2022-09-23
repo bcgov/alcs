@@ -1,34 +1,28 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
+import { UpdateApplicationSubtaskDto } from '../../application/application-subtask/application-subtask.dto';
+import { Card } from '../../card/card.entity';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { ApplicationService } from '../application.service';
-import { CardSubtaskType } from './application-subtask-type.entity';
-import { UpdateApplicationSubtaskDto } from './application-subtask.dto';
-import { CardSubtask } from './application-subtask.entity';
+import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
+import { CardSubtask } from './card-subtask.entity';
 
 @Injectable()
-export class ApplicationSubtaskService {
+export class CardSubtaskService {
   private DEFAULT_RELATIONS: FindOptionsRelations<CardSubtask> = {
     assignee: true,
     type: true,
   };
 
   constructor(
-    private applicationService: ApplicationService,
     @InjectRepository(CardSubtask)
-    private applicationSubtaskRepository: Repository<CardSubtask>,
+    private cardSubtaskRepository: Repository<CardSubtask>,
     @InjectRepository(CardSubtaskType)
-    private applicationSubtaskTypeRepository: Repository<CardSubtaskType>,
+    private cardSubtaskTypeRepository: Repository<CardSubtaskType>,
   ) {}
 
-  async create(fileNumber: string, type: string) {
-    const application = await this.applicationService.get(fileNumber);
-    if (!application) {
-      throw new ServiceNotFoundException(`File number not found ${fileNumber}`);
-    }
-
-    const selectedType = await this.applicationSubtaskTypeRepository.findOne({
+  async create(card: Card, type: string) {
+    const selectedType = await this.cardSubtaskTypeRepository.findOne({
       where: {
         type: type,
       },
@@ -38,13 +32,13 @@ export class ApplicationSubtaskService {
     }
 
     const subtask = new CardSubtask({
-      card: application.card,
+      card: card,
       type: selectedType,
     });
 
-    const savedTask = await this.applicationSubtaskRepository.save(subtask, {});
+    const savedTask = await this.cardSubtaskRepository.save(subtask);
 
-    return this.applicationSubtaskRepository.findOne({
+    return this.cardSubtaskRepository.findOne({
       where: {
         uuid: savedTask.uuid,
       },
@@ -56,7 +50,7 @@ export class ApplicationSubtaskService {
     uuid: string,
     updates: Partial<UpdateApplicationSubtaskDto>,
   ): Promise<CardSubtask> {
-    const existingTask = await this.applicationSubtaskRepository.findOne({
+    const existingTask = await this.cardSubtaskRepository.findOne({
       where: { uuid },
     });
 
@@ -66,8 +60,7 @@ export class ApplicationSubtaskService {
 
     if (updates.completedAt === null) {
       existingTask.completedAt = null;
-    }
-    if (updates.completedAt) {
+    } else if (updates.completedAt) {
       existingTask.completedAt = new Date(updates.completedAt);
     }
 
@@ -75,11 +68,9 @@ export class ApplicationSubtaskService {
       existingTask.assigneeUuid = updates.assignee;
     }
 
-    const savedTask = await this.applicationSubtaskRepository.save(
-      existingTask,
-    );
+    const savedTask = await this.cardSubtaskRepository.save(existingTask);
 
-    return this.applicationSubtaskRepository.findOne({
+    return this.cardSubtaskRepository.findOne({
       where: {
         uuid: savedTask.uuid,
       },
@@ -88,6 +79,6 @@ export class ApplicationSubtaskService {
   }
 
   async delete(uuid: string) {
-    await this.applicationSubtaskRepository.delete(uuid);
+    await this.cardSubtaskRepository.delete(uuid);
   }
 }

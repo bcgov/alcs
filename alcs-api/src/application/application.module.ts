@@ -20,10 +20,7 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
-import { CardSubtaskType } from './application-subtask/application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
-import { CardSubtask } from './application-subtask/application-subtask.entity';
-import { ApplicationSubtaskService } from './application-subtask/application-subtask.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -40,13 +37,10 @@ import { CardSubscriber } from './card.subscriber';
       ApplicationMeeting,
       ApplicationDecisionMeeting,
       ApplicationDocument,
-      CardSubtaskType,
-      CardSubtask,
     ]),
     ApplicationCodeModule,
     NotificationModule,
     DocumentModule,
-    // TODO: check if this can be deleted later
     CardModule,
   ],
   providers: [
@@ -63,7 +57,6 @@ import { CardSubscriber } from './card.subscriber';
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationDocumentService,
-    ApplicationSubtaskService,
   ],
   controllers: [
     ApplicationController,
@@ -75,7 +68,6 @@ import { CardSubscriber } from './card.subscriber';
   exports: [
     ApplicationService,
     ApplicationTimeTrackingService,
-    ApplicationSubtaskService,
     ApplicationProfile,
     ApplicationSubtaskProfile,
   ],

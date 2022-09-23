@@ -4,12 +4,12 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationCodeService } from '../application/application-code/application-code.service';
-import { CardSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
-import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
-import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { CardSubtaskType } from '../card/card-subtask/card-subtask-type/card-subtask-type.entity';
+import { CardSubtask } from '../card/card-subtask/card-subtask.entity';
+import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
@@ -19,7 +19,7 @@ import { HomeController } from './home.controller';
 describe('HomeController', () => {
   let controller: HomeController;
   let mockApplicationService: DeepMocked<ApplicationService>;
-  let mockApplicationSubtaskService: DeepMocked<ApplicationSubtaskService>;
+  let mockApplicationSubtaskService: DeepMocked<CardSubtaskService>;
 
   const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
@@ -33,7 +33,7 @@ describe('HomeController', () => {
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
-    mockApplicationSubtaskService = createMock<ApplicationSubtaskService>();
+    mockApplicationSubtaskService = createMock<CardSubtaskService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -48,7 +48,7 @@ describe('HomeController', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: ApplicationSubtaskService,
+          provide: CardSubtaskService,
           useValue: mockApplicationSubtaskService,
         },
         {
