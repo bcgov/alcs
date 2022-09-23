@@ -14,7 +14,7 @@ import {
   templateUrl: './inline-edit.component.html',
   styleUrls: ['./inline-edit.component.scss'],
 })
-export class InlineEditComponent implements OnInit, AfterContentChecked {
+export class InlineEditComponent implements AfterContentChecked {
   @Input() value: string = '';
   @Output() save = new EventEmitter<string>();
 
@@ -24,8 +24,6 @@ export class InlineEditComponent implements OnInit, AfterContentChecked {
   pendingValue = '';
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   startEdit() {
     this.isEditing = true;

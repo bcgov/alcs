@@ -8,7 +8,7 @@ import { ToastService } from '../../../services/toast/toast.service';
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent {
   searchText = '';
   @ViewChild('searchInput') input!: ElementRef;
 
@@ -17,8 +17,6 @@ export class SearchBarComponent implements OnInit {
     private toastService: ToastService,
     private router: Router
   ) {}
-
-  ngOnInit(): void {}
 
   async onSearch() {
     const app = await this.applicationService.fetchApplication(this.searchText);
