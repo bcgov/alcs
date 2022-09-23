@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity } from 'typeorm';
-import { Base } from '../../common/entities/base.entity';
+import { Base } from '../../../common/entities/base.entity';
 
 @Entity()
 export class CardSubtaskType extends Base {

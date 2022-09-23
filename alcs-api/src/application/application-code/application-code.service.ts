@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
-import { CardStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../../card/card-status/card-status.entity';
 import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';

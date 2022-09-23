@@ -12,23 +12,24 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
+import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationSubtaskDto,
   UpdateApplicationSubtaskDto,
 } from './application-subtask.dto';
-import { CardSubtask } from './application-subtask.entity';
-import { ApplicationSubtaskService } from './application-subtask.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RoleGuard)
 @Controller('application-subtask')
 export class ApplicationSubtaskController {
   constructor(
-    private applicationSubtaskService: ApplicationSubtaskService,
+    private cardSubtaskService: CardSubtaskService,
     private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -39,8 +40,13 @@ export class ApplicationSubtaskController {
     @Param('fileNumber') fileNumber: string,
     @Param('subtaskType') subtaskType: string,
   ): Promise<ApplicationSubtaskDto> {
-    const savedTask = await this.applicationSubtaskService.create(
-      fileNumber,
+    const application = await this.applicationService.get(fileNumber);
+    if (!application) {
+      throw new ServiceNotFoundException(`File number not found ${fileNumber}`);
+    }
+
+    const savedTask = await this.cardSubtaskService.create(
+      application.card,
       subtaskType,
     );
     return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
@@ -52,10 +58,7 @@ export class ApplicationSubtaskController {
     @Param('uuid') subtaskUuid: string,
     @Body() body: Partial<UpdateApplicationSubtaskDto>,
   ): Promise<ApplicationSubtaskDto> {
-    const savedTask = await this.applicationSubtaskService.update(
-      subtaskUuid,
-      body,
-    );
+    const savedTask = await this.cardSubtaskService.update(subtaskUuid, body);
     return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
   }
 
@@ -75,7 +78,7 @@ export class ApplicationSubtaskController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') subtaskUuid: string) {
-    await this.applicationSubtaskService.delete(subtaskUuid);
+    await this.cardSubtaskService.delete(subtaskUuid);
     return { deleted: true };
   }
 }

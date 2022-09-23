@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CardStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../../card/card-status/card-status.entity';
 import { ApplicationCodeController } from './application-code.controller';
 import { ApplicationCodeService } from './application-code.service';
 import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';

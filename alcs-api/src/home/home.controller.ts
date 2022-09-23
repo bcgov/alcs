@@ -4,9 +4,9 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationSubtaskWithApplicationDTO } from '../application/application-subtask/application-subtask.dto';
-import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
+import { CardSubtask } from '../card/card-subtask/card-subtask.entity';
 
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';

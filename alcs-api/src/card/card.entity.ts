@@ -6,13 +6,13 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { CardHistory } from '../application/application-history.entity';
-import { CardStatus } from '../application/application-status/application-status.entity';
-import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
+import { CardHistory } from './card-history/card-history.entity';
 import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
+import { CardStatus } from './card-status/card-status.entity';
+import { CardSubtask } from './card-subtask/card-subtask.entity';
 import { CardType } from './card-type/card-type.entity';
 
 @Entity()

@@ -22,7 +22,6 @@ export class separateCardFromApplication1663886373621
     await queryRunner.query(
       `ALTER TABLE "application" DROP CONSTRAINT "FK_49d8a9170a71a2e7a9e386c945e"`,
     );
-    // TODO: check this
     await queryRunner.query(
       `DROP INDEX IF EXISTS "public"."IDX_fbbc6f68cb51279ecde6d12a89"`,
     );

@@ -3,27 +3,27 @@ import { ApplicationType } from '../../../application/application-code/applicati
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
-import { CardStatus } from '../../../application/application-status/application-status.entity';
-import { CardSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
-import { CardSubtask } from '../../../application/application-subtask/application-subtask.entity';
 import { Application } from '../../../application/application.entity';
+import { CardStatus } from '../../../card/card-status/card-status.entity';
+import { CardSubtaskType } from '../../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
+import { CardSubtask } from '../../../card/card-subtask/card-subtask.entity';
 import { Card } from '../../../card/card.entity';
 import { Comment } from '../../../comment/comment.entity';
 import { CommentMention } from '../../../comment/mention/comment-mention.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
-const initApplicationStatusMockEntity = (): CardStatus => {
-  const applicationStatus = new CardStatus();
-  applicationStatus.code = 'status_1';
-  applicationStatus.description = 'app desc 1';
-  applicationStatus.uuid = '1111-1111-1111-1111';
-  applicationStatus.label = 'app_label';
-  applicationStatus.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  applicationStatus.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  applicationStatus.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+const initCardStatusMockEntity = (): CardStatus => {
+  const cardStatus = new CardStatus();
+  cardStatus.code = 'status_1';
+  cardStatus.description = 'app desc 1';
+  cardStatus.uuid = '1111-1111-1111-1111';
+  cardStatus.label = 'app_label';
+  cardStatus.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  cardStatus.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  cardStatus.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
-  return applicationStatus;
+  return cardStatus;
 };
 
 const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
@@ -45,7 +45,7 @@ const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
 const initCardMockEntity = (): Card => {
   const card = new Card();
   card.highPriority = true;
-  card.status = initApplicationStatusMockEntity();
+  card.status = initCardStatusMockEntity();
   card.statusUuid = '1111-1111-1111-1111';
   card.uuid = '1111-1111-1111-1111';
   card.assigneeUuid = '1111-1111-1111';
@@ -204,7 +204,7 @@ const initApplicationMeetingMock = (
 };
 
 export {
-  initApplicationStatusMockEntity,
+  initCardStatusMockEntity,
   initApplicationMockEntity,
   initAssigneeMockDto,
   initAssigneeMockEntity,

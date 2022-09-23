@@ -5,7 +5,7 @@ import {
   ApplicationSubtaskDto,
   ApplicationSubtaskWithApplicationDTO,
 } from '../../application/application-subtask/application-subtask.dto';
-import { CardSubtask } from '../../application/application-subtask/application-subtask.entity';
+import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 
 @Injectable()
 export class ApplicationSubtaskProfile extends AutomapperProfile {

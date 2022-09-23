@@ -2,10 +2,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
-import { Card } from '../card/card.entity';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { CardHistory } from './application-history.entity';
+import { User } from '../../user/user.entity';
+import { UserService } from '../../user/user.service';
+import { Card } from '../card.entity';
+import { CardHistory } from './card-history.entity';
 import { CardSubscriber } from './card.subscriber';
 
 describe('CardSubscriber', () => {
@@ -24,9 +24,7 @@ describe('CardSubscriber', () => {
   const newStatus = 'new-status';
 
   beforeAll(() => {
-    jest.useFakeTimers({
-      now: new Date(),
-    });
+    jest.useFakeTimers().setSystemTime(new Date('2022-01-01'));
   });
 
   beforeEach(async () => {
@@ -100,7 +98,7 @@ describe('CardSubscriber', () => {
 
   describe('CardHistory', () => {
     it('should create a new history card when status is changed', async () => {
-      const endDate = new Date(1, 1, 1, 1, 1, 1, 1);
+      const endDate = new Date();
 
       await cardSubscriber.beforeUpdate(updateEvent);
 

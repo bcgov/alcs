@@ -2,18 +2,20 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Application } from '../../application/application.entity';
+import { ApplicationService } from '../../application/application.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { Application } from '../application.entity';
-import { ApplicationService } from '../application.service';
-import { CardSubtaskType } from './application-subtask-type.entity';
-import { CardSubtask } from './application-subtask.entity';
-import { ApplicationSubtaskService } from './application-subtask.service';
+import { initCardMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
+import { CardSubtask } from './card-subtask.entity';
+import { CardSubtaskService } from './card-subtask.service';
 
-describe('ApplicationSubtaskService', () => {
-  let applicationSubtaskService: ApplicationSubtaskService;
+describe('CardSubtaskService', () => {
+  let cardSubtaskService: CardSubtaskService;
   let mockSubtaskRepo: DeepMocked<Repository<CardSubtask>>;
   let mockSubtaskTypeRepo: DeepMocked<Repository<CardSubtaskType>>;
   let applicationService: DeepMocked<ApplicationService>;
+  const mockCard = initCardMockEntity();
 
   beforeEach(async () => {
     applicationService = createMock<ApplicationService>();
@@ -22,7 +24,7 @@ describe('ApplicationSubtaskService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ApplicationSubtaskService,
+        CardSubtaskService,
         {
           provide: ApplicationService,
           useValue: applicationService,
@@ -38,16 +40,14 @@ describe('ApplicationSubtaskService', () => {
       ],
     }).compile();
 
-    applicationSubtaskService = module.get<ApplicationSubtaskService>(
-      ApplicationSubtaskService,
-    );
+    cardSubtaskService = module.get<CardSubtaskService>(CardSubtaskService);
   });
 
   it('should be defined', () => {
-    expect(applicationSubtaskService).toBeDefined();
+    expect(cardSubtaskService).toBeDefined();
   });
 
-  it('should check application exists and call through to repos for create', async () => {
+  it('should call repos for create', async () => {
     const mockSubtask = {
       uuid: 'fake-uuid',
     } as CardSubtask;
@@ -56,28 +56,12 @@ describe('ApplicationSubtaskService', () => {
     mockSubtaskRepo.save.mockResolvedValue({} as any);
     mockSubtaskRepo.findOne.mockResolvedValue(mockSubtask);
 
-    const res = await applicationSubtaskService.create(
-      'mock-file',
-      'fake-type',
-    );
+    const res = await cardSubtaskService.create(mockCard, 'fake-type');
 
-    expect(applicationService.get).toHaveBeenCalled();
     expect(mockSubtaskTypeRepo.findOne).toHaveBeenCalled();
     expect(mockSubtaskRepo.save).toHaveBeenCalled();
     expect(mockSubtaskRepo.findOne).toHaveBeenCalled();
     expect(res).toEqual(mockSubtask);
-  });
-
-  it("should throw an exception if application doesn't exist for create", async () => {
-    applicationService.get.mockResolvedValue(undefined);
-
-    await expect(
-      applicationSubtaskService.create('mock-file', 'fake-type'),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(`File number not found mock-file`),
-    );
-
-    expect(applicationService.get).toHaveBeenCalled();
   });
 
   it('should throw an exception if type does not exist', async () => {
@@ -85,12 +69,11 @@ describe('ApplicationSubtaskService', () => {
     mockSubtaskTypeRepo.findOne.mockResolvedValue(undefined);
 
     await expect(
-      applicationSubtaskService.create('mock-file', 'fake-type'),
+      cardSubtaskService.create(mockCard, 'fake-type'),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`Invalid subtask type fake-type`),
     );
 
-    expect(applicationService.get).toHaveBeenCalled();
     expect(mockSubtaskTypeRepo.findOne).toHaveBeenCalled();
   });
 
@@ -100,7 +83,7 @@ describe('ApplicationSubtaskService', () => {
 
     const fakeTime = 15612312512;
     const fakeAssignee = 'fake-assignee';
-    const res = await applicationSubtaskService.update('fake-uuid', {
+    const res = await cardSubtaskService.update('fake-uuid', {
       assignee: fakeAssignee,
       completedAt: fakeTime,
     });
@@ -115,7 +98,7 @@ describe('ApplicationSubtaskService', () => {
     mockSubtaskRepo.findOne.mockResolvedValue(undefined);
 
     await expect(
-      applicationSubtaskService.update('fake-uuid', {
+      cardSubtaskService.update('fake-uuid', {
         assignee: '',
         completedAt: 1,
       }),
@@ -129,7 +112,7 @@ describe('ApplicationSubtaskService', () => {
   it('should call through for delete', async () => {
     mockSubtaskRepo.delete.mockResolvedValue({} as any);
 
-    await applicationSubtaskService.delete('fake-uuid');
+    await cardSubtaskService.delete('fake-uuid');
 
     expect(mockSubtaskRepo.delete).toHaveBeenCalled();
     expect(mockSubtaskRepo.delete.mock.calls[0][0]).toEqual('fake-uuid');

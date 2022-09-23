@@ -18,8 +18,8 @@ import {
 } from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../application/application-paused.entity';
-import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
-import { CardStatus } from '../../application/application-status/application-status.entity';
+import { CardStatusDto } from '../../card/card-status/card-status.dto';
+import { CardStatus } from '../../card/card-status/card-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -40,9 +40,9 @@ export class ApplicationProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, CardStatus, ApplicationStatusDto);
+      createMap(mapper, CardStatus, CardStatusDto);
       createMap(mapper, ApplicationType, ApplicationTypeDto);
-      createMap(mapper, ApplicationStatusDto, CardStatus);
+      createMap(mapper, CardStatusDto, CardStatus);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
       createMap(
@@ -105,7 +105,7 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.statusDetails,
           mapFrom((a) =>
-            this.mapper.map(a.card.status, CardStatus, ApplicationStatusDto),
+            this.mapper.map(a.card.status, CardStatus, CardStatusDto),
           ),
         ),
         forMember(
