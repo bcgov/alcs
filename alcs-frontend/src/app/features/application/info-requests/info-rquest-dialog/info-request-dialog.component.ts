@@ -29,6 +29,7 @@ export class InfoRequestDialogComponent {
   model: ApplicationInfoRequestForm;
   defaultReason = REASON_TYPE.DEFAULT;
   @ViewChild('customReasonText') customReasonText: any;
+  isLoading = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationInfoRequestForm,
@@ -56,19 +57,24 @@ export class InfoRequestDialogComponent {
   }
 
   async onSubmit() {
-    if (this.model.uuid) {
-      await this.meetingService.update(this.model.uuid, {
-        startDate: this.model.startDate,
-        endDate: this.model.endDate,
-        description: this.getDescription(),
-      });
-    } else {
-      await this.meetingService.create(this.model.fileNumber, this.data.meetingType.label, {
-        startDate: this.model.startDate,
-        endDate: this.model.endDate,
-        meetingTypeCode: this.data.meetingType.code,
-        description: this.getDescription(),
-      });
+    try {
+      this.isLoading = true;
+      if (this.model.uuid) {
+        await this.meetingService.update(this.model.uuid, {
+          startDate: this.model.startDate,
+          endDate: this.model.endDate,
+          description: this.getDescription(),
+        });
+      } else {
+        await this.meetingService.create(this.model.fileNumber, this.data.meetingType.label, {
+          startDate: this.model.startDate,
+          endDate: this.model.endDate,
+          meetingTypeCode: this.data.meetingType.code,
+          description: this.getDescription(),
+        });
+      }
+    } finally {
+      this.isLoading = false;
     }
     this.dialogRef.close(true);
   }

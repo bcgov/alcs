@@ -5,7 +5,6 @@ import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/appl
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
-import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 
 @Component({
@@ -16,6 +15,7 @@ import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 export class CreateCardDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
+  isLoading = false;
 
   createForm = new FormGroup({
     fileNumber: new FormControl('', [Validators.required]),
@@ -43,15 +43,20 @@ export class CreateCardDialogComponent implements OnInit {
   }
 
   async onSubmit() {
-    const formValues = this.createForm.getRawValue();
-    await this.applicationService.createApplication({
-      type: formValues.type!,
-      applicant: formValues.applicant!,
-      fileNumber: formValues.fileNumber!.toString(),
-      region: formValues.region || undefined,
-      dateReceived: formatDateForApi(formValues.receivedDate!),
-    });
-    this.dialogRef.close(true);
-    this.toastService.showSuccessToast('Application Created');
+    try {
+      this.isLoading = true;
+      const formValues = this.createForm.getRawValue();
+      await this.applicationService.createApplication({
+        type: formValues.type!,
+        applicant: formValues.applicant!,
+        fileNumber: formValues.fileNumber!.toString(),
+        region: formValues.region || undefined,
+        dateReceived: formatDateForApi(formValues.receivedDate!),
+      });
+      this.dialogRef.close(true);
+      this.toastService.showSuccessToast('Application Created');
+    } finally {
+      this.isLoading = false;
+    }
   }
 }

@@ -12,8 +12,10 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div class="button-container">
-      <button mat-stroked-button color="primary" mat-dialog-close>Close</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">Save</button>
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">
+        Save
+      </button>
     </div>
   </mat-dialog-actions>
 </form>
