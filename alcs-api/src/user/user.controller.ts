@@ -43,7 +43,7 @@ export class UserController {
   }
 
   @Patch()
-  @UserRoles(AUTH_ROLE.ADMIN)
+  @UserRoles(...ANY_AUTH_ROLE)
   async update(@Body() user: CreateOrUpdateUserDto, @Req() req) {
     const existingUser = await this.userService.get(user.email);
 
