@@ -118,12 +118,12 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application.board_uuid references board.uuid via FK_fe6c9e8b98e3f649b598710dfce"><a href='application.html'>application</a><span class='relatedKey'>.board_uuid</span></td>
-                                                <td class="constraint detail">FK_fe6c9e8b98e3f649b598710dfce<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
                                                 <td title="board_status.board_uuid references board.uuid via FK_30cd0aba1ecf48c3687eaa215e1"><a href='board_status.html'>board_status</a><span class='relatedKey'>.board_uuid</span></td>
                                                 <td class="constraint detail">FK_30cd0aba1ecf48c3687eaa215e1<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="card.board_uuid references board.uuid via FK_38a14bc9166d9fac12861d07cdd"><a href='card.html'>card</a><span class='relatedKey'>.board_uuid</span></td>
+                                                <td class="constraint detail">FK_38a14bc9166d9fac12861d07cdd<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -334,28 +334,24 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,5,731,299">
-<area shape="rect" id="node2" href="board.html" target="_top" title="board" alt="" coords="5,260,384,593">
-<area shape="rect" id="node3" href="board_status.html" target="_top" title="board_status" alt="" coords="467,316,691,492">
+<area shape="rect" id="node1" href="board_status.html" target="_top" title="board_status" alt="" coords="428,5,652,181">
+<area shape="rect" id="node2" href="board.html" target="_top" title="board" alt="" coords="5,144,384,477">
+<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="428,199,652,433">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/board.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,265,731,559">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="137,111,252,199">
-<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="5,600,384,933">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="81,493,308,581">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="82,283,307,371">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="89,388,301,476">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="775,216,1089,304">
-<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="803,321,1061,409">
-<area shape="rect" id="node9" href="application_history.html" target="_top" title="application_history" alt="" coords="816,427,1048,515">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1133,567,1375,655">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="815,532,1049,620">
-<area shape="rect" id="node12" href="application_subtask.html" target="_top" title="application_subtask" alt="" coords="813,111,1051,199">
-<area shape="rect" id="node13" href="board_status.html" target="_top" title="board_status" alt="" coords="467,576,691,752">
-<area shape="rect" id="node14" href="comment.html" target="_top" title="comment" alt="" coords="854,5,1010,93">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="703,235,873,323">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="428,332,652,567">
+<area shape="rect" id="node4" href="board.html" target="_top" title="board" alt="" coords="5,5,384,339">
+<area shape="rect" id="node5" href="card_status.html" target="_top" title="card_status" alt="" coords="109,356,280,444">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="137,567,252,655">
+<area shape="rect" id="node7" href="card_type.html" target="_top" title="card_type" alt="" coords="116,461,273,549">
+<area shape="rect" id="node3" href="board_status.html" target="_top" title="board_status" alt="" coords="428,59,652,235">
+<area shape="rect" id="node8" href="card_history.html" target="_top" title="card_history" alt="" coords="699,340,877,428">
+<area shape="rect" id="node9" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="696,464,880,552">
+<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="710,579,866,667">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/board.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

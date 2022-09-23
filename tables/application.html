@@ -126,24 +126,12 @@
                                                 <td class="constraint detail">FK_6c496454f95f229c63679bf191e<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="application_history.application_uuid references application.uuid via FK_c207c12131344aa91fe4a48d81b"><a href='application_history.html'>application_history</a><span class='relatedKey'>.application_uuid</span></td>
-                                                <td class="constraint detail">FK_c207c12131344aa91fe4a48d81b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
                                                 <td title="application_meeting.application_uuid references application.uuid via FK_4a7e09569765e147304194b63f5"><a href='application_meeting.html'>application_meeting</a><span class='relatedKey'>.application_uuid</span></td>
                                                 <td class="constraint detail">FK_4a7e09569765e147304194b63f5<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
                                                 <td title="application_paused.application_uuid references application.uuid via FK_57e39f7c811d07c646fc04e8bdf"><a href='application_paused.html'>application_paused</a><span class='relatedKey'>.application_uuid</span></td>
                                                 <td class="constraint detail">FK_57e39f7c811d07c646fc04e8bdf<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="application_subtask.application_uuid references application.uuid via FK_bf49d4ecd55fb885bd570fa9c47"><a href='application_subtask.html'>application_subtask</a><span class='relatedKey'>.application_uuid</span></td>
-                                                <td class="constraint detail">FK_bf49d4ecd55fb885bd570fa9c47<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="comment.application_uuid references application.uuid via FK_fbbc6f68cb51279ecde6d12a890"><a href='comment.html'>comment</a><span class='relatedKey'>.application_uuid</span></td>
-                                                <td class="constraint detail">FK_fbbc6f68cb51279ecde6d12a890<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -290,65 +278,6 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="assignee_uuid">assignee_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application.assignee_uuid references user.uuid via FK_49d8a9170a71a2e7a9e386c945e"><a href='user.html'>user</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_49d8a9170a71a2e7a9e386c945e<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="high_priority">high_priority</span></td>
-                                    <td>bool</td>
-                                    <td>1</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>false</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="status_uuid">status_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>&#39;f9f4244f-9741-45f0-9724-ce13e8aa09eb&#39;::uuid</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application.status_uuid references application_status.uuid via FK_5b6c6dffed9d8dd24903be05473"><a href='application_status.html'>application_status</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_5b6c6dffed9d8dd24903be05473<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="type_uuid">type_uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
@@ -385,27 +314,6 @@
                                             <tr>
                                                 <td title="application.region_uuid references application_region.uuid via FK_8b7f8f8a39a6142e0f7c5ad86f5"><a href='application_region.html'>application_region</a><span class='relatedKey'>.uuid</span></td>
                                                 <td class="constraint detail">FK_8b7f8f8a39a6142e0f7c5ad86f5<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="board_uuid">board_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>&#39;bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2&#39;::uuid</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application.board_uuid references board.uuid via FK_fe6c9e8b98e3f649b598710dfce"><a href='board.html'>board</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_fe6c9e8b98e3f649b598710dfce<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -513,6 +421,27 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="card_uuid">card_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application.card_uuid references card.uuid via FK_21eddf92cb75ff3cc0c99b80d86"><a href='card.html'>card</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_21eddf92cb75ff3cc0c99b80d86<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -550,6 +479,12 @@
                                     <td>uuid</td>
                                 </tr>
                                 <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_21eddf92cb75ff3cc0c99b80d86</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>card_uuid</td>
+                                </tr>
+                                <tr>
                                     <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_39c4f5ceb0f5a7a4c819d46a0d5</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
@@ -578,43 +513,36 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,529,733,1215">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="7,228,231,375">
-<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="7,1188,231,1335">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,995,232,1171">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,608,231,784">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="7,801,231,977">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="777,421,1092,568">
-<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="806,585,1063,761">
-<area shape="rect" id="node9" href="application_history.html" target="_top" title="application_history" alt="" coords="819,779,1051,925">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1136,868,1381,1073">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="818,979,1051,1125">
-<area shape="rect" id="node12" href="application_subtask.html" target="_top" title="application_subtask" alt="" coords="815,199,1054,404">
-<area shape="rect" id="node13" href="comment.html" target="_top" title="comment" alt="" coords="823,5,1047,181">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,257,733,855">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="7,759,231,993">
+<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,560,232,736">
+<area shape="rect" id="node4" href="application_type.html" target="_top" title="application_type" alt="" coords="7,367,231,543">
+<area shape="rect" id="node5" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="777,5,1092,152">
+<area shape="rect" id="node6" href="application_document.html" target="_top" title="application_document" alt="" coords="806,169,1063,345">
+<area shape="rect" id="node7" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1136,288,1381,493">
+<area shape="rect" id="node8" href="application_paused.html" target="_top" title="application_paused" alt="" coords="818,399,1051,545">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,561,733,1247">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,217,176,305">
-<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="7,1269,231,1416">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1076,232,1252">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,883,231,1059">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="7,689,231,865">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="777,833,1092,980">
-<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="806,288,1063,464">
-<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="424,319,585,407">
-<area shape="rect" id="node10" href="application_history.html" target="_top" title="application_history" alt="" coords="819,997,1051,1144">
-<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1136,657,1377,745">
-<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="818,728,1051,816">
-<area shape="rect" id="node13" href="application_meeting_type.html" target="_top" title="application_meeting_type" alt="" coords="793,587,1077,675">
-<area shape="rect" id="node14" href="application_subtask.html" target="_top" title="application_subtask" alt="" coords="815,147,1054,235">
-<area shape="rect" id="node15" href="application_subtask_type.html" target="_top" title="application_subtask_type" alt="" coords="364,147,645,235">
-<area shape="rect" id="node16" href="board_status.html" target="_top" title="board_status" alt="" coords="413,1267,596,1355">
-<area shape="rect" id="node17" href="comment.html" target="_top" title="comment" alt="" coords="857,481,1013,569">
-<area shape="rect" id="node18" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1141,347,1372,435">
-<area shape="rect" id="node19" href="notification.html" target="_top" title="notification" alt="" coords="418,5,591,93">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="491,267,948,864">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="221,841,445,1076">
+<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="220,605,447,781">
+<area shape="rect" id="node4" href="application_type.html" target="_top" title="application_type" alt="" coords="221,412,445,588">
+<area shape="rect" id="node11" href="user.html" target="_top" title="user" alt="" coords="33,1092,148,1180">
+<area shape="rect" id="node12" href="board.html" target="_top" title="board" alt="" coords="27,881,154,969">
+<area shape="rect" id="node13" href="card_status.html" target="_top" title="card_status" alt="" coords="5,776,176,864">
+<area shape="rect" id="node14" href="card_type.html" target="_top" title="card_type" alt="" coords="12,987,169,1075">
+<area shape="rect" id="node5" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="992,111,1307,257">
+<area shape="rect" id="node6" href="application_document.html" target="_top" title="application_document" alt="" coords="1021,760,1278,936">
+<area shape="rect" id="node7" href="document.html" target="_top" title="document" alt="" coords="253,1165,414,1253">
+<area shape="rect" id="node8" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1351,275,1592,363">
+<area shape="rect" id="node9" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1033,275,1266,363">
+<area shape="rect" id="node10" href="application_meeting_type.html" target="_top" title="application_meeting_type" alt="" coords="1007,5,1291,93">
+<area shape="rect" id="node15" href="card_history.html" target="_top" title="card_history" alt="" coords="631,881,808,969">
+<area shape="rect" id="node16" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="627,987,811,1075">
+<area shape="rect" id="node17" href="comment.html" target="_top" title="comment" alt="" coords="641,1092,797,1180">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

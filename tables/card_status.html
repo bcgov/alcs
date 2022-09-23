@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>application_history - postgres Database</title>
+        <title>card_status - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_history</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>card_status</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,6 +117,14 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="board_status.status_uuid references card_status.uuid via FK_97cd2800c2e17e3cb8c24c78987"><a href='board_status.html'>board_status</a><span class='relatedKey'>.status_uuid</span></td>
+                                                <td class="constraint detail">FK_97cd2800c2e17e3cb8c24c78987<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="card.status_uuid references card_status.uuid via FK_f3fd3dde1c00cd754841b8b696b"><a href='card.html'>card</a><span class='relatedKey'>.status_uuid</span></td>
+                                                <td class="constraint detail">FK_f3fd3dde1c00cd754841b8b696b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -211,41 +219,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="start_date">start_date</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="end_date">end_date</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="user_id">user_id</span></td>
+                                    <td><span id="label">label</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -262,8 +236,8 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="status_uuid">status_uuid</span></td>
-                                    <td>uuid</td>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="code">code</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
@@ -279,10 +253,10 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_uuid">application_uuid</span></td>
-                                    <td>uuid</td>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="description">description</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
-                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -291,10 +265,6 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application_history.application_uuid references application.uuid via FK_c207c12131344aa91fe4a48d81b"><a href='application.html'>application</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_c207c12131344aa91fe4a48d81b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -330,10 +300,22 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_36290500e8ba5aee9a6d88bfd51</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_f3fd3dde1c00cd754841b8b696b</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
+                                </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_3e1a5a0591f4b54698ea641c38d</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>code</td>
+                                </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_9743541eb8e42b744016f9d14f9</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>description</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -358,28 +340,26 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_history.html" target="_top" title="application_history" alt="" coords="352,5,731,397">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,301,308,595">
+<area shape="rect" id="node1" href="board_status.html" target="_top" title="board_status" alt="" coords="428,5,652,181">
+<area shape="rect" id="node2" href="card_status.html" target="_top" title="card_status" alt="" coords="5,144,384,477">
+<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="428,199,652,433">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_history.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/card_status.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="276,225,579,519">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,111,176,199">
-<area shape="rect" id="node3" href="board.html" target="_top" title="board" alt="" coords="55,544,182,632">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,439,232,527">
-<area shape="rect" id="node5" href="application_status.html" target="_top" title="application_status" alt="" coords="6,228,231,316">
-<area shape="rect" id="node6" href="application_type.html" target="_top" title="application_type" alt="" coords="13,333,225,421">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="655,252,969,340">
-<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="683,357,941,445">
-<area shape="rect" id="node9" href="application_history.html" target="_top" title="application_history" alt="" coords="623,463,1001,855">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1045,525,1287,613">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="695,872,929,960">
-<area shape="rect" id="node12" href="application_subtask.html" target="_top" title="application_subtask" alt="" coords="693,111,931,199">
-<area shape="rect" id="node13" href="comment.html" target="_top" title="comment" alt="" coords="734,5,890,93">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="703,231,873,319">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="428,328,652,563">
+<area shape="rect" id="node4" href="board.html" target="_top" title="board" alt="" coords="131,5,258,93">
+<area shape="rect" id="node5" href="card_status.html" target="_top" title="card_status" alt="" coords="5,111,384,444">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="137,567,252,655">
+<area shape="rect" id="node7" href="card_type.html" target="_top" title="card_type" alt="" coords="116,461,273,549">
+<area shape="rect" id="node3" href="board_status.html" target="_top" title="board_status" alt="" coords="428,15,652,191">
+<area shape="rect" id="node8" href="card_history.html" target="_top" title="card_history" alt="" coords="699,336,877,424">
+<area shape="rect" id="node9" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="696,460,880,548">
+<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="710,575,866,663">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_history.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card_status.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

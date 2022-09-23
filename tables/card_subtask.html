@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>application_subtask_type - postgres Database</title>
+        <title>card_subtask - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_subtask_type</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>card_subtask</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -117,10 +117,6 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application_subtask.type_uuid references application_subtask_type.uuid via FK_395e8b9da47fe0a88b3fa8f6a53"><a href='application_subtask.html'>application_subtask</a><span class='relatedKey'>.type_uuid</span></td>
-                                                <td class="constraint detail">FK_395e8b9da47fe0a88b3fa8f6a53<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -215,10 +211,27 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="type">type</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
+                                    <td><span id="created_at">created_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
                                     <td title=''></td>
+                                    <td title=''></td>
+                                    <td>now()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="completed_at">completed_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -232,10 +245,10 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="background_color">background_color</span></td>
-                                    <td>varchar</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="assignee_uuid">assignee_uuid</span></td>
+                                    <td>uuid</td>
                                     <td>2147483647</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -244,15 +257,19 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="card_subtask.assignee_uuid references user.uuid via FK_35829d0ec7a6e71391c2349188f"><a href='user.html'>user</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_35829d0ec7a6e71391c2349188f<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="text_color">text_color</span></td>
-                                    <td>varchar</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="card_uuid">card_uuid</span></td>
+                                    <td>uuid</td>
                                     <td>2147483647</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -261,6 +278,31 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="card_subtask.card_uuid references card.uuid via FK_27ad2b929d07d4c4e43943f8e62"><a href='card.html'>card</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_27ad2b929d07d4c4e43943f8e62<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="type_uuid">type_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="card_subtask.type_uuid references card_subtask_type.uuid via FK_b2ea292f93c675defa3b3cc93dd"><a href='card_subtask_type.html'>card_subtask_type</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_b2ea292f93c675defa3b3cc93dd<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -296,7 +338,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_395e8b9da47fe0a88b3fa8f6a53</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_1196033d1dfc3f1f0d102eb9a6a</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
@@ -324,19 +366,30 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_subtask.html" target="_top" title="application_subtask" alt="" coords="455,5,693,211">
-<area shape="rect" id="node2" href="application_subtask_type.html" target="_top" title="application_subtask_type" alt="" coords="5,91,411,424">
+<area shape="rect" id="node1" href="card.html" target="_top" title="card" alt="" coords="275,272,499,507">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,279,229,425">
+<area shape="rect" id="node3" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="544,5,923,397">
+<area shape="rect" id="node4" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="273,524,500,641">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_subtask_type.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/card_subtask.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="282,67,451,155">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,31,120,119">
-<area shape="rect" id="node3" href="application_subtask.html" target="_top" title="application_subtask" alt="" coords="613,5,852,211">
-<area shape="rect" id="node4" href="application_subtask_type.html" target="_top" title="application_subtask_type" alt="" coords="164,172,569,505">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="595,111,765,199">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="276,132,391,220">
+<area shape="rect" id="node3" href="user.html" target="_top" title="user" alt="" coords="33,336,148,424">
+<area shape="rect" id="node4" href="board.html" target="_top" title="board" alt="" coords="27,20,154,108">
+<area shape="rect" id="node5" href="card_status.html" target="_top" title="card_status" alt="" coords="5,125,176,213">
+<area shape="rect" id="node6" href="card_type.html" target="_top" title="card_type" alt="" coords="12,231,169,319">
+<area shape="rect" id="node7" href="card_history.html" target="_top" title="card_history" alt="" coords="591,5,769,93">
+<area shape="rect" id="node8" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="491,357,869,749">
+<area shape="rect" id="node9" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="220,401,447,519">
+<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="602,216,758,304">
+<area shape="rect" id="node11" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="913,251,1144,339">
+<area shape="rect" id="node12" href="document.html" target="_top" title="document" alt="" coords="253,536,414,624">
+<area shape="rect" id="node13" href="notification.html" target="_top" title="notification" alt="" coords="247,641,420,729">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_subtask_type.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card_subtask.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
