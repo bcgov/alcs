@@ -109,6 +109,8 @@
 
   <mat-dialog-actions align="end">
     <button class="button-container" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Save</button>
+    <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
+      Save
+    </button>
   </mat-dialog-actions>
 </form>

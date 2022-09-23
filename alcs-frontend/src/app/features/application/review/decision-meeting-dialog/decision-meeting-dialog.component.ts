@@ -14,6 +14,7 @@ export class ApplicationDecisionMeetingForm {
 })
 export class DecisionMeetingDialogComponent {
   model: ApplicationDecisionMeetingForm;
+  isLoading = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDecisionMeetingForm,
@@ -33,22 +34,27 @@ export class DecisionMeetingDialogComponent {
 
   async onSubmit() {
     if (this.model) {
-      if (this.model.uuid) {
-        this.decisionMeetingService.update({
-          uuid: this.model.uuid as string,
-          date: this.model.date,
-          applicationFileNumber: this.data.fileNumber,
-        });
-      } else {
-        this.decisionMeetingService.create({
-          date: this.model.date,
-          applicationFileNumber: this.data.fileNumber,
-        });
-      }
+      try {
+        this.isLoading = true;
+        if (this.model.uuid) {
+          await this.decisionMeetingService.update({
+            uuid: this.model.uuid as string,
+            date: this.model.date,
+            applicationFileNumber: this.data.fileNumber,
+          });
+        } else {
+          await this.decisionMeetingService.create({
+            date: this.model.date,
+            applicationFileNumber: this.data.fileNumber,
+          });
+        }
 
-      await this.decisionMeetingService.fetch(this.data.fileNumber);
-      this.dialogRef.close();
-      this.toastService.showSuccessToast('Meeting created.');
+        await this.decisionMeetingService.fetch(this.data.fileNumber);
+        this.dialogRef.close();
+        this.toastService.showSuccessToast('Meeting created.');
+      } finally {
+        this.isLoading = false;
+      }
     }
   }
 }

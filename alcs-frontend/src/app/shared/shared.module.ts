@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDatepickerModule } from '@matheo/datepicker';
 import { DateAdapter, MatNativeDateModule } from '@matheo/datepicker/core';
+import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
@@ -59,6 +60,7 @@ import { MomentPipe } from './utils/moment.pipe';
     MomentPipe,
     MeetingOverviewComponent,
     MatExpansionModule,
+    MtxButtonModule,
   ],
 })
 export class SharedModule {

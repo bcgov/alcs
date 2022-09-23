@@ -31,6 +31,7 @@ const APPLICANT_MEETING = {
 })
 export class ApplicationMeetingDialogComponent {
   model: ApplicationMeetingForm;
+  isLoading = false;
 
   reasons: any = {
     meeting: '',
@@ -75,18 +76,23 @@ export class ApplicationMeetingDialogComponent {
 
   async onSubmit() {
     if (this.model) {
-      const data = {
-        startDate: this.model.startDate,
-        endDate: this.model.endDate ? this.model.endDate : null,
-        description: this.model.reason,
-      };
-      if (this.model.uuid) {
-        await this.meetingService.update(this.model.uuid, data);
-      } else {
-        await this.meetingService.create(this.data.fileNumber, this.data.meetingType.label, {
-          ...data,
-          meetingTypeCode: this.data.meetingType.code,
-        });
+      this.isLoading = true;
+      try {
+        const data = {
+          startDate: this.model.startDate,
+          endDate: this.model.endDate ? this.model.endDate : null,
+          description: this.model.reason,
+        };
+        if (this.model.uuid) {
+          await this.meetingService.update(this.model.uuid, data);
+        } else {
+          await this.meetingService.create(this.data.fileNumber, this.data.meetingType.label, {
+            ...data,
+            meetingTypeCode: this.data.meetingType.code,
+          });
+        }
+      } finally {
+        this.isLoading = false;
       }
       this.dialogRef.close(true);
     }
