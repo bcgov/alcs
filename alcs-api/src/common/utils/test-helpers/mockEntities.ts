@@ -3,7 +3,7 @@ import { ApplicationType } from '../../../application/application-code/applicati
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
-import { CardStatus } from '../../../application/application-status/card-status.entity';
+import { CardStatus } from '../../../card/card-status/card-status.entity';
 import { CardSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
 import { CardSubtask } from '../../../application/application-subtask/application-subtask.entity';
 import { Application } from '../../../application/application.entity';

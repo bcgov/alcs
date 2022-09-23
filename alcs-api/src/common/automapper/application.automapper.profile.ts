@@ -18,8 +18,8 @@ import {
 } from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../application/application-paused.entity';
-import { CardStatusDto } from '../../application/application-status/card-status.dto';
-import { CardStatus } from '../../application/application-status/card-status.entity';
+import { CardStatusDto } from '../../card/card-status/card-status.dto';
+import { CardStatus } from '../../card/card-status/card-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,

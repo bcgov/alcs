@@ -3,6 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { CardStatus } from '../card/card-status/card-status.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
@@ -19,7 +20,6 @@ import {
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
-import { CardStatus } from './application-status/card-status.entity';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto } from './application.dto';

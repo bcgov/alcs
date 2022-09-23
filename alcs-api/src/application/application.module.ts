@@ -3,8 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { CardType } from '../card/card-type/card-type.entity';
-import { Card } from '../card/card.entity';
-import { CardService } from '../card/card.service';
+import { CardModule } from '../card/card.module';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
@@ -22,9 +21,6 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
-import { CardStatusController } from './application-status/card-status.controller';
-import { CardStatus } from './application-status/card-status.entity';
-import { CardStatusService } from './application-status/card-status.service';
 import { CardSubtaskType } from './application-subtask/application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
 import { CardSubtask } from './application-subtask/application-subtask.entity';
@@ -39,8 +35,6 @@ import { CardSubscriber } from './card.subscriber';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      CardStatus,
-      Card,
       Application,
       CardHistory,
       ApplicationPaused,
@@ -54,10 +48,11 @@ import { CardSubscriber } from './card.subscriber';
     ApplicationCodeModule,
     NotificationModule,
     DocumentModule,
+    // TODO: check if this can be deleted later
+    CardModule,
   ],
   providers: [
     ApplicationService,
-    CardStatusService,
     ApplicationTimeTrackingService,
     CardSubscriber,
     {
@@ -71,11 +66,9 @@ import { CardSubscriber } from './card.subscriber';
     ApplicationPausedService,
     ApplicationDocumentService,
     ApplicationSubtaskService,
-    CardService,
   ],
   controllers: [
     ApplicationController,
-    CardStatusController,
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,
@@ -87,7 +80,6 @@ import { CardSubscriber } from './card.subscriber';
     ApplicationSubtaskService,
     ApplicationProfile,
     ApplicationSubtaskProfile,
-    CardService,
   ],
 })
 export class ApplicationModule {}

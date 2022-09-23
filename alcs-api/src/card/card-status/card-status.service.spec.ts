@@ -7,9 +7,9 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationTimeTrackingService } from '../application-time-tracking.service';
-import { Application } from '../application.entity';
-import { ApplicationService } from '../application.service';
+import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
+import { Application } from '../../application/application.entity';
+import { ApplicationService } from '../../application/application.service';
 import { CardStatusDto } from './card-status.dto';
 import { CardStatus } from './card-status.entity';
 import { CardStatusService } from './card-status.service';

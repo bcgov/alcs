@@ -5,8 +5,7 @@ import { CardStatusDto } from './card-status.dto';
 import { CardStatusService } from './card-status.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-// TODO: rename controller and address this on UI side
-@Controller('application-status')
+@Controller('card-status')
 export class CardStatusController {
   constructor(private cardStatusService: CardStatusService) {}
 
