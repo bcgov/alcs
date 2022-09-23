@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
-import { CardType } from '../card/card-type/card-type.entity';
 import { CardModule } from '../card/card.module';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
@@ -43,7 +42,6 @@ import { CardSubscriber } from './card.subscriber';
       ApplicationDocument,
       CardSubtaskType,
       CardSubtask,
-      CardType,
     ]),
     ApplicationCodeModule,
     NotificationModule,
