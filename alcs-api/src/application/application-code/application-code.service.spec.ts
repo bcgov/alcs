@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CardStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../application-status/card-status.entity';
 import { ApplicationCodeService } from './application-code.service';
 import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';

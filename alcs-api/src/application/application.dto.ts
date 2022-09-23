@@ -12,7 +12,7 @@ import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
 import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationStatusDto } from './application-status/application-status.dto';
+import { CardStatusDto } from './application-status/card-status.dto';
 
 export class CreateApplicationDto {
   @AutoMap()
@@ -115,7 +115,7 @@ export class ApplicationDto {
 
 export class ApplicationDetailedDto extends ApplicationDto {
   @AutoMap()
-  statusDetails: ApplicationStatusDto;
+  statusDetails: CardStatusDto;
 
   @AutoMap()
   typeDetails: ApplicationTypeDto;

@@ -22,9 +22,9 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
-import { ApplicationStatusController } from './application-status/application-status.controller';
-import { CardStatus } from './application-status/application-status.entity';
-import { ApplicationStatusService } from './application-status/application-status.service';
+import { CardStatusController } from './application-status/card-status.controller';
+import { CardStatus } from './application-status/card-status.entity';
+import { CardStatusService } from './application-status/card-status.service';
 import { CardSubtaskType } from './application-subtask/application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
 import { CardSubtask } from './application-subtask/application-subtask.entity';
@@ -57,7 +57,7 @@ import { CardSubscriber } from './card.subscriber';
   ],
   providers: [
     ApplicationService,
-    ApplicationStatusService,
+    CardStatusService,
     ApplicationTimeTrackingService,
     CardSubscriber,
     {
@@ -75,7 +75,7 @@ import { CardSubscriber } from './card.subscriber';
   ],
   controllers: [
     ApplicationController,
-    ApplicationStatusController,
+    CardStatusController,
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,

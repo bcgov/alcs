@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { CardHistory } from '../application/application-history.entity';
-import { CardStatus } from '../application/application-status/application-status.entity';
+import { CardStatus } from '../application/application-status/card-status.entity';
 import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { Board } from '../board/board.entity';
 import { Comment } from '../comment/comment.entity';

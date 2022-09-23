@@ -22,7 +22,7 @@ import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
-import { CardStatus } from './application-status/application-status.entity';
+import { CardStatus } from './application-status/card-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,

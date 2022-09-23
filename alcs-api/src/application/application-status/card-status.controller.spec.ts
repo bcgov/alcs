@@ -1,24 +1,24 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { initApplicationStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { initCardStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 import { repositoryMockFactory } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationTimeTrackingService } from '../application-time-tracking.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationStatusController } from './application-status.controller';
-import { ApplicationStatusDto } from './application-status.dto';
-import { CardStatus } from './application-status.entity';
-import { ApplicationStatusService } from './application-status.service';
+import { CardStatusController } from './card-status.controller';
+import { CardStatusDto } from './card-status.dto';
+import { CardStatus } from './card-status.entity';
+import { CardStatusService } from './card-status.service';
 
-describe('ApplicationStatusController', () => {
-  let controller: ApplicationStatusController;
-  let applicationStatusService: ApplicationStatusService;
-  const mockApplicationStatusEntity = initApplicationStatusMockEntity();
-  const applicationStatusDto: ApplicationStatusDto = {
-    code: mockApplicationStatusEntity.code,
-    description: mockApplicationStatusEntity.description,
-    label: mockApplicationStatusEntity.label,
+describe('CardStatusController', () => {
+  let controller: CardStatusController;
+  let cardStatusService: CardStatusService;
+  const mockCardStatusEntity = initCardStatusMockEntity();
+  const cardStatusDto: CardStatusDto = {
+    code: mockCardStatusEntity.code,
+    description: mockCardStatusEntity.description,
+    label: mockCardStatusEntity.label,
   };
   let applicationService: DeepMocked<ApplicationService>;
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
@@ -27,9 +27,9 @@ describe('ApplicationStatusController', () => {
     applicationService = createMock<ApplicationService>();
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ApplicationStatusController],
+      controllers: [CardStatusController],
       providers: [
-        ApplicationStatusService,
+        CardStatusService,
         {
           provide: ApplicationService,
           useValue: applicationService,
@@ -49,12 +49,8 @@ describe('ApplicationStatusController', () => {
       ],
     }).compile();
 
-    applicationStatusService = module.get<ApplicationStatusService>(
-      ApplicationStatusService,
-    );
-    controller = module.get<ApplicationStatusController>(
-      ApplicationStatusController,
-    );
+    cardStatusService = module.get<CardStatusService>(CardStatusService);
+    controller = module.get<CardStatusController>(CardStatusController);
   });
 
   it('should be defined', () => {
@@ -63,11 +59,9 @@ describe('ApplicationStatusController', () => {
 
   it('should add', async () => {
     jest
-      .spyOn(applicationStatusService, 'create')
-      .mockImplementation(async () => mockApplicationStatusEntity);
+      .spyOn(cardStatusService, 'create')
+      .mockImplementation(async () => mockCardStatusEntity);
 
-    expect(await controller.add(applicationStatusDto)).toStrictEqual(
-      applicationStatusDto,
-    );
+    expect(await controller.add(cardStatusDto)).toStrictEqual(cardStatusDto);
   });
 });
