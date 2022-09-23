@@ -7,7 +7,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Application } from '../application/application.entity';
+import { Card } from '../card/card.entity';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 import { CommentMention } from './mention/comment-mention.entity';
@@ -35,14 +35,14 @@ export class Comment extends Base {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @ManyToOne(() => Application)
-  application: Application;
-
   @AutoMap()
   @OneToMany(() => CommentMention, (mention) => mention.comment)
   mentions: CommentMention[];
 
   @Column()
   @Index()
-  applicationUuid: string;
+  cardUuid: string;
+
+  @ManyToOne(() => Card)
+  card: Card;
 }

@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
-import { ApplicationStatus } from '../application/application-status/application-status.entity';
+import { CardStatus } from '../application/application-status/application-status.entity';
 import { Base } from '../common/entities/base.entity';
 import { Board } from './board.entity';
 
@@ -16,6 +16,6 @@ export class BoardStatus extends Base {
   order: number;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationStatus, { eager: true })
-  status: ApplicationStatus;
+  @ManyToOne(() => CardStatus, { eager: true })
+  status: CardStatus;
 }

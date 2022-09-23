@@ -5,26 +5,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { ApplicationService } from '../application.service';
+import { CardSubtaskType } from './application-subtask-type.entity';
 import { ApplicationSubtaskController } from './application-subtask.controller';
-import { ApplicationSubtask } from './application-subtask.entity';
+import { CardSubtask } from './application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask.service';
 
 describe('ApplicationSubtaskController', () => {
   let controller: ApplicationSubtaskController;
   let mockSubtaskService: DeepMocked<ApplicationSubtaskService>;
+  let applicationService: DeepMocked<ApplicationService>;
 
-  const mockSubtask: Partial<ApplicationSubtask> = {
+  const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
     createdAt: new Date(1662762964667),
     type: {
       backgroundColor: 'back-color',
       textColor: 'text-color',
-    } as ApplicationSubtaskType,
+    } as CardSubtaskType,
   };
 
   beforeEach(async () => {
     mockSubtaskService = createMock<ApplicationSubtaskService>();
+    applicationService = createMock<ApplicationService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -42,6 +45,10 @@ describe('ApplicationSubtaskController', () => {
           provide: ClsService,
           useValue: {},
         },
+        {
+          provide: ApplicationService,
+          useValue: applicationService,
+        },
         ApplicationSubtaskProfile,
         ...mockKeyCloakProviders,
       ],
@@ -57,9 +64,7 @@ describe('ApplicationSubtaskController', () => {
   });
 
   it('should call the service and map to dto for create', async () => {
-    mockSubtaskService.create.mockResolvedValue(
-      mockSubtask as ApplicationSubtask,
-    );
+    mockSubtaskService.create.mockResolvedValue(mockSubtask as CardSubtask);
 
     const res = await controller.create('mock-file', 'mock-type');
 
@@ -70,20 +75,12 @@ describe('ApplicationSubtaskController', () => {
     expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
   });
 
-  it('should call through for list', async () => {
-    mockSubtaskService.listByFileNumber.mockResolvedValue([]);
-
-    await controller.list('file-number');
-
-    expect(mockSubtaskService.listByFileNumber).toHaveBeenCalled();
-  });
-
   it('should return the new entity for update', async () => {
     const completionDate = new Date(1662762964677);
     mockSubtaskService.update.mockResolvedValue({
       ...mockSubtask,
       completedAt: completionDate,
-    } as ApplicationSubtask);
+    } as CardSubtask);
 
     const res = await controller.update(mockSubtask.uuid, {
       completedAt: 1662762964677,

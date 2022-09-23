@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationStatusDto } from './application-status.dto';
@@ -19,10 +19,5 @@ export class ApplicationStatusController {
       description: app.description,
       label: app.label,
     };
-  }
-
-  @Delete()
-  async softDelete(@Body() applicationStatusCode: string): Promise<void> {
-    await this.applicationStatusService.delete(applicationStatusCode);
   }
 }

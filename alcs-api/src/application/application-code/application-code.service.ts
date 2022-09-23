@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
-import { ApplicationStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../application-status/application-status.entity';
 import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-region/application-region.entity';
 import { ApplicationType } from './application-type/application-type.entity';
@@ -12,8 +12,8 @@ export class ApplicationCodeService {
   constructor(
     @InjectRepository(ApplicationType)
     private typeRepository: Repository<ApplicationType>,
-    @InjectRepository(ApplicationStatus)
-    private statusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(CardStatus)
+    private statusRepository: Repository<CardStatus>,
     @InjectRepository(ApplicationRegion)
     private regionRepository: Repository<ApplicationRegion>,
     @InjectRepository(ApplicationMeetingType)
@@ -50,7 +50,7 @@ export class ApplicationCodeService {
     });
   }
 
-  async fetchStatus(code: string): Promise<ApplicationStatus> {
+  async fetchStatus(code: string): Promise<CardStatus> {
     return this.statusRepository.findOne({
       where: {
         code,

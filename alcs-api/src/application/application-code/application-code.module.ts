@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationStatus } from '../application-status/application-status.entity';
+import { CardStatus } from '../application-status/application-status.entity';
 import { ApplicationCodeController } from './application-code.controller';
 import { ApplicationCodeService } from './application-code.service';
 import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
@@ -10,7 +10,7 @@ import { ApplicationType } from './application-type/application-type.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      ApplicationStatus,
+      CardStatus,
       ApplicationType,
       ApplicationRegion,
       ApplicationMeetingType,

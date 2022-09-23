@@ -1,9 +1,9 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { Card } from '../card/card.entity';
 import { EntityHistory } from '../common/entities/history.entity';
-import { Application } from './application.entity';
 
 @Entity()
-export class ApplicationHistory extends EntityHistory {
+export class CardHistory extends EntityHistory {
   constructor() {
     super();
   }
@@ -13,6 +13,6 @@ export class ApplicationHistory extends EntityHistory {
   })
   statusUuid: string;
 
-  @ManyToOne(() => Application, (application) => application.history)
-  application: Application;
+  @ManyToOne(() => Card, (card) => card.history)
+  card: Card;
 }

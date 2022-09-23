@@ -2,7 +2,6 @@ import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceValidationException } from '../../common/exceptions/base.exception';
 import { initApplicationStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 import {
   MockType,
@@ -12,15 +11,12 @@ import { ApplicationTimeTrackingService } from '../application-time-tracking.ser
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationStatusDto } from './application-status.dto';
-import { ApplicationStatus } from './application-status.entity';
-import {
-  ApplicationStatusService,
-  defaultApplicationStatus,
-} from './application-status.service';
+import { CardStatus } from './application-status.entity';
+import { ApplicationStatusService } from './application-status.service';
 
 describe('ApplicationStatusService', () => {
   let applicationStatusService: ApplicationStatusService;
-  let applicationsStatusRepositoryMock: MockType<Repository<ApplicationStatus>>;
+  let applicationsStatusRepositoryMock: MockType<Repository<CardStatus>>;
   let applicationService: ApplicationService;
 
   const applicationStatusDto: ApplicationStatusDto = {
@@ -46,7 +42,7 @@ describe('ApplicationStatusService', () => {
             useValue: {},
           },
           {
-            provide: getRepositoryToken(ApplicationStatus),
+            provide: getRepositoryToken(CardStatus),
             useFactory: repositoryMockFactory,
           },
           {
@@ -57,7 +53,7 @@ describe('ApplicationStatusService', () => {
       }).compile();
 
     applicationsStatusRepositoryMock = applicationStatusModule.get(
-      getRepositoryToken(ApplicationStatus),
+      getRepositoryToken(CardStatus),
     );
     applicationStatusService =
       applicationStatusModule.get<ApplicationStatusService>(
@@ -75,7 +71,6 @@ describe('ApplicationStatusService', () => {
     applicationsStatusRepositoryMock.find.mockReturnValue([
       applicationStatusMockEntity,
     ]);
-    jest.spyOn(applicationService, 'resetStatus').mockImplementation();
   });
 
   it('should be defined', () => {
@@ -87,30 +82,5 @@ describe('ApplicationStatusService', () => {
     expect(
       await applicationStatusService.create(applicationStatusDto),
     ).toStrictEqual(applicationStatusMockEntity);
-  });
-
-  it('should delete application status', async () => {
-    await applicationStatusService.delete('app_1');
-
-    expect(await applicationService.resetStatus).toHaveBeenCalledTimes(1);
-  });
-
-  it('should not fail if application status does not exist', async () => {
-    applicationsStatusRepositoryMock.findOne.mockReturnValue(null);
-
-    await applicationStatusService.delete('app_2');
-
-    expect(await applicationService.resetStatus).toHaveBeenCalledTimes(0);
-  });
-
-  it('should not delete default application status', async () => {
-    applicationsStatusRepositoryMock.findOne.mockReturnValue(null);
-
-    expect(
-      applicationStatusService.delete(defaultApplicationStatus.code),
-    ).rejects.toMatchObject(
-      new ServiceValidationException('You cannot delete default status'),
-    );
-    expect(await applicationService.resetStatus).toHaveBeenCalledTimes(0);
   });
 });

@@ -2,22 +2,22 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { DataSource, EntityManager, UpdateEvent } from 'typeorm';
+import { Card } from '../card/card.entity';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { ApplicationHistory } from './application-history.entity';
-import { Application } from './application.entity';
-import { ApplicationSubscriber } from './application.subscriber';
+import { CardHistory } from './application-history.entity';
+import { CardSubscriber } from './card.subscriber';
 
-describe('ApplicationSubscriber', () => {
-  let applicationSubscriber: ApplicationSubscriber;
+describe('CardSubscriber', () => {
+  let cardSubscriber: CardSubscriber;
   let mockDataSource;
   let mockClsService: DeepMocked<ClsService>;
   let mockUserService: DeepMocked<UserService>;
   let subscribersArray;
 
-  let updateEvent: DeepMocked<UpdateEvent<Application>>;
-  let oldApplication: Application;
-  let newApplication: Application;
+  let updateEvent: DeepMocked<UpdateEvent<Card>>;
+  let oldApplication: Card;
+  let newApplication: Card;
   let mockManager: DeepMocked<EntityManager>;
 
   const oldStatus = 'old-status';
@@ -38,9 +38,9 @@ describe('ApplicationSubscriber', () => {
     mockUserService.get.mockResolvedValue({
       uuid: 'fake-uuid',
     } as User);
-    updateEvent = createMock<UpdateEvent<Application>>();
-    oldApplication = {} as Application;
-    newApplication = {} as Application;
+    updateEvent = createMock<UpdateEvent<Card>>();
+    oldApplication = {} as Card;
+    newApplication = {} as Card;
     mockManager = createMock<EntityManager>();
 
     mockDataSource.subscribers = subscribersArray;
@@ -69,13 +69,11 @@ describe('ApplicationSubscriber', () => {
           provide: UserService,
           useValue: mockUserService,
         },
-        ApplicationSubscriber,
+        CardSubscriber,
       ],
     }).compile();
 
-    applicationSubscriber = module.get<ApplicationSubscriber>(
-      ApplicationSubscriber,
-    );
+    cardSubscriber = module.get<CardSubscriber>(CardSubscriber);
   });
 
   afterAll(() => {
@@ -86,29 +84,29 @@ describe('ApplicationSubscriber', () => {
     expect(subscribersArray.length).toEqual(1);
   });
 
-  it('should create return Application for listenTo', () => {
-    expect(applicationSubscriber.listenTo()).toEqual(Application);
+  it('should create return Card for listenTo', () => {
+    expect(cardSubscriber.listenTo()).toEqual(Card);
   });
 
   it('should throw an error if user is not found', async () => {
     mockUserService.get.mockResolvedValue(undefined);
 
     await expect(
-      applicationSubscriber.beforeUpdate(updateEvent),
+      cardSubscriber.beforeUpdate(updateEvent),
     ).rejects.toMatchObject(
       new Error(`User not found from token! Has their email changed?`),
     );
   });
 
-  describe('ApplicationHistory', () => {
-    it('should create a new history application when status is changed', async () => {
+  describe('CardHistory', () => {
+    it('should create a new history card when status is changed', async () => {
       const endDate = new Date(1, 1, 1, 1, 1, 1, 1);
 
-      await applicationSubscriber.beforeUpdate(updateEvent);
+      await cardSubscriber.beforeUpdate(updateEvent);
 
       expect(mockManager.save).toHaveBeenCalled();
       const savedValue = mockManager.save.mock
-        .calls[0][0] as unknown as ApplicationHistory;
+        .calls[0][0] as unknown as CardHistory;
       expect(savedValue.startDate).toEqual(oldApplication.auditUpdatedAt);
       expect(savedValue.endDate).toEqual(endDate);
       expect(savedValue.statusUuid).toEqual(oldApplication.statusUuid);
@@ -118,13 +116,13 @@ describe('ApplicationSubscriber', () => {
       updateEvent.databaseEntity = {
         auditUpdatedAt: null,
         auditCreatedAt: new Date(3, 3, 3, 3, 3, 3, 3),
-      } as Application;
+      } as Card;
 
-      await applicationSubscriber.beforeUpdate(updateEvent);
+      await cardSubscriber.beforeUpdate(updateEvent);
 
       expect(mockManager.save).toHaveBeenCalled();
       const savedValue = mockManager.save.mock
-        .calls[0][0] as unknown as ApplicationHistory;
+        .calls[0][0] as unknown as CardHistory;
       expect(savedValue.startDate).toEqual(new Date(3, 3, 3, 3, 3, 3, 3));
     });
 
@@ -132,7 +130,7 @@ describe('ApplicationSubscriber', () => {
       oldApplication.statusUuid = 'same-status';
       newApplication.statusUuid = 'same-status';
 
-      await applicationSubscriber.beforeUpdate(updateEvent);
+      await cardSubscriber.beforeUpdate(updateEvent);
       expect(mockManager.save).not.toHaveBeenCalled();
     });
   });

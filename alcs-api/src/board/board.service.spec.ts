@@ -52,8 +52,10 @@ describe('BoardsService', () => {
     await service.getApplicationsByCode(boardCode);
     expect(applicationService.getAll).toHaveBeenCalled();
     expect(applicationService.getAll.mock.calls[0][0]).toEqual({
-      board: {
-        code: boardCode,
+      card: {
+        board: {
+          code: boardCode,
+        },
       },
     });
   });
@@ -71,7 +73,9 @@ describe('BoardsService', () => {
       statuses: [{ order: 1 }, zeroOrderStatus, { order: 2 }],
     } as Board;
 
-    applicationService.get.mockResolvedValue({} as Application);
+    applicationService.get.mockResolvedValue({
+      card: { status: {} },
+    } as Application);
     mockRepository.findOne.mockResolvedValue(mockBoard);
     applicationService.createOrUpdate.mockResolvedValue({} as Application);
 
@@ -81,8 +85,8 @@ describe('BoardsService', () => {
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
 
     const updatedApp = applicationService.createOrUpdate.mock.calls[0][0];
-    expect(updatedApp.board).toEqual(mockBoard);
-    expect(updatedApp.status).toEqual(zeroOrderStatus.status);
+    expect(updatedApp.card.board).toEqual(mockBoard);
+    expect(updatedApp.card.status).toEqual(zeroOrderStatus.status);
   });
 
   it("should throw an exception when updating an app that doesn't exist", async () => {

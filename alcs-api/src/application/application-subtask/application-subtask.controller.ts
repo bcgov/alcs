@@ -15,11 +15,12 @@ import * as config from 'config';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { ApplicationService } from '../application.service';
 import {
   ApplicationSubtaskDto,
   UpdateApplicationSubtaskDto,
 } from './application-subtask.dto';
-import { ApplicationSubtask } from './application-subtask.entity';
+import { CardSubtask } from './application-subtask.entity';
 import { ApplicationSubtaskService } from './application-subtask.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -28,6 +29,7 @@ import { ApplicationSubtaskService } from './application-subtask.service';
 export class ApplicationSubtaskController {
   constructor(
     private applicationSubtaskService: ApplicationSubtaskService,
+    private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -41,11 +43,7 @@ export class ApplicationSubtaskController {
       fileNumber,
       subtaskType,
     );
-    return this.mapper.map(
-      savedTask,
-      ApplicationSubtask,
-      ApplicationSubtaskDto,
-    );
+    return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
   }
 
   @Patch('/:uuid')
@@ -58,11 +56,7 @@ export class ApplicationSubtaskController {
       subtaskUuid,
       body,
     );
-    return this.mapper.map(
-      savedTask,
-      ApplicationSubtask,
-      ApplicationSubtaskDto,
-    );
+    return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
   }
 
   @Get('/:fileNumber')
@@ -70,12 +64,10 @@ export class ApplicationSubtaskController {
   async list(
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationSubtaskDto[]> {
-    const documents = await this.applicationSubtaskService.listByFileNumber(
-      fileNumber,
-    );
+    const application = await this.applicationService.get(fileNumber);
     return this.mapper.mapArray(
-      documents,
-      ApplicationSubtask,
+      application.card.subtasks,
+      CardSubtask,
       ApplicationSubtaskDto,
     );
   }

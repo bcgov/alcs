@@ -3,7 +3,7 @@ import { Column, Entity } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 
 @Entity()
-export class ApplicationSubtaskType extends Base {
+export class CardSubtaskType extends Base {
   @AutoMap()
   @Column()
   type: string;

@@ -8,7 +8,7 @@ import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationStatusController } from './application-status.controller';
 import { ApplicationStatusDto } from './application-status.dto';
-import { ApplicationStatus } from './application-status.entity';
+import { CardStatus } from './application-status.entity';
 import { ApplicationStatusService } from './application-status.service';
 
 describe('ApplicationStatusController', () => {
@@ -39,7 +39,7 @@ describe('ApplicationStatusController', () => {
           useValue: mockApplicationTimeService,
         },
         {
-          provide: getRepositoryToken(ApplicationStatus),
+          provide: getRepositoryToken(CardStatus),
           useFactory: repositoryMockFactory,
         },
         {
@@ -59,16 +59,6 @@ describe('ApplicationStatusController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  it('should delete', async () => {
-    const statusToDelete = 'some_code';
-    jest.spyOn(applicationStatusService, 'delete').mockImplementation();
-
-    await controller.softDelete(statusToDelete);
-
-    expect(applicationStatusService.delete).toBeCalledTimes(1);
-    expect(applicationStatusService.delete).toBeCalledWith(statusToDelete);
   });
 
   it('should add', async () => {

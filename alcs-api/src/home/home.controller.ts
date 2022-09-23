@@ -4,10 +4,10 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationSubtaskWithApplicationDTO } from '../application/application-subtask/application-subtask.dto';
-import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
-import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
+import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
+
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
@@ -18,7 +18,6 @@ import { UserRoles } from '../common/authorization/roles.decorator';
 export class HomeController {
   constructor(
     private applicationService: ApplicationService,
-    private applicationSubtaskService: ApplicationSubtaskService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -28,7 +27,7 @@ export class HomeController {
     const userId = req.user.entity.uuid;
     if (userId) {
       const applications = await this.applicationService.getAll({
-        assigneeUuid: userId,
+        card: { assigneeUuid: userId },
       });
       return this.applicationService.mapToDtos(applications);
     } else {
@@ -42,20 +41,24 @@ export class HomeController {
     ApplicationSubtaskWithApplicationDTO[]
   > {
     const subtaskTypes = 'GIS';
-    const subtasks = await this.applicationSubtaskService.listIncompleteByType(
-      subtaskTypes,
-    );
+    const applications =
+      await this.applicationService.getAllApplicationsWithIncompleteSubtasks(
+        subtaskTypes,
+      );
+
     const mappedApps = new Map();
-    for (const subtask of subtasks) {
-      subtask.application.decisionMeetings = [];
-      const mappedApp = await this.applicationService.mapToDtos([
-        subtask.application,
-      ]);
-      mappedApps.set(subtask.uuid, mappedApp[0]);
+    const subtasks: CardSubtask[] = [];
+    for (const application of applications) {
+      application.decisionMeetings = [];
+      const mappedApp = await this.applicationService.mapToDtos([application]);
+      for (const subtask of application.card.subtasks) {
+        mappedApps.set(subtask.uuid, mappedApp[0]);
+        subtasks.push(subtask);
+      }
     }
     const mappedTasks = this.mapper.mapArray(
       subtasks,
-      ApplicationSubtask,
+      CardSubtask,
       ApplicationSubtaskWithApplicationDTO,
     );
     return mappedTasks.map((task) => ({

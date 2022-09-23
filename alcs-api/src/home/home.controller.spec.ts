@@ -4,10 +4,11 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationCodeService } from '../application/application-code/application-code.service';
-import { ApplicationSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
-import { ApplicationSubtask } from '../application/application-subtask/application-subtask.entity';
+import { CardSubtaskType } from '../application/application-subtask/application-subtask-type.entity';
+import { CardSubtask } from '../application/application-subtask/application-subtask.entity';
 import { ApplicationSubtaskService } from '../application/application-subtask/application-subtask.service';
 import { ApplicationDto } from '../application/application.dto';
+import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
@@ -20,14 +21,14 @@ describe('HomeController', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationSubtaskService: DeepMocked<ApplicationSubtaskService>;
 
-  const mockSubtask: Partial<ApplicationSubtask> = {
+  const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
     createdAt: new Date(1662762964667),
     type: {
       type: 'fake-type',
       backgroundColor: 'back-color',
       textColor: 'text-color',
-    } as ApplicationSubtaskType,
+    } as CardSubtaskType,
   };
 
   beforeEach(async () => {
@@ -85,15 +86,20 @@ describe('HomeController', () => {
     });
     expect(mockApplicationService.getAll).toHaveBeenCalled();
     expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual({
-      assigneeUuid: userId,
+      card: {
+        assigneeUuid: userId,
+      },
     });
   });
 
-  it('should call Subtask service and map the types back for type', async () => {
+  it('should call ApplicationService and map the types back for type', async () => {
     const mockApplication = initApplicationMockEntity();
-    mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
-      { ...mockSubtask, application: mockApplication } as ApplicationSubtask,
-    ]);
+    mockApplicationService.getAllApplicationsWithIncompleteSubtasks.mockResolvedValue(
+      [{ ...mockApplication } as Application],
+    );
+    // mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
+    //   { ...mockSubtask, application: mockApplication } as CardSubtask,
+    // ]);
 
     mockApplicationService.mapToDtos.mockResolvedValue([
       mockApplication as any as ApplicationDto,
@@ -104,8 +110,8 @@ describe('HomeController', () => {
 
     expect(mockApplicationService.mapToDtos).toHaveBeenCalled();
     expect(
-      mockApplicationSubtaskService.listIncompleteByType,
-    ).toHaveBeenCalled();
+      mockApplicationService.getAllApplicationsWithIncompleteSubtasks,
+    ).toBeCalledTimes(1);
     expect(res[0].type).toEqual(mockSubtask.type.type);
     expect(res[0].application).toEqual(mockApplication);
   });

@@ -3,15 +3,18 @@ import { ApplicationType } from '../../../application/application-code/applicati
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
-import { ApplicationStatus } from '../../../application/application-status/application-status.entity';
+import { CardStatus } from '../../../application/application-status/application-status.entity';
+import { CardSubtaskType } from '../../../application/application-subtask/application-subtask-type.entity';
+import { CardSubtask } from '../../../application/application-subtask/application-subtask.entity';
 import { Application } from '../../../application/application.entity';
+import { Card } from '../../../card/card.entity';
 import { Comment } from '../../../comment/comment.entity';
 import { CommentMention } from '../../../comment/mention/comment-mention.entity';
 import { UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
-const initApplicationStatusMockEntity = (): ApplicationStatus => {
-  const applicationStatus = new ApplicationStatus();
+const initApplicationStatusMockEntity = (): CardStatus => {
+  const applicationStatus = new CardStatus();
   applicationStatus.code = 'status_1';
   applicationStatus.description = 'app desc 1';
   applicationStatus.uuid = '1111-1111-1111-1111';
@@ -21,6 +24,37 @@ const initApplicationStatusMockEntity = (): ApplicationStatus => {
   applicationStatus.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationStatus;
+};
+
+const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
+  const subtask = new CardSubtask();
+  (subtask.assignee = initAssigneeMockEntity()), (subtask.uuid = '11111');
+  subtask.assigneeUuid = subtask.assignee.uuid;
+  subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.card = card ?? new Card();
+  subtask.type = new CardSubtaskType();
+  subtask.type.backgroundColor = 'fake-bg-color';
+  subtask.type.textColor = 'fake-color';
+  subtask.type.type = 'fake-type';
+  return subtask;
+};
+
+const initCardMockEntity = (): Card => {
+  const card = new Card();
+  card.highPriority = true;
+  card.status = initApplicationStatusMockEntity();
+  card.statusUuid = '1111-1111-1111-1111';
+  card.uuid = '1111-1111-1111-1111';
+  card.assigneeUuid = '1111-1111-1111';
+  card.assignee = initAssigneeMockEntity();
+  card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  card.subtasks = [initCardSubtaskMockEntity(card)];
+
+  return card;
 };
 
 const initApplicationTypeMockEntity = (): ApplicationType => {
@@ -62,12 +96,9 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  applicationEntity.status = initApplicationStatusMockEntity();
-  applicationEntity.statusUuid = applicationEntity.status.uuid;
-  applicationEntity.assigneeUuid = '1111-1111-1111';
-  applicationEntity.assignee = initAssigneeMockEntity();
+  applicationEntity.card = initCardMockEntity();
   applicationEntity.type = initApplicationTypeMockEntity();
-  applicationEntity.highPriority = false;
+  applicationEntity.card.highPriority = false;
 
   return applicationEntity;
 };
@@ -109,8 +140,8 @@ const initCommentMock = (author?: any): Comment => {
         name: 'fake-name',
       } as any),
     createdAt: new Date(),
-    application: initApplicationMockEntity('file-number'),
-    applicationUuid: 'file-number',
+    card: initCardMockEntity(),
+    cardUuid: 'file-number',
     edited: false,
     uuid: '11111111111111111',
   });
@@ -182,4 +213,6 @@ export {
   initCommentMock,
   initApplicationDecisionMeetingMock,
   initApplicationMeetingMock,
+  initCardMockEntity,
+  initCardSubtaskMockEntity,
 };

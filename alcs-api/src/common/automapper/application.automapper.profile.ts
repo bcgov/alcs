@@ -19,12 +19,13 @@ import {
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../application/application-paused.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
-import { ApplicationStatus } from '../../application/application-status/application-status.entity';
+import { CardStatus } from '../../application/application-status/application-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
 } from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
+import { Card } from '../../card/card.entity';
 import { UserDto } from '../../user/user.dto';
 import { User } from '../../user/user.entity';
 
@@ -39,9 +40,9 @@ export class ApplicationProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, ApplicationStatus, ApplicationStatusDto);
+      createMap(mapper, CardStatus, ApplicationStatusDto);
       createMap(mapper, ApplicationType, ApplicationTypeDto);
-      createMap(mapper, ApplicationStatusDto, ApplicationStatus);
+      createMap(mapper, ApplicationStatusDto, CardStatus);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
       createMap(
@@ -65,7 +66,7 @@ export class ApplicationProfile extends AutomapperProfile {
         ApplicationDto,
         forMember(
           (ad) => ad.status,
-          mapFrom((a) => a.status.code),
+          mapFrom((a) => a.card.status.code),
         ),
         forMember(
           (ad) => ad.type,
@@ -73,7 +74,7 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.board,
-          mapFrom((a) => a.board.code),
+          mapFrom((a) => a.card.board.code),
         ),
         forMember(
           (ad) => ad.region,
@@ -92,7 +93,7 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.assignee,
           mapFrom((a) => {
-            return this.mapper.map(a.assignee, User, UserDto);
+            return this.mapper.map(a.card.assignee, User, UserDto);
           }),
         ),
       );
@@ -104,7 +105,7 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.statusDetails,
           mapFrom((a) =>
-            this.mapper.map(a.status, ApplicationStatus, ApplicationStatusDto),
+            this.mapper.map(a.card.status, CardStatus, ApplicationStatusDto),
           ),
         ),
         forMember(
@@ -126,7 +127,7 @@ export class ApplicationProfile extends AutomapperProfile {
         ApplicationDto,
         Application,
         forMember(
-          async (a) => a.status,
+          async (a) => a.card.status,
           mapFrom(async (ad) => {
             return await this.codeService.fetchStatus(ad.status);
           }),
@@ -218,6 +219,8 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => this.numberToDateSafe(ad.startDate)),
         ),
       );
+
+      createMap(mapper, ApplicationDto, Card);
     };
   }
 

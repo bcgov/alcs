@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/browser';
+import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
@@ -29,7 +30,7 @@ export class CommentService {
     const application = await this.applicationService.get(fileNumber);
     return this.commentRepository.find({
       where: {
-        applicationUuid: application.uuid,
+        cardUuid: application.cardUuid,
       },
       relations: this.DEFAULT_COMMENT_RELATIONS,
       order: {
@@ -60,12 +61,12 @@ export class CommentService {
 
     const comment = new Comment({
       body: commentBody,
-      application,
+      card: application.card,
       author,
     });
 
     const createComment = await this.commentRepository.save(comment);
-    await this.processMentions(mentions, comment);
+    await this.processMentions(mentions, comment, application);
 
     return createComment;
   }
@@ -83,28 +84,33 @@ export class CommentService {
   async update(uuid: string, body: string, mentions: CommentMention[]) {
     const comment = await this.commentRepository.findOne({
       where: { uuid },
-      relations: { ...this.DEFAULT_COMMENT_RELATIONS, application: true },
+      relations: {
+        ...this.DEFAULT_COMMENT_RELATIONS,
+      },
     });
 
     if (body.trim() === '') {
       throw new ServiceValidationException('Comment body must be filled.');
     }
 
-    if (comment.body.trim() === body.trim()) {
-      // do not preform update if nothing changed
-      return;
-    }
+    const application = await this.applicationService.getByCard(
+      comment.cardUuid,
+    );
 
     comment.edited = true;
     comment.body = body;
 
     await this.commentRepository.save(comment);
-    await this.processMentions(mentions, comment);
+    await this.processMentions(mentions, comment, application);
 
     return;
   }
 
-  private async processMentions(mentions: CommentMention[], comment: Comment) {
+  private async processMentions(
+    mentions: CommentMention[],
+    comment: Comment,
+    application: Application,
+  ) {
     await this.commentMentionService.updateMentions(comment.uuid, mentions);
 
     mentions.forEach((mention) => {
@@ -112,7 +118,7 @@ export class CommentService {
         comment.author,
         mention.userUuid,
         `${comment.author.name} mentioned you in a comment`,
-        comment.application,
+        application,
       );
     });
   }

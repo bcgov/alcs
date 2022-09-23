@@ -5,7 +5,7 @@ import {
   ApplicationSubtaskDto,
   ApplicationSubtaskWithApplicationDTO,
 } from '../../application/application-subtask/application-subtask.dto';
-import { ApplicationSubtask } from '../../application/application-subtask/application-subtask.entity';
+import { CardSubtask } from '../../application/application-subtask/application-subtask.entity';
 
 @Injectable()
 export class ApplicationSubtaskProfile extends AutomapperProfile {
@@ -17,7 +17,7 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
     return (mapper) => {
       createMap(
         mapper,
-        ApplicationSubtask,
+        CardSubtask,
         ApplicationSubtaskDto,
         forMember(
           (a) => a.backgroundColor,
@@ -49,7 +49,7 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationSubtask,
+        CardSubtask,
         ApplicationSubtaskWithApplicationDTO,
         forMember(
           (a) => a.backgroundColor,

@@ -1,25 +1,25 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationService } from '../application.service';
-import { ApplicationSubtaskType } from './application-subtask-type.entity';
+import { CardSubtaskType } from './application-subtask-type.entity';
 import { UpdateApplicationSubtaskDto } from './application-subtask.dto';
-import { ApplicationSubtask } from './application-subtask.entity';
+import { CardSubtask } from './application-subtask.entity';
 
 @Injectable()
 export class ApplicationSubtaskService {
-  private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationSubtask> = {
+  private DEFAULT_RELATIONS: FindOptionsRelations<CardSubtask> = {
     assignee: true,
     type: true,
   };
 
   constructor(
     private applicationService: ApplicationService,
-    @InjectRepository(ApplicationSubtask)
-    private applicationSubtaskRepository: Repository<ApplicationSubtask>,
-    @InjectRepository(ApplicationSubtaskType)
-    private applicationSubtaskTypeRepository: Repository<ApplicationSubtaskType>,
+    @InjectRepository(CardSubtask)
+    private applicationSubtaskRepository: Repository<CardSubtask>,
+    @InjectRepository(CardSubtaskType)
+    private applicationSubtaskTypeRepository: Repository<CardSubtaskType>,
   ) {}
 
   async create(fileNumber: string, type: string) {
@@ -37,8 +37,8 @@ export class ApplicationSubtaskService {
       throw new BadRequestException(`Invalid subtask type ${type}`);
     }
 
-    const subtask = new ApplicationSubtask({
-      application,
+    const subtask = new CardSubtask({
+      card: application.card,
       type: selectedType,
     });
 
@@ -55,7 +55,7 @@ export class ApplicationSubtaskService {
   async update(
     uuid: string,
     updates: Partial<UpdateApplicationSubtaskDto>,
-  ): Promise<ApplicationSubtask> {
+  ): Promise<CardSubtask> {
     const existingTask = await this.applicationSubtaskRepository.findOne({
       where: { uuid },
     });
@@ -89,35 +89,5 @@ export class ApplicationSubtaskService {
 
   async delete(uuid: string) {
     await this.applicationSubtaskRepository.delete(uuid);
-  }
-
-  async listIncompleteByType(type: string) {
-    return this.applicationSubtaskRepository.find({
-      where: {
-        type: {
-          type,
-        },
-        completedAt: IsNull(),
-      },
-      relations: {
-        ...this.DEFAULT_RELATIONS,
-        application: {
-          type: true,
-          board: true,
-          status: true,
-        },
-      },
-    });
-  }
-
-  async listByFileNumber(fileNumber: string) {
-    return this.applicationSubtaskRepository.find({
-      where: {
-        application: {
-          fileNumber,
-        },
-      },
-      relations: this.DEFAULT_RELATIONS,
-    });
   }
 }

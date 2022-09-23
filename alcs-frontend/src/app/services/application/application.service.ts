@@ -9,7 +9,7 @@ import {
   ApplicationStatusDto,
   ApplicationTypeDto,
 } from './application-code.dto';
-import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +31,18 @@ export class ApplicationService {
     try {
       return await firstValueFrom(
         this.http.patch<ApplicationDetailedDto>(`${environment.apiUrl}/application`, application)
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to update Application');
+    }
+    return;
+  }
+
+  async updateApplicationCard(application: ApplicationPartialDto) {
+    await this.setup();
+    try {
+      return await firstValueFrom(
+        this.http.patch<ApplicationDetailedDto>(`${environment.apiUrl}/application/updateCard`, application)
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');

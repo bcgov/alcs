@@ -1,11 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  ApplicationRegionDto,
-  ApplicationStatusDto,
-  ApplicationTypeDto,
-} from '../../../services/application/application-code.dto';
+import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
@@ -98,7 +94,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
     this.applicationService
-      .updateApplication({
+      .updateApplicationCard({
         ...changes,
         fileNumber: this.application.fileNumber,
       })

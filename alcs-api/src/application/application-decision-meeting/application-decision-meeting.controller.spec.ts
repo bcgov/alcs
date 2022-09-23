@@ -161,7 +161,7 @@ describe('ApplicationDecisionMeetingController', () => {
 
   it('should load and map meetings', async () => {
     const appMock = initApplicationMockEntity();
-    appMock.board = {
+    appMock.card.board = {
       code: 'CODE',
     } as Board;
     const mockMeeting = initApplicationDecisionMeetingMock(appMock);
