@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { CardStatus } from '../card/card-status/card-status.entity';
 import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
@@ -22,7 +23,6 @@ import { NotificationService } from '../notification/notification.service';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
-import { CardStatus } from '../card/card-status/card-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -88,7 +88,6 @@ export class ApplicationController {
     return mappedApps[0];
   }
 
-  // TODO: tidy patch methods
   @Patch()
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
