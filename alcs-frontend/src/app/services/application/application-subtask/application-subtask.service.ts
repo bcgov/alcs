@@ -8,12 +8,10 @@ import { ApplicationSubtaskDto, UpdateApplicationSubtaskDto } from './applicatio
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationSubtaskService implements OnInit {
+export class ApplicationSubtaskService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   private baseUrl = `${environment.apiUrl}/application-subtask`;
-
-  ngOnInit(): void {}
 
   async fetch(fileNumber: string) {
     return firstValueFrom(this.http.get<ApplicationSubtaskDto[]>(`${this.baseUrl}/${fileNumber}`));

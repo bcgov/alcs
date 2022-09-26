@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
@@ -8,10 +8,8 @@ import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
 @Injectable({
   providedIn: 'root',
 })
-export class CommentService implements OnInit {
+export class CommentService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
-
-  ngOnInit(): void {}
 
   async fetchComments(fileNumber: string) {
     return firstValueFrom(this.http.get<CommentDto[]>(`${environment.apiUrl}/comment/${fileNumber}`));
