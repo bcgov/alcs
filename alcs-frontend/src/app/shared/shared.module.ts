@@ -32,7 +32,7 @@ import { MomentPipe } from './utils/moment.pipe';
 
 @NgModule({
   declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe, MeetingOverviewComponent],
-  imports: [CommonModule, MatIconModule, MatExpansionModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatExpansionModule, MatButtonModule, MatInputModule, FormsModule],
   exports: [
     CommonModule,
     FormsModule,

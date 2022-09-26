@@ -4,8 +4,13 @@ import { ApplicationDocumentService } from '../../services/application/applicati
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
+import { ToastService } from '../../services/toast/toast.service';
 
-type MeetingWithApplications = { meetingDate: number; applications: UpcomingMeeting[] };
+type MeetingWithApplications = {
+  meetingDate: number;
+  applications: (UpcomingMeeting & { isExpanded: boolean; isHighlighted: boolean })[];
+  isExpanded: boolean;
+};
 
 type BoardWithDecisionMeetings = {
   boardTitle: string;
@@ -14,6 +19,7 @@ type BoardWithDecisionMeetings = {
   pastMeetings: MeetingWithApplications[];
   upcomingMeetings: MeetingWithApplications[];
   nextMeeting: MeetingWithApplications | undefined;
+  isExpanded: boolean;
 };
 
 const BOARD_CODES_TO_HIDE = ['ceo', 'vett'];
@@ -28,13 +34,15 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   private boards: BoardWithFavourite[] = [];
   private meetings: UpcomingMeetingBoardMapDto | undefined;
   customDateFormat = 'ddd YYYY-MM-DD';
+  searchText = '';
 
   viewData: BoardWithDecisionMeetings[] = [];
 
   constructor(
     private meetingService: DecisionMeetingService,
     private boardService: BoardService,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +51,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
       this.boards = boards;
       this.populateViewData();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   async loadMeetings() {
@@ -69,6 +82,9 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
           pastMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
 
           const nextMeeting = upcomingMeetings.shift();
+          if (nextMeeting) {
+            nextMeeting.isExpanded = true; //Start with next meeting expanded
+          }
           return {
             boardCode: board.code,
             boardTitle: board.title,
@@ -76,6 +92,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
             pastMeetings,
             upcomingMeetings,
             nextMeeting,
+            isExpanded: false,
           };
         });
     }
@@ -88,39 +105,125 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   ) {
     applications.forEach((app) => {
       if (app.meetingDate < Date.now()) {
-        const meeting = pastMeetings.find((meeting) => meeting.meetingDate === app.meetingDate);
-        if (meeting) {
-          meeting.applications.push(app);
-        } else {
-          pastMeetings.push({
-            meetingDate: app.meetingDate,
-            applications: [app],
-          });
-        }
+        this.mapApplicationsIntoMeetings(pastMeetings, app);
       } else {
-        const meeting = upcomingMeetings.find((meeting) => meeting.meetingDate === app.meetingDate);
-        if (meeting) {
-          meeting.applications.push(app);
-        } else {
-          upcomingMeetings.push({
-            meetingDate: app.meetingDate,
-            applications: [app],
-          });
-        }
+        this.mapApplicationsIntoMeetings(upcomingMeetings, app);
       }
     });
   }
 
+  private mapApplicationsIntoMeetings(pastMeetings: MeetingWithApplications[], app: UpcomingMeeting) {
+    const meeting = pastMeetings.find((meeting) => meeting.meetingDate === app.meetingDate);
+    if (meeting) {
+      meeting.applications.push({
+        ...app,
+        isExpanded: false,
+        isHighlighted: false,
+      });
+    } else {
+      pastMeetings.push({
+        meetingDate: app.meetingDate,
+        applications: [
+          {
+            ...app,
+            isExpanded: false,
+            isHighlighted: false,
+          },
+        ],
+        isExpanded: false,
+      });
+    }
+  }
+
   async onOpen(uuid: string, fileName: string) {
+    this.clearHighlight();
     await this.applicationDocumentService.download(uuid, fileName);
   }
 
   async onDownload(uuid: string, fileName: string) {
+    this.clearHighlight();
     await this.applicationDocumentService.download(uuid, fileName, false);
   }
 
-  ngOnDestroy(): void {
-    this.destroy.next();
-    this.destroy.complete();
+  onSearch() {
+    let foundResult = false;
+    this.viewData = this.viewData.map((board) => {
+      board.isExpanded = false;
+      board.pastMeetings = board.pastMeetings.map((meeting) => {
+        const res = this.findAndExpand(meeting, board);
+        if (res.isExpanded) {
+          foundResult = true;
+        }
+        return res;
+      });
+
+      if (board.nextMeeting) {
+        const res = this.findAndExpand(board.nextMeeting, board);
+        if (res.isExpanded) {
+          foundResult = true;
+        }
+      }
+
+      board.upcomingMeetings = board.upcomingMeetings.map((meeting) => {
+        const res = this.findAndExpand(meeting, board);
+        if (res.isExpanded) {
+          foundResult = true;
+        }
+        return res;
+      });
+
+      return board;
+    });
+
+    if (foundResult) {
+      this.searchText = '';
+    } else {
+      this.toastService.showErrorToast('File ID not found on this page');
+    }
+  }
+
+  private findAndExpand(meeting: MeetingWithApplications, board: BoardWithDecisionMeetings) {
+    meeting.isExpanded = false;
+    meeting.applications = meeting.applications.map((application) => {
+      application.isExpanded = false;
+      application.isHighlighted = false;
+      if (application.fileNumber === this.searchText) {
+        meeting.isExpanded = true;
+        board.isExpanded = true;
+        application.isExpanded = true;
+        application.isHighlighted = true;
+      }
+      return application;
+    });
+    return meeting;
+  }
+
+  clearHighlight() {
+    this.viewData = this.viewData.map((board) => {
+      board.pastMeetings = board.pastMeetings.map((meeting) => {
+        meeting.applications = meeting.applications.map((application) => {
+          application.isHighlighted = false;
+          return application;
+        });
+        return meeting;
+      });
+
+      if (board.nextMeeting) {
+        board.nextMeeting.applications.map((application) => {
+          application.isHighlighted = false;
+          return application;
+        });
+      }
+
+      board.upcomingMeetings = board.upcomingMeetings.map((meeting) => {
+        meeting.applications = meeting.applications.map((application) => {
+          application.isHighlighted = false;
+          return application;
+        });
+        return meeting;
+      });
+
+      return board;
+    });
   }
 }

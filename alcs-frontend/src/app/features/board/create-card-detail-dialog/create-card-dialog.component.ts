@@ -49,7 +49,7 @@ export class CreateCardDialogComponent implements OnInit {
       await this.applicationService.createApplication({
         type: formValues.type!,
         applicant: formValues.applicant!,
-        fileNumber: formValues.fileNumber!.toString(),
+        fileNumber: formValues.fileNumber!.trim(),
         region: formValues.region || undefined,
         dateReceived: formatDateForApi(formValues.receivedDate!),
       });
