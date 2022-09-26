@@ -15,6 +15,7 @@ env:
 
 jobs:
   deploy:
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-22.04
     steps:
     - name: Lowercase repo owner
