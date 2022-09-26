@@ -105,4 +105,32 @@ export class ApplicationMeetingComponent implements OnInit {
       }
     });
   }
+
+  async onSaveSiteVisitEndDate(uuid: any, endDate: number) {
+    const matchingMeeting = this.siteVisits.find((request) => request.uuid === uuid);
+    if (matchingMeeting) {
+      await this.meetingService.update(uuid, {
+        startDate: new Date(matchingMeeting.startDate),
+        endDate: new Date(endDate),
+        description: matchingMeeting.description,
+      });
+      await this.meetingService.fetch(this.fileNumber);
+    } else {
+      this.toastService.showErrorToast('Failed to update meeting');
+    }
+  }
+
+  async onSaveAppMeetingEndDate(uuid: any, endDate: number) {
+    const matchingMeeting = this.applicantMeetings.find((request) => request.uuid === uuid);
+    if (matchingMeeting) {
+      await this.meetingService.update(uuid, {
+        startDate: new Date(matchingMeeting.startDate),
+        endDate: new Date(endDate),
+        description: matchingMeeting.description,
+      });
+      await this.meetingService.fetch(this.fileNumber);
+    } else {
+      this.toastService.showErrorToast('Failed to update meeting');
+    }
+  }
 }

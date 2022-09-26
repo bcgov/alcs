@@ -36,8 +36,8 @@ export class ApplicationMeetingService {
       await firstValueFrom(
         this.http.patch<ApplicationMeetingDto>(`${this.url}/${uuid}`, {
           ...meeting,
-          startDate: meeting.startDate.valueOf(),
-          endDate: meeting.endDate?.valueOf(),
+          startDate: formatDateForApi(meeting.startDate),
+          endDate: meeting.endDate ? formatDateForApi(meeting.endDate) : meeting.endDate,
         })
       );
       this.toastService.showSuccessToast('Meeting updated.');
