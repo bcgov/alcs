@@ -101,4 +101,18 @@ export class InfoRequestsComponent implements OnInit {
       }
     });
   }
+
+  async onSaveEndDate(uuid: any, endDate: number) {
+    const matchingMeeting = this.infoRequests.find((request) => request.uuid === uuid);
+    if (matchingMeeting) {
+      await this.meetingService.update(uuid, {
+        startDate: new Date(matchingMeeting.startDate),
+        endDate: new Date(endDate),
+        description: matchingMeeting.description,
+      });
+      await this.meetingService.fetch(this.fileNumber);
+    } else {
+      this.toastService.showErrorToast('Failed to update meeting');
+    }
+  }
 }

@@ -15,7 +15,16 @@
 
   <ng-container matColumnDef="endDate">
     <th mat-header-cell *matHeaderCellDef>Date Fulfilled</th>
-    <td mat-cell *matCellDef="let element">{{ element.endDate | momentFormat }}</td>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="element.endDate">{{ element.endDate | momentFormat }}</ng-container>
+      <ng-container *ngIf="!element.endDate">
+        <app-inline-datepicker
+          [selectedValue]="undefined"
+          [min]="element.startDate"
+          (save)="onSaveEndDate(element.uuid, $event)"
+        ></app-inline-datepicker>
+      </ng-container>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="description">
