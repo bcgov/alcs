@@ -55,7 +55,7 @@ export class ApplicationDecisionMeetingController {
     const allFileNumbers = allApps.map((app) => app.fileNumber);
     const allDocuments = await this.appDecDocumentService.listAll(
       allFileNumbers,
-      'decisionDocument',
+      'reviewDocument',
     );
     const mappedApps = allApps.map((app): UpcomingMeetingDto => {
       const files = allDocuments.filter(
