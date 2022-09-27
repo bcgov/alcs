@@ -1,5 +1,21 @@
 <div>
-  <mat-expansion-panel class="main-panel" *ngFor="let boardMeeting of viewData">
+  <div class="search-bar">
+    <input
+      class="search-input"
+      #searchInput
+      (keyup.enter)="onSearch()"
+      (focus)="searchInput.select()"
+      [(ngModel)]="searchText"
+      matInput
+      type="text"
+      placeholder="Search by File ID"
+    />
+    <button class="search-button" (click)="onSearch()" mat-flat-button color="accent">
+      <mat-icon>search</mat-icon>
+      Search
+    </button>
+  </div>
+  <mat-expansion-panel [(expanded)]="boardMeeting.isExpanded" class="main-panel" *ngFor="let boardMeeting of viewData">
     <mat-expansion-panel-header expandedHeight="80px" collapsedHeight="80px" class="main-panel-header">
       <mat-panel-title>
         <h3 class="center">
@@ -30,6 +46,7 @@
         <mat-expansion-panel
           class="meeting-panel"
           hideToggle="true"
+          [(expanded)]="pastMeeting.isExpanded"
           *ngFor="let pastMeeting of boardMeeting.pastMeetings"
         >
           <mat-expansion-panel-header
@@ -49,7 +66,12 @@
       <div class="next-meeting">
         <h4>Next Meeting</h4>
         <h5 *ngIf="!boardMeeting.nextMeeting" class="no-meetings">No Meetings</h5>
-        <mat-expansion-panel expanded="true" class="meeting-panel" hideToggle="true" *ngIf="boardMeeting.nextMeeting">
+        <mat-expansion-panel
+          [(expanded)]="boardMeeting.nextMeeting.isExpanded"
+          class="meeting-panel"
+          hideToggle="true"
+          *ngIf="boardMeeting.nextMeeting"
+        >
           <mat-expansion-panel-header
             expandedHeight="54px"
             collapsedHeight="54px"
@@ -91,11 +113,27 @@
 </div>
 
 <ng-template #applicationPanel let-application>
-  <mat-expansion-panel class="application-panel" hideToggle="true">
-    <mat-expansion-panel-header class="application-header" expandedHeight="48px" collapsedHeight="48px">
+  <mat-expansion-panel
+    class="application-panel"
+    [ngClass]="{
+      'application-highlighted': application.isHighlighted
+    }"
+    [(expanded)]="application.isExpanded"
+    hideToggle="true"
+  >
+    <mat-expansion-panel-header
+      (click)="clearHighlight()"
+      class="application-header"
+      expandedHeight="48px"
+      collapsedHeight="48px"
+    >
       <mat-panel-title class="split">
         <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
-        <app-avatar-circle *ngIf="application.assignee" [initials]="application.assignee.initials" [fullName]="application.assignee.name"></app-avatar-circle>
+        <app-avatar-circle
+          *ngIf="application.assignee"
+          [initials]="application.assignee.initials"
+          [fullName]="application.assignee.name"
+        ></app-avatar-circle>
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="application-file" *ngFor="let file of application.files">
