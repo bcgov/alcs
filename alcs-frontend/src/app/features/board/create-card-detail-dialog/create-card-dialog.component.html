@@ -4,7 +4,7 @@
 <form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <div class="two-item-row">
-      <mat-form-field appearance="standard">
+      <mat-form-field appearance="outline">
         <mat-label>File ID</mat-label>
         <input
           id="fileNumber"
@@ -27,7 +27,7 @@
           This field is required.
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="standard">
+      <mat-form-field appearance="outline">
         <mat-label>Applicant Last Name</mat-label>
         <input
           matInput
