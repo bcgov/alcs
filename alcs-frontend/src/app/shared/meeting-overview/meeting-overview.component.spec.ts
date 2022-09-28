@@ -5,6 +5,7 @@ import { ApplicationDocumentService } from '../../services/application/applicati
 import { ApplicationMeetingService } from '../../services/application/application-meeting/application-meeting.service';
 import { BoardService } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
 
@@ -25,6 +26,10 @@ describe('MeetingOverviewComponent', () => {
         {
           provide: BoardService,
           useValue: mockBoardService,
+        },
+        {
+          provide: ToastService,
+          useValue: {},
         },
         {
           provide: ApplicationDocumentService,

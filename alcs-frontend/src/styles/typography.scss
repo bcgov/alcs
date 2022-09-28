@@ -13,6 +13,10 @@ $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
   font-family: $font-family !important;
 }
 
+.material-icons {
+  font-family: Material Icons !important;
+}
+
 h1 {
   @include typography-style(38px, 700);
 }

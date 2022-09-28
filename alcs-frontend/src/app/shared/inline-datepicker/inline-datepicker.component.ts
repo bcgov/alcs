@@ -11,6 +11,9 @@ import { formatDateForApi } from '../utils/api-date-formatter';
 })
 export class InlineDatepickerComponent implements OnInit, OnChanges {
   @Input() selectedValue: number | undefined;
+  @Input() min: Date | number | undefined;
+
+  minimum: Date | undefined;
 
   @Output() save = new EventEmitter<number>();
 
@@ -22,6 +25,9 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    if (this.min) {
+      this.minimum = new Date(this.min);
+    }
     if (this.selectedValue) {
       this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
       this.form = this.fb.group({

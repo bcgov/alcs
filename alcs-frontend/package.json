@@ -9,7 +9,8 @@
     "test": "ng test",
     "test:ci": "ng test --no-watch --browsers=ChromeHeadless",
     "test:cov": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -32,14 +33,23 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "rxjs": "~7.5.0",
+    "source-map-support": "^0.5.21",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.0.5",
+    "@angular-eslint/builder": "14.1.2",
+    "@angular-eslint/eslint-plugin": "14.1.2",
+    "@angular-eslint/eslint-plugin-template": "14.1.2",
+    "@angular-eslint/schematics": "14.1.2",
+    "@angular-eslint/template-parser": "14.1.2",
     "@angular/cli": "~14.0.5",
     "@angular/compiler-cli": "^14.0.0",
     "@types/jasmine": "~4.0.0",
+    "@typescript-eslint/eslint-plugin": "5.37.0",
+    "@typescript-eslint/parser": "5.37.0",
+    "eslint": "^8.23.1",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",

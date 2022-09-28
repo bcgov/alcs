@@ -18,5 +18,5 @@ export interface CreateApplicationMeetingDto extends UpdateApplicationMeetingDto
 export interface UpdateApplicationMeetingDto {
   startDate: Date;
   endDate: Date | null;
-  description: string | undefined;
+  description: string | undefined | null;
 }
