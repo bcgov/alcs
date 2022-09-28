@@ -138,10 +138,17 @@
     </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button class="button-container" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
-    <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
-      Save
-    </button>
+  <mat-dialog-actions>
+    <div>
+      <button type="reset" class="button-container" (click)="onReset()" mat-stroked-button color="primary">
+        Reset
+      </button>
+    </div>
+    <div class="btn-wrapper-right">
+      <button class="button-container" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
+        Save
+      </button>
+    </div>
   </mat-dialog-actions>
 </form>

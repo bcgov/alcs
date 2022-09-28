@@ -82,6 +82,6 @@ export class ApplicationService {
   }
 
   searchApplicationsByNumber(fileNumber: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/search/application/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/application/search/${fileNumber}`));
   }
 }

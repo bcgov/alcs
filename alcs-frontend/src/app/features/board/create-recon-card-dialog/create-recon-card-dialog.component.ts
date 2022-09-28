@@ -6,7 +6,6 @@ import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } 
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { BoardService } from '../../../services/board/board.service';
 import { ReconsiderationTypeDto } from '../../../services/card/card-code.dto';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -30,14 +29,19 @@ export class CreateReconCardDialogComponent implements OnInit {
   filteredApplications: Observable<ApplicationDto[]> | undefined;
 
   fileNumberControl = new FormControl('', [Validators.required]);
+  applicantControl = new FormControl('', [Validators.required]);
+  typeControl = new FormControl('', [Validators.required]);
+  regionControl = new FormControl('', [Validators.required]);
+  receivedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
+  reconTypeControl = new FormControl('', [Validators.required]);
 
   createForm = new FormGroup({
     fileNumber: this.fileNumberControl,
-    applicant: new FormControl('', [Validators.required]),
-    type: new FormControl('', [Validators.required]),
-    region: new FormControl('', [Validators.required]),
-    receivedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    reconType: new FormControl('', [Validators.required]),
+    applicant: this.applicantControl,
+    type: this.typeControl,
+    region: this.regionControl,
+    receivedDate: this.receivedDateControl,
+    reconType: this.reconTypeControl,
   });
 
   constructor(
@@ -45,7 +49,6 @@ export class CreateReconCardDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<CreateReconCardDialogComponent>,
     private applicationService: ApplicationService,
     private cardService: CardService,
-    private boardService: BoardService,
     private toastService: ToastService
   ) {}
 
@@ -94,6 +97,11 @@ export class CreateReconCardDialogComponent implements OnInit {
 
     const application = $event.source.value as ApplicationDto;
 
+    this.fileNumberControl.disable();
+    this.applicantControl.disable();
+    this.regionControl.disable();
+    this.typeControl.disable();
+
     this.createForm.patchValue({
       applicant: application.applicant,
       region: this.regions.find((r) => r.code === application.region)?.code ?? null,
@@ -105,7 +113,7 @@ export class CreateReconCardDialogComponent implements OnInit {
     }
 
     // TODO implement hasPendingRecon once reconsideration entity created
-    this.hasPendingRecon = true;
+    // this.hasPendingRecon = true;
   }
 
   async onSubmit() {
@@ -129,5 +137,23 @@ export class CreateReconCardDialogComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  onReset() {
+    this.fileNumberControl.reset();
+    this.applicantControl.reset();
+    this.regionControl.reset();
+    this.typeControl.reset();
+    this.receivedDateControl.reset();
+    this.reconTypeControl.reset();
+
+    this.fileNumberControl.enable();
+    this.applicantControl.enable();
+    this.regionControl.enable();
+    this.typeControl.enable();
+
+    // clear warnings
+    this.isDecisionDateEmpty = false;
+    this.hasPendingRecon = false;
   }
 }
