@@ -32,6 +32,7 @@ export class ApplicationService {
       status: true,
       board: true,
       assignee: true,
+      type: true,
     },
     region: true,
     decisionMeetings: true,

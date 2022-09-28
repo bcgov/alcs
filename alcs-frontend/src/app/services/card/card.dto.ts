@@ -3,6 +3,8 @@ import { UserDto } from '../user/user.dto';
 
 export interface ReconsiderationTypeDto extends BaseCodeDto {}
 
+export interface CardTypeDto extends BaseCodeDto {}
+
 export interface ReconsiderationDto {
   highPriority: boolean;
   status: string;
@@ -14,4 +16,8 @@ export interface ReconsiderationDto {
 export interface CardCreateDto {
   boardCode: string;
   typeCode: string;
+}
+
+export interface CardDto {
+  type: CardTypeDto;
 }

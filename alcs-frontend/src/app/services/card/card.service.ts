@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationMasterCodesDto } from '../application/application-code.dto';
 import { ToastService } from '../toast/toast.service';
-import { CardCreateDto, ReconsiderationTypeDto } from './card-code.dto';
+import { CardCreateDto, ReconsiderationTypeDto } from './card.dto';
 
 // TODO refactor: move to board? 
 @Injectable({

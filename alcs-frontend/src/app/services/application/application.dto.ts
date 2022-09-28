@@ -1,4 +1,5 @@
 import { BoardDto } from '../board/board.dto';
+import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationStatusDto, ApplicationTypeDto } from './application-code.dto';
 
@@ -34,6 +35,7 @@ export interface ApplicationDto {
   paused: boolean;
   highPriority: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
+  card: CardDto;
 }
 
 export interface ApplicationPartialDto {

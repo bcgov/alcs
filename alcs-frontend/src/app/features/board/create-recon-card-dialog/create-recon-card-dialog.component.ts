@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } 
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { ReconsiderationTypeDto } from '../../../services/card/card-code.dto';
+import { ReconsiderationTypeDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 

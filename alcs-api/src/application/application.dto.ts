@@ -8,11 +8,12 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { UserDto } from '../user/user.dto';
+import { CardStatusDto } from '../card/card-status/card-status.dto';
+import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { UserDto } from '../user/user.dto';
 import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
-import { CardStatusDto } from '../card/card-status/card-status.dto';
 
 export class CreateApplicationDto {
   @AutoMap()
@@ -111,6 +112,10 @@ export class ApplicationDto {
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
+
+  @AutoMap()
+  @Type(() => CardDto)
+  card: CardDto;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {

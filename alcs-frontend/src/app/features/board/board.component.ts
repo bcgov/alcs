@@ -6,7 +6,7 @@ import { ApplicationTypeDto } from '../../services/application/application-code.
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
-import { ReconsiderationDto } from '../../services/card/card-code.dto';
+import { ReconsiderationDto } from '../../services/card/card.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
@@ -191,11 +191,11 @@ export class BoardComponent implements OnInit {
       assigneeInitials: recon.assignee?.initials,
       id: 'Mock, get from application',
       type: {
-        label: 'Mock, get from recon',
-        code: 'mock',
-        shortLabel: 'mock',
-        backgroundColor: 'grey',
-        description: 'mock',
+        label: 'Recon',
+        code: 'RECON',
+        shortLabel: 'RECON',
+        backgroundColor: '#454545',
+        description: 'Reconsideration',
         textColor: 'white',
       },
       paused: false,
