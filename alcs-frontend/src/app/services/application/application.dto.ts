@@ -19,6 +19,7 @@ export interface ApplicationDto {
   applicant: string;
   status: string;
   type: string;
+  cardUuid: string;
   board: string;
   dateReceived: number;
   datePaid?: number;

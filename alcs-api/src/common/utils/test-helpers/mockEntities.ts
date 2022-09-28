@@ -1,5 +1,5 @@
-import { ApplicationMeetingType } from '../../../application/application-code/application-meeting-type/application-meeting-type.entity';
-import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
+import { ApplicationMeetingType } from '../../../code/application-code/application-meeting-type/application-meeting-type.entity';
+import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';

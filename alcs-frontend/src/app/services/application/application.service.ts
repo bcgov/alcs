@@ -9,7 +9,7 @@ import {
   ApplicationStatusDto,
   ApplicationTypeDto,
 } from './application-code.dto';
-import { ApplicationDetailedDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -70,9 +70,7 @@ export class ApplicationService {
   }
 
   private async fetchCodes() {
-    const codes = await firstValueFrom(
-      this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/application-code`)
-    );
+    const codes = await firstValueFrom(this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/code`));
     this.statuses = codes.status;
     this.$applicationStatuses.next(this.statuses);
 
@@ -81,5 +79,9 @@ export class ApplicationService {
 
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
+  }
+
+  searchApplicationsByNumber(fileNumber: string) {
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/search/application/${fileNumber}`));
   }
 }

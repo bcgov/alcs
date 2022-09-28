@@ -1,0 +1,44 @@
+.content {
+  padding: 0 16px;
+}
+
+.two-item-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  margin-bottom: 24px;
+  align-items: end;
+}
+
+.date-picker {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  button:not(:last-child) {
+    margin-right: 24px !important;
+  }
+}
+
+.application-type,
+.card-recon-type {
+  display: flex;
+  align-items: center;
+}
+
+.application-color {
+  display: inline-block;
+  height: 18px;
+  width: 40px;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+.warning-section > div {
+  margin-bottom: 16px;
+}
+
+.warning-section > div:last-child {
+  margin-bottom: 0;
+}

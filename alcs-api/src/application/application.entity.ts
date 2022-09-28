@@ -11,8 +11,8 @@ import {
 } from 'typeorm';
 import { Card } from '../card/card.entity';
 import { Base } from '../common/entities/base.entity';
-import { ApplicationRegion } from './application-code/application-region/application-region.entity';
-import { ApplicationType } from './application-code/application-type/application-type.entity';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';

@@ -106,9 +106,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.application.highPriority
-        ? 'Remove priority from this Application?'
-        : 'Add priority to this application?',
+      body: this.application.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
     });
     answer.subscribe((answer) => {
       if (answer) {

@@ -9,8 +9,8 @@ import {
   IsUUID,
 } from 'class-validator';
 import { UserDto } from '../user/user.dto';
-import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
-import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
+import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 

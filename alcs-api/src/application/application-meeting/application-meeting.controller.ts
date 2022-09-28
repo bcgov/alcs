@@ -15,11 +15,11 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { CodeService } from '../../code/code.service';
 import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { ApplicationCodeService } from '../application-code/application-code.service';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { Application } from '../application.entity';
@@ -41,7 +41,7 @@ export class ApplicationMeetingController {
   constructor(
     private appMeetingService: ApplicationMeetingService,
     private applicationService: ApplicationService,
-    private applicationCodeService: ApplicationCodeService,
+    private applicationCodeService: CodeService,
     private applicationPausedService: ApplicationPausedService,
     @InjectMapper() private mapper: Mapper,
   ) {}

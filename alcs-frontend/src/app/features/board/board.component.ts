@@ -6,11 +6,13 @@ import { ApplicationTypeDto } from '../../services/application/application-code.
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
+import { ReconsiderationDto } from '../../services/card/card-code.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
+import { CreateReconCardDialogComponent } from './create-recon-card-dialog/create-recon-card-dialog.component';
 
 @Component({
   selector: 'app-board',
@@ -22,10 +24,12 @@ export class BoardComponent implements OnInit {
   columns: DragDropColumn[] = [];
   boardTitle = '';
   boardIsFavourite: boolean = false;
+  createCardTitle = '';
 
   private applicationTypes: ApplicationTypeDto[] = [];
   selectedBoardCode?: string;
   boards: BoardWithFavourite[] = [];
+  cardDialogType: any = CreateCardDialogComponent;
 
   constructor(
     private applicationService: ApplicationService,
@@ -47,6 +51,7 @@ export class BoardComponent implements OnInit {
         if (selectedBoard) {
           this.setupBoard(selectedBoard);
         }
+        this.setupCreateCardButton(boardCode);
       }
     });
 
@@ -69,6 +74,16 @@ export class BoardComponent implements OnInit {
     }
   }
 
+  private setupCreateCardButton(boardCode: string = '') {
+    if (boardCode === 'vett') {
+      this.createCardTitle = '+ New Application';
+      this.cardDialogType = CreateCardDialogComponent;
+    } else {
+      this.createCardTitle = '+ New Reconsideration';
+      this.cardDialogType = CreateReconCardDialogComponent;
+    }
+  }
+
   private setupBoard(board: BoardWithFavourite) {
     this.loadApplications(board.code);
     this.boardTitle = board.title;
@@ -84,7 +99,9 @@ export class BoardComponent implements OnInit {
 
   private async loadApplications(boardCode: string) {
     const apps = await this.boardService.fetchApplications(boardCode);
-    this.cards = apps.map(this.mapApplicationDtoToCard.bind(this));
+    this.cards = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
+    this.cards = this.cards.concat(apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this)));
+    console.log('loadApplications', this.cards);
   }
 
   async onSelected(id: string) {
@@ -123,11 +140,13 @@ export class BoardComponent implements OnInit {
 
   async onCreate() {
     this.dialog
-      .open(CreateCardDialogComponent, {
+      .open(this.cardDialogType, {
         minWidth: '600px',
         maxWidth: '900px',
         width: '100%',
-        data: {},
+        data: {
+          currentBoardCode: this.selectedBoardCode,
+        },
       })
       .afterClosed()
       .subscribe((didCreate) => {
@@ -160,6 +179,27 @@ export class BoardComponent implements OnInit {
       paused: application.paused,
       highPriority: application.highPriority,
       decisionMeetings: application.decisionMeetings,
+    };
+  }
+
+  private mapReconsiderationDtoToCard(recon: ReconsiderationDto): CardData {
+    // TODO get mock fields from application linked to reconsideration
+    const mappedType = this.applicationTypes.find((type) => type.code === 'mock');
+    return {
+      status: recon.status,
+      title: 'Mock, get from application',
+      assigneeInitials: recon.assignee?.initials,
+      id: 'Mock, get from application',
+      type: {
+        label: 'Mock, get from recon',
+        code: 'mock',
+        shortLabel: 'mock',
+        backgroundColor: 'grey',
+        description: 'mock',
+        textColor: 'white',
+      },
+      paused: false,
+      highPriority: recon.highPriority,
     };
   }
 }

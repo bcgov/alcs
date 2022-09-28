@@ -8,10 +8,10 @@ export interface CardData {
   type: ApplicationTypeDto;
   status: string;
   assigneeInitials?: string;
-  activeDays: number;
+  activeDays?: number;
   paused: boolean;
   highPriority: boolean;
-  decisionMeetings: ApplicationDecisionMeetingDto[];
+  decisionMeetings?: ApplicationDecisionMeetingDto[];
   latestDecisionDate?: Date;
 }
 
@@ -32,9 +32,10 @@ export class CardComponent implements OnInit {
   }
 
   private getLatestDecisionDate() {
+    const meetings = this.cardData.decisionMeetings ?? [];
     return new Date(
       Math.max(
-        ...this.cardData.decisionMeetings.map((element) => {
+        ...meetings.map((element) => {
           return new Date(element.date).valueOf();
         })
       )
@@ -45,7 +46,7 @@ export class CardComponent implements OnInit {
     this.cardData.latestDecisionDate = undefined;
 
     if (this.cardData.status === 'READ') {
-      if (this.cardData.decisionMeetings.length > 0) {
+      if (this.cardData.decisionMeetings && this.cardData.decisionMeetings.length > 0) {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
     }

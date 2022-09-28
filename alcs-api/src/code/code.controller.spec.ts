@@ -3,12 +3,12 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationCodeController } from './application-code.controller';
-import { ApplicationCodeService } from './application-code.service';
+import { CodeController } from './code.controller';
+import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { CodeService } from './code.service';
 
-describe('ApplicationCodeController', () => {
-  let controller: ApplicationCodeController;
+describe('CodeController', () => {
+  let controller: CodeController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,11 +17,11 @@ describe('ApplicationCodeController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationCodeController],
+      controllers: [CodeController],
       providers: [
         {
-          provide: ApplicationCodeService,
-          useValue: createMock<ApplicationCodeService>(),
+          provide: CodeService,
+          useValue: createMock<CodeService>(),
         },
         {
           provide: ClsService,
@@ -31,9 +31,7 @@ describe('ApplicationCodeController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationCodeController>(
-      ApplicationCodeController,
-    );
+    controller = module.get<CodeController>(CodeController);
   });
 
   it('should be defined', () => {

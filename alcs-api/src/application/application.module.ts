@@ -3,11 +3,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { CardModule } from '../card/card.module';
+import { CodeModule } from '../code/code.module';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
-import { ApplicationCodeModule } from './application-code/application-code.module';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
@@ -34,10 +34,10 @@ import { ApplicationService } from './application.service';
       ApplicationDecisionMeeting,
       ApplicationDocument,
     ]),
-    ApplicationCodeModule,
     NotificationModule,
     DocumentModule,
     CardModule,
+    CodeModule,
   ],
   providers: [
     ApplicationService,

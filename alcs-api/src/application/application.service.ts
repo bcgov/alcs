@@ -2,7 +2,14 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindOptionsWhere, IsNull, Repository } from 'typeorm';
+import {
+  Between,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  IsNull,
+  Like,
+  Repository,
+} from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/browser';
 import { Card } from '../card/card.entity';
 import {
@@ -86,10 +93,12 @@ export class ApplicationService {
 
   async getAll(
     findOptions?: FindOptionsWhere<Application>,
+    sortOptions?: FindOptionsOrder<Application>,
   ): Promise<Application[]> {
     return await this.applicationRepository.find({
       where: findOptions,
       relations: this.DEFAULT_RELATIONS,
+      order: sortOptions,
     });
   }
 
@@ -176,5 +185,16 @@ export class ApplicationService {
       pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
       paused: appPausedMap.get(app.uuid) || false,
     }));
+  }
+
+  searchApplicationsByFileNumber(fileNumber: string) {
+    return this.getAll(
+      {
+        fileNumber: Like(`${fileNumber}%`),
+      },
+      {
+        fileNumber: 'ASC',
+      },
+    );
   }
 }

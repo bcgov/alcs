@@ -4,9 +4,12 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationService } from '../application/application.service';
+import { CardCreateDto } from '../card/card.dto';
+import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { BoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
@@ -18,6 +21,7 @@ export class BoardController {
   constructor(
     private boardService: BoardService,
     private applicationService: ApplicationService,
+    private cardService: CardService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -34,7 +38,17 @@ export class BoardController {
     const applications = await this.boardService.getApplicationsByCode(
       boardCode,
     );
-    return this.applicationService.mapToDtos(applications);
+    const cards = await this.cardService.getByBoard(boardCode);
+
+    // TODO implement get recons with cards ones we have the recon entity
+    const reconsCards = cards.filter(
+      (c) => !applications.some((a) => a.cardUuid === c.uuid),
+    );
+
+    return {
+      applications: await this.applicationService.mapToDtos(applications),
+      reconsiderations: await this.cardService.mapToDto(reconsCards),
+    };
   }
 
   @Post('/change')
@@ -44,5 +58,23 @@ export class BoardController {
     { fileNumber, boardCode }: { fileNumber: string; boardCode: string },
   ) {
     return this.boardService.changeBoard(fileNumber, boardCode);
+  }
+
+  @Post('/card')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async createCard(
+    @Body()
+    card: CardCreateDto,
+  ): Promise<any> {
+    const board = await this.boardService.getOne({
+      code: card.boardCode,
+    });
+    if (!board) {
+      throw new ServiceValidationException(
+        `Board with code ${card.boardCode} not found`,
+      );
+    }
+
+    return this.cardService.create(card, board);
   }
 }

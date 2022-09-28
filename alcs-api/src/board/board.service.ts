@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { ApplicationService } from '../application/application.service';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
@@ -13,6 +13,7 @@ export class BoardService {
       status: true,
     },
   };
+  cardService: any;
 
   constructor(
     @InjectRepository(Board)
@@ -20,10 +21,18 @@ export class BoardService {
     private applicationService: ApplicationService,
   ) {}
 
+  async getOne(options: FindOptionsWhere<Board>) {
+    return this.boardRepository.findOne({
+      where: options,
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
   async list() {
     const boards = await this.boardRepository.find({
       relations: this.DEFAULT_RELATIONS,
     });
+
     //Sort board statuses
     return boards.map((board) => {
       board.statuses.sort((statusA, statusB) => {

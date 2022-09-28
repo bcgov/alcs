@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationCodeService } from '../application/application-code/application-code.service';
+import { CodeService } from '../code/application-code/code.service';
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
@@ -56,7 +56,7 @@ describe('HomeController', () => {
           useValue: {},
         },
         {
-          provide: ApplicationCodeService,
+          provide: CodeService,
           useValue: {},
         },
         ApplicationProfile,

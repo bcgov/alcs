@@ -10,8 +10,8 @@ import {
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationCodeService } from '../application-code/application-code.service';
-import { ApplicationRegion } from '../application-code/application-region/application-region.entity';
+import { CodeService } from '../../code/application-code/code.service';
+import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { ApplicationService } from '../application.service';
@@ -27,13 +27,13 @@ describe('ApplicationMeetingController', () => {
   let controller: ApplicationMeetingController;
   let mockMeetingService: DeepMocked<ApplicationMeetingService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
-  let mockApplicationCodeService: DeepMocked<ApplicationCodeService>;
+  let mockApplicationCodeService: DeepMocked<CodeService>;
   let mockPausedService: DeepMocked<ApplicationPausedService>;
 
   beforeEach(async () => {
     mockMeetingService = createMock<ApplicationMeetingService>();
     mockApplicationService = createMock<ApplicationService>();
-    mockApplicationCodeService = createMock<ApplicationCodeService>();
+    mockApplicationCodeService = createMock<CodeService>();
     mockPausedService = createMock<ApplicationPausedService>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -53,7 +53,7 @@ describe('ApplicationMeetingController', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: ApplicationCodeService,
+          provide: CodeService,
           useValue: mockApplicationCodeService,
         },
         {

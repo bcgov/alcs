@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CardAutomapperProfile } from '../common/automapper/card.automapper.profile';
 import { CardHistory } from './card-history/card-history.entity';
 import { CardSubscriber } from './card-history/card.subscriber';
 import { CardStatusController } from './card-status/card-status.controller';
@@ -29,6 +30,7 @@ import { CardService } from './card.service';
     CardService,
     CardSubtaskService,
     CardSubscriber,
+    CardAutomapperProfile,
   ],
   exports: [CardStatusService, CardService, CardSubtaskService],
 })

@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { ApplicationMeetingTypeDto } from '../application-code/application-meeting-type/application-meeting-type.dto';
+import { ApplicationMeetingTypeDto } from '../../code/application-code/application-meeting-type/application-meeting-type.dto';
 
 export class CreateApplicationMeetingDto {
   @AutoMap()

@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
@@ -15,14 +13,14 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { CardService } from '../card/card.service';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { CodeService } from '../code/code.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
-import { ApplicationCodeService } from './application-code/application-code.service';
-import { ApplicationRegion } from './application-code/application-region/application-region.entity';
-import { ApplicationType } from './application-code/application-type/application-type.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -37,10 +35,9 @@ import { ApplicationService } from './application.service';
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
-    private codeService: ApplicationCodeService,
+    private codeService: CodeService,
     private notificationService: NotificationService,
     private cardService: CardService,
-    @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
   @Get()
@@ -72,7 +69,7 @@ export class ApplicationController {
   async create(
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
-    const type = await this.codeService.fetchType(application.type);
+    const type = await this.codeService.fetchApplicationType(application.type);
 
     const region = application.region
       ? await this.codeService.fetchRegion(application.region)
@@ -105,7 +102,7 @@ export class ApplicationController {
 
     let type: ApplicationType | undefined;
     if (application.type && application.type != existingApplication.type.code) {
-      type = await this.codeService.fetchType(application.type);
+      type = await this.codeService.fetchApplicationType(application.type);
     }
 
     let region: ApplicationRegion | undefined;
@@ -184,7 +181,9 @@ export class ApplicationController {
       applicationToUpdate.status &&
       applicationToUpdate.status != existingCard.status.code
     ) {
-      status = await this.codeService.fetchStatus(applicationToUpdate.status);
+      status = await this.codeService.fetchApplicationStatus(
+        applicationToUpdate.status,
+      );
     }
 
     const updatedCard = await this.cardService.update(existingCard.uuid, {
@@ -216,5 +215,13 @@ export class ApplicationController {
       typeDetails: application.type,
       regionDetails: application.region,
     };
+  }
+
+  @Get('/search/:fileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async searchApplications(@Param('fileNumber') fileNumber: string) {
+    const applications =
+      await this.applicationService.searchApplicationsByFileNumber(fileNumber);
+    return this.applicationService.mapToDtos(applications);
   }
 }

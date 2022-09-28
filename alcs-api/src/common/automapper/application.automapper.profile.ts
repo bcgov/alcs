@@ -1,13 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationCodeService } from '../../application/application-code/application-code.service';
-import { ApplicationMeetingTypeDto } from '../../application/application-code/application-meeting-type/application-meeting-type.dto';
-import { ApplicationMeetingType } from '../../application/application-code/application-meeting-type/application-meeting-type.entity';
-import { ApplicationRegionDto } from '../../application/application-code/application-region/application-region.dto';
-import { ApplicationRegion } from '../../application/application-code/application-region/application-region.entity';
-import { ApplicationTypeDto } from '../../application/application-code/application-type/application-type.dto';
-import { ApplicationType } from '../../application/application-code/application-type/application-type.entity';
+
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
@@ -18,14 +12,21 @@ import {
 } from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../application/application-paused.entity';
-import { CardStatusDto } from '../../card/card-status/card-status.dto';
-import { CardStatus } from '../../card/card-status/card-status.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
 } from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
+import { CardStatusDto } from '../../card/card-status/card-status.dto';
+import { CardStatus } from '../../card/card-status/card-status.entity';
 import { Card } from '../../card/card.entity';
+import { ApplicationMeetingTypeDto } from '../../code/application-code/application-meeting-type/application-meeting-type.dto';
+import { ApplicationMeetingType } from '../../code/application-code/application-meeting-type/application-meeting-type.entity';
+import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
+import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
+import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
+import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
+import { CodeService } from '../../code/code.service';
 import { UserDto } from '../../user/user.dto';
 import { User } from '../../user/user.entity';
 
@@ -33,7 +34,7 @@ import { User } from '../../user/user.entity';
 export class ApplicationProfile extends AutomapperProfile {
   constructor(
     @InjectMapper() mapper: Mapper,
-    private codeService: ApplicationCodeService,
+    private codeService: CodeService,
   ) {
     super(mapper);
   }
@@ -129,13 +130,13 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           async (a) => a.card.status,
           mapFrom(async (ad) => {
-            return await this.codeService.fetchStatus(ad.status);
+            return await this.codeService.fetchApplicationStatus(ad.status);
           }),
         ),
         forMember(
           async (a) => a.type,
           mapFrom(async (ad) => {
-            return await this.codeService.fetchType(ad.type);
+            return await this.codeService.fetchApplicationType(ad.type);
           }),
         ),
         forMember(

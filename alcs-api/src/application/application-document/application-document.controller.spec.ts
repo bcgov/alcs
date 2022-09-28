@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationCodeService } from '../application-code/application-code.service';
+import { CodeService } from '../../code/application-code/code.service';
 import { ApplicationDocumentController } from './application-document.controller';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
@@ -35,7 +35,7 @@ describe('ApplicationDocumentController', () => {
       controllers: [ApplicationDocumentController],
       providers: [
         {
-          provide: ApplicationCodeService,
+          provide: CodeService,
           useValue: {},
         },
         ApplicationProfile,

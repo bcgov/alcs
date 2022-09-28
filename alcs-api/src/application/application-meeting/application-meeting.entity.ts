@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
-import { ApplicationMeetingType } from '../application-code/application-meeting-type/application-meeting-type.entity';
+import { ApplicationMeetingType } from '../../code/application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationPaused } from '../application-paused.entity';
 import { Application } from '../application.entity';
 

@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
-import { BaseCodeEntity } from '../../common/entities/base.code.entity';
-import { CardStatus } from '../../card/card-status/card-status.entity';
-import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
-import { ApplicationRegion } from './application-region/application-region.entity';
-import { ApplicationType } from './application-type/application-type.entity';
+import { CardStatus } from '../card/card-status/card-status.entity';
+import { BaseCodeEntity } from '../common/entities/base.code.entity';
+import { ReconsiderationType } from '../reconsideration/reconsideration-type/reconsideration-type.entity';
+import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
+import { ApplicationRegion } from './application-code/application-region/application-region.entity';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
 
 @Injectable()
-export class ApplicationCodeService {
+export class CodeService {
   constructor(
     @InjectRepository(ApplicationType)
     private typeRepository: Repository<ApplicationType>,
@@ -18,6 +19,8 @@ export class ApplicationCodeService {
     private regionRepository: Repository<ApplicationRegion>,
     @InjectRepository(ApplicationMeetingType)
     private meetingTypesRepository: Repository<ApplicationMeetingType>,
+    @InjectRepository(ReconsiderationType)
+    private reconsiderationTypesRepository: Repository<ReconsiderationType>,
   ) {}
 
   async getAll() {
@@ -32,6 +35,7 @@ export class ApplicationCodeService {
       this.statusRepository.find(), //Status is not alphabetical
       this.regionRepository.find(alphabeticalFindOptions),
       this.meetingTypesRepository.find(alphabeticalFindOptions),
+      this.reconsiderationTypesRepository.find(alphabeticalFindOptions),
     ]);
 
     return {
@@ -39,10 +43,11 @@ export class ApplicationCodeService {
       status: values[1],
       region: values[2],
       meetingTypes: values[3],
+      reconsiderationTypes: values[4],
     };
   }
 
-  async fetchType(code: string): Promise<ApplicationType> {
+  async fetchApplicationType(code: string): Promise<ApplicationType> {
     return this.typeRepository.findOne({
       where: {
         code,
@@ -50,7 +55,7 @@ export class ApplicationCodeService {
     });
   }
 
-  async fetchStatus(code: string): Promise<CardStatus> {
+  async fetchApplicationStatus(code: string): Promise<CardStatus> {
     return this.statusRepository.findOne({
       where: {
         code,

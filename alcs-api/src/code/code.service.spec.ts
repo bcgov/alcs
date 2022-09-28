@@ -2,11 +2,11 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CardStatus } from '../../card/card-status/card-status.entity';
-import { ApplicationCodeService } from './application-code.service';
-import { ApplicationMeetingType } from './application-meeting-type/application-meeting-type.entity';
-import { ApplicationRegion } from './application-region/application-region.entity';
-import { ApplicationType } from './application-type/application-type.entity';
+import { CardStatus } from '../card/card-status/card-status.entity';
+import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
+import { ApplicationRegion } from './application-code/application-region/application-region.entity';
+import { ApplicationType } from './application-code/application-type/application-type.entity';
+import { CodeService } from './code.service';
 
 describe('ApplicationCodeService', () => {
   let mockTypeRepository: DeepMocked<Repository<ApplicationType>>;
@@ -14,7 +14,7 @@ describe('ApplicationCodeService', () => {
   let mockRegionRepository: DeepMocked<Repository<ApplicationRegion>>;
   let mockMeetingRepository: DeepMocked<Repository<ApplicationMeetingType>>;
 
-  let service: ApplicationCodeService;
+  let service: CodeService;
 
   beforeEach(async () => {
     mockTypeRepository = createMock<Repository<ApplicationType>>();
@@ -24,7 +24,7 @@ describe('ApplicationCodeService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ApplicationCodeService,
+        CodeService,
         {
           provide: getRepositoryToken(ApplicationType),
           useValue: mockTypeRepository,
@@ -44,7 +44,7 @@ describe('ApplicationCodeService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationCodeService>(ApplicationCodeService);
+    service = module.get<CodeService>(CodeService);
   });
 
   it('should be defined', () => {
@@ -112,7 +112,7 @@ describe('ApplicationCodeService', () => {
     };
     mockTypeRepository.findOne.mockResolvedValue(mockType as ApplicationType);
 
-    const res = await service.fetchType('code');
+    const res = await service.fetchApplicationType('code');
 
     expect(mockTypeRepository.findOne).toHaveBeenCalled();
     expect(res).toEqual(mockType);
@@ -124,7 +124,7 @@ describe('ApplicationCodeService', () => {
     };
     mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
 
-    const res = await service.fetchStatus('code');
+    const res = await service.fetchApplicationStatus('code');
 
     expect(mockStatusRepository.findOne).toHaveBeenCalled();
     expect(res).toEqual(mockStatus);

@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ApplicationDto } from '../application/application.dto';
 import { UserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
-import { BoardDto } from './board.dto';
+import { BoardDto, CardsDto } from './board.dto';
 
 export interface BoardWithFavourite extends BoardDto {
   isFavourite: boolean;
@@ -42,7 +42,7 @@ export class BoardService {
   }
 
   fetchApplications(boardCode: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/board/${boardCode}`));
+    return firstValueFrom(this.http.get<CardsDto>(`${environment.apiUrl}/board/${boardCode}`));
   }
 
   changeBoard(fileNumber: string, boardCode: string) {

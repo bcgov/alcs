@@ -18,8 +18,8 @@ import {
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
 import { NotificationService } from '../notification/notification.service';
-import { ApplicationCodeService } from './application-code/application-code.service';
-import { ApplicationType } from './application-code/application-type/application-type.entity';
+import { CodeService } from '../code/application-code/code.service';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto } from './application.dto';
@@ -33,7 +33,7 @@ jest.mock('../common/authorization/role.guard', () => ({
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: DeepMocked<ApplicationService>;
-  let applicationCodeService: DeepMocked<ApplicationCodeService>;
+  let applicationCodeService: DeepMocked<CodeService>;
   let notificationService: DeepMocked<NotificationService>;
   let cardService: DeepMocked<CardService>;
   const mockApplicationEntity = initApplicationMockEntity();
@@ -57,7 +57,7 @@ describe('ApplicationController', () => {
 
   beforeEach(async () => {
     applicationService = createMock<ApplicationService>();
-    applicationCodeService = createMock<ApplicationCodeService>();
+    applicationCodeService = createMock<CodeService>();
     notificationService = createMock<NotificationService>();
     cardService = createMock<CardService>();
 
@@ -69,7 +69,7 @@ describe('ApplicationController', () => {
           useValue: applicationService,
         },
         {
-          provide: ApplicationCodeService,
+          provide: CodeService,
           useValue: applicationCodeService,
         },
         {
