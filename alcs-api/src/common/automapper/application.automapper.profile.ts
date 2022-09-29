@@ -126,6 +126,12 @@ export class ApplicationProfile extends AutomapperProfile {
             this.mapper.map(a.type, ApplicationRegion, ApplicationRegionDto),
           ),
         ),
+        forMember(
+          (ad) => ad.card,
+          mapFrom((a) => {
+            return this.mapper.map(a.card, Card, CardDto);
+          }),
+        ),
       );
 
       createMap(

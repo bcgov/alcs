@@ -27,7 +27,10 @@ export class CardService {
   ) {}
 
   get(uuid: string) {
-    return this.cardRepository.findOne({ where: { uuid } });
+    return this.cardRepository.findOne({
+      where: { uuid },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 
   async update(cardUuid, card: Partial<CardUpdateDto>) {
@@ -70,7 +73,7 @@ export class CardService {
     });
   }
 
-  async mapToDto(cards: Card[]) {
+  async mapToDtos(cards: Card[]) {
     return this.mapper.mapArray(cards, Card, CardDto);
   }
 }

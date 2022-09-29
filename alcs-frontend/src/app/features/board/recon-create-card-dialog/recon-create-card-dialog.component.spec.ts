@@ -8,9 +8,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CreateReconCardDialogComponent } from './create-recon-card-dialog.component';
+import { CreateReconCardDialogComponent } from './recon-create-card-dialog.component';
 
-describe('CreateReconCardDialogComponent', () => {
+describe('ReconCreateCardDialogComponent', () => {
   let component: CreateReconCardDialogComponent;
   let fixture: ComponentFixture<CreateReconCardDialogComponent>;
 

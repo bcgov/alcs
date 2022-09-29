@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ToastService } from '../../services/toast/toast.service';
-import { CardData } from '../card/card.component';
+import { CardData, CardSelectedEvent } from '../card/card.component';
 import { DragDropColumn } from './drag-drop-column.interface';
 
 @Component({
@@ -17,7 +17,7 @@ export class DragDropBoardComponent {
     id: string;
     status: string;
   }>();
-  @Output() cardSelected = new EventEmitter<string>();
+  @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
 
   constructor(private toastService: ToastService) {}
 
@@ -47,7 +47,8 @@ export class DragDropBoardComponent {
     this.cardDropped.emit({ id: selectedCard.id, status: targetColumn.status });
   }
 
-  cardClicked(id: string) {
-    this.cardSelected.emit(id);
+  cardClicked(card: CardSelectedEvent) {
+    console.log('app-drag-drop-board cardClicked 1', card);
+    this.cardSelected.emit({ uuid: card.uuid, cardType: card.cardType });
   }
 }

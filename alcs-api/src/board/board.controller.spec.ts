@@ -59,7 +59,7 @@ describe('BoardController', () => {
     appService.mapToDtos.mockResolvedValue([]);
 
     const boardCode = 'fake-board';
-    await controller.getApplications(boardCode);
+    await controller.getCards(boardCode);
 
     expect(boardService.getApplicationsByCode).toHaveBeenCalled();
     expect(boardService.getApplicationsByCode.mock.calls[0][0]).toEqual(

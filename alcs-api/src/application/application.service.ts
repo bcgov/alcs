@@ -26,13 +26,16 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 
 @Injectable()
 export class ApplicationService {
+  private DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
+    status: true,
+    board: true,
+    assignee: true,
+    type: true,
+  };
   private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
     type: true,
     card: {
-      status: true,
-      board: true,
-      assignee: true,
-      type: true,
+      ...this.DEFAULT_CARD_RELATIONS,
     },
     region: true,
     decisionMeetings: true,
@@ -40,9 +43,7 @@ export class ApplicationService {
   private SUBTASK_RELATIONS: FindOptionsRelations<Application> = {
     ...this.DEFAULT_RELATIONS,
     card: {
-      status: true,
-      board: true,
-      assignee: true,
+      ...this.DEFAULT_CARD_RELATIONS,
       subtasks: {
         type: true,
         assignee: true,

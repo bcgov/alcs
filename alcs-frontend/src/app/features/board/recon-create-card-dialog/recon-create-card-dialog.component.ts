@@ -11,9 +11,9 @@ import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-create-recon-card-dialog',
-  templateUrl: './create-recon-card-dialog.component.html',
-  styleUrls: ['./create-recon-card-dialog.component.scss'],
+  selector: 'app-recon-create-card-dialog',
+  templateUrl: './recon-create-card-dialog.component.html',
+  styleUrls: ['./recon-create-card-dialog.component.scss'],
 })
 export class CreateReconCardDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];

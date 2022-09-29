@@ -7,12 +7,13 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { ReconsiderationDto } from '../../services/card/card.dto';
+import { CardService } from '../../services/card/card.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { CardData } from '../../shared/card/card.component';
+import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
-import { CreateReconCardDialogComponent } from './create-recon-card-dialog/create-recon-card-dialog.component';
+import { CreateReconCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
 @Component({
   selector: 'app-board',
@@ -38,7 +39,8 @@ export class BoardComponent implements OnInit {
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private cardService: CardService
   ) {}
 
   ngOnInit() {
@@ -70,7 +72,8 @@ export class BoardComponent implements OnInit {
     // open card if application number present in url
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
     if (app) {
-      this.onSelected(app);
+      // TODO this needs to read different parameters from url
+      this.onSelected({ uuid: app, cardType: 'APP' });
     }
   }
 
@@ -104,7 +107,7 @@ export class BoardComponent implements OnInit {
     console.log('loadApplications', this.cards);
   }
 
-  async onSelected(id: string) {
+  private async openAppCardDetailDialog(id: string) {
     try {
       this.setUrl(id);
 
@@ -128,6 +131,45 @@ export class BoardComponent implements OnInit {
     } catch (err) {
       this.toastService.showErrorToast('There was an issue loading the application, please try again');
       console.error(err);
+    }
+  }
+
+  private async openReconCardDetailDialog(id: string) {
+    try {
+      this.setUrl(id);
+
+      const application = await this.cardService.fetchCard(id);
+
+      const dialogRef = this.dialog.open(CardDetailDialogComponent, {
+        minHeight: '500px',
+        minWidth: '600px',
+        maxWidth: '800px',
+        width: '70%',
+        data: application,
+      });
+
+      dialogRef.afterClosed().subscribe((isDirty) => {
+        this.setUrl();
+
+        if (isDirty && this.selectedBoardCode) {
+          this.loadApplications(this.selectedBoardCode);
+        }
+      });
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
+    }
+  }
+
+  async onSelected(card: CardSelectedEvent) {
+    console.log('onSelected', card);
+    switch (card.cardType) {
+      case 'APP':
+        this.openAppCardDetailDialog(card.uuid);
+        break;
+      case 'RECON':
+        this.openReconCardDetailDialog(card.uuid);
+        break;
     }
   }
 
@@ -179,17 +221,18 @@ export class BoardComponent implements OnInit {
       paused: application.paused,
       highPriority: application.highPriority,
       decisionMeetings: application.decisionMeetings,
+      cardType: application.card.type,
     };
   }
 
   private mapReconsiderationDtoToCard(recon: ReconsiderationDto): CardData {
+    console.log('mapReconsiderationDtoToCard', recon);
     // TODO get mock fields from application linked to reconsideration
-    const mappedType = this.applicationTypes.find((type) => type.code === 'mock');
     return {
       status: recon.status,
       title: 'Mock, get from application',
       assigneeInitials: recon.assignee?.initials,
-      id: 'Mock, get from application',
+      id: recon.uuid,
       type: {
         label: 'Recon',
         code: 'RECON',
@@ -198,6 +241,7 @@ export class BoardComponent implements OnInit {
         description: 'Reconsideration',
         textColor: 'white',
       },
+      cardType: 'RECON',
       paused: false,
       highPriority: recon.highPriority,
     };

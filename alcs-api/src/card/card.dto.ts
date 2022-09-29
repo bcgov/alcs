@@ -37,5 +37,5 @@ export class CardDto {
   type: string;
 
   @AutoMap()
-  cardUuid: string;
+  uuid: string;
 }

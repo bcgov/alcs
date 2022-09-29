@@ -16,7 +16,7 @@ import { BoardComponent } from './board.component';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
-import { CreateReconCardDialogComponent } from './create-recon-card-dialog/create-recon-card-dialog.component';
+import { CreateReconCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
 const routes: Routes = [
   {

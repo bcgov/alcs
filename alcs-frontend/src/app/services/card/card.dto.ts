@@ -8,7 +8,7 @@ export interface CardTypeDto extends BaseCodeDto {}
 export interface ReconsiderationDto {
   highPriority: boolean;
   status: string;
-  cardUuid: string;
+  uuid: string; // this is a cardUuid for now
   board: string;
   assignee?: UserDto;
 }
@@ -19,5 +19,5 @@ export interface CardCreateDto {
 }
 
 export interface CardDto {
-  type: CardTypeDto;
+  type: string;
 }

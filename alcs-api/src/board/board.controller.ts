@@ -34,7 +34,7 @@ export class BoardController {
 
   @Get('/:boardCode')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getApplications(@Param('boardCode') boardCode: string) {
+  async getCards(@Param('boardCode') boardCode: string) {
     const applications = await this.boardService.getApplicationsByCode(
       boardCode,
     );
@@ -47,7 +47,7 @@ export class BoardController {
 
     return {
       applications: await this.applicationService.mapToDtos(applications),
-      reconsiderations: await this.cardService.mapToDto(reconsCards),
+      reconsiderations: await this.cardService.mapToDtos(reconsCards),
     };
   }
 
@@ -76,5 +76,13 @@ export class BoardController {
     }
 
     return this.cardService.create(card, board);
+  }
+
+  @Get('/card/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getCard(@Param('uuid') cardUuid: string) {
+    const card = await this.cardService.get(cardUuid);
+
+    return this.cardService.mapToDtos([card]);
   }
 }

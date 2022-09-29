@@ -13,8 +13,13 @@ export interface CardData {
   highPriority: boolean;
   decisionMeetings?: ApplicationDecisionMeetingDto[];
   latestDecisionDate?: Date;
+  cardType: string;
 }
 
+export interface CardSelectedEvent {
+  uuid: string;
+  cardType: string;
+}
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
@@ -23,12 +28,12 @@ export interface CardData {
 export class CardComponent implements OnInit {
   @Input() cardData!: CardData;
 
-  @Output() cardSelected = new EventEmitter<string>();
+  @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
 
   constructor() {}
 
-  onClick(cardId: string) {
-    this.cardSelected.emit(cardId);
+  onClick(uuid: string, cardType: string) {
+    this.cardSelected.emit({ uuid, cardType });
   }
 
   private getLatestDecisionDate() {
