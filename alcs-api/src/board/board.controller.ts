@@ -57,9 +57,9 @@ export class BoardController {
   @UserRoles(...ANY_AUTH_ROLE)
   async changeApplicationBoard(
     @Body()
-    { fileNumber, boardCode }: { fileNumber: string; boardCode: string },
+    { cardUuid, boardCode }: { cardUuid: string; boardCode: string },
   ) {
-    return this.boardService.changeBoard(fileNumber, boardCode);
+    return this.boardService.changeBoard(cardUuid, boardCode);
   }
 
   @Post('/card')

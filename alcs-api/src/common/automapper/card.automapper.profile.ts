@@ -9,6 +9,8 @@ import { CardStatus } from '../../card/card-status/card-status.entity';
 import { CardType } from '../../card/card-type/card-type.entity';
 import { CardDetailedDto, CardDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
+import { UserDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
 
 @Injectable()
 export class CardAutomapperProfile extends AutomapperProfile {
@@ -35,6 +37,10 @@ export class CardAutomapperProfile extends AutomapperProfile {
           (cd) => cd.type,
           mapFrom((c) => c.type.code),
         ),
+        forMember(
+          (ad) => ad.assignee,
+          mapFrom((a) => this.mapper.map(a.assignee, User, UserDto)),
+        ),
       );
 
       createMap(
@@ -57,16 +63,6 @@ export class CardAutomapperProfile extends AutomapperProfile {
           (ad) => ad.typeDetails,
           mapFrom((a) => this.mapper.map(a.type, CardType, CardTypeDto)),
         ),
-        // forMember(
-        //   (cd) => cd.typeDetails,
-        //   mapFrom((c) => {
-        //     return this.mapper.map(c.type, CardType, CardTypeDto);
-        //   }),
-        // ),
-        // forMember(
-        //   (cd) => cd.statusDetails,
-        //   mapFrom((c) => this.mapper.map(c.type, CardStatus, CardStatusDto)),
-        // ),
       );
     };
   }

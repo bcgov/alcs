@@ -88,7 +88,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.recon.applicationFileNumber, board.code).then(() => {
+    await this.boardService.changeBoard(this.recon.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
       this.toastService.showSuccessToast(`Application moved to ${board.title}`);
     });
@@ -98,7 +98,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.applicationService
       .updateApplicationCard({
         ...changes,
-        fileNumber: this.recon.applicationFileNumber,
+        cardUuid: this.recon.uuid,
       })
       .then(() => {
         this.isApplicationDirty = true;
@@ -114,7 +114,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
       if (answer) {
         this.applicationService
           .updateApplication({
-            fileNumber: this.recon.applicationFileNumber,
+            cardUuid: this.recon.uuid, // TODO this will be update to card.uuid once we have proper recon
             highPriority: !this.recon.highPriority,
           })
           .then(() => {

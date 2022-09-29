@@ -17,9 +17,11 @@
       </div>
     </div>
     <div class="lower-card">
-      <div *ngIf="cardData.type.code !== 'RECON'" class="active-days center">
-        <mat-icon title="Active Days">calendar_month</mat-icon>
-        <span class="center">{{ cardData.activeDays }}</span>
+      <div>
+        <div *ngIf="cardData.type.code !== 'RECON'" class="active-days center">
+          <mat-icon title="Active Days">calendar_month</mat-icon>
+          <span class="center">{{ cardData.activeDays }}</span>
+        </div>
       </div>
       <app-avatar-circle *ngIf="cardData.assigneeInitials" [initials]="cardData.assigneeInitials"></app-avatar-circle>
     </div>

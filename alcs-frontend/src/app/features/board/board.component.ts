@@ -230,7 +230,7 @@ export class BoardComponent implements OnInit {
       type: mappedType!,
       activeDays: application.activeDays,
       paused: application.paused,
-      highPriority: application.highPriority,
+      highPriority: application.card.highPriority,
       decisionMeetings: application.decisionMeetings,
       cardType: application.card.type,
       cardUuid: application.card.uuid,

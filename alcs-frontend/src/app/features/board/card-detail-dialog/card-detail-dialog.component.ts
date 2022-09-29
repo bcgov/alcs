@@ -86,17 +86,17 @@ export class CardDetailDialogComponent implements OnInit {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.application.fileNumber, board.code).then(() => {
+    await this.boardService.changeBoard(this.application.card.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
       this.toastService.showSuccessToast(`Application moved to ${board.title}`);
     });
   }
 
-  updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
+  updateCard(changes: Omit<ApplicationPartialDto, 'cardUuid'>) {
     this.applicationService
       .updateApplicationCard({
         ...changes,
-        fileNumber: this.application.fileNumber,
+        cardUuid: this.application.card.uuid,
       })
       .then(() => {
         this.isApplicationDirty = true;
@@ -111,9 +111,9 @@ export class CardDetailDialogComponent implements OnInit {
     answer.subscribe((answer) => {
       if (answer) {
         this.applicationService
-          .updateApplication({
-            fileNumber: this.application.fileNumber,
-            highPriority: !this.application.highPriority,
+          .updateApplicationCard({
+            cardUuid: this.application.card.uuid,
+            highPriority: !this.application.card.highPriority,
           })
           .then(() => {
             this.isApplicationDirty = true;

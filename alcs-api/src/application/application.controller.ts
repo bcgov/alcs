@@ -188,6 +188,7 @@ export class ApplicationController {
     const updatedCard = await this.cardService.update(existingCard.uuid, {
       statusUuid: status ? status.uuid : undefined,
       assigneeUuid: applicationToUpdate.assigneeUuid,
+      highPriority: applicationToUpdate.highPriority,
     });
 
     const application = await this.applicationService.getByCard(

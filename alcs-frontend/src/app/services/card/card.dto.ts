@@ -31,4 +31,5 @@ export interface CardCreateDto {
 export interface CardDto {
   uuid: string;
   type: string;
+  highPriority: boolean;
 }

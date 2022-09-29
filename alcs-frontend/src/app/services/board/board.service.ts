@@ -45,10 +45,10 @@ export class BoardService {
     return firstValueFrom(this.http.get<CardsDto>(`${environment.apiUrl}/board/${boardCode}`));
   }
 
-  changeBoard(fileNumber: string, boardCode: string) {
+  changeBoard(cardUuid: string, boardCode: string) {
     return firstValueFrom(
       this.http.post<ApplicationDto>(`${environment.apiUrl}/board/change`, {
-        fileNumber,
+        cardUuid,
         boardCode,
       })
     );
