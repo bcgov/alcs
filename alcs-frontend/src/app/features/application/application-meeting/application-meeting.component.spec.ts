@@ -7,11 +7,11 @@ import { ApplicationDetailService } from '../../../services/application/applicat
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { ApplicationMeetingComponent } from './application-meeting.component';
+import { CreateApplicationMeetingComponent } from './application-meeting.component';
 
 describe('ApplicationMeetingComponent', () => {
-  let component: ApplicationMeetingComponent;
-  let fixture: ComponentFixture<ApplicationMeetingComponent>;
+  let component: CreateApplicationMeetingComponent;
+  let fixture: ComponentFixture<CreateApplicationMeetingComponent>;
   const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
     'loadApplication',
   ]);
@@ -19,7 +19,7 @@ describe('ApplicationMeetingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ApplicationMeetingComponent],
+      declarations: [CreateApplicationMeetingComponent],
       providers: [
         {
           provide: MatDialogRef,
@@ -35,7 +35,7 @@ describe('ApplicationMeetingComponent', () => {
       imports: [HttpClientTestingModule, MatSnackBarModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationMeetingComponent);
+    fixture = TestBed.createComponent(CreateApplicationMeetingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

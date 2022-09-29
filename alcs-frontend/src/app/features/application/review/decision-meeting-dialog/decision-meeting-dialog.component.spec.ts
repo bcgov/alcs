@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
-import { MomentPipe } from '../../../../shared/utils/moment.pipe';
+import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 
 import { DecisionMeetingDialogComponent } from './decision-meeting-dialog.component';
 

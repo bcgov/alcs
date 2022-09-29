@@ -114,8 +114,7 @@ describe('ApplicationMeetingController', () => {
     mockPausedService.createOrUpdate.mockResolvedValue(fakePause);
 
     const meetingToUpdate: CreateApplicationMeetingDto = {
-      startDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      endDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      meetingStartDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
       meetingTypeCode: 'CODE',
       description: 'EMPTY',
     };
@@ -125,7 +124,7 @@ describe('ApplicationMeetingController', () => {
     expect(mockMeetingService.create).toBeCalledTimes(1);
     const calledData = mockMeetingService.create.mock.calls[0][0];
     expect(calledData.application).toEqual(appMock);
-    expect(calledData.applicationPaused).toBe(fakePause);
+    expect(calledData.meetingPause).toBe(fakePause);
     expect(calledData.typeUuid).toBe(mockMeeting.typeUuid);
   });
 
@@ -146,16 +145,16 @@ describe('ApplicationMeetingController', () => {
     const mockMeeting = initApplicationMeetingMock(appMock);
     mockMeetingService.update.mockResolvedValue(mockMeeting);
     const meetingToUpdate = {
-      startDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      endDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      meetingStartDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      meetingEndDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
     } as UpdateApplicationMeetingDto;
 
     await controller.update(meetingToUpdate, mockMeeting.uuid);
 
     expect(mockMeetingService.update).toBeCalledTimes(1);
     expect(mockMeetingService.update).toBeCalledWith(mockMeeting.uuid, {
-      startDate: meetingToUpdate.startDate,
-      endDate: meetingToUpdate.endDate,
+      startDate: meetingToUpdate.meetingStartDate,
+      endDate: meetingToUpdate.meetingEndDate,
     });
   });
 
@@ -170,8 +169,7 @@ describe('ApplicationMeetingController', () => {
         {
           meetingTypeCode: 'BAD-CODE',
           description: '',
-          startDate: Date.now(),
-          endDate: null,
+          meetingStartDate: Date.now(),
         },
         'file-number',
       ),

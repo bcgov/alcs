@@ -87,16 +87,16 @@ export class OverviewComponent implements OnInit {
       });
     }
 
-    meetings.sort((a, b) => a.startDate - b.startDate);
+    meetings.sort((a, b) => a.meetingStartDate - b.meetingStartDate);
     const typeCount = new Map<string, number>();
     meetings.forEach((meeting) => {
       const count = typeCount.get(meeting.meetingType.code) || 0;
 
       mappedEvents.push({
         name: `${meeting.meetingType.label} #${count + 1}`,
-        startDate: new Date(meeting.startDate),
-        fulfilledDate: meeting.endDate ? new Date(meeting.endDate) : undefined,
-        isFulfilled: !!meeting.endDate,
+        startDate: new Date(meeting.meetingStartDate),
+        fulfilledDate: meeting.meetingEndDate ? new Date(meeting.meetingEndDate) : undefined,
+        isFulfilled: !!meeting.meetingEndDate,
         link: editLink.get(meeting.meetingType.code),
       });
       typeCount.set(meeting.meetingType.code, count + 1);

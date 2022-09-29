@@ -82,9 +82,10 @@ export class ApplicationMeetingController {
         `Failed to find meeting with ID ${uuid}`,
       );
     }
-    await this.applicationPausedService.remove(
-      appMeeting.applicationPaused.uuid,
-    );
+    await this.applicationPausedService.remove(appMeeting.meetingPause.uuid);
+    if (appMeeting.reportPause) {
+      await this.applicationPausedService.remove(appMeeting.reportPause.uuid);
+    }
     return this.appMeetingService.remove(appMeeting);
   }
 
@@ -142,7 +143,7 @@ export class ApplicationMeetingController {
         application: application,
         type: meetingType,
         description: meeting.description,
-        applicationPaused: pause,
+        meetingPause: pause,
       });
 
       return this.mapper.map(

@@ -26,12 +26,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
+import { LessOneDayPipe } from './pipes/lessOneDay.pipe';
 import { DATE_FORMATS } from './utils/date-format';
 import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
-import { MomentPipe } from './utils/moment.pipe';
+import { MomentPipe } from './pipes/moment.pipe';
 
 @NgModule({
-  declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe, MeetingOverviewComponent],
+  declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe, LessOneDayPipe, MeetingOverviewComponent],
   imports: [CommonModule, MatIconModule, MatExpansionModule, MatButtonModule, MatInputModule, FormsModule],
   exports: [
     CommonModule,
@@ -61,6 +62,7 @@ import { MomentPipe } from './utils/moment.pipe';
     MeetingOverviewComponent,
     MatExpansionModule,
     MtxButtonModule,
+    LessOneDayPipe,
   ],
 })
 export class SharedModule {

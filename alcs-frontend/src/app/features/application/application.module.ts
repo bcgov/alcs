@@ -8,6 +8,7 @@ import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
+import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
 import { ApplicationComponent, childRoutes } from './application.component';
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -39,6 +40,7 @@ const routes: Routes = [
     InlineDatepickerComponent,
     ApplicationMeetingComponent,
     ApplicationMeetingDialogComponent,
+    CreateApplicationMeetingDialogComponent,
     DecisionComponent,
     InfoRequestsComponent,
     InfoRequestDialogComponent,

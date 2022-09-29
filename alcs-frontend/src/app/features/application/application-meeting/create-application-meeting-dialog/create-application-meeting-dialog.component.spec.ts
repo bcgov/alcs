@@ -6,15 +6,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 
-import { ApplicationMeetingDialogComponent } from './application-meeting-dialog.component';
+import { CreateApplicationMeetingDialogComponent } from './application-meeting-dialog.component';
 
 describe('ApplicationMeetingDialogComponent', () => {
-  let component: ApplicationMeetingDialogComponent;
-  let fixture: ComponentFixture<ApplicationMeetingDialogComponent>;
+  let component: CreateApplicationMeetingDialogComponent;
+  let fixture: ComponentFixture<CreateApplicationMeetingDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ApplicationMeetingDialogComponent, MomentPipe],
+      declarations: [CreateApplicationMeetingDialogComponent, MomentPipe],
       providers: [
         {
           provide: ApplicationDecisionMeetingService,
@@ -26,7 +26,7 @@ describe('ApplicationMeetingDialogComponent', () => {
       imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationMeetingDialogComponent);
+    fixture = TestBed.createComponent(CreateApplicationMeetingDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

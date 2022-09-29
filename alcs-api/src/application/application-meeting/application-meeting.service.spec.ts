@@ -115,8 +115,8 @@ describe('ApplicationMeetingService', () => {
     } as ApplicationMeeting;
 
     await service.update(mockMeeting.uuid, {
-      startDate: Date.now(),
-      endDate: Date.now(),
+      meetingStartDate: Date.now(),
+      meetingEndDate: Date.now(),
       description: '',
     });
 
@@ -137,8 +137,8 @@ describe('ApplicationMeetingService', () => {
     } as ApplicationMeeting;
 
     await service.update(mockMeeting.uuid, {
-      startDate: Date.now(),
-      endDate: null,
+      meetingStartDate: Date.now(),
+      meetingEndDate: null,
       description: '',
     });
 
@@ -168,8 +168,8 @@ describe('ApplicationMeetingService', () => {
     expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
     await expect(
       service.update('fake-uuid', {
-        startDate: 5,
-        endDate: 1,
+        meetingStartDate: 5,
+        meetingEndDate: 1,
         description: '',
       }),
     ).rejects.toMatchObject(

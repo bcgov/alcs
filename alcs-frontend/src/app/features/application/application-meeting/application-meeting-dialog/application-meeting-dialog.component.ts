@@ -1,29 +1,18 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { environment } from '../../../../../environments/environment';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationMeetingTypeDto } from '../../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../../services/application/application-meeting/application-meeting.service';
 
-export class ApplicationMeetingForm {
-  constructor(
-    public fileNumber: string,
-    public startDate: Date,
-    public endDate: Date | null,
-    public meetingType: ApplicationMeetingTypeDto,
-    public uuid: string | undefined = undefined,
-    public reason: string | undefined = undefined
-  ) {}
-}
-
-const SITE_VISIT_REASONS = {
-  MEETING: 'Waiting for a scheduled site visit to occur',
-  REPORT: 'Waiting for applicant to review site visit report',
+export type ApplicationMeetingForm = {
+  fileNumber: string;
+  meetingStartDate: Date;
+  meetingEndDate: Date | null;
+  reportStartDate: Date | null;
+  reportEndDate: Date | null;
+  meetingType: ApplicationMeetingTypeDto;
+  uuid: string;
 };
 
-const APPLICANT_MEETING = {
-  MEETING: 'Waiting for a scheduled applicant / exclusion meeting to occur',
-  REPORT: 'Waiting for applicant to review meeting report',
-};
 @Component({
   selector: 'app-application-meeting-dialog',
   templateUrl: './application-meeting-dialog.component.html',
@@ -33,45 +22,18 @@ export class ApplicationMeetingDialogComponent {
   model: ApplicationMeetingForm;
   isLoading = false;
 
-  reasons: any = {
-    meeting: '',
-    report: '',
-  };
-
-  siteVisitReason: string = 'Waiting for a scheduled site visit to occur';
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationMeetingForm,
     private dialogRef: MatDialogRef<ApplicationMeetingDialogComponent>,
     private meetingService: ApplicationMeetingService
   ) {
-    if (data.uuid) {
-      this.model = {
-        ...data,
-        startDate: new Date(data.startDate),
-        endDate: data.endDate ? new Date(data.endDate) : null,
-      };
-    } else {
-      this.model = new ApplicationMeetingForm(data.fileNumber, new Date(), null, data.meetingType);
-    }
-
-    this.populateReasonsOptions(data);
-  }
-
-  private populateReasonsOptions(data: ApplicationMeetingForm) {
-    if (data.meetingType.code === 'SV') {
-      this.reasons = {
-        meeting: SITE_VISIT_REASONS.MEETING,
-        report: SITE_VISIT_REASONS.REPORT,
-      };
-    }
-
-    if (data.meetingType.code === 'AM') {
-      this.reasons = {
-        meeting: APPLICANT_MEETING.MEETING,
-        report: APPLICANT_MEETING.REPORT,
-      };
-    }
+    this.model = {
+      ...data,
+      meetingStartDate: new Date(data.meetingStartDate),
+      meetingEndDate: data.meetingEndDate ? new Date(data.meetingEndDate) : null,
+      reportStartDate: data.reportStartDate ? new Date(data.reportStartDate) : null,
+      reportEndDate: data.reportEndDate ? new Date(data.reportEndDate) : null,
+    };
   }
 
   async onSubmit() {
@@ -79,9 +41,11 @@ export class ApplicationMeetingDialogComponent {
       this.isLoading = true;
       try {
         const data = {
-          startDate: this.model.startDate,
-          endDate: this.model.endDate ? this.model.endDate : null,
-          description: this.model.reason,
+          meetingStartDate: this.model.meetingStartDate,
+          meetingEndDate: this.model.meetingEndDate ? this.model.meetingEndDate : null,
+          reportStartDate: this.model.reportStartDate ? this.model.reportStartDate : null,
+          reportEndDate: this.model.reportEndDate ? this.model.reportEndDate : null,
+          description: '',
         };
         if (this.model.uuid) {
           await this.meetingService.update(this.model.uuid, data);
@@ -95,12 +59,6 @@ export class ApplicationMeetingDialogComponent {
         this.isLoading = false;
       }
       this.dialogRef.close(true);
-    }
-  }
-
-  startDateSelected() {
-    if (this.model.startDate && this.model.endDate && this.model.startDate > this.model.endDate) {
-      this.model.endDate = this.model.startDate;
     }
   }
 }
