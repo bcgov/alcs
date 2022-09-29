@@ -4,8 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
-import { LessOneDayPipe } from '../../../../shared/pipes/lessOneDay.pipe';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
+import { StartOfDayPipe } from '../../../../shared/pipes/startOfDay.pipe';
 
 import { ApplicationMeetingDialogComponent } from './application-meeting-dialog.component';
 
@@ -15,7 +15,7 @@ describe('ApplicationMeetingDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ApplicationMeetingDialogComponent, MomentPipe, LessOneDayPipe],
+      declarations: [ApplicationMeetingDialogComponent, MomentPipe, StartOfDayPipe],
       providers: [
         {
           provide: ApplicationDecisionMeetingService,

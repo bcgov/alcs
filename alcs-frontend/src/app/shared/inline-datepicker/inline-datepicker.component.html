@@ -4,6 +4,9 @@
     <span *ngIf="selectedValue">
       {{ formattedDate }}
     </span>
+    <button *ngIf="selectedValue" class="edit-button" mat-icon-button (click)="toggleEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
+    </button>
   </span>
   <div
     class="editing"
