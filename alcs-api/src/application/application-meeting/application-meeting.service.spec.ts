@@ -125,7 +125,8 @@ describe('ApplicationMeetingService', () => {
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
-        applicationPaused: true,
+        meetingPause: true,
+        reportPause: true,
       },
     });
     expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
@@ -147,7 +148,8 @@ describe('ApplicationMeetingService', () => {
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
-        applicationPaused: true,
+        meetingPause: true,
+        reportPause: true,
       },
     });
     expect(mockAppMeetingRepository.save).toBeCalledTimes(1);

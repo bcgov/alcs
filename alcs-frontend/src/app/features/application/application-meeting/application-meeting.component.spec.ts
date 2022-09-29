@@ -6,12 +6,11 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-
-import { CreateApplicationMeetingComponent } from './application-meeting.component';
+import { ApplicationMeetingComponent } from './application-meeting.component';
 
 describe('ApplicationMeetingComponent', () => {
-  let component: CreateApplicationMeetingComponent;
-  let fixture: ComponentFixture<CreateApplicationMeetingComponent>;
+  let component: ApplicationMeetingComponent;
+  let fixture: ComponentFixture<ApplicationMeetingComponent>;
   const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
     'loadApplication',
   ]);
@@ -19,7 +18,7 @@ describe('ApplicationMeetingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateApplicationMeetingComponent],
+      declarations: [ApplicationMeetingComponent],
       providers: [
         {
           provide: MatDialogRef,
@@ -35,7 +34,7 @@ describe('ApplicationMeetingComponent', () => {
       imports: [HttpClientTestingModule, MatSnackBarModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateApplicationMeetingComponent);
+    fixture = TestBed.createComponent(ApplicationMeetingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

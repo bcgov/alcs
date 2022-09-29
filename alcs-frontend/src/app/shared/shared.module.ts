@@ -5,7 +5,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -19,8 +19,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDatepickerModule } from '@matheo/datepicker';
-import { DateAdapter, MatNativeDateModule } from '@matheo/datepicker/core';
+import { DateAdapter as MatheoDateAdapter, MatNativeDateModule } from '@matheo/datepicker/core';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
+import { DatetimeAdapter } from '@ng-matero/extensions/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
@@ -28,6 +29,7 @@ import { FavoriteButtonComponent } from './favorite-button/favorite-button.compo
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { LessOneDayPipe } from './pipes/lessOneDay.pipe';
 import { DATE_FORMATS } from './utils/date-format';
+import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
 import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
 import { MomentPipe } from './pipes/moment.pipe';
 
@@ -70,7 +72,8 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
-        { provide: DateAdapter, useClass: MatheoDatepickerFormatter, deps: [MAT_DATE_LOCALE, Platform] },
+        { provide: MatheoDateAdapter, useClass: MatheoDatepickerFormatter, deps: [MAT_DATE_LOCALE, Platform] },
+        { provide: DatetimeAdapter, useClass: ExtensionsDatepickerFormatter, deps: [MAT_DATE_LOCALE, DateAdapter] },
         { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
       ],
     };

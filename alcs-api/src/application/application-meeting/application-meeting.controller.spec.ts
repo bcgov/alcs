@@ -146,15 +146,19 @@ describe('ApplicationMeetingController', () => {
     mockMeetingService.update.mockResolvedValue(mockMeeting);
     const meetingToUpdate = {
       meetingStartDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      meetingEndDate: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      meetingEndDate: new Date(2022, 3, 2, 2, 2, 2, 2).valueOf(),
+      reportStartDate: new Date(2022, 4, 2, 2, 2, 2, 2).valueOf(),
+      reportEndDate: new Date(2022, 5, 2, 2, 2, 2, 2).valueOf(),
     } as UpdateApplicationMeetingDto;
 
     await controller.update(meetingToUpdate, mockMeeting.uuid);
 
     expect(mockMeetingService.update).toBeCalledTimes(1);
     expect(mockMeetingService.update).toBeCalledWith(mockMeeting.uuid, {
-      startDate: meetingToUpdate.meetingStartDate,
-      endDate: meetingToUpdate.meetingEndDate,
+      meetingStartDate: meetingToUpdate.meetingStartDate,
+      meetingEndDate: meetingToUpdate.meetingEndDate,
+      reportStartDate: meetingToUpdate.reportStartDate,
+      reportEndDate: meetingToUpdate.reportEndDate,
     });
   });
 

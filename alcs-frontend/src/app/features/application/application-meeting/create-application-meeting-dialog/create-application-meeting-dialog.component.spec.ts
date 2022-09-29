@@ -5,8 +5,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
-
-import { CreateApplicationMeetingDialogComponent } from './application-meeting-dialog.component';
+import { CreateApplicationMeetingDialogComponent } from './create-application-meeting-dialog.component';
 
 describe('ApplicationMeetingDialogComponent', () => {
   let component: CreateApplicationMeetingDialogComponent;

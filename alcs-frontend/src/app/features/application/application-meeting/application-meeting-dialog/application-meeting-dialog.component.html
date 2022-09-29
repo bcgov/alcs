@@ -1,60 +1,59 @@
 <div mat-dialog-title>
-  <h2 class="card-title">Edit {{ model.meetingType?.label }}</h2>
+  <h2 class="card-title">Edit {{ meetingType?.label }}</h2>
 </div>
-<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
   <mat-dialog-content style="height: 100%">
     <div class="flex-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested</mat-label>
+        <mtx-datetimepicker #meetingStartDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [matDatepicker]="meetingStartDate"
-          [(ngModel)]="model.meetingStartDate"
-          name="meetingStartDate"
+          [mtxDatetimepicker]="meetingStartDate"
+          formControlName="meetingStartDate"
           required
+          (dateChange)="onChange()"
         />
-        <mat-datepicker-toggle matSuffix [for]="meetingStartDate"></mat-datepicker-toggle>
-        <mat-datepicker #meetingStartDate type="date"> </mat-datepicker>
+        <mtx-datetimepicker-toggle [for]="meetingStartDate" matSuffix></mtx-datetimepicker-toggle>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Conducted</mat-label>
+        <mtx-datetimepicker #meetingEndDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [matDatepicker]="meetingEndDate"
-          [(ngModel)]="model.meetingEndDate"
-          name="meetingEndDate"
-          [min]="model.meetingStartDate | lessOneDay"
+          [mtxDatetimepicker]="meetingEndDate"
+          formControlName="meetingEndDate"
+          [min]="form.get('meetingStartDate')?.value | lessOneDay"
+          (dateChange)="onChange()"
         />
-        <mat-datepicker-toggle matSuffix [for]="meetingEndDate"></mat-datepicker-toggle>
-        <mat-datepicker #meetingEndDate type="date"> </mat-datepicker>
+        <mtx-datetimepicker-toggle [for]="meetingEndDate" matSuffix></mtx-datetimepicker-toggle>
       </mat-form-field>
     </div>
     <div class="flex-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>Report Sent</mat-label>
+        <mtx-datetimepicker #reportStartDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [matDatepicker]="reportStartDate"
-          [(ngModel)]="model.reportStartDate"
-          [min]="model.meetingEndDate | lessOneDay"
-          name="reportStartDate"
+          [mtxDatetimepicker]="reportStartDate"
+          formControlName="reportStartDate"
+          [min]="form.get('meetingEndDate')?.value | lessOneDay"
+          (dateChange)="onChange()"
         />
-        <mat-datepicker-toggle matSuffix [for]="reportStartDate"></mat-datepicker-toggle>
-        <mat-datepicker #reportStartDate type="date"> </mat-datepicker>
+        <mtx-datetimepicker-toggle [for]="reportStartDate" matSuffix></mtx-datetimepicker-toggle>
       </mat-form-field>
-
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>Report Approved</mat-label>
+        <mtx-datetimepicker #reportEndDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [matDatepicker]="reportEndDate"
-          [(ngModel)]="model.reportEndDate"
-          name="reportEndDate"
-          [min]="model.reportStartDate | lessOneDay"
+          [mtxDatetimepicker]="reportEndDate"
+          formControlName="reportEndDate"
+          [min]="form.get('reportStartDate')?.value | lessOneDay"
+          (dateChange)="onChange()"
         />
-        <mat-datepicker-toggle matSuffix [for]="reportEndDate"></mat-datepicker-toggle>
-        <mat-datepicker #reportEndDate type="date"> </mat-datepicker>
+        <mtx-datetimepicker-toggle [for]="reportEndDate" matSuffix></mtx-datetimepicker-toggle>
       </mat-form-field>
     </div>
     <div class="warning">
@@ -62,7 +61,10 @@
       <div>
         The application’s active day count will be paused between the dates:
         <ul>
-          <li>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested & {{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Conducted</li>
+          <li>
+            {{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested &
+            {{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Conducted
+          </li>
           <li>Report Sent & Report Approved</li>
         </ul>
       </div>
@@ -71,7 +73,7 @@
   <mat-dialog-actions align="end">
     <div class="button-container">
       <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
-      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">
         Save
       </button>
     </div>
