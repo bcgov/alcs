@@ -1,17 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { ApplicationSubtaskDto } from '../../../services/application/application-subtask/application-subtask.dto';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-subtasks[fileNumber]',
+  selector: 'app-subtasks[cardUuid]',
   templateUrl: './subtasks.component.html',
   styleUrls: ['./subtasks.component.scss'],
 })
 export class SubtasksComponent implements OnInit {
-  @Input() fileNumber: string = '';
+  @Input() cardUuid: string = '';
 
   subtasks: ApplicationSubtaskDto[] = [];
   users: Map<string, string> = new Map();
@@ -23,7 +22,7 @@ export class SubtasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadSubtasks(this.fileNumber);
+    this.loadSubtasks(this.cardUuid);
 
     this.userService.$users.subscribe((users) => {
       this.users.clear();
@@ -38,7 +37,7 @@ export class SubtasksComponent implements OnInit {
   }
 
   async create(type: string) {
-    const task = await this.subtaskService.create(this.fileNumber, type);
+    const task = await this.subtaskService.create(this.cardUuid, type);
     this.subtasks.push(task);
   }
 
@@ -50,7 +49,7 @@ export class SubtasksComponent implements OnInit {
       .subscribe(async (yes) => {
         if (yes) {
           await this.subtaskService.delete(uuid);
-          await this.loadSubtasks(this.fileNumber);
+          await this.loadSubtasks(this.cardUuid);
         }
       });
   }
@@ -65,7 +64,7 @@ export class SubtasksComponent implements OnInit {
           await this.subtaskService.update(uuid, {
             completedAt: Date.now(),
           });
-          await this.loadSubtasks(this.fileNumber);
+          await this.loadSubtasks(this.cardUuid);
         }
       });
   }
@@ -74,6 +73,6 @@ export class SubtasksComponent implements OnInit {
     await this.subtaskService.update(uuid, {
       completedAt: null,
     });
-    await this.loadSubtasks(this.fileNumber);
+    await this.loadSubtasks(this.cardUuid);
   }
 }

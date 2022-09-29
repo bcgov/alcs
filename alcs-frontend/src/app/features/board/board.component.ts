@@ -13,7 +13,8 @@ import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
-import { CreateReconCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
+import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
+import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
 @Component({
   selector: 'app-board',
@@ -83,7 +84,7 @@ export class BoardComponent implements OnInit {
       this.cardDialogType = CreateCardDialogComponent;
     } else {
       this.createCardTitle = '+ New Reconsideration';
-      this.cardDialogType = CreateReconCardDialogComponent;
+      this.cardDialogType = ReconCreateCardDialogComponent;
     }
   }
 
@@ -138,14 +139,20 @@ export class BoardComponent implements OnInit {
     try {
       this.setUrl(id);
 
-      const application = await this.cardService.fetchCard(id);
+      const reconCard = await this.cardService.fetchReconsiderationCard(id);
+      reconCard.regionDetails = {
+        label: 'Mock',
+        code: 'Mock',
+        description: 'Mock',
+      };
+      console.log('openReconCardDetailDialog', reconCard);
 
-      const dialogRef = this.dialog.open(CardDetailDialogComponent, {
+      const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
         minHeight: '500px',
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: application,
+        data: reconCard,
       });
 
       dialogRef.afterClosed().subscribe((isDirty) => {

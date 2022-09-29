@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { UserDto } from '../user/user.dto';
+import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
 
 export class CardUpdateDto {
   @AutoMap()
@@ -38,4 +39,12 @@ export class CardDto {
 
   @AutoMap()
   uuid: string;
+}
+
+export class CardDetailedDto extends CardDto {
+  @AutoMap()
+  statusDetails: CardStatusDto;
+
+  @AutoMap()
+  typeDetails: CardTypeDto;
 }

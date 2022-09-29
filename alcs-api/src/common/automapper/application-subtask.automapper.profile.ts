@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import {
   ApplicationSubtaskDto,
   ApplicationSubtaskWithApplicationDTO,
-} from '../../application/application-subtask/application-subtask.dto';
+} from '../../card/card-subtask/card-subtask.dto';
 import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 
 @Injectable()

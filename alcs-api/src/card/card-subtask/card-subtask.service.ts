@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { UpdateApplicationSubtaskDto } from '../../application/application-subtask/application-subtask.dto';
 import { Card } from '../../card/card.entity';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
+import { UpdateApplicationSubtaskDto } from './card-subtask.dto';
 import { CardSubtask } from './card-subtask.entity';
 
 @Injectable()
@@ -80,5 +80,12 @@ export class CardSubtaskService {
 
   async delete(uuid: string) {
     await this.cardSubtaskRepository.delete(uuid);
+  }
+
+  async getByCard(cardUuid: string) {
+    return this.cardSubtaskRepository.find({
+      where: { cardUuid },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 }

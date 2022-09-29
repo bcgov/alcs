@@ -3,18 +3,18 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { CardSubtaskType } from '../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
-import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
-import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
+import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
+import { CardSubtask } from './card-subtask.entity';
+import { CardSubtaskService } from './card-subtask.service';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { Application } from '../application.entity';
-import { ApplicationService } from '../application.service';
-import { ApplicationSubtaskController } from './application-subtask.controller';
+import { Application } from '../../application/application.entity';
+import { ApplicationService } from '../../application/application.service';
+import { CardSubtaskController } from './card-subtask.controller';
 
 describe('ApplicationSubtaskController', () => {
-  let controller: ApplicationSubtaskController;
+  let controller: CardSubtaskController;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
   let applicationService: DeepMocked<ApplicationService>;
 
@@ -37,7 +37,7 @@ describe('ApplicationSubtaskController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationSubtaskController],
+      controllers: [CardSubtaskController],
       providers: [
         {
           provide: CardSubtaskService,
@@ -56,9 +56,7 @@ describe('ApplicationSubtaskController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationSubtaskController>(
-      ApplicationSubtaskController,
-    );
+    controller = module.get<CardSubtaskController>(CardSubtaskController);
   });
 
   it('should be defined', () => {

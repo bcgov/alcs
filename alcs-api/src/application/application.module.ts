@@ -19,7 +19,6 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
-import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -58,7 +57,6 @@ import { ApplicationService } from './application.service';
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,
-    ApplicationSubtaskController,
   ],
   exports: [
     ApplicationService,

@@ -35,7 +35,7 @@ import { ReconCardDetailDialogComponent } from './features/board/recon-card-deta
     ConfirmationDialogComponent,
     NotificationsComponent,
     SearchBarComponent,
-    ReconCardDetailDialogComponent,
+    
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule],
   providers: [

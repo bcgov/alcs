@@ -1,0 +1,135 @@
+@import '../../../../styles/colors';
+
+.close {
+  color: $grey;
+  margin-top: -12px;
+  margin-right: -12px;
+  display: flex;
+  justify-content: right;
+  margin-bottom: 16px;
+}
+
+.header-row {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.application-type {
+  margin-left: 16px;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+}
+
+.time-tracking {
+  div {
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  margin-right: 8px;
+  background-color: $primary-color;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid #efefef;
+  box-shadow: 0px 0px 4px 2px rgba($primary-color, 0.3);
+}
+
+.dot.paused {
+  background-color: $error-color;
+  box-shadow: 0 0 4px 2px rgba($error-color, 0.3);
+}
+
+.icon {
+  margin-right: 4px;
+  height: 18px;
+  width: 18px;
+  font-size: 18px;
+}
+
+.inactive-timer {
+  opacity: 0.3;
+}
+
+.card-assignee {
+  .assignee-card-name {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+  }
+  .assignee-card-email {
+    font-size: 0.9em !important;
+  }
+}
+
+::ng-deep .move-board-menu {
+  max-height: 250px;
+}
+
+.board-menu-item {
+  display: grid;
+  grid-template-columns: 22px 1fr 22px;
+}
+
+.favourite-board-icon-container {
+  width: 22px;
+  display: inline-block;
+}
+
+.favourite-board-icon {
+  width: 18px;
+  height: 20px;
+  font-size: 18px;
+  color: $favorite-star;
+}
+
+.selected-board-icon {
+  width: 18px;
+  height: 20px;
+  font-size: 18px;
+  margin-left: 8px;
+  margin-right: 4px;
+  color: $primary-color;
+}
+
+.priority {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 40px;
+  height: 20px;
+}
+
+.filled-priority {
+  background-image: url('/assets/icons/priority_high_red.svg');
+}
+
+.empty-priority {
+  background-image: url('/assets/icons/priority_empty.svg');
+}
+
+.select-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  align-items: end;
+}
+
+.subtasks-wrapper {
+  margin-top: 36px;
+}
+
+.card-comments-wrapper {
+  max-height: 350px;
+  overflow-y: auto;
+  margin-top: 36px;
+}

@@ -18,37 +18,34 @@ import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { ApplicationService } from '../application.service';
+import { CardService } from '../card.service';
 import {
   ApplicationSubtaskDto,
   UpdateApplicationSubtaskDto,
-} from './application-subtask.dto';
+} from './card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RoleGuard)
-@Controller('application-subtask')
-export class ApplicationSubtaskController {
+@Controller('card-subtask')
+export class CardSubtaskController {
   constructor(
     private cardSubtaskService: CardSubtaskService,
-    private applicationService: ApplicationService,
+    private cardService: CardService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Post('/:fileNumber/:subtaskType')
+  @Post('/:cardUuid/:subtaskType')
   @UserRoles(...ANY_AUTH_ROLE)
   async create(
-    @Param('fileNumber') fileNumber: string,
+    @Param('cardUuid') cardUuid: string,
     @Param('subtaskType') subtaskType: string,
   ): Promise<ApplicationSubtaskDto> {
-    const application = await this.applicationService.get(fileNumber);
-    if (!application) {
-      throw new ServiceNotFoundException(`File number not found ${fileNumber}`);
+    const card = await this.cardService.get(cardUuid);
+    if (!card) {
+      throw new ServiceNotFoundException(`File number not found ${cardUuid}`);
     }
 
-    const savedTask = await this.cardSubtaskService.create(
-      application.card,
-      subtaskType,
-    );
+    const savedTask = await this.cardSubtaskService.create(card, subtaskType);
     return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
   }
 
@@ -62,14 +59,12 @@ export class ApplicationSubtaskController {
     return this.mapper.map(savedTask, CardSubtask, ApplicationSubtaskDto);
   }
 
-  @Get('/:fileNumber')
+  @Get('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async list(
-    @Param('fileNumber') fileNumber: string,
-  ): Promise<ApplicationSubtaskDto[]> {
-    const application = await this.applicationService.get(fileNumber);
+  async list(@Param('uuid') uuid: string): Promise<ApplicationSubtaskDto[]> {
+    const card = await this.cardService.get(uuid);
     return this.mapper.mapArray(
-      application.card.subtasks,
+      card.subtasks,
       CardSubtask,
       ApplicationSubtaskDto,
     );

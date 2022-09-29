@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationMasterCodesDto } from '../application/application-code.dto';
 import { ToastService } from '../toast/toast.service';
-import { CardCreateDto, CardDto, ReconsiderationTypeDto } from './card.dto';
+import { CardCreateDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
 
 // TODO refactor: move to board?
 @Injectable({
@@ -22,8 +22,8 @@ export class CardService {
     this.$cardReconTypes.next(this.cardReconTypes);
   }
 
-  async fetchCard(uuid: string) {
-    return await firstValueFrom(this.http.get<CardDto>(`${environment.apiUrl}/board/card/${uuid}`));
+  async fetchReconsiderationCard(uuid: string) {
+    return await firstValueFrom(this.http.get<ReconsiderationDto>(`${environment.apiUrl}/board/card/${uuid}`));
   }
 
   async createCard(card: CardCreateDto) {

@@ -1,7 +1,11 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { ApplicationRegionDto, ApplicationStatusDto } from '../application/application-code.dto';
 import { UserDto } from '../user/user.dto';
 
-export interface ReconsiderationTypeDto extends BaseCodeDto {}
+export interface ReconsiderationTypeDto extends BaseCodeDto {
+  backgroundColor: string;
+  textColor: string;
+}
 
 export interface CardTypeDto extends BaseCodeDto {}
 
@@ -11,6 +15,11 @@ export interface ReconsiderationDto {
   uuid: string; // this is a cardUuid for now
   board: string;
   assignee?: UserDto;
+  // TODO: provide actual properties once we have reconsideration
+  applicationFileNumber: string;
+  statusDetails: ApplicationStatusDto;
+  regionDetails: ApplicationRegionDto;
+  typeDetails: ReconsiderationTypeDto;
 }
 
 export interface CardCreateDto {
@@ -19,5 +28,6 @@ export interface CardCreateDto {
 }
 
 export interface CardDto {
+  uuid: string;
   type: string;
 }

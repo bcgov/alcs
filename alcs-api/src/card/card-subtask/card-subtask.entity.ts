@@ -25,6 +25,9 @@ export class CardSubtask extends Base {
   @Column({ nullable: true })
   assigneeUuid?: string;
 
+  @Column()
+  cardUuid?: string;
+
   @ManyToOne(() => Card)
   card: Card;
 

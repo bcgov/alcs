@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsUUID } from 'class-validator';
-import { ApplicationDto } from '../application.dto';
+import { ApplicationDto } from '../../application/application.dto';
 
 export class UpdateApplicationSubtaskDto {
   @AutoMap()

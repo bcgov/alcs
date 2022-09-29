@@ -6,7 +6,12 @@ import { FindOptionsRelations, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { CardType } from './card-type/card-type.entity';
-import { CardCreateDto, CardDto, CardUpdateDto } from './card.dto';
+import {
+  CardCreateDto,
+  CardDetailedDto,
+  CardDto,
+  CardUpdateDto,
+} from './card.dto';
 import { Card } from './card.entity';
 
 @Injectable()
@@ -29,7 +34,13 @@ export class CardService {
   get(uuid: string) {
     return this.cardRepository.findOne({
       where: { uuid },
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        subtasks: {
+          type: true,
+          assignee: true,
+        },
+      },
     });
   }
 
@@ -75,5 +86,9 @@ export class CardService {
 
   async mapToDtos(cards: Card[]) {
     return this.mapper.mapArray(cards, Card, CardDto);
+  }
+
+  async mapToDetailedDto(card: Card) {
+    return this.mapper.map(card, Card, CardDetailedDto);
   }
 }

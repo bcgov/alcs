@@ -15,7 +15,7 @@ import { ToastService } from '../../../services/toast/toast.service';
   templateUrl: './recon-create-card-dialog.component.html',
   styleUrls: ['./recon-create-card-dialog.component.scss'],
 })
-export class CreateReconCardDialogComponent implements OnInit {
+export class ReconCreateCardDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   reconTypes: ReconsiderationTypeDto[] = [];
@@ -46,7 +46,7 @@ export class CreateReconCardDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<CreateReconCardDialogComponent>,
+    private dialogRef: MatDialogRef<ReconCreateCardDialogComponent>,
     private applicationService: ApplicationService,
     private cardService: CardService,
     private toastService: ToastService
