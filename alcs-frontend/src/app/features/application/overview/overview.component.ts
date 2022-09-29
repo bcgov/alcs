@@ -93,12 +93,23 @@ export class OverviewComponent implements OnInit {
       const count = typeCount.get(meeting.meetingType.code) || 0;
 
       mappedEvents.push({
-        name: `${meeting.meetingType.label} #${count + 1}`,
+        name: `${meeting.meetingType.label} #${count + 1} Requested`,
         startDate: new Date(meeting.meetingStartDate),
         fulfilledDate: meeting.meetingEndDate ? new Date(meeting.meetingEndDate) : undefined,
         isFulfilled: !!meeting.meetingEndDate,
         link: editLink.get(meeting.meetingType.code),
       });
+
+      if (meeting.reportStartDate) {
+        mappedEvents.push({
+          name: `${meeting.meetingType.label} #${count + 1} Sent to Applicant`,
+          startDate: new Date(meeting.reportStartDate),
+          fulfilledDate: meeting.reportEndDate ? new Date(meeting.reportEndDate) : undefined,
+          isFulfilled: !!meeting.reportEndDate,
+          link: editLink.get(meeting.meetingType.code),
+        });
+      }
+
       typeCount.set(meeting.meetingType.code, count + 1);
     });
 
