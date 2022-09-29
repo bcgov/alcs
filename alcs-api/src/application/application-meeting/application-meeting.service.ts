@@ -5,6 +5,7 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationService } from '../application.service';
 import { UpdateApplicationMeetingDto } from './application-meeting.dto';
@@ -61,20 +62,15 @@ export class ApplicationMeetingService {
       );
     }
 
-    if (meeting.meetingStartDate) {
-      existingMeeting.meetingPause.startDate = new Date(
-        meeting.meetingStartDate,
-      );
-    }
+    existingMeeting.meetingPause.startDate = formatIncomingDate(
+      meeting.meetingStartDate,
+    );
+    existingMeeting.meetingPause.endDate = formatIncomingDate(
+      meeting.meetingEndDate,
+    );
 
     if (meeting.description) {
       existingMeeting.description = meeting.description;
-    }
-
-    if (meeting.meetingEndDate !== undefined) {
-      existingMeeting.meetingPause.endDate = meeting.meetingEndDate
-        ? new Date(meeting.meetingEndDate)
-        : null;
     }
 
     if (
@@ -82,26 +78,17 @@ export class ApplicationMeetingService {
       meeting.reportEndDate !== undefined
     ) {
       if (existingMeeting.reportPause) {
-        if (meeting.reportStartDate) {
-          existingMeeting.reportPause.startDate = meeting.reportStartDate
-            ? new Date(meeting.reportStartDate)
-            : null;
-        }
-
-        if (meeting.reportEndDate) {
-          existingMeeting.reportPause.endDate = meeting.reportEndDate
-            ? new Date(meeting.reportEndDate)
-            : null;
-        }
+        existingMeeting.reportPause.startDate = formatIncomingDate(
+          meeting.reportStartDate,
+        );
+        existingMeeting.reportPause.endDate = formatIncomingDate(
+          meeting.reportEndDate,
+        );
       } else {
         existingMeeting.reportPause = new ApplicationPaused({
           applicationUuid: existingMeeting.applicationUuid,
-          startDate: meeting.reportStartDate
-            ? new Date(meeting.reportStartDate)
-            : undefined,
-          endDate: meeting.reportEndDate
-            ? new Date(meeting.reportEndDate)
-            : undefined,
+          startDate: formatIncomingDate(meeting.reportStartDate),
+          endDate: formatIncomingDate(meeting.reportEndDate),
         });
       }
     }
