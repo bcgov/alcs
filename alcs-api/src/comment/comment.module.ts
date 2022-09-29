@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../application/application.module';
+import { CardModule } from '../card/card.module';
 import { CommentProfile } from '../common/automapper/comment.automapper.profile';
 import { NotificationModule } from '../notification/notification.module';
 import { CommentController } from './comment.controller';
@@ -14,6 +15,7 @@ import { CommentMentionService } from './mention/comment-mention.service';
     TypeOrmModule.forFeature([Comment, CommentMention]),
     ApplicationModule,
     NotificationModule,
+    CardModule,
   ],
   controllers: [CommentController],
   providers: [CommentService, CommentProfile, CommentMentionService],

@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CommentMentionDto } from './mention/comment-mention.dto';
 
 export class CommentDto {
@@ -28,6 +28,10 @@ export class CommentDto {
 export class CreateCommentDto {
   @IsString()
   @IsNotEmpty()
+  cardUuid: string;
+
+  @IsString()
+  @IsOptional()
   fileNumber: string;
 
   @IsString()

@@ -20,6 +20,7 @@ export interface ReconsiderationDto {
   statusDetails: ApplicationStatusDto;
   regionDetails: ApplicationRegionDto;
   typeDetails: ReconsiderationTypeDto;
+  card: CardDto;
 }
 
 export interface CardCreateDto {

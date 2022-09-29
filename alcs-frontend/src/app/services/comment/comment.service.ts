@@ -11,8 +11,8 @@ import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
 export class CommentService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  async fetchComments(fileNumber: string) {
-    return firstValueFrom(this.http.get<CommentDto[]>(`${environment.apiUrl}/comment/${fileNumber}`));
+  async fetchComments(cardUuid: string) {
+    return firstValueFrom(this.http.get<CommentDto[]>(`${environment.apiUrl}/comment/${cardUuid}`));
   }
 
   async createComment(comment: CreateCommentDto) {
