@@ -24,7 +24,7 @@
           matInput
           [mtxDatetimepicker]="meetingEndDate"
           formControlName="meetingEndDate"
-          [min]="form.get('meetingStartDate')?.value | lessOneDay"
+          [min]="form.get('meetingStartDate')?.value | startOfDay"
           (dateChange)="onChange()"
         />
         <mtx-datetimepicker-toggle [for]="meetingEndDate" matSuffix></mtx-datetimepicker-toggle>
@@ -38,7 +38,7 @@
           matInput
           [mtxDatetimepicker]="reportStartDate"
           formControlName="reportStartDate"
-          [min]="form.get('meetingEndDate')?.value | lessOneDay"
+          [min]="form.get('meetingEndDate')?.value | startOfDay"
           (dateChange)="onChange()"
         />
         <mtx-datetimepicker-toggle [for]="reportStartDate" matSuffix></mtx-datetimepicker-toggle>
@@ -50,7 +50,7 @@
           matInput
           [mtxDatetimepicker]="reportEndDate"
           formControlName="reportEndDate"
-          [min]="form.get('reportStartDate')?.value | lessOneDay"
+          [min]="form.get('reportStartDate')?.value | startOfDay"
           (dateChange)="onChange()"
         />
         <mtx-datetimepicker-toggle [for]="reportEndDate" matSuffix></mtx-datetimepicker-toggle>
