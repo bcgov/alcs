@@ -5,8 +5,9 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application":"type_uuid":w -> "application_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_meeting":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_document":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_meeting":"application_paused_uuid":w -> "application_paused":"uuid.type":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_meeting":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_meeting":"meeting_pause_uuid":w -> "application_paused":"uuid.type":e [arrowhead=none dir=back arrowtail=teeodot];
+  "application_meeting":"report_pause_uuid":w -> "application_paused":"uuid.type":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_meeting":"type_uuid":w -> "application_meeting_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_paused":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application" [
@@ -47,7 +48,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="121" HEIGHT="16"><B>application_meeting</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
     </TABLE>>
     URL="application_meeting.html"
     target="_top"
@@ -77,7 +78,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="application_uuid" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">application_uuid</TD></TR></TABLE></TD><TD PORT="application_uuid.type" ALIGN="LEFT">uuid[2147483647]</TD></TR>
       <TR><TD PORT="start_date" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">start_date</TD></TR></TABLE></TD><TD PORT="start_date.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
       <TR><TD PORT="end_date" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">end_date</TD></TR></TABLE></TD><TD PORT="end_date.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">2 &gt;</TD></TR>
     </TABLE>>
     URL="application_paused.html"
     target="_top"

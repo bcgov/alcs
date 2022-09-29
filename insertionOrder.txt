@@ -17,8 +17,8 @@ application_document
 board_status
 comment_mention
 notification
-application_meeting
 card_subtask
+application_meeting
 health_check
 holiday_entity
 migrations

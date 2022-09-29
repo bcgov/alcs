@@ -118,8 +118,12 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_meeting.application_paused_uuid references application_paused.uuid via FK_e527e6d1acc89174494456e0ad3"><a href='application_meeting.html'>application_meeting</a><span class='relatedKey'>.application_paused_uuid</span></td>
+                                                <td title="application_meeting.meeting_pause_uuid references application_paused.uuid via FK_e527e6d1acc89174494456e0ad3"><a href='application_meeting.html'>application_meeting</a><span class='relatedKey'>.meeting_pause_uuid</span></td>
                                                 <td class="constraint detail">FK_e527e6d1acc89174494456e0ad3<span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_meeting.report_pause_uuid references application_paused.uuid via FK_77fa445c8781553d4ebd7a15749"><a href='application_meeting.html'>application_meeting</a><span class='relatedKey'>.report_pause_uuid</span></td>
+                                                <td class="constraint detail">FK_77fa445c8781553d4ebd7a15749<span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -328,9 +332,9 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="775,5,1020,211">
-<area shape="rect" id="node2" href="application_paused.html" target="_top" title="application_paused" alt="" coords="352,115,731,448">
-<area shape="rect" id="node3" href="application.html" target="_top" title="application" alt="" coords="5,165,308,400">
+<area shape="rect" id="node1" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="775,5,1016,240">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,171,308,405">
+<area shape="rect" id="node3" href="application_paused.html" target="_top" title="application_paused" alt="" coords="352,120,731,453">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_paused.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
