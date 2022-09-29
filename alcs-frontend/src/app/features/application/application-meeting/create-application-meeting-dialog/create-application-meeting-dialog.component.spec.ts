@@ -5,28 +5,27 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
+import { CreateApplicationMeetingDialogComponent } from './create-application-meeting-dialog.component';
 
-import { DecisionMeetingDialogComponent } from './decision-meeting-dialog.component';
-
-describe('DecisionMeetingDialogComponent', () => {
-  let component: DecisionMeetingDialogComponent;
-  let fixture: ComponentFixture<DecisionMeetingDialogComponent>;
+describe('ApplicationMeetingDialogComponent', () => {
+  let component: CreateApplicationMeetingDialogComponent;
+  let fixture: ComponentFixture<CreateApplicationMeetingDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DecisionMeetingDialogComponent, MomentPipe],
+      declarations: [CreateApplicationMeetingDialogComponent, MomentPipe],
       providers: [
         {
           provide: ApplicationDecisionMeetingService,
           useValue: {},
         },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: { meetingType: { code: 'fake', label: 'fake' } } },
         { provide: MatDialogRef, useValue: {} },
       ],
       imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DecisionMeetingDialogComponent);
+    fixture = TestBed.createComponent(CreateApplicationMeetingDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

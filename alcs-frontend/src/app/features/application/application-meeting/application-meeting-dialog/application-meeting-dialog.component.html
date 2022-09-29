@@ -1,43 +1,81 @@
 <div mat-dialog-title>
-  <h2 class="card-title">{{ model.uuid ? 'Update' : 'Create' }} {{ model.meetingType?.label }}</h2>
+  <h2 class="card-title">Edit {{ meetingType?.label }}</h2>
 </div>
-<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
   <mat-dialog-content style="height: 100%">
     <div class="flex-container">
-      <mat-form-field appearance="fill" class="flex-child">
-        <mat-label>Choose a start date</mat-label>
+      <mat-form-field appearance="outline" class="flex-child">
+        <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested</mat-label>
+        <mtx-datetimepicker #meetingStartDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [matDatepicker]="startDate"
-          [(ngModel)]="model.startDate"
-          name="startDate"
+          [mtxDatetimepicker]="meetingStartDate"
+          formControlName="meetingStartDate"
           required
-          (dateChange)="startDateSelected()"
+          (dateChange)="onChange()"
         />
-        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-        <mat-datepicker #startDate type="date"> </mat-datepicker>
+        <mtx-datetimepicker-toggle [for]="meetingStartDate" matSuffix></mtx-datetimepicker-toggle>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="flex-child">
-        <mat-label>Choose an end date</mat-label>
-        <input matInput [matDatepicker]="endDate" [(ngModel)]="model.endDate" name="endDate" [min]="model.startDate" />
-        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-        <mat-datepicker #endDate type="date"> </mat-datepicker>
+      <mat-form-field appearance="outline" class="flex-child">
+        <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Conducted</mat-label>
+        <mtx-datetimepicker #meetingEndDate type="date"></mtx-datetimepicker>
+        <input
+          matInput
+          [mtxDatetimepicker]="meetingEndDate"
+          formControlName="meetingEndDate"
+          [min]="form.get('meetingStartDate')?.value | lessOneDay"
+          (dateChange)="onChange()"
+        />
+        <mtx-datetimepicker-toggle [for]="meetingEndDate" matSuffix></mtx-datetimepicker-toggle>
       </mat-form-field>
     </div>
-    <div class="reason-wrapper">
-      <label class="radio-group-label" for="reason">Reason <span color="red">*</span></label>
-      <mat-radio-group aria-labelledby="Reason" [(ngModel)]="model.reason" name="reason" id="reason" required>
-        <mat-radio-button value="{{ reasons.meeting }}">{{ reasons.meeting }}</mat-radio-button>
-        <mat-radio-button value="{{ reasons.report }}">{{ reasons.report }}</mat-radio-button>
-      </mat-radio-group>
+    <div class="flex-container">
+      <mat-form-field appearance="outline" class="flex-child">
+        <mat-label>Report Sent</mat-label>
+        <mtx-datetimepicker #reportStartDate type="date"></mtx-datetimepicker>
+        <input
+          matInput
+          [mtxDatetimepicker]="reportStartDate"
+          formControlName="reportStartDate"
+          [min]="form.get('meetingEndDate')?.value | lessOneDay"
+          (dateChange)="onChange()"
+        />
+        <mtx-datetimepicker-toggle [for]="reportStartDate" matSuffix></mtx-datetimepicker-toggle>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-child">
+        <mat-label>Report Approved</mat-label>
+        <mtx-datetimepicker #reportEndDate type="date"></mtx-datetimepicker>
+        <input
+          matInput
+          [mtxDatetimepicker]="reportEndDate"
+          formControlName="reportEndDate"
+          [min]="form.get('reportStartDate')?.value | lessOneDay"
+          (dateChange)="onChange()"
+        />
+        <mtx-datetimepicker-toggle [for]="reportEndDate" matSuffix></mtx-datetimepicker-toggle>
+      </mat-form-field>
     </div>
-    <div class="warning">The application's active day count will be paused until an end date is provided.</div>
+    <div class="warning">
+      <mat-icon>warning</mat-icon>
+      <div>
+        The application’s active day count will be paused between the dates:
+        <ul>
+          <li>
+            {{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested &
+            {{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Conducted
+          </li>
+          <li>Report Sent & Report Approved</li>
+        </ul>
+      </div>
+    </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div class="button-container">
       <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
-      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">Save</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">
+        Save
+      </button>
     </div>
   </mat-dialog-actions>
 </form>

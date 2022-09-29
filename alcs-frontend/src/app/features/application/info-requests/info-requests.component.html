@@ -10,17 +10,17 @@
 <table mat-table [dataSource]="infoRequests" class="mat-elevation-z8 width-100 section">
   <ng-container matColumnDef="startDate">
     <th mat-header-cell *matHeaderCellDef>Date Requested</th>
-    <td mat-cell *matCellDef="let element">{{ element.startDate | momentFormat }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.meetingStartDate | momentFormat }}</td>
   </ng-container>
 
   <ng-container matColumnDef="endDate">
     <th mat-header-cell *matHeaderCellDef>Date Fulfilled</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.endDate">{{ element.endDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.endDate">
+      <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
+      <ng-container *ngIf="!element.meetingEndDate">
         <app-inline-datepicker
           [selectedValue]="undefined"
-          [min]="element.startDate"
+          [min]="element.meetingStartDate"
           (save)="onSaveEndDate(element.uuid, $event)"
         ></app-inline-datepicker>
       </ng-container>

@@ -20,6 +20,7 @@ import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
+import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import { ApplicationCodeService } from './application-code/application-code.service';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
@@ -123,17 +124,17 @@ export class ApplicationController {
       applicant: application.applicant,
       typeUuid: type ? type.uuid : undefined,
       regionUuid: region ? region.uuid : undefined,
-      datePaid: this.formatIncomingDate(application.datePaid),
-      dateAcknowledgedIncomplete: this.formatIncomingDate(
+      datePaid: formatIncomingDate(application.datePaid),
+      dateAcknowledgedIncomplete: formatIncomingDate(
         application.dateAcknowledgedIncomplete,
       ),
-      dateReceivedAllItems: this.formatIncomingDate(
+      dateReceivedAllItems: formatIncomingDate(
         application.dateReceivedAllItems,
       ),
-      dateAcknowledgedComplete: this.formatIncomingDate(
+      dateAcknowledgedComplete: formatIncomingDate(
         application.dateAcknowledgedComplete,
       ),
-      decisionDate: this.formatIncomingDate(application.decisionDate),
+      decisionDate: formatIncomingDate(application.decisionDate),
     });
 
     const mappedApps = await this.applicationService.mapToDtos([
@@ -151,16 +152,6 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
-  }
-
-  private formatIncomingDate(date?: number) {
-    if (date) {
-      return new Date(date);
-    } else if (date === null) {
-      return null;
-    } else {
-      return undefined;
-    }
   }
 
   @Patch('/updateCard')

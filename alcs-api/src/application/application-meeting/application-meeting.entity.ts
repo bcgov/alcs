@@ -39,7 +39,7 @@ export class ApplicationMeeting extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid', nullable: true })
-  applicationPausedUuid: string;
+  meetingPauseUuid: string;
 
   @AutoMap()
   @OneToOne(() => ApplicationPaused, {
@@ -49,5 +49,19 @@ export class ApplicationMeeting extends Base {
   })
   @JoinColumn()
   @Type(() => ApplicationPaused)
-  applicationPaused: ApplicationPaused;
+  meetingPause: ApplicationPaused;
+
+  @AutoMap()
+  @Column({ type: 'uuid', nullable: true })
+  reportPauseUuid: string;
+
+  @AutoMap()
+  @OneToOne(() => ApplicationPaused, {
+    cascade: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn()
+  @Type(() => ApplicationPaused)
+  reportPause?: ApplicationPaused;
 }

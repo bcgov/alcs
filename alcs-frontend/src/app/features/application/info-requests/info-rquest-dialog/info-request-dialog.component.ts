@@ -61,14 +61,13 @@ export class InfoRequestDialogComponent {
       this.isLoading = true;
       if (this.model.uuid) {
         await this.meetingService.update(this.model.uuid, {
-          startDate: this.model.startDate,
-          endDate: this.model.endDate,
+          meetingStartDate: this.model.startDate,
+          meetingEndDate: this.model.endDate,
           description: this.getDescription(),
         });
       } else {
         await this.meetingService.create(this.model.fileNumber, this.data.meetingType.label, {
-          startDate: this.model.startDate,
-          endDate: this.model.endDate,
+          meetingStartDate: this.model.startDate,
           meetingTypeCode: this.data.meetingType.code,
           description: this.getDescription(),
         });

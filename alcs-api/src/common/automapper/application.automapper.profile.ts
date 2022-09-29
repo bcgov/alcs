@@ -187,12 +187,20 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((a) => a.type.code),
         ),
         forMember(
-          (ad) => ad.startDate,
-          mapFrom((a) => a.applicationPaused.startDate.valueOf()),
+          (ad) => ad.meetingStartDate,
+          mapFrom((a) => a.meetingPause.startDate.valueOf()),
         ),
         forMember(
-          (ad) => ad.endDate,
-          mapFrom((a) => a.applicationPaused.endDate?.valueOf()),
+          (ad) => ad.meetingEndDate,
+          mapFrom((a) => a.meetingPause.endDate?.valueOf()),
+        ),
+        forMember(
+          (ad) => ad.reportStartDate,
+          mapFrom((a) => a.reportPause?.startDate?.valueOf()),
+        ),
+        forMember(
+          (ad) => ad.reportEndDate,
+          mapFrom((a) => a.reportPause?.endDate?.valueOf()),
         ),
         forMember(
           (ad) => ad.meetingType,
@@ -211,12 +219,8 @@ export class ApplicationProfile extends AutomapperProfile {
         CreateApplicationMeetingDto,
         ApplicationPaused,
         forMember(
-          (a) => a.endDate,
-          mapFrom((ad) => this.numberToDateSafe(ad.endDate)),
-        ),
-        forMember(
           (a) => a.startDate,
-          mapFrom((ad) => this.numberToDateSafe(ad.startDate)),
+          mapFrom((ad) => this.numberToDateSafe(ad.meetingStartDate)),
         ),
       );
 

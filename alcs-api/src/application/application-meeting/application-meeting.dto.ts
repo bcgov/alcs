@@ -5,12 +5,7 @@ import { ApplicationMeetingTypeDto } from '../application-code/application-meeti
 export class CreateApplicationMeetingDto {
   @AutoMap()
   @IsNumber()
-  startDate: number;
-
-  @AutoMap()
-  @IsNumber()
-  @IsOptional()
-  endDate: number = null;
+  meetingStartDate: number;
 
   @AutoMap()
   @IsString()
@@ -19,7 +14,7 @@ export class CreateApplicationMeetingDto {
   @AutoMap()
   @IsString()
   @IsOptional()
-  description: string;
+  description?: string;
 }
 
 export class ApplicationMeetingDto extends CreateApplicationMeetingDto {
@@ -29,21 +24,40 @@ export class ApplicationMeetingDto extends CreateApplicationMeetingDto {
 
   @AutoMap()
   meetingType: ApplicationMeetingTypeDto;
+
+  @AutoMap()
+  meetingEndDate?: number;
+
+  @AutoMap()
+  reportStartDate?: number;
+
+  @AutoMap()
+  reportEndDate?: number;
 }
 
 export class UpdateApplicationMeetingDto {
   @AutoMap()
   @IsOptional()
   @IsNumber()
-  startDate: number;
+  meetingStartDate?: number;
 
   @AutoMap()
   @IsNumber()
   @IsOptional()
-  endDate: number | null = null;
+  meetingEndDate?: number | null;
+
+  @AutoMap()
+  @IsNumber()
+  @IsOptional()
+  reportStartDate?: number | null;
+
+  @AutoMap()
+  @IsNumber()
+  @IsOptional()
+  reportEndDate?: number | null;
 
   @AutoMap()
   @IsString()
   @IsOptional()
-  description: string;
+  description?: string;
 }

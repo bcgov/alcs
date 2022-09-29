@@ -11,5 +11,6 @@ export const DATE_FORMATS = {
     monthYearA11yLabel: 'YYYY',
     monthLabel: 'MMM',
     monthDayLabel: 'MMM-DD',
+    popupHeaderDateLabel: 'YYYY-MMM-DD',
   },
 };

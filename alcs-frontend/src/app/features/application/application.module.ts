@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { MTX_DATETIME_FORMATS, MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
+import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline-datepicker.component';
 import { SharedModule } from '../../shared/shared.module';
 import { TimelineComponent } from '../../shared/timeline/timeline.component';
+import { DATE_FORMATS } from '../../shared/utils/date-format';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
+import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
 import { ApplicationComponent, childRoutes } from './application.component';
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -27,7 +31,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  providers: [ApplicationDetailService],
+  providers: [
+    ApplicationDetailService,
+    {
+      provide: MTX_DATETIME_FORMATS,
+      useValue: DATE_FORMATS,
+    },
+  ],
   declarations: [
     ApplicationComponent,
     OverviewComponent,
@@ -39,11 +49,18 @@ const routes: Routes = [
     InlineDatepickerComponent,
     ApplicationMeetingComponent,
     ApplicationMeetingDialogComponent,
+    CreateApplicationMeetingDialogComponent,
     DecisionComponent,
     InfoRequestsComponent,
     InfoRequestDialogComponent,
     TimelineComponent,
   ],
-  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    SharedModule.forRoot(),
+    RouterModule.forChild(routes),
+    MtxDatetimepickerModule,
+    MtxNativeDatetimeModule,
+  ],
 })
 export class ApplicationModule {}

@@ -1,0 +1,27 @@
+<div mat-dialog-title>
+  <h2 class="card-title">New {{ data.meetingType.label }}</h2>
+</div>
+<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
+  <mat-dialog-content style="height: 100%">
+    <div class="flex-container">
+      <mat-form-field appearance="outline" class="flex-child">
+        <mat-label>{{ data.meetingType.label }} Requested</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required />
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker type="date"> </mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="warning">
+      <mat-icon>warning</mat-icon>The application's active day count will be paused until a
+      {{ data.meetingType.code === 'AM' ? 'meeting' : 'visit' }} conducted date is provided.
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>
