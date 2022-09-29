@@ -103,6 +103,7 @@ export class BoardComponent implements OnInit {
 
   private async loadApplications(boardCode: string) {
     const apps = await this.boardService.fetchApplications(boardCode);
+    console.log('loadApplications', apps);
     this.cards = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
     this.cards = this.cards.concat(apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this)));
     console.log('loadApplications', this.cards);
@@ -211,7 +212,7 @@ export class BoardComponent implements OnInit {
   onDropped($event: { id: string; status: string }) {
     this.applicationService
       .updateApplicationCard({
-        fileNumber: $event.id,
+        cardUuid: $event.id,
         status: $event.status,
       })
       .then((r) => {
@@ -232,6 +233,7 @@ export class BoardComponent implements OnInit {
       highPriority: application.highPriority,
       decisionMeetings: application.decisionMeetings,
       cardType: application.card.type,
+      cardUuid: application.card.uuid,
     };
   }
 
@@ -254,6 +256,7 @@ export class BoardComponent implements OnInit {
       cardType: 'RECON',
       paused: false,
       highPriority: recon.highPriority,
+      cardUuid: recon.uuid,
     };
   }
 }

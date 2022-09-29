@@ -166,10 +166,9 @@ export class ApplicationController {
     @Body() applicationToUpdate: ApplicationUpdateDto,
     @Req() req,
   ) {
-    const existingCard = (
-      await this.applicationService.get(applicationToUpdate.fileNumber)
-    )?.card;
-
+    const existingCard = await this.cardService.get(
+      applicationToUpdate.cardUuid,
+    );
     if (!existingCard) {
       throw new ServiceValidationException(
         `Card for application with ${applicationToUpdate.fileNumber} not found`,

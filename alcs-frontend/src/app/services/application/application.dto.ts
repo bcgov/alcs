@@ -39,7 +39,8 @@ export interface ApplicationDto {
 }
 
 export interface ApplicationPartialDto {
-  fileNumber: string;
+  cardUuid?: string;
+  fileNumber?: string;
   applicant?: string;
   status?: string;
   region?: string;

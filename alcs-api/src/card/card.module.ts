@@ -13,6 +13,7 @@ import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CardType } from './card-type/card-type.entity';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
+import { CardController } from './card.controller';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { CardService } from './card.service';
       CardHistory,
     ]),
   ],
-  controllers: [CardStatusController, CardSubtaskController],
+  controllers: [CardStatusController, CardSubtaskController, CardController],
   providers: [
     CardStatusService,
     CardService,

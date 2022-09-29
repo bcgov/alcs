@@ -13,6 +13,7 @@ export interface CardData {
   highPriority: boolean;
   decisionMeetings?: ApplicationDecisionMeetingDto[];
   latestDecisionDate?: Date;
+  cardUuid: string;
   cardType: string;
 }
 

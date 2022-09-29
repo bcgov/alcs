@@ -131,7 +131,8 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
 export class ApplicationUpdateDto {
   @AutoMap()
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  @IsOptional()
   @IsString()
   fileNumber: string;
 
@@ -193,4 +194,9 @@ export class ApplicationUpdateDto {
   @IsBoolean()
   @IsOptional()
   highPriority?: boolean;
+
+  @AutoMap()
+  @IsOptional()
+  @IsString()
+  cardUuid;
 }
