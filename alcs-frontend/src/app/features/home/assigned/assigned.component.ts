@@ -51,7 +51,7 @@ export class AssignedComponent implements OnInit {
     });
   }
 
-  onSelectCard(fileNumber: string, boardCode: string) {
-    this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}`);
+  onSelectCard(cardUuid: string, boardCode: string, cardTypeCode: string) {
+    this.router.navigateByUrl(`/board/${boardCode}?app=${cardUuid}&type=${cardTypeCode}`);
   }
 }

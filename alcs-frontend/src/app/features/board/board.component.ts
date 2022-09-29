@@ -72,9 +72,9 @@ export class BoardComponent implements OnInit {
 
     // open card if application number present in url
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
-    if (app) {
-      // TODO this needs to read different parameters from url
-      this.onSelected({ uuid: app, cardType: 'APP' });
+    const type = this.activatedRoute.snapshot.queryParamMap.get('type');
+    if (app && type) {
+      this.onSelected({ uuid: app, cardType: type });
     }
   }
 
@@ -108,9 +108,9 @@ export class BoardComponent implements OnInit {
     console.log('loadApplications', this.cards);
   }
 
-  private async openAppCardDetailDialog(id: string) {
+  private async openAppCardDetailDialog(id: string, cardTypeCode: string) {
     try {
-      this.setUrl(id);
+      this.setUrl(id, cardTypeCode);
 
       const application = await this.applicationService.fetchApplication(id);
 
@@ -135,9 +135,9 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  private async openReconCardDetailDialog(id: string) {
+  private async openReconCardDetailDialog(id: string, cardTypeCode: string) {
     try {
-      this.setUrl(id);
+      this.setUrl(id, cardTypeCode);
 
       const reconCard = await this.cardService.fetchReconsiderationCard(id);
       reconCard.regionDetails = {
@@ -172,17 +172,20 @@ export class BoardComponent implements OnInit {
     console.log('onSelected', card);
     switch (card.cardType) {
       case 'APP':
-        this.openAppCardDetailDialog(card.uuid);
+        this.openAppCardDetailDialog(card.uuid, card.cardType);
         break;
       case 'RECON':
-        this.openReconCardDetailDialog(card.uuid);
+        this.openReconCardDetailDialog(card.uuid, card.cardType);
         break;
     }
   }
 
-  private setUrl(id: string = '') {
+  private setUrl(cardUuid: string = '', cardTypeCode: string = '') {
     const url = this.router
-      .createUrlTree([], { relativeTo: this.activatedRoute, queryParams: id ? { app: id } : {} })
+      .createUrlTree([], {
+        relativeTo: this.activatedRoute,
+        queryParams: cardUuid && cardTypeCode ? { app: cardUuid, type: cardTypeCode } : {},
+      })
       .toString();
     this.location.go(url);
   }
