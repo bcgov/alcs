@@ -141,7 +141,7 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           async (a) => a.card.status,
           mapFrom(async (ad) => {
-            return await this.codeService.fetchApplicationStatus(ad.status);
+            return await this.codeService.fetchCardStatus(ad.status);
           }),
         ),
         forMember(

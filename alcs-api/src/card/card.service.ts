@@ -10,7 +10,7 @@ import {
   CardCreateDto,
   CardDetailedDto,
   CardDto,
-  CardUpdateDto,
+  CardUpdateServiceDto,
 } from './card.dto';
 import { Card } from './card.entity';
 
@@ -44,10 +44,16 @@ export class CardService {
     });
   }
 
-  async update(cardUuid, card: Partial<CardUpdateDto>) {
+  async update(cardUuid, card: Partial<CardUpdateServiceDto>) {
     const existingCard = await this.cardRepository.findOne({
       where: { uuid: cardUuid },
     });
+
+    if (!existingCard) {
+      throw new ServiceValidationException(
+        `Card for with ${cardUuid} not found`,
+      );
+    }
 
     const updatedCard = Object.assign(existingCard, card);
 

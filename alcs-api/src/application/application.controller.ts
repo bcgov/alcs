@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -19,6 +20,7 @@ import { CodeService } from '../code/code.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import {
@@ -38,6 +40,7 @@ export class ApplicationController {
     private codeService: CodeService,
     private notificationService: NotificationService,
     private cardService: CardService,
+    @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
   @Get()
@@ -180,7 +183,7 @@ export class ApplicationController {
       applicationToUpdate.status &&
       applicationToUpdate.status != existingCard.status.code
     ) {
-      status = await this.codeService.fetchApplicationStatus(
+      status = await this.codeService.fetchCardStatus(
         applicationToUpdate.status,
       );
     }
@@ -200,11 +203,14 @@ export class ApplicationController {
       updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
       updatedCard.assigneeUuid !== req.user.entity.uuid
     ) {
-      this.notificationService.createForApplication(
+      const frontEnd = this.config.get('FRONTEND_ROOT');
+      this.notificationService.createNotificationForApplication(
         req.user.entity,
         updatedCard.assigneeUuid,
         "You've been assigned",
-        application,
+        `${application.fileNumber} (${application.applicant})`,
+        `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
+        'application',
       );
     }
 

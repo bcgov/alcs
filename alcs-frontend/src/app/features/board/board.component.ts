@@ -209,15 +209,29 @@ export class BoardComponent implements OnInit {
       });
   }
 
-  onDropped($event: { id: string; status: string }) {
-    this.applicationService
-      .updateApplicationCard({
-        cardUuid: $event.id,
-        status: $event.status,
-      })
-      .then((r) => {
-        this.toastService.showSuccessToast('Application Updated');
-      });
+  onDropped($event: { id: string; status: string; cardTypeCode: string }) {
+    switch ($event.cardTypeCode) {
+      case 'APP':
+        this.applicationService
+          .updateApplicationCard({
+            cardUuid: $event.id,
+            status: $event.status,
+          })
+          .then((r) => {
+            this.toastService.showSuccessToast('Application Updated');
+          });
+        break;
+      case 'RECON':
+        this.cardService
+          .updateCard({
+            uuid: $event.id,
+            statusCode: $event.status,
+          })
+          .then((r) => {
+            this.toastService.showSuccessToast('Card Updated');
+          });
+        break;
+    }
   }
 
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {

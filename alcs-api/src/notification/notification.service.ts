@@ -62,6 +62,25 @@ export class NotificationService {
     await this.notificationRepository.save(notification);
   }
 
+  async createNotificationForApplication(
+    actor: User,
+    receiverUuid: string,
+    body: string,
+    title: string,
+    link: string,
+    targetType: string,
+  ) {
+    const notification = new Notification({
+      body,
+      title: title,
+      link: link,
+      targetType: targetType,
+      actor,
+      receiverUuid,
+    });
+    await this.notificationRepository.save(notification);
+  }
+
   async markRead(uuid: string) {
     return await this.notificationRepository.update(
       {

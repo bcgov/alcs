@@ -8,7 +8,7 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
-import { CardUpdateDto } from './card.dto';
+import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
 
@@ -48,7 +48,7 @@ describe('CardService', () => {
   });
 
   it('should call save when an Card is updated', async () => {
-    const payload: Partial<CardUpdateDto> = {
+    const payload: Partial<CardUpdateServiceDto> = {
       assigneeUuid: mockCardEntity.assigneeUuid,
       statusUuid: mockCardEntity.statusUuid,
       boardUuid: mockCardEntity.boardUuid,

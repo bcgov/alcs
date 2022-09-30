@@ -16,6 +16,7 @@ export class DragDropBoardComponent {
   @Output() cardDropped = new EventEmitter<{
     id: string;
     status: string;
+    cardTypeCode: string;
   }>();
   @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
 
@@ -45,7 +46,11 @@ export class DragDropBoardComponent {
     }
 
     selectedCard.status = targetColumn.status;
-    this.cardDropped.emit({ id: selectedCard.cardUuid, status: targetColumn.status });
+    this.cardDropped.emit({
+      id: selectedCard.cardUuid,
+      status: targetColumn.status,
+      cardTypeCode: selectedCard.cardType,
+    });
   }
 
   cardClicked(card: CardSelectedEvent) {

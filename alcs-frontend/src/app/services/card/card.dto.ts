@@ -28,6 +28,15 @@ export interface CardCreateDto {
   typeCode: string;
 }
 
+export interface CardPartialDto {
+  uuid: string;
+  assigneeUuid?: string;
+  boardCode?: string;
+  typeCode?: string;
+  statusCode?: string;
+  highPriority?: boolean;
+}
+
 export interface CardDto {
   uuid: string;
   type: string;

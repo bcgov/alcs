@@ -48,7 +48,7 @@ export class Notification {
 
   @AutoMap()
   @Column()
-  targetType: 'application';
+  targetType: string;
 
   @AutoMap()
   @Column()

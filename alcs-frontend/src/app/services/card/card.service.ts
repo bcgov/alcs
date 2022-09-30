@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationMasterCodesDto } from '../application/application-code.dto';
 import { ToastService } from '../toast/toast.service';
-import { CardCreateDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
+import { CardCreateDto, CardPartialDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
 
 // TODO refactor: move to board?
 @Injectable({
@@ -29,5 +29,14 @@ export class CardService {
   async createCard(card: CardCreateDto) {
     console.log('createCard()', card);
     return await firstValueFrom(this.http.post<CardCreateDto>(`${environment.apiUrl}/board/card`, card));
+  }
+
+  async updateCard(card: CardPartialDto) {
+    try {
+      return await firstValueFrom(this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/updateCard`, card));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to update card');
+    }
+    return;
   }
 }

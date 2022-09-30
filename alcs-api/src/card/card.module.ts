@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CodeModule } from '../code/code.module';
 import { CardAutomapperProfile } from '../common/automapper/card.automapper.profile';
 import { CardHistory } from './card-history/card-history.entity';
 import { CardSubscriber } from './card-history/card.subscriber';
@@ -25,6 +26,7 @@ import { CardService } from './card.service';
       CardSubtask,
       CardHistory,
     ]),
+    CodeModule,
   ],
   controllers: [CardStatusController, CardSubtaskController, CardController],
   providers: [

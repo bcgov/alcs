@@ -55,7 +55,7 @@ export class CodeService {
     });
   }
 
-  async fetchApplicationStatus(code: string): Promise<CardStatus> {
+  async fetchCardStatus(code: string): Promise<CardStatus> {
     return this.statusRepository.findOne({
       where: {
         code,

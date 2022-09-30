@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
-import { ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { ReconsiderationDto } from '../../../services/card/card.dto';
+import { CardPartialDto, ReconsiderationDto } from '../../../services/card/card.dto';
+import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
@@ -35,6 +35,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<ReconCardDetailDialogComponent>,
     private userService: UserService,
     private applicationService: ApplicationService,
+    private cardService: CardService,
     private boardService: BoardService,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService
@@ -75,14 +76,14 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.selectedAssignee = assignee;
     this.recon.assignee = assignee;
     this.updateCard({
-      assigneeUuid: assignee.uuid,
+      assigneeUuid: assignee?.uuid ?? null,
     });
   }
 
   onStatusSelected(applicationStatus: ApplicationStatusDto) {
     this.selectedApplicationStatus = applicationStatus.code;
     this.updateCard({
-      status: applicationStatus.code,
+      statusCode: applicationStatus.code,
     });
   }
 
@@ -94,11 +95,11 @@ export class ReconCardDetailDialogComponent implements OnInit {
     });
   }
 
-  updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
-    this.applicationService
-      .updateApplicationCard({
+  updateCard(changes: Omit<CardPartialDto, 'uuid'>) {
+    this.cardService
+      .updateCard({
         ...changes,
-        cardUuid: this.recon.uuid,
+        uuid: this.recon.uuid,
       })
       .then(() => {
         this.isApplicationDirty = true;
@@ -112,9 +113,9 @@ export class ReconCardDetailDialogComponent implements OnInit {
     });
     answer.subscribe((answer) => {
       if (answer) {
-        this.applicationService
-          .updateApplication({
-            cardUuid: this.recon.uuid, // TODO this will be update to card.uuid once we have proper recon
+        this.cardService
+          .updateCard({
+            uuid: this.recon.uuid, // TODO this will be update to card.uuid once we have proper recon
             highPriority: !this.recon.highPriority,
           })
           .then(() => {

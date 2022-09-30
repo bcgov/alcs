@@ -6,13 +6,43 @@ import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
 export class CardUpdateDto {
   @AutoMap()
   @IsString()
+  @IsNotEmpty()
+  uuid: string;
+
+  @AutoMap()
+  @IsString()
   @IsOptional()
   assigneeUuid: string;
 
   @AutoMap()
+  @IsOptional()
+  statusCode: string;
+
+  @AutoMap()
+  @IsOptional()
+  boardCode: string;
+
+  @AutoMap()
+  cardTypeCode: string;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsOptional()
+  highPriority: boolean;
+}
+
+export class CardUpdateServiceDto {
+  @AutoMap()
+  @IsString()
+  @IsOptional()
+  assigneeUuid: string;
+
+  @AutoMap()
+  @IsOptional()
   statusUuid: string;
 
   @AutoMap()
+  @IsOptional()
   boardUuid: string;
 
   @AutoMap()

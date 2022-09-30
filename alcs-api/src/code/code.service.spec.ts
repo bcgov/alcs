@@ -124,7 +124,7 @@ describe('ApplicationCodeService', () => {
     };
     mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
 
-    const res = await service.fetchApplicationStatus('code');
+    const res = await service.fetchCardStatus('code');
 
     expect(mockStatusRepository.findOne).toHaveBeenCalled();
     expect(res).toEqual(mockStatus);
