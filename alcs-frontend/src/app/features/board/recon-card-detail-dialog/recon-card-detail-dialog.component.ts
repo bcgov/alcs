@@ -42,7 +42,6 @@ export class ReconCardDetailDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('ReconCardDetailDialogComponent', this.data);
     this.recon = this.data;
     this.selectedAssignee = this.data.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;

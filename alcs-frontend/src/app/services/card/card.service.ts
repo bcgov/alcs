@@ -22,18 +22,30 @@ export class CardService {
   }
 
   async fetchReconsiderationCard(uuid: string) {
-    return await firstValueFrom(this.http.get<ReconsiderationDto>(`${environment.apiUrl}/board/card/${uuid}`));
+    try {
+      return await firstValueFrom(this.http.get<ReconsiderationDto>(`${environment.apiUrl}/board/card/${uuid}`));
+    } catch (e) {
+      console.warn(e);
+      this.toastService.showErrorToast('Failed to fetch cards');
+    }
+    return;
   }
 
   async createCard(card: CardCreateDto) {
-    console.log('createCard()', card);
-    return await firstValueFrom(this.http.post<CardCreateDto>(`${environment.apiUrl}/board/card`, card));
+    try {
+      return await firstValueFrom(this.http.post<CardCreateDto>(`${environment.apiUrl}/board/card`, card));
+    } catch (e) {
+      console.warn(e);
+      this.toastService.showErrorToast('Failed to create card');
+    }
+    return;
   }
 
   async updateCard(card: CardPartialDto) {
     try {
       return await firstValueFrom(this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/updateCard`, card));
     } catch (e) {
+      console.warn(e);
       this.toastService.showErrorToast('Failed to update card');
     }
     return;

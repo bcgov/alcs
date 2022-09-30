@@ -30,7 +30,6 @@ export class DragDropBoardComponent {
 
   drop(event: CdkDragDrop<CardData>, targetColumn: DragDropColumn) {
     const selectedCard = this.cards.find((card) => card.id === event.item.data.id);
-    console.log('drop', selectedCard);
 
     if (!selectedCard) {
       this.toastService.showErrorToast('Something went wrong, please refresh the page and try again.');
@@ -54,7 +53,6 @@ export class DragDropBoardComponent {
   }
 
   cardClicked(card: CardSelectedEvent) {
-    console.log('app-drag-drop-board cardClicked 1', card);
     this.cardSelected.emit({ uuid: card.uuid, cardType: card.cardType });
   }
 }

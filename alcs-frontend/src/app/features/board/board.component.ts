@@ -103,10 +103,8 @@ export class BoardComponent implements OnInit {
 
   private async loadApplications(boardCode: string) {
     const apps = await this.boardService.fetchApplications(boardCode);
-    console.log('loadApplications', apps);
     this.cards = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
     this.cards = this.cards.concat(apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this)));
-    console.log('loadApplications', this.cards);
   }
 
   private async openAppCardDetailDialog(id: string, cardTypeCode: string) {
@@ -146,7 +144,6 @@ export class BoardComponent implements OnInit {
         code: 'Mock',
         description: 'Mock',
       };
-      console.log('openReconCardDetailDialog', reconCard);
 
       const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
         minHeight: '500px',
@@ -170,7 +167,6 @@ export class BoardComponent implements OnInit {
   }
 
   async onSelected(card: CardSelectedEvent) {
-    console.log('onSelected', card);
     switch (card.cardType) {
       case 'APP':
         this.openAppCardDetailDialog(card.uuid, card.cardType);
@@ -252,7 +248,6 @@ export class BoardComponent implements OnInit {
   }
 
   private mapReconsiderationDtoToCard(recon: ReconsiderationDto): CardData {
-    console.log('mapReconsiderationDtoToCard', recon);
     // TODO get mock fields from application linked to reconsideration
     return {
       status: recon.status,

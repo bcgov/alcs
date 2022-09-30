@@ -89,8 +89,6 @@ export class ReconCreateCardDialogComponent implements OnInit {
   }
 
   async onApplicationSelected($event: MatOptionSelectionChange) {
-    console.log('onApplicationSelected', $event.source.value);
-
     if (!$event?.source?.value) {
       return;
     }
@@ -124,7 +122,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
         boardCode: this.currentBoardCode,
         typeCode: 'RECON',
       };
-      console.log('recon onSubmit', formValues, card);
+
       if (!card.boardCode) {
         this.toastService.showErrorToast('Board is required. Please reload the page and try again.');
         return;
