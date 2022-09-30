@@ -36,8 +36,14 @@ export class ApplicationMeetingService {
       await firstValueFrom(
         this.http.patch<ApplicationMeetingDto>(`${this.url}/${uuid}`, {
           ...meeting,
-          startDate: formatDateForApi(meeting.startDate),
-          endDate: meeting.endDate ? formatDateForApi(meeting.endDate) : meeting.endDate,
+          meetingStartDate: meeting.meetingStartDate
+            ? formatDateForApi(meeting.meetingStartDate)
+            : meeting.meetingStartDate,
+          meetingEndDate: meeting.meetingEndDate ? formatDateForApi(meeting.meetingEndDate) : meeting.meetingEndDate,
+          reportStartDate: meeting.reportStartDate
+            ? formatDateForApi(meeting.reportStartDate)
+            : meeting.reportStartDate,
+          reportEndDate: meeting.reportEndDate ? formatDateForApi(meeting.reportEndDate) : meeting.reportEndDate,
         })
       );
       this.toastService.showSuccessToast('Meeting updated.');
@@ -51,8 +57,7 @@ export class ApplicationMeetingService {
       await firstValueFrom(
         this.http.post<ApplicationMeetingDto>(`${this.url}/${fileNumber}`, {
           ...meeting,
-          startDate: formatDateForApi(meeting.startDate),
-          endDate: meeting.endDate ? formatDateForApi(meeting.endDate) : meeting.endDate,
+          meetingStartDate: formatDateForApi(meeting.meetingStartDate),
         })
       );
       this.toastService.showSuccessToast('Meeting created.');

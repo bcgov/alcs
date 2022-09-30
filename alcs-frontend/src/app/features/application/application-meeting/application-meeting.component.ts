@@ -1,23 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
   ApplicationMeetingDto,
   ApplicationMeetingTypeDto,
+  UpdateApplicationMeetingDto,
 } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ApplicationMeetingDialogComponent } from './application-meeting-dialog/application-meeting-dialog.component';
+import { CreateApplicationMeetingDialogComponent } from './create-application-meeting-dialog/create-application-meeting-dialog.component';
 
 @Component({
-  selector: 'app-application-meeting',
+  selector: 'app-create-application-meeting',
   templateUrl: './application-meeting.component.html',
   styleUrls: ['./application-meeting.component.scss'],
 })
 export class ApplicationMeetingComponent implements OnInit {
-  displayedColumns: string[] = ['startDate', 'endDate', 'action'];
+  displayedColumns: string[] = [
+    'index',
+    'meetingStartDate',
+    'meetingEndDate',
+    'reportStartDate',
+    'reportEndDate',
+    'action',
+  ];
   siteVisits: ApplicationMeetingDto[] = [];
   applicantMeetings: ApplicationMeetingDto[] = [];
   fileNumber: string = '';
@@ -38,24 +46,23 @@ export class ApplicationMeetingComponent implements OnInit {
         this.meetingService.$meetings.subscribe((meetings) => {
           this.siteVisits = meetings
             .filter((m) => m.meetingType.code === 'SV')
-            .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
+            .sort((a, b) => (a.meetingStartDate >= b.meetingStartDate ? -1 : 1));
 
           this.applicantMeetings = meetings
             .filter((m) => m.meetingType.code === 'AM')
-            .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
+            .sort((a, b) => (a.meetingStartDate >= b.meetingStartDate ? -1 : 1));
         });
       }
     });
   }
 
   async onCreate(meetingType: ApplicationMeetingTypeDto) {
-    const dialog = this.dialog.open(ApplicationMeetingDialogComponent, {
+    const dialog = this.dialog.open(CreateApplicationMeetingDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
       data: {
         fileNumber: this.fileNumber,
-        meetingTypeCode: meetingType.code,
         meetingType: meetingType,
       },
     });
@@ -76,8 +83,10 @@ export class ApplicationMeetingComponent implements OnInit {
         data: {
           fileNumber: this.fileNumber,
           uuid: meeting.uuid,
-          startDate: meeting.startDate,
-          endDate: meeting.endDate,
+          meetingStartDate: meeting.meetingStartDate,
+          meetingEndDate: meeting.meetingEndDate,
+          reportStartDate: meeting.reportStartDate,
+          reportEndDate: meeting.reportEndDate,
           meetingTypeCode: meeting.meetingType.code,
           meetingType: meeting.meetingType,
           reason: meeting.description,
@@ -106,31 +115,26 @@ export class ApplicationMeetingComponent implements OnInit {
     });
   }
 
-  async onSaveSiteVisitEndDate(uuid: any, endDate: number) {
-    const matchingMeeting = this.siteVisits.find((request) => request.uuid === uuid);
-    if (matchingMeeting) {
-      await this.meetingService.update(uuid, {
-        startDate: new Date(matchingMeeting.startDate),
-        endDate: new Date(endDate),
-        description: matchingMeeting.description,
-      });
-      await this.meetingService.fetch(this.fileNumber);
-    } else {
-      this.toastService.showErrorToast('Failed to update meeting');
-    }
+  async onSaveMeetingEndDate(uuid: any, meetingEndDate: number) {
+    await this.updateMeeting(uuid, {
+      meetingEndDate: new Date(meetingEndDate),
+    });
   }
 
-  async onSaveAppMeetingEndDate(uuid: any, endDate: number) {
-    const matchingMeeting = this.applicantMeetings.find((request) => request.uuid === uuid);
-    if (matchingMeeting) {
-      await this.meetingService.update(uuid, {
-        startDate: new Date(matchingMeeting.startDate),
-        endDate: new Date(endDate),
-        description: matchingMeeting.description,
-      });
-      await this.meetingService.fetch(this.fileNumber);
-    } else {
-      this.toastService.showErrorToast('Failed to update meeting');
-    }
+  async onSaveReportStartDate(uuid: any, reportStartDate: number) {
+    await this.updateMeeting(uuid, {
+      reportStartDate: new Date(reportStartDate),
+    });
+  }
+
+  async onSaveReportEndDate(uuid: any, reportEndDate: number) {
+    await this.updateMeeting(uuid, {
+      reportEndDate: new Date(reportEndDate),
+    });
+  }
+
+  async updateMeeting(uuid: any, updates: UpdateApplicationMeetingDto) {
+    await this.meetingService.update(uuid, updates);
+    await this.meetingService.fetch(this.fileNumber);
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -37,7 +36,7 @@ export class InfoRequestsComponent implements OnInit {
     this.meetingService.$meetings.subscribe((meetings) => {
       this.infoRequests = meetings
         .filter((m) => m.meetingType.code === 'IR')
-        .sort((a, b) => (a.startDate >= b.startDate ? -1 : 1));
+        .sort((a, b) => (a.meetingStartDate >= b.meetingStartDate ? -1 : 1));
     });
   }
 
@@ -69,8 +68,8 @@ export class InfoRequestsComponent implements OnInit {
         data: {
           fileNumber: this.fileNumber,
           uuid: meeting.uuid,
-          startDate: meeting.startDate,
-          endDate: meeting.endDate ?? null,
+          startDate: meeting.meetingStartDate,
+          endDate: meeting.meetingEndDate ?? null,
           meetingType: { code: meeting.meetingType.code },
           reason:
             meeting.description === REASON_TYPE.DEFAULT || !meeting.description
@@ -106,8 +105,8 @@ export class InfoRequestsComponent implements OnInit {
     const matchingMeeting = this.infoRequests.find((request) => request.uuid === uuid);
     if (matchingMeeting) {
       await this.meetingService.update(uuid, {
-        startDate: new Date(matchingMeeting.startDate),
-        endDate: new Date(endDate),
+        meetingStartDate: new Date(matchingMeeting.meetingStartDate),
+        meetingEndDate: new Date(endDate),
         description: matchingMeeting.description,
       });
       await this.meetingService.fetch(this.fileNumber);

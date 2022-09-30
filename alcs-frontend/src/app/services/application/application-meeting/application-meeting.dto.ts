@@ -1,7 +1,9 @@
 export interface ApplicationMeetingDto {
   uuid: string;
-  startDate: number;
-  endDate?: number;
+  meetingStartDate: number;
+  meetingEndDate?: number;
+  reportStartDate?: number;
+  reportEndDate?: number;
   meetingType: ApplicationMeetingTypeDto;
   description: string | null;
 }
@@ -11,12 +13,16 @@ export interface ApplicationMeetingTypeDto {
   label: string;
 }
 
-export interface CreateApplicationMeetingDto extends UpdateApplicationMeetingDto {
+export interface CreateApplicationMeetingDto {
+  meetingStartDate: Date;
   meetingTypeCode: string;
+  description?: string;
 }
 
 export interface UpdateApplicationMeetingDto {
-  startDate: Date;
-  endDate: Date | null;
-  description: string | undefined | null;
+  meetingStartDate?: Date;
+  meetingEndDate?: Date | null;
+  reportStartDate?: Date | null;
+  reportEndDate?: Date | null;
+  description?: string | null;
 }

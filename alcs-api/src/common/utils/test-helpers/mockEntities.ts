@@ -195,7 +195,7 @@ const initApplicationMeetingMock = (
     meeting.type.label = 'Fake code';
     meeting.type.description = 'Fake description';
   }
-  meeting.applicationPaused = {
+  meeting.meetingPause = {
     startDate: new Date(),
     endDate: new Date(),
   } as ApplicationPaused;

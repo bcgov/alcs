@@ -5,6 +5,7 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationService } from '../application.service';
 import { UpdateApplicationMeetingDto } from './application-meeting.dto';
@@ -12,7 +13,8 @@ import { ApplicationMeeting } from './application-meeting.entity';
 
 const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationMeeting> = {
   type: true,
-  applicationPaused: true,
+  meetingPause: true,
+  reportPause: true,
 };
 
 @Injectable()
@@ -51,17 +53,49 @@ export class ApplicationMeetingService {
       throw new ServiceNotFoundException(`Meeting not found ${uuid}`);
     }
 
-    if (meeting.endDate && meeting.startDate > meeting.endDate) {
+    if (
+      meeting.meetingEndDate &&
+      meeting.meetingStartDate > meeting.meetingEndDate
+    ) {
       throw new ServiceValidationException(
         'Start Date must be smaller than End Date',
       );
     }
 
-    existingMeeting.applicationPaused.endDate = meeting.endDate
-      ? new Date(meeting.endDate)
-      : null;
-    existingMeeting.applicationPaused.startDate = new Date(meeting.startDate);
-    existingMeeting.description = meeting.description;
+    existingMeeting.meetingPause.startDate = formatIncomingDate(
+      meeting.meetingStartDate,
+    );
+    existingMeeting.meetingPause.endDate = formatIncomingDate(
+      meeting.meetingEndDate,
+    );
+
+    if (meeting.description) {
+      existingMeeting.description = meeting.description;
+    }
+
+    if (
+      meeting.reportStartDate !== undefined ||
+      meeting.reportEndDate !== undefined
+    ) {
+      if (existingMeeting.reportPause) {
+        existingMeeting.reportPause.startDate = formatIncomingDate(
+          meeting.reportStartDate,
+        );
+        existingMeeting.reportPause.endDate = formatIncomingDate(
+          meeting.reportEndDate,
+        );
+      } else {
+        existingMeeting.reportPause = new ApplicationPaused({
+          applicationUuid: existingMeeting.applicationUuid,
+          startDate: formatIncomingDate(meeting.reportStartDate),
+          endDate: formatIncomingDate(meeting.reportEndDate),
+        });
+      }
+    }
+
+    if (meeting.reportStartDate === null && meeting.reportEndDate === null) {
+      existingMeeting.reportPause = null;
+    }
 
     await this.appMeetingRepository.save(existingMeeting);
 

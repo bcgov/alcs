@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-
 import { ApplicationMeetingComponent } from './application-meeting.component';
 
 describe('ApplicationMeetingComponent', () => {
