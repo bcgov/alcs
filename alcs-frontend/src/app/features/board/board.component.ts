@@ -139,7 +139,7 @@ export class BoardComponent implements OnInit {
       this.setUrl(id, cardTypeCode);
 
       const reconCard = await this.cardService.fetchReconsiderationCard(id);
-      reconCard.regionDetails = {
+      reconCard!.regionDetails = {
         label: 'Mock',
         code: 'Mock',
         description: 'Mock',
