@@ -10,7 +10,7 @@ import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ReconsiderationTypeDto } from '../reconsideration/reconsideration-type/reconsideration-type.dto';
 import { ReconsiderationType } from '../reconsideration/reconsideration-type/reconsideration-type.entity';
-import { ApplicationMasterCodesDto } from './application-code/application-code.dto';
+import { MasterCodesDto } from './application-code/application-code.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
@@ -28,7 +28,7 @@ export class CodeController {
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
-  async getAll(): Promise<ApplicationMasterCodesDto> {
+  async getAll(): Promise<MasterCodesDto> {
     const types = await this.codeService.getAll();
 
     return {

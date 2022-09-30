@@ -70,7 +70,7 @@ export class BoardComponent implements OnInit {
       this.applicationTypes = types;
     });
 
-    // open card if application number present in url
+    // open card if cardUuid and type present in url
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
     const type = this.activatedRoute.snapshot.queryParamMap.get('type');
     if (app && type) {

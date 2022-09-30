@@ -3,7 +3,7 @@ import { ReconsiderationTypeDto } from '../../reconsideration/reconsideration-ty
 import { ApplicationRegionDto } from './application-region/application-region.dto';
 import { ApplicationTypeDto } from './application-type/application-type.dto';
 
-export class ApplicationMasterCodesDto {
+export class MasterCodesDto {
   type: ApplicationTypeDto[];
   status: CardStatusDto[];
   region: ApplicationRegionDto[];

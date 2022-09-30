@@ -131,7 +131,6 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
 export class ApplicationUpdateDto {
   @AutoMap()
-  // @IsNotEmpty()
   @IsOptional()
   @IsString()
   fileNumber: string;

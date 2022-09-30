@@ -22,7 +22,6 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
 import { SharedModule } from './shared/shared.module';
-import { ReconCardDetailDialogComponent } from './features/board/recon-card-detail-dialog/recon-card-detail-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +34,6 @@ import { ReconCardDetailDialogComponent } from './features/board/recon-card-deta
     ConfirmationDialogComponent,
     NotificationsComponent,
     SearchBarComponent,
-    
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule],
   providers: [

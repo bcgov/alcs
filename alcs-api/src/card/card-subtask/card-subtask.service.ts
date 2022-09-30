@@ -4,7 +4,7 @@ import { FindOptionsRelations, Repository } from 'typeorm';
 import { Card } from '../../card/card.entity';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
-import { UpdateApplicationSubtaskDto } from './card-subtask.dto';
+import { UpdateCardSubtaskDto } from './card-subtask.dto';
 import { CardSubtask } from './card-subtask.entity';
 
 @Injectable()
@@ -48,7 +48,7 @@ export class CardSubtaskService {
 
   async update(
     uuid: string,
-    updates: Partial<UpdateApplicationSubtaskDto>,
+    updates: Partial<UpdateCardSubtaskDto>,
   ): Promise<CardSubtask> {
     const existingTask = await this.cardSubtaskRepository.findOne({
       where: { uuid },
