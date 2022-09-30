@@ -200,3 +200,16 @@ export class ApplicationUpdateDto {
   @IsString()
   cardUuid;
 }
+
+export class ApplicationUpdateServiceDto {
+  fileNumber: string;
+  applicant: string;
+  typeUuid?: string;
+  regionUuid?: string;
+  datePaid: Date | null | undefined;
+  dateAcknowledgedIncomplete: Date | null | undefined;
+  dateReceivedAllItems: Date | null | undefined;
+  dateAcknowledgedComplete: Date | null | undefined;
+  decisionDate: Date | null | undefined;
+  dateReceived: Date;
+}

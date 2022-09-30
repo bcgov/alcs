@@ -6,7 +6,6 @@ import { ApplicationMasterCodesDto } from '../application/application-code.dto';
 import { ToastService } from '../toast/toast.service';
 import { CardCreateDto, CardPartialDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
 
-// TODO refactor: move to board?
 @Injectable({
   providedIn: 'root',
 })

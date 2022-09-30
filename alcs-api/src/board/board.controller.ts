@@ -87,11 +87,4 @@ export class BoardController {
 
     return this.cardService.mapToDetailedDto(card);
   }
-
-  // TODO move to card controller?
-  @Get('/card/subtask/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
-  async getCardSubtasks(@Param('uuid') cardUuid: string) {
-    const card = await this.cardSubtasksService.getByCard(cardUuid);
-  }
 }

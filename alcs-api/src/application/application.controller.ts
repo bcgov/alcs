@@ -81,8 +81,8 @@ export class ApplicationController {
 
     const app = await this.applicationService.createOrUpdate({
       ...application,
-      type,
-      region,
+      typeUuid: type.uuid,
+      regionUuid: region.uuid,
       dateReceived: new Date(application.dateReceived),
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
@@ -118,7 +118,6 @@ export class ApplicationController {
       region = await this.codeService.fetchRegion(application.region);
     }
 
-    // TODO: define DTO model that accepts these specific fields only
     const updatedApplication = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,

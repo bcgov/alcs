@@ -16,7 +16,7 @@ import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
-import { ApplicationDto } from './application.dto';
+import { ApplicationDto, ApplicationUpdateServiceDto } from './application.dto';
 import { Application } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -60,7 +60,7 @@ export class ApplicationService {
   ) {}
 
   async createOrUpdate(
-    application: Partial<Application>,
+    application: Partial<ApplicationUpdateServiceDto>,
   ): Promise<Application> {
     let existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
