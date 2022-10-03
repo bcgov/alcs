@@ -14,7 +14,6 @@ export interface CommentDto {
 
 export interface CreateCommentDto {
   cardUuid: string;
-  fileNumber?: string;
   body: string;
   mentions: Map<string, MentionDto>;
 }

@@ -82,7 +82,7 @@ export class ApplicationController {
     const app = await this.applicationService.createOrUpdate({
       ...application,
       typeUuid: type.uuid,
-      regionUuid: region.uuid,
+      regionUuid: region?.uuid ?? undefined,
       dateReceived: new Date(application.dateReceived),
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
