@@ -4,14 +4,14 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
+import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import {
   initApplicationMeetingMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { CodeService } from '../../code/application-code/code.service';
-import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { ApplicationService } from '../application.service';

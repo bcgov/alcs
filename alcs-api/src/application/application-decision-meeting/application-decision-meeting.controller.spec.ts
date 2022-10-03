@@ -5,6 +5,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { Board } from '../../board/board.entity';
+import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import {
@@ -12,7 +13,6 @@ import {
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { CodeService } from '../../code/application-code/code.service';
 import { ApplicationDocumentService } from '../application-document/application-document.service';
 import { ApplicationService } from '../application.service';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting.controller';

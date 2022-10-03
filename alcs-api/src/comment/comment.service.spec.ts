@@ -4,6 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { Card } from '../card/card.entity';
+import { CardService } from '../card/card.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import {
   initCardMockEntity,
@@ -21,6 +23,7 @@ describe('CommentService', () => {
   let mockCommentRepository: DeepMocked<Repository<Comment>>;
   let mockCommentMentionService: DeepMocked<CommentMentionService>;
   let mockNotificationService: DeepMocked<NotificationService>;
+  let mockCardService: DeepMocked<CardService>;
 
   let comment;
 
@@ -29,6 +32,7 @@ describe('CommentService', () => {
     mockApplicationService = createMock<ApplicationService>();
     mockCommentMentionService = createMock<CommentMentionService>();
     mockNotificationService = createMock<NotificationService>();
+    mockCardService = createMock<CardService>();
 
     mockCommentMentionService.updateMentions.mockResolvedValue([]);
     mockCommentMentionService.removeMentions.mockResolvedValue();
@@ -54,6 +58,7 @@ describe('CommentService', () => {
           provide: NotificationService,
           useValue: mockNotificationService,
         },
+        { provide: CardService, useValue: mockCardService },
       ],
     }).compile();
 
@@ -65,12 +70,10 @@ describe('CommentService', () => {
   });
 
   it('should return the fetched comments', async () => {
-    mockApplicationService.get.mockResolvedValue({} as Application);
     mockCommentRepository.find.mockResolvedValue([comment]);
 
     const comments = await service.fetch('file-number');
 
-    expect(mockApplicationService.get).toHaveBeenCalled();
     expect(mockCommentRepository.find).toHaveBeenCalled();
     expect(comments.length).toEqual(1);
     expect(comments[0]).toEqual(comment);
@@ -86,18 +89,20 @@ describe('CommentService', () => {
     expect(loadedComment).toEqual(comment);
   });
 
-  it('should save the new comment with the user and application', async () => {
+  it('should save the new comment with the user and card', async () => {
     const fakeUser = {
       uuid: 'fake-user',
     };
-    const fakeApplication = {
-      uuid: 'fake-application',
-      card: initCardMockEntity(),
-    };
-    mockApplicationService.get.mockResolvedValue(
-      fakeApplication as Application,
-    );
+    const fakeCard = initCardMockEntity();
+    const fakeComment = {
+      uuid: 'fake',
+      card: fakeCard,
+      cardUuid: fakeCard.uuid,
+    } as Comment;
+    mockCardService.get.mockResolvedValue(fakeCard as Card);
     mockCommentRepository.save.mockResolvedValue({} as Comment);
+    mockApplicationService.getByCard.mockResolvedValue({} as Application);
+    mockNotificationService.createForApplication.mockResolvedValue();
 
     await service.create(
       'file-number',
@@ -109,14 +114,14 @@ describe('CommentService', () => {
     expect(mockCommentRepository.save).toHaveBeenCalled();
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.author).toEqual(fakeUser);
-    expect(savedData.card).toEqual(fakeApplication.card);
+    expect(savedData.card).toEqual(fakeComment.card);
     expect(savedData.body).toEqual('new-comment');
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
     expect(mockNotificationService.createForApplication).toHaveBeenCalled();
   });
 
   it('throw an exception when saving a comment to a non-existing application', async () => {
-    mockApplicationService.get.mockResolvedValue(undefined);
+    mockCardService.get.mockResolvedValue(undefined);
 
     await expect(
       service.create(
@@ -125,7 +130,7 @@ describe('CommentService', () => {
         {} as User,
         comment.mentions,
       ),
-    ).rejects.toMatchObject(new Error(`Unable to find application`));
+    ).rejects.toMatchObject(new Error(`Unable to find card`));
 
     expect(mockNotificationService.createForApplication).not.toHaveBeenCalled();
   });

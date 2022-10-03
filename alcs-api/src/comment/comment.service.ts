@@ -29,10 +29,9 @@ export class CommentService {
   ) {}
 
   async fetch(cardUuid: string) {
-    const card = await this.cardService.get(cardUuid);
     return this.commentRepository.find({
       where: {
-        cardUuid: card.uuid,
+        cardUuid: cardUuid,
       },
       relations: this.DEFAULT_COMMENT_RELATIONS,
       order: {
