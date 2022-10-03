@@ -4,7 +4,6 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationService } from '../application/application.service';
-import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
@@ -23,7 +22,6 @@ export class BoardController {
     private boardService: BoardService,
     private applicationService: ApplicationService,
     private cardService: CardService,
-    private cardSubtasksService: CardSubtaskService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -55,7 +53,7 @@ export class BoardController {
 
   @Post('/change')
   @UserRoles(...ANY_AUTH_ROLE)
-  async changeApplicationBoard(
+  async changeBoard(
     @Body()
     { cardUuid, boardCode }: { cardUuid: string; boardCode: string },
   ) {

@@ -44,7 +44,7 @@ export class CardService {
     });
   }
 
-  async update(cardUuid, card: Partial<CardUpdateServiceDto>) {
+  async update(cardUuid, card: Partial<CardUpdateServiceDto>): Promise<Card> {
     const existingCard = await this.cardRepository.findOne({
       where: { uuid: cardUuid },
     });
