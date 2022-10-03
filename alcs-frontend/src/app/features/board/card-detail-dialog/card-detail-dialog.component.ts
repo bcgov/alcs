@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
@@ -24,7 +24,7 @@ export class CardDetailDialogComponent implements OnInit {
   selectedRegion?: string;
 
   application: ApplicationDetailedDto = this.data;
-  applicationStatuses: ApplicationStatusDto[] = [];
+  applicationStatuses: CardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
@@ -77,7 +77,7 @@ export class CardDetailDialogComponent implements OnInit {
     });
   }
 
-  onStatusSelected(applicationStatus: ApplicationStatusDto) {
+  onStatusSelected(applicationStatus: CardStatusDto) {
     this.selectedApplicationStatus = applicationStatus.code;
     this.updateCard({
       status: applicationStatus.code,

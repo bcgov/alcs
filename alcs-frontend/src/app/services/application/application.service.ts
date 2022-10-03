@@ -6,8 +6,8 @@ import { ToastService } from '../toast/toast.service';
 import {
   ApplicationMasterCodesDto,
   ApplicationRegionDto,
-  ApplicationStatusDto,
   ApplicationTypeDto,
+  CardStatusDto,
 } from './application-code.dto';
 import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
 
@@ -17,11 +17,11 @@ import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateAp
 export class ApplicationService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
+  public $applicationStatuses = new BehaviorSubject<CardStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
-  private statuses: ApplicationStatusDto[] = [];
+  private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
   private isInitialized = false;

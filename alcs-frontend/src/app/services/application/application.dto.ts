@@ -1,7 +1,7 @@
 import { BoardDto } from '../board/board.dto';
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
-import { ApplicationRegionDto, ApplicationStatusDto, ApplicationTypeDto } from './application-code.dto';
+import { ApplicationRegionDto, ApplicationTypeDto, CardStatusDto } from './application-code.dto';
 
 export interface CreateApplicationDto {
   fileNumber: string;
@@ -58,7 +58,7 @@ export interface ApplicationPartialDto {
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {
-  statusDetails: ApplicationStatusDto;
+  statusDetails: CardStatusDto;
   typeDetails: ApplicationTypeDto;
   regionDetails: ApplicationRegionDto;
   boardDetails?: BoardDto;

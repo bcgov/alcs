@@ -1,7 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ReconsiderationTypeDto } from '../card/card.dto';
 
-export interface ApplicationStatusDto extends BaseCodeDto {}
+export interface CardStatusDto extends BaseCodeDto {}
 export interface ApplicationRegionDto extends BaseCodeDto {}
 
 export interface ApplicationTypeDto extends BaseCodeDto {
@@ -11,7 +11,7 @@ export interface ApplicationTypeDto extends BaseCodeDto {
 }
 export interface ApplicationMasterCodesDto {
   type: ApplicationTypeDto[];
-  status: ApplicationStatusDto[];
+  status: CardStatusDto[];
   region: ApplicationRegionDto[];
   reconsiderationType: ReconsiderationTypeDto[];
 }

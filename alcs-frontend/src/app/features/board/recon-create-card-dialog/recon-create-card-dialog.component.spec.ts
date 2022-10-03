@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +27,7 @@ describe('ReconCreateCardDialogComponent', () => {
         MatSelectModule,
         BrowserAnimationsModule,
         MatSnackBarModule,
+        MatAutocompleteModule,
       ],
       providers: [
         { provide: MatDialogRef, useValue: {} },

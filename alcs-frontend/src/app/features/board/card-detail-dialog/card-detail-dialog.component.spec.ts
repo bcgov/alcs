@@ -1,15 +1,16 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   ApplicationRegionDto,
-  ApplicationStatusDto,
   ApplicationTypeDto,
+  CardStatusDto,
 } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { BoardService } from '../../../services/board/board.service';
+import { CardDto } from '../../../services/card/card.dto';
 import { UserDto } from '../../../services/user/user.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../shared/shared.module';
@@ -34,7 +35,7 @@ describe('CardDetailDialogComponent', () => {
     clientRoles: [],
   };
 
-  const mockApplicationStatusDetails: ApplicationStatusDto = {
+  const mockApplicationStatusDetails: CardStatusDto = {
     label: 'test_st',
     code: 'STATUS',
     description: 'this is a test status',
@@ -72,6 +73,7 @@ describe('CardDetailDialogComponent', () => {
     board: 'board',
     decisionMeetings: [],
     dateReceived: Date.now(),
+    card: {} as CardDto,
   };
 
   beforeEach(async () => {

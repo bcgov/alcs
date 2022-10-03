@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationSubtaskWithApplicationDto } from '../../../services/application/application-subtask/application-subtask.dto';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -15,7 +15,7 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class GisSubtasksComponent implements OnInit {
   subtasks: ApplicationSubtaskWithApplicationDto[] = [];
-  private statuses: ApplicationStatusDto[] = [];
+  private statuses: CardStatusDto[] = [];
   public gisUsers: UserDto[] = [];
 
   constructor(

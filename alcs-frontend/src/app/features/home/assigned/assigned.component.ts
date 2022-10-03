@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomeService } from '../../../services/home/home.service';
@@ -12,7 +12,7 @@ import { HomeService } from '../../../services/home/home.service';
 })
 export class AssignedComponent implements OnInit {
   applications: ApplicationDto[] = [];
-  private statuses: ApplicationStatusDto[] = [];
+  private statuses: CardStatusDto[] = [];
 
   constructor(
     private homeService: HomeService,

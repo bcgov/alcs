@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
 import { CardPartialDto, ReconsiderationDto } from '../../../services/card/card.dto';
@@ -25,7 +25,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
   selectedRegion?: string;
 
   recon: ReconsiderationDto = this.data;
-  applicationStatuses: ApplicationStatusDto[] = [];
+  applicationStatuses: CardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
@@ -79,7 +79,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     });
   }
 
-  onStatusSelected(applicationStatus: ApplicationStatusDto) {
+  onStatusSelected(applicationStatus: CardStatusDto) {
     this.selectedApplicationStatus = applicationStatus.code;
     this.updateCard({
       statusCode: applicationStatus.code,
