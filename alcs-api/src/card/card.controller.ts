@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
@@ -18,17 +18,20 @@ export class CardController {
     private codeService: CodeService,
   ) {}
 
-  @Patch('/updateCard')
+  @Patch('/updateCard/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async updateCard(@Body() cardToUpdate: CardUpdateDto) {
+  async updateCard(
+    @Param('uuid') uuid: string,
+    @Body() cardToUpdate: CardUpdateDto,
+  ) {
     let status: CardStatus | undefined;
     if (cardToUpdate.statusCode) {
       status = await this.codeService.fetchCardStatus(cardToUpdate.statusCode);
     }
 
-    const updatedCard = await this.cardService.update(cardToUpdate.uuid, {
+    const updatedCard = await this.cardService.update(uuid, {
       statusUuid: status ? status.uuid : undefined,
-      assigneeUuid: cardToUpdate.assigneeUuid,
+      assigneeUuid: cardToUpdate.assigneeUuid ?? null,
       highPriority: cardToUpdate.highPriority,
     });
 

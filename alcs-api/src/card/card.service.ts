@@ -44,7 +44,7 @@ export class CardService {
     });
   }
 
-  async update(cardUuid, card: Partial<CardUpdateServiceDto>): Promise<Card> {
+  async update(cardUuid, card: CardUpdateServiceDto): Promise<Card> {
     const existingCard = await this.cardRepository.findOne({
       where: { uuid: cardUuid },
     });
@@ -60,7 +60,7 @@ export class CardService {
     return this.cardRepository.save(updatedCard);
   }
 
-  async create(card: Partial<CardCreateDto>, board: Board) {
+  async create(card: CardCreateDto, board: Board) {
     const type = await this.cardTypeRepository.findOneOrFail({
       where: {
         code: card.typeCode,

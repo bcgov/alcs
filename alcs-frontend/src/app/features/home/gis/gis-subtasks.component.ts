@@ -27,7 +27,7 @@ export class GisSubtasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.statuses = statuses;
     });
 

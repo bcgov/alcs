@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationMasterCodesDto } from '../application/application-code.dto';
 import { ToastService } from '../toast/toast.service';
-import { CardCreateDto, CardPartialDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
+import { CardCreateDto, CardUpdateDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -41,9 +41,11 @@ export class CardService {
     return;
   }
 
-  async updateCard(card: CardPartialDto) {
+  async updateCard(card: CardUpdateDto) {
     try {
-      return await firstValueFrom(this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/updateCard`, card));
+      return await firstValueFrom(
+        this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/updateCard/${card.uuid}`, card)
+      );
     } catch (e) {
       console.warn(e);
       this.toastService.showErrorToast('Failed to update card');

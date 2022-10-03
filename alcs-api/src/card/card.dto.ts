@@ -6,11 +6,6 @@ import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
 export class CardUpdateDto {
   @AutoMap()
   @IsString()
-  @IsNotEmpty()
-  uuid: string;
-
-  @AutoMap()
-  @IsString()
   @IsOptional()
   assigneeUuid: string;
 
@@ -35,23 +30,23 @@ export class CardUpdateServiceDto {
   @AutoMap()
   @IsString()
   @IsOptional()
-  assigneeUuid: string;
+  assigneeUuid?: string;
 
   @AutoMap()
   @IsOptional()
-  statusUuid: string;
+  statusUuid?: string;
 
   @AutoMap()
   @IsOptional()
-  boardUuid: string;
+  boardUuid?: string;
 
   @AutoMap()
-  cardTypeCode: string;
+  cardTypeCode?: string;
 
   @AutoMap()
   @IsBoolean()
   @IsOptional()
-  highPriority: boolean;
+  highPriority?: boolean;
 }
 
 export class CardCreateDto {

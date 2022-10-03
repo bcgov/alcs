@@ -6,6 +6,7 @@ import { Application } from '../application/application.entity';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
+import { CreateNotificationServiceDto } from './notification.dto';
 import { Notification } from './notification.entity';
 
 @Injectable()
@@ -63,20 +64,10 @@ export class NotificationService {
   }
 
   async createNotificationForApplication(
-    actor: User,
-    receiverUuid: string,
-    body: string,
-    title: string,
-    link: string,
-    targetType: string,
+    notificationDto: CreateNotificationServiceDto,
   ) {
     const notification = new Notification({
-      body,
-      title: title,
-      link: link,
-      targetType: targetType,
-      actor,
-      receiverUuid,
+      ...notificationDto,
     });
     await this.notificationRepository.save(notification);
   }

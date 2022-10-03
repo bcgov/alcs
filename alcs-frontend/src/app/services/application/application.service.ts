@@ -17,7 +17,7 @@ import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateAp
 export class ApplicationService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  public $applicationStatuses = new BehaviorSubject<CardStatusDto[]>([]);
+  public $cardStatuses = new BehaviorSubject<CardStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
@@ -72,7 +72,7 @@ export class ApplicationService {
   private async fetchCodes() {
     const codes = await firstValueFrom(this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/code`));
     this.statuses = codes.status;
-    this.$applicationStatuses.next(this.statuses);
+    this.$cardStatuses.next(this.statuses);
 
     this.types = codes.type;
     this.$applicationTypes.next(this.types);

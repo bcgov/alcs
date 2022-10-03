@@ -22,6 +22,7 @@ import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { CreateNotificationServiceDto } from '../notification/notification.dto';
 import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import {
@@ -194,14 +195,14 @@ export class ApplicationController {
       updatedCard.assigneeUuid !== req.user.entity.uuid
     ) {
       const frontEnd = this.config.get('FRONTEND_ROOT');
-      this.notificationService.createNotificationForApplication(
-        req.user.entity,
-        updatedCard.assigneeUuid,
-        "You've been assigned",
-        `${application.fileNumber} (${application.applicant})`,
-        `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
-        'application',
-      );
+      this.notificationService.createNotificationForApplication({
+        actor: req.user.entity,
+        receiverUuid: updatedCard.assigneeUuid,
+        title: "You've been assigned",
+        body: `${application.fileNumber} (${application.applicant})`,
+        link: `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
+        targetType: 'application',
+      } as CreateNotificationServiceDto);
     }
 
     const mappedApps = await this.applicationService.mapToDtos([application]);

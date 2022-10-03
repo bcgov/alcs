@@ -53,7 +53,7 @@ export class CardDetailDialogComponent implements OnInit {
     this.boardService.$boards.subscribe((boards) => {
       this.boards = boards;
     });
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.applicationStatuses = statuses;
     });
 

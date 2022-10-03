@@ -319,15 +319,21 @@ describe('ApplicationController', () => {
     const savedData = cardService.update.mock.calls[0][1];
     expect(savedData.assigneeUuid).toEqual(mockUserUuid);
 
-    const notificationArgs =
-      notificationService.createNotificationForApplication.mock.calls[0];
-    expect(notificationArgs[0]).toStrictEqual(fakeAuthor);
-    expect(notificationArgs[1]).toStrictEqual(mockUserUuid);
-    expect(notificationArgs[2]).toStrictEqual("You've been assigned");
-    expect(notificationArgs[3]).toStrictEqual(
+    const createNotificationServiceDto =
+      notificationService.createNotificationForApplication.mock.calls[0][0];
+    expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
+    expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
+      mockUserUuid,
+    );
+    expect(createNotificationServiceDto.title).toStrictEqual(
+      "You've been assigned",
+    );
+    expect(createNotificationServiceDto.body).toStrictEqual(
       `${mockApplicationEntity.fileNumber} (${mockApplicationEntity.applicant})`,
     );
-    expect(notificationArgs[5]).toStrictEqual('application');
+    expect(createNotificationServiceDto.targetType).toStrictEqual(
+      'application',
+    );
   });
 
   it('should not update card entity even if passed', async () => {

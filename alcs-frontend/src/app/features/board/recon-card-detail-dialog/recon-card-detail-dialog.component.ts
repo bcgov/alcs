@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { CardPartialDto, ReconsiderationDto } from '../../../services/card/card.dto';
+import { CardUpdateDto, ReconsiderationDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
@@ -55,7 +55,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.boardService.$boards.subscribe((boards) => {
       this.boards = boards;
     });
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.applicationStatuses = statuses;
     });
 
@@ -94,7 +94,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     });
   }
 
-  updateCard(changes: Omit<CardPartialDto, 'uuid'>) {
+  updateCard(changes: Omit<CardUpdateDto, 'uuid'>) {
     this.cardService
       .updateCard({
         ...changes,
@@ -102,7 +102,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
       })
       .then(() => {
         this.isApplicationDirty = true;
-        this.toastService.showSuccessToast('Application Updated');
+        this.toastService.showSuccessToast('Card updated');
       });
   }
 

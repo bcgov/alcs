@@ -22,7 +22,7 @@ export class AssignedComponent implements OnInit {
 
   ngOnInit(): void {
     this.applicationService.setup();
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.statuses = statuses;
       if (this.statuses.length > 0) {
         this.loadApplications();

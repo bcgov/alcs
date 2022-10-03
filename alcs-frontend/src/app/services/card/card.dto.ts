@@ -28,7 +28,7 @@ export interface CardCreateDto {
   typeCode: string;
 }
 
-export interface CardPartialDto {
+export interface CardUpdateDto {
   uuid: string;
   assigneeUuid?: string;
   boardCode?: string;
