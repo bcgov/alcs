@@ -18,6 +18,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatepickerModule } from '@matheo/datepicker';
 import { DateAdapter as MatheoDateAdapter, MatNativeDateModule } from '@matheo/datepicker/core';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
@@ -35,7 +36,15 @@ import { MomentPipe } from './pipes/moment.pipe';
 
 @NgModule({
   declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe, StartOfDayPipe, MeetingOverviewComponent],
-  imports: [CommonModule, MatIconModule, MatExpansionModule, MatButtonModule, MatInputModule, FormsModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatButtonModule,
+    MatInputModule,
+    FormsModule,
+    MatTooltipModule,
+  ],
   exports: [
     CommonModule,
     FormsModule,
@@ -65,6 +74,7 @@ import { MomentPipe } from './pipes/moment.pipe';
     MatExpansionModule,
     MtxButtonModule,
     StartOfDayPipe,
+    MatTooltipModule,
   ],
 })
 export class SharedModule {

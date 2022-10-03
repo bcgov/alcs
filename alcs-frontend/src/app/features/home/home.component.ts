@@ -8,8 +8,9 @@ import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authe
 })
 export class HomeComponent implements OnInit {
   currentUser!: ICurrentUser;
-  isOnlyGIS = false;
-  isOnlyCommissioner = false;
+  hasGIS = false;
+  hasCommissioner = false;
+  hasOtherRole = false;
 
   constructor(private authService: AuthenticationService) {}
 
@@ -20,15 +21,13 @@ export class HomeComponent implements OnInit {
       if (currentUser) {
         this.currentUser = currentUser;
 
-        this.isOnlyGIS =
-          currentUser.client_roles && currentUser.client_roles.length === 1
-            ? currentUser.client_roles.includes(ROLES.GIS)
-            : false;
-
-        this.isOnlyCommissioner =
-          currentUser.client_roles && currentUser.client_roles.length === 1
-            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
-            : false;
+        this.hasGIS = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.GIS);
+        this.hasCommissioner = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.COMMISSIONER);
+        this.hasOtherRole =
+          !!currentUser.client_roles &&
+          currentUser.client_roles.filter((role) => {
+            return role !== ROLES.COMMISSIONER && role !== ROLES.GIS;
+          }).length > 0;
       }
     });
   }

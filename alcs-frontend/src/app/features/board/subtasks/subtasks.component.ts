@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { ApplicationSubtaskDto } from '../../../services/application/application-subtask/application-subtask.dto';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
+import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -14,7 +15,7 @@ export class SubtasksComponent implements OnInit {
   @Input() fileNumber: string = '';
 
   subtasks: ApplicationSubtaskDto[] = [];
-  users: Map<string, string> = new Map();
+  users: Map<string, UserDto> = new Map();
 
   constructor(
     private subtaskService: ApplicationSubtaskService,
@@ -28,7 +29,7 @@ export class SubtasksComponent implements OnInit {
     this.userService.$users.subscribe((users) => {
       this.users.clear();
       users.forEach((user) => {
-        this.users.set(user.uuid, user.initials);
+        this.users.set(user.uuid, user);
       });
     });
   }

@@ -94,10 +94,10 @@ export class BoardComponent implements OnInit {
       const application = await this.applicationService.fetchApplication(id);
 
       const dialogRef = this.dialog.open(CardDetailDialogComponent, {
-        minHeight: '500px',
         minWidth: '600px',
-        maxWidth: '800px',
-        width: '70%',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
         data: application,
       });
 
@@ -126,7 +126,8 @@ export class BoardComponent implements OnInit {
       .open(CreateCardDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
-        width: '100%',
+        maxHeight: '80vh',
+        width: '90%',
         data: {},
       })
       .afterClosed()
