@@ -46,7 +46,7 @@ export class ApplicationMeetingService {
           reportEndDate: meeting.reportEndDate ? formatDateForApi(meeting.reportEndDate) : meeting.reportEndDate,
         })
       );
-      this.toastService.showSuccessToast('Meeting updated.');
+      this.toastService.showSuccessToast('Meeting updated');
     } catch (e) {
       this.toastService.showErrorToast('Failed to update meeting');
     }

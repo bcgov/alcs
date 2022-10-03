@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
@@ -47,7 +48,8 @@ export const childRoutes = [
   templateUrl: './application.component.html',
   styleUrls: ['./application.component.scss'],
 })
-export class ApplicationComponent implements OnInit {
+export class ApplicationComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
   application?: ApplicationDetailedDto;
   fileNumber?: string;
 
@@ -56,7 +58,7 @@ export class ApplicationComponent implements OnInit {
   constructor(private applicationDetailService: ApplicationDetailService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(async (routeParams) => {
+    this.route.params.pipe(takeUntil(this.destroy)).subscribe(async (routeParams) => {
       const { fileNumber } = routeParams;
       this.fileNumber = fileNumber;
       this.loadApplication();
@@ -65,6 +67,11 @@ export class ApplicationComponent implements OnInit {
     this.applicationDetailService.$application.subscribe((application) => {
       this.application = application;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   async loadApplication() {

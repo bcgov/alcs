@@ -15,31 +15,34 @@
       <div class="sub-heading">
         <div>
           <div class="subheading2">Local Government:</div>
-          <div class="body1-text">Regional District of Okanagan-Similkameen</div>
-        </div>
-        <div>
-          <div class="subheading2">Public Status:</div>
-          <div class="body1-text">ALC Acknowledged - Complete</div>
-          <div class="subtext">Last updated: 2022-Sep-05</div>
+          <div class="body1-text">{{ application.localGovernment }}</div>
         </div>
         <div>
           <div class="subheading2">Business Days:</div>
-          <div class="body1-text left">
-            <span *ngIf="!application.paused"><span class="dot"></span>Active</span>
-            <span *ngIf="application.paused"><span class="dot paused"></span>Paused</span>
-            <mat-icon class="calendar">calendar_month</mat-icon>
-            {{ application.activeDays }}
+          <div class="body1-text left time-tracking">
+            <div *ngIf="!application.paused"><span class="dot"></span>Active</div>
+            <div *ngIf="application.paused"><span class="dot paused"></span>Paused</div>
+            <div
+              matTooltip="Active Days"
+              class="card-active-days"
+              [ngClass]="{
+                'inactive-timer': application.paused
+              }"
+            >
+              <mat-icon class="icon">calendar_month</mat-icon>
+              {{ application.activeDays }}
+            </div>
+            <div
+              matTooltip="Paused Days"
+              class="card-paused-days"
+              [ngClass]="{
+                'inactive-timer': !application.paused
+              }"
+            >
+              <mat-icon class="icon">pause</mat-icon>
+              {{ application.pausedDays }}
+            </div>
           </div>
-          <div class="subtext">Last updated: 2022-Sep-05</div>
-        </div>
-      </div>
-      <div>
-        <div class="subheading2">Proposal Summary:</div>
-        <div class="body1-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -12,7 +13,8 @@ import { InfoRequestDialogComponent, REASON_TYPE } from './info-rquest-dialog/in
   templateUrl: './info-requests.component.html',
   styleUrls: ['./info-requests.component.scss'],
 })
-export class InfoRequestsComponent implements OnInit {
+export class InfoRequestsComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
   displayedColumns: string[] = ['startDate', 'endDate', 'description', 'action'];
   infoRequests: ApplicationMeetingDto[] = [];
   fileNumber: string = '';
@@ -26,18 +28,23 @@ export class InfoRequestsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       if (application) {
         this.fileNumber = application.fileNumber;
-        this.meetingService.fetch(this.fileNumber);
+        this.meetingService.fetch(application.fileNumber);
       }
     });
 
-    this.meetingService.$meetings.subscribe((meetings) => {
+    this.meetingService.$meetings.pipe(takeUntil(this.destroy)).subscribe((meetings) => {
       this.infoRequests = meetings
         .filter((m) => m.meetingType.code === 'IR')
         .sort((a, b) => (a.meetingStartDate >= b.meetingStartDate ? -1 : 1));
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   async onCreate(meetingTypeCode: string) {
@@ -52,7 +59,7 @@ export class InfoRequestsComponent implements OnInit {
     });
     dialog.beforeClosed().subscribe((result) => {
       if (result) {
-        this.meetingService.fetch(this.fileNumber);
+        this.applicationDetailService.loadApplication(this.fileNumber);
       }
     });
   }
@@ -80,7 +87,7 @@ export class InfoRequestsComponent implements OnInit {
       });
       dialog.beforeClosed().subscribe((result) => {
         if (result) {
-          this.meetingService.fetch(this.fileNumber);
+          this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
     } else {
@@ -95,7 +102,7 @@ export class InfoRequestsComponent implements OnInit {
     answer.subscribe((answer) => {
       if (answer) {
         this.meetingService.delete(uuid).then(() => {
-          this.meetingService.fetch(this.fileNumber);
+          this.applicationDetailService.loadApplication(this.fileNumber);
         });
       }
     });
@@ -109,7 +116,7 @@ export class InfoRequestsComponent implements OnInit {
         meetingEndDate: new Date(endDate),
         description: matchingMeeting.description,
       });
-      await this.meetingService.fetch(this.fileNumber);
+      await this.applicationDetailService.loadApplication(this.fileNumber);
     } else {
       this.toastService.showErrorToast('Failed to update meeting');
     }
