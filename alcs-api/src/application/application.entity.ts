@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Card } from '../card/card.entity';
 import { Base } from '../common/entities/base.entity';
+import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
@@ -90,6 +91,14 @@ export class Application extends Base {
     type: 'uuid',
   })
   regionUuid: string;
+
+  @ManyToOne(() => ApplicationLocalGovernment)
+  localGovernment: ApplicationLocalGovernment;
+
+  @Column({
+    type: 'uuid',
+  })
+  localGovernmentUuid: string;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

@@ -1,0 +1,31 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
+import * as config from 'config';
+import { RoleGuard } from '../../../common/authorization/role.guard';
+import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
+import { UserRoles } from '../../../common/authorization/roles.decorator';
+import { ApplicationLocalGovernmentDto } from './application-local-government.dto';
+import { ApplicationLocalGovernmentService } from './application-local-government.service';
+
+@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
+@Controller('application-local-government')
+@UseGuards(RoleGuard)
+export class ApplicationLocalGovernmentController {
+  constructor(
+    private codeService: ApplicationLocalGovernmentService,
+    @InjectMapper() private applicationMapper: Mapper,
+  ) {}
+
+  @Get()
+  @UserRoles(...ANY_AUTH_ROLE)
+  async list(): Promise<ApplicationLocalGovernmentDto[]> {
+    const localGovernments = await this.codeService.list();
+    return localGovernments.map((government) => ({
+      name: government.name,
+      preferredRegionCode: government.preferredRegion.code,
+      uuid: government.uuid,
+    }));
+  }
+}

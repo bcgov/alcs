@@ -1,9 +1,7 @@
 // Not ng-select styles must be overridden in global css
 
 .ng-select.card-assignee .ng-select-container,
-.ng-select.card-type .ng-select-container,
 .ng-select.card-decision-maker .ng-select-container,
-.ng-select.card-region .ng-select-container,
 .ng-select.subtask-assignee .ng-select-container {
   .ng-value-container {
     margin-top: 15px;
@@ -15,5 +13,17 @@
     .ng-placeholder {
       bottom: 10px;
     }
+  }
+}
+
+.ng-select.card-local-government,
+.ng-select.card-type,
+.ng-select.card-region {
+  .ng-value {
+    margin-top: 6px;
+  }
+
+  input {
+    padding: 10px !important;
   }
 }
