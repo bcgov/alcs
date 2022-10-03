@@ -46,6 +46,7 @@ describe('ApplicationController', () => {
     assigneeUuid: mockApplicationEntity.card.assigneeUuid,
     board: undefined,
     region: undefined,
+    localGovernment: 'Local Government',
     assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
@@ -129,7 +130,10 @@ describe('ApplicationController', () => {
       code: 'fake-code',
     } as ApplicationType);
 
-    const res = await controller.create(mockApplicationDto);
+    const res = await controller.create({
+      ...mockApplicationDto,
+      localGovernmentUuid: 'government-uuid',
+    });
 
     expect(applicationService.createOrUpdate).toHaveBeenCalled();
     expect(res).toStrictEqual(mockApplicationDto);

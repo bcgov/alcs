@@ -52,6 +52,7 @@
       </mat-form-field>
       <div>
         <ng-select
+          appearance="outline"
           class="card-type"
           [items]="applicationTypes"
           appendTo="body"
@@ -86,7 +87,34 @@
         </ng-select>
       </div>
       <div>
+        <mat-form-field class="date-picker" appearance="outline">
+          <mat-label>Date Submitted to ALC</mat-label>
+          <input matInput [matDatepicker]="pdd" formControlName="receivedDate" required />
+          <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
+          <mat-datepicker #pdd type="date"> </mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
         <ng-select
+          appearance="outline"
+          class="card-local-government"
+          [items]="localGovernments"
+          appendTo="body"
+          placeholder="Local Government *"
+          bindLabel="name"
+          bindValue="uuid"
+          [clearable]="false"
+          formControlName="localGovernment"
+          (change)="onSelectGovernment($event)"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+              <div [ngOptionHighlight]="search">{{ item.name }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          appearance="outline"
           class="card-region"
           [items]="regions"
           appendTo="body"
@@ -96,15 +124,12 @@
           [clearable]="false"
           formControlName="region"
         >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.label }}</div>
+          </ng-template>
         </ng-select>
       </div>
     </div>
-    <mat-form-field class="date-picker" appearance="standard">
-      <mat-label>Date Submitted to ALC</mat-label>
-      <input matInput [matDatepicker]="pdd" formControlName="receivedDate" required />
-      <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
-      <mat-datepicker #pdd type="date"> </mat-datepicker>
-    </mat-form-field>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

@@ -8,6 +8,7 @@ export interface CreateApplicationDto {
   type: string;
   dateReceived: number;
   region?: string;
+  localGovernmentUuid?: string;
 }
 
 export interface ApplicationDecisionMeetingDto {
@@ -27,6 +28,7 @@ export interface ApplicationDto {
   dateAcknowledgedComplete?: number;
   decisionDate?: number;
   region: string;
+  localGovernment: string;
   assignee?: UserDto;
   activeDays: number;
   pausedDays: number;
