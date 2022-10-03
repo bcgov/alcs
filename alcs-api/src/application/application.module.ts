@@ -8,6 +8,9 @@ import { ApplicationSubtaskProfile } from '../common/automapper/application-subt
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
+import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
+import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
@@ -32,6 +35,7 @@ import { ApplicationService } from './application.service';
       ApplicationMeeting,
       ApplicationDecisionMeeting,
       ApplicationDocument,
+      ApplicationLocalGovernment,
     ]),
     NotificationModule,
     DocumentModule,
@@ -51,12 +55,14 @@ import { ApplicationService } from './application.service';
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationDocumentService,
+    ApplicationLocalGovernmentService,
   ],
   controllers: [
     ApplicationController,
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,
+    ApplicationLocalGovernmentController,
   ],
   exports: [
     ApplicationService,

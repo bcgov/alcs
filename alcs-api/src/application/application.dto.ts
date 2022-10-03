@@ -16,12 +16,10 @@ import { UserDto } from '../user/user.dto';
 import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 
 export class CreateApplicationDto {
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   fileNumber: string;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   applicant: string;
@@ -37,6 +35,10 @@ export class CreateApplicationDto {
   @IsString()
   @IsOptional()
   region?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  localGovernmentUuid;
 }
 
 export class ApplicationDto {
@@ -108,6 +110,9 @@ export class ApplicationDto {
 
   @IsString()
   region: string;
+
+  @IsString()
+  localGovernment: string;
 
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)

@@ -39,6 +39,7 @@ export class ApplicationService {
     },
     region: true,
     decisionMeetings: true,
+    localGovernment: true,
   };
   private SUBTASK_RELATIONS: FindOptionsRelations<Application> = {
     ...this.DEFAULT_RELATIONS,
