@@ -6,7 +6,6 @@
   margin-right: -12px;
   display: flex;
   justify-content: right;
-  margin-bottom: 16px;
 }
 
 .header-row {
@@ -18,12 +17,15 @@
 }
 
 .application-type {
+  display: inline-block;
   margin-left: 16px;
   border-radius: 10px;
   padding: 0 14px;
   font-size: 11px;
   letter-spacing: 0.01em;
   font-weight: 700;
+  line-height: 24px;
+  vertical-align: middle;
 }
 
 .time-tracking {
@@ -129,7 +131,5 @@
 }
 
 .card-comments-wrapper {
-  max-height: 350px;
-  overflow-y: auto;
   margin-top: 36px;
 }

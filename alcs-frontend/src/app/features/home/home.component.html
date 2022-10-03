@@ -2,13 +2,13 @@
   <div class="welcome-title">
     <h1>Welcome {{ currentUser.name }} to ALCS</h1>
   </div>
-  <div *ngIf="!isOnlyGIS && !isOnlyCommissioner">
+  <div *ngIf="hasOtherRole">
     <app-assigned></app-assigned>
   </div>
-  <div *ngIf="isOnlyGIS">
+  <div *ngIf="hasGIS">
     <app-gis-subtasks></app-gis-subtasks>
   </div>
-  <div *ngIf="isOnlyCommissioner">
+  <div *ngIf="hasCommissioner">
     <app-meeting-overview></app-meeting-overview>
   </div>
 </div>
