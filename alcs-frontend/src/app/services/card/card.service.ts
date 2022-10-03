@@ -43,9 +43,7 @@ export class CardService {
 
   async updateCard(card: CardUpdateDto) {
     try {
-      return await firstValueFrom(
-        this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/updateCard/${card.uuid}`, card)
-      );
+      return await firstValueFrom(this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/${card.uuid}`, card));
     } catch (e) {
       console.warn(e);
       this.toastService.showErrorToast('Failed to update card');

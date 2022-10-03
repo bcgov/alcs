@@ -18,7 +18,7 @@ export class CardController {
     private codeService: CodeService,
   ) {}
 
-  @Patch('/updateCard/:uuid')
+  @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async updateCard(
     @Param('uuid') uuid: string,
