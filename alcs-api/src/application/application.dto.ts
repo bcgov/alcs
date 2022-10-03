@@ -113,6 +113,10 @@ export class ApplicationDto {
   @IsString()
   localGovernment: string;
 
+  @IsString()
+  @IsOptional()
+  summary?: string;
+
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
@@ -193,4 +197,9 @@ export class ApplicationUpdateDto {
   @IsBoolean()
   @IsOptional()
   highPriority?: boolean;
+
+  @AutoMap()
+  @IsString()
+  @IsOptional()
+  summary?: string;
 }

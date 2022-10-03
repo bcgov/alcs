@@ -124,6 +124,7 @@ export class ApplicationController {
       applicant: application.applicant,
       typeUuid: type ? type.uuid : undefined,
       regionUuid: region ? region.uuid : undefined,
+      summary: application.summary,
       datePaid: formatIncomingDate(application.datePaid),
       dateAcknowledgedIncomplete: formatIncomingDate(
         application.dateAcknowledgedIncomplete,

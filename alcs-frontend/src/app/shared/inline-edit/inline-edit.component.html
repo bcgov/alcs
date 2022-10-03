@@ -1,15 +1,33 @@
-<span class="editable" *ngIf="!isEditing" (click)="startEdit()">
-  {{ value }}
-</span>
-<span *ngIf="isEditing">
-  <input
-    class="editable"
-    type="text"
-    name="value"
-    #editInput
-    [(ngModel)]="pendingValue"
-    (blur)="confirmEdit()"
-    (keydown.enter)="confirmEdit()"
-    (keydown.escape)="cancelEdit()"
-  />
-</span>
+<div>
+  <div (click)="startEdit()" class="content" *ngIf="!isEditing">
+    <div class="text">
+      <span *ngIf="!value" class="placeholder">{{ placeholder}}</span>
+      {{ value }}
+    </div>
+    <div matTooltip="Click to edit" class="edit-button" (click)="startEdit()">
+      <mat-icon>edit</mat-icon>
+    </div>
+  </div>
+  <div
+    class="editing"
+    [ngClass]="{
+      hidden: !isEditing
+    }"
+  >
+    <textarea
+      matInput
+      class="editable"
+      type="text"
+      name="value"
+      [placeholder]="placeholder"
+      #editInput
+      [(ngModel)]="pendingValue"
+      (keydown.enter)="confirmEdit()"
+      (keydown.escape)="cancelEdit()"
+    ></textarea>
+    <div class="button-container">
+      <button mat-button (click)="cancelEdit()">CANCEL</button>
+      <button mat-button class="save" (click)="confirmEdit()">SAVE</button>
+    </div>
+  </div>
+</div>

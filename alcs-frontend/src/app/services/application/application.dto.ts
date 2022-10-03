@@ -19,6 +19,7 @@ export interface ApplicationDto {
   fileNumber: string;
   applicant: string;
   status: string;
+  summary?: string;
   type: string;
   board: string;
   dateReceived: number;
@@ -42,6 +43,7 @@ export interface ApplicationPartialDto {
   applicant?: string;
   status?: string;
   region?: string;
+  summary?: string;
   dateReceived?: number;
   datePaid?: number;
   dateAcknowledgedIncomplete?: number;
