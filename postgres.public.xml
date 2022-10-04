@@ -37,6 +37,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="summary" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
