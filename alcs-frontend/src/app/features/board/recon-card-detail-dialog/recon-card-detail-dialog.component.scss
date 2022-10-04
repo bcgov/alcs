@@ -47,7 +47,7 @@
   }
 }
 
-::ng-deep .move-board-menu {
+:host::ng-deep .move-board-menu {
   max-height: 250px;
 }
 

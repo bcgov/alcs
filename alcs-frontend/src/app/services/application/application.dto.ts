@@ -22,7 +22,6 @@ export interface ApplicationDto {
   status: string;
   summary?: string;
   type: string;
-  // cardUuid: string;
   board: string;
   dateReceived: number;
   datePaid?: number;

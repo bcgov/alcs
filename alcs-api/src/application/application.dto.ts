@@ -220,7 +220,7 @@ export class ApplicationUpdateDto {
 
 export class ApplicationUpdateServiceDto {
   fileNumber: string;
-  applicant: string;
+  applicant?: string;
   typeUuid?: string;
   regionUuid?: string;
   datePaid?: Date | null | undefined;

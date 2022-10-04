@@ -7,23 +7,23 @@ export class CardUpdateDto {
   @AutoMap()
   @IsString()
   @IsOptional()
-  assigneeUuid: string;
+  assigneeUuid?: string;
 
   @AutoMap()
   @IsOptional()
-  statusCode: string;
+  statusCode?: string;
 
   @AutoMap()
   @IsOptional()
-  boardCode: string;
+  boardCode?: string;
 
   @AutoMap()
-  cardTypeCode: string;
+  cardTypeCode?: string;
 
   @AutoMap()
   @IsBoolean()
   @IsOptional()
-  highPriority: boolean;
+  highPriority?: boolean;
 }
 
 export class CardUpdateServiceDto {
@@ -75,7 +75,7 @@ export class CardDto {
   @AutoMap()
   @IsBoolean()
   @IsOptional()
-  highPriority: boolean;
+  highPriority?: boolean;
 }
 
 export class CardDetailedDto extends CardDto {
