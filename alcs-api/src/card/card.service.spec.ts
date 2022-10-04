@@ -3,6 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { initCardMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
   MockType,
@@ -66,4 +67,27 @@ describe('CardService', () => {
     expect(cardRepositoryMock.save).toHaveBeenCalled();
     expect(cardRepositoryMock.save).toHaveBeenCalledWith(mockCardEntity);
   });
+
+  it('should fail update if card does not exist', async () => {
+    const payload: Partial<CardUpdateServiceDto> = {
+      assigneeUuid: mockCardEntity.assigneeUuid,
+      statusUuid: mockCardEntity.statusUuid,
+      boardUuid: mockCardEntity.boardUuid,
+    };
+
+    cardRepositoryMock.findOne.mockReturnValue(undefined);
+
+    await expect(
+      service.update(mockCardEntity.uuid, payload),
+    ).rejects.toMatchObject(
+      new ServiceValidationException(
+        `Card for with ${mockCardEntity.uuid} not found`,
+      ),
+    );
+    expect(cardRepositoryMock.save).toBeCalledTimes(0);
+  });
+
+  // it('should successfully create card', async () => {
+
+  // });
 });
