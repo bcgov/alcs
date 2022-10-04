@@ -90,7 +90,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.selectedBoard = board.code;
     await this.boardService.changeBoard(this.recon.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
-      this.toastService.showSuccessToast(`Application moved to ${board.title}`);
+      this.toastService.showSuccessToast(`Recon moved to ${board.title}`);
     });
   }
 
