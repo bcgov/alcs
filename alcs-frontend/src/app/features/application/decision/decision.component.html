@@ -1,10 +1,29 @@
-<h3>Decision</h3>
-<section>
-  <h4>Decision Date</h4>
-  <div>
-    <app-inline-datepicker [selectedValue]="decisionDate" (save)="setDecisionDate($event)"></app-inline-datepicker>
+<div class="split">
+  <h3>Decision</h3>
+  <button mat-flat-button color="primary" (click)="onCreate()">+ New Decision</button>
+</div>
+<section class="decision" *ngFor="let decision of decisions; let i = index">
+  <div *ngIf="decisions.length - 1 !== i" class="recon-label">Recon</div>
+  <div class="decision-menu">
+    <button matTooltip="Attach Document" mat-icon-button><mat-icon>attach_file</mat-icon></button>
+    <button (click)="onEdit(decision)" matTooltip="Edit Decision" mat-icon-button><mat-icon>edit</mat-icon></button>
+    <button (click)="deleteDecision(decision.uuid)" matTooltip="Delete Decision" mat-icon-button><mat-icon>delete</mat-icon></button>
   </div>
-</section>
-<section>
-  <app-document [fileNumber]="fileNumber" documentType="decisionDocument" title="Documents"></app-document>
+  <div class="body-large">Decision #{{ decisions.length - i }}</div>
+  <div class="decision-content">
+    <div>
+      <div class="subheading2">Decision Date</div>
+      {{ decision.date | momentFormat }}
+    </div>
+    <div>
+      <div class="subheading2">Decision Outcome</div>
+      {{ decision.outcome }}
+    </div>
+  </div>
+  <div class="body-large">Documents</div>
+  <div class="decision-documents">
+    <div class="subheading2">File Name</div>
+    <div class="subheading2">File Upload Date</div>
+    <div class="subheading2">File Actions</div>
+  </div>
 </section>

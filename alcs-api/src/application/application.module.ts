@@ -14,6 +14,9 @@ import { ApplicationLocalGovernmentService } from './application-code/applicatio
 import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
+import { ApplicationDecisionController } from './application-decision/application-decision.controller';
+import { ApplicationDecision } from './application-decision/application-decision.entity';
+import { ApplicationDecisionService } from './application-decision/application-decision.service';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -36,6 +39,7 @@ import { ApplicationService } from './application.service';
       ApplicationDecisionMeeting,
       ApplicationDocument,
       ApplicationLocalGovernment,
+      ApplicationDecision,
     ]),
     NotificationModule,
     DocumentModule,
@@ -56,6 +60,7 @@ import { ApplicationService } from './application.service';
     ApplicationPausedService,
     ApplicationDocumentService,
     ApplicationLocalGovernmentService,
+    ApplicationDecisionService,
   ],
   controllers: [
     ApplicationController,
@@ -63,6 +68,7 @@ import { ApplicationService } from './application.service';
     ApplicationMeetingController,
     ApplicationDocumentController,
     ApplicationLocalGovernmentController,
+    ApplicationDecisionController,
   ],
   exports: [
     ApplicationService,

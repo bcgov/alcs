@@ -1,4 +1,5 @@
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecision } from '../../../application/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
 import { Application } from '../../../application/application.entity';
@@ -31,7 +32,8 @@ const initCardStatusMockEntity = (): CardStatus => {
 
 const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
   const subtask = new CardSubtask();
-  (subtask.assignee = initAssigneeMockEntity()), (subtask.uuid = '11111');
+  subtask.assignee = initAssigneeMockEntity();
+  subtask.uuid = '11111';
   subtask.assigneeUuid = subtask.assignee.uuid;
   subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
@@ -207,6 +209,15 @@ const initApplicationDecisionMeetingMock = (
   return meeting;
 };
 
+const initApplicationDecisionMock = (application?: Application) => {
+  return new ApplicationDecision({
+    outcome: 'Outcome',
+    date: new Date(),
+    uuid: 'fake-outcome-uuid',
+    application,
+  });
+};
+
 const initApplicationMeetingMock = (
   application?: Application,
   meetingType?: ApplicationMeetingType,
@@ -245,4 +256,5 @@ export {
   initCardSubtaskMockEntity,
   initBoardMockEntity,
   initCardTypeMockEntity,
+  initApplicationDecisionMock,
 };
