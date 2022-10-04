@@ -3,18 +3,70 @@
 .editable {
   display: inline-block;
   cursor: pointer;
-  background-color: #eee;
-  border: 2px solid transparent;
-  padding: 4px;
-  margin: 4px 0;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  padding: 8px;
   border-radius: 2px;
   font-size: 16px;
+  width: 100%;
+  min-height: 96px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.content {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  border-radius: 2px;
+  font-size: 16px;
+  border: 2px solid rgba(0,0,0,0);
+  margin-left: -8px;
+  margin-right: -8px;
+  min-height: 28px;
+}
+
+.text {
+  padding: 8px;
+}
+
+.content:hover {
+  border: 2px solid $grey;
+  cursor: pointer;
+
+  .edit-button {
+    color: #fff;
+    background-color: $grey;
+  }
+
+  mat-icon {
+    display: inline-block;
+  }
+}
+
+.edit-button {
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    display: none;
+  }
+}
+
+.editing.hidden {
+  display: none;
+}
+
+.placeholder {
+  font-style: italic;
+  color: $grey;
 }
 
 .editable:hover {
   border: 2px solid $accent-color;
 }
 
-input.mat-body.editing {
-  @extend .editable;
+.save {
+  color: $primary-color;
 }

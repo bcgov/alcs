@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  MaxLength,
 } from 'class-validator';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
@@ -114,6 +115,13 @@ export class ApplicationDto {
   @IsString()
   localGovernment: string;
 
+  @IsString()
+  @MaxLength(400, {
+    message: 'Summary is too long',
+  })
+  @IsOptional()
+  summary?: string;
+
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
@@ -200,6 +208,11 @@ export class ApplicationUpdateDto {
   highPriority?: boolean;
 
   @AutoMap()
+  @IsString()
+  @IsOptional()
+  summary?: string;
+
+  @AutoMap()
   @IsOptional()
   @IsString()
   cardUuid?: string;
@@ -216,4 +229,5 @@ export class ApplicationUpdateServiceDto {
   dateAcknowledgedComplete?: Date | null | undefined;
   decisionDate?: Date | null | undefined;
   dateReceived: Date;
+  summary?: string;
 }

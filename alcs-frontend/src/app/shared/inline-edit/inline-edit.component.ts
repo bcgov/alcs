@@ -10,18 +10,19 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-edit',
+  selector: 'app-inline-edit[value]',
   templateUrl: './inline-edit.component.html',
   styleUrls: ['./inline-edit.component.scss'],
 })
 export class InlineEditComponent implements AfterContentChecked {
   @Input() value: string = '';
+  @Input() placeholder: string = 'Enter a value';
   @Output() save = new EventEmitter<string>();
 
-  @ViewChild('editInput') someInput!: ElementRef;
+  @ViewChild('editInput') textInput!: ElementRef;
 
   isEditing = false;
-  pendingValue = '';
+  pendingValue: undefined | string;
 
   constructor() {}
 
@@ -31,13 +32,13 @@ export class InlineEditComponent implements AfterContentChecked {
   }
 
   ngAfterContentChecked(): void {
-    if (this.someInput) {
-      this.someInput.nativeElement.focus();
+    if (this.textInput) {
+      this.textInput.nativeElement.focus();
     }
   }
 
   confirmEdit() {
-    if (this.pendingValue !== this.value) {
+    if (this.pendingValue !== this.value && this.pendingValue) {
       this.save.emit(this.pendingValue);
       this.value = this.pendingValue;
     }
@@ -47,5 +48,6 @@ export class InlineEditComponent implements AfterContentChecked {
 
   cancelEdit() {
     this.isEditing = false;
+    this.pendingValue = this.value;
   }
 }

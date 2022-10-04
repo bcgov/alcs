@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
   ApplicationMeetingDto,
@@ -17,7 +18,8 @@ import { CreateApplicationMeetingDialogComponent } from './create-application-me
   templateUrl: './application-meeting.component.html',
   styleUrls: ['./application-meeting.component.scss'],
 })
-export class ApplicationMeetingComponent implements OnInit {
+export class ApplicationMeetingComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
   displayedColumns: string[] = [
     'index',
     'meetingStartDate',
@@ -39,7 +41,7 @@ export class ApplicationMeetingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       if (application) {
         this.fileNumber = application.fileNumber;
         this.meetingService.fetch(this.fileNumber);
@@ -56,6 +58,11 @@ export class ApplicationMeetingComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
+  }
+
   async onCreate(meetingType: ApplicationMeetingTypeDto) {
     const dialog = this.dialog.open(CreateApplicationMeetingDialogComponent, {
       minWidth: '600px',
@@ -68,7 +75,7 @@ export class ApplicationMeetingComponent implements OnInit {
     });
     dialog.beforeClosed().subscribe((result) => {
       if (result) {
-        this.meetingService.fetch(this.fileNumber);
+        this.applicationDetailService.loadApplication(this.fileNumber);
       }
     });
   }
@@ -94,7 +101,7 @@ export class ApplicationMeetingComponent implements OnInit {
       });
       dialog.beforeClosed().subscribe((result) => {
         if (result) {
-          this.meetingService.fetch(this.fileNumber);
+          this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
     } else {
@@ -109,7 +116,7 @@ export class ApplicationMeetingComponent implements OnInit {
     answer.subscribe((answer) => {
       if (answer) {
         this.meetingService.delete(uuid).then(() => {
-          this.meetingService.fetch(this.fileNumber);
+          this.applicationDetailService.loadApplication(this.fileNumber);
         });
       }
     });
@@ -135,6 +142,6 @@ export class ApplicationMeetingComponent implements OnInit {
 
   async updateMeeting(uuid: any, updates: UpdateApplicationMeetingDto) {
     await this.meetingService.update(uuid, updates);
-    await this.meetingService.fetch(this.fileNumber);
+    await this.applicationDetailService.loadApplication(this.fileNumber);
   }
 }

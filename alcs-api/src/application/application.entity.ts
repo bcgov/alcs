@@ -34,6 +34,10 @@ export class Application extends Base {
   applicant: string;
 
   @AutoMap()
+  @Column({ type: 'text', nullable: true })
+  summary: string | null;
+
+  @AutoMap()
   @Column({
     type: 'timestamptz',
   })

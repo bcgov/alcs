@@ -13,7 +13,8 @@ import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 })
 export class OverviewComponent implements OnInit {
   private application?: ApplicationDetailedDto;
-  public events: TimelineEvent[] = [];
+  events: TimelineEvent[] = [];
+  summary = '';
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -32,6 +33,7 @@ export class OverviewComponent implements OnInit {
       .pipe(combineLatestWith(this.meetingService.$meetings))
       .subscribe(([application, meetings]) => {
         if (application) {
+          this.summary = application.summary || '';
           this.application = application;
           this.events = this.mapApplicationToEvents(application, meetings);
         }
@@ -116,5 +118,14 @@ export class OverviewComponent implements OnInit {
     mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
     return mappedEvents;
+  }
+
+  onSaveSummary(updatedSummary: string) {
+    if (this.application) {
+      this.applicationDetailService.updateApplication({
+        fileNumber: this.application.fileNumber,
+        summary: updatedSummary,
+      });
+    }
   }
 }

@@ -28,6 +28,7 @@ import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { InlineEditComponent } from './inline-edit/inline-edit.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
@@ -36,7 +37,14 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
 import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
 
 @NgModule({
-  declarations: [FavoriteButtonComponent, AvatarCircleComponent, MomentPipe, StartOfDayPipe, MeetingOverviewComponent],
+  declarations: [
+    FavoriteButtonComponent,
+    AvatarCircleComponent,
+    MomentPipe,
+    StartOfDayPipe,
+    MeetingOverviewComponent,
+    InlineEditComponent,
+  ],
   imports: [
     CommonModule,
     MatIconModule,
@@ -46,6 +54,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     FormsModule,
     MatTooltipModule,
   ],
+
   exports: [
     CommonModule,
     FormsModule,
@@ -76,6 +85,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MtxButtonModule,
     StartOfDayPipe,
     MatTooltipModule,
+    InlineEditComponent,
     MatAutocompleteModule,
   ],
 })
