@@ -1,6 +1,6 @@
 BEGIN;
 -- prepare pgtap
-SELECT * from plan(14);
+SELECT * from plan(18);
 
 -- prepare data
 
@@ -27,27 +27,53 @@ INSERT INTO public.application_type (uuid,audit_deleted_date_at,audit_created_at
 	 ('11111111-1111-1111-1111-111111111111',NULL,'2022-08-02 16:20:41.717',NULL,'alcs-api',NULL,'UNITTEST','UNITTEST','UNITTEST','Fill','#b2ff59','#000');
 SELECT lives_ok('insert_application_type_in_test_calculate_paused', 'should insert application_type');
 
--- create application status
-prepare insert_application_status_in_test_calculate_paused AS 
-INSERT INTO public.application_status (uuid,audit_created_by,audit_updated_by,code,description,"label",audit_deleted_date_at,audit_created_at,audit_updated_at) VALUES
-	 ('11111111-1111-1111-1111-111111111111','migration_seed',NULL,'TEST','Application test st','Incoming / Prelim Review',NULL,'2022-07-25 14:30:38.573',NULL);
-SELECT lives_ok('insert_application_status_in_test_calculate_paused', 'should insert application_status');
-
-
--- create aregion
+-- create a region
 prepare insert_application_region_in_test_calculate_paused AS
     INSERT INTO public.application_region (uuid,audit_created_by,audit_updated_by,code,description,"label",audit_deleted_date_at,audit_created_at,audit_updated_at) VALUES
         ('11111111-1111-1111-1111-111111111111','migration_seed',NULL,'TEST','Application test st','Incoming / Prelim Review',NULL,'2022-07-25 14:30:38.573',NULL);
 SELECT lives_ok('insert_application_region_in_test_calculate_paused', 'should insert application_region');
 
+prepare insert_application_local_government_in_test_calculate_paused as 
+	INSERT INTO public.application_local_government (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,"name",preferred_region_uuid) VALUES
+		('11111111-1111-1111-1111-111111111111',NULL,'2022-09-29 16:28:39.371', NULL,'unit_test',NULL,'Village of Mock','11111111-1111-1111-1111-111111111111');
+SELECT lives_ok('insert_application_local_government_in_test_calculate_paused', 'should insert application_local_government');
+
+-- create application status
+prepare insert_card_status_in_test_calculate_paused AS 
+INSERT INTO public.card_status (uuid,audit_created_by,audit_updated_by,code,description,"label",audit_deleted_date_at,audit_created_at,audit_updated_at) VALUES
+	 ('11111111-1111-1111-1111-111111111111','migration_seed',NULL,'TEST','Application test st','Incoming / Prelim Review',NULL,'2022-07-25 14:30:38.573',NULL);
+SELECT lives_ok('insert_card_status_in_test_calculate_paused', 'should insert card_status');
+
+-- create board
+prepare insert_board_in_test_calculate_paused AS
+INSERT INTO public.board (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,code,title,decision_maker) VALUES
+	 ('11111111-1111-1111-1111-111111111111',NULL,'2022-08-24 13:49:58.829', NULL,'unit_test',NULL,'mock','Mock Panel','Mock Panel');
+SELECT lives_ok('insert_board_in_test_calculate_paused', 'should insert board');	 
+
+-- create card type
+prepare insert_card_type_in_test_calculate_paused AS
+INSERT INTO public.card_type (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,"label",code,description) VALUES
+	 ('11111111-1111-1111-1111-111111111111',NULL,'2022-09-22 06:52:12.366',NULL,'migration_seed',NULL,'Mock','MOCK','Mock card type');
+SELECT lives_ok('insert_card_type_in_test_calculate_paused', 'should insert card_type');	 
+
+-- create cards
+prepare insert_cards_in_test_calculate_paused AS
+INSERT INTO public.card (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,high_priority,status_uuid,board_uuid,assignee_uuid,created_at,type_uuid) VALUES
+	 ('11111111-1111-1111-1111-111111111111',NULL,'2022-10-03 14:39:17.968667-07', NULL,'unit_test',NULL,false,'11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,'2022-10-03 14:39:17.968667-07','11111111-1111-1111-1111-111111111111'),
+	 ('22222222-2222-2222-2222-222222222222',NULL,'2022-10-03 14:39:17.968667-07', NULL,'unit_test',NULL,false,'11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,'2022-10-03 14:39:17.968667-07','11111111-1111-1111-1111-111111111111'),
+	 ('33333333-3333-3333-3333-333333333333',NULL,'2022-10-03 14:39:17.968667-07', NULL,'unit_test',NULL,false,'11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,'2022-10-03 14:39:17.968667-07','11111111-1111-1111-1111-111111111111'),
+	 ('44444444-4444-4444-4444-444444444444',NULL,'2022-10-03 14:39:17.968667-07', NULL,'unit_test',NULL,false,'11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,'2022-10-03 14:39:17.968667-07','11111111-1111-1111-1111-111111111111'),
+	 ('55555555-5555-5555-5555-555555555555',NULL,'2022-10-03 14:39:17.968667-07', NULL,'unit_test',NULL,false,'11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,'2022-10-03 14:39:17.968667-07','11111111-1111-1111-1111-111111111111');
+SELECT lives_ok('insert_cards_in_test_calculate_paused', 'should insert card');	 	 
+
 -- create application
 prepare insert_application_in_test_calculate_paused AS 
-INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,status_uuid,region_uuid,assignee_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,paused,applicant,type_uuid,date_received,date_acknowledged_complete,decision_date) VALUES
-	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393',NULL,NULL),
-	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL),
-	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 2','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL),
-	 ('44444444-4444-4444-4444-444444444444','unit_test','unit_test','44444444-4444-4444-4444-444444444444','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL),
-	 ('55555555-5555-5555-5555-555555555555','unit_test','unit_test','55555555-5555-5555-5555-555555555555','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393',false,'unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393','2022-08-12 13:06:09.393');
+INSERT INTO public.application (uuid,audit_created_by,audit_updated_by,file_number,region_uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,created_at,applicant,type_uuid,date_received,date_acknowledged_complete,decision_date, card_uuid, local_government_uuid) VALUES
+	 ('11111111-1111-1111-1111-111111111111','unit_test','unit_test','11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111',NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393','unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393',NULL,NULL, '11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111'),
+	 ('22222222-2222-2222-2222-222222222222','unit_test','unit_test','22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111',NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393','unit test 1','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL,'22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111'),
+	 ('33333333-3333-3333-3333-333333333333','unit_test','unit_test','33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111',NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393','unit test 2','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL,'33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111'),
+	 ('44444444-4444-4444-4444-444444444444','unit_test','unit_test','44444444-4444-4444-4444-444444444444','11111111-1111-1111-1111-111111111111',NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393','unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393',NULL,'44444444-4444-4444-4444-444444444444','11111111-1111-1111-1111-111111111111'),
+	 ('55555555-5555-5555-5555-555555555555','unit_test','unit_test','55555555-5555-5555-5555-555555555555','11111111-1111-1111-1111-111111111111',NULL,'2022-07-26 14:33:12.925','2022-07-26 17:37:06.292','2022-07-26 13:06:09.393','unit test 3','11111111-1111-1111-1111-111111111111', '2022-07-26 13:06:09.393','2022-07-26 13:06:09.393','2022-08-12 13:06:09.393','55555555-5555-5555-5555-555555555555','11111111-1111-1111-1111-111111111111');
 SELECT lives_ok('insert_application_in_test_calculate_paused', 'should insert application');
 
 -- create application paused

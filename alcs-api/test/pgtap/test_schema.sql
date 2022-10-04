@@ -1,11 +1,14 @@
 
 BEGIN;
 -- prepare pgtap
-SELECT * from plan(8);
+SELECT * from plan(11);
 
-SELECT has_table('application_status');
+SELECT has_table('card_status');
+SELECT has_table('card');
+SELECT has_table('card_type');
+SELECT has_table('board');
 SELECT has_table('application_type');
-SELECT has_table('application_history');
+SELECT has_table('card_history');
 SELECT has_table('application_paused');
 SELECT has_table('application');
 SELECT has_table('user');
