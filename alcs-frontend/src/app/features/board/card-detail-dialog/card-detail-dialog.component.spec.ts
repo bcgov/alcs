@@ -65,6 +65,7 @@ describe('CardDetailDialogComponent', () => {
     status: 'STATUS',
     region: 'REGION',
     localGovernment: 'Local Government',
+    summary: 'MOCK SUMMARY',
     assignee: mockAssignee,
     activeDays: 10,
     pausedDays: 5,

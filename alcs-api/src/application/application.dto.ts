@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  MaxLength,
 } from 'class-validator';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
@@ -113,6 +114,13 @@ export class ApplicationDto {
   @IsString()
   localGovernment: string;
 
+  @IsString()
+  @MaxLength(400, {
+    message: 'Summary is too long',
+  })
+  @IsOptional()
+  summary?: string;
+
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
@@ -193,4 +201,9 @@ export class ApplicationUpdateDto {
   @IsBoolean()
   @IsOptional()
   highPriority?: boolean;
+
+  @AutoMap()
+  @IsString()
+  @IsOptional()
+  summary?: string;
 }

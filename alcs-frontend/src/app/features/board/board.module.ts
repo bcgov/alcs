@@ -9,7 +9,6 @@ import { CommentComponent } from '../../shared/commenting/comment.component';
 import { CommentsComponent } from '../../shared/commenting/comments.component';
 import { DragDropBoardComponent } from '../../shared/drag-drop-board/drag-drop-board.component';
 import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pipe';
-import { InlineEditComponent } from '../../shared/inline-edit/inline-edit.component';
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
@@ -32,7 +31,6 @@ const routes: Routes = [
     CardDetailDialogComponent,
     CreateCardDialogComponent,
     CardComponent,
-    InlineEditComponent,
     CommentComponent,
     CommentsComponent,
     MentionTextareaComponent,
