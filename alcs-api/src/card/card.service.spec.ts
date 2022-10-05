@@ -3,14 +3,18 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Board } from '../board/board.entity';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
-import { initCardMockEntity } from '../common/utils/test-helpers/mockEntities';
+import {
+  initBoardMockEntity,
+  initCardMockEntity,
+} from '../common/utils/test-helpers/mockEntities';
 import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
 import { CardType } from './card-type/card-type.entity';
-import { CardUpdateServiceDto } from './card.dto';
+import { CardCreateDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
 
@@ -87,7 +91,50 @@ describe('CardService', () => {
     expect(cardRepositoryMock.save).toBeCalledTimes(0);
   });
 
-  // it('should successfully create card', async () => {
+  it('should call save when card successfully create', async () => {
+    const cardToCreate = {
+      boardCode: 'fake-board',
+      typeCode: 'fake-type',
+    } as CardCreateDto;
 
-  // });
+    const board = {
+      ...initBoardMockEntity(),
+      uuid: 'fake',
+      code: 'fake-board',
+      statuses: [{ order: 0, status: { code: 'fake-status', uuid: 'fake' } }],
+    } as Board;
+
+    cardTypeRepositoryMock.findOneOrFail.mockReturnValue({
+      code: 'fake-type',
+      uuid: 'fake',
+    });
+
+    await service.create(cardToCreate, board);
+
+    expect(cardRepositoryMock.save).toBeCalledTimes(1);
+  });
+
+  it('should fail on create if type does not exist', async () => {
+    const cardToCreate = {
+      boardCode: 'fake-board',
+      typeCode: 'fake-type',
+    } as CardCreateDto;
+
+    const board = {
+      ...initBoardMockEntity(),
+      uuid: 'fake',
+      code: 'fake-board',
+      statuses: [{ order: 0, status: { code: 'fake-status', uuid: 'fake' } }],
+    } as Board;
+
+    cardTypeRepositoryMock.findOneOrFail.mockReturnValue(undefined);
+
+    await expect(service.create(cardToCreate, board)).rejects.toMatchObject(
+      new ServiceValidationException(
+        `Provided type does not exist ${cardToCreate.typeCode}`,
+      ),
+    );
+
+    expect(cardRepositoryMock.save).toBeCalledTimes(0);
+  });
 });
