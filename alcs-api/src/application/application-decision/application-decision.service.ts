@@ -37,7 +37,7 @@ export class ApplicationDecisionService {
       );
     }
 
-    return this.appDecisionRepository.find({
+    const records = await this.appDecisionRepository.find({
       where: { applicationUuid: application.uuid },
       order: {
         date: 'DESC',
@@ -56,6 +56,14 @@ export class ApplicationDecisionService {
         },
       },
     });
+
+    //Filter out documents where the document was deleted
+    return records.map((record) => {
+      record.documents = record.documents.filter(
+        (document) => !!document.document,
+      );
+      return record;
+    });
   }
 
   get(uuid) {
@@ -69,24 +77,51 @@ export class ApplicationDecisionService {
   }
 
   async update(uuid: string, updateData: UpdateApplicationDecisionDto) {
-    const decisionMeeting = await this.appDecisionRepository.findOne({
+    const existingDecision = await this.appDecisionRepository.findOne({
       where: {
         uuid,
       },
+      relations: {
+        application: true,
+      },
     });
 
-    if (!decisionMeeting) {
+    if (!existingDecision) {
       throw new ServiceNotFoundException(
         `Decison Meeting with UUID ${uuid} not found`,
       );
     }
 
-    decisionMeeting.date = new Date(updateData.date);
-    decisionMeeting.outcome = await this.getOutcomeByCode(updateData.outcome);
+    let dateHasChanged = false;
+    if (existingDecision.date !== new Date(updateData.date)) {
+      dateHasChanged = true;
+      existingDecision.date = new Date(updateData.date);
+    }
 
-    await this.appDecisionRepository.save(decisionMeeting);
+    existingDecision.outcome = await this.getOutcomeByCode(updateData.outcome);
+    const updatedDecision = await this.appDecisionRepository.save(
+      existingDecision,
+    );
 
-    return this.get(decisionMeeting.uuid);
+    //If we are updating the date, we need to check if it's the first decision and if so update the application decisionDate
+    if (dateHasChanged) {
+      const existingDecisions = await this.getByAppFileNumber(
+        existingDecision.application.fileNumber,
+      );
+
+      const decisionIndex = existingDecisions.findIndex(
+        (dec) => dec.uuid === existingDecision.uuid,
+      );
+
+      if (decisionIndex === existingDecisions.length - 1) {
+        await this.applicationService.createOrUpdate({
+          decisionDate: updatedDecision.date,
+          fileNumber: existingDecision.application.fileNumber,
+        });
+      }
+    }
+
+    return this.get(existingDecision.uuid);
   }
 
   async create(
@@ -99,16 +134,49 @@ export class ApplicationDecisionService {
       application,
     });
 
+    const existingDecisions = await this.getByAppFileNumber(
+      application.fileNumber,
+    );
+    if (existingDecisions.length === 0) {
+      await this.applicationService.createOrUpdate({
+        decisionDate: decision.date,
+        fileNumber: application.fileNumber,
+      });
+    }
+
     const savedDecision = await this.appDecisionRepository.save(decision);
+
     return this.get(savedDecision.uuid);
   }
 
   async delete(uuid) {
-    const applicationDecision = await this.get(uuid);
+    const applicationDecision = await this.appDecisionRepository.findOne({
+      where: { uuid },
+      relations: {
+        outcome: true,
+        documents: true,
+        application: true,
+      },
+    });
     for (const document of applicationDecision.documents) {
-      await this.deleteDocument(document.uuid);
+      await this.documentService.softRemove(document.document);
     }
-    return this.appDecisionRepository.softRemove([applicationDecision]);
+    await this.appDecisionRepository.softRemove([applicationDecision]);
+
+    const existingDecisions = await this.getByAppFileNumber(
+      applicationDecision.application.fileNumber,
+    );
+    if (existingDecisions.length === 0) {
+      await this.applicationService.createOrUpdate({
+        decisionDate: null,
+        fileNumber: applicationDecision.application.fileNumber,
+      });
+    } else {
+      await this.applicationService.createOrUpdate({
+        decisionDate: existingDecisions[existingDecisions.length - 1].date,
+        fileNumber: applicationDecision.application.fileNumber,
+      });
+    }
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {
@@ -118,7 +186,7 @@ export class ApplicationDecisionService {
       },
     });
     if (!decision) {
-      throw new ServiceNotFoundException(`Decision not Found ${decisionUuid}`);
+      throw new ServiceNotFoundException(`Decision not found ${decisionUuid}`);
     }
 
     const document = await this.documentService.create(

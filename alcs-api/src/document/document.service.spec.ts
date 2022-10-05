@@ -1,19 +1,15 @@
-import {
-  DeleteObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from '@aws-sdk/client-s3';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { mockClient } from 'aws-sdk-client-mock';
 import * as config from 'config';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { User } from '../user/user.entity';
 import { Document } from './document.entity';
 import { DocumentService } from './document.service';
-import { mockClient } from 'aws-sdk-client-mock';
 
 describe('DocumentService', () => {
   let service: DocumentService;
@@ -67,8 +63,7 @@ describe('DocumentService', () => {
   });
 
   it('should delete from s3 and repo on delete', async () => {
-    const stub = mockS3Client.on(DeleteObjectCommand).resolves({});
-    mockRepository.delete.mockResolvedValue({} as DeleteResult);
+    mockRepository.softRemove.mockResolvedValue({} as any);
 
     const documentUuid = 'fake-uuid';
 
@@ -76,7 +71,6 @@ describe('DocumentService', () => {
       uuid: documentUuid,
     } as Document);
 
-    expect(stub.calls().length).toBe(1);
-    expect(mockRepository.delete).toHaveBeenCalled();
+    expect(mockRepository.softRemove).toHaveBeenCalled();
   });
 });

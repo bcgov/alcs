@@ -22,7 +22,7 @@ import { ApplicationService } from '../application.service';
 import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutComeDto,
+  ApplicationDecisionOutcomeDto,
   CreateApplicationDecisionDto,
   DecisionDocumentDto,
   UpdateApplicationDecisionDto,
@@ -45,7 +45,7 @@ export class ApplicationDecisionController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getAllForApplication(@Param('fileNumber') fileNumber): Promise<{
     decisions: ApplicationDecisionDto[];
-    codes: ApplicationDecisionOutComeDto[];
+    codes: ApplicationDecisionOutcomeDto[];
   }> {
     const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
@@ -59,7 +59,7 @@ export class ApplicationDecisionController {
     const mappedCodes = this.mapper.mapArray(
       codes,
       ApplicationDecisionOutcome,
-      ApplicationDecisionOutComeDto,
+      ApplicationDecisionOutcomeDto,
     );
 
     return {
@@ -126,31 +126,25 @@ export class ApplicationDecisionController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
-    return this.appDecisionService.delete(uuid);
+    return await this.appDecisionService.delete(uuid);
   }
 
   @Post('/:uuid/file')
   @UserRoles(...ANY_AUTH_ROLE)
-  async attachDocument(
-    @Param('uuid') decisionUuid: string,
-    @Param('documentType') documentType: string,
-    @Req() req,
-  ): Promise<DecisionDocumentDto> {
+  async attachDocument(@Param('uuid') decisionUuid: string, @Req() req) {
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
 
     const file = await req.file();
-    const savedDocument = await this.appDecisionService.attachDocument(
+    await this.appDecisionService.attachDocument(
       decisionUuid,
       file,
       req.user.entity,
     );
-    return this.mapper.map(
-      savedDocument,
-      DecisionDocument,
-      DecisionDocumentDto,
-    );
+    return {
+      uploaded: true,
+    };
   }
 
   @Get('/:uuid/file/:fileUuid/download')
@@ -187,14 +181,10 @@ export class ApplicationDecisionController {
   async deleteDocument(
     @Param('uuid') decisionUuid: string,
     @Param('fileUuid') documentUuid: string,
-  ): Promise<DecisionDocumentDto> {
-    const savedDocument = await this.appDecisionService.deleteDocument(
-      documentUuid,
-    );
-    return this.mapper.map(
-      savedDocument,
-      DecisionDocument,
-      DecisionDocumentDto,
-    );
+  ) {
+    await this.appDecisionService.deleteDocument(documentUuid);
+    return {
+      deleted: true,
+    };
   }
 }

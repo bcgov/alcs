@@ -3,19 +3,18 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { application } from 'express';
 import { ClsService } from 'nestjs-cls';
-import { Board } from '../../board/board.entity';
+import { CodeService } from '../../code/code.service';
+import { ApplicationDecisionProfile } from '../../common/automapper/application-decision.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import {
-  initApplicationDecisionMeetingMock,
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationCodeService } from '../application-code/application-code.service';
 import { ApplicationService } from '../application.service';
+import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision.controller';
 import {
   CreateApplicationDecisionDto,
@@ -27,12 +26,12 @@ describe('ApplicationDecisionController', () => {
   let controller: ApplicationDecisionController;
   let mockDecisionService: DeepMocked<ApplicationDecisionService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
-  let mockApplicationCodeService: DeepMocked<ApplicationCodeService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockDecisionService = createMock<ApplicationDecisionService>();
     mockApplicationService = createMock<ApplicationService>();
-    mockApplicationCodeService = createMock<ApplicationCodeService>();
+    mockCodeService = createMock<CodeService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -40,9 +39,10 @@ describe('ApplicationDecisionController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationDecisionController, ApplicationProfile],
+      controllers: [ApplicationDecisionController],
       providers: [
         ApplicationProfile,
+        ApplicationDecisionProfile,
         UserProfile,
         {
           provide: ApplicationDecisionService,
@@ -53,8 +53,8 @@ describe('ApplicationDecisionController', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: ApplicationCodeService,
-          useValue: mockApplicationCodeService,
+          provide: CodeService,
+          useValue: mockCodeService,
         },
         {
           provide: ClsService,
@@ -67,6 +67,14 @@ describe('ApplicationDecisionController', () => {
     controller = module.get<ApplicationDecisionController>(
       ApplicationDecisionController,
     );
+
+    mockDecisionService.getCodeMapping.mockResolvedValue([
+      {
+        uuid: 'code-uuid',
+        code: 'decision-code',
+        label: 'decision-label',
+      } as ApplicationDecisionOutcome,
+    ]);
   });
 
   it('should be defined', () => {
@@ -77,13 +85,14 @@ describe('ApplicationDecisionController', () => {
     const mockApplication = initApplicationMockEntity();
     const mockDecision = initApplicationDecisionMock(mockApplication);
     mockDecisionService.getByAppFileNumber.mockResolvedValue([mockDecision]);
+
     const result = await controller.getAllForApplication('fake-number');
 
     expect(mockDecisionService.getByAppFileNumber).toBeCalledTimes(1);
-    expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
+    expect(result.decisions[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
-  it('should get a specific meeting', async () => {
+  it('should get a specific decision', async () => {
     const mockApplication = initApplicationMockEntity();
     const mockDecision = initApplicationDecisionMock(mockApplication);
     mockDecisionService.get.mockResolvedValue(mockDecision);
@@ -93,8 +102,8 @@ describe('ApplicationDecisionController', () => {
     expect(result.uuid).toStrictEqual(mockDecision.uuid);
   });
 
-  it('should delete meeting', async () => {
-    mockDecisionService.delete.mockReturnValue({} as any);
+  it('should call through for deletion', async () => {
+    mockDecisionService.delete.mockResolvedValue({} as any);
 
     await controller.delete('fake-uuid');
 
@@ -102,12 +111,11 @@ describe('ApplicationDecisionController', () => {
     expect(mockDecisionService.delete).toBeCalledWith('fake-uuid');
   });
 
-  it('should create meeting if application exists', async () => {
+  it('should create the decision if application exists', async () => {
     const appMock = initApplicationMockEntity();
     const mockDecision = initApplicationDecisionMock(appMock);
     mockApplicationService.get.mockResolvedValue(appMock);
     mockDecisionService.create.mockResolvedValue(mockDecision);
-    mockApplicationCodeService = createMock<ApplicationCodeService>();
 
     const decisionToCreate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -158,5 +166,43 @@ describe('ApplicationDecisionController', () => {
       outcome: 'New Outcome',
       date: updates.date,
     });
+  });
+
+  it('should call through for attaching the document', async () => {
+    mockDecisionService.attachDocument.mockResolvedValue({} as any);
+    await controller.attachDocument('fake-uuid', {
+      file: () => ({}),
+      isMultipart: () => true,
+      user: {
+        entity: {},
+      },
+    });
+
+    expect(mockDecisionService.attachDocument).toBeCalledTimes(1);
+  });
+
+  it('should call through for getting download url', async () => {
+    const fakeUrl = 'fake-url';
+    mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    const res = await controller.getDownloadUrl('fake-uuid', 'document-uuid');
+
+    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for getting open url', async () => {
+    const fakeUrl = 'fake-url';
+    mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    const res = await controller.getOpenUrl('fake-uuid', 'document-uuid');
+
+    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for document deletion', async () => {
+    mockDecisionService.deleteDocument.mockResolvedValue({} as any);
+    await controller.deleteDocument('fake-uuid', 'document-uuid');
+
+    expect(mockDecisionService.deleteDocument).toBeCalledTimes(1);
   });
 });

@@ -13,7 +13,7 @@
             formControlName="startDate"
             name="startDate"
             required
-            [min]="minDate"
+            [min]="minDate | startOfDay"
           />
           <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #startDatePicker type="date"> </mat-datepicker>

@@ -68,8 +68,10 @@ describe('ApplicationController', () => {
     cardService = createMock<CardService>();
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ApplicationController, ApplicationProfile, UserProfile],
+      controllers: [ApplicationController],
       providers: [
+        ApplicationProfile,
+        UserProfile,
         {
           provide: ApplicationService,
           useValue: applicationService,

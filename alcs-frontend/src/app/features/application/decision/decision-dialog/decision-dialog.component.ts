@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutComeDto,
+  ApplicationDecisionOutcomeDto,
 } from '../../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 
@@ -26,7 +26,7 @@ export class DecisionDialogComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileNumber: string;
-      codes: ApplicationDecisionOutComeDto[];
+      codes: ApplicationDecisionOutcomeDto[];
       existingDecision?: ApplicationDecisionDto;
       minDate?: Date;
     },

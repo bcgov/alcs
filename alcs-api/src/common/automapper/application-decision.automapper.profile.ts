@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationDecisionOutcome } from '../../application/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutComeDto,
+  ApplicationDecisionOutcomeDto,
   DecisionDocumentDto,
 } from '../../application/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
@@ -43,7 +43,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
       createMap(
         mapper,
         ApplicationDecisionOutcome,
-        ApplicationDecisionOutComeDto,
+        ApplicationDecisionOutcomeDto,
       );
 
       createMap(

@@ -42,8 +42,9 @@ describe('ApplicationMeetingController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationMeetingController, ApplicationProfile],
+      controllers: [ApplicationMeetingController],
       providers: [
+        ApplicationProfile,
         {
           provide: ApplicationMeetingService,
           useValue: mockMeetingService,

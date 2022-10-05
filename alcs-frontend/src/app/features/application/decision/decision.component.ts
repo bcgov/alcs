@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutComeDto,
+  ApplicationDecisionOutcomeDto,
 } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -18,7 +18,7 @@ export class DecisionComponent implements OnInit {
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: ApplicationDecisionDto[] = [];
-  codes: ApplicationDecisionOutComeDto[] = [];
+  codes: ApplicationDecisionOutcomeDto[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -53,8 +53,6 @@ export class DecisionComponent implements OnInit {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
 
-    debugger;
-
     this.dialog
       .open(DecisionDialogComponent, {
         minWidth: '600px',
@@ -70,7 +68,7 @@ export class DecisionComponent implements OnInit {
       .afterClosed()
       .subscribe((didCreate) => {
         if (didCreate) {
-          this.loadDecisions(this.fileNumber);
+          this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
   }
@@ -97,14 +95,14 @@ export class DecisionComponent implements OnInit {
       .afterClosed()
       .subscribe((didCreate) => {
         if (didCreate) {
-          this.loadDecisions(this.fileNumber);
+          this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
   }
 
   async deleteDecision(uuid: string) {
     await this.decisionService.delete(uuid);
-    await this.loadDecisions(this.fileNumber);
+    this.applicationDetailService.loadApplication(this.fileNumber);
     this.toastService.showSuccessToast('Decision deleted');
   }
 

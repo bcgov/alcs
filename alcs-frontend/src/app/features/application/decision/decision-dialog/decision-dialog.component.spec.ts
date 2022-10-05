@@ -5,6 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
+import { StartOfDayPipe } from '../../../../shared/pipes/startOfDay.pipe';
 import { DecisionDialogComponent } from './decision-dialog.component';
 
 describe('DecisionDialogComponent', () => {
@@ -13,7 +14,7 @@ describe('DecisionDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DecisionDialogComponent, MomentPipe],
+      declarations: [DecisionDialogComponent, MomentPipe, StartOfDayPipe],
       providers: [
         {
           provide: ApplicationDecisionService,

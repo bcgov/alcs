@@ -24,4 +24,4 @@ export interface DecisionDocumentDto {
   uploadedAt: number;
 }
 
-export interface ApplicationDecisionOutComeDto extends BaseCodeDto {}
+export interface ApplicationDecisionOutcomeDto extends BaseCodeDto {}

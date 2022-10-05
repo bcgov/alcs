@@ -6,7 +6,7 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutComeDto,
+  ApplicationDecisionOutcomeDto,
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
@@ -21,11 +21,11 @@ export class ApplicationDecisionService {
 
   async fetchByApplication(fileNumber: string) {
     let decisions: ApplicationDecisionDto[] = [];
-    let codes: ApplicationDecisionOutComeDto[] = [];
+    let codes: ApplicationDecisionOutcomeDto[] = [];
 
     try {
       const res = await firstValueFrom(
-        this.http.get<{ decisions: ApplicationDecisionDto[]; codes: ApplicationDecisionOutComeDto[] }>(
+        this.http.get<{ decisions: ApplicationDecisionDto[]; codes: ApplicationDecisionOutcomeDto[] }>(
           `${this.url}/application/${fileNumber}`
         )
       );
@@ -56,15 +56,6 @@ export class ApplicationDecisionService {
     } catch (e) {
       this.toastService.showErrorToast(`Failed to create decision`);
     }
-  }
-
-  fetchOne(uuid: string) {
-    try {
-      return firstValueFrom(this.http.get<ApplicationDecisionDto>(`${this.url}/meeting/${uuid}`));
-    } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch meetings');
-    }
-    return;
   }
 
   async delete(uuid: string) {
