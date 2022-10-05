@@ -12,13 +12,12 @@
   display: flex;
   align-content: center;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 4px;
 }
 
 .application-type {
   display: inline-block;
-  margin-left: 16px;
+  margin-left: 4px;
   border-radius: 10px;
   padding: 0 14px;
   font-size: 11px;
@@ -26,6 +25,10 @@
   font-weight: 700;
   line-height: 24px;
   vertical-align: middle;
+}
+
+.card-title {
+  margin-right: 2rem !important;
 }
 
 .time-tracking {

@@ -6,24 +6,29 @@
   margin-right: -12px;
   display: flex;
   justify-content: right;
-  margin-bottom: 16px;
 }
 
 .header-row {
   display: flex;
   align-content: center;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 4px;
 }
 
 .application-type {
-  margin-left: 16px;
+  display: inline-block;
+  margin-left: 4px;
   border-radius: 10px;
   padding: 0 14px;
   font-size: 11px;
   letter-spacing: 0.01em;
   font-weight: 700;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+.card-title {
+  margin-right: 2rem !important;
 }
 
 .icon {
@@ -105,7 +110,5 @@
 }
 
 .card-comments-wrapper {
-  max-height: 350px;
-  overflow-y: auto;
   margin-top: 36px;
 }

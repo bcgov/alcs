@@ -146,10 +146,10 @@ export class BoardComponent implements OnInit {
       };
 
       const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
-        minHeight: '500px',
         minWidth: '600px',
-        maxWidth: '800px',
-        width: '70%',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
         data: reconCard,
       });
 
