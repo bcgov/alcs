@@ -21,6 +21,7 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
     update: jest.fn((entity) => [entity]),
     softRemove: jest.fn((entity) => [entity]),
     remove: jest.fn((entity) => [entity]),
+    findOneOrFail: jest.fn((entity) => entity),
   }),
 );
 

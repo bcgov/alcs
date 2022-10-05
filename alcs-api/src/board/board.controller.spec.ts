@@ -7,8 +7,10 @@ import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
+import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { BoardController } from './board.controller';
+import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
 describe('BoardController', () => {
@@ -86,5 +88,36 @@ describe('BoardController', () => {
     expect(boardService.changeBoard).toHaveBeenCalled();
     expect(boardService.changeBoard.mock.calls[0][0]).toEqual(cardUuid);
     expect(boardService.changeBoard.mock.calls[0][1]).toEqual(boardCode);
+  });
+
+  it('should call service when creating card', async () => {
+    boardService.getOne.mockResolvedValue({} as Board);
+    cardService.create.mockResolvedValue({} as Card);
+
+    const boardCode = 'fake-board';
+    const typeCode = 'fake-type';
+    await controller.createCard({ typeCode, boardCode });
+
+    expect(cardService.create).toHaveBeenCalledTimes(1);
+    expect(cardService.create.mock.calls[0][0]).toEqual({
+      typeCode,
+      boardCode,
+    });
+    expect(cardService.create.mock.calls[0][1]).toEqual({});
+  });
+
+  it('should fail call create card when board does not exist', async () => {
+    boardService.getOne.mockResolvedValue(undefined);
+    cardService.create.mockResolvedValue({} as Card);
+
+    const boardCode = 'fake-board';
+    const typeCode = 'fake-type';
+    await expect(
+      controller.createCard({ typeCode, boardCode }),
+    ).rejects.toMatchObject(
+      new ServiceValidationException(`Board with code ${boardCode} not found`),
+    );
+
+    expect(cardService.create).toHaveBeenCalledTimes(0);
   });
 });
