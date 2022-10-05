@@ -124,7 +124,7 @@ export class Application extends Base {
     () => ApplicationDocument,
     (appDocument) => appDocument.application,
   )
-  decisionDocuments: ApplicationDocument[];
+  documents: ApplicationDocument[];
 
   @AutoMap()
   @OneToOne(() => Card, { cascade: true })

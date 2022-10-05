@@ -29,4 +29,24 @@ export class ApplicationDecisionDto extends CreateApplicationDecisionDto {
   @AutoMap()
   @IsString()
   uuid: string;
+
+  @AutoMap()
+  documents: DecisionDocumentDto[];
+}
+
+export class DecisionDocumentDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  fileName: string;
+
+  @AutoMap()
+  mimeType: string;
+
+  @AutoMap()
+  uploadedBy: string;
+
+  @AutoMap()
+  uploadedAt: number;
 }

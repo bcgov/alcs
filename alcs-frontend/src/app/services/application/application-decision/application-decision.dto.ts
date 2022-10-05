@@ -1,5 +1,6 @@
 export interface ApplicationDecisionDto extends CreateApplicationDecisionDto {
   uuid: string;
+  documents: DecisionDocumentDto[];
 }
 
 export interface CreateApplicationDecisionDto {
@@ -11,4 +12,12 @@ export interface CreateApplicationDecisionDto {
 export interface UpdateApplicationDecisionDto {
   date: number;
   outcome: string;
+}
+
+export interface DecisionDocumentDto {
+  uuid: string;
+  fileName: string;
+  mimeType: string;
+  uploadedBy: string;
+  uploadedAt: number;
 }

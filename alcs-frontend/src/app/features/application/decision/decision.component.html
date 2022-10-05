@@ -4,10 +4,15 @@
 </div>
 <section class="decision" *ngFor="let decision of decisions; let i = index">
   <div *ngIf="decisions.length - 1 !== i" class="recon-label">Recon</div>
+  <input hidden type="file" #file (change)="attachFile(decision.uuid, $event)" placeholder="Upload file" />
   <div class="decision-menu">
-    <button matTooltip="Attach Document" mat-icon-button><mat-icon>attach_file</mat-icon></button>
+    <button (click)="file.click()" matTooltip="Attach Document" mat-icon-button>
+      <mat-icon>attach_file</mat-icon>
+    </button>
     <button (click)="onEdit(decision)" matTooltip="Edit Decision" mat-icon-button><mat-icon>edit</mat-icon></button>
-    <button (click)="deleteDecision(decision.uuid)" matTooltip="Delete Decision" mat-icon-button><mat-icon>delete</mat-icon></button>
+    <button (click)="deleteDecision(decision.uuid)" matTooltip="Delete Decision" mat-icon-button>
+      <mat-icon>delete</mat-icon>
+    </button>
   </div>
   <div class="body-large">Decision #{{ decisions.length - i }}</div>
   <div class="decision-content">
@@ -25,5 +30,19 @@
     <div class="subheading2">File Name</div>
     <div class="subheading2">File Upload Date</div>
     <div class="subheading2">File Actions</div>
+    <ng-container *ngFor="let document of decision.documents">
+      <div>
+        <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
+      </div>
+      <div>{{ document.uploadedAt | momentFormat }}</div>
+      <div class="file-actions">
+        <button matTooltip="Download File" mat-icon-button (click)="downloadFile(decision.uuid, document.uuid, document.fileName)">
+          <mat-icon>download</mat-icon>
+        </button>
+        <button matTooltip="Delete File"  class="delete-file-icon" mat-icon-button (click)="deleteFile(decision.uuid, document.uuid)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </ng-container>
   </div>
 </section>

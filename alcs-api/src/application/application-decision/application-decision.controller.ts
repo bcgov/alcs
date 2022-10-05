@@ -1,6 +1,7 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,6 +10,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
@@ -20,10 +22,12 @@ import { ApplicationService } from '../application.service';
 import {
   ApplicationDecisionDto,
   CreateApplicationDecisionDto,
+  DecisionDocumentDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
+import { DecisionDocument } from './decision-document.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -40,11 +44,11 @@ export class ApplicationDecisionController {
   async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationDecisionDto[]> {
-    const meetings = await this.appDecisionService.getByAppFileNumber(
+    const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
     );
     return this.mapper.mapArrayAsync(
-      meetings,
+      decisions,
       ApplicationDecision,
       ApplicationDecisionDto,
     );
@@ -109,5 +113,74 @@ export class ApplicationDecisionController {
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
     return this.appDecisionService.delete(uuid);
+  }
+
+  @Post('/:uuid/file')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async attachDocument(
+    @Param('uuid') decisionUuid: string,
+    @Param('documentType') documentType: string,
+    @Req() req,
+  ): Promise<DecisionDocumentDto> {
+    if (!req.isMultipart()) {
+      throw new BadRequestException('Request is not multipart');
+    }
+
+    const file = await req.file();
+    const savedDocument = await this.appDecisionService.attachDocument(
+      decisionUuid,
+      file,
+      req.user.entity,
+    );
+    return this.mapper.map(
+      savedDocument,
+      DecisionDocument,
+      DecisionDocumentDto,
+    );
+  }
+
+  @Get('/:uuid/file/:fileUuid/download')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getDownloadUrl(
+    @Param('uuid') decisionUuid: string,
+    @Param('fileUuid') documentUuid: string,
+  ) {
+    const downloadUrl = await this.appDecisionService.getDownloadUrl(
+      documentUuid,
+    );
+    return {
+      url: downloadUrl,
+    };
+  }
+
+  @Get('/:uuid/file/:fileUuid/open')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getOpenUrl(
+    @Param('uuid') decisionUuid: string,
+    @Param('fileUuid') documentUuid: string,
+  ) {
+    const downloadUrl = await this.appDecisionService.getDownloadUrl(
+      documentUuid,
+      true,
+    );
+    return {
+      url: downloadUrl,
+    };
+  }
+
+  @Delete('/:uuid/file/:fileUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async deleteDocument(
+    @Param('uuid') decisionUuid: string,
+    @Param('fileUuid') documentUuid: string,
+  ): Promise<DecisionDocumentDto> {
+    const savedDocument = await this.appDecisionService.deleteDocument(
+      documentUuid,
+    );
+    return this.mapper.map(
+      savedDocument,
+      DecisionDocument,
+      DecisionDocumentDto,
+    );
   }
 }

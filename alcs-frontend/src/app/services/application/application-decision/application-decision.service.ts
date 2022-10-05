@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationDecisionDto,
@@ -66,5 +67,35 @@ export class ApplicationDecisionService {
     } catch (err) {
       this.toastService.showErrorToast('Failed to delete meeting');
     }
+  }
+
+  async uploadFile(decisionUuid: string, file: File) {
+    if (file.size > environment.maxFileSize) {
+      const niceSize = environment.maxFileSize / 1048576;
+      this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
+      return;
+    }
+
+    let formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    const res = await firstValueFrom(this.http.post(`${this.url}/${decisionUuid}/file`, formData));
+    this.toastService.showSuccessToast('Decision document uploaded');
+    return res;
+  }
+
+  async downloadFile(decisionUuid: string, documentUuid: string, fileName: string, isInline = true) {
+    const url = `${this.url}/${decisionUuid}/file/${documentUuid}`;
+    const finalUrl = isInline ? `${url}/open` : `${url}/download`;
+    const data = await firstValueFrom(this.http.get<{ url: string }>(finalUrl));
+    if (isInline) {
+      openFileInline(data.url, fileName);
+    } else {
+      downloadFileFromUrl(data.url, fileName);
+    }
+  }
+
+  async deleteFile(decisionUuid: string, documentUuid: string) {
+    const url = `${this.url}/${decisionUuid}/file/${documentUuid}`;
+    return await firstValueFrom(this.http.delete<{ url: string }>(url));
   }
 }

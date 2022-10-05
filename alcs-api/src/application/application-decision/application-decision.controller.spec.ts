@@ -142,7 +142,7 @@ describe('ApplicationDecisionController', () => {
     expect(mockDecisionService.create).toBeCalledTimes(0);
   });
 
-  it('should update meeting', async () => {
+  it('should update the decision', async () => {
     const appMock = initApplicationMockEntity();
     const mockDecision = initApplicationDecisionMock(appMock);
     mockDecisionService.update.mockResolvedValue(mockDecision);

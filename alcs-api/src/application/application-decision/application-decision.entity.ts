@@ -1,7 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { ApplicationDocument } from '../application-document/application-document.entity';
 import { Application } from '../application.entity';
+import { DecisionDocument } from './decision-document.entity';
 
 @Entity()
 export class ApplicationDecision extends Base {
@@ -27,4 +29,10 @@ export class ApplicationDecision extends Base {
   @AutoMap()
   @Column()
   applicationUuid: string;
+
+  @AutoMap()
+  @OneToMany(() => DecisionDocument, (document) => document.decision, {
+    cascade: ['remove'],
+  })
+  documents: DecisionDocument[];
 }

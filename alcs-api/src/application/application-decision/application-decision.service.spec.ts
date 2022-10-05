@@ -7,6 +7,7 @@ import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
+import { DocumentService } from '../../document/document.service';
 import { ApplicationService } from '../application.service';
 import {
   CreateApplicationDecisionDto,
@@ -14,29 +15,42 @@ import {
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
+import { DecisionDocument } from './decision-document.entity';
 
 describe('ApplicationDecisionService', () => {
   let service: ApplicationDecisionService;
-  let mockAppDecisionRepository: DeepMocked<Repository<ApplicationDecision>>;
+  let mockDecisionRepository: DeepMocked<Repository<ApplicationDecision>>;
+  let mockDecisionDocumentRepository: DeepMocked<Repository<DecisionDocument>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let mockApplication;
   let mockDecision;
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
-    mockAppDecisionRepository = createMock<Repository<ApplicationDecision>>();
+    mockDocumentService = createMock<DocumentService>();
+    mockDecisionRepository = createMock<Repository<ApplicationDecision>>();
+    mockDecisionDocumentRepository = createMock<Repository<DecisionDocument>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationDecisionService,
         {
           provide: getRepositoryToken(ApplicationDecision),
-          useValue: mockAppDecisionRepository,
+          useValue: mockDecisionRepository,
+        },
+        {
+          provide: getRepositoryToken(DecisionDocument),
+          useValue: mockDecisionDocumentRepository,
         },
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compile();
@@ -48,9 +62,9 @@ describe('ApplicationDecisionService', () => {
     mockApplication = initApplicationMockEntity();
     mockDecision = initApplicationDecisionMock(mockApplication);
 
-    mockAppDecisionRepository.find.mockResolvedValue([mockDecision]);
-    mockAppDecisionRepository.findOne.mockResolvedValue(mockDecision);
-    mockAppDecisionRepository.save.mockResolvedValue(mockDecision);
+    mockDecisionRepository.find.mockResolvedValue([mockDecision]);
+    mockDecisionRepository.findOne.mockResolvedValue(mockDecision);
+    mockDecisionRepository.save.mockResolvedValue(mockDecision);
     mockApplicationService.get.mockResolvedValue(mockApplication);
   });
 
@@ -77,7 +91,7 @@ describe('ApplicationDecisionService', () => {
   });
 
   it('should return empty array if no meetings for application', async () => {
-    mockAppDecisionRepository.find.mockResolvedValue([]);
+    mockDecisionRepository.find.mockResolvedValue([]);
     const result = await service.getByAppFileNumber('non-existing number');
 
     expect(result).toStrictEqual([]);
@@ -90,11 +104,11 @@ describe('ApplicationDecisionService', () => {
   });
 
   it('should delete meeting with uuid', async () => {
-    mockAppDecisionRepository.softRemove.mockResolvedValue({} as any);
+    mockDecisionRepository.softRemove.mockResolvedValue({} as any);
 
     await service.delete(mockDecision.uuid);
 
-    expect(mockAppDecisionRepository.softRemove).toBeCalledTimes(1);
+    expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
   });
 
   it('should create meeting', async () => {
@@ -106,8 +120,8 @@ describe('ApplicationDecisionService', () => {
 
     await service.create(meetingToCreate, mockApplication);
 
-    expect(mockAppDecisionRepository.findOne).toBeCalledTimes(0);
-    expect(mockAppDecisionRepository.save).toBeCalledTimes(1);
+    expect(mockDecisionRepository.findOne).toBeCalledTimes(0);
+    expect(mockDecisionRepository.save).toBeCalledTimes(1);
   });
 
   it('should update meeting', async () => {
@@ -118,22 +132,22 @@ describe('ApplicationDecisionService', () => {
 
     await service.update(mockDecision.uuid, decisionUpdate);
 
-    expect(mockAppDecisionRepository.findOne).toBeCalledTimes(1);
-    expect(mockAppDecisionRepository.findOne).toBeCalledWith({
+    expect(mockDecisionRepository.findOne).toBeCalledTimes(1);
+    expect(mockDecisionRepository.findOne).toBeCalledWith({
       where: { uuid: mockDecision.uuid },
     });
-    expect(mockAppDecisionRepository.save).toBeCalledTimes(1);
+    expect(mockDecisionRepository.save).toBeCalledTimes(1);
   });
 
   it('should fail on update if meeting not found', async () => {
     const nonExistantUuid = 'bad-uuid';
-    mockAppDecisionRepository.findOne.mockReturnValue(undefined);
+    mockDecisionRepository.findOne.mockReturnValue(undefined);
     const decisionUpdate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).getTime(),
       outcome: 'New Outcome',
     } as UpdateApplicationDecisionDto;
 
-    expect(mockAppDecisionRepository.save).toBeCalledTimes(0);
+    expect(mockDecisionRepository.save).toBeCalledTimes(0);
     await expect(
       service.update(nonExistantUuid, decisionUpdate),
     ).rejects.toMatchObject(

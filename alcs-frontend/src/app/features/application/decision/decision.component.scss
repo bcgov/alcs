@@ -60,11 +60,35 @@ section {
   margin-top: 16px;
   margin-bottom: 32px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 45% 45%;
+  grid-row-gap: 16px;
+
+  div {
+    font-size: 16px !important;
+  }
+
+  .subheading2 {
+    margin-bottom: 6px !important;
+  }
 }
 
 .decision-documents {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 45% 45% 10%;
+  grid-row-gap: 4px;
+
+  div {
+    display: flex;
+    align-items: center;
+    font-size: 16px !important;
+  }
+}
+
+.file-actions {
+  margin-left: -12px;
+}
+
+.delete-file-icon {
+  color: $error-color;
 }

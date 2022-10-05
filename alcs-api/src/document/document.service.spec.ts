@@ -72,7 +72,7 @@ describe('DocumentService', () => {
 
     const documentUuid = 'fake-uuid';
 
-    await service.delete({
+    await service.softRemove({
       uuid: documentUuid,
     } as Document);
 

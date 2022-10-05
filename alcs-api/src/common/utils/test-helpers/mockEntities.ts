@@ -215,6 +215,7 @@ const initApplicationDecisionMock = (application?: Application) => {
     date: new Date(),
     uuid: 'fake-outcome-uuid',
     application,
+    documents: [],
   });
 };
 

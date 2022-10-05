@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDocumentDto } from './application-document.dto';
 
@@ -43,17 +44,10 @@ export class ApplicationDocumentService {
   async download(uuid: string, fileName: string, isInline = true) {
     const url = isInline ? `${this.url}/${uuid}/open` : `${this.url}/${uuid}/download`;
     const data = await firstValueFrom(this.http.get<{ url: string }>(url));
-    const downloadLink = document.createElement('a');
-    downloadLink.href = data.url;
-    downloadLink.download = fileName;
     if (isInline) {
-      downloadLink.target = '_blank';
+      openFileInline(data.url, fileName);
+    } else {
+      downloadFileFromUrl(data.url, fileName);
     }
-    if (window.webkitURL == null) {
-      downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
-      downloadLink.style.display = 'none';
-      document.body.appendChild(downloadLink);
-    }
-    downloadLink.click();
   }
 }

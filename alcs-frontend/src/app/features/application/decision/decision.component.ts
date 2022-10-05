@@ -89,4 +89,29 @@ export class DecisionComponent implements OnInit {
     await this.loadDecisions(this.fileNumber);
     this.toastService.showSuccessToast('Decision deleted');
   }
+
+  async attachFile(decisionUuid: string, event: Event) {
+    const element = event.target as HTMLInputElement;
+    const fileList = element.files;
+    if (fileList && fileList.length > 0) {
+      const file: File = fileList[0];
+      const uploadedFile = await this.decisionService.uploadFile(decisionUuid, file);
+      if (uploadedFile) {
+        await this.loadDecisions(this.fileNumber);
+      }
+    }
+  }
+
+  async downloadFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
+    await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName, false);
+  }
+
+  async openFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
+    await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName);
+  }
+
+  async deleteFile(decisionUuid: string, decisionDocumentUuid: string) {
+    await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
+    await this.loadDecisions(this.fileNumber);
+  }
 }

@@ -17,6 +17,7 @@ import { ApplicationDecisionMeetingService } from './application-decision-meetin
 import { ApplicationDecisionController } from './application-decision/application-decision.controller';
 import { ApplicationDecision } from './application-decision/application-decision.entity';
 import { ApplicationDecisionService } from './application-decision/application-decision.service';
+import { DecisionDocument } from './application-decision/decision-document.entity';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -40,6 +41,7 @@ import { ApplicationService } from './application.service';
       ApplicationDocument,
       ApplicationLocalGovernment,
       ApplicationDecision,
+      DecisionDocument,
     ]),
     NotificationModule,
     DocumentModule,

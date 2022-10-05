@@ -4,8 +4,12 @@ import { Injectable } from '@nestjs/common';
 
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../application/application-decision/application-decision.dto';
+import {
+  ApplicationDecisionDto,
+  DecisionDocumentDto,
+} from '../../application/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
+import { DecisionDocument } from '../../application/application-decision/decision-document.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import {
@@ -47,7 +51,21 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
-      createMap(mapper, ApplicationDecision, ApplicationDecisionDto);
+      createMap(
+        mapper,
+        ApplicationDecision,
+        ApplicationDecisionDto,
+        forMember(
+          (ad) => ad.documents,
+          mapFrom((a) =>
+            this.mapper.mapArray(
+              a.documents,
+              DecisionDocument,
+              DecisionDocumentDto,
+            ),
+          ),
+        ),
+      );
       createMap(
         mapper,
         ApplicationDecisionMeeting,
@@ -171,6 +189,36 @@ export class ApplicationProfile extends AutomapperProfile {
         mapper,
         ApplicationDocument,
         ApplicationDocumentDto,
+        forMember(
+          (a) => a.mimeType,
+          mapFrom((ad) => {
+            return ad.document.mimeType;
+          }),
+        ),
+        forMember(
+          (a) => a.fileName,
+          mapFrom((ad) => {
+            return ad.document.fileName;
+          }),
+        ),
+        forMember(
+          (a) => a.uploadedBy,
+          mapFrom((ad) => {
+            return ad.document.uploadedBy.name;
+          }),
+        ),
+        forMember(
+          (a) => a.uploadedAt,
+          mapFrom((ad) => {
+            return ad.document.uploadedAt.getTime();
+          }),
+        ),
+      );
+
+      createMap(
+        mapper,
+        DecisionDocument,
+        DecisionDocumentDto,
         forMember(
           (a) => a.mimeType,
           mapFrom((ad) => {
