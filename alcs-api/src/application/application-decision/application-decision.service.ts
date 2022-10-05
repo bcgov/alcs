@@ -7,6 +7,7 @@ import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
+import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
@@ -21,6 +22,8 @@ export class ApplicationDecisionService {
     private appDecisionRepository: Repository<ApplicationDecision>,
     @InjectRepository(DecisionDocument)
     private decisionDocumentRepository: Repository<DecisionDocument>,
+    @InjectRepository(ApplicationDecisionOutcome)
+    private decisionOutcomeRepository: Repository<ApplicationDecisionOutcome>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
   ) {}
@@ -45,6 +48,7 @@ export class ApplicationDecisionService {
         },
       },
       relations: {
+        outcome: true,
         documents: {
           document: {
             uploadedBy: true,
@@ -58,6 +62,7 @@ export class ApplicationDecisionService {
     return this.appDecisionRepository.findOne({
       where: { uuid },
       relations: {
+        outcome: true,
         documents: true,
       },
     });
@@ -77,22 +82,25 @@ export class ApplicationDecisionService {
     }
 
     decisionMeeting.date = new Date(updateData.date);
-    decisionMeeting.outcome = updateData.outcome;
+    decisionMeeting.outcome = await this.getOutcomeByCode(updateData.outcome);
 
-    return this.appDecisionRepository.save(decisionMeeting);
+    await this.appDecisionRepository.save(decisionMeeting);
+
+    return this.get(decisionMeeting.uuid);
   }
 
   async create(
-    decisionMeeting: CreateApplicationDecisionDto,
+    createDto: CreateApplicationDecisionDto,
     application: Application,
   ) {
     const decision = new ApplicationDecision({
-      outcome: decisionMeeting.outcome,
-      date: new Date(decisionMeeting.date),
+      outcome: await this.getOutcomeByCode(createDto.outcome),
+      date: new Date(createDto.date),
       application,
     });
 
-    return this.appDecisionRepository.save(decision);
+    const savedDecision = await this.appDecisionRepository.save(decision);
+    return this.get(savedDecision.uuid);
   }
 
   async delete(uuid) {
@@ -166,5 +174,17 @@ export class ApplicationDecisionService {
       decisionDocument.document,
       openInline,
     );
+  }
+
+  getOutcomeByCode(code: string) {
+    return this.decisionOutcomeRepository.findOne({
+      where: {
+        code,
+      },
+    });
+  }
+
+  async getCodeMapping() {
+    return this.decisionOutcomeRepository.find();
   }
 }

@@ -6,11 +6,10 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationDecisionDto,
+  ApplicationDecisionOutComeDto,
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-
-export const OUTCOMES = ['Approved', 'Approved Alternate', 'Refused'];
 
 @Injectable({
   providedIn: 'root',
@@ -22,15 +21,23 @@ export class ApplicationDecisionService {
 
   async fetchByApplication(fileNumber: string) {
     let decisions: ApplicationDecisionDto[] = [];
+    let codes: ApplicationDecisionOutComeDto[] = [];
 
     try {
-      decisions = await firstValueFrom(
-        this.http.get<ApplicationDecisionDto[]>(`${this.url}/application/${fileNumber}`)
+      const res = await firstValueFrom(
+        this.http.get<{ decisions: ApplicationDecisionDto[]; codes: ApplicationDecisionOutComeDto[] }>(
+          `${this.url}/application/${fileNumber}`
+        )
       );
+      decisions = res.decisions;
+      codes = res.codes;
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
-    return decisions;
+    return {
+      decisions,
+      codes,
+    };
   }
 
   async update(uuid: string, data: UpdateApplicationDecisionDto) {

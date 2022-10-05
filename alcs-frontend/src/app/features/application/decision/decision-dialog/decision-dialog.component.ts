@@ -1,11 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionDto } from '../../../../services/application/application-decision/application-decision.dto';
 import {
-  ApplicationDecisionService,
-  OUTCOMES,
-} from '../../../../services/application/application-decision/application-decision.service';
+  ApplicationDecisionDto,
+  ApplicationDecisionOutComeDto,
+} from '../../../../services/application/application-decision/application-decision.dto';
+import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 
 @Component({
   selector: 'app-decision-dialog',
@@ -15,7 +15,7 @@ import {
 export class DecisionDialogComponent {
   isLoading = false;
   isEdit = false;
-  outcomes = OUTCOMES;
+  minDate = new Date(0);
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -26,11 +26,16 @@ export class DecisionDialogComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileNumber: string;
+      codes: ApplicationDecisionOutComeDto[];
       existingDecision?: ApplicationDecisionDto;
+      minDate?: Date;
     },
     private dialogRef: MatDialogRef<DecisionDialogComponent>,
     private decisionService: ApplicationDecisionService
   ) {
+    if (data.minDate) {
+      this.minDate = data.minDate;
+    }
     if (data.existingDecision) {
       this.isEdit = true;
       this.form.patchValue({

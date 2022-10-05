@@ -53,21 +53,6 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
       createMap(
         mapper,
-        ApplicationDecision,
-        ApplicationDecisionDto,
-        forMember(
-          (ad) => ad.documents,
-          mapFrom((a) =>
-            this.mapper.mapArray(
-              a.documents,
-              DecisionDocument,
-              DecisionDocumentDto,
-            ),
-          ),
-        ),
-      );
-      createMap(
-        mapper,
         ApplicationDecisionMeeting,
         ApplicationDecisionMeetingDto,
       );
@@ -189,36 +174,6 @@ export class ApplicationProfile extends AutomapperProfile {
         mapper,
         ApplicationDocument,
         ApplicationDocumentDto,
-        forMember(
-          (a) => a.mimeType,
-          mapFrom((ad) => {
-            return ad.document.mimeType;
-          }),
-        ),
-        forMember(
-          (a) => a.fileName,
-          mapFrom((ad) => {
-            return ad.document.fileName;
-          }),
-        ),
-        forMember(
-          (a) => a.uploadedBy,
-          mapFrom((ad) => {
-            return ad.document.uploadedBy.name;
-          }),
-        ),
-        forMember(
-          (a) => a.uploadedAt,
-          mapFrom((ad) => {
-            return ad.document.uploadedAt.getTime();
-          }),
-        ),
-      );
-
-      createMap(
-        mapper,
-        DecisionDocument,
-        DecisionDocumentDto,
         forMember(
           (a) => a.mimeType,
           mapFrom((ad) => {

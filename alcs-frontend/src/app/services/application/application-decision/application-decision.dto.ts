@@ -1,3 +1,5 @@
+import { BaseCodeDto } from '../../../shared/dto/base.dto';
+
 export interface ApplicationDecisionDto extends CreateApplicationDecisionDto {
   uuid: string;
   documents: DecisionDocumentDto[];
@@ -21,3 +23,5 @@ export interface DecisionDocumentDto {
   uploadedBy: string;
   uploadedAt: number;
 }
+
+export interface ApplicationDecisionOutComeDto extends BaseCodeDto {}

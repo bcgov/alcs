@@ -7,7 +7,14 @@
       <div class="center">
         <mat-form-field appearance="outline" class="date-picker">
           <mat-label>Decision Date</mat-label>
-          <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" name="startDate" required />
+          <input
+            matInput
+            [matDatepicker]="startDatePicker"
+            formControlName="startDate"
+            name="startDate"
+            required
+            [min]="minDate"
+          />
           <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #startDatePicker type="date"> </mat-datepicker>
         </mat-form-field>
@@ -15,9 +22,11 @@
       <ng-select
         appearance="outline"
         class="decision-outcome"
-        [items]="outcomes"
+        [items]="data.codes"
         formControlName="outcome"
         appendTo="body"
+        bindLabel="label"
+        bindValue="code"
         required
         placeholder="Decision Outcome *"
         [clearable]="false"

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
+import {
+  ApplicationDecisionDto,
+  ApplicationDecisionOutComeDto,
+} from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -15,6 +18,7 @@ export class DecisionComponent implements OnInit {
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: ApplicationDecisionDto[] = [];
+  codes: ApplicationDecisionOutComeDto[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -34,18 +38,23 @@ export class DecisionComponent implements OnInit {
   }
 
   async loadDecisions(fileNumber: string) {
-    this.decisions = await this.decisionService.fetchByApplication(fileNumber);
+    const { decisions, codes } = await this.decisionService.fetchByApplication(fileNumber);
+    this.decisions = decisions;
+    this.codes = codes;
   }
 
-  async setDecisionDate(time: number) {
-    await this.applicationDetailService.updateApplication({
-      fileNumber: this.fileNumber,
-      decisionDate: time,
-    });
-    this.toastService.showSuccessToast('Application updated');
+  mapCodeToLabel(outcomeCode: string) {
+    return this.codes.find((code) => code.code == outcomeCode)!.label;
   }
 
   onCreate() {
+    let minDate = new Date(0);
+    if (this.decisions.length > 0) {
+      minDate = new Date(this.decisions[this.decisions.length - 1].date);
+    }
+
+    debugger;
+
     this.dialog
       .open(DecisionDialogComponent, {
         minWidth: '600px',
@@ -53,7 +62,9 @@ export class DecisionComponent implements OnInit {
         maxHeight: '80vh',
         width: '90%',
         data: {
+          minDate,
           fileNumber: this.fileNumber,
+          codes: this.codes,
         },
       })
       .afterClosed()
@@ -65,6 +76,11 @@ export class DecisionComponent implements OnInit {
   }
 
   onEdit(decision: ApplicationDecisionDto) {
+    const decisionIndex = this.decisions.indexOf(decision);
+    let minDate = new Date(0);
+    if (decisionIndex !== this.decisions.length - 1) {
+      minDate = new Date(this.decisions[this.decisions.length - 1].date);
+    }
     this.dialog
       .open(DecisionDialogComponent, {
         minWidth: '600px',
@@ -72,7 +88,9 @@ export class DecisionComponent implements OnInit {
         maxHeight: '80vh',
         width: '90%',
         data: {
+          minDate,
           fileNumber: this.fileNumber,
+          codes: this.codes,
           existingDecision: decision,
         },
       })

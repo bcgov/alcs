@@ -22,7 +22,7 @@
     </div>
     <div>
       <div class="subheading2">Decision Outcome</div>
-      {{ decision.outcome }}
+      {{ mapCodeToLabel(decision.outcome) }}
     </div>
   </div>
   <div class="body-large">Documents</div>
@@ -36,10 +36,19 @@
       </div>
       <div>{{ document.uploadedAt | momentFormat }}</div>
       <div class="file-actions">
-        <button matTooltip="Download File" mat-icon-button (click)="downloadFile(decision.uuid, document.uuid, document.fileName)">
+        <button
+          matTooltip="Download File"
+          mat-icon-button
+          (click)="downloadFile(decision.uuid, document.uuid, document.fileName)"
+        >
           <mat-icon>download</mat-icon>
         </button>
-        <button matTooltip="Delete File"  class="delete-file-icon" mat-icon-button (click)="deleteFile(decision.uuid, document.uuid)">
+        <button
+          matTooltip="Delete File"
+          class="delete-file-icon"
+          mat-icon-button
+          (click)="deleteFile(decision.uuid, document.uuid)"
+        >
           <mat-icon>delete</mat-icon>
         </button>
       </div>

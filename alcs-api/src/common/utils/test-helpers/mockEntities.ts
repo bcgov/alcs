@@ -1,4 +1,5 @@
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionOutcome } from '../../../application/application-decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../../application/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
@@ -211,7 +212,11 @@ const initApplicationDecisionMeetingMock = (
 
 const initApplicationDecisionMock = (application?: Application) => {
   return new ApplicationDecision({
-    outcome: 'Outcome',
+    outcome: {
+      code: 'CODE',
+      uuid: 'uuid',
+      label: 'label',
+    } as ApplicationDecisionOutcome,
     date: new Date(),
     uuid: 'fake-outcome-uuid',
     application,

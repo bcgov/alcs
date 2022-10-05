@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsString } from 'class-validator';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
 
 export class CreateApplicationDecisionDto {
   @AutoMap()
@@ -50,3 +51,5 @@ export class DecisionDocumentDto {
   @AutoMap()
   uploadedAt: number;
 }
+
+export class ApplicationDecisionOutComeDto extends BaseCodeDto {}
