@@ -1,6 +1,7 @@
 import { BoardDto } from '../board/board.dto';
+import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
-import { ApplicationRegionDto, ApplicationStatusDto, ApplicationTypeDto } from './application-code.dto';
+import { ApplicationRegionDto, ApplicationTypeDto, CardStatusDto } from './application-code.dto';
 
 export interface CreateApplicationDto {
   fileNumber: string;
@@ -36,10 +37,12 @@ export interface ApplicationDto {
   paused: boolean;
   highPriority: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
+  card: CardDto;
 }
 
 export interface ApplicationPartialDto {
-  fileNumber: string;
+  cardUuid?: string;
+  fileNumber?: string;
   applicant?: string;
   status?: string;
   region?: string;
@@ -58,7 +61,7 @@ export interface ApplicationPartialDto {
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {
-  statusDetails: ApplicationStatusDto;
+  statusDetails: CardStatusDto;
   typeDetails: ApplicationTypeDto;
   regionDetails: ApplicationRegionDto;
   boardDetails?: BoardDto;

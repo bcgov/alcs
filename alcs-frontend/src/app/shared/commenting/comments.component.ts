@@ -4,11 +4,12 @@ import { CommentService } from '../../services/comment/comment.service';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
-  selector: 'app-comments',
+  selector: 'app-comments[cardUuid]',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss'],
 })
 export class CommentsComponent implements OnInit {
+  @Input() cardUuid: string = '';
   @Input() fileNumber: string = '';
 
   comments: CommentDto[] = [];
@@ -29,7 +30,7 @@ export class CommentsComponent implements OnInit {
   constructor(private commentService: CommentService, private userService: UserService) {}
 
   ngOnInit(): void {
-    this.loadComments(this.fileNumber);
+    this.loadComments(this.cardUuid);
 
     this.userService.$users.subscribe((users) => {
       this.users = users.map((user) => ({
@@ -43,8 +44,8 @@ export class CommentsComponent implements OnInit {
     this.isEditing = true;
   }
 
-  private async loadComments(fileNumber: string) {
-    this.comments = await this.commentService.fetchComments(fileNumber);
+  private async loadComments(cardUuid: string) {
+    this.comments = await this.commentService.fetchComments(cardUuid);
   }
 
   onCancel() {
@@ -54,23 +55,23 @@ export class CommentsComponent implements OnInit {
 
   async onSave(comment: CreateCommentDto) {
     this.isSaving = true;
-    comment.fileNumber = this.fileNumber;
+    comment.cardUuid = this.cardUuid;
 
     await this.commentService.createComment(comment);
 
     this.isSaving = false;
-    await this.loadComments(this.fileNumber);
+    await this.loadComments(this.cardUuid);
     this.isEditing = false;
     this.newComment = '';
   }
 
   async onEditComment(update: UpdateCommentDto) {
     await this.commentService.updateComment(update);
-    await this.loadComments(this.fileNumber);
+    await this.loadComments(this.cardUuid);
   }
 
   async onDeleteComment(commentId: string) {
     await this.commentService.deleteComment(commentId);
-    await this.loadComments(this.fileNumber);
+    await this.loadComments(this.cardUuid);
   }
 }

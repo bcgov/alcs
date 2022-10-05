@@ -6,6 +6,7 @@ import { Application } from '../application/application.entity';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
+import { CreateNotificationServiceDto } from './notification.dto';
 import { Notification } from './notification.entity';
 
 @Injectable()
@@ -54,10 +55,19 @@ export class NotificationService {
     const notification = new Notification({
       body,
       title: `${application.fileNumber} (${application.applicant})`,
-      link: `${frontEnd}/board/${application.card.board.code}?app=${application.fileNumber}`,
+      link: `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
       targetType: 'application',
       actor,
       receiverUuid,
+    });
+    await this.notificationRepository.save(notification);
+  }
+
+  async createNotificationForApplication(
+    notificationDto: CreateNotificationServiceDto,
+  ) {
+    const notification = new Notification({
+      ...notificationDto,
     });
     await this.notificationRepository.save(notification);
   }

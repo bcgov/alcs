@@ -9,11 +9,12 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { UserDto } from '../user/user.dto';
-import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
-import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
+import { CardDto } from '../card/card.dto';
+import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { UserDto } from '../user/user.dto';
+import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 
 export class CreateApplicationDto {
   @IsNotEmpty()
@@ -124,6 +125,10 @@ export class ApplicationDto {
   @AutoMap()
   @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
+
+  @AutoMap()
+  @Type(() => CardDto)
+  card: CardDto;
 }
 
 export class ApplicationDetailedDto extends ApplicationDto {
@@ -139,9 +144,9 @@ export class ApplicationDetailedDto extends ApplicationDto {
 
 export class ApplicationUpdateDto {
   @AutoMap()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  fileNumber: string;
+  fileNumber?: string;
 
   @AutoMap()
   @IsOptional()
@@ -205,5 +210,24 @@ export class ApplicationUpdateDto {
   @AutoMap()
   @IsString()
   @IsOptional()
+  summary?: string;
+
+  @AutoMap()
+  @IsOptional()
+  @IsString()
+  cardUuid?: string;
+}
+
+export class ApplicationUpdateServiceDto {
+  fileNumber: string;
+  applicant?: string;
+  typeUuid?: string;
+  regionUuid?: string;
+  datePaid?: Date | null | undefined;
+  dateAcknowledgedIncomplete?: Date | null | undefined;
+  dateReceivedAllItems?: Date | null | undefined;
+  dateAcknowledgedComplete?: Date | null | undefined;
+  decisionDate?: Date | null | undefined;
+  dateReceived: Date;
   summary?: string;
 }

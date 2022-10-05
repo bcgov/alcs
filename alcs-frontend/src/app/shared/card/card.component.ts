@@ -8,13 +8,19 @@ export interface CardData {
   type: ApplicationTypeDto;
   status: string;
   assigneeInitials?: string;
-  activeDays: number;
+  activeDays?: number;
   paused: boolean;
   highPriority: boolean;
-  decisionMeetings: ApplicationDecisionMeetingDto[];
+  decisionMeetings?: ApplicationDecisionMeetingDto[];
   latestDecisionDate?: Date;
+  cardUuid: string;
+  cardType: string;
 }
 
+export interface CardSelectedEvent {
+  uuid: string;
+  cardType: string;
+}
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
@@ -23,18 +29,19 @@ export interface CardData {
 export class CardComponent implements OnInit {
   @Input() cardData!: CardData;
 
-  @Output() cardSelected = new EventEmitter<string>();
+  @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
 
   constructor() {}
 
-  onClick(cardId: string) {
-    this.cardSelected.emit(cardId);
+  onClick(uuid: string, cardType: string) {
+    this.cardSelected.emit({ uuid, cardType });
   }
 
   private getLatestDecisionDate() {
+    const meetings = this.cardData.decisionMeetings ?? [];
     return new Date(
       Math.max(
-        ...this.cardData.decisionMeetings.map((element) => {
+        ...meetings.map((element) => {
           return new Date(element.date).valueOf();
         })
       )
@@ -45,7 +52,7 @@ export class CardComponent implements OnInit {
     this.cardData.latestDecisionDate = undefined;
 
     if (this.cardData.status === 'READ') {
-      if (this.cardData.decisionMeetings.length > 0) {
+      if (this.cardData.decisionMeetings && this.cardData.decisionMeetings.length > 0) {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
     }

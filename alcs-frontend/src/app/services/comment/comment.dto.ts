@@ -13,7 +13,7 @@ export interface CommentDto {
 }
 
 export interface CreateCommentDto {
-  fileNumber: string;
+  cardUuid: string;
   body: string;
   mentions: Map<string, MentionDto>;
 }

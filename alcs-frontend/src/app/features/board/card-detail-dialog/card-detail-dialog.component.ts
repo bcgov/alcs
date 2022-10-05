@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
@@ -24,7 +24,7 @@ export class CardDetailDialogComponent implements OnInit {
   selectedRegion?: string;
 
   application: ApplicationDetailedDto = this.data;
-  applicationStatuses: ApplicationStatusDto[] = [];
+  applicationStatuses: CardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
@@ -53,7 +53,7 @@ export class CardDetailDialogComponent implements OnInit {
     this.boardService.$boards.subscribe((boards) => {
       this.boards = boards;
     });
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.applicationStatuses = statuses;
     });
 
@@ -73,11 +73,11 @@ export class CardDetailDialogComponent implements OnInit {
     this.selectedAssignee = assignee;
     this.application.assignee = assignee;
     this.updateCard({
-      assigneeUuid: assignee.uuid,
+      assigneeUuid: assignee?.uuid ?? null,
     });
   }
 
-  onStatusSelected(applicationStatus: ApplicationStatusDto) {
+  onStatusSelected(applicationStatus: CardStatusDto) {
     this.selectedApplicationStatus = applicationStatus.code;
     this.updateCard({
       status: applicationStatus.code,
@@ -86,17 +86,17 @@ export class CardDetailDialogComponent implements OnInit {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.application.fileNumber, board.code).then(() => {
+    await this.boardService.changeBoard(this.application.card.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
       this.toastService.showSuccessToast(`Application moved to ${board.title}`);
     });
   }
 
-  updateCard(changes: Omit<ApplicationPartialDto, 'fileNumber'>) {
+  updateCard(changes: Omit<ApplicationPartialDto, 'cardUuid'>) {
     this.applicationService
       .updateApplicationCard({
         ...changes,
-        fileNumber: this.application.fileNumber,
+        cardUuid: this.application.card.uuid,
       })
       .then(() => {
         this.isApplicationDirty = true;
@@ -106,20 +106,18 @@ export class CardDetailDialogComponent implements OnInit {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.application.highPriority
-        ? 'Remove priority from this Application?'
-        : 'Add priority to this application?',
+      body: this.application.card.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
     });
     answer.subscribe((answer) => {
       if (answer) {
         this.applicationService
-          .updateApplication({
-            fileNumber: this.application.fileNumber,
-            highPriority: !this.application.highPriority,
+          .updateApplicationCard({
+            cardUuid: this.application.card.uuid,
+            highPriority: !this.application.card.highPriority,
           })
           .then(() => {
             this.isApplicationDirty = true;
-            this.application.highPriority = !this.application.highPriority;
+            this.application.card.highPriority = !this.application.card.highPriority;
           });
       }
     });

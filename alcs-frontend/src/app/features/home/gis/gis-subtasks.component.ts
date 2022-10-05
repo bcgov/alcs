@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationSubtaskWithApplicationDto } from '../../../services/application/application-subtask/application-subtask.dto';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -15,7 +15,7 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class GisSubtasksComponent implements OnInit {
   subtasks: ApplicationSubtaskWithApplicationDto[] = [];
-  private statuses: ApplicationStatusDto[] = [];
+  private statuses: CardStatusDto[] = [];
   public gisUsers: UserDto[] = [];
 
   constructor(
@@ -27,7 +27,7 @@ export class GisSubtasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.statuses = statuses;
     });
 
@@ -73,8 +73,9 @@ export class GisSubtasksComponent implements OnInit {
     );
   }
 
-  openCard(fileNumber: string, boardCode: string) {
-    this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}`);
+  // TODO: implement for recon cards ones recon entity created
+  openCard(fileNumber: string, boardCode: string, cardType: string) {
+    this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&&type=${cardType}`);
   }
 
   async onAssigneeSelected(assignee: UserDto, uuid: string) {

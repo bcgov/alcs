@@ -89,16 +89,16 @@ describe('CommentController', () => {
 
     await controller.create(
       {
-        fileNumber: 'file-number',
         body: 'comment-body',
         mentions: comment.mentions,
+        cardUuid: 'fake',
       },
       request,
     );
 
     expect(mockCommentService.create).toHaveBeenCalled();
     const passedData = mockCommentService.create.mock.calls[0];
-    expect(passedData[0]).toEqual('file-number');
+    expect(passedData[0]).toEqual('fake');
     expect(passedData[1]).toEqual('comment-body');
   });
 

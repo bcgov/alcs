@@ -6,10 +6,10 @@ import { ToastService } from '../toast/toast.service';
 import {
   ApplicationMasterCodesDto,
   ApplicationRegionDto,
-  ApplicationStatusDto,
   ApplicationTypeDto,
+  CardStatusDto,
 } from './application-code.dto';
-import { ApplicationDetailedDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +17,11 @@ import { ApplicationDetailedDto, ApplicationPartialDto, CreateApplicationDto } f
 export class ApplicationService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
+  public $cardStatuses = new BehaviorSubject<CardStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
-  private statuses: ApplicationStatusDto[] = [];
+  private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
   private isInitialized = false;
@@ -70,16 +70,18 @@ export class ApplicationService {
   }
 
   private async fetchCodes() {
-    const codes = await firstValueFrom(
-      this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/application-code`)
-    );
+    const codes = await firstValueFrom(this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/code`));
     this.statuses = codes.status;
-    this.$applicationStatuses.next(this.statuses);
+    this.$cardStatuses.next(this.statuses);
 
     this.types = codes.type;
     this.$applicationTypes.next(this.types);
 
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
+  }
+
+  searchApplicationsByNumber(fileNumber: string) {
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/application/search/${fileNumber}`));
   }
 }

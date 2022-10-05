@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsUUID } from 'class-validator';
-import { ApplicationDto } from '../application.dto';
+import { ApplicationDto } from '../../application/application.dto';
 
-export class UpdateApplicationSubtaskDto {
+export class UpdateCardSubtaskDto {
   @AutoMap()
   @IsUUID()
   @IsOptional()
@@ -13,7 +13,7 @@ export class UpdateApplicationSubtaskDto {
   completedAt?: number | null;
 }
 
-export class ApplicationSubtaskDto {
+export class CardSubtaskDto {
   @AutoMap()
   uuid: string;
 
@@ -36,7 +36,7 @@ export class ApplicationSubtaskDto {
   completedAt?: number;
 }
 
-export class ApplicationSubtaskWithApplicationDTO extends ApplicationSubtaskDto {
+export class ApplicationSubtaskWithApplicationDTO extends CardSubtaskDto {
   @AutoMap()
   application: ApplicationDto;
 }

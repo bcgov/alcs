@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { ApplicationRegion } from '../../../code/application-code/application-region/application-region.entity';
 import { Base } from '../../../common/entities/base.entity';
-import { ApplicationRegion } from '../application-region/application-region.entity';
 
 @Entity()
 export class ApplicationLocalGovernment extends Base {

@@ -3,11 +3,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { CardModule } from '../card/card.module';
+import { CodeModule } from '../code/code.module';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
-import { ApplicationCodeModule } from './application-code/application-code.module';
 import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
@@ -22,7 +22,6 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
-import { ApplicationSubtaskController } from './application-subtask/application-subtask.controller';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -38,10 +37,10 @@ import { ApplicationService } from './application.service';
       ApplicationDocument,
       ApplicationLocalGovernment,
     ]),
-    ApplicationCodeModule,
     NotificationModule,
     DocumentModule,
     CardModule,
+    CodeModule,
   ],
   providers: [
     ApplicationService,
@@ -63,7 +62,6 @@ import { ApplicationService } from './application.service';
     ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,
-    ApplicationSubtaskController,
     ApplicationLocalGovernmentController,
   ],
   exports: [

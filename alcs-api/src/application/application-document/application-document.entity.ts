@@ -28,7 +28,7 @@ export class ApplicationDocument extends BaseEntity {
   uuid: string;
 
   @Column()
-  type: string; //TODO: Automapper hates the DOCUMENT_TYPE type
+  type: string; //FIXME: Automapper hates the DOCUMENT_TYPE type
 
   @ManyToOne(() => Application, { nullable: false })
   application: Application;

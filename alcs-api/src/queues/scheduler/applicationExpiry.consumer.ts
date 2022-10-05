@@ -2,8 +2,8 @@ import { Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import {
-  APPLICATION_EXPIRATION_DAY_RANGES,
   ApplicationService,
+  APPLICATION_EXPIRATION_DAY_RANGES,
 } from '../../application/application.service';
 import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 import { EmailService } from '../../providers/email/email.service';
@@ -30,7 +30,7 @@ export class ApplicationExpiryConsumer {
         const applicationsNumbers = applicationsToProcess.map(
           (ap) => ap.fileNumber,
         );
-        // TODO: this will be refactored once we have the templating engine
+        // FIXME: this will be refactored once we have the templating engine
         const body = `
       <p>Following applications near expiration:</p>
       ${applicationsNumbers.join('<br/>')}`;

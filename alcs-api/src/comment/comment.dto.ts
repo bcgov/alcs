@@ -28,7 +28,7 @@ export class CommentDto {
 export class CreateCommentDto {
   @IsString()
   @IsNotEmpty()
-  fileNumber: string;
+  cardUuid: string;
 
   @IsString()
   @IsNotEmpty()

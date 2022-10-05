@@ -8,13 +8,15 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
-import { CardUpdateDto } from './card.dto';
+import { CardType } from './card-type/card-type.entity';
+import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
 
 describe('CardService', () => {
   let service: CardService;
   let cardRepositoryMock: MockType<Repository<Card>>;
+  let cardTypeRepositoryMock: MockType<Repository<CardType>>;
   const mockCardEntity = initCardMockEntity();
 
   beforeEach(async () => {
@@ -30,6 +32,10 @@ describe('CardService', () => {
           provide: getRepositoryToken(Card),
           useFactory: repositoryMockFactory,
         },
+        {
+          provide: getRepositoryToken(CardType),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
 
@@ -37,6 +43,7 @@ describe('CardService', () => {
 
     cardRepositoryMock = module.get(getRepositoryToken(Card));
     cardRepositoryMock.findOne.mockReturnValue(mockCardEntity);
+    cardTypeRepositoryMock = module.get(getRepositoryToken(CardType));
   });
 
   it('should be defined', () => {
@@ -48,7 +55,7 @@ describe('CardService', () => {
   });
 
   it('should call save when an Card is updated', async () => {
-    const payload: Partial<CardUpdateDto> = {
+    const payload: Partial<CardUpdateServiceDto> = {
       assigneeUuid: mockCardEntity.assigneeUuid,
       statusUuid: mockCardEntity.statusUuid,
       boardUuid: mockCardEntity.boardUuid,

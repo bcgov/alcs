@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationStatusDto } from '../../../services/application/application-code.dto';
+import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomeService } from '../../../services/home/home.service';
@@ -12,7 +12,7 @@ import { HomeService } from '../../../services/home/home.service';
 })
 export class AssignedComponent implements OnInit {
   applications: ApplicationDto[] = [];
-  private statuses: ApplicationStatusDto[] = [];
+  private statuses: CardStatusDto[] = [];
 
   constructor(
     private homeService: HomeService,
@@ -22,7 +22,7 @@ export class AssignedComponent implements OnInit {
 
   ngOnInit(): void {
     this.applicationService.setup();
-    this.applicationService.$applicationStatuses.subscribe((statuses) => {
+    this.applicationService.$cardStatuses.subscribe((statuses) => {
       this.statuses = statuses;
       if (this.statuses.length > 0) {
         this.loadApplications();
@@ -51,7 +51,7 @@ export class AssignedComponent implements OnInit {
     });
   }
 
-  onSelectCard(fileNumber: string, boardCode: string) {
-    this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}`);
+  onSelectCard(cardUuid: string, boardCode: string, cardTypeCode: string) {
+    this.router.navigateByUrl(`/board/${boardCode}?app=${cardUuid}&type=${cardTypeCode}`);
   }
 }

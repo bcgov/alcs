@@ -3,20 +3,20 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { CardSubtaskType } from '../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
-import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
-import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { Application } from '../application.entity';
-import { ApplicationService } from '../application.service';
-import { ApplicationSubtaskController } from './application-subtask.controller';
+import { Card } from '../card.entity';
+import { CardService } from '../card.service';
+import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
+import { CardSubtaskController } from './card-subtask.controller';
+import { CardSubtask } from './card-subtask.entity';
+import { CardSubtaskService } from './card-subtask.service';
 
-describe('ApplicationSubtaskController', () => {
-  let controller: ApplicationSubtaskController;
+describe('CardSubtaskController', () => {
+  let controller: CardSubtaskController;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
-  let applicationService: DeepMocked<ApplicationService>;
+  let cardService: DeepMocked<CardService>;
 
   const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
@@ -29,7 +29,7 @@ describe('ApplicationSubtaskController', () => {
 
   beforeEach(async () => {
     mockSubtaskService = createMock<CardSubtaskService>();
-    applicationService = createMock<ApplicationService>();
+    cardService = createMock<CardService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -37,7 +37,7 @@ describe('ApplicationSubtaskController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationSubtaskController],
+      controllers: [CardSubtaskController],
       providers: [
         {
           provide: CardSubtaskService,
@@ -48,17 +48,15 @@ describe('ApplicationSubtaskController', () => {
           useValue: {},
         },
         {
-          provide: ApplicationService,
-          useValue: applicationService,
+          provide: CardService,
+          useValue: cardService,
         },
         ApplicationSubtaskProfile,
         ...mockKeyCloakProviders,
       ],
     }).compile();
 
-    controller = module.get<ApplicationSubtaskController>(
-      ApplicationSubtaskController,
-    );
+    controller = module.get<CardSubtaskController>(CardSubtaskController);
   });
 
   it('should be defined', () => {
@@ -67,14 +65,14 @@ describe('ApplicationSubtaskController', () => {
 
   it('should call the service and map to dto for create', async () => {
     mockSubtaskService.create.mockResolvedValue(mockSubtask as CardSubtask);
-    applicationService.get.mockResolvedValue({} as Application);
+    cardService.get.mockResolvedValue({} as Card);
 
     const res = await controller.create('mock-file', 'mock-type');
 
     expect(mockSubtaskService.create).toHaveBeenCalled();
 
     expect(res.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
-    expect(applicationService.get).toHaveBeenCalled();
+    expect(cardService.get).toHaveBeenCalled();
     expect(res.textColor).toEqual(mockSubtask.type.textColor);
     expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
   });
@@ -105,16 +103,16 @@ describe('ApplicationSubtaskController', () => {
     );
   });
 
-  it("should throw an exception if application doesn't exist for create", async () => {
-    applicationService.get.mockResolvedValue(undefined);
+  it("should throw an exception if card doesn't exist for create", async () => {
+    cardService.get.mockResolvedValue(undefined);
 
     await expect(
-      controller.create('mock-file', 'mock-type'),
+      controller.create('mock-card', 'mock-type'),
     ).rejects.toMatchObject(
-      new ServiceNotFoundException(`File number not found mock-file`),
+      new ServiceNotFoundException(`Card not found mock-card`),
     );
 
-    expect(applicationService.get).toHaveBeenCalledTimes(1);
+    expect(cardService.get).toHaveBeenCalledTimes(1);
     expect(mockSubtaskService.create).toHaveBeenCalledTimes(0);
   });
 });

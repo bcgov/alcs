@@ -1,10 +1,9 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -15,15 +14,17 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { CardService } from '../card/card.service';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { CodeService } from '../code/code.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { CreateNotificationServiceDto } from '../notification/notification.dto';
 import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
-import { ApplicationCodeService } from './application-code/application-code.service';
-import { ApplicationRegion } from './application-code/application-region/application-region.entity';
-import { ApplicationType } from './application-code/application-type/application-type.entity';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -38,10 +39,10 @@ import { ApplicationService } from './application.service';
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
-    private codeService: ApplicationCodeService,
+    private codeService: CodeService,
     private notificationService: NotificationService,
     private cardService: CardService,
-    @InjectMapper() private applicationMapper: Mapper,
+    @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
   @Get()
@@ -73,7 +74,7 @@ export class ApplicationController {
   async create(
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
-    const type = await this.codeService.fetchType(application.type);
+    const type = await this.codeService.fetchApplicationType(application.type);
 
     const region = application.region
       ? await this.codeService.fetchRegion(application.region)
@@ -81,8 +82,8 @@ export class ApplicationController {
 
     const app = await this.applicationService.createOrUpdate({
       ...application,
-      type,
-      region,
+      typeUuid: type.uuid,
+      regionUuid: region?.uuid ?? undefined,
       dateReceived: new Date(application.dateReceived),
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
@@ -106,7 +107,7 @@ export class ApplicationController {
 
     let type: ApplicationType | undefined;
     if (application.type && application.type != existingApplication.type.code) {
-      type = await this.codeService.fetchType(application.type);
+      type = await this.codeService.fetchApplicationType(application.type);
     }
 
     let region: ApplicationRegion | undefined;
@@ -118,7 +119,6 @@ export class ApplicationController {
       region = await this.codeService.fetchRegion(application.region);
     }
 
-    // TODO: define DTO model that accepts these specific fields only
     const updatedApplication = await this.applicationService.createOrUpdate({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
@@ -161,10 +161,9 @@ export class ApplicationController {
     @Body() applicationToUpdate: ApplicationUpdateDto,
     @Req() req,
   ) {
-    const existingCard = (
-      await this.applicationService.get(applicationToUpdate.fileNumber)
-    )?.card;
-
+    const existingCard = await this.cardService.get(
+      applicationToUpdate.cardUuid,
+    );
     if (!existingCard) {
       throw new ServiceValidationException(
         `Card for application with ${applicationToUpdate.fileNumber} not found`,
@@ -176,12 +175,15 @@ export class ApplicationController {
       applicationToUpdate.status &&
       applicationToUpdate.status != existingCard.status.code
     ) {
-      status = await this.codeService.fetchStatus(applicationToUpdate.status);
+      status = await this.codeService.fetchCardStatus(
+        applicationToUpdate.status,
+      );
     }
 
     const updatedCard = await this.cardService.update(existingCard.uuid, {
       statusUuid: status ? status.uuid : undefined,
       assigneeUuid: applicationToUpdate.assigneeUuid,
+      highPriority: applicationToUpdate.highPriority,
     });
 
     const application = await this.applicationService.getByCard(
@@ -193,12 +195,15 @@ export class ApplicationController {
       updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
       updatedCard.assigneeUuid !== req.user.entity.uuid
     ) {
-      this.notificationService.createForApplication(
-        req.user.entity,
-        updatedCard.assigneeUuid,
-        "You've been assigned",
-        application,
-      );
+      const frontEnd = this.config.get('FRONTEND_ROOT');
+      this.notificationService.createNotificationForApplication({
+        actor: req.user.entity,
+        receiverUuid: updatedCard.assigneeUuid,
+        title: "You've been assigned",
+        body: `${application.fileNumber} (${application.applicant})`,
+        link: `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
+        targetType: 'application',
+      } as CreateNotificationServiceDto);
     }
 
     const mappedApps = await this.applicationService.mapToDtos([application]);
@@ -208,5 +213,13 @@ export class ApplicationController {
       typeDetails: application.type,
       regionDetails: application.region,
     };
+  }
+
+  @Get('/search/:fileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async searchApplications(@Param('fileNumber') fileNumber: string) {
+    const applications =
+      await this.applicationService.searchApplicationsByFileNumber(fileNumber);
+    return this.applicationService.mapToDtos(applications);
   }
 }

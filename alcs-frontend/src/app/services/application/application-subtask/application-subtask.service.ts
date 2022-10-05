@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
@@ -11,15 +11,15 @@ import { ApplicationSubtaskDto, UpdateApplicationSubtaskDto } from './applicatio
 export class ApplicationSubtaskService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  private baseUrl = `${environment.apiUrl}/application-subtask`;
+  private baseUrl = `${environment.apiUrl}/card-subtask`;
 
-  async fetch(fileNumber: string) {
-    return firstValueFrom(this.http.get<ApplicationSubtaskDto[]>(`${this.baseUrl}/${fileNumber}`));
+  async fetch(cardUuid: string) {
+    return firstValueFrom(this.http.get<ApplicationSubtaskDto[]>(`${this.baseUrl}/${cardUuid}`));
   }
 
-  async create(fileNumber: string, type: string) {
+  async create(cardUuid: string, type: string) {
     const createdSubtask = firstValueFrom(
-      this.http.post<ApplicationSubtaskDto>(`${this.baseUrl}/${fileNumber}/${type}`, {})
+      this.http.post<ApplicationSubtaskDto>(`${this.baseUrl}/${cardUuid}/${type}`, {})
     );
     this.toastService.showSuccessToast('Subtask created');
     return createdSubtask;

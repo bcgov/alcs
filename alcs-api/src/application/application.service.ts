@@ -2,14 +2,21 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindOptionsWhere, IsNull, Repository } from 'typeorm';
+import {
+  Between,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  IsNull,
+  Like,
+  Repository,
+} from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/browser';
 import { Card } from '../card/card.entity';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
-import { ApplicationDto } from './application.dto';
+import { ApplicationDto, ApplicationUpdateServiceDto } from './application.dto';
 import { Application } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -19,12 +26,16 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 
 @Injectable()
 export class ApplicationService {
+  private DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
+    status: true,
+    board: true,
+    assignee: true,
+    type: true,
+  };
   private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
     type: true,
     card: {
-      status: true,
-      board: true,
-      assignee: true,
+      ...this.DEFAULT_CARD_RELATIONS,
     },
     region: true,
     decisionMeetings: true,
@@ -33,9 +44,7 @@ export class ApplicationService {
   private SUBTASK_RELATIONS: FindOptionsRelations<Application> = {
     ...this.DEFAULT_RELATIONS,
     card: {
-      status: true,
-      board: true,
-      assignee: true,
+      ...this.DEFAULT_CARD_RELATIONS,
       subtasks: {
         type: true,
         assignee: true,
@@ -52,7 +61,7 @@ export class ApplicationService {
   ) {}
 
   async createOrUpdate(
-    application: Partial<Application>,
+    application: Partial<ApplicationUpdateServiceDto>,
   ): Promise<Application> {
     let existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
@@ -87,10 +96,12 @@ export class ApplicationService {
 
   async getAll(
     findOptions?: FindOptionsWhere<Application>,
+    sortOptions?: FindOptionsOrder<Application>,
   ): Promise<Application[]> {
     return await this.applicationRepository.find({
       where: findOptions,
       relations: this.DEFAULT_RELATIONS,
+      order: sortOptions,
     });
   }
 
@@ -177,5 +188,16 @@ export class ApplicationService {
       pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
       paused: appPausedMap.get(app.uuid) || false,
     }));
+  }
+
+  searchApplicationsByFileNumber(fileNumber: string) {
+    return this.getAll(
+      {
+        fileNumber: Like(`${fileNumber}%`),
+      },
+      {
+        fileNumber: 'ASC',
+      },
+    );
   }
 }

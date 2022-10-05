@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { ApplicationService } from '../application/application.service';
+import { CardService } from '../card/card.service';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { Board } from './board.entity';
 
@@ -18,12 +19,21 @@ export class BoardService {
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
     private applicationService: ApplicationService,
+    private cardService: CardService,
   ) {}
+
+  async getOne(options: FindOptionsWhere<Board>) {
+    return this.boardRepository.findOne({
+      where: options,
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
 
   async list() {
     const boards = await this.boardRepository.find({
       relations: this.DEFAULT_RELATIONS,
     });
+
     //Sort board statuses
     return boards.map((board) => {
       board.statuses.sort((statusA, statusB) => {
@@ -41,11 +51,11 @@ export class BoardService {
     });
   }
 
-  async changeBoard(fileNumber: string, code: string) {
-    const application = await this.applicationService.get(fileNumber);
-    if (!application) {
+  async changeBoard(cardUuid: string, code: string) {
+    const card = await this.cardService.get(cardUuid);
+    if (!card) {
       throw new ServiceNotFoundException(
-        `Failed to find application with fileNumber ${fileNumber}`,
+        `Failed to find card with uuid ${cardUuid}`,
       );
     }
 
@@ -62,8 +72,11 @@ export class BoardService {
     }
 
     const initialStatus = board.statuses.find((status) => status.order === 0);
-    application.card.status = initialStatus.status;
-    application.card.board = board;
-    return this.applicationService.createOrUpdate(application);
+    card.status = initialStatus.status;
+    card.board = board;
+    return this.cardService.update(card.uuid, {
+      boardUuid: card.board.uuid,
+      statusUuid: card.status.uuid,
+    });
   }
 }

@@ -14,6 +14,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
+import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
+import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
 
 const routes: Routes = [
@@ -35,6 +37,8 @@ const routes: Routes = [
     CommentsComponent,
     MentionTextareaComponent,
     SubtasksComponent,
+    ReconCreateCardDialogComponent,
+    ReconCardDetailDialogComponent,
   ],
   imports: [
     CommonModule,

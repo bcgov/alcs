@@ -1,0 +1,101 @@
+<div mat-dialog-title>
+  <div class="close">
+    <button mat-icon-button [mat-dialog-close]="isApplicationDirty">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="header-row">
+    <div class="left">
+      <h3 class="card-title">'Mock, get from app'</h3>
+      <div
+        class="center application-type"
+        [ngStyle]="{
+          backgroundColor: recon.typeDetails.backgroundColor,
+          color: recon.typeDetails.textColor
+        }"
+      >
+        {{ recon.typeDetails.label }}
+      </div>
+    </div>
+    <div>
+      <button
+        color="accent"
+        mat-flat-button
+        [mat-dialog-close]="isApplicationDirty"
+        [routerLink]="['application', recon.applicationFileNumber]"
+      >
+        View Detail
+      </button>
+    </div>
+  </div>
+  <div>
+    <span class="region">{{ recon.regionDetails.label }} Region</span>
+  </div>
+  <div class="header-row">
+    <div class="left"></div>
+    <div style="margin-right: -16px" class="right">
+      <button title="Move board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <mat-icon>move_down</mat-icon>
+      </button>
+      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
+        <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
+          <span class="favourite-board-icon-container"
+            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+          </span>
+          <span>{{ board.title }}</span>
+          <span *ngIf="recon.board === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+        </button>
+      </mat-menu>
+      <button class="toggle-priority" title="Change priority" (click)="onTogglePriority()" mat-icon-button>
+        <div
+          class="priority"
+          [ngClass]="{
+            'filled-priority': recon.highPriority,
+            'empty-priority': !recon.highPriority
+          }"
+        ></div>
+      </button>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="select-container">
+    <ng-select
+      class="card-type"
+      [items]="applicationStatuses"
+      placeholder="Workflow Stage"
+      bindLabel="label"
+      bindValue="code"
+      [clearable]="false"
+      [(ngModel)]="selectedApplicationStatus"
+      (change)="onStatusSelected($event)"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
+    </ng-select>
+    <ng-select
+      class="card-assignee"
+      [items]="$users | async"
+      placeholder="Assignee"
+      bindLabel="name"
+      bindValue="name"
+      [(ngModel)]="selectedAssigneeName"
+      [searchFn]="filterAssigneeList"
+      (change)="onAssigneeSelected($event)"
+    >
+      <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+        <div class="assignee-card-body">
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+          <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="subtasks-wrapper">
+    <app-subtasks [cardUuid]="recon.uuid"></app-subtasks>
+  </div>
+  <div class="card-comments-wrapper">
+    <app-comments [cardUuid]="recon.uuid"></app-comments>
+  </div>
+</mat-dialog-content>

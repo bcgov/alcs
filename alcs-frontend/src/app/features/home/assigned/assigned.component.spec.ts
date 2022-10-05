@@ -18,7 +18,7 @@ describe('AssignedComponent', () => {
           provide: ApplicationService,
           useValue: {
             setup: jasmine.createSpy(),
-            $applicationStatuses: new EventEmitter(),
+            $cardStatuses: new EventEmitter(),
           },
         },
         { provide: HomeService, useValue: {} },

@@ -25,6 +25,8 @@ describe('DragDropBoardComponent', () => {
     paused: false,
     highPriority: true,
     decisionMeetings: [],
+    cardUuid: 'fake',
+    cardType: 'APP',
   };
 
   beforeEach(async () => {

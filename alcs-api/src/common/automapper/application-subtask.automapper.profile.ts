@@ -2,9 +2,9 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import {
-  ApplicationSubtaskDto,
   ApplicationSubtaskWithApplicationDTO,
-} from '../../application/application-subtask/application-subtask.dto';
+  CardSubtaskDto,
+} from '../../card/card-subtask/card-subtask.dto';
 import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
       createMap(
         mapper,
         CardSubtask,
-        ApplicationSubtaskDto,
+        CardSubtaskDto,
         forMember(
           (a) => a.backgroundColor,
           mapFrom((ad) => ad.type.backgroundColor),

@@ -28,6 +28,8 @@ describe('CardComponent', () => {
       paused: false,
       highPriority: false,
       decisionMeetings: [],
+      cardUuid: 'fake',
+      cardType: 'app',
     };
 
     fixture.detectChanges();
@@ -66,6 +68,8 @@ describe('CardComponent', () => {
       paused: true,
       highPriority: false,
       decisionMeetings: [],
+      cardUuid: 'fake',
+      cardType: 'APP',
     };
     fixture.detectChanges();
 

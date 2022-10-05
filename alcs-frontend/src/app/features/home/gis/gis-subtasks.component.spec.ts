@@ -19,7 +19,7 @@ describe('GisSubtasksComponent', () => {
           provide: ApplicationService,
           useValue: {
             setup: jasmine.createSpy(),
-            $applicationStatuses: new EventEmitter(),
+            $cardStatuses: new EventEmitter(),
           },
         },
         {

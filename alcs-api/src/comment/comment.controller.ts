@@ -33,13 +33,10 @@ export class CommentController {
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
-  @Get('/:fileNumber')
+  @Get('/:cardUuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async get(
-    @Param('fileNumber') fileNumber,
-    @Req() req,
-  ): Promise<CommentDto[]> {
-    const comments = await this.commentService.fetch(fileNumber);
+  async get(@Param('cardUuid') cardUuid, @Req() req): Promise<CommentDto[]> {
+    const comments = await this.commentService.fetch(cardUuid);
     return this.mapToDto(comments, req.user.entity.uuid);
   }
 
@@ -51,7 +48,7 @@ export class CommentController {
   ): Promise<CommentDto> {
     const mappedMentions = await this.mapMentions(comment);
     const newComment = await this.commentService.create(
-      comment.fileNumber,
+      comment.cardUuid,
       comment.body,
       req.user.entity,
       mappedMentions,

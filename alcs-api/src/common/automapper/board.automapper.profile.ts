@@ -4,6 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { BoardStatus } from '../../board/board-status.entity';
 import { BoardDto, BoardStatusDto } from '../../board/board.dto';
 import { Board } from '../../board/board.entity';
+import { CardDto } from '../../card/card.dto';
+import { Card } from '../../card/card.entity';
 
 @Injectable()
 export class BoardAutomapperProfile extends AutomapperProfile {
@@ -24,6 +26,7 @@ export class BoardAutomapperProfile extends AutomapperProfile {
           ),
         ),
       );
+
       createMap(
         mapper,
         BoardStatus,
@@ -35,6 +38,20 @@ export class BoardAutomapperProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.statusCode,
           mapFrom((a) => a.status.code),
+        ),
+      );
+
+      createMap(
+        mapper,
+        Card,
+        CardDto,
+        forMember(
+          (cd) => cd.status,
+          mapFrom((c) => c.status.code),
+        ),
+        forMember(
+          (cd) => cd.type,
+          mapFrom((c) => c.type.code),
         ),
       );
     };

@@ -6,11 +6,15 @@ import { ApplicationTypeDto } from '../../services/application/application-code.
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
+import { ReconsiderationDto } from '../../services/card/card.dto';
+import { CardService } from '../../services/card/card.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { CardData } from '../../shared/card/card.component';
+import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
+import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
+import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
 @Component({
   selector: 'app-board',
@@ -22,10 +26,12 @@ export class BoardComponent implements OnInit {
   columns: DragDropColumn[] = [];
   boardTitle = '';
   boardIsFavourite: boolean = false;
+  createCardTitle = '';
 
   private applicationTypes: ApplicationTypeDto[] = [];
   selectedBoardCode?: string;
   boards: BoardWithFavourite[] = [];
+  cardDialogType: any = CreateCardDialogComponent;
 
   constructor(
     private applicationService: ApplicationService,
@@ -34,7 +40,8 @@ export class BoardComponent implements OnInit {
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private cardService: CardService
   ) {}
 
   ngOnInit() {
@@ -47,6 +54,7 @@ export class BoardComponent implements OnInit {
         if (selectedBoard) {
           this.setupBoard(selectedBoard);
         }
+        this.setupCreateCardButton(boardCode);
       }
     });
 
@@ -62,10 +70,21 @@ export class BoardComponent implements OnInit {
       this.applicationTypes = types;
     });
 
-    // open card if application number present in url
+    // open card if cardUuid and type present in url
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
-    if (app) {
-      this.onSelected(app);
+    const type = this.activatedRoute.snapshot.queryParamMap.get('type');
+    if (app && type) {
+      this.onSelected({ uuid: app, cardType: type });
+    }
+  }
+
+  private setupCreateCardButton(boardCode: string = '') {
+    if (boardCode === 'vett') {
+      this.createCardTitle = '+ New Application';
+      this.cardDialogType = CreateCardDialogComponent;
+    } else {
+      this.createCardTitle = '+ New Reconsideration';
+      this.cardDialogType = ReconCreateCardDialogComponent;
     }
   }
 
@@ -84,12 +103,13 @@ export class BoardComponent implements OnInit {
 
   private async loadApplications(boardCode: string) {
     const apps = await this.boardService.fetchApplications(boardCode);
-    this.cards = apps.map(this.mapApplicationDtoToCard.bind(this));
+    this.cards = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
+    this.cards = this.cards.concat(apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this)));
   }
 
-  async onSelected(id: string) {
+  private async openAppCardDetailDialog(id: string, cardTypeCode: string) {
     try {
-      this.setUrl(id);
+      this.setUrl(id, cardTypeCode);
 
       const application = await this.applicationService.fetchApplication(id);
 
@@ -114,21 +134,69 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  private setUrl(id: string = '') {
+  private async openReconCardDetailDialog(id: string, cardTypeCode: string) {
+    try {
+      this.setUrl(id, cardTypeCode);
+
+      const reconCard = await this.cardService.fetchReconsiderationCard(id);
+      reconCard!.regionDetails = {
+        label: 'Mock',
+        code: 'Mock',
+        description: 'Mock',
+      };
+
+      const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
+        minHeight: '500px',
+        minWidth: '600px',
+        maxWidth: '800px',
+        width: '70%',
+        data: reconCard,
+      });
+
+      dialogRef.afterClosed().subscribe((isDirty) => {
+        this.setUrl();
+
+        if (isDirty && this.selectedBoardCode) {
+          this.loadApplications(this.selectedBoardCode);
+        }
+      });
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
+    }
+  }
+
+  async onSelected(card: CardSelectedEvent) {
+    switch (card.cardType) {
+      case 'APP':
+        this.openAppCardDetailDialog(card.uuid, card.cardType);
+        break;
+      case 'RECON':
+        this.openReconCardDetailDialog(card.uuid, card.cardType);
+        break;
+    }
+  }
+
+  private setUrl(cardUuid: string = '', cardTypeCode: string = '') {
     const url = this.router
-      .createUrlTree([], { relativeTo: this.activatedRoute, queryParams: id ? { app: id } : {} })
+      .createUrlTree([], {
+        relativeTo: this.activatedRoute,
+        queryParams: cardUuid && cardTypeCode ? { app: cardUuid, type: cardTypeCode } : {},
+      })
       .toString();
     this.location.go(url);
   }
 
   async onCreate() {
     this.dialog
-      .open(CreateCardDialogComponent, {
+      .open(this.cardDialogType, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
-        data: {},
+        data: {
+          currentBoardCode: this.selectedBoardCode,
+        },
       })
       .afterClosed()
       .subscribe((didCreate) => {
@@ -138,15 +206,29 @@ export class BoardComponent implements OnInit {
       });
   }
 
-  onDropped($event: { id: string; status: string }) {
-    this.applicationService
-      .updateApplicationCard({
-        fileNumber: $event.id,
-        status: $event.status,
-      })
-      .then((r) => {
-        this.toastService.showSuccessToast('Application Updated');
-      });
+  onDropped($event: { id: string; status: string; cardTypeCode: string }) {
+    switch ($event.cardTypeCode) {
+      case 'APP':
+        this.applicationService
+          .updateApplicationCard({
+            cardUuid: $event.id,
+            status: $event.status,
+          })
+          .then((r) => {
+            this.toastService.showSuccessToast('Application Updated');
+          });
+        break;
+      case 'RECON':
+        this.cardService
+          .updateCard({
+            uuid: $event.id,
+            statusCode: $event.status,
+          })
+          .then((r) => {
+            this.toastService.showSuccessToast('Card Updated');
+          });
+        break;
+    }
   }
 
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
@@ -159,8 +241,32 @@ export class BoardComponent implements OnInit {
       type: mappedType!,
       activeDays: application.activeDays,
       paused: application.paused,
-      highPriority: application.highPriority,
+      highPriority: application.card.highPriority,
       decisionMeetings: application.decisionMeetings,
+      cardType: application.card.type,
+      cardUuid: application.card.uuid,
+    };
+  }
+
+  private mapReconsiderationDtoToCard(recon: ReconsiderationDto): CardData {
+    // TODO get mock fields from application linked to reconsideration
+    return {
+      status: recon.status,
+      title: 'Mock, get from application',
+      assigneeInitials: recon.assignee?.initials,
+      id: recon.uuid,
+      type: {
+        label: 'Recon',
+        code: 'RECON',
+        shortLabel: 'RECON',
+        backgroundColor: '#454545',
+        description: 'Reconsideration',
+        textColor: 'white',
+      },
+      cardType: 'RECON',
+      paused: false,
+      highPriority: recon.highPriority,
+      cardUuid: recon.uuid,
     };
   }
 }

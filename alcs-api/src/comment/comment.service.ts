@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/browser';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { CardService } from '../card/card.service';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
@@ -22,15 +23,15 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
     private applicationService: ApplicationService,
+    private cardService: CardService,
     private commentMentionService: CommentMentionService,
     private notificationService: NotificationService,
   ) {}
 
-  async fetch(fileNumber: string) {
-    const application = await this.applicationService.get(fileNumber);
+  async fetch(cardUuid: string) {
     return this.commentRepository.find({
       where: {
-        cardUuid: application.cardUuid,
+        cardUuid: cardUuid,
       },
       relations: this.DEFAULT_COMMENT_RELATIONS,
       order: {
@@ -49,23 +50,27 @@ export class CommentService {
   }
 
   async create(
-    fileNumber: string,
+    cardUuid: string,
     commentBody: string,
     author: User,
     mentions: CommentMention[],
   ) {
-    const application = await this.applicationService.get(fileNumber);
-    if (!application) {
-      throw new NotFoundException('Unable to find application');
+    const card = await this.cardService.get(cardUuid);
+    if (!card) {
+      throw new NotFoundException('Unable to find card');
     }
 
     const comment = new Comment({
       body: commentBody,
-      card: application.card,
+      card: card,
       author,
     });
 
     const createComment = await this.commentRepository.save(comment);
+
+    const application = await this.applicationService.getByCard(
+      comment.cardUuid,
+    );
     await this.processMentions(mentions, comment, application);
 
     return createComment;
@@ -109,17 +114,19 @@ export class CommentService {
   private async processMentions(
     mentions: CommentMention[],
     comment: Comment,
-    application: Application,
+    application?: Application,
   ) {
     await this.commentMentionService.updateMentions(comment.uuid, mentions);
 
-    mentions.forEach((mention) => {
-      this.notificationService.createForApplication(
-        comment.author,
-        mention.userUuid,
-        `${comment.author.name} mentioned you in a comment`,
-        application,
-      );
-    });
+    if (application) {
+      mentions.forEach((mention) => {
+        this.notificationService.createForApplication(
+          comment.author,
+          mention.userUuid,
+          `${comment.author.name} mentioned you in a comment`,
+          application,
+        );
+      });
+    }
   }
 }

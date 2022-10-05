@@ -1,13 +1,16 @@
-import { ApplicationMeetingType } from '../../../application/application-code/application-meeting-type/application-meeting-type.entity';
-import { ApplicationType } from '../../../application/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
 import { Application } from '../../../application/application.entity';
+import { Board } from '../../../board/board.entity';
 import { CardStatus } from '../../../card/card-status/card-status.entity';
 import { CardSubtaskType } from '../../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
 import { CardSubtask } from '../../../card/card-subtask/card-subtask.entity';
+import { CardType } from '../../../card/card-type/card-type.entity';
 import { Card } from '../../../card/card.entity';
+import { ApplicationMeetingType } from '../../../code/application-code/application-meeting-type/application-meeting-type.entity';
+import { ApplicationRegion } from '../../../code/application-code/application-region/application-region.entity';
+import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { Comment } from '../../../comment/comment.entity';
 import { CommentMention } from '../../../comment/mention/comment-mention.entity';
 import { UserDto } from '../../../user/user.dto';
@@ -42,6 +45,20 @@ const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
   return subtask;
 };
 
+const initBoardMockEntity = (): Board => {
+  const board = new Board();
+  board.uuid = 'fake-uuid';
+  board.code = 'fake-code';
+  return board;
+};
+
+const initCardTypeMockEntity = (): CardType => {
+  const type = new CardType();
+  type.uuid = 'fake-uuid';
+  type.code = 'fake-code';
+  return type;
+};
+
 const initCardMockEntity = (): Card => {
   const card = new Card();
   card.highPriority = true;
@@ -53,6 +70,10 @@ const initCardMockEntity = (): Card => {
   card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.subtasks = [initCardSubtaskMockEntity(card)];
+  card.board = initBoardMockEntity();
+  card.boardUuid = card.board.uuid;
+  card.type = initCardTypeMockEntity();
+  card.typeUuid = card.type.uuid;
 
   return card;
 };
@@ -99,6 +120,13 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.card = initCardMockEntity();
   applicationEntity.type = initApplicationTypeMockEntity();
   applicationEntity.card.highPriority = false;
+  applicationEntity.region = {
+    code: 'fake',
+    label: 'fake',
+    uuid: 'fake',
+    auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
+    auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
+  } as ApplicationRegion;
 
   return applicationEntity;
 };
@@ -215,4 +243,6 @@ export {
   initApplicationMeetingMock,
   initCardMockEntity,
   initCardSubtaskMockEntity,
+  initBoardMockEntity,
+  initCardTypeMockEntity,
 };

@@ -92,8 +92,8 @@
         <div
           class="priority"
           [ngClass]="{
-            'filled-priority': application.highPriority,
-            'empty-priority': !application.highPriority
+            'filled-priority': application.card.highPriority,
+            'empty-priority': !application.card.highPriority
           }"
         ></div>
       </button>
@@ -135,9 +135,9 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks [fileNumber]="application.fileNumber"></app-subtasks>
+    <app-subtasks [cardUuid]="application.card.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
-    <app-comments [fileNumber]="application.fileNumber"></app-comments>
+    <app-comments [cardUuid]="application.card.uuid" [fileNumber]="application.fileNumber"></app-comments>
   </div>
 </mat-dialog-content>
