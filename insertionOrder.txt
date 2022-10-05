@@ -23,3 +23,4 @@ application_meeting
 health_check
 holiday_entity
 migrations
+reconsideration_type

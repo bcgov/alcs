@@ -1,3 +1,4 @@
+reconsideration_type
 migrations
 holiday_entity
 health_check
