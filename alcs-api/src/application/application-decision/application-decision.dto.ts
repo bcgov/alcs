@@ -52,4 +52,4 @@ export class DecisionDocumentDto {
   uploadedAt: number;
 }
 
-export class ApplicationDecisionOutcomeDto extends BaseCodeDto {}
+export class ApplicationDecisionOutcomeTypeDto extends BaseCodeDto {}

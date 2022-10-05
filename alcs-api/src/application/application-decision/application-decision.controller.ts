@@ -19,10 +19,10 @@ import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
+import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeDto,
+  ApplicationDecisionOutcomeTypeDto,
   CreateApplicationDecisionDto,
   DecisionDocumentDto,
   UpdateApplicationDecisionDto,
@@ -45,7 +45,7 @@ export class ApplicationDecisionController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getAllForApplication(@Param('fileNumber') fileNumber): Promise<{
     decisions: ApplicationDecisionDto[];
-    codes: ApplicationDecisionOutcomeDto[];
+    codes: ApplicationDecisionOutcomeTypeDto[];
   }> {
     const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
@@ -58,8 +58,8 @@ export class ApplicationDecisionController {
     );
     const mappedCodes = this.mapper.mapArray(
       codes,
-      ApplicationDecisionOutcome,
-      ApplicationDecisionOutcomeDto,
+      ApplicationDecisionOutcomeType,
+      ApplicationDecisionOutcomeTypeDto,
     );
 
     return {

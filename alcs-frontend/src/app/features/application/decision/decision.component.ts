@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeDto,
+  ApplicationDecisionOutcomeTypeDto,
 } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -18,7 +18,7 @@ export class DecisionComponent implements OnInit {
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: ApplicationDecisionDto[] = [];
-  codes: ApplicationDecisionOutcomeDto[] = [];
+  codes: ApplicationDecisionOutcomeTypeDto[] = [];
 
   constructor(
     public dialog: MatDialog,

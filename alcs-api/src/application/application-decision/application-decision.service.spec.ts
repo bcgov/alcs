@@ -12,7 +12,7 @@ import {
 } from '../../common/utils/test-helpers/mockEntities';
 import { DocumentService } from '../../document/document.service';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
+import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
@@ -26,7 +26,7 @@ describe('ApplicationDecisionService', () => {
   let mockDecisionRepository: DeepMocked<Repository<ApplicationDecision>>;
   let mockDecisionDocumentRepository: DeepMocked<Repository<DecisionDocument>>;
   let mockDecisionOutcomeRepository: DeepMocked<
-    Repository<ApplicationDecisionOutcome>
+    Repository<ApplicationDecisionOutcomeType>
   >;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
@@ -40,7 +40,7 @@ describe('ApplicationDecisionService', () => {
     mockDecisionRepository = createMock<Repository<ApplicationDecision>>();
     mockDecisionDocumentRepository = createMock<Repository<DecisionDocument>>();
     mockDecisionOutcomeRepository =
-      createMock<Repository<ApplicationDecisionOutcome>>();
+      createMock<Repository<ApplicationDecisionOutcomeType>>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -59,7 +59,7 @@ describe('ApplicationDecisionService', () => {
           useValue: mockDecisionDocumentRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationDecisionOutcome),
+          provide: getRepositoryToken(ApplicationDecisionOutcomeType),
           useValue: mockDecisionOutcomeRepository,
         },
         {

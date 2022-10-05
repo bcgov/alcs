@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application.entity';
-import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
+import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
 import { DecisionDocument } from './decision-document.entity';
 
 @Entity()
@@ -18,10 +18,10 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'timestamptz' })
   date: Date;
 
-  @ManyToOne(() => ApplicationDecisionOutcome, {
+  @ManyToOne(() => ApplicationDecisionOutcomeType, {
     nullable: false,
   })
-  outcome: ApplicationDecisionOutcome;
+  outcome: ApplicationDecisionOutcomeType;
 
   @AutoMap()
   @Column({ type: 'uuid' })

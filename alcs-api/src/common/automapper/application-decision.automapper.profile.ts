@@ -1,10 +1,10 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDecisionOutcome } from '../../application/application-decision/application-decision-outcome.entity';
+import { ApplicationDecisionOutcomeType } from '../../application/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeDto,
+  ApplicationDecisionOutcomeTypeDto,
   DecisionDocumentDto,
 } from '../../application/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
@@ -42,8 +42,8 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationDecisionOutcome,
-        ApplicationDecisionOutcomeDto,
+        ApplicationDecisionOutcomeType,
+        ApplicationDecisionOutcomeTypeDto,
       );
 
       createMap(

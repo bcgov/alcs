@@ -7,7 +7,7 @@ import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
+import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
@@ -22,8 +22,8 @@ export class ApplicationDecisionService {
     private appDecisionRepository: Repository<ApplicationDecision>,
     @InjectRepository(DecisionDocument)
     private decisionDocumentRepository: Repository<DecisionDocument>,
-    @InjectRepository(ApplicationDecisionOutcome)
-    private decisionOutcomeRepository: Repository<ApplicationDecisionOutcome>,
+    @InjectRepository(ApplicationDecisionOutcomeType)
+    private decisionOutcomeRepository: Repository<ApplicationDecisionOutcomeType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
   ) {}

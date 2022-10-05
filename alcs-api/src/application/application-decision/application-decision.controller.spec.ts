@@ -14,7 +14,7 @@ import {
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcome } from './application-decision-outcome.entity';
+import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision.controller';
 import {
   CreateApplicationDecisionDto,
@@ -73,7 +73,7 @@ describe('ApplicationDecisionController', () => {
         uuid: 'code-uuid',
         code: 'decision-code',
         label: 'decision-label',
-      } as ApplicationDecisionOutcome,
+      } as ApplicationDecisionOutcomeType,
     ]);
   });
 
