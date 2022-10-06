@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
@@ -23,7 +24,7 @@ describe('DecisionDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: { meetingType: { code: 'fake', label: 'fake' } } },
         { provide: MatDialogRef, useValue: {} },
       ],
-      imports: [MatDialogModule, MatSnackBarModule, ReactiveFormsModule, NgSelectModule],
+      imports: [MatDialogModule, MatSnackBarModule, ReactiveFormsModule, NgSelectModule, MatButtonToggleModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DecisionDialogComponent);

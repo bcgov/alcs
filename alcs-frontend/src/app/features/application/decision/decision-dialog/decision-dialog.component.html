@@ -4,21 +4,19 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <mat-dialog-content style="height: 100%">
     <div class="grid">
-      <div class="center">
-        <mat-form-field appearance="outline" class="date-picker">
-          <mat-label>Decision Date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="startDatePicker"
-            formControlName="startDate"
-            name="startDate"
-            required
-            [min]="minDate | startOfDay"
-          />
-          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #startDatePicker type="date"> </mat-datepicker>
-        </mat-form-field>
-      </div>
+      <mat-form-field appearance="outline" class="date-picker">
+        <mat-label>Decision Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="datePicker"
+          formControlName="date"
+          name="date"
+          required
+          [min]="minDate | startOfDay"
+        />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker type="date"> </mat-datepicker>
+      </mat-form-field>
       <ng-select
         appearance="outline"
         class="decision-outcome"
@@ -31,6 +29,34 @@
         placeholder="Decision Outcome *"
         [clearable]="false"
       ></ng-select>
+      <mat-form-field appearance="outline" class="date-picker">
+        <mat-label>Audit Date</mat-label>
+        <input matInput [matDatepicker]="auditDatePicker" formControlName="auditDate" name="auditDate" />
+        <mat-datepicker-toggle matSuffix [for]="auditDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #auditDatePicker type="date"> </mat-datepicker>
+      </mat-form-field>
+      <div>
+        <mat-label class="toggle-label">Chair Review</mat-label>
+        <mat-button-toggle-group
+          id="chairReviewRequired"
+          formControlName="chairReviewRequired"
+          name="chairReviewRequired"
+        >
+          <mat-button-toggle value="true">Required</mat-button-toggle>
+          <mat-button-toggle value="false">Not Needed</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-form-field appearance="outline" class="date-picker chair-review-date">
+        <mat-label>Chair Review Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="chairReviewDatePicker"
+          formControlName="chairReviewDate"
+          name="chairReviewDate"
+        />
+        <mat-datepicker-toggle matSuffix [for]="chairReviewDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #chairReviewDatePicker type="date"> </mat-datepicker>
+      </mat-form-field>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

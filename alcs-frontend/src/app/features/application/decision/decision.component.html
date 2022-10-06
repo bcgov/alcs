@@ -24,6 +24,21 @@
       <div class="subheading2">Decision Outcome</div>
       {{ mapCodeToLabel(decision.outcome) }}
     </div>
+    <div></div>
+    <div>
+      <div class="subheading2">Audit Date</div>
+      <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+      <span *ngIf="!decision.auditDate">
+        <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
+      </span>
+    </div>
+    <div *ngIf="decision.chairReviewRequired">
+      <div class="subheading2">Chair Review Date</div>
+      <span *ngIf="!decision.chairReviewDate">
+        <app-inline-datepicker (save)="onSaveChairReviewDate(decision.uuid, $event)"></app-inline-datepicker>
+      </span>
+      <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
+    </div>
   </div>
   <div class="body-large">Documents</div>
   <div class="decision-documents">

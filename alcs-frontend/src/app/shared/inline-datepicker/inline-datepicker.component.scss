@@ -21,13 +21,24 @@
 .button-container {
   display: flex;
   justify-content: flex-end;
+  margin-right: -14px;
+
+  button:not(:last-child) {
+    margin-right: 2px !important;
+  }
 }
 
 .add-date {
-  font-size: 14px !important;
   cursor: pointer;
 }
 
 .save {
   color: $primary-color;
+}
+
+:host::ng-deep {
+  .mat-form-field-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }

@@ -18,6 +18,18 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'timestamptz' })
   date: Date;
 
+  @AutoMap()
+  @Column({ type: 'timestamptz', nullable: true })
+  auditDate: Date;
+
+  @AutoMap()
+  @Column({ type: 'boolean' })
+  chairReviewRequired: boolean;
+
+  @AutoMap()
+  @Column({ type: 'timestamptz', nullable: true })
+  chairReviewDate: Date;
+
   @ManyToOne(() => ApplicationDecisionOutcomeType, {
     nullable: false,
   })

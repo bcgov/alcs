@@ -7,6 +7,7 @@ import {
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
 @Component({
@@ -128,6 +129,21 @@ export class DecisionComponent implements OnInit {
 
   async deleteFile(decisionUuid: string, decisionDocumentUuid: string) {
     await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
+    await this.loadDecisions(this.fileNumber);
+  }
+
+  async onSaveChairReviewDate(decisionUuid: string, chairReviewDate: number) {
+    await this.decisionService.update(decisionUuid, {
+      chairReviewDate: formatDateForApi(chairReviewDate),
+      chairReviewRequired: true,
+    });
+    await this.loadDecisions(this.fileNumber);
+  }
+
+  async onSaveAuditDate(decisionUuid: string, auditReviewDate: number) {
+    await this.decisionService.update(decisionUuid, {
+      auditDate: formatDateForApi(auditReviewDate),
+    });
     await this.loadDecisions(this.fileNumber);
   }
 }
