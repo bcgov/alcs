@@ -4,7 +4,7 @@
 <form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <div class="two-item-row">
-      <mat-form-field appearance="standard">
+      <mat-form-field appearance="outline">
         <mat-label>File ID</mat-label>
         <input
           id="fileNumber"
@@ -39,7 +39,7 @@
           This field is required.
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="standard">
+      <mat-form-field appearance="outline">
         <mat-label>Applicant Last Name</mat-label>
         <input
           matInput
@@ -64,6 +64,7 @@
       </mat-form-field>
       <div>
         <ng-select
+          appearance="outline"
           class="card-type"
           [items]="applicationTypes"
           appendTo="body"
@@ -99,6 +100,7 @@
       </div>
       <div>
         <ng-select
+          appearance="outline"
           class="card-region"
           [items]="regions"
           appendTo="body"
@@ -112,6 +114,7 @@
       </div>
       <div>
         <ng-select
+          appearance="outline"
           class="card-recon-type"
           [items]="reconTypes"
           appendTo="body"
@@ -124,7 +127,7 @@
         </ng-select>
       </div>
       <div>
-        <mat-form-field class="date-picker" appearance="standard">
+        <mat-form-field class="date-picker" appearance="outline">
           <mat-label>Reconsideration Request Submitted to ALC</mat-label>
           <input matInput [matDatepicker]="pdd" formControlName="receivedDate" required />
           <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
