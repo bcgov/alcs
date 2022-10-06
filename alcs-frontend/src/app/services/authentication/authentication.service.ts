@@ -93,7 +93,7 @@ export class AuthenticationService {
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
-        this.http.get(`${environment.apiUrl}/admin`, {
+        this.http.get(`${environment.apiUrl}/token`, {
           responseType: 'text',
           headers: {
             Authorization: `Bearer ${token}`,
