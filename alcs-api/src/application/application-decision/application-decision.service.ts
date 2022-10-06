@@ -202,27 +202,27 @@ export class ApplicationDecisionService {
     return this.decisionDocumentRepository.save(appDocument);
   }
 
-  async deleteDocument(documentUuid: string) {
-    const decisionDocument = await this.decisionDocumentRepository.findOne({
-      where: {
-        uuid: documentUuid,
-      },
-      relations: {
-        document: true,
-      },
-    });
-
-    if (!decisionDocument) {
-      throw new ServiceNotFoundException(
-        `Failed to find document with uuid ${documentUuid}`,
-      );
-    }
+  async deleteDocument(decisionDocumentUuid: string) {
+    const decisionDocument = await this.getDecisionDocumentOrFail(
+      decisionDocumentUuid,
+    );
 
     await this.documentService.softRemove(decisionDocument.document);
     return decisionDocument;
   }
 
   async getDownloadUrl(decisionDocumentUuid: string, openInline = false) {
+    const decisionDocument = await this.getDecisionDocumentOrFail(
+      decisionDocumentUuid,
+    );
+
+    return this.documentService.getDownloadUrl(
+      decisionDocument.document,
+      openInline,
+    );
+  }
+
+  private async getDecisionDocumentOrFail(decisionDocumentUuid: string) {
     const decisionDocument = await this.decisionDocumentRepository.findOne({
       where: {
         uuid: decisionDocumentUuid,
@@ -237,11 +237,7 @@ export class ApplicationDecisionService {
         `Failed to find document with uuid ${decisionDocumentUuid}`,
       );
     }
-
-    return this.documentService.getDownloadUrl(
-      decisionDocument.document,
-      openInline,
-    );
+    return decisionDocument;
   }
 
   getOutcomeByCode(code: string) {
