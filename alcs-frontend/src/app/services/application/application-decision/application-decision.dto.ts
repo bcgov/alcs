@@ -1,19 +1,23 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 
+export interface UpdateApplicationDecisionDto {
+  date?: number;
+  outcome?: string;
+  chairReviewRequired?: boolean;
+  auditDate?: number | null;
+  chairReviewDate?: number | null;
+}
+
+export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
+  date: number;
+  outcome: string;
+  chairReviewRequired: boolean;
+  applicationFileNumber: string;
+}
+
 export interface ApplicationDecisionDto extends CreateApplicationDecisionDto {
   uuid: string;
   documents: DecisionDocumentDto[];
-}
-
-export interface CreateApplicationDecisionDto {
-  date: number;
-  applicationFileNumber: string;
-  outcome: string;
-}
-
-export interface UpdateApplicationDecisionDto {
-  date: number;
-  outcome: string;
 }
 
 export interface DecisionDocumentDto {

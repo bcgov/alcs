@@ -60,22 +60,22 @@ section {
   margin-top: 16px;
   margin-bottom: 32px;
   display: grid;
-  grid-template-columns: 45% 45%;
-  grid-row-gap: 16px;
-
-  div {
-    font-size: 16px !important;
-  }
+  grid-template-columns: 1fr 1fr 100px;
+  grid-row-gap: 24px;
 
   .subheading2 {
     margin-bottom: 6px !important;
   }
+
+  & > div {
+    font-size: 16px;
+  }
 }
 
 .decision-documents {
-  margin-top: 16px;
+  margin-top: 4px;
   display: grid;
-  grid-template-columns: 45% 45% 10%;
+  grid-template-columns: 1fr 1fr 100px;
   grid-row-gap: 4px;
 
   div {
@@ -91,4 +91,13 @@ section {
 
 .delete-file-icon {
   color: $error-color;
+}
+
+.no-decisions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $grey-light;
+  height: 72px;
 }

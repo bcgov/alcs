@@ -245,3 +245,23 @@ a {
   background-color: $secondary-color-light;
   border-radius: 8px;
 }
+
+mat-button-toggle-group {
+  width: 100%;
+
+  mat-button-toggle {
+    width: 100%;
+  }
+
+  .mat-button-toggle-checked {
+    background-color: $primary-color-light;
+  }
+
+  .mat-button-toggle-label-content {
+    line-height: 33px !important;
+  }
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  height: 56px;
+}

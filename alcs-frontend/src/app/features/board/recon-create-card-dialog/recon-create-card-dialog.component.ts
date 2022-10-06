@@ -24,16 +24,14 @@ export class ReconCreateCardDialogComponent implements OnInit {
   hasPendingRecon = false;
   currentBoardCode: string = '';
 
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]> | undefined;
   filteredApplications: Observable<ApplicationDto[]> | undefined;
 
   fileNumberControl = new FormControl('', [Validators.required]);
   applicantControl = new FormControl('', [Validators.required]);
-  typeControl = new FormControl('', [Validators.required]);
-  regionControl = new FormControl('', [Validators.required]);
+  typeControl = new FormControl<string | null>(null, [Validators.required]);
+  regionControl = new FormControl<string | null>(null, [Validators.required]);
   receivedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
-  reconTypeControl = new FormControl('', [Validators.required]);
+  reconTypeControl = new FormControl<string | null>(null, [Validators.required]);
 
   createForm = new FormGroup({
     fileNumber: this.fileNumberControl,

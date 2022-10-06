@@ -35,3 +35,7 @@
 .section {
   margin: 24px 0;
 }
+
+:host::ng-deep .date-picker a {
+  font-size: 14px !important;
+}

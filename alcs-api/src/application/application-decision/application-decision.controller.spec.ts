@@ -181,6 +181,21 @@ describe('ApplicationDecisionController', () => {
     expect(mockDecisionService.attachDocument).toBeCalledTimes(1);
   });
 
+  it('should throw an exception if there is no file for file upload', async () => {
+    mockDecisionService.attachDocument.mockResolvedValue({} as any);
+    const promise = controller.attachDocument('fake-uuid', {
+      file: () => ({}),
+      isMultipart: () => false,
+      user: {
+        entity: {},
+      },
+    });
+
+    await expect(promise).rejects.toMatchObject(
+      new Error('Request is not multipart'),
+    );
+  });
+
   it('should call through for getting download url', async () => {
     const fakeUrl = 'fake-url';
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
