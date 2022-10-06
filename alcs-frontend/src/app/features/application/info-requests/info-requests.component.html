@@ -19,6 +19,7 @@
       <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.meetingEndDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveEndDate(element.uuid, $event)"

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
@@ -71,7 +72,9 @@ export class ApplicationDecisionService {
       where: { uuid },
       relations: {
         outcome: true,
-        documents: true,
+        documents: {
+          document: true,
+        },
       },
     });
   }
@@ -93,12 +96,29 @@ export class ApplicationDecisionService {
     }
 
     let dateHasChanged = false;
-    if (existingDecision.date !== new Date(updateData.date)) {
+    if (
+      updateData.date &&
+      existingDecision.date !== new Date(updateData.date)
+    ) {
       dateHasChanged = true;
       existingDecision.date = new Date(updateData.date);
     }
 
-    existingDecision.outcome = await this.getOutcomeByCode(updateData.outcome);
+    if (updateData.outcome) {
+      existingDecision.outcome = await this.getOutcomeByCode(
+        updateData.outcome,
+      );
+    }
+    existingDecision.auditDate = formatIncomingDate(updateData.auditDate);
+    existingDecision.chairReviewDate = formatIncomingDate(
+      updateData.chairReviewDate,
+    );
+    if (updateData.chairReviewRequired !== undefined) {
+      existingDecision.chairReviewRequired = updateData.chairReviewRequired;
+      if (updateData.chairReviewRequired === false) {
+        existingDecision.chairReviewDate = null;
+      }
+    }
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
     );
@@ -131,6 +151,13 @@ export class ApplicationDecisionService {
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcome),
       date: new Date(createDto.date),
+      chairReviewRequired: createDto.chairReviewRequired,
+      auditDate: createDto.auditDate
+        ? new Date(createDto.auditDate)
+        : undefined,
+      chairReviewDate: createDto.chairReviewDate
+        ? new Date(createDto.chairReviewDate)
+        : undefined,
       application,
     });
 
@@ -154,7 +181,9 @@ export class ApplicationDecisionService {
       where: { uuid },
       relations: {
         outcome: true,
-        documents: true,
+        documents: {
+          document: true,
+        },
         application: true,
       },
     });

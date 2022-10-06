@@ -32,7 +32,7 @@
             [matDatepicker]="endDate"
             [(ngModel)]="model.endDate"
             name="endDate"
-            [min]="model.startDate"
+            [min]="model.startDate | startOfDay"
           />
           <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
           <mat-datepicker #endDate type="date"> </mat-datepicker>

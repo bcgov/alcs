@@ -26,6 +26,7 @@
       <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.meetingEndDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveMeetingEndDate(element.uuid, $event)"
@@ -40,6 +41,7 @@
       <ng-container *ngIf="element.reportStartDate">{{ element.reportStartDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.reportStartDate && element.meetingEndDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingEndDate | startOfDay"
           (save)="onSaveReportStartDate(element.uuid, $event)"
@@ -54,6 +56,7 @@
       <ng-container *ngIf="element.reportEndDate">{{ element.reportEndDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.reportEndDate && element.reportStartDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.reportStartDate | startOfDay"
           (save)="onSaveReportEndDate(element.uuid, $event)"
@@ -114,6 +117,7 @@
       <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.meetingEndDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveMeetingEndDate(element.uuid, $event)"
@@ -128,6 +132,7 @@
       <ng-container *ngIf="element.reportStartDate">{{ element.reportStartDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.reportStartDate && element.meetingEndDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingEndDate | startOfDay"
           (save)="onSaveReportStartDate(element.uuid, $event)"
@@ -142,6 +147,7 @@
       <ng-container *ngIf="element.reportEndDate">{{ element.reportEndDate | momentFormat }}</ng-container>
       <ng-container *ngIf="!element.reportEndDate && element.reportStartDate">
         <app-inline-datepicker
+          class="date-picker"
           [selectedValue]="undefined"
           [min]="element.reportStartDate | startOfDay"
           (save)="onSaveReportEndDate(element.uuid, $event)"

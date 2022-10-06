@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationMeetingService } from '../../../../services/application/application-meeting/application-meeting.service';
+import { StartOfDayPipe } from '../../../../shared/pipes/startOfDay.pipe';
 
 import { InfoRequestDialogComponent } from './info-request-dialog.component';
 
@@ -26,7 +27,7 @@ describe('InfoRequestDialogComponent', () => {
           useValue: {},
         },
       ],
-      declarations: [InfoRequestDialogComponent],
+      declarations: [InfoRequestDialogComponent, StartOfDayPipe],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InfoRequestDialogComponent);
