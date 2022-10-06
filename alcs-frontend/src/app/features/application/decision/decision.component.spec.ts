@@ -1,12 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 
 import { DecisionComponent } from './decision.component';
 
-describe('ReviewComponent', () => {
+describe('DecisionComponent', () => {
   let component: DecisionComponent;
   let fixture: ComponentFixture<DecisionComponent>;
 
@@ -23,6 +25,18 @@ describe('ReviewComponent', () => {
         {
           provide: ApplicationDetailService,
           useValue: mockAppDetailService,
+        },
+        {
+          provide: ApplicationDecisionService,
+          useValue: {},
+        },
+        {
+          provide: MatDialogRef,
+          useValue: {},
+        },
+        {
+          provide: MatDialog,
+          useValue: {},
         },
       ],
     }).compileComponents();

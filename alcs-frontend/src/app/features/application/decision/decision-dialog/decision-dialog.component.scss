@@ -1,0 +1,36 @@
+@import '../../../../../styles/colors';
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+}
+
+label {
+  font-weight: 500;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.date-picker {
+  flex: 1 0 auto;
+
+  .mat-form-field-appearance-outline .mat-form-field-flex {
+    height: 60px;
+  }
+}
+
+.warning {
+  padding: 16px;
+  font-size: 16px;
+  background-color: rgba($secondary-color, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    color: $secondary-color-dark;
+    margin-right: 16px;
+  }
+}

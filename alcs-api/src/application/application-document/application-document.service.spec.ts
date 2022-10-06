@@ -116,13 +116,13 @@ describe('ApplicationDocumentService', () => {
       document: mockDocument,
     } as ApplicationDocument;
 
-    mockDocumentService.delete.mockResolvedValue();
+    mockDocumentService.softRemove.mockResolvedValue();
     mockRepository.delete.mockResolvedValue(undefined);
 
     await service.delete(mockAppDocument);
 
-    expect(mockDocumentService.delete).toHaveBeenCalled();
-    expect(mockDocumentService.delete.mock.calls[0][0]).toBe(mockDocument);
+    expect(mockDocumentService.softRemove).toHaveBeenCalled();
+    expect(mockDocumentService.softRemove.mock.calls[0][0]).toBe(mockDocument);
 
     expect(mockRepository.delete).toHaveBeenCalled();
     expect(mockRepository.delete.mock.calls[0][0]).toBe(mockAppDocument.uuid);
@@ -135,7 +135,7 @@ describe('ApplicationDocumentService', () => {
       document: mockDocument,
     } as ApplicationDocument;
 
-    mockDocumentService.delete.mockResolvedValue();
+    mockDocumentService.softRemove.mockResolvedValue();
     mockRepository.findOne.mockResolvedValue(mockAppDocument);
 
     const res = await service.get('fake-uuid');
@@ -149,7 +149,7 @@ describe('ApplicationDocumentService', () => {
       document: mockDocument,
     } as ApplicationDocument;
 
-    mockDocumentService.delete.mockResolvedValue();
+    mockDocumentService.softRemove.mockResolvedValue();
     mockRepository.findOne.mockResolvedValue(undefined);
 
     await expect(service.get(mockAppDocument.uuid)).rejects.toMatchObject(

@@ -59,14 +59,8 @@ export class DocumentService {
     return document;
   }
 
-  async delete(document: Document) {
-    const command = new DeleteObjectCommand({
-      Bucket: this.bucket,
-      Key: document.fileKey,
-    });
-
-    await this.dataStore.send(command);
-    await this.documentRepository.delete(document.uuid);
+  async softRemove(document: Document) {
+    await this.documentRepository.softRemove(document);
   }
 
   getDownloadUrl(document: Document, openInline = false) {

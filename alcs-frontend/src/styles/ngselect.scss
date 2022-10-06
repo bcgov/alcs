@@ -18,9 +18,7 @@
   }
 }
 
-.ng-select.card-local-government,
-.ng-select.card-type,
-.ng-select.card-region {
+.ng-appearance-outline {
   .ng-value {
     margin-top: 6px;
   }
@@ -28,4 +26,19 @@
   input {
     padding: 10px !important;
   }
+}
+
+//This only changes the padding of the placeholder when its not focused/selecting
+ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
+  .ng-placeholder {
+    margin-top: 2px;
+  }
+}
+
+.ng-select .ng-select-container.ng-appearance-outline {
+  min-height: 56px;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-placeholder {
+  color: rgba(0, 0, 0, 0.6) !important;
 }

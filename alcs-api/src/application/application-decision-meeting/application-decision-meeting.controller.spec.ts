@@ -41,7 +41,7 @@ describe('ApplicationDecisionMeetingController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationDecisionMeetingController, ApplicationProfile],
+      controllers: [ApplicationDecisionMeetingController],
       providers: [
         ApplicationProfile,
         UserProfile,

@@ -20,7 +20,7 @@
       <ng-container *ngIf="!element.meetingEndDate">
         <app-inline-datepicker
           [selectedValue]="undefined"
-          [min]="element.meetingStartDate"
+          [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveEndDate(element.uuid, $event)"
         ></app-inline-datepicker>
       </ng-container>

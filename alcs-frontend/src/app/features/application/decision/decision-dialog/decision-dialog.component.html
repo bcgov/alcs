@@ -1,0 +1,42 @@
+<div mat-dialog-title>
+  <h2 class="card-title">{{ isEdit ? 'Edit' : 'New' }} Decision</h2>
+</div>
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-dialog-content style="height: 100%">
+    <div class="grid">
+      <div class="center">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>Decision Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startDatePicker"
+            formControlName="startDate"
+            name="startDate"
+            required
+            [min]="minDate | startOfDay"
+          />
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker type="date"> </mat-datepicker>
+        </mat-form-field>
+      </div>
+      <ng-select
+        appearance="outline"
+        class="decision-outcome"
+        [items]="data.codes"
+        formControlName="outcome"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="code"
+        required
+        placeholder="Decision Outcome *"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
+    </div>
+  </mat-dialog-actions>
+</form>
