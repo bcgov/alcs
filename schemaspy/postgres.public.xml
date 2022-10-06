@@ -32,7 +32,7 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="14" name="date_received_all_items" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="15" name="date_acknowledged_complete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="16" name="decision_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_21eddf92cb75ff3cc0c99b80d86" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
@@ -66,6 +66,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="outcome_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_cd7126f6177b068f58e05d47b8f" implied="false" onDeleteCascade="false" schema="public" table="application_decision_outcome_type"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="audit_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="chair_review_required" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="chair_review_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f1cbebd03275dcbe1a70d46cebf" unique="true">
             <column ascending="true" name="uuid"/>
@@ -113,7 +116,7 @@
       <table name="application_document" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="application_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_6c496454f95f229c63679bf191e" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="document_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
@@ -127,7 +130,7 @@
             <column ascending="true" name="document_uuid"/>
          </index>
       </table>
-      <table name="application_local_government" remarks="" schema="public" type="TABLE">
+      <table name="application_local_government" numRows="148" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="local_government_uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
@@ -399,7 +402,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="assignee_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_35829d0ec7a6e71391c2349188f" implied="false" onDeleteCascade="false" schema="public" table="user"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_27ad2b929d07d4c4e43943f8e62" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="type_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
@@ -553,7 +556,7 @@
             <column ascending="true" name="day"/>
          </index>
       </table>
-      <table name="migrations" remarks="" schema="public" type="TABLE">
+      <table name="migrations" numRows="55" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
