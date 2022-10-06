@@ -28,6 +28,9 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
+import { ApplicationReconsiderationController } from './application-reconsideration/application-reconsideration.controller';
+import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from './application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -45,6 +48,7 @@ import { ApplicationService } from './application.service';
       ApplicationLocalGovernment,
       ApplicationDecision,
       DecisionDocument,
+      ApplicationReconsideration,
     ]),
     NotificationModule,
     DocumentModule,
@@ -67,6 +71,7 @@ import { ApplicationService } from './application.service';
     ApplicationDocumentService,
     ApplicationLocalGovernmentService,
     ApplicationDecisionService,
+    ApplicationReconsiderationService,
   ],
   controllers: [
     ApplicationController,
@@ -75,6 +80,7 @@ import { ApplicationService } from './application.service';
     ApplicationDocumentController,
     ApplicationLocalGovernmentController,
     ApplicationDecisionController,
+    ApplicationReconsiderationController,
   ],
   exports: [
     ApplicationService,
