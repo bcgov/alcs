@@ -92,3 +92,12 @@ section {
 .delete-file-icon {
   color: $error-color;
 }
+
+.no-decisions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $grey-light;
+  height: 72px;
+}

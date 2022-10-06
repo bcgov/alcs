@@ -181,7 +181,9 @@ export class ApplicationDecisionService {
       where: { uuid },
       relations: {
         outcome: true,
-        documents: true,
+        documents: {
+          document: true,
+        },
         application: true,
       },
     });
