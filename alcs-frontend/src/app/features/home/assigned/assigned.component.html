@@ -12,11 +12,11 @@
         [ngClass]="{
           paused: application.paused
         }"
-        (click)="onSelectCard(application.card.uuid, application.board, application.card.type)"
+        (click)="onSelectCard(application.fileNumber, application.board, application.card.type)"
         *ngFor="let application of applications"
       >
         <td class="center" style="padding: 4px">
-          <span class="high-priority" *ngIf="application.highPriority">!</span>
+          <span class="high-priority" *ngIf="application.card.highPriority">!</span>
         </td>
         <td>{{ application.fileNumber }} ({{ application.applicant }})</td>
         <td>{{ application.activeDays }}</td>

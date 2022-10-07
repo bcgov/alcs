@@ -67,15 +67,16 @@ describe('CardDetailDialogComponent', () => {
     region: 'REGION',
     localGovernment: 'Local Government',
     summary: 'MOCK SUMMARY',
-    assignee: mockAssignee,
     activeDays: 10,
     pausedDays: 5,
     paused: true,
-    highPriority: false,
     board: 'board',
     decisionMeetings: [],
     dateReceived: Date.now(),
-    card: {} as CardDto,
+    card: {
+      assignee: mockAssignee,
+      highPriority: false,
+    } as CardDto,
   };
 
   beforeEach(async () => {

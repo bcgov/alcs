@@ -41,7 +41,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.application = this.data;
-    this.selectedAssignee = this.data.assignee;
+    this.selectedAssignee = this.data.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
     this.selectedApplicationStatus = this.data.statusDetails.code;
     this.selectedBoard = this.data.board;
@@ -71,7 +71,7 @@ export class CardDetailDialogComponent implements OnInit {
 
   onAssigneeSelected(assignee: UserDto) {
     this.selectedAssignee = assignee;
-    this.application.assignee = assignee;
+    this.application.card.assignee = assignee;
     this.updateCard({
       assigneeUuid: assignee?.uuid ?? null,
     });
@@ -118,6 +118,9 @@ export class CardDetailDialogComponent implements OnInit {
           .then(() => {
             this.isApplicationDirty = true;
             this.application.card.highPriority = !this.application.card.highPriority;
+            this.toastService.showSuccessToast(
+              this.application.card.highPriority ? 'Priority added' : 'Priority removed'
+            );
           });
       }
     });

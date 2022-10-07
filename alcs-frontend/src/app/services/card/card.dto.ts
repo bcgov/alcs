@@ -41,4 +41,5 @@ export interface CardDto {
   uuid: string;
   type: string;
   highPriority: boolean;
+  assignee: UserDto;
 }
