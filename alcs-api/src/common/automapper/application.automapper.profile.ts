@@ -101,12 +101,6 @@ export class ApplicationProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.assignee,
-          mapFrom((a) => {
-            return this.mapper.map(a.card.assignee, User, UserDto);
-          }),
-        ),
-        forMember(
           (ad) => ad.card,
           mapFrom((a) => {
             return this.mapper.map(a.card, Card, CardDto);

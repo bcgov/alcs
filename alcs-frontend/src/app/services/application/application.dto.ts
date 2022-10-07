@@ -31,32 +31,25 @@ export interface ApplicationDto {
   decisionDate?: number;
   region: string;
   localGovernment: string;
-  assignee?: UserDto;
   activeDays: number;
   pausedDays: number;
   paused: boolean;
-  highPriority: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card: CardDto;
 }
 
-export interface ApplicationPartialDto {
-  cardUuid?: string;
-  fileNumber?: string;
+export interface UpdateApplicationDto {
   applicant?: string;
   status?: string;
   region?: string;
   summary?: string;
-  dateReceived?: number;
   datePaid?: number;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
-  decisionDate?: number;
   type?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;
-  paused?: boolean;
   highPriority?: boolean;
 }
 

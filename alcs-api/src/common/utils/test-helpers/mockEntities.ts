@@ -219,6 +219,7 @@ const initApplicationDecisionMock = (application?: Application) => {
     } as ApplicationDecisionOutcomeType,
     date: new Date(),
     uuid: 'fake-outcome-uuid',
+    applicationUuid: application.uuid,
     application,
     documents: [],
   });

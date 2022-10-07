@@ -166,10 +166,10 @@ export class BoardComponent implements OnInit {
   async onSelected(card: CardSelectedEvent) {
     switch (card.cardType) {
       case 'APP':
-        this.openAppCardDetailDialog(card.uuid, card.cardType);
+        await this.openAppCardDetailDialog(card.uuid, card.cardType);
         break;
       case 'RECON':
-        this.openReconCardDetailDialog(card.uuid, card.cardType);
+        await this.openReconCardDetailDialog(card.uuid, card.cardType);
         break;
     }
   }
@@ -207,8 +207,7 @@ export class BoardComponent implements OnInit {
     switch ($event.cardTypeCode) {
       case 'APP':
         this.applicationService
-          .updateApplicationCard({
-            cardUuid: $event.id,
+          .updateApplicationCard($event.id, {
             status: $event.status,
           })
           .then((r) => {
@@ -233,7 +232,7 @@ export class BoardComponent implements OnInit {
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.applicant})`,
-      assigneeInitials: application.assignee?.initials,
+      assigneeInitials: application.card.assignee?.initials,
       id: application.fileNumber,
       type: mappedType!,
       activeDays: application.activeDays,

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
@@ -25,11 +25,10 @@ export class IntakeComponent implements OnInit {
     });
   }
 
-  async updateApplication(field: keyof ApplicationDto, time: number) {
+  async updateApplication(field: keyof UpdateApplicationDto, time: number) {
     const application = this.application;
     if (application) {
-      await this.applicationDetailService.updateApplication({
-        fileNumber: application.fileNumber,
+      await this.applicationDetailService.updateApplication(application.fileNumber, {
         [field]: time,
       });
       this.toastService.showSuccessToast('Application updated');

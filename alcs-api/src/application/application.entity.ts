@@ -22,6 +22,13 @@ import { ApplicationReconsideration } from './application-reconsideration/applic
 
 @Entity()
 export class Application extends Base {
+  constructor(data?: Partial<Application>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @Column({ unique: true })
   fileNumber: string;

@@ -40,10 +40,10 @@ export class AssignedComponent implements OnInit {
       };
     });
     this.applications.sort((a, b) => {
-      if (a.highPriority === b.highPriority) {
+      if (a.card.highPriority === b.card.highPriority) {
         return b.activeDays - a.activeDays;
       }
-      if (a.highPriority) {
+      if (a.card.highPriority) {
         return -1;
       } else {
         return 1;
@@ -51,7 +51,7 @@ export class AssignedComponent implements OnInit {
     });
   }
 
-  onSelectCard(cardUuid: string, boardCode: string, cardTypeCode: string) {
-    this.router.navigateByUrl(`/board/${boardCode}?app=${cardUuid}&type=${cardTypeCode}`);
+  onSelectCard(fileNumber: string, boardCode: string, cardTypeCode: string) {
+    this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&type=${cardTypeCode}`);
   }
 }

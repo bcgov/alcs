@@ -1,9 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { BoardStatusDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
 import { CardUpdateDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
@@ -17,7 +19,8 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
   templateUrl: './recon-card-detail-dialog.component.html',
   styleUrls: ['./recon-card-detail-dialog.component.scss'],
 })
-export class ReconCardDetailDialogComponent implements OnInit {
+export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
@@ -27,7 +30,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
   title?: string;
 
   recon: ApplicationReconsiderationDto = this.data;
-  applicationStatuses: CardStatusDto[] = [];
+  boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
@@ -54,11 +57,13 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
 
-    this.boardService.$boards.subscribe((boards) => {
+    this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
-    });
-    this.applicationService.$cardStatuses.subscribe((statuses) => {
-      this.applicationStatuses = statuses;
+
+      const loadedBoard = boards.find((board) => board.code === this.selectedBoard);
+      if (loadedBoard) {
+        this.boardStatuses = loadedBoard.statuses;
+      }
     });
 
     this.dialogRef.backdropClick().subscribe(() => {
@@ -83,10 +88,10 @@ export class ReconCardDetailDialogComponent implements OnInit {
     });
   }
 
-  onStatusSelected(applicationStatus: CardStatusDto) {
-    this.selectedApplicationStatus = applicationStatus.code;
+  onStatusSelected(applicationStatus: BoardStatusDto) {
+    this.selectedApplicationStatus = applicationStatus.statusCode;
     this.updateCard({
-      statusCode: applicationStatus.code,
+      statusCode: applicationStatus.statusCode,
     });
   }
 
@@ -127,5 +132,10 @@ export class ReconCardDetailDialogComponent implements OnInit {
           });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }
