@@ -104,10 +104,10 @@
   <div class="select-container">
     <ng-select
       class="card-type"
-      [items]="applicationStatuses"
+      [items]="boardStatuses"
       placeholder="Workflow Stage"
       bindLabel="label"
-      bindValue="code"
+      bindValue="statusCode"
       [clearable]="false"
       [(ngModel)]="selectedApplicationStatus"
       (change)="onStatusSelected($event)"
