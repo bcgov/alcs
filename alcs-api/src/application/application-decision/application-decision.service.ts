@@ -84,9 +84,6 @@ export class ApplicationDecisionService {
       where: {
         uuid,
       },
-      relations: {
-        application: true,
-      },
     });
 
     if (!existingDecision) {
@@ -134,10 +131,12 @@ export class ApplicationDecisionService {
       );
 
       if (decisionIndex === existingDecisions.length - 1) {
-        await this.applicationService.createOrUpdate({
-          decisionDate: updatedDecision.date,
-          fileNumber: existingDecision.application.fileNumber,
-        });
+        await this.applicationService.updateByUuid(
+          existingDecision.applicationUuid,
+          {
+            decisionDate: updatedDecision.date,
+          },
+        );
       }
     }
 
@@ -165,9 +164,8 @@ export class ApplicationDecisionService {
       application.fileNumber,
     );
     if (existingDecisions.length === 0) {
-      await this.applicationService.createOrUpdate({
+      await this.applicationService.update(application, {
         decisionDate: decision.date,
-        fileNumber: application.fileNumber,
       });
     }
 
@@ -196,14 +194,12 @@ export class ApplicationDecisionService {
       applicationDecision.application.fileNumber,
     );
     if (existingDecisions.length === 0) {
-      await this.applicationService.createOrUpdate({
+      await this.applicationService.update(applicationDecision.application, {
         decisionDate: null,
-        fileNumber: applicationDecision.application.fileNumber,
       });
     } else {
-      await this.applicationService.createOrUpdate({
+      await this.applicationService.update(applicationDecision.application, {
         decisionDate: existingDecisions[existingDecisions.length - 1].date,
-        fileNumber: applicationDecision.application.fileNumber,
       });
     }
   }

@@ -122,8 +122,7 @@ export class OverviewComponent implements OnInit {
 
   onSaveSummary(updatedSummary: string) {
     if (this.application) {
-      this.applicationDetailService.updateApplication({
-        fileNumber: this.application.fileNumber,
+      this.applicationDetailService.updateApplication(this.application.fileNumber, {
         summary: updatedSummary,
       });
     }

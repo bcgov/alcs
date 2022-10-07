@@ -1,8 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardStatusDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
@@ -95,16 +95,11 @@ export class CardDetailDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateCard(changes: Omit<ApplicationPartialDto, 'cardUuid'>) {
-    this.applicationService
-      .updateApplicationCard({
-        ...changes,
-        cardUuid: this.application.card.uuid,
-      })
-      .then(() => {
-        this.isApplicationDirty = true;
-        this.toastService.showSuccessToast('Application Updated');
-      });
+  updateCard(updates: UpdateApplicationDto) {
+    this.applicationService.updateApplicationCard(this.data.card.uuid, updates).then(() => {
+      this.isApplicationDirty = true;
+      this.toastService.showSuccessToast('Application Updated');
+    });
   }
 
   onTogglePriority() {
@@ -114,8 +109,7 @@ export class CardDetailDialogComponent implements OnInit, OnDestroy {
     answer.subscribe((answer) => {
       if (answer) {
         this.applicationService
-          .updateApplicationCard({
-            cardUuid: this.application.card.uuid,
+          .updateApplicationCard(this.application.card.uuid, {
             highPriority: !this.application.card.highPriority,
           })
           .then(() => {

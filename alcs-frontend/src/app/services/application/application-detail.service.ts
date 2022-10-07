@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailedDto, ApplicationPartialDto } from './application.dto';
+import { ApplicationDetailedDto, UpdateApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
 @Injectable()
@@ -17,8 +17,8 @@ export class ApplicationDetailService {
     this.$application.next(application);
   }
 
-  async updateApplication(application: ApplicationPartialDto) {
-    const updatedApp = await this.applicationService.updateApplication(application);
+  async updateApplication(fileNumber: string, application: UpdateApplicationDto) {
+    const updatedApp = await this.applicationService.updateApplication(fileNumber, application);
     if (updatedApp) {
       this.$application.next(updatedApp);
     }

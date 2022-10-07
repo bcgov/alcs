@@ -130,7 +130,7 @@ describe('ApplicationController', () => {
   });
 
   it('should return the entity after create', async () => {
-    applicationService.createOrUpdate.mockResolvedValue(mockApplicationEntity);
+    applicationService.create.mockResolvedValue(mockApplicationEntity);
 
     codeService.fetchApplicationType.mockResolvedValue({
       uuid: 'fake-uuid',
@@ -142,7 +142,7 @@ describe('ApplicationController', () => {
       localGovernmentUuid: 'government-uuid',
     });
 
-    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+    expect(applicationService.create).toHaveBeenCalled();
     expect(res).toStrictEqual(mockApplicationDto);
   });
 
@@ -150,25 +150,25 @@ describe('ApplicationController', () => {
     applicationService.get.mockResolvedValue(undefined);
 
     await expect(
-      controller.update({
-        fileNumber: '11',
+      controller.update('11', {
         applicant: 'New Applicant',
-        cardUuid: 'fake',
       }),
-    ).rejects.toMatchObject(new Error(`File 11 not found`));
+    ).rejects.toMatchObject(
+      new Error(`Application with file number 11 not found`),
+    );
   });
 
   it('should update only the given fields', async () => {
+    const fileNumber = '11';
     const mockUpdate = {
-      fileNumber: '11',
       applicant: 'New Applicant',
     } as ApplicationUpdateDto;
 
     applicationService.get.mockResolvedValue(mockApplicationEntity);
 
-    applicationService.createOrUpdate.mockResolvedValue({
+    applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
-      fileNumber: mockUpdate.fileNumber,
+      fileNumber: fileNumber,
       applicant: mockUpdate.applicant,
     } as Application);
     applicationService.mapToDtos.mockResolvedValue([
@@ -177,21 +177,24 @@ describe('ApplicationController', () => {
       } as unknown as ApplicationDto,
     ]);
 
-    const res = await controller.update(mockUpdate);
+    const res = await controller.update(fileNumber, mockUpdate);
 
     expect(res.applicant).toEqual(mockUpdate.applicant);
-    expect(applicationService.createOrUpdate).toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalled();
     expect(
       notificationService.createNotificationForApplication,
     ).not.toHaveBeenCalled();
-    expect(applicationService.createOrUpdate).toHaveBeenCalledWith(mockUpdate);
+    expect(applicationService.update).toHaveBeenCalledWith(
+      mockApplicationEntity,
+      mockUpdate,
+    );
   });
 
   it('should handle updating application and not include status', async () => {
     const mockStatus = 'NEW_STATUS';
     const mockUuid = 'uuid';
+    const fileNumber = '11';
     const mockUpdate = {
-      fileNumber: '11',
       status: mockStatus,
       cardUuid: 'fake',
     };
@@ -201,7 +204,7 @@ describe('ApplicationController', () => {
       code: mockStatus,
     } as CardStatus);
     applicationService.get.mockResolvedValue(mockApplicationEntity);
-    applicationService.createOrUpdate.mockResolvedValue({
+    applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
       card: {
         ...mockApplicationEntity.card,
@@ -213,21 +216,17 @@ describe('ApplicationController', () => {
       },
     } as Application);
 
-    await controller.update(mockUpdate);
+    await controller.update(fileNumber, mockUpdate);
 
-    expect(applicationService.createOrUpdate).toHaveBeenCalled();
-    expect(
-      notificationService.createNotificationForApplication,
-    ).not.toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalled();
   });
 
   it('should handle updating type', async () => {
     const mockType = 'NEW_STATUS';
     const mockUuid = 'uuid';
+    const fileNumber = '11';
     const mockUpdate = {
-      fileNumber: '11',
       type: mockType,
-      cardUuid: 'fake',
     };
 
     codeService.fetchApplicationType.mockResolvedValue({
@@ -235,7 +234,7 @@ describe('ApplicationController', () => {
       code: mockType,
     } as ApplicationType);
     applicationService.get.mockResolvedValue(mockApplicationEntity);
-    applicationService.createOrUpdate.mockResolvedValue({
+    applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
       type: {
         code: mockType,
@@ -244,19 +243,17 @@ describe('ApplicationController', () => {
       },
     } as Application);
 
-    await controller.update(mockUpdate);
+    await controller.update(fileNumber, mockUpdate);
 
-    expect(applicationService.createOrUpdate).toHaveBeenCalled();
-    expect(
-      notificationService.createNotificationForApplication,
-    ).not.toHaveBeenCalled();
-    const savedData = applicationService.createOrUpdate.mock.calls[0][0];
+    expect(applicationService.update).toHaveBeenCalled();
+    const savedData = applicationService.update.mock.calls[0][1];
     expect(savedData.typeUuid).toEqual(mockUuid);
   });
 
   it('should handle updating region', async () => {
     const mockRegion = 'NEW_REGION';
     const mockUuid = 'uuid';
+    const fileNumber = '11';
     const mockUpdate = {
       fileNumber: '11',
       region: mockRegion,
@@ -268,7 +265,7 @@ describe('ApplicationController', () => {
       code: mockRegion,
     } as ApplicationType);
     applicationService.get.mockResolvedValue(mockApplicationEntity);
-    applicationService.createOrUpdate.mockResolvedValue({
+    applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
       region: {
         code: mockRegion,
@@ -277,23 +274,18 @@ describe('ApplicationController', () => {
       },
     } as Application);
 
-    await controller.update(mockUpdate);
+    await controller.update(fileNumber, mockUpdate);
 
-    expect(applicationService.createOrUpdate).toBeCalledTimes(1);
-    expect(
-      notificationService.createNotificationForApplication,
-    ).not.toHaveBeenCalled();
+    expect(applicationService.update).toBeCalledTimes(1);
     expect(codeService.fetchRegion).toBeCalledTimes(1);
-    const savedData = applicationService.createOrUpdate.mock.calls[0][0];
+    const savedData = applicationService.update.mock.calls[0][1];
     expect(savedData.regionUuid).toEqual(mockUuid);
   });
 
   it('should call notification service when assignee is changed', async () => {
     const mockUserUuid = 'fake-user';
     const mockUpdate = {
-      fileNumber: '11',
       assigneeUuid: mockUserUuid,
-      cardUuid: 'fake',
     };
 
     const fakeAuthor = {
@@ -312,7 +304,7 @@ describe('ApplicationController', () => {
     cardService.get.mockResolvedValue(mockApplicationEntity.card);
     cardService.update.mockResolvedValue(updatedCard);
 
-    await controller.updateCard(mockUpdate, {
+    await controller.updateCard('fake', mockUpdate, {
       user: {
         entity: fakeAuthor,
       },
@@ -345,31 +337,26 @@ describe('ApplicationController', () => {
   it('should not update card entity even if passed', async () => {
     const mockUserUuid = 'fake-author';
     const mockUpdate = {
-      fileNumber: '11',
       assigneeUuid: mockUserUuid,
-      cardUuid: 'fake',
     };
 
     const returnedApplication = mockApplicationEntity;
     returnedApplication.card.assigneeUuid = mockUserUuid;
 
     applicationService.get.mockResolvedValue(mockApplicationEntity);
-    applicationService.createOrUpdate.mockResolvedValue(returnedApplication);
+    applicationService.update.mockResolvedValue(returnedApplication);
 
-    await controller.update(mockUpdate);
+    await controller.update('11', mockUpdate);
 
-    expect(applicationService.createOrUpdate).toHaveBeenCalled();
-    expect(
-      notificationService.createNotificationForApplication,
-    ).not.toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalled();
+    expect(notificationService.createForApplication).not.toHaveBeenCalled();
   });
 
   it('should throw service validation exceptions on update if card/application does not exist', async () => {
     const mockUserUuid = 'fake-user';
+    const cardUuid = 'fake-card-uuid';
     const mockUpdate = {
-      fileNumber: '11',
       assigneeUuid: mockUserUuid,
-      cardUuid: 'fake',
     };
 
     const fakeAuthor = {
@@ -380,19 +367,15 @@ describe('ApplicationController', () => {
     cardService.get.mockResolvedValue(undefined);
 
     await expect(
-      controller.updateCard(mockUpdate, {
+      controller.updateCard(cardUuid, mockUpdate, {
         user: {
           entity: fakeAuthor,
         },
       }),
-    ).rejects.toMatchObject(
-      new Error(`Card for application with ${mockUpdate.fileNumber} not found`),
-    );
+    ).rejects.toMatchObject(new Error(`Card ${cardUuid} not found`));
 
     expect(cardService.update).toBeCalledTimes(0);
-    expect(
-      notificationService.createNotificationForApplication,
-    ).toBeCalledTimes(0);
+    expect(notificationService.createForApplication).toBeCalledTimes(0);
   });
 
   it('should update card status if it changed', async () => {
@@ -427,9 +410,13 @@ describe('ApplicationController', () => {
       card: updatedCard,
     } as Application);
 
-    const result = await controller.updateCard(mockUpdate, {
-      user: { entity: { uuid: 'fake' } },
-    });
+    const result = await controller.updateCard(
+      mockApplicationEntity.card.uuid,
+      mockUpdate,
+      {
+        user: { entity: { uuid: 'fake' } },
+      },
+    );
 
     expect(cardService.update).toBeCalledTimes(1);
     expect(codeService.fetchCardStatus).toBeCalledTimes(1);
