@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDecisionMeetingDto } from '../../services/application/application.dto';
+import { UserDto } from '../../services/user/user.dto';
 
 export interface CardData {
   id: string;
   title: string;
   type: ApplicationTypeDto;
   status: string;
-  assigneeInitials?: string;
+  assignee?: UserDto;
   activeDays?: number;
   paused: boolean;
   highPriority: boolean;
@@ -21,6 +22,7 @@ export interface CardSelectedEvent {
   uuid: string;
   cardType: string;
 }
+
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',

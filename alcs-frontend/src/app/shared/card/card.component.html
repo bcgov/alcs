@@ -23,7 +23,11 @@
           <span class="center">{{ cardData.activeDays }}</span>
         </div>
       </div>
-      <app-avatar-circle *ngIf="cardData.assigneeInitials" [initials]="cardData.assigneeInitials"></app-avatar-circle>
+      <app-avatar-circle
+        *ngIf="cardData.assignee"
+        [initials]="cardData.assignee.initials"
+        [name]="cardData.assignee.name"
+      ></app-avatar-circle>
     </div>
   </div>
 </mat-card>
