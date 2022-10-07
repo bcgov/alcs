@@ -55,10 +55,10 @@ export class GisSubtasksComponent implements OnInit {
     });
 
     this.subtasks.sort((a, b) => {
-      if (a.application.highPriority === b.application.highPriority) {
+      if (a.application.card.highPriority === b.application.card.highPriority) {
         return b.application.activeDays - a.application.activeDays;
       }
-      if (a.application.highPriority) {
+      if (a.application.card.highPriority) {
         return -1;
       } else {
         return 1;

@@ -49,7 +49,6 @@ describe('ApplicationController', () => {
     board: undefined,
     region: undefined,
     localGovernment: 'Local Government',
-    assignee: initAssigneeMockDto(),
     activeDays: 2,
     pausedDays: 0,
     paused: false,
@@ -57,6 +56,7 @@ describe('ApplicationController', () => {
     decisionMeetings: [],
     dateReceived: Date.now(),
     card: {
+      assignee: initAssigneeMockDto(),
       status: 'FAKE',
     } as CardDto,
   };

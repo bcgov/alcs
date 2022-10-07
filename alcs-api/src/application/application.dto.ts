@@ -62,9 +62,6 @@ export class ApplicationDto {
   assigneeUuid?: string;
 
   @AutoMap()
-  assignee?: UserDto;
-
-  @AutoMap()
   activeDays: number;
 
   @AutoMap()

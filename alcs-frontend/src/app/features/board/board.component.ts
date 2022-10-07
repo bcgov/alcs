@@ -236,7 +236,7 @@ export class BoardComponent implements OnInit {
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.applicant})`,
-      assigneeInitials: application.assignee?.initials,
+      assigneeInitials: application.card.assignee?.initials,
       id: application.fileNumber,
       type: mappedType!,
       activeDays: application.activeDays,

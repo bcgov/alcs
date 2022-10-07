@@ -17,7 +17,7 @@
         *ngFor="let subtask of subtasks"
       >
         <td class="priority-column">
-          <span class="high-priority" *ngIf="subtask.application.highPriority">!</span>
+          <span class="high-priority" *ngIf="subtask.application.card.highPriority">!</span>
         </td>
         <td>{{ subtask.application.fileNumber }} ({{ subtask.application.applicant }})</td>
         <td>{{ subtask.application.activeDays }}</td>

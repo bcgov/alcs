@@ -6,17 +6,18 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <h3 class="card-title">{{ application.fileNumber }} ({{ application.applicant }})
+      <h3 class="card-title">
+        {{ application.fileNumber }} ({{ application.applicant }})
         <span
           class="center application-type"
           [ngStyle]="{
-          backgroundColor: application.typeDetails.backgroundColor,
-          color: application.typeDetails.textColor
-        }"
+            backgroundColor: application.typeDetails.backgroundColor,
+            color: application.typeDetails.textColor
+          }"
         >
-        {{ application.typeDetails.label }}
-      </span></h3>
-
+          {{ application.typeDetails.label }}
+        </span>
+      </h3>
     </div>
     <div>
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
@@ -46,7 +47,7 @@
     </div>
   </div>
   <div>
-    <span class="region">{{application.localGovernment}} - {{ application.regionDetails.label }} Region</span>
+    <span class="region">{{ application.localGovernment }} - {{ application.regionDetails.label }} Region</span>
   </div>
   <div class="header-row">
     <div class="left">
@@ -88,7 +89,12 @@
           <span *ngIf="application.board === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
         </button>
       </mat-menu>
-      <button [matTooltip]="application.highPriority ? 'Remove Priority' : 'Add Priority'" class="toggle-priority" (click)="onTogglePriority()" mat-icon-button>
+      <button
+        [matTooltip]="application.card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        class="toggle-priority"
+        (click)="onTogglePriority()"
+        mat-icon-button
+      >
         <div
           class="priority"
           [ngClass]="{

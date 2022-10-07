@@ -31,11 +31,9 @@ export interface ApplicationDto {
   decisionDate?: number;
   region: string;
   localGovernment: string;
-  assignee?: UserDto;
   activeDays: number;
   pausedDays: number;
   paused: boolean;
-  highPriority: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card: CardDto;
 }
