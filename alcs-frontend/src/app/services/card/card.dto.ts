@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { CardStatusDto } from '../application/application-code.dto';
 import { BoardDto } from '../board/board.dto';
 import { UserDto } from '../user/user.dto';
 
@@ -11,18 +12,27 @@ export interface CardCreateDto {
 
 export interface CardUpdateDto {
   uuid: string;
-  assigneeUuid?: string;
+  assigneeUuid?: string | null;
   boardCode?: string;
   typeCode?: string;
   statusCode?: string;
   highPriority?: boolean;
 }
 
+export interface CardFlatDto {
+  uuid: string;
+  assigneeUuid: string;
+  type: string;
+  highPriority: boolean;
+  statusUuid: string;
+  boardUuid: string;
+}
+
 export interface CardDto {
   uuid: string;
   type: string;
   highPriority: boolean;
-  status: string;
+  status: CardStatusDto;
   assignee?: UserDto;
   board: BoardDto;
 }

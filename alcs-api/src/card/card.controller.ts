@@ -31,7 +31,7 @@ export class CardController {
 
     const updatedCard = await this.cardService.update(uuid, {
       statusUuid: status ? status.uuid : undefined,
-      assigneeUuid: cardToUpdate.assigneeUuid ?? null,
+      assigneeUuid: cardToUpdate.assigneeUuid,
       highPriority: cardToUpdate.highPriority,
     });
 

@@ -65,7 +65,7 @@ export class CardDto {
   assignee?: UserDto;
 
   @AutoMap()
-  status: string;
+  status: CardStatusDto;
 
   @AutoMap()
   type: string;

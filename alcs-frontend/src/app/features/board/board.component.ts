@@ -248,7 +248,7 @@ export class BoardComponent implements OnInit {
     // TODO get mock fields from application linked to reconsideration
     console.log(recon);
     return {
-      status: recon.card.status,
+      status: recon.card.status.code,
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
       // title: `${recon.fileNumber} (${application.applicant})`,
       assigneeInitials: recon.card.assignee?.initials,

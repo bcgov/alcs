@@ -2,9 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationService } from '../../../services/application/application.service';
 import { BoardStatusDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
 import { CardUpdateDto } from '../../../services/card/card.dto';
@@ -39,7 +37,6 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: ApplicationReconsiderationDto,
     private dialogRef: MatDialogRef<ReconCardDetailDialogComponent>,
     private userService: UserService,
-    private applicationService: ApplicationService,
     private cardService: CardService,
     private boardService: BoardService,
     private toastService: ToastService,
@@ -50,7 +47,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
     this.recon = this.data;
     this.selectedAssignee = this.data.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = this.data.card.status;
+    this.selectedApplicationStatus = this.data.card.status.code;
     this.selectedBoard = this.data.card.board.code;
     this.selectedRegion = this.data.application.region.code;
 
@@ -59,7 +56,6 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
 
     this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
-
       const loadedBoard = boards.find((board) => board.code === this.selectedBoard);
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
@@ -125,6 +121,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
           .updateCard({
             uuid: this.recon.card.uuid,
             highPriority: !this.recon.card.highPriority,
+            assigneeUuid: this.recon.card.assignee?.uuid,
           })
           .then(() => {
             this.isApplicationDirty = true;

@@ -11,11 +11,11 @@
         <span
           class="center application-type"
           [ngStyle]="{
-            backgroundColor: recon.type.backgroundColor,
-            color: recon.type.textColor
+            backgroundColor: recon.application.type.backgroundColor,
+            color: recon.application.type.textColor
           }"
         >
-          {{ recon.type.label }}
+          {{ recon.application.type.label }}
         </span>
       </h3>
     </div>
@@ -74,7 +74,7 @@
       [items]="boardStatuses"
       placeholder="Workflow Stage"
       bindLabel="label"
-      bindValue="code"
+      bindValue="statusCode"
       [clearable]="false"
       [(ngModel)]="selectedApplicationStatus"
       (change)="onStatusSelected($event)"

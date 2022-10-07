@@ -32,11 +32,6 @@ export class ApplicationReconsiderationService {
     private cardService: CardService,
   ) {}
 
-  // private CARD_RELATIONS: FindOptionsRelations<Card> = {
-  //   board: true,
-  //   type: true,
-  //   status: true,
-  // };
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
     {
       application: {
@@ -48,25 +43,7 @@ export class ApplicationReconsiderationService {
         board: true,
         type: true,
         status: true,
-      },
-      type: true,
-    };
-
-  DEFAULT_RECONSIDERATION_DETAILED_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
-    {
-      application: {
-        type: true,
-        region: true,
-        localGovernment: true,
-      },
-      card: {
-        board: true,
-        type: true,
-        status: true,
-        comments: {
-          mentions: true,
-        },
-        subtasks: true,
+        assignee: true,
       },
       type: true,
     };

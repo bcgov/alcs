@@ -30,10 +30,6 @@ export class CardAutomapperProfile extends AutomapperProfile {
         Card,
         CardDto,
         forMember(
-          (cd) => cd.status,
-          mapFrom((c) => c.status.code),
-        ),
-        forMember(
           (cd) => cd.type,
           mapFrom((c) => c.type.code),
         ),
@@ -47,10 +43,6 @@ export class CardAutomapperProfile extends AutomapperProfile {
         mapper,
         Card,
         CardDetailedDto,
-        forMember(
-          (cd) => cd.status,
-          mapFrom((c) => c.status.code),
-        ),
         forMember(
           (cd) => cd.type,
           mapFrom((c) => c.type.code),
