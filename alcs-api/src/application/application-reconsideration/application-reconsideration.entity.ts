@@ -20,6 +20,7 @@ export class ApplicationReconsideration extends Base {
   @Column({ type: 'timestamptz' })
   submittedDate: Date;
 
+  @AutoMap()
   @ManyToOne(() => ReconsiderationType, {
     nullable: false,
   })
@@ -30,7 +31,7 @@ export class ApplicationReconsideration extends Base {
   isReviewApproved: boolean;
 
   @AutoMap()
-  @ManyToOne(() => Application)
+  @ManyToOne(() => Application, { cascade: ['insert'] })
   application: Application;
 
   @AutoMap()

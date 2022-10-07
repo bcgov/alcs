@@ -7,15 +7,15 @@
   <div class="header-row">
     <div class="left">
       <h3 class="card-title">
-        'Mock, get from app'
+        {{ recon.application.fileNumber }} ({{ recon.application.applicant }})
         <span
           class="center application-type"
           [ngStyle]="{
-            backgroundColor: recon.typeDetails.backgroundColor,
-            color: recon.typeDetails.textColor
+            backgroundColor: recon.type.backgroundColor,
+            color: recon.type.textColor
           }"
         >
-          {{ recon.typeDetails.label }}
+          {{ recon.type.label }}
         </span>
       </h3>
     </div>
@@ -24,14 +24,14 @@
         color="accent"
         mat-flat-button
         [mat-dialog-close]="isApplicationDirty"
-        [routerLink]="['application', recon.applicationFileNumber]"
+        [routerLink]="['application', recon.application.fileNumber]"
       >
         View Detail
       </button>
     </div>
   </div>
   <div>
-    <span class="region">{{ recon.regionDetails.label }} Region</span>
+    <span class="region">{{ recon.application.region.label }} Region</span>
   </div>
   <div class="header-row">
     <div class="left"></div>
@@ -45,11 +45,13 @@
             ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
           </span>
           <span>{{ board.title }}</span>
-          <span *ngIf="recon.board === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+          <span *ngIf="recon.card.board.code === board.code"
+            ><mat-icon class="selected-board-icon">check</mat-icon></span
+          >
         </button>
       </mat-menu>
       <button
-        [matTooltip]="recon.highPriority ? 'Remove Priority' : 'Add Priority'"
+        [matTooltip]="recon.card.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
         mat-icon-button
@@ -57,8 +59,8 @@
         <div
           class="priority"
           [ngClass]="{
-            'filled-priority': recon.highPriority,
-            'empty-priority': !recon.highPriority
+            'filled-priority': recon.card.highPriority,
+            'empty-priority': !recon.card.highPriority
           }"
         ></div>
       </button>
@@ -100,9 +102,9 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks [cardUuid]="recon.uuid"></app-subtasks>
+    <app-subtasks [cardUuid]="recon.card.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
-    <app-comments [cardUuid]="recon.uuid"></app-comments>
+    <app-comments [cardUuid]="recon.card.uuid"></app-comments>
   </div>
 </mat-dialog-content>

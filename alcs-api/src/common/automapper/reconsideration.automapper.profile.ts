@@ -1,9 +1,11 @@
-import { createMap, Mapper } from '@automapper/core';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationReconsideration } from '../../application/application-reconsideration/application-reconsideration.entity';
 import {
+  ApplicationDto,
   ApplicationReconsiderationCreateDto,
+  ApplicationReconsiderationDto,
   ReconsiderationTypeDto,
 } from '../../application/application-reconsideration/applicationReconsideration.dto';
 import { ReconsiderationType } from '../../application/application-reconsideration/reconsideration-type/reconsideration-type.entity';
@@ -23,9 +25,49 @@ export class ReconsiderationProfile extends AutomapperProfile {
         mapper,
         ApplicationReconsiderationCreateDto,
         ApplicationReconsideration,
+        forMember(
+          (r) => r.submittedDate,
+          mapFrom((rd) => new Date(rd.submittedDate)),
+        ),
       );
 
-      createMap(mapper, ApplicationReconsiderationCreateDto, Application);
+      createMap(
+        mapper,
+        ApplicationReconsiderationCreateDto,
+        Application,
+        forMember(
+          (a) => a.fileNumber,
+          mapFrom((rd) => rd.applicationFileNumber),
+        ),
+        forMember(
+          (a) => a.dateReceived,
+          mapFrom((rd) => new Date(rd.submittedDate)),
+        ),
+      );
+
+      createMap(
+        mapper,
+        Application,
+        ApplicationDto,
+        forMember(
+          (a) => a.localGovernment,
+          mapFrom((rd) => rd.localGovernment.name),
+        ),
+      );
+
+      createMap(mapper, ReconsiderationType, ReconsiderationTypeDto);
+
+      createMap(
+        mapper,
+        ApplicationReconsideration,
+        ApplicationReconsiderationDto,
+        forMember(
+          (a) => a.application,
+          mapFrom((rd) =>
+            this.mapper.map(rd.application, Application, ApplicationDto),
+          ),
+        ),
+      );
     };
   }
 }

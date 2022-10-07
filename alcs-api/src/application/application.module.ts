@@ -2,11 +2,15 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { Board } from '../board/board.entity';
+import { BoardService } from '../board/board.service';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
 import { ApplicationDecisionProfile } from '../common/automapper/application-decision.automapper.profile';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
+import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
 import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
@@ -49,6 +53,7 @@ import { ApplicationService } from './application.service';
       ApplicationDecision,
       DecisionDocument,
       ApplicationReconsideration,
+      Board,
     ]),
     NotificationModule,
     DocumentModule,
@@ -72,6 +77,9 @@ import { ApplicationService } from './application.service';
     ApplicationLocalGovernmentService,
     ApplicationDecisionService,
     ApplicationReconsiderationService,
+    BoardService,
+    ReconsiderationProfile,
+    BoardAutomapperProfile,
   ],
   controllers: [
     ApplicationController,
@@ -87,6 +95,8 @@ import { ApplicationService } from './application.service';
     ApplicationTimeTrackingService,
     ApplicationProfile,
     ApplicationSubtaskProfile,
+    ApplicationReconsiderationService,
+    ReconsiderationProfile,
   ],
 })
 export class ApplicationModule {}

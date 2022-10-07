@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationReconsiderationService } from '../application/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
@@ -22,6 +23,7 @@ export class BoardController {
     private boardService: BoardService,
     private applicationService: ApplicationService,
     private cardService: CardService,
+    private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -38,16 +40,12 @@ export class BoardController {
     const applications = await this.boardService.getApplicationsByCode(
       boardCode,
     );
-    const cards = await this.cardService.getByBoard(boardCode);
 
-    // TODO implement get recons with cards ones we have the recon entity
-    const reconsCards = cards.filter(
-      (c) => !applications.some((a) => a.cardUuid === c.uuid),
-    );
+    const recons = await this.reconsiderationService.getByBoardCode(boardCode);
 
     return {
       applications: await this.applicationService.mapToDtos(applications),
-      reconsiderations: await this.cardService.mapToDtos(reconsCards),
+      reconsiderations: await this.reconsiderationService.mapToDtos(recons),
     };
   }
 

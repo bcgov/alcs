@@ -2,9 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
 import { CardStatusDto } from '../../../services/application/application-code.dto';
+import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { CardUpdateDto, ReconsiderationDto } from '../../../services/card/card.dto';
+import { CardUpdateDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
@@ -23,15 +24,16 @@ export class ReconCardDetailDialogComponent implements OnInit {
   selectedApplicationStatus = '';
   selectedBoard?: string;
   selectedRegion?: string;
+  title?: string;
 
-  recon: ReconsiderationDto = this.data;
+  recon: ApplicationReconsiderationDto = this.data;
   applicationStatuses: CardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ReconsiderationDto,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationReconsiderationDto,
     private dialogRef: MatDialogRef<ReconCardDetailDialogComponent>,
     private userService: UserService,
     private applicationService: ApplicationService,
@@ -43,11 +45,11 @@ export class ReconCardDetailDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.recon = this.data;
-    this.selectedAssignee = this.data.assignee;
+    this.selectedAssignee = this.data.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = this.data.statusDetails.code;
-    this.selectedBoard = this.data.board;
-    this.selectedRegion = this.data.regionDetails?.code;
+    this.selectedApplicationStatus = this.data.card.status;
+    this.selectedBoard = this.data.card.board.code;
+    this.selectedRegion = this.data.application.region.code;
 
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
@@ -62,6 +64,8 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.dialogRef.backdropClick().subscribe(() => {
       this.dialogRef.close(this.isApplicationDirty);
     });
+
+    this.title = this.recon.application.fileNumber;
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -73,7 +77,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
 
   onAssigneeSelected(assignee: UserDto) {
     this.selectedAssignee = assignee;
-    this.recon.assignee = assignee;
+    this.recon.card.assignee = assignee;
     this.updateCard({
       assigneeUuid: assignee?.uuid ?? null,
     });
@@ -88,7 +92,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.recon.uuid, board.code).then(() => {
+    await this.boardService.changeBoard(this.recon.card.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
       this.toastService.showSuccessToast(`Recon moved to ${board.title}`);
     });
@@ -98,7 +102,7 @@ export class ReconCardDetailDialogComponent implements OnInit {
     this.cardService
       .updateCard({
         ...changes,
-        uuid: this.recon.uuid,
+        uuid: this.recon.card.uuid,
       })
       .then(() => {
         this.isApplicationDirty = true;
@@ -108,18 +112,18 @@ export class ReconCardDetailDialogComponent implements OnInit {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.recon.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
+      body: this.recon.card.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
     });
     answer.subscribe((answer) => {
       if (answer) {
         this.cardService
           .updateCard({
-            uuid: this.recon.uuid, // TODO this will be update to card.uuid once we have proper recon
-            highPriority: !this.recon.highPriority,
+            uuid: this.recon.card.uuid,
+            highPriority: !this.recon.card.highPriority,
           })
           .then(() => {
             this.isApplicationDirty = true;
-            this.recon.highPriority = !this.recon.highPriority;
+            this.recon.card.highPriority = !this.recon.card.highPriority;
           });
       }
     });

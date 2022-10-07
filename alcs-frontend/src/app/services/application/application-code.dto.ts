@@ -1,5 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { ReconsiderationTypeDto } from '../card/card.dto';
+import { ReconsiderationTypeDto } from './application-reconsideration/application-reconsideration.dto';
 
 export interface CardStatusDto extends BaseCodeDto {}
 export interface ApplicationRegionDto extends BaseCodeDto {}

@@ -2,17 +2,22 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
+import { Board } from '../../board/board.entity';
+import { CardCreateDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
+import { CardService } from '../../card/card.service';
 import { CodeService } from '../../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
 import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import {
   ApplicationReconsiderationCreateDto,
+  ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
 } from './applicationReconsideration.dto';
 
@@ -22,12 +27,72 @@ export class ApplicationReconsiderationService {
     @InjectRepository(ApplicationReconsideration)
     private reconsiderationRepository: Repository<ApplicationReconsideration>,
     @InjectMapper() private mapper: Mapper,
-
     private codeService: CodeService,
+    private applicationService: ApplicationService,
+    private cardService: CardService,
   ) {}
 
-  async create(reconsideration: ApplicationReconsiderationCreateDto) {
-    const type = await this.fetchAndValidateType(reconsideration.typeCode);
+  // private CARD_RELATIONS: FindOptionsRelations<Card> = {
+  //   board: true,
+  //   type: true,
+  //   status: true,
+  // };
+  private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
+    {
+      application: {
+        type: true,
+        region: true,
+        localGovernment: true,
+      },
+      card: {
+        board: true,
+        type: true,
+        status: true,
+      },
+      type: true,
+    };
+
+  DEFAULT_RECONSIDERATION_DETAILED_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
+    {
+      application: {
+        type: true,
+        region: true,
+        localGovernment: true,
+      },
+      card: {
+        board: true,
+        type: true,
+        status: true,
+        comments: {
+          mentions: true,
+        },
+        subtasks: true,
+      },
+      type: true,
+    };
+
+  async getByBoardCode(boardCode: string) {
+    return this.reconsiderationRepository.find({
+      where: { card: { board: { code: boardCode } } },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
+  }
+
+  async mapToDtos(
+    reconsiderations: ApplicationReconsideration[],
+  ): Promise<ApplicationReconsiderationDto[]> {
+    return this.mapper.mapArrayAsync(
+      reconsiderations,
+      ApplicationReconsideration,
+      ApplicationReconsiderationDto,
+    );
+  }
+
+  async create(
+    reconsideration: ApplicationReconsiderationCreateDto,
+    board: Board,
+  ) {
+    const type = await this.fetchAndValidateType(reconsideration.reconTypeCode);
 
     const mappedReconsideration = this.mapper.map(
       reconsideration,
@@ -39,19 +104,46 @@ export class ApplicationReconsiderationService {
       new ApplicationReconsideration(),
       mappedReconsideration,
     );
-    newReconsideration.card = new Card();
+
+    const newCard = await this.cardService.create(
+      {
+        boardCode: reconsideration.boardCode,
+        typeCode: 'RECON',
+      } as CardCreateDto,
+      board,
+      false,
+    );
+
+    newReconsideration.card = newCard;
     newReconsideration.type = type;
 
-    if (!newReconsideration.applicationUuid) {
+    const existingApplication = await this.applicationService.get(
+      reconsideration.applicationFileNumber,
+    );
+
+    // TODO: move application creation/linkage to separate function
+    if (existingApplication) {
+      newReconsideration.applicationUuid = existingApplication.uuid;
+      // TODO: check if this is required
+      // newReconsideration.application = existingApplication;
+    } else {
       const applicationType = await this.codeService.fetchApplicationType(
-        reconsideration.applicationType,
+        reconsideration.applicationTypeCode,
       );
       if (!applicationType) {
         throw new ServiceNotFoundException(
-          `Provided application type does not exist ${reconsideration.applicationType}`,
+          `Provided application type does not exist ${reconsideration.applicationTypeCode}`,
         );
       }
 
+      const applicationRegion = await this.codeService.fetchRegion(
+        reconsideration.region,
+      );
+      if (!applicationRegion) {
+        throw new ServiceNotFoundException(
+          `Provided application region does not exist ${reconsideration.region}`,
+        );
+      }
       // if application does not exist => create it and link to reconsideration.
       // Application card must not be created
       const mappedApplication = this.mapper.map(
@@ -59,11 +151,14 @@ export class ApplicationReconsiderationService {
         ApplicationReconsiderationCreateDto,
         Application,
       );
+      newReconsideration.application = new Application();
       newReconsideration.application = Object.assign(
-        new Application(),
+        newReconsideration.application,
         mappedApplication,
       );
       newReconsideration.application.type = applicationType;
+      newReconsideration.application.region = applicationRegion;
+      newReconsideration.application.card = new Card();
     }
 
     return this.reconsiderationRepository.save(newReconsideration);
@@ -126,5 +221,12 @@ export class ApplicationReconsiderationService {
     }
 
     return recon;
+  }
+
+  getByCardUuid(cardUuid: string) {
+    return this.reconsiderationRepository.findOne({
+      where: { cardUuid },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
   }
 }

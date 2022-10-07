@@ -6,7 +6,8 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationRegionDto, CardStatusDto } from '../../../services/application/application-code.dto';
-import { CardDto, ReconsiderationDto, ReconsiderationTypeDto } from '../../../services/card/card.dto';
+import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { CardDto, ReconsiderationTypeDto } from '../../../services/card/card.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../shared/shared.module';
 
@@ -36,7 +37,7 @@ describe('ReconCardDetailDialogComponent', () => {
     backgroundColor: '#fff',
   };
 
-  const mockReconDto: ReconsiderationDto = {
+  const mockReconDto: ApplicationReconsiderationDto = {
     highPriority: false,
     status: '',
     uuid: '',

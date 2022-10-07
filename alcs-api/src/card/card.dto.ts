@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { BoardSmallDto } from '../board/board.dto';
 import { UserDto } from '../user/user.dto';
 import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
 
@@ -76,6 +77,9 @@ export class CardDto {
   @IsBoolean()
   @IsOptional()
   highPriority?: boolean;
+
+  @AutoMap()
+  board: BoardSmallDto;
 }
 
 export class CardDetailedDto extends CardDto {

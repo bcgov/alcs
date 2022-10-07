@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -10,6 +11,7 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
+import { BoardService } from '../../board/board.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationReconsiderationService } from './application-reconsideration.service';
@@ -24,6 +26,7 @@ import {
 export class ApplicationReconsiderationController {
   constructor(
     private reconsiderationService: ApplicationReconsiderationService,
+    private boardService: BoardService,
   ) {}
 
   @Patch('/:uuid')
@@ -43,8 +46,13 @@ export class ApplicationReconsiderationController {
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
   async create(@Body() reconsideration: ApplicationReconsiderationCreateDto) {
+    const board = await this.boardService.getOne({
+      code: reconsideration.boardCode,
+    });
+
     const createdRecon = await this.reconsiderationService.create(
       reconsideration,
+      board,
     );
 
     return createdRecon;
@@ -53,6 +61,12 @@ export class ApplicationReconsiderationController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
-    return await this.reconsiderationService.delete(uuid);
+    return this.reconsiderationService.delete(uuid);
+  }
+
+  @Get('/card/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getByCard(@Param('uuid') cardUuid: string) {
+    return this.reconsiderationService.getByCardUuid(cardUuid);
   }
 }

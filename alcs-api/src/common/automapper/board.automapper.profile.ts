@@ -2,7 +2,7 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { BoardStatus } from '../../board/board-status.entity';
-import { BoardDto, BoardStatusDto } from '../../board/board.dto';
+import { BoardDto, BoardSmallDto, BoardStatusDto } from '../../board/board.dto';
 import { Board } from '../../board/board.entity';
 import { CardDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
@@ -15,6 +15,8 @@ export class BoardAutomapperProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
+      createMap(mapper, Board, BoardSmallDto);
+
       createMap(
         mapper,
         Board,

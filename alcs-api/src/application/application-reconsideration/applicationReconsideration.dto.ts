@@ -6,41 +6,51 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { CardDto } from '../../card/card.dto';
+import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
+import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
 export class ApplicationReconsiderationCreateDto {
   @AutoMap()
-  @IsNumber()
-  submittedDate: number;
+  @IsString()
+  applicationTypeCode: string;
 
   @AutoMap()
-  @IsString()
-  typeCode: string;
-
-  @AutoMap()
-  @IsOptional()
-  applicationUuid?: string;
-
-  @IsString()
-  localGovernmentUuid: string;
-
   @IsNotEmpty()
   @IsString()
-  fileNumber: string;
+  applicationFileNumber: string;
 
+  @AutoMap()
   @IsNotEmpty()
   @IsString()
   applicant: string;
 
-  @IsNotEmpty()
-  @IsString()
-  applicationType: string;
-
+  @AutoMap()
   @IsNotEmpty()
   @IsString()
   region: string;
+
+  // TODO not mapped on UI
+  @IsString()
+  localGovernmentUuid: string;
+
+  @AutoMap()
+  @IsNumber()
+  @IsNotEmpty()
+  submittedDate: number;
+
+  @AutoMap()
+  @IsNotEmpty()
+  @IsString()
+  reconTypeCode: string;
+
+  @AutoMap()
+  @IsNotEmpty()
+  @IsString()
+  boardCode: string;
 }
 
 export class ApplicationReconsiderationUpdateDto {
@@ -63,35 +73,18 @@ export class ApplicationReconsiderationUpdateDto {
   isReviewApproved?: boolean;
 }
 
-// export class ApplicationReconsiderationCreateServiceDto {
-//   @AutoMap()
-//   @IsNumber()
-//   submittedDate: number;
+export class ApplicationDto {
+  fileNumber: string;
+  type: ApplicationTypeDto;
+  applicant: string;
+  region: ApplicationRegionDto;
+  localGovernment: string;
+}
 
-//   @AutoMap()
-//   @IsString()
-//   typeUuid: string;
-
-//   @AutoMap()
-//   @IsOptional()
-//   applicationUuid?: string;
-
-//   @IsNotEmpty()
-//   @IsString()
-//   fileNumber?: string;
-
-//   @IsNotEmpty()
-//   @IsString()
-//   applicant?: string;
-
-//   @IsString()
-//   type?: string;
-
-//   @IsString()
-//   @IsOptional()
-//   region?: string;
-
-//   @IsNotEmpty()
-//   @IsString()
-//   localGovernmentUuid;
-// }
+export class ApplicationReconsiderationDto {
+  uuid: string;
+  application: ApplicationDto;
+  card: CardDto;
+  type: ReconsiderationTypeDto;
+  submittedDate: Date;
+}

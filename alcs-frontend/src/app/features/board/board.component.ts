@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
-import { ReconsiderationDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
@@ -41,7 +42,8 @@ export class BoardComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private cardService: CardService
+    private cardService: CardService,
+    private reconsiderationService: ApplicationReconsiderationService
   ) {}
 
   ngOnInit() {
@@ -138,19 +140,14 @@ export class BoardComponent implements OnInit {
     try {
       this.setUrl(id, cardTypeCode);
 
-      const reconCard = await this.cardService.fetchReconsiderationCard(id);
-      reconCard!.regionDetails = {
-        label: 'Mock',
-        code: 'Mock',
-        description: 'Mock',
-      };
+      const recon = await this.reconsiderationService.fetchByCardUuid(id);
 
       const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
-        data: reconCard,
+        data: recon,
       });
 
       dialogRef.afterClosed().subscribe((isDirty) => {
@@ -248,13 +245,15 @@ export class BoardComponent implements OnInit {
     };
   }
 
-  private mapReconsiderationDtoToCard(recon: ReconsiderationDto): CardData {
+  private mapReconsiderationDtoToCard(recon: ApplicationReconsiderationDto): CardData {
     // TODO get mock fields from application linked to reconsideration
+    console.log(recon);
     return {
-      status: recon.status,
-      title: 'Mock, get from application',
-      assigneeInitials: recon.assignee?.initials,
-      id: recon.uuid,
+      status: recon.card.status,
+      title: `${recon.application.fileNumber} (${recon.application.applicant})`,
+      // title: `${recon.fileNumber} (${application.applicant})`,
+      assigneeInitials: recon.card.assignee?.initials,
+      id: recon.card.uuid,
       type: {
         label: 'Recon',
         code: 'RECON',
@@ -265,8 +264,8 @@ export class BoardComponent implements OnInit {
       },
       cardType: 'RECON',
       paused: false,
-      highPriority: recon.highPriority,
-      cardUuid: recon.uuid,
+      highPriority: recon.card.highPriority,
+      cardUuid: recon.card.uuid,
     };
   }
 }

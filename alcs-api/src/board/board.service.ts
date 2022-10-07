@@ -51,6 +51,14 @@ export class BoardService {
     });
   }
 
+  getReconsiderationCardsByCode(code: string) {
+    return this.applicationService.getAll({
+      card: {
+        board: { code },
+      },
+    });
+  }
+
   async changeBoard(cardUuid: string, code: string) {
     const card = await this.cardService.get(cardUuid);
     if (!card) {

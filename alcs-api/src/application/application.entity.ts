@@ -18,6 +18,7 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting/appli
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
+import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 
 @Entity()
 export class Application extends Base {
@@ -137,4 +138,11 @@ export class Application extends Base {
     type: 'uuid',
   })
   cardUuid: string;
+
+  @AutoMap()
+  @OneToMany(
+    () => ApplicationReconsideration,
+    (appRecon) => appRecon.application,
+  )
+  reconsiderations: ApplicationReconsideration[];
 }
