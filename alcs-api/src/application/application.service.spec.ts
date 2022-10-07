@@ -4,6 +4,9 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { CodeService } from '../code/code.service';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
   MockType,
@@ -14,6 +17,10 @@ import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
+import {
+  ApplicationUpdateServiceDto,
+  CreateApplicationDto,
+} from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -22,9 +29,11 @@ describe('ApplicationService', () => {
   let applicationRepositoryMock: MockType<Repository<Application>>;
   const applicationMockEntity = initApplicationMockEntity();
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
+    mockCodeService = createMock<CodeService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -37,6 +46,10 @@ describe('ApplicationService', () => {
         {
           provide: ApplicationTimeTrackingService,
           useValue: mockApplicationTimeService,
+        },
+        {
+          provide: CodeService,
+          useValue: mockCodeService,
         },
         {
           provide: getRepositoryToken(ApplicationPaused),
@@ -79,16 +92,25 @@ describe('ApplicationService', () => {
     applicationRepositoryMock.findOne
       .mockReturnValueOnce(null)
       .mockReturnValueOnce(applicationMockEntity);
+    mockCodeService.fetchApplicationType.mockResolvedValue(
+      {} as ApplicationType,
+    );
+    mockCodeService.fetchRegion.mockResolvedValue({} as ApplicationRegion);
 
-    const payload: Partial<Application> = {
+    const payload: CreateApplicationDto = {
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
-      card: applicationMockEntity.card,
+      localGovernmentUuid: 'government-uuid',
+      type: 'type',
+      region: 'region',
+      dateReceived: new Date().getTime(),
     };
 
-    expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
+    expect(await applicationService.create(payload)).toStrictEqual(
       applicationMockEntity,
     );
+    expect(mockCodeService.fetchApplicationType).toHaveBeenCalled();
+    expect(mockCodeService.fetchRegion).toHaveBeenCalled();
     expect(applicationRepositoryMock.save).toHaveBeenCalled();
   });
 
@@ -96,15 +118,16 @@ describe('ApplicationService', () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
 
-    const payload: Partial<Application> = {
-      fileNumber: applicationMockEntity.fileNumber,
+    const payload: ApplicationUpdateServiceDto = {
       applicant: applicationMockEntity.applicant,
-      card: applicationMockEntity.card,
     };
 
-    expect(await applicationService.createOrUpdate(payload)).toStrictEqual(
-      applicationMockEntity,
-    );
+    expect(
+      await applicationService.updateByFileNumber(
+        applicationMockEntity.fileNumber,
+        payload,
+      ),
+    ).toStrictEqual(applicationMockEntity);
     expect(applicationRepositoryMock.save).toHaveBeenCalled();
   });
 

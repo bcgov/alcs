@@ -22,7 +22,6 @@ import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
-import { CreateNotificationServiceDto } from '../notification/notification.dto';
 import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import {
@@ -74,69 +73,54 @@ export class ApplicationController {
   async create(
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
-    const type = await this.codeService.fetchApplicationType(application.type);
-
-    const region = application.region
-      ? await this.codeService.fetchRegion(application.region)
-      : undefined;
-
-    const app = await this.applicationService.createOrUpdate({
-      ...application,
-      typeUuid: type.uuid,
-      regionUuid: region?.uuid ?? undefined,
-      dateReceived: new Date(application.dateReceived),
-    });
+    const app = await this.applicationService.create(application);
     const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
   }
 
-  @Patch()
+  @Patch('/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
-    @Body() application: ApplicationUpdateDto,
+    @Param('fileNumber') fileNumber: string,
+    @Body() updates: ApplicationUpdateDto,
   ): Promise<ApplicationDetailedDto> {
-    const existingApplication = await this.applicationService.get(
-      application.fileNumber,
-    );
-
-    if (!existingApplication) {
+    const application = await this.applicationService.get(fileNumber);
+    if (!application) {
       throw new ServiceValidationException(
-        `File ${application.fileNumber} not found`,
+        `Application with file number ${fileNumber} not found`,
       );
     }
 
     let type: ApplicationType | undefined;
-    if (application.type && application.type != existingApplication.type.code) {
-      type = await this.codeService.fetchApplicationType(application.type);
+    if (updates.type && updates.type != application.type.code) {
+      type = await this.codeService.fetchApplicationType(updates.type);
     }
 
     let region: ApplicationRegion | undefined;
     if (
-      application.region &&
-      (!existingApplication.region ||
-        application.region != existingApplication.region.code)
+      updates.region &&
+      (!application.region || updates.region != application.region.code)
     ) {
-      region = await this.codeService.fetchRegion(application.region);
+      region = await this.codeService.fetchRegion(updates.region);
     }
 
-    const updatedApplication = await this.applicationService.createOrUpdate({
-      fileNumber: application.fileNumber,
-      applicant: application.applicant,
-      typeUuid: type ? type.uuid : undefined,
-      regionUuid: region ? region.uuid : undefined,
-      summary: application.summary,
-      datePaid: formatIncomingDate(application.datePaid),
-      dateAcknowledgedIncomplete: formatIncomingDate(
-        application.dateAcknowledgedIncomplete,
-      ),
-      dateReceivedAllItems: formatIncomingDate(
-        application.dateReceivedAllItems,
-      ),
-      dateAcknowledgedComplete: formatIncomingDate(
-        application.dateAcknowledgedComplete,
-      ),
-      decisionDate: formatIncomingDate(application.decisionDate),
-    });
+    const updatedApplication = await this.applicationService.update(
+      application,
+      {
+        applicant: updates.applicant,
+        typeUuid: type ? type.uuid : undefined,
+        regionUuid: region ? region.uuid : undefined,
+        summary: updates.summary,
+        datePaid: formatIncomingDate(updates.datePaid),
+        dateAcknowledgedIncomplete: formatIncomingDate(
+          updates.dateAcknowledgedIncomplete,
+        ),
+        dateReceivedAllItems: formatIncomingDate(updates.dateReceivedAllItems),
+        dateAcknowledgedComplete: formatIncomingDate(
+          updates.dateAcknowledgedComplete,
+        ),
+      },
+    );
 
     const mappedApps = await this.applicationService.mapToDtos([
       updatedApplication,
@@ -155,35 +139,32 @@ export class ApplicationController {
     await this.applicationService.delete(applicationNumber);
   }
 
-  @Patch('/updateCard')
+  @Patch('/card/:cardUuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async updateCard(
-    @Body() applicationToUpdate: ApplicationUpdateDto,
+    @Param('cardUuid') cardUuid: string,
+    @Body() applicationUpdates: ApplicationUpdateDto,
     @Req() req,
   ) {
-    const existingCard = await this.cardService.get(
-      applicationToUpdate.cardUuid,
-    );
+    const existingCard = await this.cardService.get(cardUuid);
     if (!existingCard) {
-      throw new ServiceValidationException(
-        `Card for application with ${applicationToUpdate.fileNumber} not found`,
-      );
+      throw new ServiceValidationException(`Card ${cardUuid} not found`);
     }
 
     let status: CardStatus | undefined;
     if (
-      applicationToUpdate.status &&
-      applicationToUpdate.status != existingCard.status.code
+      applicationUpdates.status &&
+      applicationUpdates.status != existingCard.status.code
     ) {
       status = await this.codeService.fetchCardStatus(
-        applicationToUpdate.status,
+        applicationUpdates.status,
       );
     }
 
     const updatedCard = await this.cardService.update(existingCard.uuid, {
       statusUuid: status ? status.uuid : undefined,
-      assigneeUuid: applicationToUpdate.assigneeUuid,
-      highPriority: applicationToUpdate.highPriority,
+      assigneeUuid: applicationUpdates.assigneeUuid,
+      highPriority: applicationUpdates.highPriority,
     });
 
     const application = await this.applicationService.getByCard(
@@ -203,7 +184,7 @@ export class ApplicationController {
         body: `${application.fileNumber} (${application.applicant})`,
         link: `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
         targetType: 'application',
-      } as CreateNotificationServiceDto);
+      });
     }
 
     const mappedApps = await this.applicationService.mapToDtos([application]);

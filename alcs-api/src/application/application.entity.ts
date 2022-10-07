@@ -21,6 +21,13 @@ import { ApplicationPaused } from './application-paused.entity';
 
 @Entity()
 export class Application extends Base {
+  constructor(data?: Partial<Application>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @Column({ unique: true })
   fileNumber: string;

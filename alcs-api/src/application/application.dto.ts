@@ -143,11 +143,6 @@ export class ApplicationUpdateDto {
   @AutoMap()
   @IsOptional()
   @IsString()
-  fileNumber?: string;
-
-  @AutoMap()
-  @IsOptional()
-  @IsString()
   applicant?: string;
 
   @AutoMap()
@@ -177,10 +172,6 @@ export class ApplicationUpdateDto {
 
   @IsOptional()
   @IsNumber()
-  dateReceived?: number;
-
-  @IsOptional()
-  @IsNumber()
   datePaid?: number;
 
   @IsOptional()
@@ -195,10 +186,6 @@ export class ApplicationUpdateDto {
   @IsNumber()
   dateAcknowledgedComplete?: number;
 
-  @IsOptional()
-  @IsNumber()
-  decisionDate?: number;
-
   @AutoMap()
   @IsBoolean()
   @IsOptional()
@@ -208,15 +195,9 @@ export class ApplicationUpdateDto {
   @IsString()
   @IsOptional()
   summary?: string;
-
-  @AutoMap()
-  @IsOptional()
-  @IsString()
-  cardUuid?: string;
 }
 
 export class ApplicationUpdateServiceDto {
-  fileNumber: string;
   applicant?: string;
   typeUuid?: string;
   regionUuid?: string;
@@ -225,6 +206,5 @@ export class ApplicationUpdateServiceDto {
   dateReceivedAllItems?: Date | null | undefined;
   dateAcknowledgedComplete?: Date | null | undefined;
   decisionDate?: Date | null | undefined;
-  dateReceived: Date;
   summary?: string;
 }

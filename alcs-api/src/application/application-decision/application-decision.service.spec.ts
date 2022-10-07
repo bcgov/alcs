@@ -4,7 +4,6 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDecisionProfile } from '../../common/automapper/application-decision.automapper.profile';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import {
   initApplicationDecisionMock,
@@ -85,7 +84,8 @@ describe('ApplicationDecisionService', () => {
     mockDecisionRepository.save.mockResolvedValue(mockDecision);
 
     mockApplicationService.get.mockResolvedValue(mockApplication);
-    mockApplicationService.createOrUpdate.mockResolvedValue({} as any);
+    mockApplicationService.update.mockResolvedValue({} as any);
+    mockApplicationService.updateByUuid.mockResolvedValue({} as any);
 
     mockDecisionOutcomeRepository.find.mockResolvedValue([]);
     mockDecisionOutcomeRepository.findOne.mockResolvedValue(undefined);
@@ -129,11 +129,13 @@ describe('ApplicationDecisionService', () => {
       await service.delete(mockDecision.uuid);
 
       expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
-      expect(mockApplicationService.createOrUpdate).toHaveBeenCalled();
-      expect(mockApplicationService.createOrUpdate).toHaveBeenCalledWith({
-        fileNumber: mockApplication.fileNumber,
-        decisionDate: null,
-      });
+      expect(mockApplicationService.update).toHaveBeenCalled();
+      expect(mockApplicationService.update).toHaveBeenCalledWith(
+        mockApplication,
+        {
+          decisionDate: null,
+        },
+      );
     });
 
     it('should create a decision and update the application if this was the first decision', async () => {
@@ -149,11 +151,13 @@ describe('ApplicationDecisionService', () => {
       await service.create(meetingToCreate, mockApplication);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.createOrUpdate).toHaveBeenCalled();
-      expect(mockApplicationService.createOrUpdate).toHaveBeenCalledWith({
-        fileNumber: mockApplication.fileNumber,
-        decisionDate,
-      });
+      expect(mockApplicationService.update).toHaveBeenCalled();
+      expect(mockApplicationService.update).toHaveBeenCalledWith(
+        mockApplication,
+        {
+          decisionDate,
+        },
+      );
     });
 
     it('should create a decision and NOT update the application if this was the second decision', async () => {
@@ -167,7 +171,7 @@ describe('ApplicationDecisionService', () => {
       await service.create(meetingToCreate, mockApplication);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.createOrUpdate).not.toHaveBeenCalled();
+      expect(mockApplicationService.update).not.toHaveBeenCalled();
     });
 
     it('should update the decision and update the application if it was the only decision', async () => {
@@ -181,11 +185,13 @@ describe('ApplicationDecisionService', () => {
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.createOrUpdate).toHaveBeenCalled();
-      expect(mockApplicationService.createOrUpdate).toHaveBeenCalledWith({
-        fileNumber: mockApplication.fileNumber,
-        decisionDate,
-      });
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalled();
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(
+        mockApplication.uuid,
+        {
+          decisionDate,
+        },
+      );
     });
 
     it('should not update the application if this was not the first decision', async () => {
@@ -207,7 +213,7 @@ describe('ApplicationDecisionService', () => {
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.createOrUpdate).not.toHaveBeenCalled();
+      expect(mockApplicationService.update).not.toHaveBeenCalled();
     });
 
     it('should fail on update if the decision is not found', async () => {

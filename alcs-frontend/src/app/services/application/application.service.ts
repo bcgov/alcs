@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { AjaxResponse } from 'rxjs/internal/ajax/AjaxResponse';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 import {
@@ -9,7 +10,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from './application-code.dto';
-import { ApplicationDetailedDto, ApplicationDto, ApplicationPartialDto, CreateApplicationDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -21,16 +22,17 @@ export class ApplicationService {
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
+  private baseUrl = `${environment.apiUrl}/application`;
   private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
   private isInitialized = false;
 
-  async updateApplication(application: ApplicationPartialDto) {
+  async updateApplication(fileNumber: string, application: UpdateApplicationDto) {
     await this.setup();
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDetailedDto>(`${environment.apiUrl}/application`, application)
+        this.http.patch<ApplicationDetailedDto>(`${this.baseUrl}/${fileNumber}`, application)
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
@@ -38,11 +40,11 @@ export class ApplicationService {
     return;
   }
 
-  async updateApplicationCard(application: ApplicationPartialDto) {
+  async updateApplicationCard(cardUuid: string, application: UpdateApplicationDto) {
     await this.setup();
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDetailedDto>(`${environment.apiUrl}/application/updateCard`, application)
+        this.http.patch<ApplicationDetailedDto>(`${this.baseUrl}/card/${cardUuid}`, application)
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
@@ -52,14 +54,21 @@ export class ApplicationService {
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
     await this.setup();
-    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${environment.apiUrl}/application/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${this.baseUrl}/${fileNumber}`));
   }
 
   async createApplication(application: CreateApplicationDto) {
     await this.setup();
-    return await firstValueFrom(
-      this.http.post<ApplicationDetailedDto>(`${environment.apiUrl}/application`, application)
-    );
+    try {
+      return await firstValueFrom(this.http.post<ApplicationDetailedDto>(`${this.baseUrl}`, application));
+    } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 400) {
+        this.toastService.showErrorToast(`Application with file id ${application.fileNumber} already exists`);
+      } else {
+        this.toastService.showErrorToast('Failed to create Application');
+      }
+      throw e;
+    }
   }
 
   async setup() {
@@ -82,6 +91,6 @@ export class ApplicationService {
   }
 
   searchApplicationsByNumber(fileNumber: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${environment.apiUrl}/application/search/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/search/${fileNumber}`));
   }
 }
