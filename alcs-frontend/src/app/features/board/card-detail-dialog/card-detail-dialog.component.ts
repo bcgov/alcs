@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailedDto, ApplicationPartialDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { BoardStatusDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
@@ -15,7 +16,8 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
   templateUrl: './card-detail-dialog.component.html',
   styleUrls: ['./card-detail-dialog.component.scss'],
 })
-export class CardDetailDialogComponent implements OnInit {
+export class CardDetailDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
   selectedAssigneeName?: string;
@@ -24,7 +26,7 @@ export class CardDetailDialogComponent implements OnInit {
   selectedRegion?: string;
 
   application: ApplicationDetailedDto = this.data;
-  applicationStatuses: CardStatusDto[] = [];
+  boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
@@ -50,11 +52,12 @@ export class CardDetailDialogComponent implements OnInit {
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
 
-    this.boardService.$boards.subscribe((boards) => {
+    this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
-    });
-    this.applicationService.$cardStatuses.subscribe((statuses) => {
-      this.applicationStatuses = statuses;
+      const loadedBoard = boards.find((board) => board.code === this.selectedBoard);
+      if (loadedBoard) {
+        this.boardStatuses = loadedBoard.statuses;
+      }
     });
 
     this.dialogRef.backdropClick().subscribe(() => {
@@ -77,10 +80,10 @@ export class CardDetailDialogComponent implements OnInit {
     });
   }
 
-  onStatusSelected(applicationStatus: CardStatusDto) {
-    this.selectedApplicationStatus = applicationStatus.code;
+  onStatusSelected(applicationStatus: BoardStatusDto) {
+    this.selectedApplicationStatus = applicationStatus.statusCode;
     this.updateCard({
-      status: applicationStatus.code,
+      status: applicationStatus.statusCode,
     });
   }
 
@@ -124,5 +127,10 @@ export class CardDetailDialogComponent implements OnInit {
           });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }
