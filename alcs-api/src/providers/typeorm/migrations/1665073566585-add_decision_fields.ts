@@ -8,7 +8,10 @@ export class addDecisionFields1665073566585 implements MigrationInterface {
       `ALTER TABLE "application_decision" ADD "audit_date" TIMESTAMP WITH TIME ZONE`,
     );
     await queryRunner.query(
-      `ALTER TABLE "application_decision" ADD "chair_review_required" boolean NOT NULL`,
+      `ALTER TABLE "application_decision" ADD "chair_review_required" boolean NOT NULL DEFAULT true`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "application_decision" ALTER COLUMN "chair_review_required" DROP DEFAULT`,
     );
     await queryRunner.query(
       `ALTER TABLE "application_decision" ADD "chair_review_date" TIMESTAMP WITH TIME ZONE`,
