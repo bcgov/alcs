@@ -33,7 +33,7 @@ export class ApplicationDocumentService {
     formData.append('documentType', documentType);
     formData.append('file', file, file.name);
     const res = await firstValueFrom(this.http.post(`${this.url}/application/${fileNumber}/${documentType}`, formData));
-    this.toastService.showSuccessToast('Decision document uploaded');
+    this.toastService.showSuccessToast('Review document uploaded');
     return res;
   }
 

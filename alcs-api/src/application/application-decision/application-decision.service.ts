@@ -88,7 +88,7 @@ export class ApplicationDecisionService {
 
     if (!existingDecision) {
       throw new ServiceNotFoundException(
-        `Decison Meeting with UUID ${uuid} not found`,
+        `Decision with UUID ${uuid} not found`,
       );
     }
 

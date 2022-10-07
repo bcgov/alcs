@@ -229,7 +229,7 @@ describe('ApplicationDecisionService', () => {
         service.update(nonExistantUuid, decisionUpdate),
       ).rejects.toMatchObject(
         new ServiceNotFoundException(
-          `Decison Meeting with UUID ${nonExistantUuid} not found`,
+          `Decision with UUID ${nonExistantUuid} not found`,
         ),
       );
     });

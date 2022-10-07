@@ -77,7 +77,7 @@ export class ApplicationDecisionService {
     let formData: FormData = new FormData();
     formData.append('file', file, file.name);
     const res = await firstValueFrom(this.http.post(`${this.url}/${decisionUuid}/file`, formData));
-    this.toastService.showSuccessToast('Decision document uploaded');
+    this.toastService.showSuccessToast('Review document uploaded');
     return res;
   }
 
