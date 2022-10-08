@@ -73,6 +73,13 @@ export class ApplicationReconsiderationUpdateDto {
   isReviewApproved?: boolean;
 }
 
+// export class ApplicationFlatDto {
+//   typeCode: string;
+//   localGovernmentUuid: string;
+//   fileNumber: string;
+//   applicant: string;
+// }
+
 export class ApplicationDto {
   fileNumber: string;
   type: ApplicationTypeDto;

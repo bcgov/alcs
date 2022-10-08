@@ -115,21 +115,6 @@
       <div>
         <ng-select
           appearance="outline"
-          class="card-recon-type"
-          [items]="reconTypes"
-          appendTo="body"
-          placeholder="Reconsideration Type *"
-          bindLabel="label"
-          bindValue="code"
-          [clearable]="false"
-          formControlName="reconType"
-        >
-        </ng-select>
-      </div>
-
-      <div>
-        <ng-select
-          appearance="outline"
           class="card-local-government"
           [items]="localGovernments"
           appendTo="body"
@@ -143,6 +128,20 @@
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             <div [ngOptionHighlight]="search">{{ item.name }}</div>
           </ng-template>
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          appearance="outline"
+          class="card-recon-type"
+          [items]="reconTypes"
+          appendTo="body"
+          placeholder="Reconsideration Type *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="reconType"
+        >
         </ng-select>
       </div>
     </div>

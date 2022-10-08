@@ -71,7 +71,10 @@ export class ApplicationService {
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
-  async create(application: CreateApplicationDto): Promise<Application> {
+  async create(
+    application: CreateApplicationDto,
+    persist = true,
+  ): Promise<Application> {
     const existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
@@ -98,9 +101,12 @@ export class ApplicationService {
     });
 
     newApplication.card = new Card();
-    await this.applicationRepository.save(newApplication);
-
-    return this.get(application.fileNumber);
+    if (persist) {
+      await this.applicationRepository.save(newApplication);
+      return this.get(application.fileNumber);
+    } else {
+      return newApplication;
+    }
   }
 
   async updateByFileNumber(

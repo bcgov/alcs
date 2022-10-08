@@ -39,10 +39,6 @@ export class ReconsiderationProfile extends AutomapperProfile {
           (a) => a.fileNumber,
           mapFrom((rd) => rd.applicationFileNumber),
         ),
-        forMember(
-          (a) => a.dateReceived,
-          mapFrom((rd) => new Date(rd.submittedDate)),
-        ),
       );
 
       createMap(

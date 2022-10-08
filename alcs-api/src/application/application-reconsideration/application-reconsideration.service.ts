@@ -5,14 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { Board } from '../../board/board.entity';
 import { CardCreateDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { CodeService } from '../../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
-import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import {
@@ -94,51 +92,38 @@ export class ApplicationReconsiderationService {
     newReconsideration.card = newCard;
     newReconsideration.type = type;
 
+    await this.assignApplication(reconsideration, newReconsideration);
+
+    return this.reconsiderationRepository.save(newReconsideration);
+  }
+
+  async assignApplication(
+    reconsideration: ApplicationReconsiderationCreateDto,
+    reconsiderationToCreate: ApplicationReconsideration,
+  ) {
     const existingApplication = await this.applicationService.get(
       reconsideration.applicationFileNumber,
     );
 
     // TODO: move application creation/linkage to separate function
     if (existingApplication) {
-      newReconsideration.applicationUuid = existingApplication.uuid;
+      reconsiderationToCreate.applicationUuid = existingApplication.uuid;
       // TODO: check if this is required
-      // newReconsideration.application = existingApplication;
+      // reconsiderationToCreate.application = existingApplication;
     } else {
-      const applicationType = await this.codeService.fetchApplicationType(
-        reconsideration.applicationTypeCode,
+      const application = await this.applicationService.create(
+        {
+          fileNumber: reconsideration.applicationFileNumber,
+          type: reconsideration.applicationTypeCode,
+          region: reconsideration.region,
+          localGovernmentUuid: reconsideration.localGovernmentUuid,
+          applicant: reconsideration.applicant,
+          dateReceived: reconsideration.submittedDate,
+        },
+        false,
       );
-      if (!applicationType) {
-        throw new ServiceNotFoundException(
-          `Provided application type does not exist ${reconsideration.applicationTypeCode}`,
-        );
-      }
-
-      const applicationRegion = await this.codeService.fetchRegion(
-        reconsideration.region,
-      );
-      if (!applicationRegion) {
-        throw new ServiceNotFoundException(
-          `Provided application region does not exist ${reconsideration.region}`,
-        );
-      }
-      // if application does not exist => create it and link to reconsideration.
-      // Application card must not be created
-      const mappedApplication = this.mapper.map(
-        reconsideration,
-        ApplicationReconsiderationCreateDto,
-        Application,
-      );
-      newReconsideration.application = new Application();
-      newReconsideration.application = Object.assign(
-        newReconsideration.application,
-        mappedApplication,
-      );
-      newReconsideration.application.type = applicationType;
-      newReconsideration.application.region = applicationRegion;
-      newReconsideration.application.card = new Card();
+      reconsiderationToCreate.application = application;
     }
-
-    return this.reconsiderationRepository.save(newReconsideration);
   }
 
   async update(

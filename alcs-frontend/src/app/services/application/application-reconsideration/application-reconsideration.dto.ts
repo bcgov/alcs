@@ -1,6 +1,7 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 
 export interface ReconsiderationTypeDto extends BaseCodeDto {
   backgroundColor: string;
@@ -11,7 +12,7 @@ export interface ApplicationDto {
   type: ApplicationTypeDto;
   applicant: string;
   region: ApplicationRegionDto;
-  localGovernment: string;
+  localGovernment: ApplicationLocalGovernmentDto;
 }
 
 export interface ApplicationReconsiderationDto {

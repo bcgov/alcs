@@ -1,15 +1,11 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
 
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import {
-  ApplicationDecisionDto,
-  DecisionDocumentDto,
-} from '../../application/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
-import { DecisionDocument } from '../../application/application-decision/decision-document.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import {
@@ -34,8 +30,6 @@ import { ApplicationRegion } from '../../code/application-code/application-regio
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../../code/code.service';
-import { UserDto } from '../../user/user.dto';
-import { User } from '../../user/user.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -68,6 +62,12 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(
         mapper,
+        ApplicationLocalGovernment,
+        ApplicationLocalGovernmentDto,
+      );
+
+      createMap(
+        mapper,
         Application,
         ApplicationDto,
         forMember(
@@ -88,7 +88,13 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.localGovernment,
-          mapFrom((a) => a.localGovernment.name),
+          mapFrom((a) =>
+            this.mapper.map(
+              a.localGovernment,
+              ApplicationLocalGovernment,
+              ApplicationLocalGovernmentDto,
+            ),
+          ),
         ),
         forMember(
           (ad) => ad.decisionMeetings,

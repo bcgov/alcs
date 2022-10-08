@@ -6,9 +6,12 @@ import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } 
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
-import { CreateApplicationReconsiderationDto, ReconsiderationTypeDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
+import {
+  CreateApplicationReconsiderationDto,
+  ReconsiderationTypeDto,
+} from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -94,7 +97,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
     );
   }
 
-  autocompleteDisplay(application: ApplicationDto): string {
+  autocompleteDisplay(application: ApplicationDetailedDto): string {
     return (application && application.fileNumber) ?? '';
   }
 
@@ -103,17 +106,19 @@ export class ReconCreateCardDialogComponent implements OnInit {
       return;
     }
 
-    const application = $event.source.value as ApplicationDto;
+    const application = $event.source.value as ApplicationDetailedDto;
 
     this.fileNumberControl.disable();
     this.applicantControl.disable();
     this.regionControl.disable();
     this.applicationTypeControl.disable();
+    this.localGovernmentControl.disable();
 
     this.createForm.patchValue({
       applicant: application.applicant,
       region: this.regions.find((r) => r.code === application.region)?.code ?? null,
       applicationType: this.applicationTypes.find((r) => r.code === application.type)?.code ?? null,
+      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment.uuid)?.uuid ?? null,
     });
 
     if (!application.decisionDate) {
