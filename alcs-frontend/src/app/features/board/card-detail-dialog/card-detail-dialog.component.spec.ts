@@ -66,7 +66,11 @@ describe('CardDetailDialogComponent', () => {
     applicant: 'I am an applicant',
     status: 'STATUS',
     region: 'REGION',
-    localGovernment: 'Local Government',
+    localGovernment: {
+      uuid: 'fake',
+      name: 'Local Government',
+      preferredRegionCode: 'FAKE_CODE',
+    },
     summary: 'MOCK SUMMARY',
     activeDays: 10,
     pausedDays: 5,
