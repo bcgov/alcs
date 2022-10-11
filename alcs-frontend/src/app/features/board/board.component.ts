@@ -235,7 +235,7 @@ export class BoardComponent implements OnInit {
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.applicant})`,
-      assigneeInitials: application.card.assignee?.initials,
+      assignee: application.card.assignee,
       id: application.fileNumber,
       type: mappedType!,
       activeDays: application.activeDays,
@@ -252,7 +252,7 @@ export class BoardComponent implements OnInit {
     return {
       status: recon.status,
       title: 'Mock, get from application',
-      assigneeInitials: recon.assignee?.initials,
+      assignee: recon.assignee,
       id: recon.uuid,
       type: {
         label: 'Recon',

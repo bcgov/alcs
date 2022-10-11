@@ -27,7 +27,7 @@ import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
-  ApplicationUpdateDto,
+  UpdateApplicationDto,
   CreateApplicationDto,
 } from './application.dto';
 import { ApplicationService } from './application.service';
@@ -82,7 +82,7 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
     @Param('fileNumber') fileNumber: string,
-    @Body() updates: ApplicationUpdateDto,
+    @Body() updates: UpdateApplicationDto,
   ): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
     if (!application) {
@@ -119,6 +119,7 @@ export class ApplicationController {
         dateAcknowledgedComplete: formatIncomingDate(
           updates.dateAcknowledgedComplete,
         ),
+        notificationSentDate: formatIncomingDate(updates.notificationSentDate),
       },
     );
 
@@ -143,7 +144,7 @@ export class ApplicationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async updateCard(
     @Param('cardUuid') cardUuid: string,
-    @Body() applicationUpdates: ApplicationUpdateDto,
+    @Body() applicationUpdates: UpdateApplicationDto,
     @Req() req,
   ) {
     const existingCard = await this.cardService.get(cardUuid);

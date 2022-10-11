@@ -13,7 +13,6 @@ import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { UserDto } from '../user/user.dto';
 import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 
 export class CreateApplicationDto {
@@ -106,6 +105,10 @@ export class ApplicationDto {
   @IsNumber()
   decisionDate?: number;
 
+  @IsOptional()
+  @IsNumber()
+  notificationSentDate?: number;
+
   @IsString()
   region: string;
 
@@ -139,7 +142,7 @@ export class ApplicationDetailedDto extends ApplicationDto {
   regionDetails: ApplicationRegionDto;
 }
 
-export class ApplicationUpdateDto {
+export class UpdateApplicationDto {
   @AutoMap()
   @IsOptional()
   @IsString()
@@ -195,6 +198,10 @@ export class ApplicationUpdateDto {
   @IsString()
   @IsOptional()
   summary?: string;
+
+  @IsOptional()
+  @IsNumber()
+  notificationSentDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -207,4 +214,5 @@ export class ApplicationUpdateServiceDto {
   dateAcknowledgedComplete?: Date | null | undefined;
   decisionDate?: Date | null | undefined;
   summary?: string;
+  notificationSentDate?: Date | null;
 }
