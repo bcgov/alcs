@@ -265,3 +265,7 @@ mat-button-toggle-group {
 .date-picker.mat-form-field-appearance-outline .mat-form-field-flex {
   height: 56px;
 }
+
+.mat-calendar-body-cell-content.mat-focus-indicator.mat-calendar-body-selected {
+  color: $white;
+}

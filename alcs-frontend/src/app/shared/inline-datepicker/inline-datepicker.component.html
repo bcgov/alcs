@@ -17,7 +17,13 @@
     <form [formGroup]="form">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
-        <input matInput [matDatepicker]="datePicker" formControlName="date" [min]="minimum | startOfDay" />
+        <input
+          matInput
+          (click)="datePicker.open()"
+          [matDatepicker]="datePicker"
+          formControlName="date"
+          [min]="minimum | startOfDay"
+        />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker type="date"> </mat-datepicker>
       </mat-form-field>
