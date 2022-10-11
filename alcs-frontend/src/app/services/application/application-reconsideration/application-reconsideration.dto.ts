@@ -15,12 +15,19 @@ export interface ApplicationDto {
   localGovernment: ApplicationLocalGovernmentDto;
 }
 
+export interface BoardSmallDto {
+  code: string;
+  title: string;
+  decisionMaker: string;
+}
+
 export interface ApplicationReconsiderationDto {
   uuid: string;
   application: ApplicationDto;
   card: CardDto;
   type: ReconsiderationTypeDto;
   submittedDate: Date;
+  board: BoardSmallDto;
 }
 
 export interface ApplicationReconsiderationDetailedDto {}

@@ -95,3 +95,11 @@ export class ApplicationReconsiderationDto {
   type: ReconsiderationTypeDto;
   submittedDate: Date;
 }
+
+export class ApplicationReconsiderationWithoutApplicationDto {
+  uuid: string;
+  applicationUuid: string;
+  card: CardDto;
+  type: ReconsiderationTypeDto;
+  submittedDate: Date;
+}

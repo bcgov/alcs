@@ -6,6 +6,7 @@ import {
   ApplicationDto,
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
+  ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
 } from '../../application/application-reconsideration/applicationReconsideration.dto';
 import { ReconsiderationType } from '../../application/application-reconsideration/reconsideration-type/reconsideration-type.entity';
@@ -63,6 +64,12 @@ export class ReconsiderationProfile extends AutomapperProfile {
             this.mapper.map(rd.application, Application, ApplicationDto),
           ),
         ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationReconsideration,
+        ApplicationReconsiderationWithoutApplicationDto,
       );
     };
   }

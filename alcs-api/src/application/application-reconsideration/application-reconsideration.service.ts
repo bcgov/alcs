@@ -17,6 +17,7 @@ import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
+  ApplicationReconsiderationWithoutApplicationDto,
 } from './applicationReconsideration.dto';
 
 @Injectable()
@@ -60,6 +61,16 @@ export class ApplicationReconsiderationService {
       reconsiderations,
       ApplicationReconsideration,
       ApplicationReconsiderationDto,
+    );
+  }
+
+  async mapToDtosWithoutApplication(
+    reconsiderations: ApplicationReconsideration[],
+  ): Promise<ApplicationReconsiderationWithoutApplicationDto[]> {
+    return this.mapper.mapArrayAsync(
+      reconsiderations,
+      ApplicationReconsideration,
+      ApplicationReconsiderationWithoutApplicationDto,
     );
   }
 

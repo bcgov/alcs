@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationReconsiderationService } from '../application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { ApplicationSubtaskWithApplicationDTO } from '../card/card-subtask/card-subtask.dto';
@@ -19,6 +20,7 @@ export class HomeController {
   constructor(
     private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
+    private reconsiderationService: ApplicationReconsiderationService,
   ) {}
 
   @Get('/assigned')
@@ -40,20 +42,44 @@ export class HomeController {
   async getIncompleteSubtasksByType(): Promise<
     ApplicationSubtaskWithApplicationDTO[]
   > {
-    const subtaskTypes = 'GIS';
+    const subtaskType = 'GIS';
     const applications =
       await this.applicationService.getAllApplicationsWithIncompleteSubtasks(
-        subtaskTypes,
+        subtaskType,
       );
+
+    const applicationsWithReconsiderations =
+      await this.applicationService.getAllApplicationsWithReconsiderationIncompleteSubtasks(
+        subtaskType,
+      );
+
+    applicationsWithReconsiderations.push(
+      ...applications.filter((a) =>
+        applicationsWithReconsiderations.some((r) => r.uuid !== a.uuid),
+      ),
+    );
 
     const mappedApps = new Map();
     const subtasks: CardSubtask[] = [];
-    for (const application of applications) {
+    for (const application of applicationsWithReconsiderations) {
       application.decisionMeetings = [];
       const mappedApp = await this.applicationService.mapToDtos([application]);
-      for (const subtask of application.card.subtasks) {
-        mappedApps.set(subtask.uuid, mappedApp[0]);
+      for (const subtask of application.card?.subtasks) {
+        mappedApps.set(subtask.uuid, { app: mappedApp[0], recon: null });
         subtasks.push(subtask);
+      }
+      for (const recon of application.reconsiderations ?? []) {
+        const mappedRecon =
+          await this.reconsiderationService.mapToDtosWithoutApplication([
+            recon,
+          ]);
+        for (const subtask of recon.card.subtasks) {
+          mappedApps.set(subtask.uuid, {
+            app: mappedApp[0],
+            recon: mappedRecon[0],
+          });
+          subtasks.push(subtask);
+        }
       }
     }
     const mappedTasks = this.mapper.mapArray(
@@ -63,7 +89,8 @@ export class HomeController {
     );
     return mappedTasks.map((task) => ({
       ...task,
-      application: mappedApps.get(task.uuid),
+      application: mappedApps.get(task.uuid)?.app,
+      reconsideration: mappedApps.get(task.uuid)?.recon,
     }));
   }
 }

@@ -1,5 +1,5 @@
-import { IConfig } from 'config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { IConfig } from 'config';
 import { join } from 'path';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
