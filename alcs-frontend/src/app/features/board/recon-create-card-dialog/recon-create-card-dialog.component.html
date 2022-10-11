@@ -129,9 +129,15 @@
       <div>
         <mat-form-field class="date-picker" appearance="outline">
           <mat-label>Reconsideration Request Submitted to ALC</mat-label>
-          <input matInput [matDatepicker]="pdd" formControlName="receivedDate" required />
-          <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
-          <mat-datepicker #pdd type="date"> </mat-datepicker>
+          <input
+            matInput
+            (click)="datePicker.open()"
+            [matDatepicker]="datePicker"
+            formControlName="receivedDate"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker type="date"> </mat-datepicker>
         </mat-form-field>
       </div>
     </div>
