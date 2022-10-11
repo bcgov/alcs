@@ -1,4 +1,8 @@
 <h3>Review</h3>
+<div class="notification-date">
+  <div class="subheading1">'Ready for Review' Notification Sent to Applicant</div>
+  <app-inline-datepicker [selectedValue]="notificationSentDate" (save)="onSaveNotificationDate($event)"></app-inline-datepicker>
+</div>
 <section>
   <app-decision-meeting [fileNumber]="fileNumber"></app-decision-meeting>
 </section>

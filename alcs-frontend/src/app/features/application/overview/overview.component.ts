@@ -74,7 +74,7 @@ export class OverviewComponent implements OnInit {
 
     if (application.decisionMeetings.length) {
       const events: TimelineEvent[] = application.decisionMeetings.map((meeting, index) => ({
-        name: application.decisionMeetings.length === 1 ? `Decision Meeting` : `Decision Meeting #${index + 1}`,
+        name: application.decisionMeetings.length === 1 ? `Review Meeting` : `Review Meeting #${index + 1}`,
         startDate: new Date(meeting.date),
         isFulfilled: true,
       }));
@@ -85,6 +85,14 @@ export class OverviewComponent implements OnInit {
       mappedEvents.push({
         name: 'Decision Made',
         startDate: new Date(application.decisionDate),
+        isFulfilled: true,
+      });
+    }
+
+    if (application.notificationSentDate) {
+      mappedEvents.push({
+        name: "'Ready for Review' Notification Sent to Applicant",
+        startDate: new Date(application.notificationSentDate),
         isFulfilled: true,
       });
     }

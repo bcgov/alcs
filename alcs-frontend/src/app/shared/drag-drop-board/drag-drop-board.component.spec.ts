@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastService } from '../../services/toast/toast.service';
+import { UserDto } from '../../services/user/user.dto';
 import { CardData } from '../card/card.component';
 
 import { DragDropBoardComponent } from './drag-drop-board.component';
@@ -11,7 +12,10 @@ describe('DragDropBoardComponent', () => {
   const mockCard: CardData = {
     id: '1',
     status: 'status',
-    assigneeInitials: '',
+    assignee: {
+      name: 'Name',
+      initials: 'initials',
+    } as UserDto,
     type: {
       textColor: '#000',
       shortLabel: 'LUP',

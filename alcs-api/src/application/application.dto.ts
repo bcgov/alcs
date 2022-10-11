@@ -106,6 +106,10 @@ export class ApplicationDto {
   @IsNumber()
   decisionDate?: number;
 
+  @IsOptional()
+  @IsNumber()
+  notificationSentDate?: number;
+
   @IsString()
   region: string;
 
@@ -139,7 +143,7 @@ export class ApplicationDetailedDto extends ApplicationDto {
   regionDetails: ApplicationRegionDto;
 }
 
-export class ApplicationUpdateDto {
+export class UpdateApplicationDto {
   @AutoMap()
   @IsOptional()
   @IsString()
@@ -195,6 +199,10 @@ export class ApplicationUpdateDto {
   @IsString()
   @IsOptional()
   summary?: string;
+
+  @IsOptional()
+  @IsNumber()
+  notificationSentDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -207,4 +215,5 @@ export class ApplicationUpdateServiceDto {
   dateAcknowledgedComplete?: Date | null | undefined;
   decisionDate?: Date | null | undefined;
   summary?: string;
+  notificationSentDate?: Date | null;
 }

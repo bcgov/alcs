@@ -147,10 +147,8 @@ export class ReconCreateCardDialogComponent implements OnInit {
         boardCode: this.currentBoardCode,
       };
 
-      console.log('recon onSubmit', recon);
-
       if (!recon.boardCode) {
-        this.toastService.showErrorToast('Board is required. Please reload the page and try again.');
+        this.toastService.showErrorToast('Board is required, please reload the page and try again');
         return;
       }
 

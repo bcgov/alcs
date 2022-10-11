@@ -27,7 +27,6 @@ export const REASON_TYPE = {
 })
 export class InfoRequestDialogComponent {
   model: ApplicationInfoRequestForm;
-  defaultReason = REASON_TYPE.DEFAULT;
   @ViewChild('customReasonText') customReasonText: any;
   isLoading = false;
 
@@ -68,6 +67,7 @@ export class InfoRequestDialogComponent {
       } else {
         await this.meetingService.create(this.model.fileNumber, this.data.meetingType.label, {
           meetingStartDate: this.model.startDate,
+          meetingEndDate: this.model.endDate || undefined,
           meetingTypeCode: this.data.meetingType.code,
           description: this.getDescription(),
         });

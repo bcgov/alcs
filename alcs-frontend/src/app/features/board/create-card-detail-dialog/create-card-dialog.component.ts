@@ -70,7 +70,7 @@ export class CreateCardDialogComponent implements OnInit {
         localGovernmentUuid: formValues.localGovernment!,
       });
       this.dialogRef.close(true);
-      this.toastService.showSuccessToast('Application Created');
+      this.toastService.showSuccessToast('Application created');
     } finally {
       this.isLoading = false;
     }

@@ -21,7 +21,7 @@ export class ApplicationDecisionMeetingService {
     try {
       meetings = await firstValueFrom(this.http.get<ApplicationDecisionMeetingDto[]>(`${this.url}/${fileNumber}`));
     } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch decision meetings');
+      this.toastService.showErrorToast('Failed to fetch review meetings');
     }
 
     this.$decisionMeetings.next(meetings);
@@ -37,7 +37,7 @@ export class ApplicationDecisionMeetingService {
       );
       await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update decision meeting');
+      this.toastService.showErrorToast('Failed to update review meeting');
     }
   }
 
@@ -51,7 +51,7 @@ export class ApplicationDecisionMeetingService {
       );
       return await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {
-      this.toastService.showErrorToast('Failed to create decision meeting');
+      this.toastService.showErrorToast('Failed to create review meeting');
     }
   }
 
@@ -59,7 +59,7 @@ export class ApplicationDecisionMeetingService {
     try {
       return firstValueFrom(this.http.get<ApplicationDecisionMeetingDto>(`${this.url}/meeting/${uuid}`));
     } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch decision meetings');
+      this.toastService.showErrorToast('Failed to fetch review meeting');
     }
     return;
   }

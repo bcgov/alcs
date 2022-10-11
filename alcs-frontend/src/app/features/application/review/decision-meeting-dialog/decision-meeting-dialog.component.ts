@@ -51,7 +51,7 @@ export class DecisionMeetingDialogComponent {
 
         await this.decisionMeetingService.fetch(this.data.fileNumber);
         this.dialogRef.close();
-        this.toastService.showSuccessToast('Meeting created.');
+        this.toastService.showSuccessToast('Meeting created');
       } finally {
         this.isLoading = false;
       }

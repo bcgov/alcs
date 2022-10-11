@@ -8,6 +8,11 @@ export class CreateApplicationMeetingDto {
   meetingStartDate: number;
 
   @AutoMap()
+  @IsNumber()
+  @IsOptional()
+  meetingEndDate?: number;
+
+  @AutoMap()
   @IsString()
   meetingTypeCode: string;
 

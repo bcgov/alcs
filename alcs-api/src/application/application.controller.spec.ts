@@ -24,7 +24,7 @@ import {
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
-import { ApplicationDto, ApplicationUpdateDto } from './application.dto';
+import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -162,7 +162,7 @@ describe('ApplicationController', () => {
     const fileNumber = '11';
     const mockUpdate = {
       applicant: 'New Applicant',
-    } as ApplicationUpdateDto;
+    } as UpdateApplicationDto;
 
     applicationService.get.mockResolvedValue(mockApplicationEntity);
 

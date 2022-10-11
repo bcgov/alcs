@@ -3,6 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import {
   ApplicationRegionDto,
   ApplicationTypeDto,
@@ -93,7 +94,7 @@ describe('CardDetailDialogComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [CardDetailDialogComponent],
-      imports: [HttpClientTestingModule, SharedModule, BrowserAnimationsModule],
+      imports: [HttpClientTestingModule, SharedModule, BrowserAnimationsModule, RouterTestingModule],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         {

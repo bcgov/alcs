@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class AvatarCircleComponent {
   @Input() initials = '';
-  @Input() fullName = '';
+  @Input() name = '';
 
   constructor() {}
 }

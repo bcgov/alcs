@@ -211,7 +211,7 @@ export class BoardComponent implements OnInit {
             status: $event.status,
           })
           .then((r) => {
-            this.toastService.showSuccessToast('Application Updated');
+            this.toastService.showSuccessToast('Application updated');
           });
         break;
       case 'RECON':
@@ -221,7 +221,7 @@ export class BoardComponent implements OnInit {
             statusCode: $event.status,
           })
           .then((r) => {
-            this.toastService.showSuccessToast('Card Updated');
+            this.toastService.showSuccessToast('Card updated');
           });
         break;
     }
@@ -232,7 +232,7 @@ export class BoardComponent implements OnInit {
     return {
       status: application.status,
       title: `${application.fileNumber} (${application.applicant})`,
-      assigneeInitials: application.card.assignee?.initials,
+      assignee: application.card.assignee,
       id: application.fileNumber,
       type: mappedType!,
       activeDays: application.activeDays,
@@ -251,7 +251,7 @@ export class BoardComponent implements OnInit {
       status: recon.card.status.code,
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
       // title: `${recon.fileNumber} (${application.applicant})`,
-      assigneeInitials: recon.card.assignee?.initials,
+      assignee: recon.card.assignee,
       id: recon.card.uuid,
       type: {
         label: 'Recon',

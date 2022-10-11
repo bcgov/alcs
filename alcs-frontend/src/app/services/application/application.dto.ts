@@ -30,6 +30,7 @@ export interface ApplicationDto {
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
   decisionDate?: number;
+  notificationSentDate?: number;
   region: string;
   localGovernment: ApplicationLocalGovernmentDto;
   activeDays: number;
@@ -52,6 +53,7 @@ export interface UpdateApplicationDto {
   assigneeUuid?: string | null;
   assignee?: UserDto;
   highPriority?: boolean;
+  notificationSentDate?: number;
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {

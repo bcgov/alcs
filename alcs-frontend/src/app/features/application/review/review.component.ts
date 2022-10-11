@@ -8,6 +8,7 @@ import { ApplicationDetailService } from '../../../services/application/applicat
 })
 export class ReviewComponent implements OnInit {
   fileNumber: string = '';
+  notificationSentDate: number | undefined = undefined;
 
   constructor(private applicationDetailService: ApplicationDetailService) {}
 
@@ -15,7 +16,14 @@ export class ReviewComponent implements OnInit {
     this.applicationDetailService.$application.subscribe((application) => {
       if (application) {
         this.fileNumber = application.fileNumber;
+        this.notificationSentDate = application.notificationSentDate;
       }
+    });
+  }
+
+  onSaveNotificationDate(newDate: number) {
+    this.applicationDetailService.updateApplication(this.fileNumber, {
+      notificationSentDate: newDate,
     });
   }
 }

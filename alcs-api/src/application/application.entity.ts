@@ -86,6 +86,13 @@ export class Application extends Base {
   })
   decisionDate?: Date;
 
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  notificationSentDate?: Date;
+
   @ManyToOne(() => ApplicationType, {
     nullable: false,
   })

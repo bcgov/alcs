@@ -244,6 +244,10 @@ export class ApplicationProfile extends AutomapperProfile {
           (a) => a.startDate,
           mapFrom((ad) => this.numberToDateSafe(ad.meetingStartDate)),
         ),
+        forMember(
+          (a) => a.endDate,
+          mapFrom((ad) => this.numberToDateSafe(ad.meetingEndDate)),
+        ),
       );
 
       createMap(mapper, ApplicationDto, Card);
