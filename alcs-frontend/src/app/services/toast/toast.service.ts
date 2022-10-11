@@ -8,23 +8,24 @@ export class ToastService {
   constructor(private snackBar: MatSnackBar) {}
 
   private TOAST_DURATION = 3000;
+  private ACTION_TOAST_DURATION = 6000;
 
   showSuccessToast(text: string, action: string = '') {
-    this.snackBar.open(text, action, {
-      duration: this.TOAST_DURATION,
+    return this.snackBar.open(text, action, {
+      duration: action ? this.ACTION_TOAST_DURATION : this.TOAST_DURATION,
       panelClass: 'success',
     });
   }
 
   showWarningToast(text: string, action: string = '') {
-    this.snackBar.open(text, action, {
-      duration: this.TOAST_DURATION,
+    return this.snackBar.open(text, action, {
+      duration: action ? this.ACTION_TOAST_DURATION : this.TOAST_DURATION,
       panelClass: 'warning',
     });
   }
 
   showErrorToast(text: string, action: string = 'Dismiss') {
-    this.snackBar.open(text, action, {
+    return this.snackBar.open(text, action, {
       panelClass: 'error',
     });
   }
