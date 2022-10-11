@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDatepicker } from '@matheo/datepicker';
 import * as moment from 'moment';
 import { environment } from '../../../environments/environment';
 import { formatDateForApi } from '../utils/api-date-formatter';
@@ -12,6 +13,8 @@ import { formatDateForApi } from '../utils/api-date-formatter';
 export class InlineDatepickerComponent implements OnInit, OnChanges {
   @Input() selectedValue: number | undefined;
   @Input() min: Date | number | undefined;
+
+  @ViewChild('datePicker') private datePicker!: MatDatepicker<any>;
 
   minimum: Date | undefined;
 
@@ -42,6 +45,9 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      this.datePicker.open();
+    }
   }
 
   onSave() {

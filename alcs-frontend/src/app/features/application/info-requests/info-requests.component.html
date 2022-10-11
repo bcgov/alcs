@@ -36,10 +36,10 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>User Action</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-icon-button class="action-btn" (click)="onEdit(element.uuid)">
+      <button matTooltip="Edit" mat-icon-button class="action-btn" (click)="onEdit(element.uuid)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid)">
+      <button matTooltip="Delete" mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid)">
         <mat-icon>delete</mat-icon>
       </button>
     </td>

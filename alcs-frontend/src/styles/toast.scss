@@ -1,5 +1,35 @@
 @import './colors';
 
+snack-bar-container {
+  padding: 0 !important;
+
+  .mat-simple-snackbar {
+    align-items: stretch;
+  }
+
+  .mat-simple-snack-bar-content {
+    padding: 14px;
+    text-align: center;
+  }
+
+  .mat-simple-snackbar-action {
+    border-left: 1px solid #fff;
+    color: #fff;
+    padding: 0;
+    margin: 0;
+
+    .mat-button-wrapper {
+      letter-spacing: normal;
+      font-weight: bold;
+    }
+  }
+}
+
+.mat-simple-snackbar-action button {
+  height: 100% !important;
+  max-height: unset !important;
+}
+
 snack-bar-container.success {
   background: $success-color;
   color: #fff;
@@ -13,25 +43,4 @@ snack-bar-container.warning {
 snack-bar-container.error {
   background: $error-color;
   color: #fff;
-  padding: 0;
-
-  .mat-simple-snackbar {
-    align-items: stretch;
-  }
-
-  .mat-simple-snack-bar-content {
-    padding: 14px 8px 14px 14px;
-  }
-
-  .mat-simple-snackbar-action {
-    border-left: 2px solid #fff;
-    color: #fff;
-    padding: 0;
-    margin: 0;
-  }
-
-  button {
-    height: 100%;
-    max-height: unset;
-  }
 }

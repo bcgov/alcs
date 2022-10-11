@@ -214,7 +214,7 @@ export class BoardComponent implements OnInit {
             status: $event.status,
           })
           .then((r) => {
-            this.toastService.showSuccessToast('Application Updated');
+            this.toastService.showSuccessToast('Application updated');
           });
         break;
       case 'RECON':
@@ -224,7 +224,7 @@ export class BoardComponent implements OnInit {
             statusCode: $event.status,
           })
           .then((r) => {
-            this.toastService.showSuccessToast('Card Updated');
+            this.toastService.showSuccessToast('Card updated');
           });
         break;
     }

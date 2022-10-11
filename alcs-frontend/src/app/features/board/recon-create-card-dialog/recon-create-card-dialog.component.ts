@@ -122,7 +122,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
       };
 
       if (!card.boardCode) {
-        this.toastService.showErrorToast('Board is required. Please reload the page and try again.');
+        this.toastService.showErrorToast('Board is required, please reload the page and try again');
         return;
       }
 

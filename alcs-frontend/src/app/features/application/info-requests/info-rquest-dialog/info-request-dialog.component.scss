@@ -31,3 +31,15 @@ label {
     }
   }
 }
+
+.other-text {
+  border-bottom: 1px solid $black;
+  padding-bottom: 4px;
+  margin-bottom: -5px;
+}
+
+:host::ng-deep {
+  .mat-form-field-underline {
+    display: none;
+  }
+}

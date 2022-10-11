@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../services/application/application.dto';
@@ -38,7 +39,8 @@ export class CardDetailDialogComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private boardService: BoardService,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -91,14 +93,17 @@ export class CardDetailDialogComponent implements OnInit, OnDestroy {
     this.selectedBoard = board.code;
     await this.boardService.changeBoard(this.application.card.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
-      this.toastService.showSuccessToast(`Application moved to ${board.title}`);
+      const toast = this.toastService.showSuccessToast(`Application moved to ${board.title}`, 'Go to Board');
+      toast.onAction().subscribe(() => {
+        this.router.navigate(['/board', board.code]);
+      });
     });
   }
 
   updateCard(updates: UpdateApplicationDto) {
     this.applicationService.updateApplicationCard(this.data.card.uuid, updates).then(() => {
       this.isApplicationDirty = true;
-      this.toastService.showSuccessToast('Application Updated');
+      this.toastService.showSuccessToast('Application updated');
     });
   }
 

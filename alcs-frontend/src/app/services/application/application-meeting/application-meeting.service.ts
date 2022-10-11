@@ -60,7 +60,7 @@ export class ApplicationMeetingService {
           meetingStartDate: formatDateForApi(meeting.meetingStartDate),
         })
       );
-      this.toastService.showSuccessToast('Meeting created.');
+      this.toastService.showSuccessToast('Meeting created');
     } catch (e) {
       this.toastService.showErrorToast(`Failed to create ${typeLabel}`);
     }

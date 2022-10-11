@@ -105,7 +105,7 @@ export class ApplicationMeetingComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.toastService.showErrorToast('Failed to open meeting, please refresh the page.');
+      this.toastService.showErrorToast('Failed to open meeting, please refresh the page');
     }
   }
 

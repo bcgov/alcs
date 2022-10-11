@@ -91,7 +91,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.toastService.showErrorToast('Failed to open Info Request, please refresh the page.');
+      this.toastService.showErrorToast('Failed to open Information Request, please refresh the page');
     }
   }
 

@@ -1,15 +1,18 @@
 <div>
   <div class="search-bar">
-    <input
-      class="search-input"
-      #searchInput
-      (keyup.enter)="onSearch()"
-      (focus)="searchInput.select()"
-      [(ngModel)]="searchText"
-      matInput
-      type="text"
-      placeholder="Search by File ID"
-    />
+    <mat-form-field class="search-form-field" appearance="outline">
+      <mat-label>Search by File ID</mat-label>
+      <input
+        class="search-input"
+        #searchInput
+        (keyup.enter)="onSearch()"
+        (focus)="searchInput.select()"
+        [(ngModel)]="searchText"
+        matInput
+        type="text"
+        placeholder="61251231"
+      />
+    </mat-form-field>
     <button class="search-button" (click)="onSearch()" mat-flat-button color="accent">
       <mat-icon>search</mat-icon>
       Search
