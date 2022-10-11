@@ -15,6 +15,7 @@ export interface ApplicationMeetingTypeDto {
 
 export interface CreateApplicationMeetingDto {
   meetingStartDate: Date;
+  meetingEndDate?: Date;
   meetingTypeCode: string;
   description?: string;
 }

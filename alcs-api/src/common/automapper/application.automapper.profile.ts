@@ -4,12 +4,6 @@ import { Injectable } from '@nestjs/common';
 
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import {
-  ApplicationDecisionDto,
-  DecisionDocumentDto,
-} from '../../application/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
-import { DecisionDocument } from '../../application/application-decision/decision-document.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import {
@@ -34,8 +28,6 @@ import { ApplicationRegion } from '../../code/application-code/application-regio
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../../code/code.service';
-import { UserDto } from '../../user/user.dto';
-import { User } from '../../user/user.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -237,6 +229,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.startDate,
           mapFrom((ad) => this.numberToDateSafe(ad.meetingStartDate)),
+        ),
+        forMember(
+          (a) => a.endDate,
+          mapFrom((ad) => this.numberToDateSafe(ad.meetingEndDate)),
         ),
       );
 
