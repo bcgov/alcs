@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { combineLatestWith, tap } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, tap } from 'rxjs';
+import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
+import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -13,12 +15,14 @@ import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 })
 export class OverviewComponent implements OnInit {
   private application?: ApplicationDetailedDto;
+  private $decisions = new BehaviorSubject<ApplicationDecisionDto[]>([]);
   events: TimelineEvent[] = [];
   summary = '';
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
-    private meetingService: ApplicationMeetingService
+    private meetingService: ApplicationMeetingService,
+    private decisionService: ApplicationDecisionService
   ) {}
 
   ngOnInit(): void {
@@ -27,20 +31,27 @@ export class OverviewComponent implements OnInit {
         tap((app) => {
           if (app) {
             this.meetingService.fetch(app.fileNumber);
+            this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
+              this.$decisions.next(res.decisions);
+            });
           }
         })
       )
-      .pipe(combineLatestWith(this.meetingService.$meetings))
-      .subscribe(([application, meetings]) => {
+      .pipe(combineLatestWith(this.meetingService.$meetings, this.$decisions))
+      .subscribe(([application, meetings, decisions]) => {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
-          this.events = this.mapApplicationToEvents(application, meetings);
+          this.events = this.mapApplicationToEvents(application, meetings, decisions);
         }
       });
   }
 
-  mapApplicationToEvents(application: ApplicationDto, meetings: ApplicationMeetingDto[]): TimelineEvent[] {
+  mapApplicationToEvents(
+    application: ApplicationDto,
+    meetings: ApplicationMeetingDto[],
+    decisions: ApplicationDecisionDto[]
+  ): TimelineEvent[] {
     const editLink = new Map<string, string>([
       ['IR', './info-request'],
       ['AM', './site-visit-meeting'],
@@ -81,10 +92,26 @@ export class OverviewComponent implements OnInit {
       mappedEvents.push(...events);
     }
 
-    if (application.decisionDate) {
+    for (const [index, decision] of decisions.entries()) {
+      if (decision.auditDate) {
+        mappedEvents.push({
+          name: `Audited Decision #${decisions.length - index}`,
+          startDate: new Date(decision.auditDate),
+          isFulfilled: true,
+        });
+      }
+
+      if (decision.chairReviewDate) {
+        mappedEvents.push({
+          name: `Chair Reviewed Decision #${decisions.length - index}`,
+          startDate: new Date(decision.chairReviewDate),
+          isFulfilled: true,
+        });
+      }
+
       mappedEvents.push({
-        name: 'Decision Made',
-        startDate: new Date(application.decisionDate),
+        name: `Decision Made #${decisions.length - index}`,
+        startDate: new Date(decision.date),
         isFulfilled: true,
       });
     }
