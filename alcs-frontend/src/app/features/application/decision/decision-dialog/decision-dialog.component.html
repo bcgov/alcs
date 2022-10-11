@@ -46,7 +46,7 @@
           <mat-button-toggle value="false">Not Needed</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <mat-form-field appearance="outline" class="date-picker chair-review-date">
+      <mat-form-field *ngIf="form.get('chairReviewRequired')!.value === 'true'" appearance="outline" class="date-picker chair-review-date">
         <mat-label>Chair Review Date</mat-label>
         <input
           matInput
