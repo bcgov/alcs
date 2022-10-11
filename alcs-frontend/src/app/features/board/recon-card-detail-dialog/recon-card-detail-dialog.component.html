@@ -17,6 +17,15 @@
         >
           {{ recon.application.type.label }}
         </span>
+        <span
+          class="center application-type"
+          [ngStyle]="{
+            backgroundColor: reconType.backgroundColor,
+            color: reconType.textColor
+          }"
+        >
+          {{ reconType.label }}
+        </span>
       </h3>
     </div>
     <div>

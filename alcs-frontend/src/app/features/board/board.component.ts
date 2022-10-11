@@ -14,7 +14,10 @@ import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
-import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
+import {
+  ReconCardDetailDialogComponent,
+  RECON_TYPE_LABEL,
+} from './recon-card-detail-dialog/recon-card-detail-dialog.component';
 import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
 @Component({
@@ -253,14 +256,7 @@ export class BoardComponent implements OnInit {
       // title: `${recon.fileNumber} (${application.applicant})`,
       assignee: recon.card.assignee,
       id: recon.card.uuid,
-      type: {
-        label: 'Recon',
-        code: 'RECON',
-        shortLabel: 'RECON',
-        backgroundColor: '#454545',
-        description: 'Reconsideration',
-        textColor: 'white',
-      },
+      type: RECON_TYPE_LABEL,
       cardType: 'RECON',
       paused: false,
       highPriority: recon.card.highPriority,

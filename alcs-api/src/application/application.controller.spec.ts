@@ -3,6 +3,8 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { BoardSmallDto } from '../board/board.dto';
+import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
@@ -48,7 +50,11 @@ describe('ApplicationController', () => {
     assigneeUuid: mockApplicationEntity.card.assigneeUuid,
     board: undefined,
     region: undefined,
-    localGovernment: 'Local Government',
+    localGovernment: {
+      uuid: 'fake',
+      name: 'Local Government',
+      preferredRegionCode: 'fake',
+    },
     activeDays: 2,
     pausedDays: 0,
     paused: false,
@@ -57,7 +63,11 @@ describe('ApplicationController', () => {
     dateReceived: Date.now(),
     card: {
       assignee: initAssigneeMockDto(),
-      status: 'FAKE',
+      status: {} as CardStatusDto,
+      type: 'fake',
+      uuid: 'fake',
+      highPriority: false,
+      board: {} as BoardSmallDto,
     } as CardDto,
   };
 

@@ -12,6 +12,15 @@ import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
+export const RECON_TYPE_LABEL = {
+  label: 'Recon',
+  code: 'RECON',
+  shortLabel: 'RECON',
+  backgroundColor: '#454545',
+  description: 'Reconsideration',
+  textColor: 'white',
+};
+
 @Component({
   selector: 'app-recon-card-detail-dialog',
   templateUrl: './recon-card-detail-dialog.component.html',
@@ -26,6 +35,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
   selectedBoard?: string;
   selectedRegion?: string;
   title?: string;
+  reconType = RECON_TYPE_LABEL;
 
   recon: ApplicationReconsiderationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];

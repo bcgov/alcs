@@ -3,6 +3,7 @@ import { ApplicationDecisionOutcomeType } from '../../../application/application
 import { ApplicationDecision } from '../../../application/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
+import { ApplicationReconsideration } from '../../../application/application-reconsideration/application-reconsideration.entity';
 import { Application } from '../../../application/application.entity';
 import { Board } from '../../../board/board.entity';
 import { CardStatus } from '../../../card/card-status/card-status.entity';
@@ -112,6 +113,24 @@ const initAssigneeMockEntity = (): User => {
   return user;
 };
 
+const initApplicationReconsiderationMockEntity = (
+  application?: Application,
+  card?: Card,
+): ApplicationReconsideration => {
+  const reconsideration = new ApplicationReconsideration();
+  const app = application ?? initApplicationMockEntity();
+  reconsideration.application = app;
+  reconsideration.applicationUuid = app.uuid;
+  reconsideration.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  reconsideration.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  reconsideration.reviewDate = new Date(1, 1, 1, 1, 1, 1, 1);
+  reconsideration.submittedDate = new Date(1, 1, 1, 1, 1, 1, 1);
+  const cardEntity = card ?? initCardMockEntity();
+  reconsideration.card = cardEntity;
+  reconsideration.cardUuid = cardEntity.uuid;
+  return reconsideration;
+};
+
 const initApplicationMockEntity = (fileNumber?: string): Application => {
   const applicationEntity = new Application();
   applicationEntity.fileNumber = fileNumber ?? 'app_1';
@@ -130,6 +149,10 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
   } as ApplicationRegion;
+
+  applicationEntity.reconsiderations = [
+    initApplicationReconsiderationMockEntity(applicationEntity),
+  ];
 
   return applicationEntity;
 };
@@ -264,4 +287,5 @@ export {
   initBoardMockEntity,
   initCardTypeMockEntity,
   initApplicationDecisionMock,
+  initApplicationReconsiderationMockEntity,
 };

@@ -3,6 +3,8 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationReconsiderationService } from '../application/application-reconsideration/application-reconsideration.service';
+import { ApplicationReconsiderationWithoutApplicationDto } from '../application/application-reconsideration/applicationReconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
@@ -20,6 +22,7 @@ describe('HomeController', () => {
   let controller: HomeController;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationSubtaskService: DeepMocked<CardSubtaskService>;
+  let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
 
   const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
@@ -34,6 +37,8 @@ describe('HomeController', () => {
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
     mockApplicationSubtaskService = createMock<CardSubtaskService>();
+    mockApplicationReconsiderationService =
+      createMock<ApplicationReconsiderationService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -58,6 +63,10 @@ describe('HomeController', () => {
         {
           provide: CodeService,
           useValue: {},
+        },
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: mockApplicationReconsiderationService,
         },
         ApplicationProfile,
         ApplicationSubtaskProfile,
@@ -97,20 +106,29 @@ describe('HomeController', () => {
     mockApplicationService.getAllApplicationsWithIncompleteSubtasks.mockResolvedValue(
       [{ ...mockApplication } as Application],
     );
-    // mockApplicationSubtaskService.listIncompleteByType.mockResolvedValue([
-    //   { ...mockSubtask, application: mockApplication } as CardSubtask,
-    // ]);
+    mockApplicationService.getAllApplicationsWithReconsiderationIncompleteSubtasks.mockResolvedValue(
+      [{ ...mockApplication } as Application],
+    );
 
     mockApplicationService.mapToDtos.mockResolvedValue([
       mockApplication as any as ApplicationDto,
     ]);
+    mockApplicationReconsiderationService.mapToDtosWithoutApplication.mockResolvedValue(
+      [
+        mockApplication
+          .reconsiderations[0] as any as ApplicationReconsiderationWithoutApplicationDto,
+      ],
+    );
+
     const res = await controller.getIncompleteSubtasksByType();
 
-    expect(res.length).toEqual(1);
-
+    expect(res.length).toEqual(2);
     expect(mockApplicationService.mapToDtos).toHaveBeenCalled();
     expect(
       mockApplicationService.getAllApplicationsWithIncompleteSubtasks,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationService.getAllApplicationsWithReconsiderationIncompleteSubtasks,
     ).toBeCalledTimes(1);
     expect(res[0].type).toEqual(mockSubtask.type.type);
     expect(res[0].application).toEqual(mockApplication);

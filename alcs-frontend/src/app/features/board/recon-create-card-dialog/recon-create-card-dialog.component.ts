@@ -173,6 +173,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
     this.applicantControl.enable();
     this.regionControl.enable();
     this.applicationTypeControl.enable();
+    this.reconTypeControl.enable();
 
     // clear warnings
     this.isDecisionDateEmpty = false;
