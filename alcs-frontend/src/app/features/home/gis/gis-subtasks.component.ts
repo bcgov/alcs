@@ -73,7 +73,6 @@ export class GisSubtasksComponent implements OnInit {
     );
   }
 
-  // TODO: implement for recon cards ones recon entity created
   openCard(fileNumber: string, boardCode: string, cardType: string) {
     this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&&type=${cardType}`);
   }

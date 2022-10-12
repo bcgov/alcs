@@ -28,12 +28,11 @@ export class ReconCreateCardDialogComponent implements OnInit {
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
-  hasPendingRecon = false;
   currentBoardCode: string = '';
 
   filteredApplications: Observable<ApplicationDto[]> | undefined;
 
-  fileNumberControl = new FormControl('', [Validators.required]);
+  fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   applicantControl = new FormControl('', [Validators.required]);
   applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
@@ -98,7 +97,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
   }
 
   autocompleteDisplay(application: ApplicationDetailedDto): string {
-    return (application && application.fileNumber) ?? '';
+    return application?.fileNumber ?? '';
   }
 
   async onApplicationSelected($event: MatOptionSelectionChange) {
@@ -124,9 +123,6 @@ export class ReconCreateCardDialogComponent implements OnInit {
     if (!application.decisionDate) {
       this.isDecisionDateEmpty = true;
     }
-
-    // TODO implement hasPendingRecon once reconsideration entity created
-    // this.hasPendingRecon = true;
   }
 
   async onSubmit() {
@@ -136,7 +132,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
       const recon: CreateApplicationReconsiderationDto = {
         // application details
         applicationTypeCode: formValues.applicationType!,
-        applicationFileNumber: formValues.fileNumber!.trim(),
+        applicationFileNumber: formValues.fileNumber!.fileNumber?.trim() ?? formValues.fileNumber!.trim(),
         applicant: formValues.applicant!,
         region: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
@@ -177,7 +173,6 @@ export class ReconCreateCardDialogComponent implements OnInit {
 
     // clear warnings
     this.isDecisionDateEmpty = false;
-    this.hasPendingRecon = false;
   }
 
   onSelectGovernment(value: ApplicationLocalGovernmentDto) {

@@ -155,8 +155,7 @@
     </div>
 
     <div class="warning-section">
-      <div class="form-warning" *ngIf="isDecisionDateEmpty">File does not have a decision</div>
-      <div class="form-warning" *ngIf="hasPendingRecon">File already has pending reconsideration</div>
+      <div class="warning" *ngIf="isDecisionDateEmpty"><mat-icon>warning</mat-icon>File does not have a decision</div>
     </div>
   </mat-dialog-content>
 
