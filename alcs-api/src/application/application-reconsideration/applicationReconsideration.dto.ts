@@ -35,7 +35,6 @@ export class ApplicationReconsiderationCreateDto {
   @IsString()
   region: string;
 
-  // TODO not mapped on UI
   @IsString()
   localGovernmentUuid: string;
 
@@ -74,13 +73,6 @@ export class ApplicationReconsiderationUpdateDto {
   @IsBoolean()
   isReviewApproved?: boolean;
 }
-
-// export class ApplicationFlatDto {
-//   typeCode: string;
-//   localGovernmentUuid: string;
-//   fileNumber: string;
-//   applicant: string;
-// }
 
 export class ApplicationDto {
   fileNumber: string;

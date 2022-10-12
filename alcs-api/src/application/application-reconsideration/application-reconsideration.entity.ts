@@ -6,7 +6,6 @@ import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
-// TODO rename to application reconsideration
 @Entity()
 export class ApplicationReconsideration extends Base {
   constructor(data?: Partial<ApplicationReconsideration>) {
