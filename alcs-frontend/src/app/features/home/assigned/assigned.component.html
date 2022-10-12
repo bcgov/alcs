@@ -20,7 +20,7 @@
         </td>
         <td>{{ application.fileNumber }} ({{ application.applicant }})</td>
         <td>{{ application.activeDays }}</td>
-        <td>{{ application.status }}</td>
+        <td [innerHTML]="application.status"></td>
       </tr>
     </tbody>
   </table>
