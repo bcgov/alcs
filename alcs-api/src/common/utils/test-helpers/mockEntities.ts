@@ -4,7 +4,7 @@ import { ApplicationDecision } from '../../../application/application-decision/a
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
 import { ApplicationReconsideration } from '../../../application/application-reconsideration/application-reconsideration.entity';
-import { ReconsiderationType } from '../../../application/application-reconsideration/reconsideration-type/reconsideration-type.entity';
+import { ApplicationReconsiderationType } from '../../../application/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { Application } from '../../../application/application.entity';
 import { Board } from '../../../board/board.entity';
 import { CardStatus } from '../../../card/card-status/card-status.entity';
@@ -130,7 +130,7 @@ const initApplicationReconsiderationMockEntity = (
   reconsideration.card = cardEntity;
   reconsideration.cardUuid = cardEntity.uuid;
 
-  const reconsiderationType = new ReconsiderationType();
+  const reconsiderationType = new ApplicationReconsiderationType();
   reconsiderationType.code = '33';
   reconsiderationType.label = '33';
   reconsiderationType.description = '33';

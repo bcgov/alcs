@@ -5,7 +5,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
 import { ReconsiderationTypeDto } from '../application/application-reconsideration/applicationReconsideration.dto';
-import { ReconsiderationType } from '../application/application-reconsideration/reconsideration-type/reconsideration-type.entity';
+import { ApplicationReconsiderationType } from '../application/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
@@ -45,7 +45,7 @@ export class CodeController {
       ),
       reconsiderationType: this.mapper.mapArray(
         types.reconsiderationTypes,
-        ReconsiderationType,
+        ApplicationReconsiderationType,
         ReconsiderationTypeDto,
       ),
     };

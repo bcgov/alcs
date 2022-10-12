@@ -37,6 +37,7 @@ export class ApplicationReconsiderationService {
         type: true,
         region: true,
         localGovernment: true,
+        decisionMeetings: true,
       },
       card: {
         board: true,

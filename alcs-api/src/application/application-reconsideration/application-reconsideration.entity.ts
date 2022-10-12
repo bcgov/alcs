@@ -4,7 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Card } from '../../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application.entity';
-import { ReconsiderationType } from './reconsideration-type/reconsideration-type.entity';
+import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 // TODO rename to application reconsideration
 @Entity()
@@ -21,10 +21,10 @@ export class ApplicationReconsideration extends Base {
   submittedDate: Date;
 
   @AutoMap()
-  @ManyToOne(() => ReconsiderationType, {
+  @ManyToOne(() => ApplicationReconsiderationType, {
     nullable: false,
   })
-  type: ReconsiderationType;
+  type: ApplicationReconsiderationType;
 
   @AutoMap()
   @Column({ nullable: true })

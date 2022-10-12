@@ -43,6 +43,8 @@ export class BoardController {
 
     const recons = await this.reconsiderationService.getByBoardCode(boardCode);
 
+    console.log('here', await this.reconsiderationService.mapToDtos(recons));
+
     return {
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),

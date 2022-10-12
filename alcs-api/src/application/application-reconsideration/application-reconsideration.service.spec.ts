@@ -28,7 +28,7 @@ import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
 } from './applicationReconsideration.dto';
-import { ReconsiderationType } from './reconsideration-type/reconsideration-type.entity';
+import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 describe('ReconsiderationService', () => {
   let reconsiderationRepositoryMock: MockType<
@@ -292,7 +292,7 @@ describe('ReconsiderationService', () => {
       initApplicationReconsiderationMockEntity(),
     );
     codeServiceMock.fetchReconsiderationType.mockResolvedValue(
-      {} as ReconsiderationType,
+      {} as ApplicationReconsiderationType,
     );
 
     await expect(

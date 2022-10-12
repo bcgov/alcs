@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -10,6 +11,7 @@ import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { ApplicationDecisionMeetingDto } from '../application-decision-meeting/application-decision-meeting.dto';
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
@@ -86,6 +88,9 @@ export class ApplicationDto {
   applicant: string;
   region: ApplicationRegionDto;
   localGovernment: string;
+  @AutoMap()
+  @Type(() => ApplicationDecisionMeetingDto)
+  decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
 export class ApplicationReconsiderationDto {

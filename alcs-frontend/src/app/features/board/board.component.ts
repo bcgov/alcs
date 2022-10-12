@@ -248,12 +248,9 @@ export class BoardComponent implements OnInit {
   }
 
   private mapReconsiderationDtoToCard(recon: ApplicationReconsiderationDto): CardData {
-    // TODO get mock fields from application linked to reconsideration
-    console.log(recon);
     return {
       status: recon.card.status.code,
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
-      // title: `${recon.fileNumber} (${application.applicant})`,
       assignee: recon.card.assignee,
       id: recon.card.uuid,
       type: RECON_TYPE_LABEL,
@@ -261,6 +258,7 @@ export class BoardComponent implements OnInit {
       paused: false,
       highPriority: recon.card.highPriority,
       cardUuid: recon.card.uuid,
+      decisionMeetings: recon.application.decisionMeetings,
     };
   }
 }

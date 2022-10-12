@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
-import { ReconsiderationType } from '../application/application-reconsideration/reconsideration-type/reconsideration-type.entity';
+import { ApplicationReconsiderationType } from '../application/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { BaseCodeEntity } from '../common/entities/base.code.entity';
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
@@ -19,8 +19,8 @@ export class CodeService {
     private regionRepository: Repository<ApplicationRegion>,
     @InjectRepository(ApplicationMeetingType)
     private meetingTypesRepository: Repository<ApplicationMeetingType>,
-    @InjectRepository(ReconsiderationType)
-    private reconsiderationTypesRepository: Repository<ReconsiderationType>,
+    @InjectRepository(ApplicationReconsiderationType)
+    private reconsiderationTypesRepository: Repository<ApplicationReconsiderationType>,
   ) {}
 
   async getAll() {
@@ -79,7 +79,9 @@ export class CodeService {
     });
   }
 
-  async fetchReconsiderationType(code: string): Promise<ReconsiderationType> {
+  async fetchReconsiderationType(
+    code: string,
+  ): Promise<ApplicationReconsiderationType> {
     return this.reconsiderationTypesRepository.findOneByOrFail({
       code,
     });
