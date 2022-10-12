@@ -105,7 +105,8 @@ export class ApplicationReconsiderationService {
 
     await this.assignApplication(reconsideration, newReconsideration);
 
-    return this.reconsiderationRepository.save(newReconsideration);
+    const recon = await this.reconsiderationRepository.save(newReconsideration);
+    return this.getByUuid(recon.uuid);
   }
 
   async assignApplication(
@@ -161,8 +162,11 @@ export class ApplicationReconsiderationService {
         'Review outcome is required for reconsideration of type 33',
       );
     }
+    const recon = await this.reconsiderationRepository.save(
+      updatedReconsideration,
+    );
 
-    return this.reconsiderationRepository.save(updatedReconsideration);
+    return this.getByUuid(recon.uuid);
   }
 
   private async fetchAndValidateType(code) {
@@ -199,6 +203,13 @@ export class ApplicationReconsiderationService {
   getByCardUuid(cardUuid: string) {
     return this.reconsiderationRepository.findOne({
       where: { cardUuid },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
+  }
+
+  getByUuid(uuid: string) {
+    return this.reconsiderationRepository.findOneOrFail({
+      where: { uuid },
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });
   }

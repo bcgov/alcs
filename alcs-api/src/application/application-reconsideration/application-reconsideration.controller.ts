@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
@@ -14,9 +16,11 @@ import { RoleGuard } from 'nest-keycloak-connect';
 import { BoardService } from '../../board/board.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { ApplicationReconsideration } from './application-reconsideration.entity';
 import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import {
   ApplicationReconsiderationCreateDto,
+  ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
 } from './applicationReconsideration.dto';
 
@@ -27,6 +31,7 @@ export class ApplicationReconsiderationController {
   constructor(
     private reconsiderationService: ApplicationReconsiderationService,
     private boardService: BoardService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Patch('/:uuid')
@@ -40,7 +45,7 @@ export class ApplicationReconsiderationController {
       reconsideration,
     );
 
-    return updatedRecon;
+    return this.reconsiderationService.mapToDtos([updatedRecon]);
   }
 
   @Post()
@@ -55,18 +60,24 @@ export class ApplicationReconsiderationController {
       board,
     );
 
-    return createdRecon;
+    return this.reconsiderationService.mapToDtos([createdRecon]);
   }
 
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
-    return this.reconsiderationService.delete(uuid);
+    await this.reconsiderationService.delete(uuid);
+    return { deleted: true };
   }
 
   @Get('/card/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async getByCard(@Param('uuid') cardUuid: string) {
-    return this.reconsiderationService.getByCardUuid(cardUuid);
+    const recon = await this.reconsiderationService.getByCardUuid(cardUuid);
+    return this.mapper.mapAsync(
+      recon,
+      ApplicationReconsideration,
+      ApplicationReconsiderationDto,
+    );
   }
 }
