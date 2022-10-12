@@ -62,6 +62,7 @@ describe('ReconCardDetailDialogComponent', () => {
         code: 'FAKE_REGION',
       } as ApplicationRegionDto,
       localGovernment: {} as ApplicationLocalGovernmentDto,
+      decisionMeetings: [],
     },
     card: {
       status: {
