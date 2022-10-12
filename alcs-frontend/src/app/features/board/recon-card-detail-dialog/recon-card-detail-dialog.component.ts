@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { CardStatusDto } from '../../../services/application/application-code.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { BoardStatusDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';

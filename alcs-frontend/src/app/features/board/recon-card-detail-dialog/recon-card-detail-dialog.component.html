@@ -72,12 +72,15 @@
       [items]="boardStatuses"
       placeholder="Workflow Stage"
       bindLabel="label"
-      bindValue="code"
+      bindValue="statusCode"
       [clearable]="false"
       [(ngModel)]="selectedApplicationStatus"
       (change)="onStatusSelected($event)"
     >
       <ng-template ng-option-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
+      <ng-template ng-label-tmp let-item="item">
         <span [innerHTML]="item.label"> </span>
       </ng-template>
     </ng-select>
