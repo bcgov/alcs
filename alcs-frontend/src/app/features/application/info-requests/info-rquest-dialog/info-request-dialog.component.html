@@ -10,6 +10,7 @@
           <mat-label>Date requested</mat-label>
           <input
             matInput
+            (click)="startDate.open()"
             [matDatepicker]="startDate"
             [(ngModel)]="model.startDate"
             name="startDate"
@@ -28,6 +29,7 @@
           <mat-label>Date fulfilled</mat-label>
           <input
             matInput
+            (click)="endDate.open()"
             id="endDate"
             [matDatepicker]="endDate"
             [(ngModel)]="model.endDate"

@@ -5,9 +5,16 @@
   <mat-dialog-content style="height: 100%">
     <mat-form-field appearance="outline">
       <mat-label>Choose a date</mat-label>
-      <input matInput [matDatepicker]="pdd" [(ngModel)]="model.date" name="date" required />
-      <mat-datepicker-toggle matSuffix [for]="pdd"></mat-datepicker-toggle>
-      <mat-datepicker #pdd type="date"> </mat-datepicker>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        [(ngModel)]="model.date"
+        name="date"
+        required
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"> </mat-datepicker>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

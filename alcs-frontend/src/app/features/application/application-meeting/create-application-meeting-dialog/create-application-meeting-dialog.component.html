@@ -6,7 +6,14 @@
     <div class="flex-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>{{ data.meetingType.label }} Requested</mat-label>
-        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required />
+        <input
+          (click)="startDatePicker.open()"
+          matInput
+          [matDatepicker]="startDatePicker"
+          [(ngModel)]="startDate"
+          name="startDate"
+          required
+        />
         <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker type="date"> </mat-datepicker>
       </mat-form-field>

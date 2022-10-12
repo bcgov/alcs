@@ -84,6 +84,9 @@ export class ApplicationDecisionService {
       where: {
         uuid,
       },
+      relations: {
+        application: true,
+      },
     });
 
     if (!existingDecision) {

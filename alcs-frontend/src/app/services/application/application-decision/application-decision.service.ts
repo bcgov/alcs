@@ -43,16 +43,16 @@ export class ApplicationDecisionService {
   async update(uuid: string, data: UpdateApplicationDecisionDto) {
     try {
       await firstValueFrom(this.http.patch<ApplicationDecisionDto>(`${this.url}/${uuid}`, data));
-      this.toastService.showSuccessToast('Meeting updated');
+      this.toastService.showSuccessToast('Decision updated');
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update meeting');
+      this.toastService.showErrorToast('Failed to update decision');
     }
   }
 
   async create(decision: CreateApplicationDecisionDto) {
     try {
       await firstValueFrom(this.http.post<ApplicationDecisionDto>(`${this.url}`, decision));
-      this.toastService.showSuccessToast('Meeting created');
+      this.toastService.showSuccessToast('Decision created');
     } catch (e) {
       this.toastService.showErrorToast(`Failed to create decision`);
     }
@@ -61,7 +61,7 @@ export class ApplicationDecisionService {
   async delete(uuid: string) {
     try {
       await firstValueFrom(this.http.delete<ApplicationDecisionDto>(`${this.url}/${uuid}`));
-      this.toastService.showSuccessToast('Meeting deleted');
+      this.toastService.showSuccessToast('Decision deleted');
     } catch (err) {
       this.toastService.showErrorToast('Failed to delete meeting');
     }
