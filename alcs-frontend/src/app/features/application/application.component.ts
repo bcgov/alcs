@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
@@ -55,7 +55,11 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   childRoutes = childRoutes;
 
-  constructor(private applicationDetailService: ApplicationDetailService, private route: ActivatedRoute) {}
+  constructor(
+    private applicationDetailService: ApplicationDetailService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy)).subscribe(async (routeParams) => {
@@ -76,5 +80,12 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   async loadApplication() {
     await this.applicationDetailService.loadApplication(this.fileNumber!);
+  }
+
+  async onGoToCard() {
+    const boardCode = this.application?.board;
+    const fileNumber = this.application?.fileNumber;
+    const cardTypeCode = this.application?.card.type;
+    await this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&type=${cardTypeCode}`);
   }
 }

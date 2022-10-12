@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
@@ -33,6 +33,10 @@ describe('ApplicationComponent', () => {
           useValue: {
             params: new EventEmitter(),
           },
+        },
+        {
+          provide: Router,
+          useValue: {},
         },
       ],
       declarations: [ApplicationComponent],

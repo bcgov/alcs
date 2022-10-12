@@ -2,15 +2,22 @@
   <div class="application">
     <div class="header">
       <div class="heading">
-        <h5>{{ application?.fileNumber }} ({{ application?.applicant }})</h5>
-        <span
-          class="application-type"
-          [ngStyle]="{
-            backgroundColor: application.typeDetails.backgroundColor,
-            color: application.typeDetails.textColor
-          }"
-          >{{ application.typeDetails.label }}</span
-        >
+        <div class="center">
+          <h5>{{ application?.fileNumber }} ({{ application?.applicant }})</h5>
+          <span
+            class="application-type"
+            [ngStyle]="{
+              backgroundColor: application.typeDetails.backgroundColor,
+              color: application.typeDetails.textColor
+            }"
+            >{{ application.typeDetails.label }}</span
+          >
+        </div>
+        <div class="center">
+          <button class="menu-item center" mat-flat-button color="accent" (click)="onGoToCard()">
+            Go to card <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+          </button>
+        </div>
       </div>
       <div class="sub-heading">
         <div>
