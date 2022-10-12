@@ -109,7 +109,7 @@ export class ApplicationReconsiderationService {
     return this.getByUuid(recon.uuid);
   }
 
-  async assignApplication(
+  private async assignApplication(
     reconsideration: ApplicationReconsiderationCreateDto,
     reconsiderationToCreate: ApplicationReconsideration,
   ) {
@@ -117,11 +117,8 @@ export class ApplicationReconsiderationService {
       reconsideration.applicationFileNumber,
     );
 
-    // TODO: move application creation/linkage to separate function
     if (existingApplication) {
       reconsiderationToCreate.applicationUuid = existingApplication.uuid;
-      // TODO: check if this is required
-      // reconsiderationToCreate.application = existingApplication;
     } else {
       const application = await this.applicationService.create(
         {
@@ -153,20 +150,27 @@ export class ApplicationReconsiderationService {
 
     const type = await this.fetchAndValidateType(reconsideration.typeCode);
     updatedReconsideration.type = type;
-    if (
-      (reconsideration.typeCode === '33' &&
-        updatedReconsideration.isReviewApproved === null) ||
-      updatedReconsideration.isReviewApproved === undefined
-    ) {
-      throw new ServiceValidationException(
-        'Review outcome is required for reconsideration of type 33',
-      );
-    }
+    this.validateReviewOutcome(reconsideration, updatedReconsideration);
     const recon = await this.reconsiderationRepository.save(
       updatedReconsideration,
     );
 
     return this.getByUuid(recon.uuid);
+  }
+
+  private validateReviewOutcome(
+    reconsideration: ApplicationReconsiderationUpdateDto,
+    updatedReconsideration: ApplicationReconsideration,
+  ) {
+    if (
+      reconsideration.typeCode === '33' &&
+      (updatedReconsideration.isReviewApproved === null ||
+        updatedReconsideration.isReviewApproved === undefined)
+    ) {
+      throw new ServiceValidationException(
+        'Review outcome is required for reconsideration of type 33',
+      );
+    }
   }
 
   private async fetchAndValidateType(code) {
@@ -201,7 +205,7 @@ export class ApplicationReconsiderationService {
   }
 
   getByCardUuid(cardUuid: string) {
-    return this.reconsiderationRepository.findOne({
+    return this.reconsiderationRepository.findOneOrFail({
       where: { cardUuid },
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });

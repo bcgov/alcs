@@ -39,7 +39,7 @@ export class CreateApplicationDto {
 
   @IsNotEmpty()
   @IsString()
-  localGovernmentUuid;
+  localGovernmentUuid: string;
 }
 
 export class ApplicationDto {
