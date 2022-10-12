@@ -11,6 +11,7 @@ import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import fastifyMultipart from '@fastify/multipart';
+import fastify from 'fastify';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -87,10 +88,24 @@ async function registerMultiPart(app: NestFastifyApplication) {
 }
 
 async function bootstrap() {
+  //TODO: Security workaround for fastify, fixed in fastify 4.8.1+
+  const fastifyInstance = fastify();
+  // @ts-ignore
+  const badNames = Object.getOwnPropertyNames({}.__proto__);
+  fastifyInstance.addHook('onRequest', async (req, reply) => {
+    for (const badName of badNames) {
+      const contentType = req.headers['content-type'];
+      if (contentType && contentType.includes(badName)) {
+        reply.code(415);
+        throw new Error('Content type not supported');
+      }
+    }
+  });
+
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter(fastifyInstance),
     {
       bufferLogs: true,
     },
