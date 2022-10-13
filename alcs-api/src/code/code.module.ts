@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationReconsiderationType } from '../application/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
 

@@ -41,18 +41,11 @@ export class GisSubtasksComponent implements OnInit {
 
   private async loadSubtasks() {
     const subtasks = await this.homeService.fetchGisSubtasks();
-    this.subtasks = subtasks.map((subtask) => {
-      const statusDto = this.statuses.find((status) => status.code === subtask.application.status);
-      const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
-      return {
-        ...subtask,
-        assignee: userDto ? userDto.name : undefined,
-        application: {
-          ...subtask.application,
-          status: statusDto!.label,
-        },
-      };
-    });
+
+    this.subtasks = this.getMappedApplicationSubtasks(subtasks);
+
+    const reconsiderationSubtasks = this.getMappedReconsiderationSubtasks(subtasks);
+    this.subtasks.push(...reconsiderationSubtasks);
 
     this.subtasks.sort((a, b) => {
       if (a.application.card.highPriority === b.application.card.highPriority) {
@@ -64,6 +57,43 @@ export class GisSubtasksComponent implements OnInit {
         return 1;
       }
     });
+  }
+
+  private getMappedApplicationSubtasks(subtasks: ApplicationSubtaskWithApplicationDto[]) {
+    return subtasks
+      .filter((subtask) => subtask.application)
+      .map((subtask) => {
+        const statusDto = this.statuses.find((status) => status.code === subtask.application.status);
+        const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
+        return {
+          ...subtask,
+          assignee: userDto ? userDto.name : undefined,
+          application: {
+            ...subtask.application,
+            status: statusDto!.label,
+          },
+        };
+      });
+  }
+
+  private getMappedReconsiderationSubtasks(subtasks: ApplicationSubtaskWithApplicationDto[]) {
+    return subtasks
+      .filter((subtask) => subtask.reconsideration)
+      .map((subtask) => {
+        const statusDto = this.statuses.find((status) => status.code === subtask.reconsideration.card.status.code);
+        const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
+        return {
+          ...subtask,
+          assignee: userDto ? userDto.name : undefined,
+          application: {
+            ...(subtask.reconsideration.application as any),
+            status: statusDto!.label,
+            card: {
+              ...subtask.reconsideration.card,
+            },
+          },
+        };
+      });
   }
 
   filterAssigneeList(term: string, item: UserDto) {

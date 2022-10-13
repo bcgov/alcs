@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
@@ -13,14 +11,12 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
-import { BoardService } from '../../board/board.service';
-import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
-import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ApplicationReconsideration } from './application-reconsideration.entity';
+import { BoardService } from '../board/board.service';
+import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import { UserRoles } from '../common/authorization/roles.decorator';
 import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import {
   ApplicationReconsiderationCreateDto,
-  ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
 } from './applicationReconsideration.dto';
 
@@ -31,7 +27,6 @@ export class ApplicationReconsiderationController {
   constructor(
     private reconsiderationService: ApplicationReconsiderationService,
     private boardService: BoardService,
-    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Patch('/:uuid')
@@ -74,10 +69,7 @@ export class ApplicationReconsiderationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getByCard(@Param('uuid') cardUuid: string) {
     const recon = await this.reconsiderationService.getByCardUuid(cardUuid);
-    return this.mapper.mapAsync(
-      recon,
-      ApplicationReconsideration,
-      ApplicationReconsiderationDto,
-    );
+    const mapped = await this.reconsiderationService.mapToDtos([recon]);
+    return mapped[0];
   }
 }

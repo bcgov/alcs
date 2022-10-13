@@ -3,14 +3,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { Board } from '../board/board.entity';
-import { BoardService } from '../board/board.service';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
 import { ApplicationDecisionProfile } from '../common/automapper/application-decision.automapper.profile';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
-import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
-import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { NotificationModule } from '../notification/notification.module';
 import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
@@ -32,9 +29,6 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
-import { ApplicationReconsiderationController } from './application-reconsideration/application-reconsideration.controller';
-import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationService } from './application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -52,7 +46,6 @@ import { ApplicationService } from './application.service';
       ApplicationLocalGovernment,
       ApplicationDecision,
       DecisionDocument,
-      ApplicationReconsideration,
       Board,
     ]),
     NotificationModule,
@@ -76,10 +69,6 @@ import { ApplicationService } from './application.service';
     ApplicationDocumentService,
     ApplicationLocalGovernmentService,
     ApplicationDecisionService,
-    ApplicationReconsiderationService,
-    BoardService,
-    ReconsiderationProfile,
-    BoardAutomapperProfile,
   ],
   controllers: [
     ApplicationController,
@@ -88,15 +77,12 @@ import { ApplicationService } from './application.service';
     ApplicationDocumentController,
     ApplicationLocalGovernmentController,
     ApplicationDecisionController,
-    ApplicationReconsiderationController,
   ],
   exports: [
     ApplicationService,
     ApplicationTimeTrackingService,
     ApplicationProfile,
     ApplicationSubtaskProfile,
-    ApplicationReconsiderationService,
-    ReconsiderationProfile,
   ],
 })
 export class ApplicationModule {}

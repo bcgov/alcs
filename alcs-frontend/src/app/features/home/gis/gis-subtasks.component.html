@@ -21,7 +21,7 @@
         </td>
         <td>{{ subtask.application.fileNumber }} ({{ subtask.application.applicant }})</td>
         <td>{{ subtask.reconsideration ? '-' : subtask.application.activeDays }}</td>
-        <td>{{ subtask.application.status }}</td>
+        <td [innerHTML]="subtask.application.status"></td>
         <td class="assignee-column">
           <ng-select
             class="subtask-assignee"

@@ -1,17 +1,17 @@
 import { AutoMap } from '@automapper/classes';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsDefined,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { CardDto } from '../../card/card.dto';
-import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
-import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
-import { BaseCodeDto } from '../../common/dtos/base.dto';
-import { ApplicationDecisionMeetingDto } from '../application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeetingDto } from '../application/application-decision-meeting/application-decision-meeting.dto';
+import { CardDto } from '../card/card.dto';
+import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { BaseCodeDto } from '../common/dtos/base.dto';
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
@@ -40,7 +40,7 @@ export class ApplicationReconsiderationCreateDto {
 
   @AutoMap()
   @IsNumber()
-  @IsNotEmpty()
+  @IsDefined()
   submittedDate: number;
 
   @AutoMap()
@@ -74,20 +74,19 @@ export class ApplicationReconsiderationUpdateDto {
   isReviewApproved?: boolean;
 }
 
-export class ApplicationDto {
+export class ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
+  status: string;
   applicant: string;
   region: ApplicationRegionDto;
   localGovernment: string;
-  @AutoMap()
-  @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
 export class ApplicationReconsiderationDto {
   uuid: string;
-  application: ApplicationDto;
+  application: ApplicationForReconsiderationDto;
   card: CardDto;
   type: ReconsiderationTypeDto;
   submittedDate: Date;

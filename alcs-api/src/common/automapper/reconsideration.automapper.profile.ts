@@ -1,17 +1,17 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationReconsideration } from '../../application/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import {
-  ApplicationDto,
+  ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
-} from '../../application/application-reconsideration/applicationReconsideration.dto';
-import { ApplicationReconsiderationType } from '../../application/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+} from '../../application-reconsideration/applicationReconsideration.dto';
+import { ApplicationReconsiderationType } from '../../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { Application } from '../../application/application.entity';
 
 @Injectable()
@@ -27,16 +27,6 @@ export class ReconsiderationProfile extends AutomapperProfile {
       createMap(
         mapper,
         ApplicationReconsiderationCreateDto,
-        ApplicationReconsideration,
-        forMember(
-          (r) => r.submittedDate,
-          mapFrom((rd) => new Date(rd.submittedDate)),
-        ),
-      );
-
-      createMap(
-        mapper,
-        ApplicationReconsiderationCreateDto,
         Application,
         forMember(
           (a) => a.fileNumber,
@@ -47,7 +37,7 @@ export class ReconsiderationProfile extends AutomapperProfile {
       createMap(
         mapper,
         Application,
-        ApplicationDto,
+        ApplicationForReconsiderationDto,
         forMember(
           (a) => a.localGovernment,
           mapFrom((rd) => rd.localGovernment.name),
@@ -73,7 +63,11 @@ export class ReconsiderationProfile extends AutomapperProfile {
         forMember(
           (a) => a.application,
           mapFrom((rd) =>
-            this.mapper.map(rd.application, Application, ApplicationDto),
+            this.mapper.map(
+              rd.application,
+              Application,
+              ApplicationForReconsiderationDto,
+            ),
           ),
         ),
       );

@@ -49,7 +49,6 @@ export class ApplicationService {
     region: true,
     decisionMeetings: true,
     localGovernment: true,
-    // reconsiderations: true,
   };
   private SUBTASK_RELATIONS: FindOptionsRelations<Application> = {
     ...this.DEFAULT_RELATIONS,
@@ -269,39 +268,5 @@ export class ApplicationService {
         fileNumber: 'ASC',
       },
     );
-  }
-
-  // typeorm does not like this condition to be merged with getAllApplicationsWithIncompleteSubtasks
-  async getAllApplicationsWithReconsiderationIncompleteSubtasks(
-    subtaskType: string,
-  ) {
-    return this.applicationRepository.find({
-      where: {
-        reconsiderations: {
-          card: {
-            subtasks: {
-              completedAt: IsNull(),
-              type: {
-                type: subtaskType,
-              },
-            },
-          },
-        },
-      },
-      relations: {
-        ...this.SUBTASK_RELATIONS,
-        reconsiderations: {
-          card: {
-            status: true,
-            board: true,
-            type: true,
-            subtasks: {
-              type: true,
-              assignee: true,
-            },
-          },
-        },
-      },
-    });
   }
 }

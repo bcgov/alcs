@@ -32,6 +32,15 @@ export interface ApplicationReconsiderationDto {
   board: BoardSmallDto;
 }
 
+export interface ApplicationReconsiderationDto {
+  uuid: string;
+  application: ApplicationDto;
+  card: CardDto;
+  type: ReconsiderationTypeDto;
+  submittedDate: Date;
+  board: BoardSmallDto;
+}
+
 export interface ApplicationReconsiderationDetailedDto {}
 
 export interface CreateApplicationReconsiderationDto {

@@ -1,9 +1,9 @@
 import { AutoMap } from '@automapper/classes';
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { Card } from '../../card/card.entity';
-import { Base } from '../../common/entities/base.entity';
-import { Application } from '../application.entity';
+import { Application } from '../application/application.entity';
+import { Card } from '../card/card.entity';
+import { Base } from '../common/entities/base.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Entity()
@@ -43,7 +43,7 @@ export class ApplicationReconsideration extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid' })
-  cardUuid;
+  cardUuid: string;
 
   @AutoMap()
   @OneToOne(() => Card, { cascade: true })
