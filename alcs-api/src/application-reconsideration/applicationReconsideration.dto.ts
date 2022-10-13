@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import {
   IsBoolean,
+  IsDefined,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -39,7 +40,7 @@ export class ApplicationReconsiderationCreateDto {
 
   @AutoMap()
   @IsNumber()
-  @IsNotEmpty()
+  @IsDefined()
   submittedDate: number;
 
   @AutoMap()
