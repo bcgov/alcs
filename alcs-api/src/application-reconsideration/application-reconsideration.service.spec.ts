@@ -4,23 +4,23 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { Board } from '../../board/board.entity';
-import { CardCreateDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
-import { CardService } from '../../card/card.service';
-import { CodeService } from '../../code/code.service';
-import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import { CreateApplicationDto } from '../application/application.dto';
+import { ApplicationService } from '../application/application.service';
+import { Board } from '../board/board.entity';
+import { CardCreateDto } from '../card/card.dto';
+import { Card } from '../card/card.entity';
+import { CardService } from '../card/card.service';
+import { CodeService } from '../code/code.service';
+import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import {
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
+} from '../common/utils/test-helpers/mockEntities';
 import {
   MockType,
   repositoryMockFactory,
-} from '../../common/utils/test-helpers/mockTypes';
-import { CreateApplicationDto } from '../application.dto';
-import { ApplicationService } from '../application.service';
+} from '../common/utils/test-helpers/mockTypes';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import {
@@ -317,7 +317,7 @@ describe('ReconsiderationService', () => {
       initApplicationReconsiderationMockEntity(),
     );
 
-    await service.delete('fake');
+    await service.delete(uuid);
 
     expect(reconsiderationRepositoryMock.findOneByOrFail).toBeCalledWith({
       uuid,

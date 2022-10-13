@@ -2,7 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardCreateDto } from '../card/card.dto';
@@ -205,6 +205,34 @@ export class ApplicationReconsiderationService {
     return this.reconsiderationRepository.findOneOrFail({
       where: { uuid },
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
+  }
+
+  getSubtasks(subtaskType: string) {
+    return this.reconsiderationRepository.find({
+      where: {
+        card: {
+          subtasks: {
+            completedAt: IsNull(),
+            type: {
+              type: subtaskType,
+            },
+          },
+        },
+      },
+      relations: {
+        application: {
+          type: true,
+          decisionMeetings: true,
+          localGovernment: true,
+        },
+        card: {
+          status: true,
+          board: true,
+          type: true,
+          subtasks: { type: true, assignee: true },
+        },
+      },
     });
   }
 }

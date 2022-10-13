@@ -48,40 +48,31 @@ export class HomeController {
         subtaskType,
       );
 
-    const applicationsWithReconsiderations =
-      await this.applicationService.getAllApplicationsWithReconsiderationIncompleteSubtasks(
-        subtaskType,
-      );
-
-    applicationsWithReconsiderations.push(
-      ...applications.filter((a) =>
-        applicationsWithReconsiderations.some((r) => r.uuid !== a.uuid),
-      ),
-    );
+    const reconsiderationWithSubtasks =
+      await this.reconsiderationService.getSubtasks(subtaskType);
 
     const mappedApps = new Map();
     const subtasks: CardSubtask[] = [];
-    for (const application of applicationsWithReconsiderations) {
+    for (const application of applications) {
       application.decisionMeetings = [];
       const mappedApp = await this.applicationService.mapToDtos([application]);
       for (const subtask of application.card?.subtasks) {
         mappedApps.set(subtask.uuid, { app: mappedApp[0], recon: null });
         subtasks.push(subtask);
       }
-      for (const recon of application.reconsiderations ?? []) {
-        const mappedRecon =
-          await this.reconsiderationService.mapToDtosWithoutApplication([
-            recon,
-          ]);
-        for (const subtask of recon.card.subtasks) {
-          mappedApps.set(subtask.uuid, {
-            app: mappedApp[0],
-            recon: mappedRecon[0],
-          });
-          subtasks.push(subtask);
-        }
+    }
+
+    for (const recon of reconsiderationWithSubtasks) {
+      const mappedRecon = await this.reconsiderationService.mapToDtos([recon]);
+      for (const subtask of recon.card.subtasks) {
+        mappedApps.set(subtask.uuid, {
+          recon: mappedRecon[0],
+          app: null,
+        });
+        subtasks.push(subtask);
       }
     }
+
     const mappedTasks = this.mapper.mapArray(
       subtasks,
       CardSubtask,

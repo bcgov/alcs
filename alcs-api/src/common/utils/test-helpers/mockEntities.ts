@@ -33,16 +33,16 @@ const initCardStatusMockEntity = (): CardStatus => {
   return cardStatus;
 };
 
-const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
+const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   const subtask = new CardSubtask();
   subtask.assignee = initAssigneeMockEntity();
-  subtask.uuid = '11111';
+  subtask.uuid = uuid ?? '11111';
   subtask.assigneeUuid = subtask.assignee.uuid;
   subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  subtask.card = card ?? new Card();
+  subtask.card = card;
   subtask.type = new CardSubtaskType();
   subtask.type.backgroundColor = 'fake-bg-color';
   subtask.type.textColor = 'fake-color';
@@ -64,7 +64,7 @@ const initCardTypeMockEntity = (): CardType => {
   return type;
 };
 
-const initCardMockEntity = (): Card => {
+const initCardMockEntity = (subtaskUuid?: string): Card => {
   const card = new Card();
   card.highPriority = true;
   card.status = initCardStatusMockEntity();
@@ -74,7 +74,7 @@ const initCardMockEntity = (): Card => {
   card.assignee = initAssigneeMockEntity();
   card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  card.subtasks = [initCardSubtaskMockEntity(card)];
+  card.subtasks = [initCardSubtaskMockEntity(card, subtaskUuid)];
   card.board = initBoardMockEntity();
   card.boardUuid = card.board.uuid;
   card.type = initCardTypeMockEntity();
@@ -126,7 +126,7 @@ const initApplicationReconsiderationMockEntity = (
   reconsideration.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   reconsideration.reviewDate = new Date(1, 1, 1, 1, 1, 1, 1);
   reconsideration.submittedDate = new Date(1, 1, 1, 1, 1, 1, 1);
-  const cardEntity = card ?? initCardMockEntity();
+  const cardEntity = card ?? initCardMockEntity('222');
   reconsideration.card = cardEntity;
   reconsideration.cardUuid = cardEntity.uuid;
 

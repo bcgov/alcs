@@ -3,8 +3,8 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationReconsiderationService } from '../application/application-reconsideration/application-reconsideration.service';
-import { ApplicationReconsiderationWithoutApplicationDto } from '../application/application-reconsideration/applicationReconsideration.dto';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
@@ -14,7 +14,10 @@ import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CodeService } from '../code/code.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
-import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
+import {
+  initApplicationMockEntity,
+  initApplicationReconsiderationMockEntity,
+} from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { HomeController } from './home.controller';
 
@@ -106,19 +109,18 @@ describe('HomeController', () => {
     mockApplicationService.getAllApplicationsWithIncompleteSubtasks.mockResolvedValue(
       [{ ...mockApplication } as Application],
     );
-    mockApplicationService.getAllApplicationsWithReconsiderationIncompleteSubtasks.mockResolvedValue(
-      [{ ...mockApplication } as Application],
-    );
+    mockApplicationReconsiderationService.getSubtasks.mockResolvedValue([
+      {
+        ...initApplicationReconsiderationMockEntity(),
+      } as ApplicationReconsideration,
+    ]);
 
     mockApplicationService.mapToDtos.mockResolvedValue([
       mockApplication as any as ApplicationDto,
     ]);
-    mockApplicationReconsiderationService.mapToDtosWithoutApplication.mockResolvedValue(
-      [
-        mockApplication
-          .reconsiderations[0] as any as ApplicationReconsiderationWithoutApplicationDto,
-      ],
-    );
+    mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([
+      mockApplication.reconsiderations[0] as any,
+    ]);
 
     const res = await controller.getIncompleteSubtasksByType();
 
@@ -127,9 +129,9 @@ describe('HomeController', () => {
     expect(
       mockApplicationService.getAllApplicationsWithIncompleteSubtasks,
     ).toBeCalledTimes(1);
-    expect(
-      mockApplicationService.getAllApplicationsWithReconsiderationIncompleteSubtasks,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationReconsiderationService.getSubtasks).toBeCalledTimes(
+      1,
+    );
     expect(res[0].type).toEqual(mockSubtask.type.type);
     expect(res[0].application).toEqual(mockApplication);
   });

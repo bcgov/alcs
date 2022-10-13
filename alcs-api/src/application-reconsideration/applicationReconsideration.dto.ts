@@ -76,6 +76,7 @@ export class ApplicationReconsiderationUpdateDto {
 export class ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
+  status: string;
   applicant: string;
   region: ApplicationRegionDto;
   localGovernment: string;
