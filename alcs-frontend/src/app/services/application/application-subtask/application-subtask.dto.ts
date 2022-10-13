@@ -18,5 +18,5 @@ export interface ApplicationSubtaskDto {
 
 export interface ApplicationSubtaskWithApplicationDto extends ApplicationSubtaskDto {
   application: ApplicationDto;
-  reconsideration:ApplicationReconsiderationDto
+  reconsideration: ApplicationReconsiderationDto;
 }

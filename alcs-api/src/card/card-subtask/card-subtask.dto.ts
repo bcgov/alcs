@@ -42,5 +42,5 @@ export class ApplicationSubtaskWithApplicationDTO extends CardSubtaskDto {
   application: ApplicationDto;
 
   @AutoMap()
-  reconsideration: ApplicationReconsiderationDto;
+  reconsideration?: ApplicationReconsiderationDto;
 }

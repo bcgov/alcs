@@ -20,7 +20,6 @@ import {
   repositoryMockFactory,
 } from '../../common/utils/test-helpers/mockTypes';
 import { CreateApplicationDto } from '../application.dto';
-import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import { ApplicationReconsiderationService } from './application-reconsideration.service';
@@ -142,7 +141,7 @@ describe('ReconsiderationService', () => {
     cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(undefined);
     applicationServiceMock.create.mockResolvedValue(
-      mockApplicationCreateDto as unknown as Application,
+      mockApplicationCreateDto as any,
     );
 
     await service.create(mockReconsiderationCreateDto, {} as Board);

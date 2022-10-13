@@ -174,7 +174,7 @@ export class ApplicationReconsiderationService {
     }
   }
 
-  private async fetchAndValidateType(code) {
+  private async fetchAndValidateType(code: string) {
     const type = await this.codeService.fetchReconsiderationType(code);
 
     if (!type) {

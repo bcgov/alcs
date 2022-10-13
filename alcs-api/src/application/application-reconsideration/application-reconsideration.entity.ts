@@ -43,7 +43,7 @@ export class ApplicationReconsideration extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid' })
-  cardUuid;
+  cardUuid: string;
 
   @AutoMap()
   @OneToOne(() => Card, { cascade: true })
