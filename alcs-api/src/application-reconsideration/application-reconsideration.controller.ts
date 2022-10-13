@@ -11,9 +11,9 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
-import { BoardService } from '../../board/board.service';
-import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
-import { UserRoles } from '../../common/authorization/roles.decorator';
+import { BoardService } from '../board/board.service';
+import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import { UserRoles } from '../common/authorization/roles.decorator';
 import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import {
   ApplicationReconsiderationCreateDto,
@@ -69,6 +69,7 @@ export class ApplicationReconsiderationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getByCard(@Param('uuid') cardUuid: string) {
     const recon = await this.reconsiderationService.getByCardUuid(cardUuid);
-    return this.reconsiderationService.mapToDtos([recon])[0];
+    const mapped = await this.reconsiderationService.mapToDtos([recon]);
+    return mapped[0];
   }
 }

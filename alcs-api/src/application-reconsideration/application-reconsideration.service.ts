@@ -3,15 +3,15 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { Board } from '../../board/board.entity';
-import { CardCreateDto } from '../../card/card.dto';
-import { CardService } from '../../card/card.service';
-import { CodeService } from '../../code/code.service';
+import { ApplicationService } from '../application/application.service';
+import { Board } from '../board/board.entity';
+import { CardCreateDto } from '../card/card.dto';
+import { CardService } from '../card/card.service';
+import { CodeService } from '../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
-} from '../../common/exceptions/base.exception';
-import { ApplicationService } from '../application.service';
+} from '../common/exceptions/base.exception';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import {
   ApplicationReconsiderationCreateDto,

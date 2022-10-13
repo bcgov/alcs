@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -18,7 +19,6 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting/appli
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
-import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 
 @Entity()
 export class Application extends Base {

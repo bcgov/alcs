@@ -3,7 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationReconsiderationService } from '../application/application-reconsideration/application-reconsideration.service';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { ApplicationSubtaskWithApplicationDTO } from '../card/card-subtask/card-subtask.dto';
