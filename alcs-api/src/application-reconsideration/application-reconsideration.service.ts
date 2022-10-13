@@ -97,13 +97,15 @@ export class ApplicationReconsiderationService {
     newReconsideration.card = newCard;
     newReconsideration.type = type;
 
-    newReconsideration.application = await this.getApplication(reconsideration);
+    newReconsideration.application = await this.getOrCreateApplication(
+      reconsideration,
+    );
 
     const recon = await this.reconsiderationRepository.save(newReconsideration);
     return this.getByUuid(recon.uuid);
   }
 
-  private async getApplication(
+  private async getOrCreateApplication(
     reconsideration: ApplicationReconsiderationCreateDto,
   ) {
     const existingApplication = await this.applicationService.get(
