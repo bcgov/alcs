@@ -5,7 +5,7 @@ import { ApplicationDecisionMeetingDto } from '../../application/application-dec
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../../application/application-reconsideration/application-reconsideration.entity';
 import {
-  ApplicationDto,
+  ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationWithoutApplicationDto,
@@ -27,16 +27,6 @@ export class ReconsiderationProfile extends AutomapperProfile {
       createMap(
         mapper,
         ApplicationReconsiderationCreateDto,
-        ApplicationReconsideration,
-        forMember(
-          (r) => r.submittedDate,
-          mapFrom((rd) => new Date(rd.submittedDate)),
-        ),
-      );
-
-      createMap(
-        mapper,
-        ApplicationReconsiderationCreateDto,
         Application,
         forMember(
           (a) => a.fileNumber,
@@ -47,7 +37,7 @@ export class ReconsiderationProfile extends AutomapperProfile {
       createMap(
         mapper,
         Application,
-        ApplicationDto,
+        ApplicationForReconsiderationDto,
         forMember(
           (a) => a.localGovernment,
           mapFrom((rd) => rd.localGovernment.name),
@@ -73,7 +63,11 @@ export class ReconsiderationProfile extends AutomapperProfile {
         forMember(
           (a) => a.application,
           mapFrom((rd) =>
-            this.mapper.map(rd.application, Application, ApplicationDto),
+            this.mapper.map(
+              rd.application,
+              Application,
+              ApplicationForReconsiderationDto,
+            ),
           ),
         ),
       );

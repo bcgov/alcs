@@ -1,5 +1,4 @@
 import { AutoMap } from '@automapper/classes';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -74,20 +73,18 @@ export class ApplicationReconsiderationUpdateDto {
   isReviewApproved?: boolean;
 }
 
-export class ApplicationDto {
+export class ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
   applicant: string;
   region: ApplicationRegionDto;
   localGovernment: string;
-  @AutoMap()
-  @Type(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
 export class ApplicationReconsiderationDto {
   uuid: string;
-  application: ApplicationDto;
+  application: ApplicationForReconsiderationDto;
   card: CardDto;
   type: ReconsiderationTypeDto;
   submittedDate: Date;

@@ -81,16 +81,9 @@ export class ApplicationReconsiderationService {
   ) {
     const type = await this.fetchAndValidateType(reconsideration.reconTypeCode);
 
-    const mappedReconsideration = this.mapper.map(
-      reconsideration,
-      ApplicationReconsiderationCreateDto,
-      ApplicationReconsideration,
-    );
-
-    const newReconsideration = Object.assign(
-      new ApplicationReconsideration(),
-      mappedReconsideration,
-    );
+    const newReconsideration = new ApplicationReconsideration({
+      submittedDate: new Date(reconsideration.submittedDate),
+    });
 
     const newCard = await this.cardService.create(
       {
@@ -104,24 +97,23 @@ export class ApplicationReconsiderationService {
     newReconsideration.card = newCard;
     newReconsideration.type = type;
 
-    await this.assignApplication(reconsideration, newReconsideration);
+    newReconsideration.application = await this.getApplication(reconsideration);
 
     const recon = await this.reconsiderationRepository.save(newReconsideration);
     return this.getByUuid(recon.uuid);
   }
 
-  private async assignApplication(
+  private async getApplication(
     reconsideration: ApplicationReconsiderationCreateDto,
-    reconsiderationToCreate: ApplicationReconsideration,
   ) {
     const existingApplication = await this.applicationService.get(
       reconsideration.applicationFileNumber,
     );
 
     if (existingApplication) {
-      reconsiderationToCreate.applicationUuid = existingApplication.uuid;
+      return existingApplication;
     } else {
-      const application = await this.applicationService.create(
+      return await this.applicationService.create(
         {
           fileNumber: reconsideration.applicationFileNumber,
           type: reconsideration.applicationTypeCode,
@@ -132,26 +124,23 @@ export class ApplicationReconsiderationService {
         },
         false,
       );
-      reconsiderationToCreate.application = application;
     }
   }
 
-  async update(
-    uuid: string,
-    reconsideration: ApplicationReconsiderationUpdateDto,
-  ) {
+  async update(uuid: string, updates: ApplicationReconsiderationUpdateDto) {
     const existingReconsideration = await this.fetchAndValidateReconsideration(
       uuid,
     );
 
+    // this will be refactored in part2
     const updatedReconsideration = Object.assign(
       existingReconsideration,
-      reconsideration,
+      updates,
     );
 
-    const type = await this.fetchAndValidateType(reconsideration.typeCode);
+    const type = await this.fetchAndValidateType(updates.typeCode);
     updatedReconsideration.type = type;
-    this.validateReviewOutcome(reconsideration, updatedReconsideration);
+    this.validateReviewOutcome(updates, updatedReconsideration);
     const recon = await this.reconsiderationRepository.save(
       updatedReconsideration,
     );

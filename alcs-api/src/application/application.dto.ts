@@ -113,7 +113,6 @@ export class ApplicationDto {
   @IsString()
   region: string;
 
-  @IsString()
   localGovernment: ApplicationLocalGovernmentDto;
 
   @IsString()
