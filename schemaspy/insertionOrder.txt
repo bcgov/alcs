@@ -4,6 +4,7 @@ board
 card_status
 application_decision_outcome_type
 application_meeting_type
+application_reconsideration_type
 application_type
 card_subtask_type
 card_type
@@ -21,9 +22,9 @@ board_status
 comment_mention
 decision_document
 notification
+application_reconsideration
 card_subtask
 application_meeting
 health_check
 holiday_entity
 migrations
-reconsideration_type
