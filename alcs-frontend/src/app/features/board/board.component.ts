@@ -3,17 +3,21 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
-import { ReconsiderationDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
-import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
+import {
+  ReconCardDetailDialogComponent,
+  RECON_TYPE_LABEL,
+} from './recon-card-detail-dialog/recon-card-detail-dialog.component';
 import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
 @Component({
@@ -41,7 +45,8 @@ export class BoardComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private cardService: CardService
+    private cardService: CardService,
+    private reconsiderationService: ApplicationReconsiderationService
   ) {}
 
   ngOnInit() {
@@ -138,19 +143,14 @@ export class BoardComponent implements OnInit {
     try {
       this.setUrl(id, cardTypeCode);
 
-      const reconCard = await this.cardService.fetchReconsiderationCard(id);
-      reconCard!.regionDetails = {
-        label: 'Mock',
-        code: 'Mock',
-        description: 'Mock',
-      };
+      const recon = await this.reconsiderationService.fetchByCardUuid(id);
 
       const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
-        data: reconCard,
+        data: recon,
       });
 
       dialogRef.afterClosed().subscribe((isDirty) => {
@@ -247,25 +247,18 @@ export class BoardComponent implements OnInit {
     };
   }
 
-  private mapReconsiderationDtoToCard(recon: ReconsiderationDto): CardData {
-    // TODO get mock fields from application linked to reconsideration
+  private mapReconsiderationDtoToCard(recon: ApplicationReconsiderationDto): CardData {
     return {
-      status: recon.status,
-      title: 'Mock, get from application',
-      assignee: recon.assignee,
-      id: recon.uuid,
-      type: {
-        label: 'Recon',
-        code: 'RECON',
-        shortLabel: 'RECON',
-        backgroundColor: '#454545',
-        description: 'Reconsideration',
-        textColor: 'white',
-      },
+      status: recon.card.status.code,
+      title: `${recon.application.fileNumber} (${recon.application.applicant})`,
+      assignee: recon.card.assignee,
+      id: recon.card.uuid,
+      type: RECON_TYPE_LABEL,
       cardType: 'RECON',
       paused: false,
-      highPriority: recon.highPriority,
-      cardUuid: recon.uuid,
+      highPriority: recon.card.highPriority,
+      cardUuid: recon.card.uuid,
+      decisionMeetings: recon.application.decisionMeetings,
     };
   }
 }

@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationMasterCodesDto } from '../application/application-code.dto';
+import { ReconsiderationTypeDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ToastService } from '../toast/toast.service';
-import { CardCreateDto, CardUpdateDto, ReconsiderationDto, ReconsiderationTypeDto } from './card.dto';
+import { CardCreateDto, CardFlatDto, CardUpdateDto } from './card.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -21,16 +22,6 @@ export class CardService {
     this.$cardReconTypes.next(this.cardReconTypes);
   }
 
-  async fetchReconsiderationCard(uuid: string) {
-    try {
-      return await firstValueFrom(this.http.get<ReconsiderationDto>(`${environment.apiUrl}/board/card/${uuid}`));
-    } catch (e) {
-      console.warn(e);
-      this.toastService.showErrorToast('Failed to fetch cards');
-    }
-    return;
-  }
-
   async createCard(card: CardCreateDto) {
     try {
       return await firstValueFrom(this.http.post<CardCreateDto>(`${environment.apiUrl}/board/card`, card));
@@ -43,7 +34,7 @@ export class CardService {
 
   async updateCard(card: CardUpdateDto) {
     try {
-      return await firstValueFrom(this.http.patch<ReconsiderationDto>(`${environment.apiUrl}/card/${card.uuid}`, card));
+      return await firstValueFrom(this.http.patch<CardFlatDto>(`${environment.apiUrl}/card/${card.uuid}`, card));
     } catch (e) {
       console.warn(e);
       this.toastService.showErrorToast('Failed to update card');

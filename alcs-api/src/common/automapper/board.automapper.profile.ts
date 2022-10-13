@@ -2,8 +2,10 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { BoardStatus } from '../../board/board-status.entity';
-import { BoardDto, BoardStatusDto } from '../../board/board.dto';
+import { BoardDto, BoardSmallDto, BoardStatusDto } from '../../board/board.dto';
 import { Board } from '../../board/board.entity';
+import { CardStatusDto } from '../../card/card-status/card-status.dto';
+import { CardStatus } from '../../card/card-status/card-status.entity';
 import { CardDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
 
@@ -15,6 +17,8 @@ export class BoardAutomapperProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
+      createMap(mapper, Board, BoardSmallDto);
+
       createMap(
         mapper,
         Board,
@@ -47,7 +51,7 @@ export class BoardAutomapperProfile extends AutomapperProfile {
         CardDto,
         forMember(
           (cd) => cd.status,
-          mapFrom((c) => c.status.code),
+          mapFrom((c) => this.mapper.map(c.status, CardStatus, CardStatusDto)),
         ),
         forMember(
           (cd) => cd.type,

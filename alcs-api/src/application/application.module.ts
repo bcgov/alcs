@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
 import { ApplicationDecisionProfile } from '../common/automapper/application-decision.automapper.profile';
@@ -45,6 +46,7 @@ import { ApplicationService } from './application.service';
       ApplicationLocalGovernment,
       ApplicationDecision,
       DecisionDocument,
+      Board,
     ]),
     NotificationModule,
     DocumentModule,

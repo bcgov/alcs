@@ -2,6 +2,7 @@ import { BoardDto } from '../board/board.dto';
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto, CardStatusDto } from './application-code.dto';
+import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
 export interface CreateApplicationDto {
   fileNumber: string;
@@ -31,7 +32,7 @@ export interface ApplicationDto {
   decisionDate?: number;
   notificationSentDate?: number;
   region: string;
-  localGovernment: string;
+  localGovernment: ApplicationLocalGovernmentDto;
   activeDays: number;
   pausedDays: number;
   paused: boolean;

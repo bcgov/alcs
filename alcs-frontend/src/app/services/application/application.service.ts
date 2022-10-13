@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { AjaxResponse } from 'rxjs/internal/ajax/AjaxResponse';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 import {
@@ -10,7 +9,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from './application-code.dto';
-import { ApplicationDetailedDto, ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
+import { ApplicationDetailedDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -91,6 +90,6 @@ export class ApplicationService {
   }
 
   searchApplicationsByNumber(fileNumber: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/search/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDetailedDto[]>(`${this.baseUrl}/search/${fileNumber}`));
   }
 }

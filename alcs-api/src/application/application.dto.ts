@@ -13,6 +13,7 @@ import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 
 export class CreateApplicationDto {
@@ -38,7 +39,7 @@ export class CreateApplicationDto {
 
   @IsNotEmpty()
   @IsString()
-  localGovernmentUuid;
+  localGovernmentUuid: string;
 }
 
 export class ApplicationDto {
@@ -112,8 +113,7 @@ export class ApplicationDto {
   @IsString()
   region: string;
 
-  @IsString()
-  localGovernment: string;
+  localGovernment: ApplicationLocalGovernmentDto;
 
   @IsString()
   @MaxLength(400, {

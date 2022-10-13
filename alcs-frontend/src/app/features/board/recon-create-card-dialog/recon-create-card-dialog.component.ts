@@ -4,9 +4,15 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import {
+  CreateApplicationReconsiderationDto,
+  ReconsiderationTypeDto,
+} from '../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { ReconsiderationTypeDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -19,26 +25,28 @@ export class ReconCreateCardDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   reconTypes: ReconsiderationTypeDto[] = [];
+  localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
-  hasPendingRecon = false;
   currentBoardCode: string = '';
 
   filteredApplications: Observable<ApplicationDto[]> | undefined;
 
-  fileNumberControl = new FormControl('', [Validators.required]);
+  fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   applicantControl = new FormControl('', [Validators.required]);
-  typeControl = new FormControl<string | null>(null, [Validators.required]);
+  applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
-  receivedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
+  submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   reconTypeControl = new FormControl<string | null>(null, [Validators.required]);
+  localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
 
   createForm = new FormGroup({
+    applicationType: this.applicationTypeControl,
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
-    type: this.typeControl,
     region: this.regionControl,
-    receivedDate: this.receivedDateControl,
+    localGovernment: this.localGovernmentControl,
+    submittedDate: this.submittedDateControl,
     reconType: this.reconTypeControl,
   });
 
@@ -47,6 +55,8 @@ export class ReconCreateCardDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<ReconCreateCardDialogComponent>,
     private applicationService: ApplicationService,
     private cardService: CardService,
+    private reconsiderationService: ApplicationReconsiderationService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
     private toastService: ToastService
   ) {}
 
@@ -63,6 +73,10 @@ export class ReconCreateCardDialogComponent implements OnInit {
 
     this.cardService.$cardReconTypes.subscribe((reconTypes) => {
       this.reconTypes = reconTypes;
+    });
+
+    this.localGovernmentService.list().then((res) => {
+      this.localGovernments = res;
     });
 
     this.initApplicationFileNumberAutocomplete();
@@ -82,8 +96,8 @@ export class ReconCreateCardDialogComponent implements OnInit {
     );
   }
 
-  autocompleteDisplay(application: ApplicationDto): string {
-    return (application && application.fileNumber) ?? '';
+  autocompleteDisplay(application: ApplicationDetailedDto): string {
+    return application?.fileNumber ?? '';
   }
 
   async onApplicationSelected($event: MatOptionSelectionChange) {
@@ -91,42 +105,50 @@ export class ReconCreateCardDialogComponent implements OnInit {
       return;
     }
 
-    const application = $event.source.value as ApplicationDto;
+    const application = $event.source.value as ApplicationDetailedDto;
 
     this.fileNumberControl.disable();
     this.applicantControl.disable();
     this.regionControl.disable();
-    this.typeControl.disable();
+    this.applicationTypeControl.disable();
+    this.localGovernmentControl.disable();
 
     this.createForm.patchValue({
       applicant: application.applicant,
       region: this.regions.find((r) => r.code === application.region)?.code ?? null,
-      type: this.applicationTypes.find((r) => r.code === application.type)?.code ?? null,
+      applicationType: this.applicationTypes.find((r) => r.code === application.type)?.code ?? null,
+      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment.uuid)?.uuid ?? null,
     });
 
     if (!application.decisionDate) {
       this.isDecisionDateEmpty = true;
     }
-
-    // TODO implement hasPendingRecon once reconsideration entity created
-    // this.hasPendingRecon = true;
   }
 
   async onSubmit() {
     try {
       this.isLoading = true;
       const formValues = this.createForm.getRawValue();
-      const card = {
+      const recon: CreateApplicationReconsiderationDto = {
+        // application details
+        applicationTypeCode: formValues.applicationType!,
+        applicationFileNumber: formValues.fileNumber!.fileNumber?.trim() ?? formValues.fileNumber!.trim(),
+        applicant: formValues.applicant!,
+        region: formValues.region!,
+        localGovernmentUuid: formValues.localGovernment!,
+        // recon details
+        submittedDate: formValues.submittedDate!,
+        reconTypeCode: formValues.reconType!,
+        // card details
         boardCode: this.currentBoardCode,
-        typeCode: 'RECON',
       };
 
-      if (!card.boardCode) {
+      if (!recon.boardCode) {
         this.toastService.showErrorToast('Board is required, please reload the page and try again');
         return;
       }
 
-      await this.cardService.createCard(card);
+      await this.reconsiderationService.create(recon);
 
       this.dialogRef.close(true);
       this.toastService.showSuccessToast('Reconsideration card created');
@@ -139,17 +161,23 @@ export class ReconCreateCardDialogComponent implements OnInit {
     this.fileNumberControl.reset();
     this.applicantControl.reset();
     this.regionControl.reset();
-    this.typeControl.reset();
-    this.receivedDateControl.reset();
+    this.applicationTypeControl.reset();
+    this.submittedDateControl.reset();
     this.reconTypeControl.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();
     this.regionControl.enable();
-    this.typeControl.enable();
+    this.applicationTypeControl.enable();
+    this.localGovernmentControl.enable();
 
     // clear warnings
     this.isDecisionDateEmpty = false;
-    this.hasPendingRecon = false;
+  }
+
+  onSelectGovernment(value: ApplicationLocalGovernmentDto) {
+    this.createForm.patchValue({
+      region: value.preferredRegionCode,
+    });
   }
 }

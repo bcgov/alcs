@@ -2,8 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
-import { ReconsiderationType } from '../reconsideration/reconsideration-type/reconsideration-type.entity';
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
@@ -15,7 +15,7 @@ describe('CodeService', () => {
   let mockRegionRepository: DeepMocked<Repository<ApplicationRegion>>;
   let mockMeetingRepository: DeepMocked<Repository<ApplicationMeetingType>>;
   let mockReconsiderationTypeRepository: DeepMocked<
-    Repository<ReconsiderationType>
+    Repository<ApplicationReconsiderationType>
   >;
 
   let service: CodeService;
@@ -26,7 +26,7 @@ describe('CodeService', () => {
     mockRegionRepository = createMock<Repository<ApplicationRegion>>();
     mockMeetingRepository = createMock<Repository<ApplicationMeetingType>>();
     mockReconsiderationTypeRepository =
-      createMock<Repository<ReconsiderationType>>();
+      createMock<Repository<ApplicationReconsiderationType>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -48,7 +48,7 @@ describe('CodeService', () => {
           useValue: mockMeetingRepository,
         },
         {
-          provide: getRepositoryToken(ReconsiderationType),
+          provide: getRepositoryToken(ApplicationReconsiderationType),
           useValue: mockReconsiderationTypeRepository,
         },
       ],
@@ -116,7 +116,7 @@ describe('CodeService', () => {
       },
     ];
     mockReconsiderationTypeRepository.find.mockResolvedValue(
-      mockReconsiderationTypes as ReconsiderationType[],
+      mockReconsiderationTypes as ApplicationReconsiderationType[],
     );
 
     const res = await service.getAll();

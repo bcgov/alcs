@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -151,4 +152,11 @@ export class Application extends Base {
     type: 'uuid',
   })
   cardUuid: string;
+
+  @AutoMap()
+  @OneToMany(
+    () => ApplicationReconsideration,
+    (appRecon) => appRecon.application,
+  )
+  reconsiderations: ApplicationReconsideration[];
 }

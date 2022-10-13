@@ -2,15 +2,24 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { BoardStatusDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { CardUpdateDto, ReconsiderationDto } from '../../../services/card/card.dto';
+import { CardUpdateDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+
+export const RECON_TYPE_LABEL = {
+  label: 'Recon',
+  code: 'RECON',
+  shortLabel: 'RECON',
+  backgroundColor: '#454545',
+  description: 'Reconsideration',
+  textColor: 'white',
+};
 
 @Component({
   selector: 'app-recon-card-detail-dialog',
@@ -25,18 +34,19 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
   selectedApplicationStatus = '';
   selectedBoard?: string;
   selectedRegion?: string;
+  title?: string;
+  reconType = RECON_TYPE_LABEL;
 
-  recon: ReconsiderationDto = this.data;
+  recon: ApplicationReconsiderationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ReconsiderationDto,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationReconsiderationDto,
     private dialogRef: MatDialogRef<ReconCardDetailDialogComponent>,
     private userService: UserService,
-    private applicationService: ApplicationService,
     private cardService: CardService,
     private boardService: BoardService,
     private toastService: ToastService,
@@ -45,18 +55,17 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.recon = this.data;
-    this.selectedAssignee = this.data.assignee;
+    this.selectedAssignee = this.data.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = this.data.statusDetails.code;
-    this.selectedBoard = this.data.board;
-    this.selectedRegion = this.data.regionDetails?.code;
+    this.selectedApplicationStatus = this.data.card.status.code;
+    this.selectedBoard = this.data.card.board.code;
+    this.selectedRegion = this.data.application.region.code;
 
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
 
     this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
-
       const loadedBoard = boards.find((board) => board.code === this.selectedBoard);
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
@@ -66,6 +75,8 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.backdropClick().subscribe(() => {
       this.dialogRef.close(this.isApplicationDirty);
     });
+
+    this.title = this.recon.application.fileNumber;
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -77,7 +88,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
 
   onAssigneeSelected(assignee: UserDto) {
     this.selectedAssignee = assignee;
-    this.recon.assignee = assignee;
+    this.recon.card.assignee = assignee;
     this.updateCard({
       assigneeUuid: assignee?.uuid ?? null,
     });
@@ -92,7 +103,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.recon.uuid, board.code).then(() => {
+    await this.boardService.changeBoard(this.recon.card.uuid, board.code).then(() => {
       this.isApplicationDirty = true;
       this.toastService.showSuccessToast(`Recon moved to ${board.title}`);
     });
@@ -102,7 +113,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
     this.cardService
       .updateCard({
         ...changes,
-        uuid: this.recon.uuid,
+        uuid: this.recon.card.uuid,
       })
       .then(() => {
         this.isApplicationDirty = true;
@@ -112,18 +123,19 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.recon.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
+      body: this.recon.card.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
     });
     answer.subscribe((answer) => {
       if (answer) {
         this.cardService
           .updateCard({
-            uuid: this.recon.uuid, // TODO this will be update to card.uuid once we have proper recon
-            highPriority: !this.recon.highPriority,
+            uuid: this.recon.card.uuid,
+            highPriority: !this.recon.card.highPriority,
+            assigneeUuid: this.recon.card.assignee?.uuid,
           })
           .then(() => {
             this.isApplicationDirty = true;
-            this.recon.highPriority = !this.recon.highPriority;
+            this.recon.card.highPriority = !this.recon.card.highPriority;
           });
       }
     });

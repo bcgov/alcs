@@ -3,6 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -18,11 +19,13 @@ describe('BoardController', () => {
 
   let boardService: DeepMocked<BoardService>;
   let appService: DeepMocked<ApplicationService>;
+  let appReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let cardService: DeepMocked<CardService>;
 
   beforeEach(async () => {
     boardService = createMock<BoardService>();
     appService = createMock<ApplicationService>();
+    appReconsiderationService = createMock<ApplicationReconsiderationService>();
     cardService = createMock<CardService>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -34,6 +37,10 @@ describe('BoardController', () => {
       providers: [
         { provide: BoardService, useValue: boardService },
         { provide: ApplicationService, useValue: appService },
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: appReconsiderationService,
+        },
         { provide: CardService, useValue: cardService },
         {
           provide: ClsService,
@@ -63,8 +70,8 @@ describe('BoardController', () => {
   it('should call through to service for get apps', async () => {
     boardService.getApplicationsByCode.mockResolvedValue([]);
     appService.mapToDtos.mockResolvedValue([]);
-    cardService.mapToDtos.mockResolvedValue([]);
-    cardService.getByBoard.mockResolvedValue([]);
+    appReconsiderationService.getByBoardCode.mockResolvedValue([]);
+    appReconsiderationService.mapToDtos.mockResolvedValue([]);
 
     const boardCode = 'fake-board';
     await controller.getCards(boardCode);
@@ -74,8 +81,7 @@ describe('BoardController', () => {
       boardCode,
     );
     expect(appService.mapToDtos).toHaveBeenCalled();
-    expect(cardService.mapToDtos).toHaveBeenCalled();
-    expect(cardService.getByBoard).toHaveBeenCalled();
+    expect(appReconsiderationService.mapToDtos).toHaveBeenCalled();
   });
 
   it('should call through to service when changing boards', async () => {

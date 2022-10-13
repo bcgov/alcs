@@ -4,12 +4,12 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
+import { ReconsiderationTypeDto } from '../application-reconsideration/applicationReconsideration.dto';
+import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { ReconsiderationTypeDto } from '../reconsideration/reconsideration-type/reconsideration-type.dto';
-import { ReconsiderationType } from '../reconsideration/reconsideration-type/reconsideration-type.entity';
 import { MasterCodesDto } from './application-code/application-code.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
@@ -45,7 +45,7 @@ export class CodeController {
       ),
       reconsiderationType: this.mapper.mapArray(
         types.reconsiderationTypes,
-        ReconsiderationType,
+        ApplicationReconsiderationType,
         ReconsiderationTypeDto,
       ),
     };

@@ -9,6 +9,7 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ApplicationReconsiderationModule } from './application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
@@ -65,6 +66,7 @@ import { UserService } from './user/user.service';
     HomeModule,
     NotificationModule,
     BoardModule,
+    ApplicationReconsiderationModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [

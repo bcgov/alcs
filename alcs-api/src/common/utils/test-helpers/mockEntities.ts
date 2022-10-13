@@ -1,3 +1,5 @@
+import { ApplicationReconsideration } from '../../../application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationType } from '../../../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionOutcomeType } from '../../../application/application-decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../../application/application-decision/application-decision.entity';
@@ -31,16 +33,16 @@ const initCardStatusMockEntity = (): CardStatus => {
   return cardStatus;
 };
 
-const initCardSubtaskMockEntity = (card?: Card): CardSubtask => {
+const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   const subtask = new CardSubtask();
   subtask.assignee = initAssigneeMockEntity();
-  subtask.uuid = '11111';
+  subtask.uuid = uuid ?? '11111';
   subtask.assigneeUuid = subtask.assignee.uuid;
   subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   subtask.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  subtask.card = card ?? new Card();
+  subtask.card = card;
   subtask.type = new CardSubtaskType();
   subtask.type.backgroundColor = 'fake-bg-color';
   subtask.type.textColor = 'fake-color';
@@ -62,7 +64,7 @@ const initCardTypeMockEntity = (): CardType => {
   return type;
 };
 
-const initCardMockEntity = (): Card => {
+const initCardMockEntity = (subtaskUuid?: string): Card => {
   const card = new Card();
   card.highPriority = true;
   card.status = initCardStatusMockEntity();
@@ -72,7 +74,7 @@ const initCardMockEntity = (): Card => {
   card.assignee = initAssigneeMockEntity();
   card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  card.subtasks = [initCardSubtaskMockEntity(card)];
+  card.subtasks = [initCardSubtaskMockEntity(card, subtaskUuid)];
   card.board = initBoardMockEntity();
   card.boardUuid = card.board.uuid;
   card.type = initCardTypeMockEntity();
@@ -112,6 +114,33 @@ const initAssigneeMockEntity = (): User => {
   return user;
 };
 
+const initApplicationReconsiderationMockEntity = (
+  application?: Application,
+  card?: Card,
+): ApplicationReconsideration => {
+  const reconsideration = new ApplicationReconsideration();
+  const app = application ?? initApplicationMockEntity();
+  reconsideration.application = app;
+  reconsideration.applicationUuid = app.uuid;
+  reconsideration.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  reconsideration.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  reconsideration.reviewDate = new Date(1, 1, 1, 1, 1, 1, 1);
+  reconsideration.submittedDate = new Date(1, 1, 1, 1, 1, 1, 1);
+  const cardEntity = card ?? initCardMockEntity('222');
+  reconsideration.card = cardEntity;
+  reconsideration.cardUuid = cardEntity.uuid;
+
+  const reconsiderationType = new ApplicationReconsiderationType();
+  reconsiderationType.code = '33';
+  reconsiderationType.label = '33';
+  reconsiderationType.description = '33';
+  reconsiderationType.uuid = 'fake-33';
+  reconsideration.type = reconsiderationType;
+
+  reconsideration.isReviewApproved = true;
+  return reconsideration;
+};
+
 const initApplicationMockEntity = (fileNumber?: string): Application => {
   const applicationEntity = new Application();
   applicationEntity.fileNumber = fileNumber ?? 'app_1';
@@ -130,6 +159,10 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
   } as ApplicationRegion;
+
+  applicationEntity.reconsiderations = [
+    initApplicationReconsiderationMockEntity(applicationEntity),
+  ];
 
   return applicationEntity;
 };
@@ -264,4 +297,5 @@ export {
   initBoardMockEntity,
   initCardTypeMockEntity,
   initApplicationDecisionMock,
+  initApplicationReconsiderationMockEntity,
 };

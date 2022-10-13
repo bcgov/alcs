@@ -60,7 +60,7 @@ export class CardService {
     return this.cardRepository.save(updatedCard);
   }
 
-  async create(card: CardCreateDto, board: Board) {
+  async create(card: CardCreateDto, board: Board, persist = true) {
     const type = await this.cardTypeRepository.findOneOrFail({
       where: {
         code: card.typeCode,
@@ -80,7 +80,11 @@ export class CardService {
     newCard.typeUuid = type.uuid;
     newCard.boardUuid = board.uuid;
 
-    return this.cardRepository.save(newCard);
+    if (persist) {
+      return this.cardRepository.save(newCard);
+    } else {
+      return newCard;
+    }
   }
 
   async getByBoard(boardCode: string) {

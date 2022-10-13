@@ -1,3 +1,4 @@
+import { ApplicationReconsiderationDto } from '../application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application.dto';
 
 export interface UpdateApplicationSubtaskDto {
@@ -17,4 +18,5 @@ export interface ApplicationSubtaskDto {
 
 export interface ApplicationSubtaskWithApplicationDto extends ApplicationSubtaskDto {
   application: ApplicationDto;
+  reconsideration: ApplicationReconsiderationDto;
 }

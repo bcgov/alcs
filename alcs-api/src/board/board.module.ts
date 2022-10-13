@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationReconsiderationModule } from '../application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from '../application/application.module';
 import { CardModule } from '../card/card.module';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
@@ -13,8 +14,10 @@ import { BoardService } from './board.service';
     TypeOrmModule.forFeature([Board, BoardStatus]),
     ApplicationModule,
     CardModule,
+    forwardRef(() => ApplicationReconsiderationModule),
   ],
   controllers: [BoardController],
   providers: [BoardService, BoardAutomapperProfile],
+  exports: [BoardService],
 })
 export class BoardModule {}

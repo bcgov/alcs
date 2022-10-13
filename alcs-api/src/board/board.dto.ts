@@ -14,6 +14,17 @@ export class BoardDto {
   statuses: BoardStatusDto[];
 }
 
+export class BoardSmallDto {
+  @AutoMap()
+  code: string;
+
+  @AutoMap()
+  title: string;
+
+  @AutoMap()
+  decisionMaker: string;
+}
+
 export class BoardStatusDto {
   @AutoMap()
   order: number;

@@ -1,5 +1,5 @@
+import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
-import { ReconsiderationDto } from '../card/card.dto';
 
 export interface BoardDto {
   code: string;
@@ -16,5 +16,5 @@ export interface BoardStatusDto {
 
 export interface CardsDto {
   applications: ApplicationDto[];
-  reconsiderations: ReconsiderationDto[];
+  reconsiderations: ApplicationReconsiderationDto[];
 }
