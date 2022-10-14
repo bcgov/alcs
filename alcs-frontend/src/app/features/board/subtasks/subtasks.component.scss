@@ -60,3 +60,12 @@
 .subtext {
   color: $grey-dark;
 }
+
+.no-subtasks {
+  border: none;
+  background-color: $grey-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
