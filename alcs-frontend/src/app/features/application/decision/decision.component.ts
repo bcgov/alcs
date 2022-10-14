@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   ApplicationDecisionDto,
   ApplicationDecisionOutcomeTypeDto,
+  CeoCriterionDto,
+  DecisionMakerDto,
 } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -19,7 +21,9 @@ export class DecisionComponent implements OnInit {
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: ApplicationDecisionDto[] = [];
-  codes: ApplicationDecisionOutcomeTypeDto[] = [];
+  outcomes: ApplicationDecisionOutcomeTypeDto[] = [];
+  decisionMakers: DecisionMakerDto[] = [];
+  ceoCriterion: CeoCriterionDto[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -39,13 +43,11 @@ export class DecisionComponent implements OnInit {
   }
 
   async loadDecisions(fileNumber: string) {
-    const { decisions, codes } = await this.decisionService.fetchByApplication(fileNumber);
-    this.decisions = decisions;
-    this.codes = codes;
-  }
-
-  mapCodeToLabel(outcomeCode: string) {
-    return this.codes.find((code) => code.code == outcomeCode)!.label;
+    const codes = await this.decisionService.fetchCodes();
+    this.decisions = await this.decisionService.fetchByApplication(fileNumber);
+    this.outcomes = codes.outcomes;
+    this.decisionMakers = codes.decisionMakers;
+    this.ceoCriterion = codes.ceoCriterion;
   }
 
   onCreate() {
@@ -63,7 +65,9 @@ export class DecisionComponent implements OnInit {
         data: {
           minDate,
           fileNumber: this.fileNumber,
-          codes: this.codes,
+          outcomes: this.outcomes,
+          decisionMakers: this.decisionMakers,
+          ceoCriterion: this.ceoCriterion,
         },
       })
       .afterClosed()
@@ -89,7 +93,9 @@ export class DecisionComponent implements OnInit {
         data: {
           minDate,
           fileNumber: this.fileNumber,
-          codes: this.codes,
+          outcomes: this.outcomes,
+          decisionMakers: this.decisionMakers,
+          ceoCriterion: this.ceoCriterion,
           existingDecision: decision,
         },
       })

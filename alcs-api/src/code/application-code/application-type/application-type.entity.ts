@@ -1,9 +1,13 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity } from 'typeorm';
-import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ObsoleteBaseCodeEntity } from '../../../common/entities/obsolete-base-code.entity';
 
 @Entity()
-export class ApplicationType extends BaseCodeEntity {
+export class ApplicationType extends ObsoleteBaseCodeEntity {
+  @AutoMap()
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string;
+
   @AutoMap()
   @Column()
   shortLabel: string;

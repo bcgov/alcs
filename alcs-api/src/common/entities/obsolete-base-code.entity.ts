@@ -1,14 +1,14 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, PrimaryColumn } from 'typeorm';
+import { Column } from 'typeorm';
 import { Auditable } from './audit.entity';
 
-export abstract class BaseCodeEntity extends Auditable {
+export abstract class ObsoleteBaseCodeEntity extends Auditable {
   @AutoMap()
   @Column()
   label: string;
 
   @AutoMap()
-  @PrimaryColumn({ type: 'text', width: 4, unique: true })
+  @Column({ type: 'text', width: 4, unique: true })
   code: string;
 
   @AutoMap()

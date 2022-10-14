@@ -2,19 +2,24 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../../common/exceptions/base.exception';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
+import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
+import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './decision-document.entity';
+import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 @Injectable()
 export class ApplicationDecisionService {
@@ -23,8 +28,12 @@ export class ApplicationDecisionService {
     private appDecisionRepository: Repository<ApplicationDecision>,
     @InjectRepository(DecisionDocument)
     private decisionDocumentRepository: Repository<DecisionDocument>,
-    @InjectRepository(ApplicationDecisionOutcomeType)
-    private decisionOutcomeRepository: Repository<ApplicationDecisionOutcomeType>,
+    @InjectRepository(DecisionOutcomeCode)
+    private decisionOutcomeRepository: Repository<DecisionOutcomeCode>,
+    @InjectRepository(DecisionMakerCode)
+    private decisionMakerRepository: Repository<DecisionMakerCode>,
+    @InjectRepository(CeoCriterionCode)
+    private ceoCriterionRepository: Repository<CeoCriterionCode>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
   ) {}
@@ -50,6 +59,8 @@ export class ApplicationDecisionService {
       },
       relations: {
         outcome: true,
+        decisionMaker: true,
+        ceoCriterion: true,
         documents: {
           document: {
             uploadedBy: true,
@@ -95,6 +106,31 @@ export class ApplicationDecisionService {
       );
     }
 
+    this.validateDecisionChanges(updateData);
+
+    existingDecision.decisionMakerCode = updateData.decisionMakerCode;
+    existingDecision.ceoCriterionCode = updateData.ceoCriterionCode;
+    existingDecision.isTimeExtension = updateData.isTimeExtension;
+    existingDecision.auditDate = formatIncomingDate(updateData.auditDate);
+    existingDecision.chairReviewDate = formatIncomingDate(
+      updateData.chairReviewDate,
+    );
+    existingDecision.chairReviewOutcome = updateData.chairReviewOutcome;
+
+    if (updateData.outcomeCode) {
+      existingDecision.outcome = await this.getOutcomeByCode(
+        updateData.outcomeCode,
+      );
+    }
+
+    if (updateData.chairReviewRequired !== undefined) {
+      existingDecision.chairReviewRequired = updateData.chairReviewRequired;
+      if (updateData.chairReviewRequired === false) {
+        existingDecision.chairReviewDate = null;
+        existingDecision.chairReviewOutcome = null;
+      }
+    }
+
     let dateHasChanged = false;
     if (
       updateData.date &&
@@ -104,21 +140,6 @@ export class ApplicationDecisionService {
       existingDecision.date = new Date(updateData.date);
     }
 
-    if (updateData.outcome) {
-      existingDecision.outcome = await this.getOutcomeByCode(
-        updateData.outcome,
-      );
-    }
-    existingDecision.auditDate = formatIncomingDate(updateData.auditDate);
-    existingDecision.chairReviewDate = formatIncomingDate(
-      updateData.chairReviewDate,
-    );
-    if (updateData.chairReviewRequired !== undefined) {
-      existingDecision.chairReviewRequired = updateData.chairReviewRequired;
-      if (updateData.chairReviewRequired === false) {
-        existingDecision.chairReviewDate = null;
-      }
-    }
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
     );
@@ -146,12 +167,33 @@ export class ApplicationDecisionService {
     return this.get(existingDecision.uuid);
   }
 
+  private validateDecisionChanges(updateData: UpdateApplicationDecisionDto) {
+    if (
+      updateData.ceoCriterionCode &&
+      updateData.decisionMakerCode !== 'CEOP'
+    ) {
+      throw new ServiceValidationException(
+        'Cannot set ceo criterion code unless ceo the decision maker',
+      );
+    }
+
+    if (
+      updateData.ceoCriterionCode !== 'MODI' &&
+      (updateData.isTimeExtension === true ||
+        updateData.isTimeExtension === false)
+    ) {
+      throw new ServiceValidationException(
+        'Cannot set time extension unless ceo criterion is modification',
+      );
+    }
+  }
+
   async create(
     createDto: CreateApplicationDecisionDto,
     application: Application,
   ) {
     const decision = new ApplicationDecision({
-      outcome: await this.getOutcomeByCode(createDto.outcome),
+      outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
       chairReviewRequired: createDto.chairReviewRequired,
       auditDate: createDto.auditDate
@@ -160,8 +202,14 @@ export class ApplicationDecisionService {
       chairReviewDate: createDto.chairReviewDate
         ? new Date(createDto.chairReviewDate)
         : undefined,
+      chairReviewOutcome: createDto.chairReviewOutcome,
+      ceoCriterionCode: createDto.ceoCriterionCode,
+      decisionMakerCode: createDto.decisionMakerCode,
+      isTimeExtension: createDto.isTimeExtension,
       application,
     });
+
+    this.validateDecisionChanges(createDto);
 
     const existingDecisions = await this.getByAppFileNumber(
       application.fileNumber,
@@ -276,7 +324,17 @@ export class ApplicationDecisionService {
     });
   }
 
-  async getCodeMapping() {
-    return this.decisionOutcomeRepository.find();
+  async fetchCodes() {
+    const values = await Promise.all([
+      this.decisionOutcomeRepository.find(),
+      this.decisionMakerRepository.find(),
+      this.ceoCriterionRepository.find(),
+    ]);
+
+    return {
+      outcomes: values[0],
+      decisionMakers: values[1],
+      ceoCriterion: values[2],
+    };
   }
 }

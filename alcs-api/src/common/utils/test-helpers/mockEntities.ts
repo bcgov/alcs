@@ -1,7 +1,7 @@
 import { ApplicationReconsideration } from '../../../application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationType } from '../../../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionOutcomeType } from '../../../application/application-decision/application-decision-outcome.entity';
+import { DecisionOutcomeCode } from '../../../application/application-decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../../application/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../../application/application-paused.entity';
@@ -249,7 +249,7 @@ const initApplicationDecisionMock = (application?: Application) => {
       code: 'CODE',
       uuid: 'uuid',
       label: 'label',
-    } as ApplicationDecisionOutcomeType,
+    } as DecisionOutcomeCode,
     date: new Date(),
     uuid: 'fake-outcome-uuid',
     applicationUuid: application.uuid,

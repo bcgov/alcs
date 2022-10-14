@@ -32,7 +32,7 @@ export class OverviewComponent implements OnInit {
           if (app) {
             this.meetingService.fetch(app.fileNumber);
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
-              this.$decisions.next(res.decisions);
+              this.$decisions.next(res);
             });
           }
         })

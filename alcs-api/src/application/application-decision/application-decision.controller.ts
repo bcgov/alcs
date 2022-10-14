@@ -19,17 +19,19 @@ import { RoleGuard } from '../../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
+import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
   ApplicationDecisionOutcomeTypeDto,
   CreateApplicationDecisionDto,
-  DecisionDocumentDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
-import { DecisionDocument } from './decision-document.entity';
+import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
+import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
+import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
+import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -43,28 +45,39 @@ export class ApplicationDecisionController {
 
   @Get('/application/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getAllForApplication(@Param('fileNumber') fileNumber): Promise<{
-    decisions: ApplicationDecisionDto[];
-    codes: ApplicationDecisionOutcomeTypeDto[];
-  }> {
+  async getByFileNumber(
+    @Param('fileNumber') fileNumber,
+  ): Promise<ApplicationDecisionDto[]> {
     const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
     );
-    const codes = await this.appDecisionService.getCodeMapping();
-    const mappedDecisions = this.mapper.mapArray(
+    return this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,
       ApplicationDecisionDto,
     );
-    const mappedCodes = this.mapper.mapArray(
-      codes,
-      ApplicationDecisionOutcomeType,
-      ApplicationDecisionOutcomeTypeDto,
-    );
+  }
 
+  @Get('/codes')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getCodes() {
+    const codes = await this.appDecisionService.fetchCodes();
     return {
-      decisions: mappedDecisions,
-      codes: mappedCodes,
+      outcomes: await this.mapper.mapArrayAsync(
+        codes.outcomes,
+        DecisionOutcomeCode,
+        ApplicationDecisionOutcomeTypeDto,
+      ),
+      decisionMakers: await this.mapper.mapArrayAsync(
+        codes.decisionMakers,
+        DecisionMakerCode,
+        DecisionMakerCodeDto,
+      ),
+      ceoCriterion: await this.mapper.mapArrayAsync(
+        codes.ceoCriterion,
+        CeoCriterionCode,
+        CeoCriterionCodeDto,
+      ),
     };
   }
 
@@ -99,7 +112,7 @@ export class ApplicationDecisionController {
       application,
     );
 
-    return this.mapper.map(
+    return this.mapper.mapAsync(
       newDecision,
       ApplicationDecision,
       ApplicationDecisionDto,
@@ -116,7 +129,7 @@ export class ApplicationDecisionController {
       uuid,
       appDecMeeting,
     );
-    return this.mapper.map(
+    return this.mapper.mapAsync(
       updatedMeeting,
       ApplicationDecision,
       ApplicationDecisionDto,

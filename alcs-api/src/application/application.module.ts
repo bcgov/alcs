@@ -16,11 +16,13 @@ import { ApplicationLocalGovernmentService } from './application-code/applicatio
 import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
-import { ApplicationDecisionOutcomeType } from './application-decision/application-decision-outcome.entity';
+import { DecisionOutcomeCode } from './application-decision/application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision/application-decision.controller';
 import { ApplicationDecision } from './application-decision/application-decision.entity';
 import { ApplicationDecisionService } from './application-decision/application-decision.service';
+import { CeoCriterionCode } from './application-decision/ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './application-decision/decision-document.entity';
+import { DecisionMakerCode } from './application-decision/decision-maker/decision-maker.entity';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -41,7 +43,9 @@ import { ApplicationService } from './application.service';
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDecisionMeeting,
-      ApplicationDecisionOutcomeType,
+      DecisionOutcomeCode,
+      DecisionMakerCode,
+      CeoCriterionCode,
       ApplicationDocument,
       ApplicationLocalGovernment,
       ApplicationDecision,

@@ -4,29 +4,38 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../../common/exceptions/base.exception';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { DocumentService } from '../../document/document.service';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
+import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
+import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './decision-document.entity';
+import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 describe('ApplicationDecisionService', () => {
   let service: ApplicationDecisionService;
   let mockDecisionRepository: DeepMocked<Repository<ApplicationDecision>>;
   let mockDecisionDocumentRepository: DeepMocked<Repository<DecisionDocument>>;
   let mockDecisionOutcomeRepository: DeepMocked<
-    Repository<ApplicationDecisionOutcomeType>
+    Repository<DecisionOutcomeCode>
   >;
+  let mockDecisionMakerCodeRepository: DeepMocked<
+    Repository<DecisionMakerCode>
+  >;
+  let mockCeoCriterionCodeRepository: DeepMocked<Repository<CeoCriterionCode>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
 
@@ -39,7 +48,10 @@ describe('ApplicationDecisionService', () => {
     mockDecisionRepository = createMock<Repository<ApplicationDecision>>();
     mockDecisionDocumentRepository = createMock<Repository<DecisionDocument>>();
     mockDecisionOutcomeRepository =
-      createMock<Repository<ApplicationDecisionOutcomeType>>();
+      createMock<Repository<DecisionOutcomeCode>>();
+    mockDecisionMakerCodeRepository =
+      createMock<Repository<DecisionMakerCode>>();
+    mockCeoCriterionCodeRepository = createMock<Repository<CeoCriterionCode>>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -58,7 +70,15 @@ describe('ApplicationDecisionService', () => {
           useValue: mockDecisionDocumentRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationDecisionOutcomeType),
+          provide: getRepositoryToken(DecisionMakerCode),
+          useValue: mockDecisionMakerCodeRepository,
+        },
+        {
+          provide: getRepositoryToken(CeoCriterionCode),
+          useValue: mockCeoCriterionCodeRepository,
+        },
+        {
+          provide: getRepositoryToken(DecisionOutcomeCode),
           useValue: mockDecisionOutcomeRepository,
         },
         {
@@ -89,6 +109,9 @@ describe('ApplicationDecisionService', () => {
 
     mockDecisionOutcomeRepository.find.mockResolvedValue([]);
     mockDecisionOutcomeRepository.findOne.mockResolvedValue(undefined);
+
+    mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
+    mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
   });
 
   describe('ApplicationDecisionService Core Tests', () => {
@@ -145,7 +168,7 @@ describe('ApplicationDecisionService', () => {
       const meetingToCreate = {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
-        outcome: 'Outcome',
+        outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
       await service.create(meetingToCreate, mockApplication);
@@ -165,7 +188,7 @@ describe('ApplicationDecisionService', () => {
       const meetingToCreate = {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
-        outcome: 'Outcome',
+        outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
       await service.create(meetingToCreate, mockApplication);
@@ -176,10 +199,10 @@ describe('ApplicationDecisionService', () => {
 
     it('should update the decision and update the application if it was the only decision', async () => {
       const decisionDate = new Date(2022, 3, 3, 3, 3, 3, 3);
-      const decisionUpdate = {
+      const decisionUpdate: UpdateApplicationDecisionDto = {
         date: decisionDate.getTime(),
-        outcome: 'New Outcome',
-      } as UpdateApplicationDecisionDto;
+        outcomeCode: 'New Outcome',
+      };
 
       await service.update(mockDecision.uuid, decisionUpdate);
 
@@ -204,10 +227,10 @@ describe('ApplicationDecisionService', () => {
       mockDecisionRepository.findOne.mockResolvedValue(secondDecision);
 
       const decisionDate = new Date(2022, 3, 3, 3, 3, 3, 3);
-      const decisionUpdate = {
+      const decisionUpdate: UpdateApplicationDecisionDto = {
         date: decisionDate.getTime(),
-        outcome: 'New Outcome',
-      } as UpdateApplicationDecisionDto;
+        outcomeCode: 'New Outcome',
+      };
 
       await service.update(mockDecision.uuid, decisionUpdate);
 
@@ -219,12 +242,11 @@ describe('ApplicationDecisionService', () => {
     it('should fail on update if the decision is not found', async () => {
       const nonExistantUuid = 'bad-uuid';
       mockDecisionRepository.findOne.mockReturnValue(undefined);
-      const decisionUpdate = {
+      const decisionUpdate: UpdateApplicationDecisionDto = {
         date: new Date(2022, 2, 2, 2, 2, 2, 2).getTime(),
-        outcome: 'New Outcome',
-      } as UpdateApplicationDecisionDto;
+        outcomeCode: 'New Outcome',
+      };
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
       await expect(
         service.update(nonExistantUuid, decisionUpdate),
       ).rejects.toMatchObject(
@@ -232,10 +254,54 @@ describe('ApplicationDecisionService', () => {
           `Decision with UUID ${nonExistantUuid} not found`,
         ),
       );
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+    });
+
+    it('should fail on update if trying to set ceo criterion but decision maker is not CEO', async () => {
+      const uuid = 'uuid';
+      const decisionUpdate: UpdateApplicationDecisionDto = {
+        ceoCriterionCode: 'fake-code',
+      };
+
+      await expect(service.update(uuid, decisionUpdate)).rejects.toMatchObject(
+        new ServiceValidationException(
+          `Cannot set ceo criterion code unless ceo the decision maker`,
+        ),
+      );
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+    });
+
+    it('should allow updating the ceo criterion and decision maker to CEO', async () => {
+      const uuid = 'uuid';
+      const decisionUpdate: UpdateApplicationDecisionDto = {
+        ceoCriterionCode: 'fake-code',
+        decisionMakerCode: 'CEOP',
+      };
+
+      await service.update(uuid, decisionUpdate);
+
+      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
+      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+    });
+
+    it('should fail on update if trying to set time extension when ceo criterion is not correct', async () => {
+      const uuid = 'uuid';
+      const decisionUpdate: UpdateApplicationDecisionDto = {
+        isTimeExtension: true,
+      };
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      await expect(service.update(uuid, decisionUpdate)).rejects.toMatchObject(
+        new ServiceValidationException(
+          `Cannot set time extension unless ceo criterion is modification`,
+        ),
+      );
     });
 
     it('should call through for get code', async () => {
-      await service.getCodeMapping();
+      await service.fetchCodes();
       expect(mockDecisionOutcomeRepository.find).toHaveBeenCalled();
     });
   });

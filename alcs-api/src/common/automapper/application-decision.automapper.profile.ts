@@ -1,14 +1,18 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDecisionOutcomeType } from '../../application/application-decision/application-decision-outcome.entity';
+import { DecisionOutcomeCode } from '../../application/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
   ApplicationDecisionOutcomeTypeDto,
   DecisionDocumentDto,
 } from '../../application/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
+import { CeoCriterionCodeDto } from '../../application/application-decision/ceo-criterion/ceo-criterion.dto';
+import { CeoCriterionCode } from '../../application/application-decision/ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from '../../application/application-decision/decision-document.entity';
+import { DecisionMakerCodeDto } from '../../application/application-decision/decision-maker/decision-maker.dto';
+import { DecisionMakerCode } from '../../application/application-decision/decision-maker/decision-maker.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -32,19 +36,13 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             ),
           ),
         ),
-        forMember(
-          (ad) => ad.outcome,
-          mapFrom((ad) => {
-            return ad.outcome.code;
-          }),
-        ),
       );
 
-      createMap(
-        mapper,
-        ApplicationDecisionOutcomeType,
-        ApplicationDecisionOutcomeTypeDto,
-      );
+      createMap(mapper, DecisionOutcomeCode, ApplicationDecisionOutcomeTypeDto);
+
+      createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
+
+      createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
 
       createMap(
         mapper,
