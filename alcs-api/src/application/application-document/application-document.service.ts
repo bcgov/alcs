@@ -30,11 +30,7 @@ export class ApplicationDocumentService {
     user: User,
     documentType: DOCUMENT_TYPE,
   ) {
-    const application = await this.applicationService.get(fileNumber);
-    if (!application) {
-      throw new ServiceNotFoundException(`File Number not Found ${fileNumber}`);
-    }
-
+    const application = await this.applicationService.getOrFail(fileNumber);
     const document = await this.documentService.create(
       `application/${fileNumber}`,
       file,

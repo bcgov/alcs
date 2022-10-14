@@ -127,15 +127,9 @@ export class ApplicationDecisionMeetingController {
   async create(
     @Body() meeting: CreateApplicationDecisionMeetingDto,
   ): Promise<ApplicationDecisionMeetingDto> {
-    const application = await this.applicationService.get(
+    const application = await this.applicationService.getOrFail(
       meeting.applicationFileNumber,
     );
-
-    if (!application) {
-      throw new NotFoundException(
-        `Application not found ${meeting.applicationFileNumber}`,
-      );
-    }
 
     const newMeeting = await this.appDecisionMeetingService.createOrUpdate({
       date: new Date(meeting.date),

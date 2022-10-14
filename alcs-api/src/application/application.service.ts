@@ -185,6 +185,18 @@ export class ApplicationService {
     });
   }
 
+  async getOrFail(fileNumber: string) {
+    const application = await this.get(fileNumber);
+
+    if (!application) {
+      throw new ServiceNotFoundException(
+        `Application with provided number not found ${fileNumber}`,
+      );
+    }
+
+    return application;
+  }
+
   async getAllApplicationsWithIncompleteSubtasks(subtaskType: string) {
     return this.applicationRepository.find({
       where: {

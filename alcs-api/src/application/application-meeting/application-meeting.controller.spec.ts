@@ -110,7 +110,7 @@ describe('ApplicationMeetingController', () => {
     const appMock = initApplicationMockEntity();
     const mockMeeting = initApplicationMeetingMock(appMock);
     const fakePause = {} as ApplicationPaused;
-    mockApplicationService.get.mockResolvedValue(appMock);
+    mockApplicationService.getOrFail.mockResolvedValue(appMock);
     mockMeetingService.create.mockResolvedValue(mockMeeting);
     mockPausedService.createOrUpdate.mockResolvedValue(fakePause);
 
@@ -127,18 +127,6 @@ describe('ApplicationMeetingController', () => {
     expect(calledData.application).toEqual(appMock);
     expect(calledData.meetingPause).toBe(fakePause);
     expect(calledData.typeUuid).toBe(mockMeeting.typeUuid);
-  });
-
-  it('should fail create meeting if application does not exist', async () => {
-    mockApplicationService.get.mockReturnValue(undefined);
-
-    await expect(
-      controller.create({} as CreateApplicationMeetingDto, 'file-number'),
-    ).rejects.toMatchObject(
-      new NotFoundException('Application not found file-number'),
-    );
-
-    expect(mockMeetingService.create).toBeCalledTimes(0);
   });
 
   it('should update meeting', async () => {
@@ -166,7 +154,7 @@ describe('ApplicationMeetingController', () => {
   it('should fail create meeting if meeting type does not exist', async () => {
     const appMock = initApplicationMockEntity();
     initApplicationMeetingMock(appMock);
-    mockApplicationService.get.mockResolvedValueOnce(appMock);
+    mockApplicationService.getOrFail.mockResolvedValueOnce(appMock);
     mockApplicationCodeService.fetchMeetingType.mockReturnValue(undefined);
 
     await expect(

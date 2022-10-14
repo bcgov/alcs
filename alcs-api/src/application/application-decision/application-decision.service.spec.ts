@@ -103,7 +103,7 @@ describe('ApplicationDecisionService', () => {
     mockDecisionRepository.findOne.mockResolvedValue(mockDecision);
     mockDecisionRepository.save.mockResolvedValue(mockDecision);
 
-    mockApplicationService.get.mockResolvedValue(mockApplication);
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockApplicationService.update.mockResolvedValue({} as any);
     mockApplicationService.updateByUuid.mockResolvedValue({} as any);
 
@@ -125,18 +125,6 @@ describe('ApplicationDecisionService', () => {
       );
 
       expect(result).toStrictEqual([mockDecision]);
-    });
-
-    it('should fail on get decisions if application does not exist', async () => {
-      mockApplicationService.get.mockResolvedValue(null);
-
-      await expect(
-        service.getByAppFileNumber('fake-file-number'),
-      ).rejects.toMatchObject(
-        new ServiceNotFoundException(
-          'Application with provided number not found fake-file-number',
-        ),
-      );
     });
 
     it('should return decisions by uuid', async () => {
@@ -331,7 +319,7 @@ describe('ApplicationDecisionService', () => {
       await expect(
         service.attachDocument('uuid', {} as any, {} as any),
       ).rejects.toMatchObject(
-        new ServiceNotFoundException(`Decision not found uuid`),
+        new ServiceNotFoundException(`Decision with UUID uuid not found`),
       );
       expect(mockDocumentService.create).not.toHaveBeenCalled();
     });

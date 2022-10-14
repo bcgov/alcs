@@ -84,13 +84,7 @@ export class ApplicationController {
     @Param('fileNumber') fileNumber: string,
     @Body() updates: UpdateApplicationDto,
   ): Promise<ApplicationDetailedDto> {
-    const application = await this.applicationService.get(fileNumber);
-    if (!application) {
-      throw new ServiceValidationException(
-        `Application with file number ${fileNumber} not found`,
-      );
-    }
-
+    const application = await this.applicationService.getOrFail(fileNumber);
     let type: ApplicationType | undefined;
     if (updates.type && updates.type != application.type.code) {
       type = await this.codeService.fetchApplicationType(updates.type);

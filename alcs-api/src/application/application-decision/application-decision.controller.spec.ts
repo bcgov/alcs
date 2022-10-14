@@ -118,7 +118,7 @@ describe('ApplicationDecisionController', () => {
   it('should create the decision if application exists', async () => {
     const appMock = initApplicationMockEntity();
     const mockDecision = initApplicationDecisionMock(appMock);
-    mockApplicationService.get.mockResolvedValue(appMock);
+    mockApplicationService.getOrFail.mockResolvedValue(appMock);
     mockDecisionService.create.mockResolvedValue(mockDecision);
 
     const decisionToCreate = {
@@ -138,20 +138,6 @@ describe('ApplicationDecisionController', () => {
       },
       appMock,
     );
-  });
-
-  it('should fail create meeting if application does not exist', async () => {
-    mockApplicationService.get.mockReturnValue(undefined);
-
-    await expect(
-      controller.create({
-        applicationFileNumber: 'fake-number',
-      } as CreateApplicationDecisionDto),
-    ).rejects.toMatchObject(
-      new NotFoundException('Application not found fake-number'),
-    );
-
-    expect(mockDecisionService.create).toBeCalledTimes(0);
   });
 
   it('should update the decision', async () => {

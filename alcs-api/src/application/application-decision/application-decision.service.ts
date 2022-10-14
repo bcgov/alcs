@@ -39,13 +39,7 @@ export class ApplicationDecisionService {
   ) {}
 
   async getByAppFileNumber(number: string) {
-    const application = await this.applicationService.get(number);
-
-    if (!application) {
-      throw new ServiceNotFoundException(
-        `Application with provided number not found ${number}`,
-      );
-    }
+    const application = await this.applicationService.getOrFail(number);
 
     const records = await this.appDecisionRepository.find({
       where: { applicationUuid: application.uuid },
@@ -91,20 +85,7 @@ export class ApplicationDecisionService {
   }
 
   async update(uuid: string, updateData: UpdateApplicationDecisionDto) {
-    const existingDecision = await this.appDecisionRepository.findOne({
-      where: {
-        uuid,
-      },
-      relations: {
-        application: true,
-      },
-    });
-
-    if (!existingDecision) {
-      throw new ServiceNotFoundException(
-        `Decision with UUID ${uuid} not found`,
-      );
-    }
+    const existingDecision = await this.getOrFail(uuid);
 
     this.validateDecisionChanges(updateData);
 
@@ -165,6 +146,24 @@ export class ApplicationDecisionService {
     }
 
     return this.get(existingDecision.uuid);
+  }
+
+  private async getOrFail(uuid: string) {
+    const existingDecision = await this.appDecisionRepository.findOne({
+      where: {
+        uuid,
+      },
+      relations: {
+        application: true,
+      },
+    });
+
+    if (!existingDecision) {
+      throw new ServiceNotFoundException(
+        `Decision with UUID ${uuid} not found`,
+      );
+    }
+    return existingDecision;
   }
 
   private validateDecisionChanges(updateData: UpdateApplicationDecisionDto) {
@@ -236,6 +235,7 @@ export class ApplicationDecisionService {
         application: true,
       },
     });
+
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
@@ -256,15 +256,7 @@ export class ApplicationDecisionService {
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {
-    const decision = await this.appDecisionRepository.findOne({
-      where: {
-        uuid: decisionUuid,
-      },
-    });
-    if (!decision) {
-      throw new ServiceNotFoundException(`Decision not found ${decisionUuid}`);
-    }
-
+    const decision = await this.getOrFail(decisionUuid);
     const document = await this.documentService.create(
       `decision/${decision.uuid}`,
       file,

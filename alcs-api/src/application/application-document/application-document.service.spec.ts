@@ -27,7 +27,7 @@ describe('ApplicationDocumentService', () => {
     mockRepository = createMock<Repository<ApplicationDocument>>();
 
     mockApplication = initApplicationMockEntity(fileNumber);
-    mockApplicationService.get.mockResolvedValue(mockApplication);
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockDocumentService.create.mockResolvedValue({} as Document);
 
     const module: TestingModule = await Test.createTestingModule({
@@ -73,7 +73,7 @@ describe('ApplicationDocumentService', () => {
       'decisionDocument',
     );
 
-    expect(mockApplicationService.get).toHaveBeenCalled();
+    expect(mockApplicationService.getOrFail).toHaveBeenCalled();
     expect(mockDocumentService.create).toHaveBeenCalled();
     expect(mockDocumentService.create.mock.calls[0][0]).toBe(
       'application/12345',
@@ -87,26 +87,6 @@ describe('ApplicationDocumentService', () => {
     );
 
     expect(res).toBe(mockSavedDocument);
-  });
-
-  it("should throw an exception if the application doesn't exist", async () => {
-    const mockUser = {};
-    const mockFile = {};
-
-    mockApplicationService.get.mockResolvedValue(undefined);
-
-    await expect(
-      service.attachDocument(
-        fileNumber,
-        mockFile as MultipartFile,
-        mockUser as User,
-        'decisionDocument',
-      ),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(`File Number not Found ${fileNumber}`),
-    );
-
-    expect(mockApplicationService.get).toHaveBeenCalled();
   });
 
   it('should delete document and application document when deleting', async () => {
