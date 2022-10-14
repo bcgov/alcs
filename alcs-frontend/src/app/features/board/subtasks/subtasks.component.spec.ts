@@ -1,15 +1,22 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BehaviorSubject } from 'rxjs';
 import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
+import { UserDto } from '../../../services/user/user.dto';
+import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SubtasksComponent } from './subtasks.component';
 
 describe('SubtasksComponent', () => {
   let component: SubtasksComponent;
   let fixture: ComponentFixture<SubtasksComponent>;
+  let mockUserService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
+    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
+    mockUserService.$users = new BehaviorSubject<UserDto[]>([]);
+
     await TestBed.configureTestingModule({
       providers: [
         {
@@ -19,6 +26,10 @@ describe('SubtasksComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: {},
+        },
+        {
+          provide: UserService,
+          useValue: mockUserService,
         },
       ],
       declarations: [SubtasksComponent],
