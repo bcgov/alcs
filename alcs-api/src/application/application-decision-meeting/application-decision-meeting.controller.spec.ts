@@ -1,7 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { Board } from '../../board/board.entity';
@@ -107,10 +106,10 @@ describe('ApplicationDecisionMeetingController', () => {
     expect(mockMeetingService.delete).toBeCalledWith('fake-uuid');
   });
 
-  it('should create meeting if application exists', async () => {
+  it('should create meeting', async () => {
     const appMock = initApplicationMockEntity();
     const mockMeeting = initApplicationDecisionMeetingMock(appMock);
-    mockApplicationService.get.mockResolvedValue(appMock);
+    mockApplicationService.getOrFail.mockResolvedValue(appMock);
     mockMeetingService.createOrUpdate.mockResolvedValue(mockMeeting);
 
     const meetingToUpdate = {
@@ -125,20 +124,6 @@ describe('ApplicationDecisionMeetingController', () => {
       date: new Date(meetingToUpdate.date),
       applicationUuid: appMock.uuid,
     });
-  });
-
-  it('should fail create meeting if application does not exist', async () => {
-    mockApplicationService.get.mockReturnValue(undefined);
-
-    await expect(
-      controller.create({
-        applicationFileNumber: 'fake-number',
-      } as CreateApplicationDecisionMeetingDto),
-    ).rejects.toMatchObject(
-      new NotFoundException('Application not found fake-number'),
-    );
-
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(0);
   });
 
   it('should update meeting', async () => {

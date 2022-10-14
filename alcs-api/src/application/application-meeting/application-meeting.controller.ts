@@ -108,12 +108,7 @@ export class ApplicationMeetingController {
     fileNumber: string,
     meeting: CreateApplicationMeetingDto,
   ) {
-    const application = await this.applicationService.get(fileNumber);
-
-    if (!application) {
-      throw new NotFoundException(`Application not found ${fileNumber}`);
-    }
-
+    const application = await this.applicationService.getOrFail(fileNumber);
     const meetingType = await this.applicationCodeService.fetchMeetingType(
       meeting.meetingTypeCode,
     );

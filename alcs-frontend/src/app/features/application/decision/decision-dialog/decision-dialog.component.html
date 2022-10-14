@@ -21,7 +21,7 @@
       <ng-select
         appearance="outline"
         class="decision-outcome"
-        [items]="data.codes"
+        [items]="data.outcomes"
         formControlName="outcome"
         appendTo="body"
         bindLabel="label"
@@ -30,6 +30,42 @@
         placeholder="Decision Outcome *"
         [clearable]="false"
       ></ng-select>
+      <ng-select
+        appearance="outline"
+        class="full-width"
+        [items]="data.decisionMakers"
+        formControlName="decisionMaker"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="code"
+        placeholder="Decision Maker"
+        (change)="onSelectDecisionMaker($event)"
+      ></ng-select>
+      <ng-select
+        *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
+        appearance="outline"
+        class="full-width"
+        [items]="data.ceoCriterion"
+        formControlName="ceoCriterion"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="code"
+        placeholder="CEO Criterion"
+      >
+        <ng-template ng-option-tmp let-item="item">
+          <span>{{ item.number }} - {{ item.label }} </span>
+        </ng-template>
+        <ng-template ng-label-tmp let-item="item">
+          <span>{{ item.number }} - {{ item.label }} </span>
+        </ng-template>
+      </ng-select>
+      <div *ngIf="form.get('ceoCriterion')!.value === 'MODI'" class="full-width">
+        <mat-label class="toggle-label">Criterion 8 Modification</mat-label>
+        <mat-button-toggle-group id="isTimeExtension" formControlName="isTimeExtension" name="isTimeExtension">
+          <mat-button-toggle value="true">Time extension</mat-button-toggle>
+          <mat-button-toggle value="false">Other</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
       <mat-form-field appearance="outline" class="date-picker">
         <mat-label>Audit Date</mat-label>
         <input
@@ -48,12 +84,17 @@
           id="chairReviewRequired"
           formControlName="chairReviewRequired"
           name="chairReviewRequired"
+          (change)="onSelectChairReviewRequired($event)"
         >
           <mat-button-toggle value="true">Required</mat-button-toggle>
           <mat-button-toggle value="false">Not Needed</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <mat-form-field *ngIf="form.get('chairReviewRequired')!.value === 'true'" appearance="outline" class="date-picker chair-review-date">
+      <mat-form-field
+        *ngIf="form.get('chairReviewRequired')!.value === 'true'"
+        appearance="outline"
+        class="date-picker"
+      >
         <mat-label>Chair Review Date</mat-label>
         <input
           matInput
@@ -65,6 +106,13 @@
         <mat-datepicker-toggle matSuffix [for]="chairReviewDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #chairReviewDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
+      <div *ngIf="form.get('chairReviewRequired')!.value === 'true'">
+        <mat-label class="toggle-label">Chair Review Outcome</mat-label>
+        <mat-button-toggle-group id="chairReviewOutcome" formControlName="chairReviewOutcome" name="chairReviewOutcome">
+          <mat-button-toggle value="true">Reconsider</mat-button-toggle>
+          <mat-button-toggle value="false">Stay</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

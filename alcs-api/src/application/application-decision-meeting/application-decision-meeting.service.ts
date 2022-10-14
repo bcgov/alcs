@@ -14,13 +14,7 @@ export class ApplicationDecisionMeetingService {
   ) {}
 
   async getByAppFileNumber(number: string) {
-    const application = await this.applicationService.get(number);
-
-    if (!application) {
-      throw new ServiceNotFoundException(
-        `Application with provided number not found ${number}`,
-      );
-    }
+    const application = await this.applicationService.getOrFail(number);
 
     return this.appDecisionMeetingRepository.find({
       where: { applicationUuid: application.uuid },

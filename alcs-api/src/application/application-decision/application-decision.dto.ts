@@ -1,71 +1,99 @@
 import { AutoMap } from '@automapper/classes';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
+import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
+
+export class ApplicationDecisionOutcomeTypeDto extends BaseCodeDto {}
 
 export class UpdateApplicationDecisionDto {
-  @AutoMap()
   @IsNumber()
   @IsOptional()
-  date: number;
+  date?: number;
 
-  @AutoMap()
   @IsString()
   @IsOptional()
-  outcome?: string;
+  outcomeCode?: string;
 
-  @AutoMap()
   @IsNumber()
   @IsOptional()
   auditDate?: number | null;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   chairReviewRequired?: boolean;
 
-  @AutoMap()
-  @IsOptional()
   @IsNumber()
   @IsOptional()
   chairReviewDate?: number | null;
+
+  @IsString()
+  @IsOptional()
+  decisionMakerCode?: string | null;
+
+  @IsString()
+  @IsOptional()
+  ceoCriterionCode?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  isTimeExtension?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  chairReviewOutcome?: boolean | null;
 }
 
-export class CreateApplicationDecisionDto {
-  @AutoMap()
+export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   @IsString()
   applicationFileNumber;
 
-  @AutoMap()
   @IsNumber()
   date: number;
 
-  @AutoMap()
   @IsString()
-  outcome: string;
+  outcomeCode: string;
 
-  @AutoMap()
   @IsBoolean()
   chairReviewRequired: boolean;
-
-  @AutoMap()
-  @IsNumber()
-  @IsOptional()
-  auditDate?: number | null;
-
-  @AutoMap()
-  @IsOptional()
-  @IsNumber()
-  @IsOptional()
-  chairReviewDate?: number | null;
 }
 
-export class ApplicationDecisionDto extends CreateApplicationDecisionDto {
+export class ApplicationDecisionDto {
   @AutoMap()
-  @IsString()
   uuid: string;
 
   @AutoMap()
+  applicationFileNumber;
+
+  @AutoMap()
+  date: number;
+
+  @AutoMap()
+  outcome: ApplicationDecisionOutcomeTypeDto;
+
+  @AutoMap()
+  chairReviewRequired: boolean;
+
+  @AutoMap()
+  auditDate?: number | null;
+
+  @AutoMap()
+  chairReviewDate?: number | null;
+
+  @AutoMap()
+  chairReviewOutcome?: boolean | null;
+
+  @AutoMap()
   documents: DecisionDocumentDto[];
+
+  @AutoMap()
+  decisionMaker?: DecisionMakerCodeDto | null;
+
+  @AutoMap()
+  ceoCriterion?: CeoCriterionCodeDto | null;
+
+  @AutoMap()
+  isTimeExtension?: boolean | null;
 }
 
 export class DecisionDocumentDto {
@@ -84,5 +112,3 @@ export class DecisionDocumentDto {
   @AutoMap()
   uploadedAt: number;
 }
-
-export class ApplicationDecisionOutcomeTypeDto extends BaseCodeDto {}

@@ -58,7 +58,7 @@ describe('ApplicationMeetingService', () => {
     );
     mockAppMeetingRepository.find.mockReturnValue([mockMeeting]);
     mockAppMeetingRepository.findOne.mockReturnValue(mockMeeting);
-    mockApplicationService.get.mockResolvedValue(mockApplication);
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
   });
 
   it('should be defined', () => {
@@ -69,18 +69,6 @@ describe('ApplicationMeetingService', () => {
     const result = await service.getByAppFileNumber(mockApplication.fileNumber);
 
     expect(result).toStrictEqual([mockMeeting]);
-  });
-
-  it('should fail on get meetings if application does not exist', async () => {
-    mockApplicationService.get.mockResolvedValue(null);
-
-    await expect(
-      service.getByAppFileNumber('fake-file-number'),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        'Application with provided number not found fake-file-number',
-      ),
-    );
   });
 
   it('should return empty array if no meetings for application', async () => {

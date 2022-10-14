@@ -26,14 +26,7 @@ export class ApplicationMeetingService {
   ) {}
 
   async getByAppFileNumber(number: string): Promise<ApplicationMeeting[]> {
-    const application = await this.applicationService.get(number);
-
-    if (!application) {
-      throw new ServiceNotFoundException(
-        `Application with provided number not found ${number}`,
-      );
-    }
-
+    const application = await this.applicationService.getOrFail(number);
     return this.appMeetingRepository.find({
       where: { applicationUuid: application.uuid },
       relations: DEFAULT_RELATIONS,

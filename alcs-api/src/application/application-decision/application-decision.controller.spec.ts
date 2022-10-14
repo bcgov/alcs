@@ -14,7 +14,7 @@ import {
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationService } from '../application.service';
-import { ApplicationDecisionOutcomeType } from './application-decision-outcome.entity';
+import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision.controller';
 import {
   CreateApplicationDecisionDto,
@@ -68,13 +68,17 @@ describe('ApplicationDecisionController', () => {
       ApplicationDecisionController,
     );
 
-    mockDecisionService.getCodeMapping.mockResolvedValue([
-      {
-        uuid: 'code-uuid',
-        code: 'decision-code',
-        label: 'decision-label',
-      } as ApplicationDecisionOutcomeType,
-    ]);
+    mockDecisionService.fetchCodes.mockResolvedValue({
+      outcomes: [
+        {
+          uuid: 'code-uuid',
+          code: 'decision-code',
+          label: 'decision-label',
+        } as DecisionOutcomeCode,
+      ],
+      ceoCriterion: [],
+      decisionMakers: [],
+    });
   });
 
   it('should be defined', () => {
@@ -86,10 +90,10 @@ describe('ApplicationDecisionController', () => {
     const mockDecision = initApplicationDecisionMock(mockApplication);
     mockDecisionService.getByAppFileNumber.mockResolvedValue([mockDecision]);
 
-    const result = await controller.getAllForApplication('fake-number');
+    const result = await controller.getByFileNumber('fake-number');
 
     expect(mockDecisionService.getByAppFileNumber).toBeCalledTimes(1);
-    expect(result.decisions[0].uuid).toStrictEqual(mockDecision.uuid);
+    expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
   it('should get a specific decision', async () => {
@@ -114,13 +118,13 @@ describe('ApplicationDecisionController', () => {
   it('should create the decision if application exists', async () => {
     const appMock = initApplicationMockEntity();
     const mockDecision = initApplicationDecisionMock(appMock);
-    mockApplicationService.get.mockResolvedValue(appMock);
+    mockApplicationService.getOrFail.mockResolvedValue(appMock);
     mockDecisionService.create.mockResolvedValue(mockDecision);
 
     const decisionToCreate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
       applicationFileNumber: appMock.fileNumber,
-      outcome: 'outcome',
+      outcomeCode: 'outcome',
     } as CreateApplicationDecisionDto;
 
     await controller.create(decisionToCreate);
@@ -129,25 +133,11 @@ describe('ApplicationDecisionController', () => {
     expect(mockDecisionService.create).toBeCalledWith(
       {
         applicationFileNumber: appMock.fileNumber,
-        outcome: 'outcome',
+        outcomeCode: 'outcome',
         date: decisionToCreate.date,
       },
       appMock,
     );
-  });
-
-  it('should fail create meeting if application does not exist', async () => {
-    mockApplicationService.get.mockReturnValue(undefined);
-
-    await expect(
-      controller.create({
-        applicationFileNumber: 'fake-number',
-      } as CreateApplicationDecisionDto),
-    ).rejects.toMatchObject(
-      new NotFoundException('Application not found fake-number'),
-    );
-
-    expect(mockDecisionService.create).toBeCalledTimes(0);
   });
 
   it('should update the decision', async () => {
