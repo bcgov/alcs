@@ -1,9 +1,10 @@
 <div>
   <div class="subheading2 header split">
-    <div>Subtasks ({{ subtasks.length }})</div>
+    <div>Sub-Tasks ({{ subtasks.length }})</div>
     <div><button (click)="create('GIS')" mat-flat-button color="primary">+ GIS</button></div>
   </div>
-  <div class="subtasks">
+  <div class="no-subtasks" *ngIf="!subtasks.length">No Sub-Tasks</div>
+  <div class="subtasks" *ngIf="subtasks.length">
     <ng-container *ngFor="let subtask of subtasks">
       <div class="left subheading2 status">
         <div class="center in-progress" *ngIf="subtask.assignee && !subtask.completedAt">
@@ -22,11 +23,7 @@
           [initials]="subtask.assignee ? users.get(subtask.assignee)!.initials : ''"
           [name]="subtask.assignee ? users.get(subtask.assignee)!.name : ''"
         ></app-avatar-circle>
-        <app-avatar-circle
-          class="unassigned-circle"
-          *ngIf="!subtask.assignee"
-          initials="-"
-        ></app-avatar-circle>
+        <app-avatar-circle class="unassigned-circle" *ngIf="!subtask.assignee" initials="-"></app-avatar-circle>
       </div>
       <div class="center">
         <div class="type badge" [ngStyle]="{ backgroundColor: subtask.backgroundColor, color: subtask.textColor }">

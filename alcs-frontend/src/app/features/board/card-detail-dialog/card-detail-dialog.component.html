@@ -111,6 +111,7 @@
     <ng-select
       class="card-type"
       [items]="boardStatuses"
+      appearance="outline"
       placeholder="Workflow Stage"
       bindLabel="label"
       bindValue="statusCode"
@@ -127,8 +128,9 @@
     </ng-select>
     <ng-select
       class="card-assignee"
+      appearance="outline"
       [items]="$users | async"
-      placeholder="Assignee"
+      placeholder="Assigned Planner"
       bindLabel="name"
       bindValue="name"
       [(ngModel)]="selectedAssigneeName"
