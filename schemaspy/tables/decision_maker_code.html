@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>decision_document - postgres Database</title>
+        <title>decision_maker_code - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>decision_document</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>decision_maker_code</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -109,12 +109,12 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
+                                    <td><span id="audit_deleted_date_at">audit_deleted_date_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
-                                    <td title=''></td>
-                                    <td>gen_random_uuid()</td>
+                                    <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
@@ -126,8 +126,42 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="decision_uuid">decision_uuid</span></td>
-                                    <td>uuid</td>
+                                    <td><span id="audit_created_at">audit_created_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>now()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_updated_at">audit_updated_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>now()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_created_by">audit_created_by</span></td>
+                                    <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
@@ -138,17 +172,13 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="decision_document.decision_uuid references application_decision.uuid via FK_a86632c9a6ab56e984cf1cc9e6b"><a href='application_decision.html'>application_decision</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_a86632c9a6ab56e984cf1cc9e6b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="document_uuid">document_uuid</span></td>
-                                    <td>uuid</td>
+                                    <td><span id="audit_updated_by">audit_updated_by</span></td>
+                                    <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
@@ -159,10 +189,61 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="label">label</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="code">code</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="decision_document.document_uuid references document.uuid via FK_83717f1d73931fd18e810c03aa7"><a href='document.html'>document</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_83717f1d73931fd18e810c03aa7<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="application_decision.decision_maker_code references decision_maker_code.code via FK_9bfe649b67952a226317fc3c1ae"><a href='application_decision.html'>application_decision</a><span class='relatedKey'>.decision_maker_code</span></td>
+                                                <td class="constraint detail">FK_9bfe649b67952a226317fc3c1ae<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="description">description</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
                                     <td></td>
@@ -198,16 +279,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_251180d41aea07259eb6686a4e7</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_9dfb1aa358567693c26014ecc18</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>uuid</td>
+                                    <td>code</td>
                                 </tr>
                                 <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> REL_83717f1d73931fd18e810c03aa</td>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_93d14f2a437bd125e8881760177</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>document_uuid</td>
+                                    <td>description</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -232,25 +313,21 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="decision_document.html" target="_top" title="decision_document" alt="" coords="291,85,628,243">
-<area shape="rect" id="node2" href="application_decision.html" target="_top" title="application_decision" alt="" coords="5,5,247,240">
-<area shape="rect" id="node3" href="document.html" target="_top" title="document" alt="" coords="14,257,238,404">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="428,96,669,331">
+<area shape="rect" id="node2" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="5,5,384,309">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/decision_document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/decision_maker_code.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="316,103,557,337">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="54,5,223,93">
-<area shape="rect" id="node3" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="25,321,252,409">
-<area shape="rect" id="node4" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="15,216,263,304">
-<area shape="rect" id="node5" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="5,111,272,199">
-<area shape="rect" id="node6" href="application_document.html" target="_top" title="application_document" alt="" coords="641,69,899,157">
-<area shape="rect" id="node7" href="document.html" target="_top" title="document" alt="" coords="325,355,549,501">
-<area shape="rect" id="node9" href="user.html" target="_top" title="user" alt="" coords="81,427,196,515">
-<area shape="rect" id="node8" href="decision_document.html" target="_top" title="decision_document" alt="" coords="601,215,939,372">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="428,179,669,413">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="110,5,279,93">
+<area shape="rect" id="node3" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="81,537,308,625">
+<area shape="rect" id="node4" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="5,216,384,520">
+<area shape="rect" id="node5" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="61,111,328,199">
+<area shape="rect" id="node6" href="decision_document.html" target="_top" title="decision_document" alt="" coords="713,181,947,269">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/decision_document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/decision_maker_code.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
