@@ -15,7 +15,11 @@
 <section class="post-decision" *ngFor="let decision of postDecisions; let i = index">
   <div class="decision-menu">
     <button (click)="onEdit(decision)" matTooltip="Edit Request" mat-icon-button><mat-icon>edit</mat-icon></button>
-    <button (click)="deletePostDecision(decision.uuid)" matTooltip="Delete Request" mat-icon-button>
+    <button
+      (click)="deletePostDecision(decision.uuid, postDecisions.length - i)"
+      matTooltip="Delete Request"
+      mat-icon-button
+    >
       <mat-icon>delete</mat-icon>
     </button>
   </div>

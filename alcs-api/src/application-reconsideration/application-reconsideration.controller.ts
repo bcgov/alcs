@@ -90,4 +90,10 @@ export class ApplicationReconsiderationController {
     );
     return this.reconsiderationService.mapToDtos(recon);
   }
+
+  @Get('/codes')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getCodes() {
+    return this.reconsiderationService.getCodes();
+  }
 }

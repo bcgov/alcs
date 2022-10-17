@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationReconsiderationDetailedDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ToastService } from '../../../../services/toast/toast.service';
+import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
 @Component({
@@ -13,6 +14,7 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 })
 export class PostDecisionDialogComponent {
   isLoading = false;
+  codes: BaseCodeDto[] = [];
 
   typeControl = new FormControl<string | undefined>(undefined, [Validators.required]);
   isReviewApprovedControl = new FormControl<string | null>(null);
@@ -29,12 +31,13 @@ export class PostDecisionDialogComponent {
     public data: {
       fileNumber: string;
       existingDecision: ApplicationReconsiderationDetailedDto;
-      codes: [{ code: '33.1'; label: '33.1'; description: '33.1' }, { code: '33'; label: '33'; description: '33' }];
+      codes: BaseCodeDto[];
     },
     private dialogRef: MatDialogRef<PostDecisionDialogComponent>,
     private applicationReconsiderationService: ApplicationReconsiderationService,
     private toastService: ToastService
   ) {
+    this.codes = data.codes;
     this.form.patchValue({
       submittedDate: new Date(data.existingDecision.submittedDate),
       type: data.existingDecision.type.code,

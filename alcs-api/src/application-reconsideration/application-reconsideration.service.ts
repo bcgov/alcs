@@ -7,7 +7,6 @@ import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
-import { CodeService } from '../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -19,7 +18,9 @@ import {
   ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
   ApplicationReconsiderationWithoutApplicationDto,
+  ReconsiderationTypeDto,
 } from './applicationReconsideration.dto';
+import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Injectable()
 export class ApplicationReconsiderationService {
@@ -27,9 +28,10 @@ export class ApplicationReconsiderationService {
     @InjectRepository(ApplicationReconsideration)
     private reconsiderationRepository: Repository<ApplicationReconsideration>,
     @InjectMapper() private mapper: Mapper,
-    private codeService: CodeService,
     private applicationService: ApplicationService,
     private cardService: CardService,
+    @InjectRepository(ApplicationReconsiderationType)
+    private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
   ) {}
 
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
@@ -156,7 +158,8 @@ export class ApplicationReconsiderationService {
       existingReconsideration.reviewDate = null;
     } else {
       existingReconsideration.isReviewApproved = updates.isReviewApproved;
-      this.validateReviewOutcome(updates, existingReconsideration);
+      // TODO clarify this
+      // this.validateReviewOutcome(updates, existingReconsideration);
     }
 
     const recon = await this.reconsiderationRepository.save(
@@ -182,7 +185,7 @@ export class ApplicationReconsiderationService {
   }
 
   private async fetchAndValidateType(code: string) {
-    const type = await this.codeService.fetchReconsiderationType(code);
+    const type = await this.getReconsiderationType(code);
 
     if (!type) {
       throw new ServiceNotFoundException(
@@ -251,6 +254,25 @@ export class ApplicationReconsiderationService {
           subtasks: { type: true, assignee: true },
         },
       },
+    });
+  }
+
+  async getCodes() {
+    const codes = await this.reconsiderationTypeRepository.find({
+      order: { label: 'ASC' },
+    });
+    return this.mapper.mapArrayAsync(
+      codes,
+      ApplicationReconsiderationType,
+      ReconsiderationTypeDto,
+    );
+  }
+
+  async getReconsiderationType(
+    code: string,
+  ): Promise<ApplicationReconsiderationType> {
+    return this.reconsiderationTypeRepository.findOneByOrFail({
+      code,
     });
   }
 }

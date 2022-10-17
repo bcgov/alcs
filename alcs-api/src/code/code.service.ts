@@ -79,11 +79,5 @@ export class CodeService {
     });
   }
 
-  async fetchReconsiderationType(
-    code: string,
-  ): Promise<ApplicationReconsiderationType> {
-    return this.reconsiderationTypesRepository.findOneByOrFail({
-      code,
-    });
-  }
+
 }

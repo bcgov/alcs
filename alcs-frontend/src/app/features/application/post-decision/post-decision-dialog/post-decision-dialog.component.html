@@ -21,8 +21,7 @@
       <div>
         <mat-label class="toggle-label">Reconsideration Type *</mat-label>
         <mat-button-toggle-group id="reviewOutcome" formControlName="type" name="reviewOutcome">
-          <mat-button-toggle value="33">33</mat-button-toggle>
-          <mat-button-toggle value="33.1">33.1</mat-button-toggle>
+          <mat-button-toggle *ngFor="let type of codes" value="{{ type.code }}">{{ type.label }}</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
 

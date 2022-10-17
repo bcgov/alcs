@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { ToastService } from '../../toast/toast.service';
 import {
@@ -15,6 +16,7 @@ import {
 })
 export class ApplicationReconsiderationService {
   $reconsiderations = new BehaviorSubject<ApplicationReconsiderationDto[]>([]);
+  $codes = new BehaviorSubject<BaseCodeDto[]>([]);
 
   private url = `${environment.apiUrl}/application-reconsideration`;
 
@@ -88,6 +90,15 @@ export class ApplicationReconsiderationService {
       this.toastService.showSuccessToast('Reconsideration deleted');
     } catch (err) {
       this.toastService.showErrorToast('Failed to delete reconsideration');
+    }
+  }
+
+  async fetchCodes() {
+    try {
+      const codes = await firstValueFrom(this.http.get<BaseCodeDto[]>(`${this.url}/codes`));
+      this.$codes.next(codes);
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch reconsideration codes');
     }
   }
 }

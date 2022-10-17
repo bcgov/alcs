@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatestWith, tap } from 'rxjs';
-import { ApplicationMasterCodesDto } from '../../../services/application/application-code.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationReconsiderationDetailedDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { PostDecisionDialogComponent } from './post-decision-dialog/post-decision-dialog.component';
 
@@ -17,35 +18,37 @@ import { PostDecisionDialogComponent } from './post-decision-dialog/post-decisio
 export class PostDecisionComponent implements OnInit {
   fileNumber: string = '';
   postDecisions: ApplicationReconsiderationDetailedDto[] = [];
-  codes?: ApplicationMasterCodesDto;
+  codes: BaseCodeDto[] = [];
 
   constructor(
     public dialog: MatDialog,
     private applicationDetailService: ApplicationDetailService,
     private applicationReconsiderationService: ApplicationReconsiderationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
-    // TODO add codes here from code service
-    combineLatestWith(
-      this.applicationDetailService.$application,
-      this.applicationReconsiderationService.$reconsiderations
-    );
-
     this.applicationDetailService.$application
       .pipe(
         tap((application) => {
           if (application) {
             this.applicationReconsiderationService.fetchByApplication(application.fileNumber);
           }
+          this.applicationReconsiderationService.fetchCodes();
         })
       )
-      .pipe(combineLatestWith(this.applicationReconsiderationService.$reconsiderations))
-      .subscribe(([application, reconsiderations]) => {
+      .pipe(
+        combineLatestWith(
+          this.applicationReconsiderationService.$reconsiderations,
+          this.applicationReconsiderationService.$codes
+        )
+      )
+      .subscribe(([application, reconsiderations, codes]) => {
         if (application) {
           this.fileNumber = application.fileNumber;
           this.postDecisions = reconsiderations ?? [];
+          this.codes = codes;
         }
       });
   }
@@ -61,7 +64,7 @@ export class PostDecisionComponent implements OnInit {
         data: {
           fileNumber: this.fileNumber,
           existingDecision: reconsideration,
-          // codes: this.codes,
+          codes: this.codes,
         },
       })
       .afterClosed()
@@ -72,10 +75,18 @@ export class PostDecisionComponent implements OnInit {
       });
   }
 
-  async deletePostDecision(uuid: string) {
-    await this.applicationReconsiderationService.delete(uuid);
-    this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
-    this.toastService.showSuccessToast('Post-Decision deleted');
+  async deletePostDecision(uuid: string, reconsiderationIndex: number) {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to delete Reconsideration Request #${reconsiderationIndex}?`,
+      })
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.applicationReconsiderationService.delete(uuid);
+          await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
+          this.toastService.showSuccessToast('Post-Decision deleted');
+        }
+      });
   }
 
   async onSaveReviewDate(reconsiderationUuid: string, reviewDate: number) {
