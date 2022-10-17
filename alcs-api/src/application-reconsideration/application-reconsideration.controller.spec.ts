@@ -91,4 +91,28 @@ describe('ApplicationReconsiderationController', () => {
     await controller.create({} as ApplicationReconsiderationCreateDto);
     expect(mockReconsiderationService.create).toBeCalledTimes(1);
   });
+
+  it('should call service getByApplication method', async () => {
+    const fakeNumber = 'fake';
+    mockReconsiderationService.getByApplication.mockResolvedValue([]);
+    await controller.getByApplication(fakeNumber);
+    expect(mockReconsiderationService.getByApplication).toBeCalledTimes(1);
+    expect(mockReconsiderationService.getByApplication).toBeCalledWith(
+      fakeNumber,
+    );
+  });
+
+  it('should call service getByBoardCode method', async () => {
+    const fakeCode = 'fake';
+    mockReconsiderationService.getByBoardCode.mockResolvedValue([]);
+    await controller.getByBoard(fakeCode);
+    expect(mockReconsiderationService.getByBoardCode).toBeCalledTimes(1);
+    expect(mockReconsiderationService.getByBoardCode).toBeCalledWith(fakeCode);
+  });
+
+  it('should call service getCodes method', async () => {
+    mockReconsiderationService.getCodes.mockResolvedValue([]);
+    await controller.getCodes();
+    expect(mockReconsiderationService.getCodes).toBeCalledTimes(1);
+  });
 });

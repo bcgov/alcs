@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import { CreateApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
@@ -32,6 +32,9 @@ import { ApplicationReconsiderationType } from './reconsideration-type/applicati
 describe('ReconsiderationService', () => {
   let reconsiderationRepositoryMock: MockType<
     Repository<ApplicationReconsideration>
+  >;
+  let reconsiderationTypeRepositoryMock: MockType<
+    Repository<ApplicationReconsiderationType>
   >;
   let service: ApplicationReconsiderationService;
   let codeServiceMock: DeepMocked<CodeService>;
@@ -84,11 +87,18 @@ describe('ReconsiderationService', () => {
           provide: getRepositoryToken(ApplicationReconsideration),
           useFactory: repositoryMockFactory,
         },
+        {
+          provide: getRepositoryToken(ApplicationReconsiderationType),
+          useFactory: repositoryMockFactory,
+        },
         ReconsiderationProfile,
       ],
     }).compile();
 
     reconsiderationRepositoryMock = module.get(
+      getRepositoryToken(ApplicationReconsideration),
+    );
+    reconsiderationTypeRepositoryMock = module.get(
       getRepositoryToken(ApplicationReconsideration),
     );
     service = module.get<ApplicationReconsiderationService>(
@@ -135,9 +145,9 @@ describe('ReconsiderationService', () => {
       dateReceived: mockReconsiderationCreateDto.submittedDate,
     } as CreateApplicationDto;
 
-    codeServiceMock.fetchReconsiderationType.mockResolvedValue(
+    reconsiderationTypeRepositoryMock.find.mockReturnValue([
       mockReconsideration.type,
-    );
+    ]);
     cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(undefined);
     applicationServiceMock.create.mockResolvedValue(
@@ -174,9 +184,9 @@ describe('ReconsiderationService', () => {
       boardCode: 'fake-board',
     } as ApplicationReconsiderationCreateDto;
 
-    codeServiceMock.fetchReconsiderationType.mockResolvedValue(
+    reconsiderationTypeRepositoryMock.find.mockReturnValue([
       mockReconsideration.type,
-    );
+    ]);
     cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(
       initApplicationMockEntity(
@@ -197,29 +207,6 @@ describe('ReconsiderationService', () => {
     expect(applicationServiceMock.create).toBeCalledTimes(0);
   });
 
-  it('should fail create reconsideration if reconsideration type is invalid', async () => {
-    const code = 'fake-code';
-    reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
-      initApplicationReconsiderationMockEntity(),
-    );
-    codeServiceMock.fetchReconsiderationType.mockResolvedValue(undefined);
-
-    await expect(
-      service.create(
-        {
-          reconTypeCode: code,
-        } as ApplicationReconsiderationCreateDto,
-        {} as Board,
-      ),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Provided reconsideration type does not exist ${code}`,
-      ),
-    );
-    expect(cardServiceMock.create).toBeCalledTimes(0);
-    expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(0);
-  });
-
   it('should successfully update reconsideration', async () => {
     const uuid = 'fake';
     const code = '33';
@@ -227,7 +214,7 @@ describe('ReconsiderationService', () => {
     reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
       mockReconsideration,
     );
-    codeServiceMock.fetchReconsiderationType.mockResolvedValue(
+    reconsiderationTypeRepositoryMock.find.mockReturnValue(
       mockReconsideration.type,
     );
 
@@ -262,53 +249,29 @@ describe('ReconsiderationService', () => {
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
-  it('should fail update reconsideration if reconsideration type is invalid', async () => {
+  it('should set reviewDate and isReviewApproved to null if reconsideration type is updated to 33.1', async () => {
     const uuid = 'fake';
-    const code = 'fake-code';
+    const code = '33.1';
+    const mockReconsideration = initApplicationReconsiderationMockEntity();
     reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
-      initApplicationReconsiderationMockEntity(),
+      mockReconsideration,
     );
-    codeServiceMock.fetchReconsiderationType.mockResolvedValue(undefined);
+    reconsiderationTypeRepositoryMock.find.mockReturnValue(
+      mockReconsideration.type,
+    );
 
-    await expect(
-      service.update(uuid, {
-        typeCode: code,
-      } as ApplicationReconsiderationUpdateDto),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Provided reconsideration type does not exist ${code}`,
-      ),
-    );
+    await service.update(uuid, {
+      typeCode: code,
+    } as ApplicationReconsiderationUpdateDto);
+
     expect(reconsiderationRepositoryMock.findOneByOrFail).toBeCalledWith({
       uuid,
     });
-    expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(0);
-  });
-
-  it('should fail update reconsideration if review outcome is invalid', async () => {
-    const uuid = 'fake';
-    const code = '33';
-    reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
-      initApplicationReconsiderationMockEntity(),
-    );
-    codeServiceMock.fetchReconsiderationType.mockResolvedValue(
-      {} as ApplicationReconsiderationType,
-    );
-
-    await expect(
-      service.update(uuid, {
-        typeCode: code,
-        isReviewApproved: null,
-      } as ApplicationReconsiderationUpdateDto),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        'Review outcome is required for reconsideration of type 33',
-      ),
-    );
-    expect(reconsiderationRepositoryMock.findOneByOrFail).toBeCalledWith({
-      uuid,
+    expect(reconsiderationRepositoryMock.save).toHaveBeenCalledWith({
+      ...mockReconsideration,
+      reviewDate: null,
+      isReviewApproved: null,
     });
-    expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call softRemove on delete', async () => {
@@ -366,5 +329,37 @@ describe('ReconsiderationService', () => {
     expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(
       findOptions,
     );
+  });
+
+  it('should have correct filter condition in getSubtasks', async () => {
+    const subtaskType = 'fake';
+    const findOptions = {
+      where: {
+        card: {
+          subtasks: {
+            completedAt: IsNull(),
+            type: {
+              type: subtaskType,
+            },
+          },
+        },
+      },
+      relations: {
+        application: {
+          type: true,
+          decisionMeetings: true,
+          localGovernment: true,
+        },
+        card: {
+          status: true,
+          board: true,
+          type: true,
+          subtasks: { type: true, assignee: true },
+        },
+      },
+    };
+    await service.getSubtasks(subtaskType);
+
+    expect(reconsiderationRepositoryMock.find).toBeCalledWith(findOptions);
   });
 });

@@ -54,7 +54,6 @@ export class PostDecisionComponent implements OnInit {
   }
 
   onEdit(reconsideration: ApplicationReconsiderationDetailedDto) {
-    console.log('onEdit', reconsideration);
     this.dialog
       .open(PostDecisionDialogComponent, {
         minWidth: '600px',
