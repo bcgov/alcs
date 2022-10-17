@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { InlineReviewOutcomeComponent } from './inline-review-outcome.component';
 
@@ -8,9 +10,10 @@ describe('InlineReviewOutcomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InlineReviewOutcomeComponent ]
-    })
-    .compileComponents();
+      imports: [FormsModule, ReactiveFormsModule, MatButtonToggleModule],
+      declarations: [InlineReviewOutcomeComponent],
+      providers: [],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(InlineReviewOutcomeComponent);
     component = fixture.componentInstance;

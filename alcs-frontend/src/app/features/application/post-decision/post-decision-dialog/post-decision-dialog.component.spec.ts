@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { PostDecisionDialogComponent } from './post-decision-dialog.component';
 
@@ -8,9 +11,20 @@ describe('PostDecisionDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PostDecisionDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [PostDecisionDialogComponent],
+      providers: [
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
+          useValue: {},
+        },
+        { provide: MAT_DIALOG_DATA, useValue: { existingDecision: { type: {} } } },
+        { provide: MatDialogRef, useValue: {} },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PostDecisionDialogComponent);
     component = fixture.componentInstance;
