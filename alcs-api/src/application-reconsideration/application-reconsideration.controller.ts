@@ -18,7 +18,7 @@ import { ApplicationReconsiderationService } from './application-reconsideration
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
-} from './applicationReconsideration.dto';
+} from './application-reconsideration.dto';
 
 @Controller('application-reconsideration')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))

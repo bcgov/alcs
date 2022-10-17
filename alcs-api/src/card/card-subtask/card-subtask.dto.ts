@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsUUID } from 'class-validator';
-import { ApplicationReconsiderationDto } from '../../application-reconsideration/applicationReconsideration.dto';
+import { ApplicationReconsiderationDto } from '../../application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../application/application.dto';
 
 export class UpdateCardSubtaskDto {

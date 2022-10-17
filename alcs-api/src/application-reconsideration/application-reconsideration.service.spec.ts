@@ -26,7 +26,7 @@ import { ApplicationReconsiderationService } from './application-reconsideration
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
-} from './applicationReconsideration.dto';
+} from './application-reconsideration.dto';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 describe('ReconsiderationService', () => {

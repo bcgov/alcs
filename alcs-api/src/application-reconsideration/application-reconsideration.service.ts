@@ -20,8 +20,7 @@ import {
   ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
   ApplicationReconsiderationWithoutApplicationDto,
-  ReconsiderationTypeDto,
-} from './applicationReconsideration.dto';
+} from './application-reconsideration.dto';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Injectable()

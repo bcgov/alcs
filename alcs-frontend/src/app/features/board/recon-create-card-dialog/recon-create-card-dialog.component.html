@@ -101,14 +101,14 @@
       <div>
         <ng-select
           appearance="outline"
-          class="card-region"
-          [items]="regions"
+          class="card-recon-type"
+          [items]="reconTypes"
           appendTo="body"
-          placeholder="Region *"
+          placeholder="Reconsideration Type *"
           bindLabel="label"
           bindValue="code"
           [clearable]="false"
-          formControlName="region"
+          formControlName="reconType"
         >
         </ng-select>
       </div>
@@ -133,14 +133,14 @@
       <div>
         <ng-select
           appearance="outline"
-          class="card-recon-type"
-          [items]="reconTypes"
+          class="card-region"
+          [items]="regions"
           appendTo="body"
-          placeholder="Reconsideration Type *"
+          placeholder="Region *"
           bindLabel="label"
           bindValue="code"
           [clearable]="false"
-          formControlName="reconType"
+          formControlName="region"
         >
         </ng-select>
       </div>

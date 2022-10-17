@@ -4,7 +4,7 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
-import { ReconsiderationTypeDto } from '../application-reconsideration/applicationReconsideration.dto';
+import { ReconsiderationTypeDto } from '../application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardStatus } from '../card/card-status/card-status.entity';
