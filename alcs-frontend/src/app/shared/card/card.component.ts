@@ -15,12 +15,18 @@ export interface CardData {
   decisionMeetings?: ApplicationDecisionMeetingDto[];
   latestDecisionDate?: Date;
   cardUuid: string;
-  cardType: string;
+  cardType: CardType;
 }
 
 export interface CardSelectedEvent {
   uuid: string;
-  cardType: string;
+  cardType: CardType;
+}
+
+export enum CardType {
+  APP = 'APP',
+  RECON = 'RECON',
+  PLAN = 'PLAN',
 }
 
 @Component({
@@ -35,7 +41,7 @@ export class CardComponent implements OnInit {
 
   constructor() {}
 
-  onClick(uuid: string, cardType: string) {
+  onClick(uuid: string, cardType: CardType) {
     this.cardSelected.emit({ uuid, cardType });
   }
 

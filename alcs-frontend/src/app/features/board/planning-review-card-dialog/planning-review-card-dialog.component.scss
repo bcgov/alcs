@@ -1,0 +1,80 @@
+@import '../../../../styles/colors';
+
+.close {
+  color: $grey;
+  margin-top: -12px;
+  margin-right: -12px;
+  display: flex;
+  justify-content: right;
+}
+
+.header-row {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.type-label {
+  display: inline-block;
+  margin-left: 4px;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+.card-title {
+  margin-right: 2rem !important;
+}
+
+.icon {
+  margin-right: 4px;
+  height: 18px;
+  width: 18px;
+  font-size: 18px;
+}
+
+.card-assignee {
+  .assignee-card-name {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+  }
+  .assignee-card-email {
+    font-size: 0.9em !important;
+  }
+}
+
+.priority {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 40px;
+  height: 20px;
+}
+
+.filled-priority {
+  background-image: url('/assets/icons/priority_high_red.svg');
+}
+
+.empty-priority {
+  background-image: url('/assets/icons/priority_empty.svg');
+}
+
+.select-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  align-items: end;
+}
+
+.subtasks-wrapper {
+  margin-top: 36px;
+}
+
+.card-comments-wrapper {
+  margin-top: 36px;
+}

@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
-import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
@@ -99,16 +98,11 @@ export class ApplicationReconsiderationService {
       submittedDate: new Date(reconsideration.submittedDate),
     });
 
-    const newCard = await this.cardService.create(
-      {
-        boardCode: reconsideration.boardCode,
-        typeCode: 'RECON',
-      } as CardCreateDto,
+    newReconsideration.card = await this.cardService.create(
+      'RECON',
       board,
       false,
     );
-
-    newReconsideration.card = newCard;
     newReconsideration.type = type;
 
     newReconsideration.application = await this.getOrCreateApplication(

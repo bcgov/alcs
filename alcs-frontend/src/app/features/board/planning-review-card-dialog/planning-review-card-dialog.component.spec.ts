@@ -6,73 +6,36 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
-import {
-  ApplicationRegionDto,
-  ApplicationTypeDto,
-  CardStatusDto,
-} from '../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import {
-  ApplicationReconsiderationDto,
-  ReconsiderationTypeDto,
-} from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { BoardDto } from '../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
 import { CardDto } from '../../../services/card/card.dto';
 import { CardService } from '../../../services/card/card.service';
+import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../shared/shared.module';
+import { PlanningReviewCardDialogComponent } from './planning-review-card-dialog.component';
 
-import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog.component';
-
-describe('ReconCardDetailDialogComponent', () => {
-  let component: ReconCardDetailDialogComponent;
-  let fixture: ComponentFixture<ReconCardDetailDialogComponent>;
+describe('PlanningReviewCardDialogComponent', () => {
+  let component: PlanningReviewCardDialogComponent;
+  let fixture: ComponentFixture<PlanningReviewCardDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockBoardService: jasmine.SpyObj<BoardService>;
 
-  const mockCardStatusDetails: CardStatusDto = {
-    label: 'test_st',
-    code: 'STATUS',
-    description: 'this is a test status',
-  };
-
-  const mockApplicationRegionDetails: ApplicationRegionDto = {
-    label: 'test_st',
-    code: 'STATUS',
-    description: 'this is a test status',
-  };
-
-  const mockReconType: ReconsiderationTypeDto = {
-    label: 'test_ty',
-    code: 'TYPE',
-    description: 'this is a test type',
-    textColor: '#000',
-    backgroundColor: '#fff',
-  };
-
-  const mockReconDto: ApplicationReconsiderationDto = {
-    uuid: '',
-    board: {
-      code: 'fake',
-      title: 'Fake',
-      decisionMaker: '',
+  const mockReconDto: PlanningReviewDto = {
+    type: 'fake-type',
+    region: {
+      code: 'region-code',
+      label: 'region',
+      description: 'WHY',
     },
-    type: {} as ReconsiderationTypeDto,
-    submittedDate: 111111,
-    application: {
-      fileNumber: '',
-      type: {} as ApplicationTypeDto,
-      applicant: '',
-      region: {
-        code: 'FAKE_REGION',
-      } as ApplicationRegionDto,
-      localGovernment: {} as ApplicationLocalGovernmentDto,
-      decisionMeetings: [],
+    localGovernment: {
+      name: 'local-gov',
+      uuid: 'uuid',
+      preferredRegionCode: 'CODE',
     },
+    fileNumber: 'file-number',
     card: {
       status: {
         code: 'FAKE_STATUS',
@@ -94,7 +57,7 @@ describe('ReconCardDetailDialogComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [ReconCardDetailDialogComponent],
+      declarations: [PlanningReviewCardDialogComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
@@ -130,7 +93,7 @@ describe('ReconCardDetailDialogComponent', () => {
       imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, SharedModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReconCardDetailDialogComponent);
+    fixture = TestBed.createComponent(PlanningReviewCardDialogComponent);
     component = fixture.componentInstance;
     component.data = mockReconDto;
     fixture.detectChanges();

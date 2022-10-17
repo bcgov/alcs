@@ -11,6 +11,7 @@ import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
@@ -24,6 +25,7 @@ export class BoardController {
     private applicationService: ApplicationService,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
+    private planningReviewService: PlanningReviewService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -43,9 +45,17 @@ export class BoardController {
 
     const recons = await this.reconsiderationService.getByBoardCode(boardCode);
 
+    let planningReviews = [];
+    if (boardCode === 'exec') {
+      planningReviews = await this.planningReviewService.getCards();
+    }
+
     return {
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
+      planningReviews: await this.planningReviewService.mapToDtos(
+        planningReviews,
+      ),
     };
   }
 
@@ -73,7 +83,7 @@ export class BoardController {
       );
     }
 
-    return this.cardService.create(card, board);
+    return this.cardService.create(card.typeCode, board);
   }
 
   @Get('/card/:uuid')

@@ -156,14 +156,7 @@ describe('ReconsiderationService', () => {
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(
-      {
-        boardCode: mockReconsiderationCreateDto.boardCode,
-        typeCode: 'RECON',
-      } as CardCreateDto,
-      {} as Board,
-      false,
-    );
+    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledWith(
       mockApplicationCreateDto,
       false,
@@ -196,14 +189,7 @@ describe('ReconsiderationService', () => {
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(
-      {
-        boardCode: mockReconsiderationCreateDto.boardCode,
-        typeCode: 'RECON',
-      } as CardCreateDto,
-      {} as Board,
-      false,
-    );
+    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledTimes(0);
   });
 

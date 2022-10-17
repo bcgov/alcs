@@ -10,6 +10,8 @@ import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { PlanningReviewController } from '../planning-review/planning-review.controller';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
@@ -21,12 +23,21 @@ describe('BoardController', () => {
   let appService: DeepMocked<ApplicationService>;
   let appReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let cardService: DeepMocked<CardService>;
+  let planningReviewService: DeepMocked<PlanningReviewService>;
 
   beforeEach(async () => {
     boardService = createMock<BoardService>();
     appService = createMock<ApplicationService>();
     appReconsiderationService = createMock<ApplicationReconsiderationService>();
+    planningReviewService = createMock<PlanningReviewService>();
     cardService = createMock<CardService>();
+
+    boardService.getApplicationsByCode.mockResolvedValue([]);
+    appService.mapToDtos.mockResolvedValue([]);
+    appReconsiderationService.getByBoardCode.mockResolvedValue([]);
+    appReconsiderationService.mapToDtos.mockResolvedValue([]);
+    planningReviewService.getCards.mockResolvedValue([]);
+    planningReviewService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -42,6 +53,10 @@ describe('BoardController', () => {
           useValue: appReconsiderationService,
         },
         { provide: CardService, useValue: cardService },
+        {
+          provide: PlanningReviewService,
+          useValue: planningReviewService,
+        },
         {
           provide: ClsService,
           useValue: {},
@@ -68,12 +83,8 @@ describe('BoardController', () => {
   });
 
   it('should call through to service for get apps', async () => {
-    boardService.getApplicationsByCode.mockResolvedValue([]);
-    appService.mapToDtos.mockResolvedValue([]);
-    appReconsiderationService.getByBoardCode.mockResolvedValue([]);
-    appReconsiderationService.mapToDtos.mockResolvedValue([]);
-
     const boardCode = 'fake-board';
+
     await controller.getCards(boardCode);
 
     expect(boardService.getApplicationsByCode).toHaveBeenCalled();
@@ -82,13 +93,24 @@ describe('BoardController', () => {
     );
     expect(appService.mapToDtos).toHaveBeenCalled();
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalled();
+    expect(planningReviewService.getCards).not.toHaveBeenCalled();
+    expect(planningReviewService.mapToDtos).toHaveBeenCalled();
+  });
+
+  it('should call through to planning meeting service for exec board', async () => {
+    const boardCode = 'exec';
+
+    await controller.getCards(boardCode);
+
+    expect(planningReviewService.getCards).toHaveBeenCalled();
+    expect(planningReviewService.mapToDtos).toHaveBeenCalled();
   });
 
   it('should call through to service when changing boards', async () => {
     boardService.changeBoard.mockResolvedValue({} as Card);
-
     const boardCode = 'fake-board';
     const cardUuid = 'card-uuid';
+
     await controller.changeBoard({ cardUuid, boardCode });
 
     expect(boardService.changeBoard).toHaveBeenCalled();
@@ -96,7 +118,7 @@ describe('BoardController', () => {
     expect(boardService.changeBoard.mock.calls[0][1]).toEqual(boardCode);
   });
 
-  it('should call service when creating card', async () => {
+  it('should call service with correct type when creating card', async () => {
     boardService.getOne.mockResolvedValue({} as Board);
     cardService.create.mockResolvedValue({} as Card);
 
@@ -105,10 +127,7 @@ describe('BoardController', () => {
     await controller.createCard({ typeCode, boardCode });
 
     expect(cardService.create).toHaveBeenCalledTimes(1);
-    expect(cardService.create.mock.calls[0][0]).toEqual({
-      typeCode,
-      boardCode,
-    });
+    expect(cardService.create.mock.calls[0][0]).toEqual(typeCode);
     expect(cardService.create.mock.calls[0][1]).toEqual({});
   });
 

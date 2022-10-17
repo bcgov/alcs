@@ -14,7 +14,7 @@ describe('MeetingOverviewComponent', () => {
   let fixture: ComponentFixture<MeetingOverviewComponent>;
 
   beforeEach(async () => {
-    const mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchApplications']);
+    const mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
     mockBoardService.$boards = new BehaviorSubject([]);
 
     await TestBed.configureTestingModule({

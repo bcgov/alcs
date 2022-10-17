@@ -92,11 +92,6 @@ describe('CardService', () => {
   });
 
   it('should call save when card successfully create', async () => {
-    const cardToCreate = {
-      boardCode: 'fake-board',
-      typeCode: 'fake-type',
-    } as CardCreateDto;
-
     const board = {
       ...initBoardMockEntity(),
       uuid: 'fake',
@@ -109,17 +104,13 @@ describe('CardService', () => {
       uuid: 'fake',
     });
 
-    await service.create(cardToCreate, board);
+    await service.create('fake-type', board);
 
     expect(cardRepositoryMock.save).toBeCalledTimes(1);
   });
 
   it('should fail on create if type does not exist', async () => {
-    const cardToCreate = {
-      boardCode: 'fake-board',
-      typeCode: 'fake-type',
-    } as CardCreateDto;
-
+    const fakeType = 'fake-type';
     const board = {
       ...initBoardMockEntity(),
       uuid: 'fake',
@@ -129,9 +120,9 @@ describe('CardService', () => {
 
     cardTypeRepositoryMock.findOneOrFail.mockReturnValue(undefined);
 
-    await expect(service.create(cardToCreate, board)).rejects.toMatchObject(
+    await expect(service.create(fakeType, board)).rejects.toMatchObject(
       new ServiceValidationException(
-        `Provided type does not exist ${cardToCreate.typeCode}`,
+        `Provided type does not exist ${fakeType}`,
       ),
     );
 

@@ -9,14 +9,21 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardService } from '../../services/card/card.service';
+import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
+import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { CardData, CardSelectedEvent } from '../../shared/card/card.component';
+import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 import {
-  ReconCardDetailDialogComponent,
+  PLANNING_TYPE_LABEL,
+  PlanningReviewCardDialogComponent,
+} from './planning-review-card-dialog/planning-review-card-dialog.component';
+import { PlanningReviewCreateCardDialogComponent } from './planning-review-create-card-dialog/planning-review-create-card-dialog.component';
+import {
   RECON_TYPE_LABEL,
+  ReconCardDetailDialogComponent,
 } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
 import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
 
@@ -30,6 +37,7 @@ export class BoardComponent implements OnInit {
   columns: DragDropColumn[] = [];
   boardTitle = '';
   boardIsFavourite: boolean = false;
+  boardHasPlanningReviews: boolean = false;
   createCardTitle = '';
 
   private applicationTypes: ApplicationTypeDto[] = [];
@@ -46,7 +54,8 @@ export class BoardComponent implements OnInit {
     private location: Location,
     private router: Router,
     private cardService: CardService,
-    private reconsiderationService: ApplicationReconsiderationService
+    private reconsiderationService: ApplicationReconsiderationService,
+    private planningReviewService: PlanningReviewService
   ) {}
 
   ngOnInit() {
@@ -79,7 +88,7 @@ export class BoardComponent implements OnInit {
     const app = this.activatedRoute.snapshot.queryParamMap.get('app');
     const type = this.activatedRoute.snapshot.queryParamMap.get('type');
     if (app && type) {
-      this.onSelected({ uuid: app, cardType: type });
+      this.onSelected({ uuid: app, cardType: type as CardType });
     }
   }
 
@@ -94,9 +103,10 @@ export class BoardComponent implements OnInit {
   }
 
   private setupBoard(board: BoardWithFavourite) {
-    this.loadApplications(board.code);
+    this.loadCards(board.code);
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
+    this.boardHasPlanningReviews = board.code === 'exec';
     const allStatuses = board.statuses.map((status) => status.statusCode);
 
     this.columns = board.statuses.map((status) => ({
@@ -106,10 +116,12 @@ export class BoardComponent implements OnInit {
     }));
   }
 
-  private async loadApplications(boardCode: string) {
-    const apps = await this.boardService.fetchApplications(boardCode);
-    this.cards = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
-    this.cards = this.cards.concat(apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this)));
+  private async loadCards(boardCode: string) {
+    const apps = await this.boardService.fetchCards(boardCode);
+    const mappedApps = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
+    const mappedRecons = apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
+    const mappedReviewMeetings = apps.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
+    this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings];
   }
 
   private async openAppCardDetailDialog(id: string, cardTypeCode: string) {
@@ -130,7 +142,7 @@ export class BoardComponent implements OnInit {
         this.setUrl();
 
         if (isDirty && this.selectedBoardCode) {
-          this.loadApplications(this.selectedBoardCode);
+          this.loadCards(this.selectedBoardCode);
         }
       });
     } catch (err) {
@@ -157,7 +169,34 @@ export class BoardComponent implements OnInit {
         this.setUrl();
 
         if (isDirty && this.selectedBoardCode) {
-          this.loadApplications(this.selectedBoardCode);
+          this.loadCards(this.selectedBoardCode);
+        }
+      });
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
+    }
+  }
+
+  private async openPlanningCardDialog(id: string, cardTypeCode: string) {
+    try {
+      this.setUrl(id, cardTypeCode);
+
+      const planningReview = await this.planningReviewService.fetchByCardUuid(id);
+
+      const dialogRef = this.dialog.open(PlanningReviewCardDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: planningReview,
+      });
+
+      dialogRef.afterClosed().subscribe((isDirty) => {
+        this.setUrl();
+
+        if (isDirty && this.selectedBoardCode) {
+          this.loadCards(this.selectedBoardCode);
         }
       });
     } catch (err) {
@@ -168,12 +207,17 @@ export class BoardComponent implements OnInit {
 
   async onSelected(card: CardSelectedEvent) {
     switch (card.cardType) {
-      case 'APP':
+      case CardType.APP:
         await this.openAppCardDetailDialog(card.uuid, card.cardType);
         break;
-      case 'RECON':
+      case CardType.RECON:
         await this.openReconCardDetailDialog(card.uuid, card.cardType);
         break;
+      case CardType.PLAN:
+        await this.openPlanningCardDialog(card.uuid, card.cardType);
+        break;
+      default:
+        console.error('Card type is not configured for a dialog');
     }
   }
 
@@ -201,14 +245,33 @@ export class BoardComponent implements OnInit {
       .afterClosed()
       .subscribe((didCreate) => {
         if (didCreate && this.selectedBoardCode) {
-          this.loadApplications(this.selectedBoardCode);
+          this.loadCards(this.selectedBoardCode);
         }
       });
   }
 
-  onDropped($event: { id: string; status: string; cardTypeCode: string }) {
+  onCreatePlanningReview() {
+    this.dialog
+      .open(PlanningReviewCreateCardDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          currentBoardCode: this.selectedBoardCode,
+        },
+      })
+      .afterClosed()
+      .subscribe((didCreate) => {
+        if (didCreate && this.selectedBoardCode) {
+          this.loadCards(this.selectedBoardCode);
+        }
+      });
+  }
+
+  onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
     switch ($event.cardTypeCode) {
-      case 'APP':
+      case CardType.APP:
         this.applicationService
           .updateApplicationCard($event.id, {
             status: $event.status,
@@ -217,7 +280,8 @@ export class BoardComponent implements OnInit {
             this.toastService.showSuccessToast('Application updated');
           });
         break;
-      case 'RECON':
+      case CardType.RECON:
+      case CardType.PLAN:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -242,7 +306,7 @@ export class BoardComponent implements OnInit {
       paused: application.paused,
       highPriority: application.card.highPriority,
       decisionMeetings: application.decisionMeetings,
-      cardType: application.card.type,
+      cardType: CardType.APP,
       cardUuid: application.card.uuid,
     };
   }
@@ -254,11 +318,25 @@ export class BoardComponent implements OnInit {
       assignee: recon.card.assignee,
       id: recon.card.uuid,
       type: RECON_TYPE_LABEL,
-      cardType: 'RECON',
+      cardType: CardType.RECON,
       paused: false,
       highPriority: recon.card.highPriority,
       cardUuid: recon.card.uuid,
       decisionMeetings: recon.application.decisionMeetings,
+    };
+  }
+
+  private mapPlanningReviewToCard(meeting: PlanningReviewDto): CardData {
+    return {
+      status: meeting.card.status.code,
+      title: `${meeting.fileNumber} (${meeting.type})`,
+      assignee: meeting.card.assignee,
+      id: meeting.card.uuid,
+      type: PLANNING_TYPE_LABEL,
+      cardType: CardType.PLAN,
+      paused: false,
+      highPriority: meeting.card.highPriority,
+      cardUuid: meeting.card.uuid,
     };
   }
 }

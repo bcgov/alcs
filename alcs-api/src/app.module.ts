@@ -22,6 +22,7 @@ import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { HomeModule } from './home/home.module';
 import { LogoutController } from './logout/logout.controller';
 import { NotificationModule } from './notification/notification.module';
+import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
@@ -32,6 +33,9 @@ import { UserService } from './user/user.service';
     ConfigModule,
     TypeOrmModule.forRootAsync({ useClass: TypeormConfigService }),
     TypeOrmModule.forFeature([HealthCheck, User]),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
     ClsModule.register({
       global: true,
       middleware: { mount: true },
@@ -41,9 +45,12 @@ import { UserService } from './user/user.service';
     ConfigModule,
     AuthorizationModule,
     RedisModule,
-    AutomapperModule.forRoot({
-      strategyInitializer: classes(),
-    }),
+    SchedulerModule,
+    HomeModule,
+    NotificationModule,
+    BoardModule,
+    ApplicationReconsiderationModule,
+    PlanningReviewModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: config.get('LOG_LEVEL'),
@@ -62,11 +69,6 @@ import { UserService } from './user/user.service';
             : undefined,
       },
     }),
-    SchedulerModule,
-    HomeModule,
-    NotificationModule,
-    BoardModule,
-    ApplicationReconsiderationModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [

@@ -6,8 +6,15 @@
         >{{ boardTitle }}
       </h2>
     </div>
-    <div>
-      <button mat-flat-button color="primary" (click)="onCreate()">
+    <div class="button-container">
+      <ng-container *ngIf="boardHasPlanningReviews">
+        <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
+        <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
+          <button mat-menu-item (click)="onCreate()">Reconsideration</button>
+          <button mat-menu-item (click)="onCreatePlanningReview()">Planning Review</button>
+        </mat-menu>
+      </ng-container>
+      <button *ngIf="!boardHasPlanningReviews" mat-flat-button color="primary" (click)="onCreate()">
         {{ createCardTitle }}
       </button>
     </div>
