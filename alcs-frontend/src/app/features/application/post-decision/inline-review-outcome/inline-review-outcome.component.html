@@ -1,8 +1,8 @@
 <div>
   <span *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!isReviewOutcomeSet(selectedValue)"> Select outcome </a>
-    <span *ngIf="isReviewOutcomeSet(selectedValue)">
-      {{ getReviewOutcomeLabel(selectedValue!) }}
+    <a (click)="toggleEdit()" class="add-date" *ngIf="!isReviewOutcomeSet(pendingReviewOutcome)"> Select outcome </a>
+    <span *ngIf="isReviewOutcomeSet(pendingReviewOutcome)">
+      {{ getReviewOutcomeLabel(pendingReviewOutcome!) }}
     </span>
   </span>
   <div

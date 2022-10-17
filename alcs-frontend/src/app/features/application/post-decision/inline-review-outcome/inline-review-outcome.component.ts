@@ -13,8 +13,11 @@ export class InlineReviewOutcomeComponent implements OnInit {
 
   form!: FormGroup;
   isEditing = false;
+  pendingReviewOutcome?: boolean | null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.pendingReviewOutcome = this.selectedValue;
+  }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -24,9 +27,9 @@ export class InlineReviewOutcomeComponent implements OnInit {
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
-    this.selectedValue = undefined;
+    this.selectedValue = true;
     this.form = this.fb.group({
-      reviewOutcome: this.selectedValue,
+      reviewOutcome: this.selectedValue.toString(),
     });
   }
 
