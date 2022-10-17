@@ -24,12 +24,10 @@ import {
   ApplicationDecisionDto,
   ApplicationDecisionOutcomeTypeDto,
   CreateApplicationDecisionDto,
-  DecisionDocumentDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
-import { DecisionDocument } from './decision-document.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')

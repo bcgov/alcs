@@ -19,10 +19,12 @@ import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
+import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { PostDecisionDialogComponent } from './post-decision/post-decision-dialog/post-decision-dialog.component';
 
 const routes: Routes = [
   {
@@ -58,6 +60,8 @@ const routes: Routes = [
     TimelineComponent,
     DecisionDialogComponent,
     PostDecisionComponent,
+    InlineReviewOutcomeComponent,
+    PostDecisionDialogComponent,
   ],
   imports: [
     CommonModule,

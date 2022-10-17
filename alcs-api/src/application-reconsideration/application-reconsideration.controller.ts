@@ -72,4 +72,22 @@ export class ApplicationReconsiderationController {
     const mapped = await this.reconsiderationService.mapToDtos([recon]);
     return mapped[0];
   }
+
+  @Get('/board/:boardCode')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getByBoard(@Param('code') boardCode: string) {
+    const recon = await this.reconsiderationService.getByBoardCode(boardCode);
+    return this.reconsiderationService.mapToDtos(recon);
+  }
+
+  @Get('/application/:applicationFileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getByApplication(
+    @Param('applicationFileNumber') applicationFileNumber: string,
+  ) {
+    const recon = await this.reconsiderationService.getByApplication(
+      applicationFileNumber,
+    );
+    return this.reconsiderationService.mapToDtos(recon);
+  }
 }

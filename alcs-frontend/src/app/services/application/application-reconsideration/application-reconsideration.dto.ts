@@ -28,8 +28,10 @@ export interface ApplicationReconsiderationDto {
   application: ApplicationDto;
   card: CardDto;
   type: ReconsiderationTypeDto;
-  submittedDate: Date;
+  submittedDate: number;
   board: BoardSmallDto;
+  reviewDate?: number;
+  isReviewApproved?: boolean | null;
 }
 
 export interface ApplicationReconsiderationDto {
@@ -37,11 +39,12 @@ export interface ApplicationReconsiderationDto {
   application: ApplicationDto;
   card: CardDto;
   type: ReconsiderationTypeDto;
-  submittedDate: Date;
+  submittedDate: number;
   board: BoardSmallDto;
+  isReviewApproved?: boolean | null;
 }
 
-export interface ApplicationReconsiderationDetailedDto {}
+export interface ApplicationReconsiderationDetailedDto extends ApplicationReconsiderationDto {}
 
 export interface CreateApplicationReconsiderationDto {
   applicationTypeCode: string;
@@ -55,9 +58,8 @@ export interface CreateApplicationReconsiderationDto {
 }
 
 export interface UpdateApplicationReconsiderationDto {
-  submittedDate: Date;
-  typeCode: string;
-  reviewDate?: Date;
-  isReviewApproved?: boolean;
-  applicationFileNumber: string;
+  submittedDate?: number;
+  typeCode?: string | undefined;
+  reviewDate?: number | null;
+  isReviewApproved?: boolean | null;
 }

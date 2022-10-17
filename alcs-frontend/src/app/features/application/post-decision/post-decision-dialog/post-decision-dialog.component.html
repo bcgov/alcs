@@ -1,0 +1,62 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Edit Post-Decision</h2>
+</div>
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-dialog-content style="height: 100%">
+    <div class="grid">
+      <mat-form-field appearance="outline" class="date-picker">
+        <mat-label>Request Submission Date</mat-label>
+        <input
+          matInput
+          (click)="datePicker.open()"
+          [matDatepicker]="datePicker"
+          formControlName="submittedDate"
+          name="submittedDate"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker type="date"> </mat-datepicker>
+      </mat-form-field>
+
+      <div>
+        <mat-label class="toggle-label">Reconsideration Type *</mat-label>
+        <mat-button-toggle-group id="reviewOutcome" formControlName="type" name="reviewOutcome">
+          <mat-button-toggle value="33">33</mat-button-toggle>
+          <mat-button-toggle value="33.1">33.1</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div *ngIf="typeControl.value === '33'" class="full-grid-line toggle-group">
+        <mat-label class="toggle-label">Review Outcome <span>*</span></mat-label>
+        <mat-button-toggle-group id="isReviewApproved" formControlName="isReviewApproved" name="reviewOutcome">
+          <mat-button-toggle value="null">Pending</mat-button-toggle>
+          <mat-button-toggle value="true">Proceed</mat-button-toggle>
+          <mat-button-toggle value="false">Refuse</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <mat-form-field
+        *ngIf="typeControl.value === '33' && isReviewApprovedControl.value !== 'null'"
+        appearance="outline"
+        class="date-picker full-grid-line"
+      >
+        <mat-label>Review Date</mat-label>
+        <input
+          matInput
+          (click)="reviewDatePicker.open()"
+          [matDatepicker]="reviewDatePicker"
+          formControlName="reviewDate"
+          name="reviewDate"
+        />
+        <mat-datepicker-toggle matSuffix [for]="reviewDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #reviewDatePicker type="date"> </mat-datepicker>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
+    </div>
+  </mat-dialog-actions>
+</form>

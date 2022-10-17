@@ -12,6 +12,7 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../common/exceptions/base.exception';
+import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import {
   ApplicationReconsiderationCreateDto,
@@ -48,9 +49,17 @@ export class ApplicationReconsiderationService {
       type: true,
     };
 
+  // TODO: merge getByBoard and getByApplication into one method
   async getByBoardCode(boardCode: string) {
     return this.reconsiderationRepository.find({
       where: { card: { board: { code: boardCode } } },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
+  }
+
+  async getByApplication(applicationFileNumber: string) {
+    return this.reconsiderationRepository.find({
+      where: { application: { fileNumber: applicationFileNumber } },
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });
   }
@@ -134,17 +143,24 @@ export class ApplicationReconsiderationService {
       uuid,
     );
 
-    // this will be refactored in part2
-    const updatedReconsideration = Object.assign(
-      existingReconsideration,
-      updates,
+    existingReconsideration.reviewDate = formatIncomingDate(updates.reviewDate);
+    existingReconsideration.submittedDate = formatIncomingDate(
+      updates.submittedDate,
     );
 
     const type = await this.fetchAndValidateType(updates.typeCode);
-    updatedReconsideration.type = type;
-    this.validateReviewOutcome(updates, updatedReconsideration);
+    existingReconsideration.type = type;
+
+    if (existingReconsideration.type.code === '33.1') {
+      existingReconsideration.isReviewApproved = null;
+      existingReconsideration.reviewDate = null;
+    } else {
+      existingReconsideration.isReviewApproved = updates.isReviewApproved;
+      this.validateReviewOutcome(updates, existingReconsideration);
+    }
+
     const recon = await this.reconsiderationRepository.save(
-      updatedReconsideration,
+      existingReconsideration,
     );
 
     return this.getByUuid(recon.uuid);

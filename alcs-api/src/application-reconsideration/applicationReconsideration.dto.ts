@@ -57,11 +57,13 @@ export class ApplicationReconsiderationCreateDto {
 export class ApplicationReconsiderationUpdateDto {
   @AutoMap()
   @IsNumber()
-  submittedDate: number;
+  @IsOptional()
+  submittedDate?: number;
 
   @AutoMap()
   @IsString()
-  typeCode: string;
+  @IsOptional()
+  typeCode?: string;
 
   @AutoMap()
   @IsNumber()
@@ -69,9 +71,9 @@ export class ApplicationReconsiderationUpdateDto {
   reviewDate?: number;
 
   @AutoMap()
-  @IsOptional()
   @IsBoolean()
-  isReviewApproved?: boolean;
+  @IsOptional()
+  isReviewApproved?: boolean | null;
 }
 
 export class ApplicationForReconsiderationDto {
@@ -89,7 +91,9 @@ export class ApplicationReconsiderationDto {
   application: ApplicationForReconsiderationDto;
   card: CardDto;
   type: ReconsiderationTypeDto;
-  submittedDate: Date;
+  submittedDate: number;
+  reviewDate: number;
+  isReviewApproved: boolean | null;
 }
 
 export class ApplicationReconsiderationWithoutApplicationDto {
@@ -97,5 +101,7 @@ export class ApplicationReconsiderationWithoutApplicationDto {
   applicationUuid: string;
   card: CardDto;
   type: ReconsiderationTypeDto;
-  submittedDate: Date;
+  submittedDate: number;
+  reviewDate: number;
+  isReviewApproved: boolean | null;
 }
