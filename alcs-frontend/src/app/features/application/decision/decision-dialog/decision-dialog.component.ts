@@ -53,7 +53,6 @@ export class DecisionDialogComponent {
     }
 
     this.form.controls['decisionMaker']!.valueChanges.subscribe((val) => {
-      debugger;
       if (val === 'CEOP') {
         this.form.controls['ceoCriterion'].setValidators([Validators.required]);
       } else {
