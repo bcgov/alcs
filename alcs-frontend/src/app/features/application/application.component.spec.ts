@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
+import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 
@@ -18,6 +20,12 @@ describe('ApplicationComponent', () => {
     ]);
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
 
+    const mockReconsiderationService = jasmine.createSpyObj<ApplicationReconsiderationService>(
+      'ApplicationReconsiderationService',
+      ['fetchByApplication']
+    );
+    mockReconsiderationService.$reconsiderations = new BehaviorSubject<ApplicationReconsiderationDto[]>([]);
+
     await TestBed.configureTestingModule({
       providers: [
         {
@@ -27,6 +35,10 @@ describe('ApplicationComponent', () => {
         {
           provide: ApplicationDetailService,
           useValue: mockAppDetailService,
+        },
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: mockReconsiderationService,
         },
         {
           provide: ActivatedRoute,

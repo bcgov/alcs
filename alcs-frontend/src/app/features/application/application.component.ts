@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
+import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
@@ -60,9 +62,11 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   fileNumber?: string;
 
   childRoutes = childRoutes;
+  reconsiderations: ApplicationReconsiderationDto[] = [];
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
+    private reconsiderationService: ApplicationReconsiderationService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -74,8 +78,14 @@ export class ApplicationComponent implements OnInit, OnDestroy {
       this.loadApplication();
     });
 
-    this.applicationDetailService.$application.subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       this.application = application;
+      if (application) {
+        this.reconsiderationService.fetchByApplication(application.fileNumber);
+      }
+    });
+    this.reconsiderationService.$reconsiderations.pipe(takeUntil(this.destroy)).subscribe((recons) => {
+      this.reconsiderations = recons;
     });
   }
 
@@ -93,5 +103,11 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     const fileNumber = this.application?.fileNumber;
     const cardTypeCode = this.application?.card.type;
     await this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&type=${cardTypeCode}`);
+  }
+
+  async onGoToReconCard(recon: ApplicationReconsiderationDto) {
+    const boardCode = recon.card.board.code;
+    const cardTypeCode = recon.card.type;
+    await this.router.navigateByUrl(`/board/${boardCode}?app=${recon.card.uuid}&type=${cardTypeCode}`);
   }
 }
