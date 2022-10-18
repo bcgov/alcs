@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -15,7 +15,7 @@ import { PostDecisionDialogComponent } from './post-decision-dialog/post-decisio
   templateUrl: './post-decision.component.html',
   styleUrls: ['./post-decision.component.scss'],
 })
-export class PostDecisionComponent implements OnInit {
+export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   fileNumber: string = '';
   postDecisions: ApplicationReconsiderationDetailedDto[] = [];
@@ -110,5 +110,10 @@ export class PostDecisionComponent implements OnInit {
 
   isReviewOutcomeSet(reviewOutcome?: boolean | null) {
     return typeof reviewOutcome === 'boolean';
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }
