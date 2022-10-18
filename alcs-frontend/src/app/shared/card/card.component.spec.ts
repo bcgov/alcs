@@ -30,6 +30,7 @@ describe('CardComponent', () => {
       decisionMeetings: [],
       cardUuid: 'fake',
       cardType: CardType.APP,
+      dateReceived: 11111,
     };
 
     fixture.detectChanges();
@@ -70,6 +71,7 @@ describe('CardComponent', () => {
       decisionMeetings: [],
       cardUuid: 'fake',
       cardType: CardType.APP,
+      dateReceived: 11111,
     };
     fixture.detectChanges();
 
