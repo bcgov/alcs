@@ -2,15 +2,15 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { BoardStatusDto } from '../../../services/board/board.dto';
-import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { CardUpdateDto } from '../../../services/card/card.dto';
-import { CardService } from '../../../services/card/card.service';
-import { ToastService } from '../../../services/toast/toast.service';
-import { UserDto } from '../../../services/user/user.dto';
-import { UserService } from '../../../services/user/user.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { BoardStatusDto } from '../../../../services/board/board.dto';
+import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { CardUpdateDto } from '../../../../services/card/card.dto';
+import { CardService } from '../../../../services/card/card.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 export const RECON_TYPE_LABEL = {
   label: 'Recon',
@@ -22,11 +22,11 @@ export const RECON_TYPE_LABEL = {
 };
 
 @Component({
-  selector: 'app-recon-card-detail-dialog',
-  templateUrl: './recon-card-detail-dialog.component.html',
-  styleUrls: ['./recon-card-detail-dialog.component.scss'],
+  selector: 'app-recon-detail-dialog',
+  templateUrl: './reconsideration-dialog.component.html',
+  styleUrls: ['./reconsideration-dialog.component.scss'],
 })
-export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
+export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
@@ -45,7 +45,7 @@ export class ReconCardDetailDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationReconsiderationDto,
-    private dialogRef: MatDialogRef<ReconCardDetailDialogComponent>,
+    private dialogRef: MatDialogRef<ReconsiderationDialogComponent>,
     private userService: UserService,
     private cardService: CardService,
     private boardService: BoardService,

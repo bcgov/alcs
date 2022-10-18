@@ -10,27 +10,27 @@ import {
   ApplicationRegionDto,
   ApplicationTypeDto,
   CardStatusDto,
-} from '../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+} from '../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
 import {
   ApplicationReconsiderationDto,
   ReconsiderationTypeDto,
-} from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { BoardDto } from '../../../services/board/board.dto';
-import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { CardDto } from '../../../services/card/card.dto';
-import { CardService } from '../../../services/card/card.service';
-import { ToastService } from '../../../services/toast/toast.service';
-import { UserDto } from '../../../services/user/user.dto';
-import { UserService } from '../../../services/user/user.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SharedModule } from '../../../shared/shared.module';
+} from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { BoardDto } from '../../../../services/board/board.dto';
+import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { CardDto } from '../../../../services/card/card.dto';
+import { CardService } from '../../../../services/card/card.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SharedModule } from '../../../../shared/shared.module';
 
-import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog.component';
+import { ReconsiderationDialogComponent } from './reconsideration-dialog.component';
 
 describe('ReconCardDetailDialogComponent', () => {
-  let component: ReconCardDetailDialogComponent;
-  let fixture: ComponentFixture<ReconCardDetailDialogComponent>;
+  let component: ReconsiderationDialogComponent;
+  let fixture: ComponentFixture<ReconsiderationDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockBoardService: jasmine.SpyObj<BoardService>;
 
@@ -94,7 +94,7 @@ describe('ReconCardDetailDialogComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [ReconCardDetailDialogComponent],
+      declarations: [ReconsiderationDialogComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
@@ -130,7 +130,7 @@ describe('ReconCardDetailDialogComponent', () => {
       imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, SharedModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReconCardDetailDialogComponent);
+    fixture = TestBed.createComponent(ReconsiderationDialogComponent);
     component = fixture.componentInstance;
     component.data = mockReconDto;
     fixture.detectChanges();

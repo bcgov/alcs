@@ -8,18 +8,18 @@ import {
   ApplicationRegionDto,
   ApplicationTypeDto,
   CardStatusDto,
-} from '../../../services/application/application-code.dto';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { BoardService } from '../../../services/board/board.service';
-import { CardDto } from '../../../services/card/card.dto';
-import { UserDto } from '../../../services/user/user.dto';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SharedModule } from '../../../shared/shared.module';
-import { CardDetailDialogComponent } from './card-detail-dialog.component';
+} from '../../../../services/application/application-code.dto';
+import { ApplicationDetailedDto } from '../../../../services/application/application.dto';
+import { BoardService } from '../../../../services/board/board.service';
+import { CardDto } from '../../../../services/card/card.dto';
+import { UserDto } from '../../../../services/user/user.dto';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SharedModule } from '../../../../shared/shared.module';
+import { ApplicationDialogComponent } from './application-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
-  let component: CardDetailDialogComponent;
-  let fixture: ComponentFixture<CardDetailDialogComponent>;
+  let component: ApplicationDialogComponent;
+  let fixture: ComponentFixture<ApplicationDialogComponent>;
 
   const mockAssignee: UserDto = {
     uuid: '11111-11111-11111',
@@ -97,7 +97,7 @@ describe('CardDetailDialogComponent', () => {
     mockBoardService.$boards = new EventEmitter();
 
     await TestBed.configureTestingModule({
-      declarations: [CardDetailDialogComponent],
+      declarations: [ApplicationDialogComponent],
       imports: [HttpClientTestingModule, SharedModule, BrowserAnimationsModule, RouterTestingModule],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
@@ -114,7 +114,7 @@ describe('CardDetailDialogComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CardDetailDialogComponent);
+    fixture = TestBed.createComponent(ApplicationDialogComponent);
     component = fixture.componentInstance;
     component.data = mockCardDetail;
     fixture.detectChanges();

@@ -9,15 +9,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReconCreateCardDialogComponent } from './recon-create-card-dialog.component';
+import { CreatePlanningReviewDialogComponent } from './create-planning-review-dialog.component';
 
-describe('ReconCreateCardDialogComponent', () => {
-  let component: ReconCreateCardDialogComponent;
-  let fixture: ComponentFixture<ReconCreateCardDialogComponent>;
+describe('PlanningReviewCreateCardDialogComponent', () => {
+  let component: CreatePlanningReviewDialogComponent;
+  let fixture: ComponentFixture<CreatePlanningReviewDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ReconCreateCardDialogComponent],
+      declarations: [CreatePlanningReviewDialogComponent],
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
@@ -36,7 +36,7 @@ describe('ReconCreateCardDialogComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReconCreateCardDialogComponent);
+    fixture = TestBed.createComponent(CreatePlanningReviewDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -49,8 +49,7 @@ describe('ReconCreateCardDialogComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#applicant')).toBeTruthy();
     expect(compiled.querySelector('#fileNumber')).toBeTruthy();
-    expect(compiled.querySelector('.card-type')).toBeTruthy();
+    expect(compiled.querySelector('#type')).toBeTruthy();
   });
 });

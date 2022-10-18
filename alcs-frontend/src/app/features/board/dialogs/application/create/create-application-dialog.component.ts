@@ -1,20 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { ToastService } from '../../../services/toast/toast.service';
-import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationDetailedDto } from '../../../../../services/application/application.dto';
+import { ApplicationService } from '../../../../../services/application/application.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
+import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 
 @Component({
   selector: 'app-create-card-dialog',
-  templateUrl: './create-card-dialog.component.html',
-  styleUrls: ['./create-card-dialog.component.scss'],
+  templateUrl: './create-application-dialog.html',
+  styleUrls: ['./create-application-dialog.component.scss'],
 })
-export class CreateCardDialogComponent implements OnInit {
+export class CreateApplicationDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
@@ -31,7 +31,7 @@ export class CreateCardDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
-    private dialogRef: MatDialogRef<CreateCardDialogComponent>,
+    private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private toastService: ToastService

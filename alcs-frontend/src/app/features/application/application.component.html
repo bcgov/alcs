@@ -14,9 +14,26 @@
           >
         </div>
         <div class="center">
-          <button class="menu-item center" mat-flat-button color="accent" (click)="onGoToCard()">
+          <button
+            *ngIf="!reconsiderations.length"
+            class="menu-item center"
+            mat-flat-button
+            color="accent"
+            (click)="onGoToCard()"
+          >
             Go to card <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
           </button>
+          <ng-container *ngIf="reconsiderations.length">
+            <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
+              Go to card ▾
+            </button>
+            <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
+              <button mat-menu-item (click)="onGoToCard()">Standard Application</button>
+              <button *ngFor="let recon of reconsiderations; let i = index" mat-menu-item (click)="onGoToReconCard(recon)">
+                Reconsideration Request #{{i + 1}}
+              </button>
+            </mat-menu>
+          </ng-container>
         </div>
       </div>
       <div class="sub-heading">

@@ -3,25 +3,25 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
 import {
   CreateApplicationReconsiderationDto,
   ReconsiderationTypeDto,
-} from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { CardService } from '../../../services/card/card.service';
-import { ToastService } from '../../../services/toast/toast.service';
+} from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationService } from '../../../../../services/application/application.service';
+import { CardService } from '../../../../../services/card/card.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-recon-create-card-dialog',
-  templateUrl: './recon-create-card-dialog.component.html',
-  styleUrls: ['./recon-create-card-dialog.component.scss'],
+  selector: 'app-create',
+  templateUrl: './create-reconsideration-dialog.html',
+  styleUrls: ['./create-reconsideration-dialog.component.scss'],
 })
-export class ReconCreateCardDialogComponent implements OnInit {
+export class CreateReconsiderationDialogComponent implements OnInit {
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   reconTypes: ReconsiderationTypeDto[] = [];
@@ -52,7 +52,7 @@ export class ReconCreateCardDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<ReconCreateCardDialogComponent>,
+    private dialogRef: MatDialogRef<CreateReconsiderationDialogComponent>,
     private applicationService: ApplicationService,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
