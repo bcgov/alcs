@@ -17,7 +17,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { SharedModule } from '../../../../shared/shared.module';
 import { ApplicationDialogComponent } from './application-dialog.component';
 
-describe('CardDetailDialogComponent', () => {
+describe('ApplicationDialogComponent', () => {
   let component: ApplicationDialogComponent;
   let fixture: ComponentFixture<ApplicationDialogComponent>;
 

@@ -1,8 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardUpdateDto } from '../../../../services/card/card.dto';
@@ -50,16 +52,13 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
     private cardService: CardService,
     private boardService: BoardService,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private reconService: ApplicationReconsiderationService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.recon = this.data;
-    this.selectedAssignee = this.data.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = this.data.card.status.code;
-    this.selectedBoard = this.data.card.board.code;
-    this.selectedRegion = this.data.application.region.code;
+    this.populateData(this.data);
 
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
@@ -77,6 +76,15 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
     });
 
     this.title = this.recon.application.fileNumber;
+  }
+
+  populateData(recon: ApplicationReconsiderationDto) {
+    this.recon = recon;
+    this.selectedAssignee = recon.card.assignee;
+    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedApplicationStatus = recon.card.status.code;
+    this.selectedBoard = recon.card.board.code;
+    this.selectedRegion = recon.application.region.code;
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -103,10 +111,29 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.recon.card.uuid, board.code).then(() => {
+    try {
+      await this.boardService.changeBoard(this.recon.card.uuid, board.code);
+      const loadedBoard = this.boards.find((board) => board.code === this.selectedBoard);
+      if (loadedBoard) {
+        this.boardStatuses = loadedBoard.statuses;
+      }
+
       this.isApplicationDirty = true;
-      this.toastService.showSuccessToast(`Recon moved to ${board.title}`);
-    });
+      const toast = this.toastService.showSuccessToast(`Reconsideration moved to ${board.title}`, 'Go to Board');
+      toast.onAction().subscribe(() => {
+        this.router.navigate(['/board', board.code]);
+      });
+      await this.reloadReconsideration();
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to move to new board');
+    }
+  }
+
+  private async reloadReconsideration() {
+    const reconsideration = await this.reconService.fetchByCardUuid(this.recon.card.uuid);
+    if (reconsideration) {
+      this.populateData(reconsideration);
+    }
   }
 
   updateCard(changes: Omit<CardUpdateDto, 'uuid'>) {
