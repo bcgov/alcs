@@ -6,20 +6,20 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
-import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { CardDto } from '../../../services/card/card.dto';
-import { CardService } from '../../../services/card/card.service';
-import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
-import { ToastService } from '../../../services/toast/toast.service';
-import { UserDto } from '../../../services/user/user.dto';
-import { UserService } from '../../../services/user/user.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SharedModule } from '../../../shared/shared.module';
-import { PlanningReviewCardDialogComponent } from './planning-review-card-dialog.component';
+import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { CardDto } from '../../../../services/card/card.dto';
+import { CardService } from '../../../../services/card/card.service';
+import { PlanningReviewDto } from '../../../../services/planning-review/planning-review.dto';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SharedModule } from '../../../../shared/shared.module';
+import { PlanningReviewDialogComponent } from './planning-review-dialog.component';
 
 describe('PlanningReviewCardDialogComponent', () => {
-  let component: PlanningReviewCardDialogComponent;
-  let fixture: ComponentFixture<PlanningReviewCardDialogComponent>;
+  let component: PlanningReviewDialogComponent;
+  let fixture: ComponentFixture<PlanningReviewDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockBoardService: jasmine.SpyObj<BoardService>;
 
@@ -57,7 +57,7 @@ describe('PlanningReviewCardDialogComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [PlanningReviewCardDialogComponent],
+      declarations: [PlanningReviewDialogComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
@@ -93,7 +93,7 @@ describe('PlanningReviewCardDialogComponent', () => {
       imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, SharedModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PlanningReviewCardDialogComponent);
+    fixture = TestBed.createComponent(PlanningReviewDialogComponent);
     component = fixture.componentInstance;
     component.data = mockReconDto;
     fixture.detectChanges();

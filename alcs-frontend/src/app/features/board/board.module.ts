@@ -12,12 +12,12 @@ import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pip
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
-import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
-import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
-import { PlanningReviewCardDialogComponent } from './planning-review-card-dialog/planning-review-card-dialog.component';
-import { PlanningReviewCreateCardDialogComponent } from './planning-review-create-card-dialog/planning-review-create-card-dialog.component';
-import { ReconCardDetailDialogComponent } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
-import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
+import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
+import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
+import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
+import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
+import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
+import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
 
 const routes: Routes = [
@@ -32,17 +32,17 @@ const routes: Routes = [
     BoardComponent,
     DragDropBoardComponent,
     StatusFilterPipe,
-    CardDetailDialogComponent,
-    CreateCardDialogComponent,
+    ApplicationDialogComponent,
+    CreateApplicationDialogComponent,
     CardComponent,
     CommentComponent,
     CommentsComponent,
     MentionTextareaComponent,
     SubtasksComponent,
-    ReconCreateCardDialogComponent,
-    ReconCardDetailDialogComponent,
-    PlanningReviewCreateCardDialogComponent,
-    PlanningReviewCardDialogComponent,
+    CreateReconsiderationDialogComponent,
+    ReconsiderationDialogComponent,
+    CreatePlanningReviewDialogComponent,
+    PlanningReviewDialogComponent,
   ],
   imports: [
     CommonModule,

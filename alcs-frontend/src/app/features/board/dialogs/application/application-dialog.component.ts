@@ -3,21 +3,21 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { BoardStatusDto } from '../../../services/board/board.dto';
-import { BoardService, BoardWithFavourite } from '../../../services/board/board.service';
-import { ToastService } from '../../../services/toast/toast.service';
-import { UserDto } from '../../../services/user/user.dto';
-import { UserService } from '../../../services/user/user.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationService } from '../../../../services/application/application.service';
+import { BoardStatusDto } from '../../../../services/board/board.dto';
+import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-card-detail-dialog',
-  templateUrl: './card-detail-dialog.component.html',
-  styleUrls: ['./card-detail-dialog.component.scss'],
+  selector: 'app-detail-dialog',
+  templateUrl: './application-dialog.component.html',
+  styleUrls: ['./application-dialog.component.scss'],
 })
-export class CardDetailDialogComponent implements OnInit, OnDestroy {
+export class ApplicationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
@@ -34,7 +34,7 @@ export class CardDetailDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
-    private dialogRef: MatDialogRef<CardDetailDialogComponent>,
+    private dialogRef: MatDialogRef<ApplicationDialogComponent>,
     private userService: UserService,
     private applicationService: ApplicationService,
     private boardService: BoardService,

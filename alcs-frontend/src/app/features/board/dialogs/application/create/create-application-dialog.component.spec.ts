@@ -8,15 +8,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CreateCardDialogComponent } from './create-card-dialog.component';
+import { CreateApplicationDialogComponent } from './create-application-dialog.component';
 
 describe('CardDetailDialogComponent', () => {
-  let component: CreateCardDialogComponent;
-  let fixture: ComponentFixture<CreateCardDialogComponent>;
+  let component: CreateApplicationDialogComponent;
+  let fixture: ComponentFixture<CreateApplicationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateCardDialogComponent],
+      declarations: [CreateApplicationDialogComponent],
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
@@ -34,7 +34,7 @@ describe('CardDetailDialogComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateCardDialogComponent);
+    fixture = TestBed.createComponent(CreateApplicationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

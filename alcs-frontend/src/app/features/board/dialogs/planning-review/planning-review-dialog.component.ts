@@ -2,15 +2,15 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { BoardStatusDto } from '../../../services/board/board.dto';
-import { BoardService } from '../../../services/board/board.service';
-import { CardUpdateDto } from '../../../services/card/card.dto';
-import { CardService } from '../../../services/card/card.service';
-import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
-import { ToastService } from '../../../services/toast/toast.service';
-import { UserDto } from '../../../services/user/user.dto';
-import { UserService } from '../../../services/user/user.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { BoardStatusDto } from '../../../../services/board/board.dto';
+import { BoardService } from '../../../../services/board/board.service';
+import { CardUpdateDto } from '../../../../services/card/card.dto';
+import { CardService } from '../../../../services/card/card.service';
+import { PlanningReviewDto } from '../../../../services/planning-review/planning-review.dto';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 export const PLANNING_TYPE_LABEL = {
   label: 'Planning Review',
@@ -22,11 +22,11 @@ export const PLANNING_TYPE_LABEL = {
 };
 
 @Component({
-  selector: 'app-planning-review-card-dialog',
-  templateUrl: './planning-review-card-dialog.component.html',
-  styleUrls: ['./planning-review-card-dialog.component.scss'],
+  selector: 'app-detail-dialog',
+  templateUrl: './planning-review-dialog.component.html',
+  styleUrls: ['./planning-review-dialog.component.scss'],
 })
-export class PlanningReviewCardDialogComponent implements OnInit, OnDestroy {
+export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
   selectedAssignee?: UserDto;
@@ -43,7 +43,7 @@ export class PlanningReviewCardDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: PlanningReviewDto,
-    private dialogRef: MatDialogRef<PlanningReviewCardDialogComponent>,
+    private dialogRef: MatDialogRef<PlanningReviewDialogComponent>,
     private userService: UserService,
     private cardService: CardService,
     private boardService: BoardService,

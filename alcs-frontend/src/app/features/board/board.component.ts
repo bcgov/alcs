@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
@@ -14,18 +15,18 @@ import { PlanningReviewService } from '../../services/planning-review/planning-r
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
-import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
+import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
+import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
+import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import {
-  PlanningReviewCardDialogComponent,
   PLANNING_TYPE_LABEL,
-} from './planning-review-card-dialog/planning-review-card-dialog.component';
-import { PlanningReviewCreateCardDialogComponent } from './planning-review-create-card-dialog/planning-review-create-card-dialog.component';
+  PlanningReviewDialogComponent,
+} from './dialogs/planning-review/planning-review-dialog.component';
+import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import {
-  ReconCardDetailDialogComponent,
   RECON_TYPE_LABEL,
-} from './recon-card-detail-dialog/recon-card-detail-dialog.component';
-import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
+  ReconsiderationDialogComponent,
+} from './dialogs/reconsiderations/reconsideration-dialog.component';
 
 export const BOARD_TYPE_CODES = {
   VETT: 'vett',
@@ -38,7 +39,8 @@ export const BOARD_TYPE_CODES = {
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
   boardTitle = '';
@@ -49,7 +51,7 @@ export class BoardComponent implements OnInit {
   private applicationTypes: ApplicationTypeDto[] = [];
   selectedBoardCode?: string;
   boards: BoardWithFavourite[] = [];
-  cardDialogType: any = CreateCardDialogComponent;
+  cardDialogType: any = CreateApplicationDialogComponent;
 
   constructor(
     private applicationService: ApplicationService,
@@ -65,7 +67,7 @@ export class BoardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.pipe(takeUntil(this.destroy)).subscribe((params) => {
       const boardCode = params['boardCode'];
       if (boardCode) {
         this.selectedBoardCode = boardCode;
@@ -78,7 +80,7 @@ export class BoardComponent implements OnInit {
       }
     });
 
-    this.boardService.$boards.subscribe((boards) => {
+    this.boardService.$boards.pipe(takeUntil(this.destroy)).subscribe((boards) => {
       this.boards = boards;
       const selectedBoard = boards.find((board) => board.code === this.selectedBoardCode);
       if (selectedBoard) {
@@ -86,7 +88,7 @@ export class BoardComponent implements OnInit {
       }
     });
 
-    this.applicationService.$applicationTypes.subscribe((types) => {
+    this.applicationService.$applicationTypes.pipe(takeUntil(this.destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
@@ -98,13 +100,18 @@ export class BoardComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
+  }
+
   private setupCreateCardButton(boardCode: string = '') {
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       this.createCardTitle = '+ New Application';
-      this.cardDialogType = CreateCardDialogComponent;
+      this.cardDialogType = CreateApplicationDialogComponent;
     } else {
       this.createCardTitle = '+ New Reconsideration';
-      this.cardDialogType = ReconCreateCardDialogComponent;
+      this.cardDialogType = CreateReconsiderationDialogComponent;
     }
   }
 
@@ -157,7 +164,7 @@ export class BoardComponent implements OnInit {
 
       const application = await this.applicationService.fetchApplication(id);
 
-      const dialogRef = this.dialog.open(CardDetailDialogComponent, {
+      const dialogRef = this.dialog.open(ApplicationDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
@@ -184,7 +191,7 @@ export class BoardComponent implements OnInit {
 
       const recon = await this.reconsiderationService.fetchByCardUuid(id);
 
-      const dialogRef = this.dialog.open(ReconCardDetailDialogComponent, {
+      const dialogRef = this.dialog.open(ReconsiderationDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
@@ -211,7 +218,7 @@ export class BoardComponent implements OnInit {
 
       const planningReview = await this.planningReviewService.fetchByCardUuid(id);
 
-      const dialogRef = this.dialog.open(PlanningReviewCardDialogComponent, {
+      const dialogRef = this.dialog.open(PlanningReviewDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
@@ -279,7 +286,7 @@ export class BoardComponent implements OnInit {
 
   onCreatePlanningReview() {
     this.dialog
-      .open(PlanningReviewCreateCardDialogComponent, {
+      .open(CreatePlanningReviewDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',

@@ -1,22 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationService } from '../../../services/application/application.service';
-import { CardService } from '../../../services/card/card.service';
-import { CreatePlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
-import { PlanningReviewService } from '../../../services/planning-review/planning-review.service';
-import { ToastService } from '../../../services/toast/toast.service';
+import { ApplicationRegionDto } from '../../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../../../services/application/application.service';
+import { CardService } from '../../../../../services/card/card.service';
+import { CreatePlanningReviewDto } from '../../../../../services/planning-review/planning-review.dto';
+import { PlanningReviewService } from '../../../../../services/planning-review/planning-review.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-planning-review-create-card-dialog',
-  templateUrl: './planning-review-create-card-dialog.component.html',
-  styleUrls: ['./planning-review-create-card-dialog.component.scss'],
+  selector: 'app-create',
+  templateUrl: './create-planning-review-dialog.component.html',
+  styleUrls: ['./create-planning-review-dialog.component.scss'],
 })
-export class PlanningReviewCreateCardDialogComponent implements OnInit {
+export class CreatePlanningReviewDialogComponent implements OnInit {
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
@@ -35,7 +34,7 @@ export class PlanningReviewCreateCardDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<PlanningReviewCreateCardDialogComponent>,
+    private dialogRef: MatDialogRef<CreatePlanningReviewDialogComponent>,
     private planningReviewService: PlanningReviewService,
     private cardService: CardService,
     private applicationService: ApplicationService,

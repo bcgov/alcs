@@ -1,4 +1,4 @@
-@import '../../../../styles/colors';
+@import '../../../../../styles/colors';
 
 .close {
   color: $grey;
@@ -15,7 +15,7 @@
   margin-bottom: 4px;
 }
 
-.application-type {
+.type-label {
   display: inline-block;
   margin-left: 4px;
   border-radius: 10px;
@@ -38,10 +38,6 @@
   font-size: 18px;
 }
 
-.inactive-timer {
-  opacity: 0.3;
-}
-
 .card-assignee {
   .assignee-card-name {
     font-size: 1.2em !important;
@@ -50,36 +46,6 @@
   .assignee-card-email {
     font-size: 0.9em !important;
   }
-}
-
-:host::ng-deep .move-board-menu {
-  max-height: 250px;
-}
-
-.board-menu-item {
-  display: grid;
-  grid-template-columns: 22px 1fr 22px;
-}
-
-.favourite-board-icon-container {
-  width: 22px;
-  display: inline-block;
-}
-
-.favourite-board-icon {
-  width: 18px;
-  height: 20px;
-  font-size: 18px;
-  color: $favorite-star;
-}
-
-.selected-board-icon {
-  width: 18px;
-  height: 20px;
-  font-size: 18px;
-  margin-left: 8px;
-  margin-right: 4px;
-  color: $primary-color;
 }
 
 .priority {
