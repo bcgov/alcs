@@ -11,7 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreatePlanningReviewDialogComponent } from './create-planning-review-dialog.component';
 
-describe('PlanningReviewCreateCardDialogComponent', () => {
+describe('CreatePlanningReviewDialogComponent', () => {
   let component: CreatePlanningReviewDialogComponent;
   let fixture: ComponentFixture<CreatePlanningReviewDialogComponent>;
 

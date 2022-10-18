@@ -10,7 +10,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateApplicationDialogComponent } from './create-application-dialog.component';
 
-describe('CardDetailDialogComponent', () => {
+describe('CreateApplicationDialogComponent', () => {
   let component: CreateApplicationDialogComponent;
   let fixture: ComponentFixture<CreateApplicationDialogComponent>;
 

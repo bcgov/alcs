@@ -3,7 +3,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
+import {
+  ApplicationDetailedDto,
+  ApplicationDto,
+  UpdateApplicationDto,
+} from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
@@ -44,12 +48,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.application = this.data;
-    this.selectedAssignee = this.data.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = this.data.statusDetails.code;
-    this.selectedBoard = this.data.board;
-    this.selectedRegion = this.data.regionDetails?.code;
+    this.populateData(this.data);
 
     this.$users = this.userService.$users;
     this.userService.fetchUsers();
@@ -65,6 +64,15 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.backdropClick().subscribe(() => {
       this.dialogRef.close(this.isApplicationDirty);
     });
+  }
+
+  populateData(application: ApplicationDetailedDto) {
+    this.application = application;
+    this.selectedAssignee = application.card.assignee;
+    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedApplicationStatus = application.statusDetails.code;
+    this.selectedBoard = application.board;
+    this.selectedRegion = application.regionDetails?.code;
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -91,13 +99,27 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
-    await this.boardService.changeBoard(this.application.card.uuid, board.code).then(() => {
+    try {
+      await this.boardService.changeBoard(this.application.card.uuid, board.code);
+      const loadedBoard = this.boards.find((board) => board.code === this.selectedBoard);
+      if (loadedBoard) {
+        this.boardStatuses = loadedBoard.statuses;
+      }
+
       this.isApplicationDirty = true;
       const toast = this.toastService.showSuccessToast(`Application moved to ${board.title}`, 'Go to Board');
       toast.onAction().subscribe(() => {
         this.router.navigate(['/board', board.code]);
       });
-    });
+      await this.reloadApplication();
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to move to new board');
+    }
+  }
+
+  async reloadApplication() {
+    const application = await this.applicationService.fetchApplication(this.application.fileNumber);
+    this.populateData(application);
   }
 
   updateCard(updates: UpdateApplicationDto) {

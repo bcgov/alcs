@@ -11,7 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateReconsiderationDialogComponent } from './create-reconsideration-dialog.component';
 
-describe('ReconCreateCardDialogComponent', () => {
+describe('CreateReconsiderationDialogComponent', () => {
   let component: CreateReconsiderationDialogComponent;
   let fixture: ComponentFixture<CreateReconsiderationDialogComponent>;
 

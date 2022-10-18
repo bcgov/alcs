@@ -17,7 +17,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { SharedModule } from '../../../../shared/shared.module';
 import { PlanningReviewDialogComponent } from './planning-review-dialog.component';
 
-describe('PlanningReviewCardDialogComponent', () => {
+describe('PlanningReviewDialogComponent', () => {
   let component: PlanningReviewDialogComponent;
   let fixture: ComponentFixture<PlanningReviewDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;

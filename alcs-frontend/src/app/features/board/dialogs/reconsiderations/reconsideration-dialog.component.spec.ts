@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
 import {
   ApplicationRegionDto,
@@ -16,6 +17,7 @@ import {
   ApplicationReconsiderationDto,
   ReconsiderationTypeDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { BoardDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
@@ -28,31 +30,11 @@ import { SharedModule } from '../../../../shared/shared.module';
 
 import { ReconsiderationDialogComponent } from './reconsideration-dialog.component';
 
-describe('ReconCardDetailDialogComponent', () => {
+describe('ReconsiderationDialogComponent', () => {
   let component: ReconsiderationDialogComponent;
   let fixture: ComponentFixture<ReconsiderationDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockBoardService: jasmine.SpyObj<BoardService>;
-
-  const mockCardStatusDetails: CardStatusDto = {
-    label: 'test_st',
-    code: 'STATUS',
-    description: 'this is a test status',
-  };
-
-  const mockApplicationRegionDetails: ApplicationRegionDto = {
-    label: 'test_st',
-    code: 'STATUS',
-    description: 'this is a test status',
-  };
-
-  const mockReconType: ReconsiderationTypeDto = {
-    label: 'test_ty',
-    code: 'TYPE',
-    description: 'this is a test type',
-    textColor: '#000',
-    backgroundColor: '#fff',
-  };
 
   const mockReconDto: ApplicationReconsiderationDto = {
     uuid: '',
@@ -113,6 +95,10 @@ describe('ReconCardDetailDialogComponent', () => {
           useValue: {},
         },
         {
+          provide: ApplicationReconsiderationService,
+          useValue: {},
+        },
+        {
           provide: BoardService,
           useValue: mockBoardService,
         },
@@ -125,9 +111,8 @@ describe('ReconCardDetailDialogComponent', () => {
           useValue: {},
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
-        { provide: ConfirmationDialogService, useValue: {} },
       ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, SharedModule],
+      imports: [MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, RouterTestingModule, SharedModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReconsiderationDialogComponent);
