@@ -156,25 +156,13 @@ describe('ApplicationController', () => {
     expect(res).toStrictEqual(mockApplicationDto);
   });
 
-  it('should throw an exception when application is not found during update', async () => {
-    applicationService.get.mockResolvedValue(undefined);
-
-    await expect(
-      controller.update('11', {
-        applicant: 'New Applicant',
-      }),
-    ).rejects.toMatchObject(
-      new Error(`Application with file number 11 not found`),
-    );
-  });
-
   it('should update only the given fields', async () => {
     const fileNumber = '11';
     const mockUpdate = {
       applicant: 'New Applicant',
     } as UpdateApplicationDto;
 
-    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
 
     applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
@@ -213,7 +201,7 @@ describe('ApplicationController', () => {
       uuid: mockUuid,
       code: mockStatus,
     } as CardStatus);
-    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
     applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
       card: {
@@ -243,7 +231,7 @@ describe('ApplicationController', () => {
       uuid: mockUuid,
       code: mockType,
     } as ApplicationType);
-    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
     applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
       type: {
@@ -274,7 +262,7 @@ describe('ApplicationController', () => {
       uuid: mockUuid,
       code: mockRegion,
     } as ApplicationType);
-    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
     applicationService.update.mockResolvedValue({
       ...mockApplicationEntity,
       region: {
@@ -302,7 +290,7 @@ describe('ApplicationController', () => {
       uuid: 'fake-author',
     };
 
-    applicationService.get.mockResolvedValue({
+    applicationService.getOrFail.mockResolvedValue({
       ...mockApplicationEntity,
     } as Application);
     applicationService.getByCard.mockResolvedValue({
@@ -353,7 +341,7 @@ describe('ApplicationController', () => {
     const returnedApplication = mockApplicationEntity;
     returnedApplication.card.assigneeUuid = mockUserUuid;
 
-    applicationService.get.mockResolvedValue(mockApplicationEntity);
+    applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
     applicationService.update.mockResolvedValue(returnedApplication);
 
     await controller.update('11', mockUpdate);
@@ -373,7 +361,7 @@ describe('ApplicationController', () => {
       uuid: 'fake-author',
     };
 
-    applicationService.get.mockResolvedValue({} as Application);
+    applicationService.getOrFail.mockResolvedValue({} as Application);
     cardService.get.mockResolvedValue(undefined);
 
     await expect(
@@ -400,7 +388,7 @@ describe('ApplicationController', () => {
       cardUuid: mockApplicationEntity.card.uuid,
     };
 
-    applicationService.get.mockResolvedValue({
+    applicationService.getOrFail.mockResolvedValue({
       ...mockApplicationEntity,
     } as Application);
     codeService.fetchCardStatus.mockResolvedValue({

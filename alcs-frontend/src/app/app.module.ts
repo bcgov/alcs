@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,7 @@ import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
+import { TokenRefreshService } from './services/authentication/token-refresh.service';
 import { BoardService } from './services/board/board.service';
 import { DecisionMeetingService } from './services/decision-meeting/decision-meeting.service';
 import { NotificationService } from './services/notification/notification.service';
@@ -45,6 +46,14 @@ import { SharedModule } from './shared/shared.module';
     DecisionMeetingService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (service: TokenRefreshService) => () => {
+        return service.init();
+      },
+      deps: [TokenRefreshService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

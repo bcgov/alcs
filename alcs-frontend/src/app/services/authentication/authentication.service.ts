@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -28,12 +29,13 @@ export class AuthenticationService {
   private token: string | undefined;
   private refreshToken: string | undefined;
   private expires: number | undefined;
+  private refreshExpires: number | undefined;
 
   isInitialized = false;
   $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
   currentUser: ICurrentUser | undefined;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   async setTokens(token: string, refreshToken: string) {
     this.token = token;
@@ -42,10 +44,12 @@ export class AuthenticationService {
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 
     const decodedToken = jwtDecode<JwtPayload>(token);
-    this.currentUser = decodedToken as ICurrentUser;
+    const decodedRefreshToken = jwtDecode<JwtPayload>(refreshToken);
 
     //Convert to MS for JS consistency
+    this.refreshExpires = decodedRefreshToken.exp! * 1000;
     this.expires = decodedToken.exp! * 1000;
+    this.currentUser = decodedToken as ICurrentUser;
     this.$currentUser.next(this.currentUser);
   }
 
@@ -65,11 +69,21 @@ export class AuthenticationService {
     if (this.token && this.refreshToken && this.expires && this.expires < Date.now()) {
       //Clear token to prevent infinite loop from interceptor
       this.token = undefined;
+      await this.refreshTokens();
+    }
+    return this.token;
+  }
+
+  async refreshTokens() {
+    if (this.refreshToken) {
+      if (this.refreshExpires && this.refreshExpires < Date.now()) {
+        await this.router.navigateByUrl('/login');
+        return;
+      }
 
       const newTokens = await this.getNewTokens(this.refreshToken);
       await this.setTokens(newTokens.token, newTokens.refresh_token);
     }
-    return this.token;
   }
 
   private async loadTokenFromStorage() {

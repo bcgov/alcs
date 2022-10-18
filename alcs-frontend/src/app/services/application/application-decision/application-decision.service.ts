@@ -7,7 +7,9 @@ import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationDecisionDto,
   ApplicationDecisionOutcomeTypeDto,
+  CeoCriterionDto,
   CreateApplicationDecisionDto,
+  DecisionMakerDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 
@@ -21,22 +23,38 @@ export class ApplicationDecisionService {
 
   async fetchByApplication(fileNumber: string) {
     let decisions: ApplicationDecisionDto[] = [];
-    let codes: ApplicationDecisionOutcomeTypeDto[] = [];
+    try {
+      decisions = await firstValueFrom(
+        this.http.get<ApplicationDecisionDto[]>(`${this.url}/application/${fileNumber}`)
+      );
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch decisions');
+    }
+    return decisions;
+  }
 
+  async fetchCodes() {
+    let outcomes: ApplicationDecisionOutcomeTypeDto[] = [];
+    let decisionMakers: DecisionMakerDto[] = [];
+    let ceoCriterion: CeoCriterionDto[] = [];
     try {
       const res = await firstValueFrom(
-        this.http.get<{ decisions: ApplicationDecisionDto[]; codes: ApplicationDecisionOutcomeTypeDto[] }>(
-          `${this.url}/application/${fileNumber}`
-        )
+        this.http.get<{
+          outcomes: ApplicationDecisionOutcomeTypeDto[];
+          decisionMakers: DecisionMakerDto[];
+          ceoCriterion: CeoCriterionDto[];
+        }>(`${this.url}/codes`)
       );
-      decisions = res.decisions;
-      codes = res.codes;
+      outcomes = res.outcomes;
+      decisionMakers = res.decisionMakers;
+      ceoCriterion = res.ceoCriterion;
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
     return {
-      decisions,
-      codes,
+      outcomes,
+      decisionMakers,
+      ceoCriterion,
     };
   }
 

@@ -1,17 +1,16 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TokenRefreshService } from './token-refresh.service';
 
-import { AuthenticationService } from './authentication.service';
-
-describe('AuthenticationService', () => {
-  let service: AuthenticationService;
+describe('TokenRefreshService', () => {
+  let service: TokenRefreshService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
     });
-    service = TestBed.inject(AuthenticationService);
+    service = TestBed.inject(TokenRefreshService);
   });
 
   it('should be created', () => {

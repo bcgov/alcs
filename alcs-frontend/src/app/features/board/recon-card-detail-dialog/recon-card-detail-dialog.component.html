@@ -80,6 +80,7 @@
   <div class="select-container">
     <ng-select
       class="card-type"
+      appearance="outline"
       [items]="boardStatuses"
       placeholder="Workflow Stage"
       bindLabel="label"
@@ -97,8 +98,9 @@
     </ng-select>
     <ng-select
       class="card-assignee"
+      appearance="outline"
       [items]="$users | async"
-      placeholder="Assignee"
+      placeholder="Assigned Planner"
       bindLabel="name"
       bindValue="name"
       [(ngModel)]="selectedAssigneeName"

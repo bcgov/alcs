@@ -25,16 +25,21 @@
     </div>
     <div>
       <div class="subheading2">Decision Outcome</div>
-      {{ mapCodeToLabel(decision.outcome) }}
+      {{ decision.outcome.label }}
     </div>
     <div></div>
     <div>
-      <div class="subheading2">Audit Date</div>
-      <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
-      <span *ngIf="!decision.auditDate">
-        <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
-      </span>
+      <div class="subheading2">Decision Maker</div>
+      {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
     </div>
+    <div>
+      <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
+      {{ decision.ceoCriterion?.label }}
+      <ng-container *ngIf="decision.isTimeExtension !== null">
+        {{ decision.isTimeExtension ? '- Time extension' : '- Other' }}
+      </ng-container>
+    </div>
+    <div></div>
     <div *ngIf="decision.chairReviewRequired">
       <div class="subheading2">Chair Review Date</div>
       <span *ngIf="!decision.chairReviewDate">
@@ -42,12 +47,28 @@
       </span>
       <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
     </div>
+    <div *ngIf="decision.chairReviewRequired">
+      <div class="subheading2">Chair Review Outcome</div>
+      <span *ngIf="decision.chairReviewOutcome !== null">{{
+        decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
+      }}</span>
+      <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
+    </div>
+    <div *ngIf="decision.chairReviewRequired"></div>
+    <div>
+      <div class="subheading2">Audit Date</div>
+      <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+      <span *ngIf="!decision.auditDate">
+        <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
+      </span>
+    </div>
   </div>
   <div class="body-large">Documents</div>
   <div class="decision-documents">
     <div class="subheading2">File Name</div>
     <div class="subheading2">File Upload Date</div>
     <div class="subheading2">File Actions</div>
+    <div *ngIf="!decision.documents.length" class="no-files">No Documents</div>
     <ng-container *ngFor="let document of decision.documents">
       <div>
         <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>

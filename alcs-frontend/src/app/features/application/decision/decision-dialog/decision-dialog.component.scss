@@ -35,10 +35,16 @@ label {
   }
 }
 
-.chair-review-date {
+.full-width {
   grid-column: 1 / 3;
 }
 
 .toggle-label {
   color: rgba(0, 0, 0, 0.6);
+}
+
+:host::ng-deep {
+  .mat-button-toggle-group {
+    margin-bottom: 16px;
+  }
 }
