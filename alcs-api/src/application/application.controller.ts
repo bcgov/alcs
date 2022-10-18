@@ -18,7 +18,10 @@ import { ApplicationRegion } from '../code/application-code/application-region/a
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
 import { RoleGuard } from '../common/authorization/role.guard';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import {
+  ANY_AUTH_ROLE,
+  ROLES_ALLOWED_APPLICATIONS,
+} from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
@@ -45,14 +48,14 @@ export class ApplicationController {
   ) {}
 
   @Get()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getAll(): Promise<ApplicationDto[]> {
     const applications = await this.applicationService.getAll();
     return this.applicationService.mapToDtos(applications);
   }
 
   @Get('/:fileNumber')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
     const application = await this.applicationService.get(fileNumber);
     if (application) {
@@ -69,7 +72,7 @@ export class ApplicationController {
   }
 
   @Post()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async create(
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
@@ -79,7 +82,7 @@ export class ApplicationController {
   }
 
   @Patch('/:fileNumber')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async update(
     @Param('fileNumber') fileNumber: string,
     @Body() updates: UpdateApplicationDto,
@@ -129,13 +132,13 @@ export class ApplicationController {
   }
 
   @Delete()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
   }
 
   @Patch('/card/:cardUuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async updateCard(
     @Param('cardUuid') cardUuid: string,
     @Body() applicationUpdates: UpdateApplicationDto,
@@ -192,7 +195,7 @@ export class ApplicationController {
   }
 
   @Get('/search/:fileNumber')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async searchApplications(@Param('fileNumber') fileNumber: string) {
     const applications =
       await this.applicationService.searchApplicationsByFileNumber(fileNumber);

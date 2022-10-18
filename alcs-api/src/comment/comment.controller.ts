@@ -16,7 +16,10 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from '../common/authorization/role.guard';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import {
+  ANY_AUTH_ROLE,
+  ROLES_ALLOWED_BOARDS,
+} from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
 import { Comment } from './comment.entity';
@@ -34,14 +37,14 @@ export class CommentController {
   ) {}
 
   @Get('/:cardUuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async get(@Param('cardUuid') cardUuid, @Req() req): Promise<CommentDto[]> {
     const comments = await this.commentService.fetch(cardUuid);
     return this.mapToDto(comments, req.user.entity.uuid);
   }
 
   @Post()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async create(
     @Body() comment: CreateCommentDto,
     @Req() req,
@@ -58,7 +61,7 @@ export class CommentController {
   }
 
   @Patch()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async update(
     @Body() comment: UpdateCommentDto,
     @Req() req,
@@ -82,7 +85,7 @@ export class CommentController {
   }
 
   @Delete('/:id')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async softDelete(@Param('id') id: string, @Req() req): Promise<void> {
     const comment = await this.commentService.get(id);
 

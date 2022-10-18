@@ -3,7 +3,10 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
 import { BoardService } from '../board/board.service';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import {
+  ANY_AUTH_ROLE,
+  ROLES_ALLOWED_BOARDS,
+} from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CreatePlanningReviewDto } from './planning-review.dto';
 import { PlanningReviewService } from './planning-review.service';
@@ -18,7 +21,7 @@ export class PlanningReviewController {
   ) {}
 
   @Post()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async create(@Body() createPlanningReviewDto: CreatePlanningReviewDto) {
     const board = await this.boardService.getOne({
       code: 'exec',
@@ -34,7 +37,7 @@ export class PlanningReviewController {
   }
 
   @Get('/card/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getByCard(@Param('uuid') cardUuid: string) {
     const planningReview = await this.planningReviewService.getByCardUuid(
       cardUuid,

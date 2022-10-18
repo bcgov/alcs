@@ -8,7 +8,10 @@ import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
 import { RoleGuard } from '../common/authorization/role.guard';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import {
+  ANY_AUTH_ROLE,
+  ROLES_ALLOWED_BOARDS,
+} from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
@@ -37,7 +40,7 @@ export class BoardController {
   }
 
   @Get('/:boardCode')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getCards(@Param('boardCode') boardCode: string) {
     const applications = await this.boardService.getApplicationsByCode(
       boardCode,
@@ -60,7 +63,7 @@ export class BoardController {
   }
 
   @Post('/change')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async changeBoard(
     @Body()
     { cardUuid, boardCode }: { cardUuid: string; boardCode: string },
@@ -69,7 +72,7 @@ export class BoardController {
   }
 
   @Post('/card')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async createCard(
     @Body()
     card: CardCreateDto,
@@ -87,7 +90,7 @@ export class BoardController {
   }
 
   @Get('/card/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getCard(@Param('uuid') cardUuid: string) {
     const card = await this.cardService.get(cardUuid);
 
