@@ -99,7 +99,7 @@ export class AuthorizationService {
       ) as BaseToken;
       this.logger.debug(decodedToken);
 
-      this.registerOrUpdateUser(decodedToken);
+      await this.registerOrUpdateUser(decodedToken);
 
       return res.data;
     } else {
@@ -166,7 +166,16 @@ export class AuthorizationService {
       );
     } else {
       this.logger.debug(payload);
-      await this.userService.create(this.mapUserFromTokenToCreateDto(payload));
+      const user = await this.userService.create(
+        this.mapUserFromTokenToCreateDto(payload),
+      );
+
+      if (user.clientRoles.length === 0) {
+        await this.userService.sendNewUserRequestEmail(
+          user.email,
+          user.displayName ?? user.bceidGuid,
+        );
+      }
     }
   }
 }

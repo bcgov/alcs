@@ -45,8 +45,11 @@ describe('AuthorizationService', () => {
       } as any),
     );
 
-    mockUserService.create.mockReturnValue(createMock<Promise<User>>());
-    mockUserService.get.mockReturnValue(null);
+    mockUserService.create.mockResolvedValue(createMock<Promise<User>>());
+    mockUserService.sendNewUserRequestEmail.mockResolvedValue(
+      createMock<Promise<void>>(),
+    );
+    mockUserService.get.mockResolvedValue(null);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -84,14 +87,26 @@ describe('AuthorizationService', () => {
     expect(mockHttpService.post).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out CreateUser on receiving token if user is not registered', async () => {
+  it('should call out CreateUser and SendEmail on receiving token if user is not registered', async () => {
     await service.exchangeCodeForToken('fake-code');
     expect(mockUserService.create).toBeCalledTimes(1);
+    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(1);
+  });
+
+  it('should call out CreateUser but not SendEmail on receiving token if user is not registered but has CSS roles assigned', async () => {
+    mockUserService.create.mockResolvedValue({
+      clientRoles: ['fake-role'],
+    } as User);
+    await service.exchangeCodeForToken('fake-code');
+    expect(mockUserService.create).toBeCalledTimes(1);
+    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
   });
 
   it('should not call out CreateUser on receiving token if user is registered', async () => {
-    mockUserService.get.mockReturnValue(createMock<Promise<User>>());
+    mockUserService.get.mockResolvedValue(createMock<User>({} as User));
+    mockUserService.update.mockResolvedValue(createMock<User>({} as User));
     await service.exchangeCodeForToken('fake-code');
     expect(mockUserService.create).toBeCalledTimes(0);
+    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
   });
 });
