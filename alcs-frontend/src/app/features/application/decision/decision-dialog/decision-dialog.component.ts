@@ -25,7 +25,7 @@ export class DecisionDialogComponent {
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
     date: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    decisionMaker: new FormControl<string | null>(null),
+    decisionMaker: new FormControl<string | null>(null, [Validators.required]),
     ceoCriterion: new FormControl<string | null>(null),
     chairReviewRequired: new FormControl<string>('true', [Validators.required]),
     chairReviewDate: new FormControl<Date | null>(null),
@@ -51,6 +51,17 @@ export class DecisionDialogComponent {
     if (data.minDate) {
       this.minDate = data.minDate;
     }
+
+    this.form.controls['decisionMaker']!.valueChanges.subscribe((val) => {
+      debugger;
+      if (val === 'CEOP') {
+        this.form.controls['ceoCriterion'].setValidators([Validators.required]);
+      } else {
+        this.form.controls['ceoCriterion'].clearValidators();
+      }
+      this.form.controls['ceoCriterion'].updateValueAndValidity();
+    });
+
     if (data.existingDecision) {
       this.isEdit = true;
       this.form.patchValue({
