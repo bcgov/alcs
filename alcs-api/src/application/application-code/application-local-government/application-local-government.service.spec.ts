@@ -37,6 +37,6 @@ describe('ApplicationLocalGovernmentService', () => {
 
     await service.list();
 
-    expect(mockRepository.find).toHaveBeenCalled();
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
 });

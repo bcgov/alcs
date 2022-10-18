@@ -68,7 +68,7 @@ describe('CardService', () => {
 
     const result = await service.update(mockCardEntity.uuid, payload);
     expect(result).toStrictEqual(mockCardEntity);
-    expect(cardRepositoryMock.save).toHaveBeenCalled();
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.save).toHaveBeenCalledWith(mockCardEntity);
   });
 

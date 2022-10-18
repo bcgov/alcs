@@ -96,7 +96,7 @@ describe('CommentController', () => {
       request,
     );
 
-    expect(mockCommentService.create).toHaveBeenCalled();
+    expect(mockCommentService.create).toHaveBeenCalledTimes(1);
     const passedData = mockCommentService.create.mock.calls[0];
     expect(passedData[0]).toEqual('fake');
     expect(passedData[1]).toEqual('comment-body');
@@ -115,7 +115,7 @@ describe('CommentController', () => {
       request,
     );
 
-    expect(mockCommentService.update).toHaveBeenCalled();
+    expect(mockCommentService.update).toHaveBeenCalledTimes(1);
     const passedData = mockCommentService.update.mock.calls[0];
     expect(passedData[1]).toEqual('new-body');
     expect(passedData[0]).toEqual('uuid');
@@ -170,7 +170,7 @@ describe('CommentController', () => {
 
     await controller.softDelete('uuid', request);
 
-    expect(mockCommentService.delete).toHaveBeenCalled();
+    expect(mockCommentService.delete).toHaveBeenCalledTimes(1);
     const passedData = mockCommentService.delete.mock.calls[0];
     expect(passedData[0]).toEqual('uuid');
   });

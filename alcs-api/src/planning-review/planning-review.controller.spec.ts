@@ -55,9 +55,9 @@ describe('PlanningReviewController', () => {
       regionCode: 'region-code',
     });
 
-    expect(mockBoardService.getOne).toHaveBeenCalled();
-    expect(mockService.create).toHaveBeenCalled();
-    expect(mockService.mapToDtos).toHaveBeenCalled();
+    expect(mockBoardService.getOne).toHaveBeenCalledTimes(1);
+    expect(mockService.create).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service for get card', async () => {
@@ -66,7 +66,7 @@ describe('PlanningReviewController', () => {
 
     await controller.getByCard('uuid');
 
-    expect(mockService.getByCardUuid).toHaveBeenCalled();
-    expect(mockService.mapToDtos).toHaveBeenCalled();
+    expect(mockService.getByCardUuid).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 });

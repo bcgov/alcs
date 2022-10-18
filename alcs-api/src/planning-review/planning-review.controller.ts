@@ -29,7 +29,7 @@ export class PlanningReviewController {
       board,
     );
 
-    const mapped = this.planningReviewService.mapToDtos([createdReview];
+    const mapped = this.planningReviewService.mapToDtos([createdReview]);
     return mapped[0];
   }
 

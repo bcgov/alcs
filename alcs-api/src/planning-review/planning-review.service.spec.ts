@@ -77,9 +77,9 @@ describe('PlanningReviewService', () => {
       fakeBoard,
     );
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
-    expect(mockCardService.create).toHaveBeenCalled();
-    expect(mockRepository.save).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockCardService.create).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].regionUuid).toEqual(regionUuid);
     expect(mockRepository.save.mock.calls[0][0].card).toBe(mockCard);
   });
@@ -109,7 +109,7 @@ describe('PlanningReviewService', () => {
       ),
     );
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockCardService.create).not.toHaveBeenCalled();
     expect(mockRepository.save).not.toHaveBeenCalled();
   });
@@ -119,7 +119,7 @@ describe('PlanningReviewService', () => {
     const cardUuid = 'fake-card-uuid';
     await service.getByCardUuid(cardUuid);
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception when getting by card fails', async () => {
@@ -131,13 +131,13 @@ describe('PlanningReviewService', () => {
       new Error(`Failed to find planning meeting with card uuid ${cardUuid}`),
     );
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to the repo for get cards', async () => {
     mockRepository.find.mockResolvedValue([]);
     await service.getCards();
 
-    expect(mockRepository.find).toHaveBeenCalled();
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
 });

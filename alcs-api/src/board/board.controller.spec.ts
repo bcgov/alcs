@@ -79,7 +79,7 @@ describe('BoardController', () => {
 
     await controller.getBoards();
 
-    expect(boardService.list).toHaveBeenCalled();
+    expect(boardService.list).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service for get apps', async () => {
@@ -87,14 +87,14 @@ describe('BoardController', () => {
 
     await controller.getCards(boardCode);
 
-    expect(boardService.getApplicationsByCode).toHaveBeenCalled();
+    expect(boardService.getApplicationsByCode).toHaveBeenCalledTimes(1);
     expect(boardService.getApplicationsByCode.mock.calls[0][0]).toEqual(
       boardCode,
     );
-    expect(appService.mapToDtos).toHaveBeenCalled();
-    expect(appReconsiderationService.mapToDtos).toHaveBeenCalled();
+    expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(planningReviewService.getCards).not.toHaveBeenCalled();
-    expect(planningReviewService.mapToDtos).toHaveBeenCalled();
+    expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to planning meeting service for exec board', async () => {
@@ -102,8 +102,8 @@ describe('BoardController', () => {
 
     await controller.getCards(boardCode);
 
-    expect(planningReviewService.getCards).toHaveBeenCalled();
-    expect(planningReviewService.mapToDtos).toHaveBeenCalled();
+    expect(planningReviewService.getCards).toHaveBeenCalledTimes(1);
+    expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service when changing boards', async () => {
@@ -113,7 +113,7 @@ describe('BoardController', () => {
 
     await controller.changeBoard({ cardUuid, boardCode });
 
-    expect(boardService.changeBoard).toHaveBeenCalled();
+    expect(boardService.changeBoard).toHaveBeenCalledTimes(1);
     expect(boardService.changeBoard.mock.calls[0][0]).toEqual(cardUuid);
     expect(boardService.changeBoard.mock.calls[0][1]).toEqual(boardCode);
   });

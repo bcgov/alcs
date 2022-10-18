@@ -75,7 +75,7 @@ describe('ApplicationDocumentController', () => {
 
     expect(res.mimeType).toEqual(mockDocument.document.mimeType);
 
-    expect(appDocumentService.attachDocument).toHaveBeenCalled();
+    expect(appDocumentService.attachDocument).toHaveBeenCalledTimes(1);
     expect(appDocumentService.attachDocument.mock.calls[0][0]).toEqual('file');
     expect(appDocumentService.attachDocument.mock.calls[0][1]).toEqual(
       mockFile,
@@ -142,8 +142,8 @@ describe('ApplicationDocumentController', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(appDocumentService.get).toHaveBeenCalled();
-    expect(appDocumentService.delete).toHaveBeenCalled();
+    expect(appDocumentService.get).toHaveBeenCalledTimes(1);
+    expect(appDocumentService.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for download', async () => {

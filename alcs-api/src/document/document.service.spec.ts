@@ -59,7 +59,7 @@ describe('DocumentService', () => {
     );
 
     expect(stub.calls().length).toBe(1);
-    expect(mockRepository.save).toHaveBeenCalled();
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should delete from s3 and repo on delete', async () => {
@@ -71,6 +71,6 @@ describe('DocumentService', () => {
       uuid: documentUuid,
     } as Document);
 
-    expect(mockRepository.softRemove).toHaveBeenCalled();
+    expect(mockRepository.softRemove).toHaveBeenCalledTimes(1);
   });
 });

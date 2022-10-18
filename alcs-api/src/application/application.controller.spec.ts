@@ -133,7 +133,7 @@ describe('ApplicationController', () => {
     const applicationNumberToDelete = 'app_1';
     await controller.softDelete(applicationNumberToDelete);
 
-    expect(applicationService.delete).toHaveBeenCalled();
+    expect(applicationService.delete).toHaveBeenCalledTimes(1);
     expect(applicationService.delete).toHaveBeenCalledWith(
       applicationNumberToDelete,
     );
@@ -152,7 +152,7 @@ describe('ApplicationController', () => {
       localGovernmentUuid: 'government-uuid',
     });
 
-    expect(applicationService.create).toHaveBeenCalled();
+    expect(applicationService.create).toHaveBeenCalledTimes(1);
     expect(res).toStrictEqual(mockApplicationDto);
   });
 
@@ -178,7 +178,7 @@ describe('ApplicationController', () => {
     const res = await controller.update(fileNumber, mockUpdate);
 
     expect(res.applicant).toEqual(mockUpdate.applicant);
-    expect(applicationService.update).toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalledTimes(1);
     expect(
       notificationService.createNotificationForApplication,
     ).not.toHaveBeenCalled();
@@ -216,7 +216,7 @@ describe('ApplicationController', () => {
 
     await controller.update(fileNumber, mockUpdate);
 
-    expect(applicationService.update).toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should handle updating type', async () => {
@@ -243,7 +243,7 @@ describe('ApplicationController', () => {
 
     await controller.update(fileNumber, mockUpdate);
 
-    expect(applicationService.update).toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalledTimes(1);
     const savedData = applicationService.update.mock.calls[0][1];
     expect(savedData.typeUuid).toEqual(mockUuid);
   });
@@ -308,10 +308,10 @@ describe('ApplicationController', () => {
       },
     });
 
-    expect(cardService.update).toHaveBeenCalled();
+    expect(cardService.update).toHaveBeenCalledTimes(1);
     expect(
       notificationService.createNotificationForApplication,
-    ).toHaveBeenCalled();
+    ).toHaveBeenCalledTimes(1);
     const savedData = cardService.update.mock.calls[0][1];
     expect(savedData.assigneeUuid).toEqual(mockUserUuid);
 
@@ -346,7 +346,7 @@ describe('ApplicationController', () => {
 
     await controller.update('11', mockUpdate);
 
-    expect(applicationService.update).toHaveBeenCalled();
+    expect(applicationService.update).toHaveBeenCalledTimes(1);
     expect(notificationService.createForApplication).not.toHaveBeenCalled();
   });
 

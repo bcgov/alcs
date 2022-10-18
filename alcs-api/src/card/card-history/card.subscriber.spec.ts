@@ -102,7 +102,7 @@ describe('CardSubscriber', () => {
 
       await cardSubscriber.beforeUpdate(updateEvent);
 
-      expect(mockManager.save).toHaveBeenCalled();
+      expect(mockManager.save).toHaveBeenCalledTimes(1);
       const savedValue = mockManager.save.mock
         .calls[0][0] as unknown as CardHistory;
       expect(savedValue.startDate).toEqual(oldApplication.auditUpdatedAt);
@@ -118,7 +118,7 @@ describe('CardSubscriber', () => {
 
       await cardSubscriber.beforeUpdate(updateEvent);
 
-      expect(mockManager.save).toHaveBeenCalled();
+      expect(mockManager.save).toHaveBeenCalledTimes(1);
       const savedValue = mockManager.save.mock
         .calls[0][0] as unknown as CardHistory;
       expect(savedValue.startDate).toEqual(new Date(3, 3, 3, 3, 3, 3, 3));

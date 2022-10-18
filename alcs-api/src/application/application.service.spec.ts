@@ -109,9 +109,9 @@ describe('ApplicationService', () => {
     expect(await applicationService.create(payload)).toStrictEqual(
       applicationMockEntity,
     );
-    expect(mockCodeService.fetchApplicationType).toHaveBeenCalled();
-    expect(mockCodeService.fetchRegion).toHaveBeenCalled();
-    expect(applicationRepositoryMock.save).toHaveBeenCalled();
+    expect(mockCodeService.fetchApplicationType).toHaveBeenCalledTimes(1);
+    expect(mockCodeService.fetchRegion).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
   it('should call save when an Application is updated', async () => {
@@ -128,7 +128,7 @@ describe('ApplicationService', () => {
         payload,
       ),
     ).toStrictEqual(applicationMockEntity);
-    expect(applicationRepositoryMock.save).toHaveBeenCalled();
+    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
   it('should get applications near expiry', async () => {

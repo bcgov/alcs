@@ -74,7 +74,7 @@ describe('CommentService', () => {
 
     const comments = await service.fetch('file-number');
 
-    expect(mockCommentRepository.find).toHaveBeenCalled();
+    expect(mockCommentRepository.find).toHaveBeenCalledTimes(1);
     expect(comments.length).toEqual(1);
     expect(comments[0]).toEqual(comment);
     expect(comments[0].mentions).toEqual(comment.mentions);
@@ -85,7 +85,7 @@ describe('CommentService', () => {
 
     const loadedComment = await service.get('comment-uuid');
 
-    expect(mockCommentRepository.findOne).toHaveBeenCalled();
+    expect(mockCommentRepository.findOne).toHaveBeenCalledTimes(1);
     expect(loadedComment).toEqual(comment);
   });
 
@@ -111,13 +111,15 @@ describe('CommentService', () => {
       comment.mentions,
     );
 
-    expect(mockCommentRepository.save).toHaveBeenCalled();
+    expect(mockCommentRepository.save).toHaveBeenCalledTimes(1);
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.author).toEqual(fakeUser);
     expect(savedData.card).toEqual(fakeComment.card);
     expect(savedData.body).toEqual('new-comment');
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
-    expect(mockNotificationService.createForApplication).toHaveBeenCalled();
+    expect(mockNotificationService.createForApplication).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('throw an exception when saving a comment to a non-existing application', async () => {
@@ -141,8 +143,8 @@ describe('CommentService', () => {
 
     await service.delete('comment-uuid');
 
-    expect(mockCommentRepository.findOne).toHaveBeenCalled();
-    expect(mockCommentRepository.softRemove).toHaveBeenCalled();
+    expect(mockCommentRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockCommentRepository.softRemove).toHaveBeenCalledTimes(1);
   });
 
   it('should set the edited flag when editing', async () => {
@@ -152,13 +154,15 @@ describe('CommentService', () => {
 
     await service.update('comment-uuid', 'new-body', comment.mentions);
 
-    expect(mockCommentRepository.findOne).toHaveBeenCalled();
-    expect(mockCommentRepository.save).toHaveBeenCalled();
+    expect(mockCommentRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockCommentRepository.save).toHaveBeenCalledTimes(1);
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.body).toEqual('new-body');
     expect(savedData.edited).toBeTruthy();
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
-    expect(mockNotificationService.createForApplication).toHaveBeenCalled();
+    expect(mockNotificationService.createForApplication).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('throw an exception when updating a comment body with empty string', async () => {

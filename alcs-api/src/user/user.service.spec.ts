@@ -64,7 +64,7 @@ describe('UserService', () => {
       const user = await service.create(mockUser);
 
       expect(user).toEqual(mockUser);
-      expect(repositoryMock.save).toHaveBeenCalled();
+      expect(repositoryMock.save).toHaveBeenCalledTimes(1);
     });
 
     it('should reject if user already exists', async () => {
@@ -78,7 +78,7 @@ describe('UserService', () => {
     it('should call delete user on the repository', async () => {
       await service.delete(mockUser.email);
 
-      expect(repositoryMock.softRemove).toHaveBeenCalled();
+      expect(repositoryMock.softRemove).toHaveBeenCalledTimes(1);
       expect(repositoryMock.softRemove).toHaveBeenCalledWith(mockUser);
     });
 

@@ -58,9 +58,9 @@ describe('CardSubtaskService', () => {
 
     const res = await cardSubtaskService.create(mockCard, 'fake-type');
 
-    expect(mockSubtaskTypeRepo.findOne).toHaveBeenCalled();
-    expect(mockSubtaskRepo.save).toHaveBeenCalled();
-    expect(mockSubtaskRepo.findOne).toHaveBeenCalled();
+    expect(mockSubtaskTypeRepo.findOne).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskRepo.save).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskRepo.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockSubtask);
   });
 
@@ -74,7 +74,7 @@ describe('CardSubtaskService', () => {
       new ServiceNotFoundException(`Invalid subtask type fake-type`),
     );
 
-    expect(mockSubtaskTypeRepo.findOne).toHaveBeenCalled();
+    expect(mockSubtaskTypeRepo.findOne).toHaveBeenCalledTimes(1);
   });
 
   it('should call save and set fields for update', async () => {
@@ -88,8 +88,8 @@ describe('CardSubtaskService', () => {
       completedAt: fakeTime,
     });
 
-    expect(mockSubtaskRepo.findOne).toHaveBeenCalled();
-    expect(mockSubtaskRepo.save).toHaveBeenCalled();
+    expect(mockSubtaskRepo.findOne).toHaveBeenCalledTimes(2);
+    expect(mockSubtaskRepo.save).toHaveBeenCalledTimes(1);
     expect(res.completedAt).toEqual(new Date(fakeTime));
     expect(res.assigneeUuid).toEqual(fakeAssignee);
   });
@@ -106,7 +106,7 @@ describe('CardSubtaskService', () => {
       new ServiceNotFoundException(`Failed to find task fake-uuid`),
     );
 
-    expect(mockSubtaskRepo.findOne).toHaveBeenCalled();
+    expect(mockSubtaskRepo.findOne).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {
@@ -114,7 +114,7 @@ describe('CardSubtaskService', () => {
 
     await cardSubtaskService.delete('fake-uuid');
 
-    expect(mockSubtaskRepo.delete).toHaveBeenCalled();
+    expect(mockSubtaskRepo.delete).toHaveBeenCalledTimes(1);
     expect(mockSubtaskRepo.delete.mock.calls[0][0]).toEqual('fake-uuid');
   });
 });
