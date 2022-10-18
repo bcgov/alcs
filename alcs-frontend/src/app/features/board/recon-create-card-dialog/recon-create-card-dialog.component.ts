@@ -152,7 +152,6 @@ export class ReconCreateCardDialogComponent implements OnInit {
       this.dialogRef.close(true);
       this.toastService.showSuccessToast('Reconsideration card created');
     } finally {
-      await this.reconsiderationService.fetchByBoard(this.currentBoardCode);
       this.isLoading = false;
     }
   }

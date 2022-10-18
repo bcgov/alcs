@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatestWith, tap } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationReconsiderationDetailedDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -16,6 +16,7 @@ import { PostDecisionDialogComponent } from './post-decision-dialog/post-decisio
   styleUrls: ['./post-decision.component.scss'],
 })
 export class PostDecisionComponent implements OnInit {
+  $destroy = new Subject<void>();
   fileNumber: string = '';
   postDecisions: ApplicationReconsiderationDetailedDto[] = [];
   codes: BaseCodeDto[] = [];
@@ -44,6 +45,7 @@ export class PostDecisionComponent implements OnInit {
           this.applicationReconsiderationService.$codes
         )
       )
+      .pipe(takeUntil(this.$destroy))
       .subscribe(([application, reconsiderations, codes]) => {
         if (application) {
           this.fileNumber = application.fileNumber;
