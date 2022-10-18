@@ -17,15 +17,21 @@ import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.in
 import { CardDetailDialogComponent } from './card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from './create-card-detail-dialog/create-card-dialog.component';
 import {
-  PLANNING_TYPE_LABEL,
   PlanningReviewCardDialogComponent,
+  PLANNING_TYPE_LABEL,
 } from './planning-review-card-dialog/planning-review-card-dialog.component';
 import { PlanningReviewCreateCardDialogComponent } from './planning-review-create-card-dialog/planning-review-create-card-dialog.component';
 import {
-  RECON_TYPE_LABEL,
   ReconCardDetailDialogComponent,
+  RECON_TYPE_LABEL,
 } from './recon-card-detail-dialog/recon-card-detail-dialog.component';
 import { ReconCreateCardDialogComponent } from './recon-create-card-dialog/recon-create-card-dialog.component';
+
+export const BOARD_TYPE_CODES = {
+  VETT: 'vett',
+  EXEC: 'exec',
+  CEO: 'ceo',
+};
 
 @Component({
   selector: 'app-board',
@@ -93,7 +99,7 @@ export class BoardComponent implements OnInit {
   }
 
   private setupCreateCardButton(boardCode: string = '') {
-    if (boardCode === 'vett') {
+    if (boardCode === BOARD_TYPE_CODES.VETT) {
       this.createCardTitle = '+ New Application';
       this.cardDialogType = CreateCardDialogComponent;
     } else {
@@ -106,7 +112,7 @@ export class BoardComponent implements OnInit {
     this.loadCards(board.code);
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
-    this.boardHasPlanningReviews = board.code === 'exec';
+    this.boardHasPlanningReviews = board.code === BOARD_TYPE_CODES.EXEC;
     const allStatuses = board.statuses.map((status) => status.statusCode);
 
     this.columns = board.statuses.map((status) => ({
@@ -121,7 +127,28 @@ export class BoardComponent implements OnInit {
     const mappedApps = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
     const mappedRecons = apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
     const mappedReviewMeetings = apps.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
-    this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings];
+    this.cards = [
+      ...this.sortCards(boardCode, mappedApps),
+      ...this.sortCards(boardCode, mappedRecons),
+      ...this.sortCards(boardCode, mappedReviewMeetings),
+    ];
+  }
+
+  private sortCards(boardCode: string, cards: CardData[]) {
+    if (boardCode === BOARD_TYPE_CODES.VETT) {
+      return cards.sort((a, b) => b.dateReceived - a.dateReceived);
+    } else {
+      return cards.sort((a, b) => {
+        if (a.highPriority === b.highPriority) {
+          return b.activeDays && a.activeDays ? b.activeDays - a.activeDays : 0;
+        }
+        if (a.highPriority) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+    }
   }
 
   private async openAppCardDetailDialog(id: string, cardTypeCode: string) {
@@ -308,6 +335,7 @@ export class BoardComponent implements OnInit {
       decisionMeetings: application.decisionMeetings,
       cardType: CardType.APP,
       cardUuid: application.card.uuid,
+      dateReceived: application.dateReceived,
     };
   }
 
@@ -323,6 +351,7 @@ export class BoardComponent implements OnInit {
       highPriority: recon.card.highPriority,
       cardUuid: recon.card.uuid,
       decisionMeetings: recon.application.decisionMeetings,
+      dateReceived: recon.submittedDate,
     };
   }
 
@@ -337,6 +366,7 @@ export class BoardComponent implements OnInit {
       paused: false,
       highPriority: meeting.card.highPriority,
       cardUuid: meeting.card.uuid,
+      dateReceived: meeting.card.createdAt,
     };
   }
 }

@@ -16,6 +16,7 @@ export interface CardData {
   latestDecisionDate?: Date;
   cardUuid: string;
   cardType: CardType;
+  dateReceived: number;
 }
 
 export interface CardSelectedEvent {

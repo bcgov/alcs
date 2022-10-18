@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { BOARD_TYPE_CODES } from '../../features/board/board.component';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
@@ -22,7 +23,7 @@ type BoardWithDecisionMeetings = {
   isExpanded: boolean;
 };
 
-const BOARD_CODES_TO_HIDE = ['ceo', 'vett'];
+const BOARD_CODES_TO_HIDE = [BOARD_TYPE_CODES.CEO, BOARD_TYPE_CODES.VETT];
 
 @Component({
   selector: 'app-meeting-overview',

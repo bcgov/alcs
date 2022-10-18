@@ -35,4 +35,5 @@ export interface CardDto {
   status: CardStatusDto;
   assignee?: UserDto;
   board: BoardDto;
+  createdAt: number;
 }
