@@ -68,14 +68,14 @@ describe('UserController', () => {
     mockService.getAll.mockResolvedValue([mockRes]);
     const res = await controller.getUsers();
     expect(res).toEqual([mockRes]);
-    expect(mockService.getAll).toHaveBeenCalled();
+    expect(mockService.getAll).toHaveBeenCalledTimes(1);
   });
 
   it('should call deleteUser on the service', async () => {
     mockService.delete.mockResolvedValue(mockRes);
     const res = await controller.deleteUser('');
     expect(res).toEqual(mockRes);
-    expect(mockService.delete).toHaveBeenCalled();
+    expect(mockService.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call update user on the service', async () => {

@@ -8,7 +8,7 @@ import {
   ApplicationReconsiderationDto,
   ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
-} from '../../application-reconsideration/applicationReconsideration.dto';
+} from '../../application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationType } from '../../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';

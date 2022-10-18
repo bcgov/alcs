@@ -90,7 +90,7 @@ describe('ReconCardDetailDialogComponent', () => {
     mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
     mockUserService.$users = new BehaviorSubject<UserDto[]>([]);
 
-    mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchApplications']);
+    mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({

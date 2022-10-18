@@ -60,16 +60,16 @@ export class CardService {
     return this.cardRepository.save(updatedCard);
   }
 
-  async create(card: CardCreateDto, board: Board, persist = true) {
+  async create(typeCode: string, board: Board, persist = true) {
     const type = await this.cardTypeRepository.findOneOrFail({
       where: {
-        code: card.typeCode,
+        code: typeCode,
       },
     });
 
     if (!type) {
       throw new ServiceValidationException(
-        `Provided type does not exist ${card.typeCode}`,
+        `Provided type does not exist ${typeCode}`,
       );
     }
 

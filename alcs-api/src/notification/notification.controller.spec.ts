@@ -62,7 +62,7 @@ describe('NotificationController', () => {
 
     expect(res.length).toEqual(1);
     expect(res[0].createdAt).toEqual(date.getTime());
-    expect(notificationService.list).toHaveBeenCalled();
+    expect(notificationService.list).toHaveBeenCalledTimes(1);
     expect(notificationService.list.mock.calls[0][0]).toEqual('fake-user');
   });
 
@@ -88,7 +88,7 @@ describe('NotificationController', () => {
       },
     });
 
-    expect(notificationService.markAllRead).toHaveBeenCalled();
+    expect(notificationService.markAllRead).toHaveBeenCalledTimes(1);
     expect(notificationService.markAllRead.mock.calls[0][0]).toEqual(
       'fake-user',
     );
@@ -109,7 +109,7 @@ describe('NotificationController', () => {
       'fake-notification',
     );
 
-    expect(notificationService.markRead).toHaveBeenCalled();
+    expect(notificationService.markRead).toHaveBeenCalledTimes(1);
     expect(notificationService.markRead.mock.calls[0][0]).toEqual(
       'fake-notification',
     );

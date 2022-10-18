@@ -70,11 +70,11 @@ describe('CodeService', () => {
 
     await service.getAll();
 
-    expect(mockTypeRepository.find).toHaveBeenCalled();
-    expect(mockStatusRepository.find).toHaveBeenCalled();
-    expect(mockRegionRepository.find).toHaveBeenCalled();
-    expect(mockMeetingRepository.find).toHaveBeenCalled();
-    expect(mockReconsiderationTypeRepository.find).toHaveBeenCalled();
+    expect(mockTypeRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockStatusRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockRegionRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockMeetingRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockReconsiderationTypeRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should map the repos to the right response keys', async () => {
@@ -136,7 +136,7 @@ describe('CodeService', () => {
 
     const res = await service.fetchApplicationType('code');
 
-    expect(mockTypeRepository.findOne).toHaveBeenCalled();
+    expect(mockTypeRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockType);
   });
 
@@ -148,7 +148,7 @@ describe('CodeService', () => {
 
     const res = await service.fetchCardStatus('code');
 
-    expect(mockStatusRepository.findOne).toHaveBeenCalled();
+    expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockStatus);
   });
 
@@ -162,7 +162,7 @@ describe('CodeService', () => {
 
     const res = await service.fetchRegion('code');
 
-    expect(mockRegionRepository.findOne).toHaveBeenCalled();
+    expect(mockRegionRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockRegion);
   });
 
@@ -176,7 +176,7 @@ describe('CodeService', () => {
 
     const res = await service.fetchMeetingType('code');
 
-    expect(mockMeetingRepository.findOne).toHaveBeenCalled();
+    expect(mockMeetingRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockMeetingType);
   });
 });

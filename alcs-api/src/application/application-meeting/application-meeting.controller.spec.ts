@@ -103,7 +103,7 @@ describe('ApplicationMeetingController', () => {
 
     expect(mockMeetingService.remove).toBeCalledTimes(1);
     expect(mockMeetingService.remove).toBeCalledWith(mockMeeting);
-    expect(mockPausedService.remove).toHaveBeenCalled();
+    expect(mockPausedService.remove).toHaveBeenCalledTimes(1);
   });
 
   it('should create meeting if application exists', async () => {

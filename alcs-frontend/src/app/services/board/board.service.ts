@@ -41,7 +41,7 @@ export class BoardService {
     return;
   }
 
-  fetchApplications(boardCode: string) {
+  fetchCards(boardCode: string) {
     return firstValueFrom(this.http.get<CardsDto>(`${environment.apiUrl}/board/${boardCode}`));
   }
 

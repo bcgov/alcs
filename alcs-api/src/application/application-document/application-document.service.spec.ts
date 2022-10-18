@@ -73,15 +73,15 @@ describe('ApplicationDocumentService', () => {
       'decisionDocument',
     );
 
-    expect(mockApplicationService.getOrFail).toHaveBeenCalled();
-    expect(mockDocumentService.create).toHaveBeenCalled();
+    expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create.mock.calls[0][0]).toBe(
       'application/12345',
     );
     expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockFile);
     expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockUser);
 
-    expect(mockRepository.save).toHaveBeenCalled();
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].application).toBe(
       mockApplication,
     );
@@ -101,10 +101,10 @@ describe('ApplicationDocumentService', () => {
 
     await service.delete(mockAppDocument);
 
-    expect(mockDocumentService.softRemove).toHaveBeenCalled();
+    expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.softRemove.mock.calls[0][0]).toBe(mockDocument);
 
-    expect(mockRepository.delete).toHaveBeenCalled();
+    expect(mockRepository.delete).toHaveBeenCalledTimes(1);
     expect(mockRepository.delete.mock.calls[0][0]).toBe(mockAppDocument.uuid);
   });
 
@@ -149,7 +149,7 @@ describe('ApplicationDocumentService', () => {
 
     const res = await service.list(fileNumber, 'decisionDocument');
 
-    expect(mockRepository.find).toHaveBeenCalled();
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);
   });
 
@@ -163,7 +163,7 @@ describe('ApplicationDocumentService', () => {
 
     const res = await service.listAll([fileNumber], 'decisionDocument');
 
-    expect(mockRepository.find).toHaveBeenCalled();
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);
   });
 
@@ -179,7 +179,7 @@ describe('ApplicationDocumentService', () => {
 
     const res = await service.getInlineUrl(mockAppDocument);
 
-    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalled();
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res).toEqual(fakeUrl);
   });
 });

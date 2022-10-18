@@ -38,7 +38,7 @@ describe('ApplicationPausedService', () => {
 
     const res = await service.get('uuid');
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(mockPause);
   });
 
@@ -47,7 +47,7 @@ describe('ApplicationPausedService', () => {
 
     await service.remove('uuid');
 
-    expect(mockRepository.delete).toHaveBeenCalled();
+    expect(mockRepository.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call save in the create happy path', async () => {
@@ -60,8 +60,8 @@ describe('ApplicationPausedService', () => {
       endDate: new Date(),
     });
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
-    expect(mockRepository.save).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(res).toBe(mockPause);
   });
 
@@ -78,7 +78,7 @@ describe('ApplicationPausedService', () => {
       new ServiceNotFoundException(`Pause not found invalid-uuid`),
     );
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).not.toHaveBeenCalled();
   });
 
@@ -99,7 +99,7 @@ describe('ApplicationPausedService', () => {
       ),
     );
 
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).not.toHaveBeenCalled();
   });
 });

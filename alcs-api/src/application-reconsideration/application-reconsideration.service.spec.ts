@@ -26,7 +26,7 @@ import { ApplicationReconsiderationService } from './application-reconsideration
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
-} from './applicationReconsideration.dto';
+} from './application-reconsideration.dto';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 describe('ReconsiderationService', () => {
@@ -156,14 +156,7 @@ describe('ReconsiderationService', () => {
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(
-      {
-        boardCode: mockReconsiderationCreateDto.boardCode,
-        typeCode: 'RECON',
-      } as CardCreateDto,
-      {} as Board,
-      false,
-    );
+    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledWith(
       mockApplicationCreateDto,
       false,
@@ -196,14 +189,7 @@ describe('ReconsiderationService', () => {
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(
-      {
-        boardCode: mockReconsiderationCreateDto.boardCode,
-        typeCode: 'RECON',
-      } as CardCreateDto,
-      {} as Board,
-      false,
-    );
+    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledTimes(0);
   });
 

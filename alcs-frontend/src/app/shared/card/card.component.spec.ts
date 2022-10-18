@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CardComponent } from './card.component';
+import { CardComponent, CardType } from './card.component';
 
 describe('CardComponent', () => {
   let component: CardComponent;
@@ -29,7 +29,7 @@ describe('CardComponent', () => {
       highPriority: false,
       decisionMeetings: [],
       cardUuid: 'fake',
-      cardType: 'app',
+      cardType: CardType.APP,
     };
 
     fixture.detectChanges();
@@ -69,7 +69,7 @@ describe('CardComponent', () => {
       highPriority: false,
       decisionMeetings: [],
       cardUuid: 'fake',
-      cardType: 'APP',
+      cardType: CardType.APP,
     };
     fixture.detectChanges();
 

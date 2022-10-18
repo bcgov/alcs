@@ -55,7 +55,7 @@ describe('ApplicationLocalGovernmentController', () => {
     mockService.list.mockResolvedValue([mockGovernment]);
     const res = await mockService.list();
 
-    expect(mockService.list).toHaveBeenCalled();
+    expect(mockService.list).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
     expect(res[0].name).toEqual(mockGovernment.name);
   });

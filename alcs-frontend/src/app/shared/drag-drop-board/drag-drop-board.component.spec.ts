@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
-import { CardData } from '../card/card.component';
+import { CardData, CardType } from '../card/card.component';
 
 import { DragDropBoardComponent } from './drag-drop-board.component';
 import { StatusFilterPipe } from './status-filter.pipe';
@@ -30,7 +30,7 @@ describe('DragDropBoardComponent', () => {
     highPriority: true,
     decisionMeetings: [],
     cardUuid: 'fake',
-    cardType: 'APP',
+    cardType: CardType.APP,
   };
 
   beforeEach(async () => {

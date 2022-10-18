@@ -18,7 +18,7 @@
     </div>
     <div class="lower-card">
       <div>
-        <div *ngIf="cardData.type.code !== 'RECON'" class="active-days center">
+        <div *ngIf="cardData.cardType === 'APP'" class="active-days center">
           <mat-icon title="Active Days">calendar_month</mat-icon>
           <span class="center">{{ cardData.activeDays }}</span>
         </div>

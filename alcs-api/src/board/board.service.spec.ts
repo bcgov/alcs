@@ -49,7 +49,7 @@ describe('BoardsService', () => {
     mockRepository.find.mockResolvedValue([]);
 
     await service.list();
-    expect(mockRepository.find).toHaveBeenCalled();
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call app service to get apps with board code', async () => {
@@ -57,7 +57,7 @@ describe('BoardsService', () => {
 
     const boardCode = 'board-code';
     await service.getApplicationsByCode(boardCode);
-    expect(applicationService.getAll).toHaveBeenCalled();
+    expect(applicationService.getAll).toHaveBeenCalledTimes(1);
     expect(applicationService.getAll.mock.calls[0][0]).toEqual({
       card: {
         board: {
@@ -91,9 +91,9 @@ describe('BoardsService', () => {
     cardService.update.mockResolvedValue({} as Card);
 
     await service.changeBoard(cardUuid, boardCode);
-    expect(cardService.get).toHaveBeenCalled();
-    expect(mockRepository.findOne).toHaveBeenCalled();
-    expect(cardService.update).toHaveBeenCalled();
+    expect(cardService.get).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(cardService.update).toHaveBeenCalledTimes(1);
 
     const updatedCardUuid = cardService.update.mock.calls[0][0];
     const updatedCard = cardService.update.mock.calls[0][1];

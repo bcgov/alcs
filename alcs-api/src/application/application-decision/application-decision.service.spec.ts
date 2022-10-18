@@ -140,7 +140,7 @@ describe('ApplicationDecisionService', () => {
       await service.delete(mockDecision.uuid);
 
       expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
-      expect(mockApplicationService.update).toHaveBeenCalled();
+      expect(mockApplicationService.update).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledWith(
         mockApplication,
         {
@@ -162,7 +162,7 @@ describe('ApplicationDecisionService', () => {
       await service.create(meetingToCreate, mockApplication);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.update).toHaveBeenCalled();
+      expect(mockApplicationService.update).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledWith(
         mockApplication,
         {
@@ -196,7 +196,7 @@ describe('ApplicationDecisionService', () => {
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.updateByUuid).toHaveBeenCalled();
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(
         mockApplication.uuid,
         {
@@ -290,7 +290,7 @@ describe('ApplicationDecisionService', () => {
 
     it('should call through for get code', async () => {
       await service.fetchCodes();
-      expect(mockDecisionOutcomeRepository.find).toHaveBeenCalled();
+      expect(mockDecisionOutcomeRepository.find).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -310,8 +310,8 @@ describe('ApplicationDecisionService', () => {
       mockDocumentService.create.mockResolvedValue({} as any);
 
       await service.attachDocument('uuid', {} as any, {} as any);
-      expect(mockDecisionDocumentRepository.save).toHaveBeenCalled();
-      expect(mockDocumentService.create).toHaveBeenCalled();
+      expect(mockDecisionDocumentRepository.save).toHaveBeenCalledTimes(1);
+      expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an exception when attaching a document to a non-existent decision', async () => {
@@ -328,7 +328,7 @@ describe('ApplicationDecisionService', () => {
       mockDocumentService.softRemove.mockResolvedValue({} as any);
 
       await service.deleteDocument('fake-uuid');
-      expect(mockDocumentService.softRemove).toHaveBeenCalled();
+      expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an exception when document not found for deletion', async () => {
@@ -347,7 +347,7 @@ describe('ApplicationDecisionService', () => {
 
       const res = await service.getDownloadUrl('fake-uuid');
 
-      expect(mockDocumentService.getDownloadUrl).toHaveBeenCalled();
+      expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
       expect(res).toEqual(downloadUrl);
     });
 

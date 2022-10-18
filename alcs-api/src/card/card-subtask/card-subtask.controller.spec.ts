@@ -69,10 +69,9 @@ describe('CardSubtaskController', () => {
 
     const res = await controller.create('mock-file', 'mock-type');
 
-    expect(mockSubtaskService.create).toHaveBeenCalled();
-
+    expect(mockSubtaskService.create).toHaveBeenCalledTimes(1);
     expect(res.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
-    expect(cardService.get).toHaveBeenCalled();
+    expect(cardService.get).toHaveBeenCalledTimes(1);
     expect(res.textColor).toEqual(mockSubtask.type.textColor);
     expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
   });
@@ -88,7 +87,7 @@ describe('CardSubtaskController', () => {
       completedAt: 1662762964677,
     });
 
-    expect(mockSubtaskService.update).toHaveBeenCalled();
+    expect(mockSubtaskService.update).toHaveBeenCalledTimes(1);
     expect(res.completedAt).toEqual(completionDate.getTime());
   });
 
@@ -97,7 +96,7 @@ describe('CardSubtaskController', () => {
 
     await controller.delete(mockSubtask.uuid);
 
-    expect(mockSubtaskService.delete).toHaveBeenCalled();
+    expect(mockSubtaskService.delete).toHaveBeenCalledTimes(1);
     expect(mockSubtaskService.delete.mock.calls[0][0]).toEqual(
       mockSubtask.uuid,
     );

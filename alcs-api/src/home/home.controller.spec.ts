@@ -96,7 +96,7 @@ describe('HomeController', () => {
         },
       },
     });
-    expect(mockApplicationService.getAll).toHaveBeenCalled();
+    expect(mockApplicationService.getAll).toHaveBeenCalledTimes(1);
     expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual({
       card: {
         assigneeUuid: userId,
@@ -125,7 +125,7 @@ describe('HomeController', () => {
     const res = await controller.getIncompleteSubtasksByType();
 
     expect(res.length).toEqual(2);
-    expect(mockApplicationService.mapToDtos).toHaveBeenCalled();
+    expect(mockApplicationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationService.getAllApplicationsWithIncompleteSubtasks,
     ).toBeCalledTimes(1);

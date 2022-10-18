@@ -62,7 +62,7 @@
           This field is required.
         </mat-error>
       </mat-form-field>
-      <div>
+      <div class="full-grid">
         <ng-select
           appearance="outline"
           class="card-type"
@@ -101,20 +101,6 @@
       <div>
         <ng-select
           appearance="outline"
-          class="card-region"
-          [items]="regions"
-          appendTo="body"
-          placeholder="Region *"
-          bindLabel="label"
-          bindValue="code"
-          [clearable]="false"
-          formControlName="region"
-        >
-        </ng-select>
-      </div>
-      <div>
-        <ng-select
-          appearance="outline"
           class="card-local-government"
           [items]="localGovernments"
           appendTo="body"
@@ -133,6 +119,20 @@
       <div>
         <ng-select
           appearance="outline"
+          class="card-region"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Region *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="region"
+        >
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          appearance="outline"
           class="card-recon-type"
           [items]="reconTypes"
           appendTo="body"
@@ -144,20 +144,20 @@
         >
         </ng-select>
       </div>
-    </div>
-    <div>
-      <mat-form-field class="date-picker" appearance="outline">
-        <mat-label>Reconsideration Request Submitted to ALC</mat-label>
-        <input
-          matInput
-          (click)="datePicker.open()"
-          [matDatepicker]="datePicker"
-          formControlName="submittedDate"
-          required
-        />
-        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker type="date"> </mat-datepicker>
-      </mat-form-field>
+      <div>
+        <mat-form-field class="date-picker" appearance="outline">
+          <mat-label>Reconsideration Request Submitted to ALC</mat-label>
+          <input
+            matInput
+            (click)="datePicker.open()"
+            [matDatepicker]="datePicker"
+            formControlName="submittedDate"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker type="date"> </mat-datepicker>
+        </mat-form-field>
+      </div>
     </div>
     <div class="warning-section">
       <div class="warning" *ngIf="isDecisionDateEmpty"><mat-icon>warning</mat-icon>File does not have a decision</div>

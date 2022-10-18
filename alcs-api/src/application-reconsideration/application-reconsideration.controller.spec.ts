@@ -14,7 +14,7 @@ import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
-} from './applicationReconsideration.dto';
+} from './application-reconsideration.dto';
 
 describe('ApplicationReconsiderationController', () => {
   let controller: ApplicationReconsiderationController;

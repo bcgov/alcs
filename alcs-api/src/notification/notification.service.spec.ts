@@ -59,7 +59,7 @@ describe('NotificationService', () => {
     mockRepository.update.mockResolvedValue({} as UpdateResult);
 
     await service.markRead(fakeNotification.uuid);
-    expect(mockRepository.update).toHaveBeenCalled();
+    expect(mockRepository.update).toHaveBeenCalledTimes(1);
     expect(mockRepository.update.mock.calls[0][0]).toEqual({
       uuid: fakeNotification.uuid,
     });
@@ -70,7 +70,7 @@ describe('NotificationService', () => {
     mockRepository.update.mockResolvedValue({} as UpdateResult);
 
     await service.markAllRead(userId);
-    expect(mockRepository.update).toHaveBeenCalled();
+    expect(mockRepository.update).toHaveBeenCalledTimes(1);
     expect(mockRepository.update.mock.calls[0][0]).toEqual({
       receiverUuid: userId,
     });
@@ -80,13 +80,13 @@ describe('NotificationService', () => {
     mockRepository.delete.mockResolvedValue({} as UpdateResult);
 
     await service.cleanUp(new Date());
-    expect(mockRepository.delete).toHaveBeenCalled();
+    expect(mockRepository.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call findOne when doing get', async () => {
     mockRepository.findOne.mockResolvedValue({} as Notification);
 
     await service.get('fake-uuid', 'fake-receiever');
-    expect(mockRepository.findOne).toHaveBeenCalled();
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
   });
 });
