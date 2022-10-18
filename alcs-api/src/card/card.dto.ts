@@ -80,6 +80,9 @@ export class CardDto {
 
   @AutoMap()
   board: BoardSmallDto;
+
+  @AutoMap()
+  createdAt: number;
 }
 
 export class CardDetailedDto extends CardDto {

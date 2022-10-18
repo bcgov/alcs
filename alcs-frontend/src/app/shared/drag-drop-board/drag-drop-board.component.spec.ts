@@ -31,6 +31,7 @@ describe('DragDropBoardComponent', () => {
     decisionMeetings: [],
     cardUuid: 'fake',
     cardType: CardType.APP,
+    dateReceived: 11111,
   };
 
   beforeEach(async () => {

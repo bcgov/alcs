@@ -34,6 +34,10 @@ export class CardAutomapperProfile extends AutomapperProfile {
           mapFrom((c) => c.type.code),
         ),
         forMember(
+          (cd) => cd.createdAt,
+          mapFrom((c) => c.createdAt.getTime()),
+        ),
+        forMember(
           (ad) => ad.assignee,
           mapFrom((a) => this.mapper.map(a.assignee, User, UserDto)),
         ),
