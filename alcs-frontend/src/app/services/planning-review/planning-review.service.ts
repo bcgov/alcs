@@ -17,6 +17,7 @@ export class PlanningReviewService {
     try {
       return await firstValueFrom(this.http.post<PlanningReviewDto>(`${this.url}`, meeting));
     } catch (err) {
+      console.error(err);
       this.toastService.showErrorToast('Failed to create planning review');
     }
     return;
@@ -26,6 +27,7 @@ export class PlanningReviewService {
     try {
       return await firstValueFrom(this.http.get<PlanningReviewDto>(`${this.url}/card/${id}`));
     } catch (err) {
+      console.error(err);
       this.toastService.showErrorToast('Failed to fetch planning review');
     }
     return;

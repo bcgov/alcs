@@ -24,12 +24,13 @@ export class PlanningReviewController {
       code: 'exec',
     });
 
-    const createdRecon = await this.planningReviewService.create(
+    const createdReview = await this.planningReviewService.create(
       createPlanningReviewDto,
       board,
     );
 
-    return this.planningReviewService.mapToDtos([createdRecon]);
+    const mapped = this.planningReviewService.mapToDtos([createdReview];
+    return mapped[0];
   }
 
   @Get('/card/:uuid')

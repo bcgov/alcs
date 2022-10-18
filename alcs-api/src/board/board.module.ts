@@ -16,7 +16,7 @@ import { BoardService } from './board.service';
     ApplicationModule,
     CardModule,
     forwardRef(() => ApplicationReconsiderationModule),
-    forwardRef(() => PlanningReviewModule),
+    PlanningReviewModule,
   ],
   controllers: [BoardController],
   providers: [BoardService, BoardAutomapperProfile],
