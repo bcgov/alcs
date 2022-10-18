@@ -2,7 +2,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { initCardStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
-import { repositoryMockFactory } from '../../common/utils/test-helpers/mockTypes';
+import {
+  mockKeyCloakProviders,
+  repositoryMockFactory,
+} from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
 import { Application } from '../../application/application.entity';
 import { ApplicationService } from '../../application/application.service';
@@ -46,6 +49,7 @@ describe('CardStatusController', () => {
           provide: getRepositoryToken(Application),
           useFactory: repositoryMockFactory,
         },
+        ...mockKeyCloakProviders,
       ],
     }).compile();
 

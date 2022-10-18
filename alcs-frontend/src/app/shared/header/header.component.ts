@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { ROLES_ALLOWED_APPLICATIONS } from '../../app-routing.module';
 import { ApplicationService } from '../../services/application/application.service';
 import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit {
   currentUserProfile?: UserDto;
   currentUser?: ICurrentUser;
   hasRoles = false;
+  allowedSearch = false;
   sortedBoards: BoardWithFavourite[] = [];
   notifications: NotificationDto[] = [];
   isCommissioner = false;
@@ -48,6 +50,11 @@ export class HeaderComponent implements OnInit {
           this.userService.fetchUsers();
           this.applicationService.setup();
           this.loadNotifications();
+
+          const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+            currentUser.client_roles!.includes(value)
+          );
+          this.allowedSearch = overlappingRoles.length > 0;
         }
       }
     });

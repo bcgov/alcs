@@ -15,7 +15,10 @@ import * as config from 'config';
 import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
 import { RoleGuard } from '../../common/authorization/role.guard';
-import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
+import {
+  ANY_AUTH_ROLE,
+  ROLES_ALLOWED_BOARDS,
+} from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { CardService } from '../card.service';
@@ -32,7 +35,7 @@ export class CardSubtaskController {
   ) {}
 
   @Post('/:cardUuid/:subtaskType')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async create(
     @Param('cardUuid') cardUuid: string,
     @Param('subtaskType') subtaskType: string,
@@ -47,7 +50,7 @@ export class CardSubtaskController {
   }
 
   @Patch('/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async update(
     @Param('uuid') subtaskUuid: string,
     @Body() body: Partial<UpdateCardSubtaskDto>,
@@ -57,14 +60,14 @@ export class CardSubtaskController {
   }
 
   @Get('/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async list(@Param('uuid') uuid: string): Promise<CardSubtaskDto[]> {
     const card = await this.cardService.get(uuid);
     return this.mapper.mapArray(card.subtasks, CardSubtask, CardSubtaskDto);
   }
 
   @Delete('/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async delete(@Param('uuid') subtaskUuid: string) {
     await this.cardSubtaskService.delete(subtaskUuid);
     return { deleted: true };

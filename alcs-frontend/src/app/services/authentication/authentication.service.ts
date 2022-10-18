@@ -22,6 +22,8 @@ export enum ROLES {
   LUP = 'LUP',
 }
 
+export const ALL_ROLES = Object.values(ROLES);
+
 @Injectable({
   providedIn: 'root',
 })

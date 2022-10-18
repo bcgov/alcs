@@ -3,7 +3,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
 import { CodeService } from '../code/code.service';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CardStatus } from './card-status/card-status.entity';
 import { CardUpdateDto } from './card.dto';
@@ -19,7 +19,7 @@ export class CardController {
   ) {}
 
   @Patch('/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
   async updateCard(
     @Param('uuid') uuid: string,
     @Body() cardToUpdate: CardUpdateDto,

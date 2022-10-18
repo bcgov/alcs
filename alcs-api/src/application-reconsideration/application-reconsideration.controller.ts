@@ -12,13 +12,13 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
 import { BoardService } from '../board/board.service';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import { ROLES_ALLOWED_APPLICATIONS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
 } from './application-reconsideration.dto';
+import { ApplicationReconsiderationService } from './application-reconsideration.service';
 
 @Controller('application-reconsideration')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -30,7 +30,7 @@ export class ApplicationReconsiderationController {
   ) {}
 
   @Patch('/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async update(
     @Param('uuid') uuid: string,
     @Body() reconsideration: ApplicationReconsiderationUpdateDto,
@@ -44,7 +44,7 @@ export class ApplicationReconsiderationController {
   }
 
   @Post()
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async create(@Body() reconsideration: ApplicationReconsiderationCreateDto) {
     const board = await this.boardService.getOne({
       code: reconsideration.boardCode,
@@ -59,14 +59,14 @@ export class ApplicationReconsiderationController {
   }
 
   @Delete('/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async delete(@Param('uuid') uuid: string) {
     await this.reconsiderationService.delete(uuid);
     return { deleted: true };
   }
 
   @Get('/card/:uuid')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByCard(@Param('uuid') cardUuid: string) {
     const recon = await this.reconsiderationService.getByCardUuid(cardUuid);
     const mapped = await this.reconsiderationService.mapToDtos([recon]);
@@ -74,14 +74,14 @@ export class ApplicationReconsiderationController {
   }
 
   @Get('/board/:boardCode')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByBoard(@Param('code') boardCode: string) {
     const recon = await this.reconsiderationService.getByBoardCode(boardCode);
     return this.reconsiderationService.mapToDtos(recon);
   }
 
   @Get('/application/:applicationFileNumber')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByApplication(
     @Param('applicationFileNumber') applicationFileNumber: string,
   ) {
@@ -92,7 +92,7 @@ export class ApplicationReconsiderationController {
   }
 
   @Get('/codes')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getCodes() {
     return this.reconsiderationService.getCodes();
   }
