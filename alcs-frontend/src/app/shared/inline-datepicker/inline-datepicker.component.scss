@@ -21,7 +21,6 @@
 .button-container {
   display: flex;
   justify-content: flex-end;
-  margin-right: -14px;
 
   button:not(:last-child) {
     margin-right: 2px !important;

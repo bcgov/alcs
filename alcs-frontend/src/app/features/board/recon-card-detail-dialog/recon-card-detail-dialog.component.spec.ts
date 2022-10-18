@@ -62,7 +62,7 @@ describe('ReconCardDetailDialogComponent', () => {
       decisionMaker: '',
     },
     type: {} as ReconsiderationTypeDto,
-    submittedDate: new Date(),
+    submittedDate: 111111,
     application: {
       fileNumber: '',
       type: {} as ApplicationTypeDto,

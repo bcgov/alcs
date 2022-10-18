@@ -70,6 +70,16 @@ export class ReconsiderationProfile extends AutomapperProfile {
             ),
           ),
         ),
+        forMember(
+          (a) => a.submittedDate,
+          mapFrom((rd) => rd.submittedDate.getTime()),
+        ),
+        forMember(
+          (a) => a.reviewDate,
+          mapFrom((rd) =>
+            rd.reviewDate ? rd.reviewDate.getTime() : undefined,
+          ),
+        ),
       );
 
       createMap(

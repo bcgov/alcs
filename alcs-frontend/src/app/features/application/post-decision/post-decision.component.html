@@ -1,0 +1,54 @@
+<h3>Post-Decision</h3>
+
+<h5 class="post-decision-header">
+  Reconsideration Requests<mat-icon
+    class="icon"
+    matTooltip="Create new Reconsideration Request from application tracking boards"
+    >info_outline</mat-icon
+  >
+</h5>
+
+<section class="no-decisions" *ngIf="!postDecisions.length">
+  <div>No data</div>
+</section>
+
+<section class="post-decision" *ngFor="let decision of postDecisions; let i = index">
+  <div class="decision-menu">
+    <button (click)="onEdit(decision)" matTooltip="Edit Request" mat-icon-button><mat-icon>edit</mat-icon></button>
+    <button
+      (click)="deletePostDecision(decision.uuid, postDecisions.length - i)"
+      matTooltip="Delete Request"
+      mat-icon-button
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  <div class="body-large">Reconsideration Request #{{ postDecisions.length - i }}</div>
+  <div class="decision-content">
+    <div>
+      <div class="subheading2">Request Submission Date</div>
+      {{ decision.submittedDate | momentFormat }}
+    </div>
+    <div>
+      <div class="subheading2">Reconsideration Type</div>
+      {{ decision.type.code }}
+    </div>
+    <div></div>
+    <div *ngIf="decision.type.code === '33'">
+      <div class="subheading2">Review Date</div>
+      <span *ngIf="decision.reviewDate">{{ decision.reviewDate | momentFormat }}</span>
+      <span *ngIf="!decision.reviewDate">
+        <app-inline-datepicker (save)="onSaveReviewDate(decision.uuid, $event)"></app-inline-datepicker>
+      </span>
+    </div>
+    <div *ngIf="decision.type.code === '33'">
+      <div class="subheading2">Review Outcome</div>
+      <span *ngIf="!isReviewOutcomeSet(decision.isReviewApproved)">
+        <app-inline-review-outcome (save)="onSaveReviewOutcome(decision.uuid, $event)"></app-inline-review-outcome>
+      </span>
+      <span *ngIf="isReviewOutcomeSet(decision.isReviewApproved)">{{
+        getReviewOutcomeLabel(decision.isReviewApproved!)
+      }}</span>
+    </div>
+  </div>
+</section>

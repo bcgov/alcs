@@ -2,23 +2,27 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
+import {
+  FindOptionsRelations,
+  FindOptionsWhere,
+  IsNull,
+  Repository,
+} from 'typeorm';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
-import { CodeService } from '../code/code.service';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../common/exceptions/base.exception';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
+import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
   ApplicationReconsiderationWithoutApplicationDto,
+  ReconsiderationTypeDto,
 } from './applicationReconsideration.dto';
+import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Injectable()
 export class ApplicationReconsiderationService {
@@ -26,9 +30,10 @@ export class ApplicationReconsiderationService {
     @InjectRepository(ApplicationReconsideration)
     private reconsiderationRepository: Repository<ApplicationReconsideration>,
     @InjectMapper() private mapper: Mapper,
-    private codeService: CodeService,
     private applicationService: ApplicationService,
     private cardService: CardService,
+    @InjectRepository(ApplicationReconsiderationType)
+    private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
   ) {}
 
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
@@ -48,14 +53,22 @@ export class ApplicationReconsiderationService {
       type: true,
     };
 
-  async getByBoardCode(boardCode: string) {
+  getByBoardCode(boardCode: string) {
+    return this.getBy({ card: { board: { code: boardCode } } });
+  }
+
+  getByApplication(applicationFileNumber: string) {
+    return this.getBy({ application: { fileNumber: applicationFileNumber } });
+  }
+
+  getBy(findOptions: FindOptionsWhere<ApplicationReconsideration>) {
     return this.reconsiderationRepository.find({
-      where: { card: { board: { code: boardCode } } },
+      where: findOptions,
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });
   }
 
-  async mapToDtos(
+  mapToDtos(
     reconsiderations: ApplicationReconsideration[],
   ): Promise<ApplicationReconsiderationDto[]> {
     return this.mapper.mapArrayAsync(
@@ -65,7 +78,7 @@ export class ApplicationReconsiderationService {
     );
   }
 
-  async mapToDtosWithoutApplication(
+  mapToDtosWithoutApplication(
     reconsiderations: ApplicationReconsideration[],
   ): Promise<ApplicationReconsiderationWithoutApplicationDto[]> {
     return this.mapper.mapArrayAsync(
@@ -79,7 +92,9 @@ export class ApplicationReconsiderationService {
     reconsideration: ApplicationReconsiderationCreateDto,
     board: Board,
   ) {
-    const type = await this.fetchAndValidateType(reconsideration.reconTypeCode);
+    const type = await this.getReconsiderationType(
+      reconsideration.reconTypeCode,
+    );
 
     const newReconsideration = new ApplicationReconsideration({
       submittedDate: new Date(reconsideration.submittedDate),
@@ -134,47 +149,27 @@ export class ApplicationReconsiderationService {
       uuid,
     );
 
-    // this will be refactored in part2
-    const updatedReconsideration = Object.assign(
-      existingReconsideration,
-      updates,
+    existingReconsideration.reviewDate = formatIncomingDate(updates.reviewDate);
+    existingReconsideration.submittedDate = formatIncomingDate(
+      updates.submittedDate,
     );
 
-    const type = await this.fetchAndValidateType(updates.typeCode);
-    updatedReconsideration.type = type;
-    this.validateReviewOutcome(updates, updatedReconsideration);
+    existingReconsideration.type = await this.getReconsiderationType(
+      updates.typeCode,
+    );
+
+    if (existingReconsideration.type.code === '33.1') {
+      existingReconsideration.isReviewApproved = null;
+      existingReconsideration.reviewDate = null;
+    } else {
+      existingReconsideration.isReviewApproved = updates.isReviewApproved;
+    }
+
     const recon = await this.reconsiderationRepository.save(
-      updatedReconsideration,
+      existingReconsideration,
     );
 
     return this.getByUuid(recon.uuid);
-  }
-
-  private validateReviewOutcome(
-    reconsideration: ApplicationReconsiderationUpdateDto,
-    updatedReconsideration: ApplicationReconsideration,
-  ) {
-    if (
-      reconsideration.typeCode === '33' &&
-      (updatedReconsideration.isReviewApproved === null ||
-        updatedReconsideration.isReviewApproved === undefined)
-    ) {
-      throw new ServiceValidationException(
-        'Review outcome is required for reconsideration of type 33',
-      );
-    }
-  }
-
-  private async fetchAndValidateType(code: string) {
-    const type = await this.codeService.fetchReconsiderationType(code);
-
-    if (!type) {
-      throw new ServiceNotFoundException(
-        `Provided reconsideration type does not exist ${code}`,
-      );
-    }
-
-    return type;
   }
 
   async delete(uuid: string) {
@@ -197,15 +192,16 @@ export class ApplicationReconsiderationService {
   }
 
   getByCardUuid(cardUuid: string) {
-    return this.reconsiderationRepository.findOneOrFail({
-      where: { cardUuid },
-      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
-    });
+    return this.getOneByOrFail({ cardUuid });
   }
 
   getByUuid(uuid: string) {
+    return this.getOneByOrFail({ uuid });
+  }
+
+  getOneByOrFail(findOptions: FindOptionsWhere<ApplicationReconsideration>) {
     return this.reconsiderationRepository.findOneOrFail({
-      where: { uuid },
+      where: findOptions,
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });
   }
@@ -235,6 +231,25 @@ export class ApplicationReconsiderationService {
           subtasks: { type: true, assignee: true },
         },
       },
+    });
+  }
+
+  async getCodes() {
+    const codes = await this.reconsiderationTypeRepository.find({
+      order: { label: 'ASC' },
+    });
+    return this.mapper.mapArrayAsync(
+      codes,
+      ApplicationReconsiderationType,
+      ReconsiderationTypeDto,
+    );
+  }
+
+  async getReconsiderationType(
+    code: string,
+  ): Promise<ApplicationReconsiderationType> {
+    return this.reconsiderationTypeRepository.findOneByOrFail({
+      code,
     });
   }
 }

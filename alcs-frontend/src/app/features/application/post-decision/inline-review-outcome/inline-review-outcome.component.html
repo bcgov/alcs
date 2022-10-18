@@ -1,0 +1,25 @@
+<div>
+  <span *ngIf="!isEditing">
+    <a (click)="toggleEdit()" class="add-date" *ngIf="!isReviewOutcomeSet(pendingReviewOutcome)"> Select outcome </a>
+    <span *ngIf="isReviewOutcomeSet(pendingReviewOutcome)">
+      {{ getReviewOutcomeLabel(pendingReviewOutcome!) }}
+    </span>
+  </span>
+  <div
+    class="editing"
+    [ngClass]="{
+      hidden: !isEditing
+    }"
+  >
+    <form [formGroup]="form">
+      <mat-button-toggle-group id="reviewOutcome" formControlName="reviewOutcome" name="reviewOutcome">
+        <mat-button-toggle value="true">Proceed</mat-button-toggle>
+        <mat-button-toggle value="false">Refuse</mat-button-toggle>
+      </mat-button-toggle-group>
+    </form>
+    <div class="button-container">
+      <button mat-button (click)="toggleEdit()">CANCEL</button>
+      <button mat-button class="save" (click)="onSave()">SAVE</button>
+    </div>
+  </div>
+</div>

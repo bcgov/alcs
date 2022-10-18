@@ -149,7 +149,6 @@ export class ReconCreateCardDialogComponent implements OnInit {
       }
 
       await this.reconsiderationService.create(recon);
-
       this.dialogRef.close(true);
       this.toastService.showSuccessToast('Reconsideration card created');
     } finally {
