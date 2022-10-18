@@ -38,8 +38,9 @@
         appendTo="body"
         bindLabel="label"
         bindValue="code"
-        placeholder="Decision Maker"
+        placeholder="Decision Maker *"
         (change)="onSelectDecisionMaker($event)"
+        [clearable]="false"
       ></ng-select>
       <ng-select
         *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
@@ -50,7 +51,8 @@
         appendTo="body"
         bindLabel="label"
         bindValue="code"
-        placeholder="CEO Criterion"
+        placeholder="CEO Criterion *"
+        [clearable]="false"
       >
         <ng-template ng-option-tmp let-item="item">
           <span>{{ item.number }} - {{ item.label }} </span>
