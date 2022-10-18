@@ -137,6 +137,10 @@
                                                 <td title="comment.card_uuid references card.uuid via FK_acb37fb28b6e19312217e12aaa2"><a href='comment.html'>comment</a><span class='relatedKey'>.card_uuid</span></td>
                                                 <td class="constraint detail">FK_acb37fb28b6e19312217e12aaa2<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
+                                            <tr>
+                                                <td title="planning_review.card_uuid references card.uuid via FK_03a05aa8fefbc2fc1cdf138d807"><a href='planning_review.html'>planning_review</a><span class='relatedKey'>.card_uuid</span></td>
+                                                <td class="constraint detail">FK_03a05aa8fefbc2fc1cdf138d807<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -407,45 +411,47 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="696,5,999,269">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="273,249,652,671">
-<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="5,768,229,915">
-<area shape="rect" id="node5" href="board.html" target="_top" title="board" alt="" coords="5,411,229,557">
-<area shape="rect" id="node6" href="card_status.html" target="_top" title="card_status" alt="" coords="5,217,229,393">
-<area shape="rect" id="node7" href="card_type.html" target="_top" title="card_type" alt="" coords="5,575,229,751">
-<area shape="rect" id="node3" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1043,83,1345,288">
-<area shape="rect" id="node8" href="card_history.html" target="_top" title="card_history" alt="" coords="735,323,959,469">
-<area shape="rect" id="node9" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="735,487,959,692">
-<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="735,709,959,885">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="696,421,999,685">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="273,533,652,955">
+<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="5,1051,229,1197">
+<area shape="rect" id="node5" href="board.html" target="_top" title="board" alt="" coords="5,693,229,840">
+<area shape="rect" id="node6" href="card_status.html" target="_top" title="card_status" alt="" coords="5,500,229,676">
+<area shape="rect" id="node7" href="card_type.html" target="_top" title="card_type" alt="" coords="5,857,229,1033">
+<area shape="rect" id="node3" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1043,499,1345,704">
+<area shape="rect" id="node8" href="card_history.html" target="_top" title="card_history" alt="" coords="735,5,959,152">
+<area shape="rect" id="node9" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="735,747,959,952">
+<area shape="rect" id="node10" href="comment.html" target="_top" title="comment" alt="" coords="735,987,959,1163">
+<area shape="rect" id="node11" href="planning_review.html" target="_top" title="planning_review" alt="" coords="731,169,964,404">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/card.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="787,181,956,269">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="276,389,655,811">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="307,37,624,125">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,72,232,160">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="359,179,571,267">
-<area shape="rect" id="node15" href="board.html" target="_top" title="board" alt="" coords="7,532,231,679">
-<area shape="rect" id="node16" href="card_status.html" target="_top" title="card_status" alt="" coords="7,301,231,477">
-<area shape="rect" id="node17" href="user.html" target="_top" title="user" alt="" coords="61,971,176,1059">
-<area shape="rect" id="node18" href="card_type.html" target="_top" title="card_type" alt="" coords="7,715,231,891">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1125,252,1366,340">
-<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1088,5,1403,93">
-<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="1117,357,1374,445">
-<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="791,509,952,597">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1447,111,1688,199">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1129,111,1362,199">
-<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1094,463,1397,551">
-<area shape="rect" id="node13" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="699,615,1044,703">
-<area shape="rect" id="node14" href="board_status.html" target="_top" title="board_status" alt="" coords="374,284,557,372">
-<area shape="rect" id="node19" href="card_history.html" target="_top" title="card_history" alt="" coords="759,309,983,456">
-<area shape="rect" id="node20" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="779,919,963,1007">
-<area shape="rect" id="node21" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="352,900,579,988">
-<area shape="rect" id="node22" href="comment.html" target="_top" title="comment" alt="" coords="793,813,949,901">
-<area shape="rect" id="node23" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1130,952,1361,1040">
-<area shape="rect" id="node24" href="notification.html" target="_top" title="notification" alt="" coords="379,1041,552,1129">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="787,668,956,756">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="276,111,655,532">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="307,585,624,673">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,608,232,696">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="359,691,571,779">
+<area shape="rect" id="node15" href="board.html" target="_top" title="board" alt="" coords="7,224,231,371">
+<area shape="rect" id="node16" href="card_status.html" target="_top" title="card_status" alt="" coords="7,17,231,193">
+<area shape="rect" id="node17" href="user.html" target="_top" title="user" alt="" coords="61,871,176,959">
+<area shape="rect" id="node18" href="card_type.html" target="_top" title="card_type" alt="" coords="7,415,231,591">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1125,613,1366,701">
+<area shape="rect" id="node7" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1088,719,1403,807">
+<area shape="rect" id="node8" href="application_document.html" target="_top" title="application_document" alt="" coords="1117,988,1374,1076">
+<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="385,1115,546,1203">
+<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1447,824,1688,912">
+<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1129,824,1362,912">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1094,119,1397,207">
+<area shape="rect" id="node13" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="699,48,1044,136">
+<area shape="rect" id="node14" href="board_status.html" target="_top" title="board_status" alt="" coords="374,5,557,93">
+<area shape="rect" id="node19" href="card_history.html" target="_top" title="card_history" alt="" coords="759,189,983,336">
+<area shape="rect" id="node20" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="779,976,963,1064">
+<area shape="rect" id="node21" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="352,973,579,1061">
+<area shape="rect" id="node22" href="comment.html" target="_top" title="comment" alt="" coords="793,797,949,885">
+<area shape="rect" id="node23" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1130,1153,1361,1241">
+<area shape="rect" id="node24" href="notification.html" target="_top" title="notification" alt="" coords="379,868,552,956">
+<area shape="rect" id="node25" href="planning_review.html" target="_top" title="planning_review" alt="" coords="755,392,988,627">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

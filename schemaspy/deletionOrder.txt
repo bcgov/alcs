@@ -2,6 +2,7 @@ migrations
 holiday_entity
 health_check
 application_meeting
+planning_review
 card_subtask
 application_reconsideration
 notification

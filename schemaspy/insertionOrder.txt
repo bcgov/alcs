@@ -26,6 +26,7 @@ decision_document
 notification
 application_reconsideration
 card_subtask
+planning_review
 application_meeting
 health_check
 holiday_entity
