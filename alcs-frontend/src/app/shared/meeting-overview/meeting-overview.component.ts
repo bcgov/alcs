@@ -193,10 +193,18 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
         board.isExpanded = true;
         application.isExpanded = true;
         application.isHighlighted = true;
+        this.scrollToApplication(application.fileNumber);
       }
       return application;
     });
     return meeting;
+  }
+
+  private scrollToApplication(fileNumber: string) {
+    let el = document.getElementById(fileNumber);
+    if (el) {
+      el.scrollIntoView();
+    }
   }
 
   clearHighlight() {

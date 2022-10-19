@@ -131,7 +131,7 @@
       expandedHeight="48px"
       collapsedHeight="48px"
     >
-      <mat-panel-title class="split">
+      <mat-panel-title id="{{ application.fileNumber }}" class="split">
         <span>{{ application.fileNumber }} ({{ application.applicant }})</span>
         <app-avatar-circle
           *ngIf="application.assignee"
