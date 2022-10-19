@@ -269,3 +269,8 @@ mat-button-toggle-group {
 .mat-calendar-body-cell-content.mat-focus-indicator.mat-calendar-body-selected {
   color: $white;
 }
+
+.no-wrap-tooltip {
+  word-break: keep-all !important;
+  max-width: unset !important;
+}

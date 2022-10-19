@@ -57,7 +57,6 @@
   margin-bottom: 24px;
 }
 
-
 .main-panel:hover {
   .main-panel-description {
     visibility: visible;
@@ -77,7 +76,6 @@ mat-panel-description {
   margin-right: 0;
   flex-basis: auto;
 }
-
 
 .main-panel-description {
   visibility: hidden;
@@ -110,8 +108,8 @@ mat-panel-description {
 .meetings-container {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-column-gap: 24px;
+  grid-template-columns: 31% 31% 31%;
+  grid-column-gap: 3%;
   text-align: center;
 
   & > div {
@@ -172,7 +170,6 @@ mat-panel-description {
       mat-panel-title {
         color: #fff;
       }
-
     }
   }
 
@@ -199,7 +196,6 @@ mat-panel-description {
       mat-panel-title {
         color: #fff;
       }
-
     }
   }
 }
@@ -222,9 +218,15 @@ mat-panel-description {
 }
 
 @keyframes border-pulsate {
-  0%   { border-color: rgba($primary-color, 1); }
-  50%  { border-color: rgba($primary-color, 0.2); }
-  100% { border-color: rgba($primary-color, 1); }
+  0% {
+    border-color: rgba($primary-color, 1);
+  }
+  50% {
+    border-color: rgba($primary-color, 0.2);
+  }
+  100% {
+    border-color: rgba($primary-color, 1);
+  }
 }
 
 :host::ng-deep .application-panel {
@@ -276,4 +278,22 @@ mat-panel-description {
   color: $grey;
   font-style: italic;
   margin-top: 24px !important;
+}
+
+.previous-meetings,
+.next-meeting,
+.upcoming-meetings {
+  min-width: 100%;
+  width: 100%;
+
+  mat-panel-title {
+    width: 100%;
+  }
+
+  .ellipsis {
+    white-space: nowrap;
+    max-width: calc(100% - 48px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
