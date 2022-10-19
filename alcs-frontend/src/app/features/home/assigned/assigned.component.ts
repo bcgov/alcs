@@ -31,14 +31,7 @@ export class AssignedComponent implements OnInit {
   }
 
   async loadApplications() {
-    const apps = await this.homeService.fetchAssignedToMe();
-    this.applications = apps.map((app) => {
-      const statusDto = this.statuses.find((status) => status.code === app.status);
-      return {
-        ...app,
-        status: statusDto!.label,
-      };
-    });
+    this.applications = await this.homeService.fetchAssignedToMe();
     this.applications.sort((a, b) => {
       if (a.card.highPriority === b.card.highPriority) {
         return b.activeDays - a.activeDays;

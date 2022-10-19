@@ -7,9 +7,6 @@ import { Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
-import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
-import { CodeService } from '../code/code.service';
 import { PlanningReview } from './planning-review.entity';
 import { PlanningReviewService } from './planning-review.service';
 
@@ -17,11 +14,9 @@ describe('PlanningReviewService', () => {
   let service: PlanningReviewService;
   let mockRepository: DeepMocked<Repository<PlanningReview>>;
   let mockCardService: DeepMocked<CardService>;
-  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockCardService = createMock<CardService>();
-    mockCodeService = createMock<CodeService>();
     mockRepository = createMock<Repository<PlanningReview>>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -39,10 +34,6 @@ describe('PlanningReviewService', () => {
           provide: CardService,
           useValue: mockCardService,
         },
-        {
-          provide: CodeService,
-          useValue: mockCodeService,
-        },
         PlanningReviewService,
       ],
     }).compile();
@@ -56,16 +47,12 @@ describe('PlanningReviewService', () => {
 
   it('should load the type code and call the repo to save when creating', async () => {
     const mockCard = {} as Card;
-    const regionUuid = 'region-uuid';
     const fakeBoard = {} as Board;
 
     mockRepository.findOne.mockResolvedValueOnce(undefined);
     mockRepository.findOne.mockResolvedValueOnce({} as PlanningReview);
     mockRepository.save.mockResolvedValue({} as PlanningReview);
     mockCardService.create.mockResolvedValue(mockCard);
-    mockCodeService.fetchRegion.mockResolvedValue({
-      uuid: regionUuid,
-    } as ApplicationRegion);
 
     const res = await service.create(
       {
@@ -80,7 +67,6 @@ describe('PlanningReviewService', () => {
     expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
     expect(mockCardService.create).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save.mock.calls[0][0].regionUuid).toEqual(regionUuid);
     expect(mockRepository.save.mock.calls[0][0].card).toBe(mockCard);
   });
 

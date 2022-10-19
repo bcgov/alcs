@@ -31,9 +31,9 @@ export class Card extends Base {
 
   @Column({
     type: 'uuid',
-    default: 'f9f4244f-9741-45f0-9724-ce13e8aa09eb',
+    default: 'SUBM',
   })
-  statusUuid: string;
+  statusCode: string;
 
   @ManyToOne(() => Board)
   board: Board;
@@ -76,8 +76,9 @@ export class Card extends Base {
   type: CardType;
 
   @Column({
-    type: 'uuid',
-    default: 'f6df265f-3163-4201-858a-87d4fbd75cbe',
+    type: 'text',
+    default: 'APP',
+    nullable: false,
   })
-  typeUuid: string;
+  typeCode: string;
 }

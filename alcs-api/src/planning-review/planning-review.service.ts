@@ -2,10 +2,9 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, RelationOptions, Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
-import { CodeService } from '../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -20,7 +19,6 @@ import { PlanningReview } from './planning-review.entity';
 export class PlanningReviewService {
   constructor(
     private cardService: CardService,
-    private codeService: CodeService,
     @InjectRepository(PlanningReview)
     private repository: Repository<PlanningReview>,
     @InjectMapper() private mapper: Mapper,
@@ -49,14 +47,11 @@ export class PlanningReviewService {
       );
     }
 
-    //TODO: Remove this and use regionCode directly as part of code table cleanup
-    const region = await this.codeService.fetchRegion(data.regionCode);
-
     const planingMeeting = new PlanningReview({
       type: data.type,
       localGovernmentUuid: data.localGovernmentUuid,
       fileNumber: data.fileNumber,
-      regionUuid: region.uuid,
+      regionCode: data.regionCode,
     });
 
     planingMeeting.card = await this.cardService.create('PLAN', board, false);

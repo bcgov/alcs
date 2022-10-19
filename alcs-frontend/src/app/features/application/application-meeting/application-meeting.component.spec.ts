@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ApplicationMeetingComponent } from './application-meeting.component';
 
@@ -14,7 +14,7 @@ describe('ApplicationMeetingComponent', () => {
   const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
     'loadApplication',
   ]);
-  mockAppDetailService.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+  mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

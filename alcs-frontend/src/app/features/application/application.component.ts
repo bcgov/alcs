@@ -4,7 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDetailedDto } from '../../services/application/application.dto';
+import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -58,7 +58,7 @@ export const childRoutes = [
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
-  application?: ApplicationDetailedDto;
+  application?: ApplicationDto;
   fileNumber?: string;
 
   childRoutes = childRoutes;
@@ -99,7 +99,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   }
 
   async onGoToCard() {
-    const boardCode = this.application?.board;
+    const boardCode = this.application?.card.board.code;
     const fileNumber = this.application?.fileNumber;
     const cardTypeCode = this.application?.card.type;
     await this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&type=${cardTypeCode}`);

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 
 import { ReviewComponent } from './review.component';
 
@@ -13,7 +13,7 @@ describe('ReviewComponent', () => {
     const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
       'loadApplication',
     ]);
-    mockAppDetailService.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+    mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [

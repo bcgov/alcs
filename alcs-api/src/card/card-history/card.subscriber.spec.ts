@@ -43,9 +43,9 @@ describe('CardSubscriber', () => {
 
     mockDataSource.subscribers = subscribersArray;
 
-    oldApplication.statusUuid = oldStatus;
+    oldApplication.statusCode = oldStatus;
     oldApplication.auditUpdatedAt = new Date(2, 2, 2, 2, 2, 2, 2);
-    newApplication.statusUuid = newStatus;
+    newApplication.statusCode = newStatus;
 
     updateEvent.databaseEntity = oldApplication;
     updateEvent.entity = newApplication;
@@ -107,7 +107,7 @@ describe('CardSubscriber', () => {
         .calls[0][0] as unknown as CardHistory;
       expect(savedValue.startDate).toEqual(oldApplication.auditUpdatedAt);
       expect(savedValue.endDate).toEqual(endDate);
-      expect(savedValue.statusUuid).toEqual(oldApplication.statusUuid);
+      expect(savedValue.statusCode).toEqual(oldApplication.statusCode);
     });
 
     it('should fallback to createdAt if old entity has no updatedAt', async () => {
@@ -125,8 +125,8 @@ describe('CardSubscriber', () => {
     });
 
     it('should not save anything if status is the same', async () => {
-      oldApplication.statusUuid = 'same-status';
-      newApplication.statusUuid = 'same-status';
+      oldApplication.statusCode = 'same-status';
+      newApplication.statusCode = 'same-status';
 
       await cardSubscriber.beforeUpdate(updateEvent);
       expect(mockManager.save).not.toHaveBeenCalled();

@@ -76,7 +76,7 @@ export class BoardService {
     card.board = board;
     return this.cardService.update(card.uuid, {
       boardUuid: card.board.uuid,
-      statusUuid: card.status.uuid,
+      statusCode: card.status.code,
     });
   }
 }

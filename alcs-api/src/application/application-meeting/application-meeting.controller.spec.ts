@@ -21,7 +21,6 @@ import {
   UpdateApplicationMeetingDto,
 } from './application-meeting.dto';
 import { ApplicationMeetingService } from './application-meeting.service';
-import mock = jest.mock;
 
 describe('ApplicationMeetingController', () => {
   let controller: ApplicationMeetingController;
@@ -74,7 +73,7 @@ describe('ApplicationMeetingController', () => {
     );
 
     mockApplicationCodeService.fetchMeetingType.mockResolvedValue({
-      uuid: 'fake',
+      code: 'fake',
     } as ApplicationRegion);
   });
 
@@ -126,7 +125,7 @@ describe('ApplicationMeetingController', () => {
     const calledData = mockMeetingService.create.mock.calls[0][0];
     expect(calledData.application).toEqual(appMock);
     expect(calledData.meetingPause).toBe(fakePause);
-    expect(calledData.typeUuid).toBe(mockMeeting.typeUuid);
+    expect(calledData.typeCode).toBe(mockMeeting.typeCode);
   });
 
   it('should update meeting', async () => {

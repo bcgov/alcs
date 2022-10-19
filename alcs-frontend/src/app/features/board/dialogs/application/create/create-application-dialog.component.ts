@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationDetailedDto } from '../../../../../services/application/application.dto';
+import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
@@ -30,7 +30,7 @@ export class CreateApplicationDialogComponent implements OnInit {
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
@@ -62,10 +62,10 @@ export class CreateApplicationDialogComponent implements OnInit {
       this.isLoading = true;
       const formValues = this.createForm.getRawValue();
       await this.applicationService.createApplication({
-        type: formValues.type!,
+        typeCode: formValues.type!,
         applicant: formValues.applicant!,
         fileNumber: formValues.fileNumber!.trim(),
-        region: formValues.region || undefined,
+        regionCode: formValues.region || undefined,
         dateReceived: formatDateForApi(formValues.receivedDate!),
         localGovernmentUuid: formValues.localGovernment!,
       });

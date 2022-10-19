@@ -11,7 +11,7 @@ import {
   ReconsiderationTypeDto,
 } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
@@ -96,7 +96,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
     );
   }
 
-  autocompleteDisplay(application: ApplicationDetailedDto): string {
+  autocompleteDisplay(application: ApplicationDto): string {
     return application?.fileNumber ?? '';
   }
 
@@ -105,7 +105,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
       return;
     }
 
-    const application = $event.source.value as ApplicationDetailedDto;
+    const application = $event.source.value as ApplicationDto;
 
     this.fileNumberControl.disable();
     this.applicantControl.disable();
@@ -115,8 +115,8 @@ export class CreateReconsiderationDialogComponent implements OnInit {
 
     this.createForm.patchValue({
       applicant: application.applicant,
-      region: this.regions.find((r) => r.code === application.region)?.code ?? null,
-      applicationType: this.applicationTypes.find((r) => r.code === application.type)?.code ?? null,
+      region: application.region.code,
+      applicationType: application.type.code,
       localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment.uuid)?.uuid ?? null,
     });
 
@@ -134,7 +134,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
         applicationTypeCode: formValues.applicationType!,
         applicationFileNumber: formValues.fileNumber!.fileNumber?.trim() ?? formValues.fileNumber!.trim(),
         applicant: formValues.applicant!,
-        region: formValues.region!,
+        regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         // recon details
         submittedDate: formValues.submittedDate!,

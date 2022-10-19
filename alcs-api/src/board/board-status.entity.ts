@@ -8,7 +8,7 @@ import { Board } from './board.entity';
 @Unique(['board', 'status'])
 export class BoardStatus extends Base {
   @AutoMap()
-  @ManyToOne(() => Board, (board) => board.statuses)
+  @ManyToOne(() => Board, (board) => board.statuses, { nullable: false })
   board: Board;
 
   @AutoMap()
@@ -16,6 +16,6 @@ export class BoardStatus extends Base {
   order: number;
 
   @AutoMap()
-  @ManyToOne(() => CardStatus, { eager: true })
+  @ManyToOne(() => CardStatus, { eager: true, nullable: false })
   status: CardStatus;
 }

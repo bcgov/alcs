@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
 import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
-import { ObsoleteBaseCodeEntity } from '../common/entities/obsolete-base-code.entity';
+import { BaseCodeEntity } from '../common/entities/base.code.entity';
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
@@ -24,7 +24,7 @@ export class CodeService {
   ) {}
 
   async getAll() {
-    const alphabeticalSort: FindOptionsOrder<ObsoleteBaseCodeEntity> = {
+    const alphabeticalSort: FindOptionsOrder<BaseCodeEntity> = {
       label: 'ASC',
     };
     const alphabeticalFindOptions = {
@@ -71,7 +71,7 @@ export class CodeService {
     });
   }
 
-  async fetchMeetingType(code: string): Promise<ApplicationRegion> {
+  async fetchMeetingType(code: string): Promise<ApplicationMeetingType> {
     return this.meetingTypesRepository.findOne({
       where: {
         code,

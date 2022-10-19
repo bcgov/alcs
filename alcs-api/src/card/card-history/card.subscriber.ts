@@ -44,12 +44,12 @@ export class CardSubscriber implements EntitySubscriberInterface<Card> {
     event: UpdateEvent<Card>,
     user: User,
   ) {
-    if (oldApplication.statusUuid !== newApplication.statusUuid) {
+    if (oldApplication.statusCode !== newApplication.statusCode) {
       const history = new CardHistory();
       history.startDate =
         oldApplication.auditUpdatedAt || oldApplication.auditCreatedAt;
       history.endDate = new Date();
-      history.statusUuid = oldApplication.statusUuid;
+      history.statusCode = oldApplication.statusCode;
       history.card = event.databaseEntity;
       history.userId = user.uuid;
       history.auditCreatedBy = user.uuid;

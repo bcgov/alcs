@@ -27,7 +27,7 @@ export class CreateApplicationDto {
 
   @IsNotEmpty()
   @IsString()
-  type: string;
+  typeCode: string;
 
   @IsNotEmpty()
   @IsNumber()
@@ -35,111 +35,11 @@ export class CreateApplicationDto {
 
   @IsString()
   @IsOptional()
-  region?: string;
+  regionCode?: string;
 
   @IsNotEmpty()
   @IsString()
   localGovernmentUuid: string;
-}
-
-export class ApplicationDto {
-  @AutoMap()
-  @IsNotEmpty()
-  @IsString()
-  fileNumber: string;
-
-  @AutoMap()
-  @IsNotEmpty()
-  @IsString()
-  applicant: string;
-
-  @IsNotEmpty()
-  @IsString()
-  status: string;
-
-  @AutoMap()
-  @IsUUID()
-  assigneeUuid?: string;
-
-  @AutoMap()
-  activeDays: number;
-
-  @AutoMap()
-  pausedDays: number;
-
-  @AutoMap()
-  @IsBoolean()
-  paused: boolean;
-
-  @AutoMap()
-  @IsBoolean()
-  highPriority: boolean;
-
-  @IsNotEmpty()
-  @IsString()
-  type: string;
-
-  @IsNotEmpty()
-  @IsString()
-  board: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  dateReceived: number;
-
-  @IsNumber()
-  datePaid?: number;
-
-  @IsOptional()
-  @IsNumber()
-  dateAcknowledgedIncomplete?: number;
-
-  @IsOptional()
-  @IsNumber()
-  dateReceivedAllItems?: number;
-
-  @IsOptional()
-  @IsNumber()
-  dateAcknowledgedComplete?: number;
-
-  @IsOptional()
-  @IsNumber()
-  decisionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  notificationSentDate?: number;
-
-  @IsString()
-  region: string;
-
-  localGovernment: ApplicationLocalGovernmentDto;
-
-  @IsString()
-  @MaxLength(400, {
-    message: 'Summary is too long',
-  })
-  @IsOptional()
-  summary?: string;
-
-  @AutoMap()
-  @Type(() => ApplicationDecisionMeetingDto)
-  decisionMeetings: ApplicationDecisionMeetingDto[];
-
-  @AutoMap()
-  @Type(() => CardDto)
-  card: CardDto;
-}
-
-export class ApplicationDetailedDto extends ApplicationDto {
-  @AutoMap()
-  statusDetails: CardStatusDto;
-
-  @AutoMap()
-  typeDetails: ApplicationTypeDto;
-
-  @AutoMap()
-  regionDetails: ApplicationRegionDto;
 }
 
 export class UpdateApplicationDto {
@@ -151,17 +51,17 @@ export class UpdateApplicationDto {
   @AutoMap()
   @IsOptional()
   @IsString()
-  type?: string;
+  typeCode?: string;
 
   @AutoMap()
   @IsOptional()
   @IsString()
-  region?: string;
+  regionCode?: string;
 
   @AutoMap()
   @IsOptional()
   @IsString()
-  status?: string;
+  statusCode?: string;
 
   @AutoMap()
   @IsOptional()
@@ -204,10 +104,75 @@ export class UpdateApplicationDto {
   notificationSentDate?: number;
 }
 
+export class ApplicationDto {
+  @AutoMap()
+  fileNumber: string;
+
+  @AutoMap()
+  applicant: string;
+
+  @AutoMap()
+  assigneeUuid?: string;
+
+  @AutoMap()
+  activeDays: number;
+
+  @AutoMap()
+  pausedDays: number;
+
+  @AutoMap()
+  paused: boolean;
+
+  @AutoMap()
+  highPriority: boolean;
+
+  @AutoMap()
+  type: ApplicationTypeDto;
+
+  board: string;
+
+  @AutoMap()
+  dateReceived: number;
+
+  @AutoMap()
+  datePaid?: number;
+
+  @AutoMap()
+  dateAcknowledgedIncomplete?: number;
+
+  @AutoMap()
+  dateReceivedAllItems?: number;
+
+  @AutoMap()
+  dateAcknowledgedComplete?: number;
+
+  @AutoMap()
+  decisionDate?: number;
+
+  @AutoMap()
+  notificationSentDate?: number;
+
+  @AutoMap()
+  summary?: string;
+
+  @AutoMap()
+  region: ApplicationRegionDto;
+
+  localGovernment: ApplicationLocalGovernmentDto;
+
+  @AutoMap()
+  @Type(() => ApplicationDecisionMeetingDto)
+  decisionMeetings: ApplicationDecisionMeetingDto[];
+
+  @AutoMap()
+  @Type(() => CardDto)
+  card: CardDto;
+}
+
 export class ApplicationUpdateServiceDto {
   applicant?: string;
-  typeUuid?: string;
-  regionUuid?: string;
+  typeCode?: string;
+  regionCode?: string;
   datePaid?: Date | null | undefined;
   dateAcknowledgedIncomplete?: Date | null | undefined;
   dateReceivedAllItems?: Date | null | undefined;

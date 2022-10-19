@@ -74,10 +74,10 @@ export class CardService {
     }
 
     const newCard = new Card();
-    newCard.statusUuid = board.statuses.reduce((prev, curr) =>
+    newCard.statusCode = board.statuses.reduce((prev, curr) =>
       prev.order < curr.order ? prev : curr,
-    )?.status.uuid;
-    newCard.typeUuid = type.uuid;
+    )?.status.code;
+    newCard.typeCode = typeCode;
     newCard.boardUuid = board.uuid;
 
     if (persist) {

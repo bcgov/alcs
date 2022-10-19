@@ -22,9 +22,9 @@ export interface CardUpdateDto {
 export interface CardFlatDto {
   uuid: string;
   assigneeUuid: string;
-  type: string;
+  typeCode: string;
   highPriority: boolean;
-  statusUuid: string;
+  statusCode: string;
   boardUuid: string;
 }
 

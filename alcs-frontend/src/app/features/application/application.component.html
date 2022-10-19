@@ -7,10 +7,10 @@
           <span
             class="application-type"
             [ngStyle]="{
-              backgroundColor: application.typeDetails.backgroundColor,
-              color: application.typeDetails.textColor
+              backgroundColor: application.type.backgroundColor,
+              color: application.type.textColor
             }"
-            >{{ application.typeDetails.label }}</span
+            >{{ application.type.label }}</span
           >
         </div>
         <div class="center">
@@ -29,8 +29,12 @@
             </button>
             <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
               <button mat-menu-item (click)="onGoToCard()">Standard Application</button>
-              <button *ngFor="let recon of reconsiderations; let i = index" mat-menu-item (click)="onGoToReconCard(recon)">
-                Reconsideration Request #{{i + 1}}
+              <button
+                *ngFor="let recon of reconsiderations; let i = index"
+                mat-menu-item
+                (click)="onGoToReconCard(recon)"
+              >
+                Reconsideration Request #{{ i + 1 }}
               </button>
             </mat-menu>
           </ng-container>

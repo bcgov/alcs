@@ -12,26 +12,18 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { CardStatus } from '../card/card-status/card-status.entity';
 import { CardService } from '../card/card.service';
-import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { CodeService } from '../code/code.service';
 import { RoleGuard } from '../common/authorization/role.guard';
-import {
-  ANY_AUTH_ROLE,
-  ROLES_ALLOWED_APPLICATIONS,
-} from '../common/authorization/roles';
+import { ROLES_ALLOWED_APPLICATIONS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import {
-  ApplicationDetailedDto,
   ApplicationDto,
-  UpdateApplicationDto,
   CreateApplicationDto,
+  UpdateApplicationDto,
 } from './application.dto';
 import { ApplicationService } from './application.service';
 
@@ -41,7 +33,6 @@ import { ApplicationService } from './application.service';
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
-    private codeService: CodeService,
     private notificationService: NotificationService,
     private cardService: CardService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
@@ -56,18 +47,13 @@ export class ApplicationController {
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDetailedDto> {
+  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
     const application = await this.applicationService.get(fileNumber);
     if (application) {
       const mappedApplication = await this.applicationService.mapToDtos([
         application,
       ]);
-      return {
-        ...mappedApplication[0],
-        statusDetails: application.card.status,
-        typeDetails: application.type,
-        regionDetails: application.region,
-      };
+      return mappedApplication[0];
     }
   }
 
@@ -86,27 +72,14 @@ export class ApplicationController {
   async update(
     @Param('fileNumber') fileNumber: string,
     @Body() updates: UpdateApplicationDto,
-  ): Promise<ApplicationDetailedDto> {
+  ): Promise<ApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
-    let type: ApplicationType | undefined;
-    if (updates.type && updates.type != application.type.code) {
-      type = await this.codeService.fetchApplicationType(updates.type);
-    }
-
-    let region: ApplicationRegion | undefined;
-    if (
-      updates.region &&
-      (!application.region || updates.region != application.region.code)
-    ) {
-      region = await this.codeService.fetchRegion(updates.region);
-    }
-
     const updatedApplication = await this.applicationService.update(
       application,
       {
         applicant: updates.applicant,
-        typeUuid: type ? type.uuid : undefined,
-        regionUuid: region ? region.uuid : undefined,
+        typeCode: updates.typeCode,
+        regionCode: updates.regionCode,
         summary: updates.summary,
         datePaid: formatIncomingDate(updates.datePaid),
         dateAcknowledgedIncomplete: formatIncomingDate(
@@ -123,12 +96,7 @@ export class ApplicationController {
     const mappedApps = await this.applicationService.mapToDtos([
       updatedApplication,
     ]);
-    return {
-      ...mappedApps[0],
-      statusDetails: updatedApplication.card.status,
-      typeDetails: updatedApplication.type,
-      regionDetails: updatedApplication.region,
-    };
+    return mappedApps[0];
   }
 
   @Delete()
@@ -149,18 +117,8 @@ export class ApplicationController {
       throw new ServiceValidationException(`Card ${cardUuid} not found`);
     }
 
-    let status: CardStatus | undefined;
-    if (
-      applicationUpdates.status &&
-      applicationUpdates.status != existingCard.status.code
-    ) {
-      status = await this.codeService.fetchCardStatus(
-        applicationUpdates.status,
-      );
-    }
-
     const updatedCard = await this.cardService.update(existingCard.uuid, {
-      statusUuid: status ? status.uuid : undefined,
+      statusCode: applicationUpdates.statusCode,
       assigneeUuid: applicationUpdates.assigneeUuid,
       highPriority: applicationUpdates.highPriority,
     });
@@ -186,12 +144,7 @@ export class ApplicationController {
     }
 
     const mappedApps = await this.applicationService.mapToDtos([application]);
-    return {
-      ...mappedApps[0],
-      statusDetails: application.card.status,
-      typeDetails: application.type,
-      regionDetails: application.region,
-    };
+    return mappedApps[0];
   }
 
   @Get('/search/:fileNumber')

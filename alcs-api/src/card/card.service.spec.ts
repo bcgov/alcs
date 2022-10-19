@@ -62,7 +62,7 @@ describe('CardService', () => {
   it('should call save when an Card is updated', async () => {
     const payload: Partial<CardUpdateServiceDto> = {
       assigneeUuid: mockCardEntity.assigneeUuid,
-      statusUuid: mockCardEntity.statusUuid,
+      statusCode: mockCardEntity.statusCode,
       boardUuid: mockCardEntity.boardUuid,
     };
 
@@ -75,7 +75,7 @@ describe('CardService', () => {
   it('should fail update if card does not exist', async () => {
     const payload: Partial<CardUpdateServiceDto> = {
       assigneeUuid: mockCardEntity.assigneeUuid,
-      statusUuid: mockCardEntity.statusUuid,
+      statusCode: mockCardEntity.statusCode,
       boardUuid: mockCardEntity.boardUuid,
     };
 
@@ -94,9 +94,8 @@ describe('CardService', () => {
   it('should call save when card successfully create', async () => {
     const board = {
       ...initBoardMockEntity(),
-      uuid: 'fake',
       code: 'fake-board',
-      statuses: [{ order: 0, status: { code: 'fake-status', uuid: 'fake' } }],
+      statuses: [{ order: 0, status: { code: 'fake-status' } }],
     } as Board;
 
     cardTypeRepositoryMock.findOneOrFail.mockReturnValue({
@@ -113,9 +112,8 @@ describe('CardService', () => {
     const fakeType = 'fake-type';
     const board = {
       ...initBoardMockEntity(),
-      uuid: 'fake',
       code: 'fake-board',
-      statuses: [{ order: 0, status: { code: 'fake-status', uuid: 'fake' } }],
+      statuses: [{ order: 0, status: { code: 'fake-status' } }],
     } as Board;
 
     cardTypeRepositoryMock.findOneOrFail.mockReturnValue(undefined);

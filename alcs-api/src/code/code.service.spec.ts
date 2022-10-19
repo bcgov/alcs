@@ -80,21 +80,21 @@ describe('CodeService', () => {
   it('should map the repos to the right response keys', async () => {
     const mockTypes = [
       {
-        uuid: '1',
+        code: '1',
       },
     ];
     mockTypeRepository.find.mockResolvedValue(mockTypes as ApplicationType[]);
 
     const mockStatuses = [
       {
-        uuid: '2',
+        code: '2',
       },
     ];
     mockStatusRepository.find.mockResolvedValue(mockStatuses as CardStatus[]);
 
     const mockRegions = [
       {
-        uuid: '3',
+        code: '3',
       },
     ];
     mockRegionRepository.find.mockResolvedValue(
@@ -103,7 +103,7 @@ describe('CodeService', () => {
 
     const mockMeetingTypes = [
       {
-        uuid: '4',
+        code: '4',
       },
     ];
     mockMeetingRepository.find.mockResolvedValue(
@@ -112,11 +112,11 @@ describe('CodeService', () => {
 
     const mockReconsiderationTypes = [
       {
-        uuid: '5',
+        code: '5',
       },
     ];
     mockReconsiderationTypeRepository.find.mockResolvedValue(
-      mockReconsiderationTypes as ApplicationReconsiderationType[],
+      mockReconsiderationTypes as any[],
     );
 
     const res = await service.getAll();
@@ -130,7 +130,7 @@ describe('CodeService', () => {
 
   it('should call the type repo for types', async () => {
     const mockType = {
-      uuid: '1',
+      code: '1',
     };
     mockTypeRepository.findOne.mockResolvedValue(mockType as ApplicationType);
 
@@ -142,7 +142,7 @@ describe('CodeService', () => {
 
   it('should call the status repo for status', async () => {
     const mockStatus = {
-      uuid: '2',
+      code: '2',
     };
     mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
 
@@ -154,7 +154,7 @@ describe('CodeService', () => {
 
   it('should call the region repo for regions', async () => {
     const mockRegion = {
-      uuid: '1',
+      code: '1',
     };
     mockRegionRepository.findOne.mockResolvedValue(
       mockRegion as ApplicationRegion,
@@ -168,7 +168,7 @@ describe('CodeService', () => {
 
   it('should call the meeting type repo for application meeting types', async () => {
     const mockMeetingType = {
-      uuid: '1',
+      code: '1',
     };
     mockMeetingRepository.findOne.mockResolvedValue(
       mockMeetingType as ApplicationMeetingType,

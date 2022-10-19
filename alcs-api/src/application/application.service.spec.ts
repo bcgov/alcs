@@ -101,8 +101,8 @@ describe('ApplicationService', () => {
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
       localGovernmentUuid: 'government-uuid',
-      type: 'type',
-      region: 'region',
+      typeCode: 'type',
+      regionCode: 'region',
       dateReceived: new Date().getTime(),
     };
 

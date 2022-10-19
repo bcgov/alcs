@@ -71,7 +71,6 @@ describe('ApplicationDecisionController', () => {
     mockDecisionService.fetchCodes.mockResolvedValue({
       outcomes: [
         {
-          uuid: 'code-uuid',
           code: 'decision-code',
           label: 'decision-label',
         } as DecisionOutcomeCode,

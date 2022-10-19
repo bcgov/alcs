@@ -127,8 +127,8 @@ export class ApplicationReconsiderationService {
       return await this.applicationService.create(
         {
           fileNumber: reconsideration.applicationFileNumber,
-          type: reconsideration.applicationTypeCode,
-          region: reconsideration.region,
+          typeCode: reconsideration.applicationTypeCode,
+          regionCode: reconsideration.regionCode,
           localGovernmentUuid: reconsideration.localGovernmentUuid,
           applicant: reconsideration.applicant,
           dateReceived: reconsideration.submittedDate,
