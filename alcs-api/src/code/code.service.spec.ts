@@ -80,35 +80,39 @@ describe('CodeService', () => {
   it('should map the repos to the right response keys', async () => {
     const mockTypes = [
       {
-        uuid: '1',
+        code: '1',
       },
     ];
-    mockTypeRepository.find.mockResolvedValue(mockTypes as any[]);
+    mockTypeRepository.find.mockResolvedValue(mockTypes as ApplicationType[]);
 
     const mockStatuses = [
       {
-        uuid: '2',
+        code: '2',
       },
     ];
-    mockStatusRepository.find.mockResolvedValue(mockStatuses as any[]);
+    mockStatusRepository.find.mockResolvedValue(mockStatuses as CardStatus[]);
 
     const mockRegions = [
       {
-        uuid: '3',
+        code: '3',
       },
     ];
-    mockRegionRepository.find.mockResolvedValue(mockRegions as any[]);
+    mockRegionRepository.find.mockResolvedValue(
+      mockRegions as ApplicationRegion[],
+    );
 
     const mockMeetingTypes = [
       {
-        uuid: '4',
+        code: '4',
       },
     ];
-    mockMeetingRepository.find.mockResolvedValue(mockMeetingTypes as any[]);
+    mockMeetingRepository.find.mockResolvedValue(
+      mockMeetingTypes as ApplicationMeetingType[],
+    );
 
     const mockReconsiderationTypes = [
       {
-        uuid: '5',
+        code: '5',
       },
     ];
     mockReconsiderationTypeRepository.find.mockResolvedValue(
@@ -126,9 +130,9 @@ describe('CodeService', () => {
 
   it('should call the type repo for types', async () => {
     const mockType = {
-      uuid: '1',
+      code: '1',
     };
-    mockTypeRepository.findOne.mockResolvedValue(mockType as any);
+    mockTypeRepository.findOne.mockResolvedValue(mockType as ApplicationType);
 
     const res = await service.fetchApplicationType('code');
 
@@ -138,9 +142,9 @@ describe('CodeService', () => {
 
   it('should call the status repo for status', async () => {
     const mockStatus = {
-      uuid: '2',
+      code: '2',
     };
-    mockStatusRepository.findOne.mockResolvedValue(mockStatus as any);
+    mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
 
     const res = await service.fetchCardStatus('code');
 
@@ -150,9 +154,11 @@ describe('CodeService', () => {
 
   it('should call the region repo for regions', async () => {
     const mockRegion = {
-      uuid: '1',
+      code: '1',
     };
-    mockRegionRepository.findOne.mockResolvedValue(mockRegion as any);
+    mockRegionRepository.findOne.mockResolvedValue(
+      mockRegion as ApplicationRegion,
+    );
 
     const res = await service.fetchRegion('code');
 
@@ -162,9 +168,11 @@ describe('CodeService', () => {
 
   it('should call the meeting type repo for application meeting types', async () => {
     const mockMeetingType = {
-      uuid: '1',
+      code: '1',
     };
-    mockMeetingRepository.findOne.mockResolvedValue(mockMeetingType as any);
+    mockMeetingRepository.findOne.mockResolvedValue(
+      mockMeetingType as ApplicationMeetingType,
+    );
 
     const res = await service.fetchMeetingType('code');
 

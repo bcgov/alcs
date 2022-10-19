@@ -5,12 +5,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BoardSmallDto } from '../board/board.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
-import { CardStatus } from '../card/card-status/card-status.entity';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { CodeService } from '../code/code.service';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
@@ -137,7 +134,8 @@ describe('ApplicationController', () => {
     const res = await controller.create({
       ...mockApplicationDto,
       localGovernmentUuid: 'government-uuid',
-    } as any);
+      typeCode: 'fake-code',
+    });
 
     expect(applicationService.create).toHaveBeenCalledTimes(1);
     expect(res).toStrictEqual(mockApplicationDto);
@@ -159,7 +157,7 @@ describe('ApplicationController', () => {
     applicationService.mapToDtos.mockResolvedValue([
       {
         applicant: mockUpdate.applicant,
-      } as unknown as ApplicationDto,
+      } as ApplicationDto,
     ]);
 
     const res = await controller.update(fileNumber, mockUpdate);
@@ -372,9 +370,12 @@ describe('ApplicationController', () => {
 
     applicationService.mapToDtos.mockResolvedValue([
       {
-        ...mockApplicationEntity,
-        card: updatedCard as any,
-      } as any,
+        card: {
+          status: {
+            code: mockStatus,
+          },
+        },
+      } as ApplicationDto,
     ]);
 
     const result = await controller.updateCard(
