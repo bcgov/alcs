@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_reconsideration_type</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>application_reconsideration_type</h1><p><span id="recordNumber">2</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -108,27 +108,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>gen_random_uuid()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application_reconsideration.type_uuid references application_reconsideration_type.uuid via FK_38dd9eddb8d8d72e50d28e876e3"><a href='application_reconsideration.html'>application_reconsideration</a><span class='relatedKey'>.type_uuid</span></td>
-                                                <td class="constraint detail">FK_38dd9eddb8d8d72e50d28e876e3<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
                                 <tr>
                                     <td><span id="audit_deleted_date_at">audit_deleted_date_at</span></td>
                                     <td>timestamptz</td>
@@ -232,7 +211,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="code">code</span></td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="code">code</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -240,6 +219,10 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_reconsideration.type_code references application_reconsideration_type.code via FK_8cc8462c63cbb9608a920e9edde"><a href='application_reconsideration.html'>application_reconsideration</a><span class='relatedKey'>.type_code</span></td>
+                                                <td class="constraint detail">FK_8cc8462c63cbb9608a920e9edde<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -296,22 +279,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_2ffcd94d8574e04dc112b07cee7</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_8cc8462c63cbb9608a920e9edde</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>uuid</td>
+                                    <td>code</td>
                                 </tr>
                                 <tr>
                                     <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_cf38509e56ffe4793053f949553</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>description</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_d141dda7d1d0d9b59629557827e</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>code</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -336,8 +313,8 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="519,5,821,211">
-<area shape="rect" id="node2" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="5,91,475,424">
+<area shape="rect" id="node1" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="519,96,821,301">
+<area shape="rect" id="node2" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="5,5,475,309">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_reconsideration_type.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
@@ -346,7 +323,7 @@
 <area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="314,5,483,93">
 <area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="5,40,120,128">
 <area shape="rect" id="node3" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="677,12,980,217">
-<area shape="rect" id="node4" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="164,147,633,480">
+<area shape="rect" id="node4" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="164,147,633,451">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_reconsideration_type.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

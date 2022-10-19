@@ -122,24 +122,6 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_cd7126f6177b068f58e05d47b8f</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application_decision.html'>application_decision</a><span>.outcome_uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/decision_outcome_code.html'>decision_outcome_code</a><span>.uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
-                                    </tr>
-                                    <tr>
                                         <td>FK_0c9a7750537b07493a78248b295</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
@@ -152,6 +134,24 @@
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
                                                     <td><a href='tables/application.html'>application</a><span>.uuid</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FK_d00682751a3d4cdd7c9a16ab041</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application_decision.html'>application_decision</a><span>.outcome_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/decision_outcome_code.html'>decision_outcome_code</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -194,18 +194,36 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_b53229d75c2fe5a617ecbff82f3</td>
+                                        <td>FK_805ded031f6340b59f60b6f76f5</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application.html'>application</a><span>.type_uuid</span></td>
+                                                    <td><a href='tables/application.html'>application</a><span>.region_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_type.html'>application_type</a><span>.uuid</span></td>
+                                                    <td><a href='tables/application_region.html'>application_region</a><span>.code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FK_c11f09867d33ab9bea127b7fa87</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application.html'>application</a><span>.type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application_type.html'>application_type</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -224,24 +242,6 @@
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
                                                     <td><a href='tables/card.html'>card</a><span>.uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FK_8b7f8f8a39a6142e0f7c5ad86f5</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application.html'>application</a><span>.region_uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application_region.html'>application_region</a><span>.uuid</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -356,36 +356,18 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_38dd9eddb8d8d72e50d28e876e3</td>
+                                        <td>FK_8cc8462c63cbb9608a920e9edde</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_reconsideration.html'>application_reconsideration</a><span>.type_uuid</span></td>
+                                                    <td><a href='tables/application_reconsideration.html'>application_reconsideration</a><span>.type_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_reconsideration_type.html'>application_reconsideration_type</a><span>.uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FK_5a9e11f5a58d23866e129e6981d</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/card.html'>card</a><span>.type_uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/card_type.html'>card_type</a><span>.uuid</span></td>
+                                                    <td><a href='tables/application_reconsideration_type.html'>application_reconsideration_type</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -428,18 +410,36 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_f3fd3dde1c00cd754841b8b696b</td>
+                                        <td>FK_30b9e07ab7c729f90911604179f</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/card.html'>card</a><span>.status_uuid</span></td>
+                                                    <td><a href='tables/card.html'>card</a><span>.type_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/card_status.html'>card_status</a><span>.uuid</span></td>
+                                                    <td><a href='tables/card_type.html'>card_type</a><span>.code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FK_3e1a5a0591f4b54698ea641c38d</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/card.html'>card</a><span>.status_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/card_status.html'>card_status</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -482,18 +482,18 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_97cd2800c2e17e3cb8c24c78987</td>
+                                        <td>FK_f7dd22f525a7b3712256f63ebcb</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/board_status.html'>board_status</a><span>.status_uuid</span></td>
+                                                    <td><a href='tables/board_status.html'>board_status</a><span>.status_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/card_status.html'>card_status</a><span>.uuid</span></td>
+                                                    <td><a href='tables/card_status.html'>card_status</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -554,6 +554,24 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
+                                        <td>FK_c6031d3312bd42fd3f325eba266</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application_meeting.html'>application_meeting</a><span>.meeting_pause_uuid</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application_paused.html'>application_paused</a><span>.uuid</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>Null on delete</span></td>
+                                    </tr>
+                                    <tr>
                                         <td>FK_77fa445c8781553d4ebd7a15749</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
@@ -572,40 +590,22 @@
                                         <td><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>Null on delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_72a475306937f870cdffdcc0981</td>
+                                        <td>FK_85b30b748ea5fd08763e0ecf628</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_meeting.html'>application_meeting</a><span>.type_uuid</span></td>
+                                                    <td><a href='tables/application_meeting.html'>application_meeting</a><span>.type_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_meeting_type.html'>application_meeting_type</a><span>.uuid</span></td>
+                                                    <td><a href='tables/application_meeting_type.html'>application_meeting_type</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FK_e527e6d1acc89174494456e0ad3</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application_meeting.html'>application_meeting</a><span>.meeting_pause_uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application_paused.html'>application_paused</a><span>.uuid</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>Null on delete</span></td>
                                     </tr>
                                     <tr>
                                         <td>FK_4a7e09569765e147304194b63f5</td>
@@ -680,25 +680,25 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_3afd8e13199baffc02bd7b0ccba</td>
+                                        <td>FK_409473aef1f92b6675e3f7c00ad</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/planning_review.html'>planning_review</a><span>.region_uuid</span></td>
+                                                    <td><a href='tables/planning_review.html'>planning_review</a><span>.region_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_region.html'>application_region</a><span>.uuid</span></td>
+                                                    <td><a href='tables/application_region.html'>application_region</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_03a05aa8fefbc2fc1cdf138d807</td>
+                                        <td>FK_735dcdd4fa909a60d0fa1828f24</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
@@ -716,7 +716,7 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_aa000ca980238643bb70df5270b</td>
+                                        <td>FK_5a57c8d407eb6132ed39cb8fe6f</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
@@ -734,18 +734,18 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_a97bb512509e0637e03fa9812f3</td>
+                                        <td>FK_b7e4525de796ada01f43f464d9d</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_local_government.html'>application_local_government</a><span>.preferred_region_uuid</span></td>
+                                                    <td><a href='tables/application_local_government.html'>application_local_government</a><span>.preferred_region_code</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_region.html'>application_region</a><span>.uuid</span></td>
+                                                    <td><a href='tables/application_region.html'>application_region</a><span>.code</span></td>
                                                 </tr>
                                             </table>
                                         </td>

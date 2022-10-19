@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_local_government</h1><p><span id="recordNumber">148</span> rows</p><br />
+                    <h1>application_local_government</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -122,8 +122,8 @@
                                                 <td class="constraint detail">FK_58853fcb8957e8b2c131cc12da1<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="planning_review.local_government_uuid references application_local_government.uuid via FK_aa000ca980238643bb70df5270b"><a href='planning_review.html'>planning_review</a><span class='relatedKey'>.local_government_uuid</span></td>
-                                                <td class="constraint detail">FK_aa000ca980238643bb70df5270b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="planning_review.local_government_uuid references application_local_government.uuid via FK_5a57c8d407eb6132ed39cb8fe6f"><a href='planning_review.html'>planning_review</a><span class='relatedKey'>.local_government_uuid</span></td>
+                                                <td class="constraint detail">FK_5a57c8d407eb6132ed39cb8fe6f<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -236,8 +236,8 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="preferred_region_uuid">preferred_region_uuid</span></td>
-                                    <td>uuid</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="preferred_region_code">preferred_region_code</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
@@ -249,8 +249,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_local_government.preferred_region_uuid references application_region.uuid via FK_a97bb512509e0637e03fa9812f3"><a href='application_region.html'>application_region</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_a97bb512509e0637e03fa9812f3<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="application_local_government.preferred_region_code references application_region.code via FK_b7e4525de796ada01f43f464d9d"><a href='application_region.html'>application_region</a><span class='relatedKey'>.code</span></td>
+                                                <td class="constraint detail">FK_b7e4525de796ada01f43f464d9d<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -316,9 +316,9 @@
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
 <area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="761,5,1064,269">
-<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,159,717,463">
-<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,367,232,543">
-<area shape="rect" id="node4" href="planning_review.html" target="_top" title="planning_review" alt="" coords="796,300,1029,535">
+<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,201,717,505">
+<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,409,232,556">
+<area shape="rect" id="node4" href="planning_review.html" target="_top" title="planning_review" alt="" coords="796,313,1029,548">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_local_government.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

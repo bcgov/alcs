@@ -21,26 +21,26 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="applicant" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="type_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_b53229d75c2fe5a617ecbff82f3" implied="false" onDeleteCascade="false" schema="public" table="application_type"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="region_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_8b7f8f8a39a6142e0f7c5ad86f5" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="date_received" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="12" name="date_paid" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="13" name="date_acknowledged_incomplete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="14" name="date_received_all_items" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="15" name="date_acknowledged_complete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="16" name="decision_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="date_received" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="10" name="date_paid" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="date_acknowledged_incomplete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="12" name="date_received_all_items" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="13" name="date_acknowledged_complete" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="14" name="decision_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_21eddf92cb75ff3cc0c99b80d86" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="summary" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="20" name="notification_sent_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="summary" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="18" name="notification_sent_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_c11f09867d33ab9bea127b7fa87" implied="false" onDeleteCascade="false" schema="public" table="application_type"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="20" name="region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_805ded031f6340b59f60b6f76f5" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
@@ -65,20 +65,20 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_0c9a7750537b07493a78248b295" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="outcome_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_cd7126f6177b068f58e05d47b8f" implied="false" onDeleteCascade="false" schema="public" table="decision_outcome_code"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="audit_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="chair_review_required" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="chair_review_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="is_time_extension" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="decision_maker_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="audit_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="chair_review_required" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="10" name="chair_review_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="is_time_extension" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="decision_maker_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_9bfe649b67952a226317fc3c1ae" implied="false" onDeleteCascade="false" schema="public" table="decision_maker_code"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="ceo_criterion_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="ceo_criterion_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_421d167684e2e83d826f939bea7" implied="false" onDeleteCascade="false" schema="public" table="ceo_criterion_code"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="chair_review_outcome" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="chair_review_outcome" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="outcome_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_d00682751a3d4cdd7c9a16ab041" implied="false" onDeleteCascade="false" schema="public" table="decision_outcome_code"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f1cbebd03275dcbe1a70d46cebf" unique="true">
             <column ascending="true" name="uuid"/>
@@ -117,10 +117,10 @@
             <column ascending="true" name="document_uuid"/>
          </index>
       </table>
-      <table name="application_local_government" numRows="148" remarks="" schema="public" type="TABLE">
+      <table name="application_local_government" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="local_government_uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="public" table="application"/>
-            <child column="local_government_uuid" foreignKey="FK_aa000ca980238643bb70df5270b" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
+            <child column="local_government_uuid" foreignKey="FK_5a57c8d407eb6132ed39cb8fe6f" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -128,8 +128,8 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="preferred_region_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_a97bb512509e0637e03fa9812f3" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="preferred_region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_b7e4525de796ada01f43f464d9d" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_58853fcb8957e8b2c131cc12da1" unique="true">
@@ -143,18 +143,18 @@
          <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="type_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_72a475306937f870cdffdcc0981" implied="false" onDeleteCascade="false" schema="public" table="application_meeting_type"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_4a7e09569765e147304194b63f5" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="meeting_pause_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_e527e6d1acc89174494456e0ad3" implied="false" onDeleteCascade="false" schema="public" table="application_paused"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="meeting_pause_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_c6031d3312bd42fd3f325eba266" implied="false" onDeleteCascade="false" schema="public" table="application_paused"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="report_pause_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="report_pause_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_77fa445c8781553d4ebd7a15749" implied="false" onDeleteCascade="false" schema="public" table="application_paused"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_85b30b748ea5fd08763e0ecf628" implied="false" onDeleteCascade="false" schema="public" table="application_meeting_type"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_cd00f1709cc87faf611c3e4c284" unique="true">
@@ -167,23 +167,19 @@
             <column ascending="true" name="meeting_pause_uuid"/>
          </index>
       </table>
-      <table name="application_meeting_type" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="type_uuid" foreignKey="FK_72a475306937f870cdffdcc0981" implied="false" onDeleteCascade="false" schema="public" table="application_meeting"/>
+      <table name="application_meeting_type" numRows="3" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="type_code" foreignKey="FK_85b30b748ea5fd08763e0ecf628" implied="false" onDeleteCascade="false" schema="public" table="application_meeting"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_72a475306937f870cdffdcc0981" unique="true">
-            <column ascending="true" name="uuid"/>
-         </index>
-         <index name="UQ_85b30b748ea5fd08763e0ecf628" unique="true">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_85b30b748ea5fd08763e0ecf628" unique="true">
             <column ascending="true" name="code"/>
          </index>
          <index name="UQ_d1e025597c97f817a546a3877c9" unique="true">
@@ -192,7 +188,7 @@
       </table>
       <table name="application_paused" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="meeting_pause_uuid" foreignKey="FK_e527e6d1acc89174494456e0ad3" implied="false" onDeleteCascade="false" schema="public" table="application_meeting"/>
+            <child column="meeting_pause_uuid" foreignKey="FK_c6031d3312bd42fd3f325eba266" implied="false" onDeleteCascade="false" schema="public" table="application_meeting"/>
             <child column="report_pause_uuid" foreignKey="FK_77fa445c8781553d4ebd7a15749" implied="false" onDeleteCascade="false" schema="public" table="application_meeting"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -226,8 +222,8 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_6d10e08b482effb968defe55357" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="type_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_38dd9eddb8d8d72e50d28e876e3" implied="false" onDeleteCascade="false" schema="public" table="application_reconsideration_type"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_8cc8462c63cbb9608a920e9edde" implied="false" onDeleteCascade="false" schema="public" table="application_reconsideration_type"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_9aadf4188d47bd2ccf9b24e6ccb" unique="true">
@@ -237,78 +233,66 @@
             <column ascending="true" name="card_uuid"/>
          </index>
       </table>
-      <table name="application_reconsideration_type" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="type_uuid" foreignKey="FK_38dd9eddb8d8d72e50d28e876e3" implied="false" onDeleteCascade="false" schema="public" table="application_reconsideration"/>
+      <table name="application_reconsideration_type" numRows="2" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="type_code" foreignKey="FK_8cc8462c63cbb9608a920e9edde" implied="false" onDeleteCascade="false" schema="public" table="application_reconsideration"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_2ffcd94d8574e04dc112b07cee7" unique="true">
-            <column ascending="true" name="uuid"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_8cc8462c63cbb9608a920e9edde" unique="true">
+            <column ascending="true" name="code"/>
          </index>
          <index name="UQ_cf38509e56ffe4793053f949553" unique="true">
             <column ascending="true" name="description"/>
          </index>
-         <index name="UQ_d141dda7d1d0d9b59629557827e" unique="true">
-            <column ascending="true" name="code"/>
-         </index>
       </table>
-      <table name="application_region" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="region_uuid" foreignKey="FK_8b7f8f8a39a6142e0f7c5ad86f5" implied="false" onDeleteCascade="false" schema="public" table="application"/>
-            <child column="preferred_region_uuid" foreignKey="FK_a97bb512509e0637e03fa9812f3" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
-            <child column="region_uuid" foreignKey="FK_3afd8e13199baffc02bd7b0ccba" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
+      <table name="application_region" numRows="6" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="region_code" foreignKey="FK_805ded031f6340b59f60b6f76f5" implied="false" onDeleteCascade="false" schema="public" table="application"/>
+            <child column="preferred_region_code" foreignKey="FK_b7e4525de796ada01f43f464d9d" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
+            <child column="region_code" foreignKey="FK_409473aef1f92b6675e3f7c00ad" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_8b7f8f8a39a6142e0f7c5ad86f5" unique="true">
-            <column ascending="true" name="uuid"/>
-         </index>
-         <index name="UQ_805ded031f6340b59f60b6f76f5" unique="true">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_805ded031f6340b59f60b6f76f5" unique="true">
             <column ascending="true" name="code"/>
          </index>
          <index name="UQ_cd2aeaf77db9f2e0b50d194aa78" unique="true">
             <column ascending="true" name="description"/>
          </index>
       </table>
-      <table name="application_type" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="type_uuid" foreignKey="FK_b53229d75c2fe5a617ecbff82f3" implied="false" onDeleteCascade="false" schema="public" table="application"/>
+      <table name="application_type" numRows="9" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="type_code" foreignKey="FK_c11f09867d33ab9bea127b7fa87" implied="false" onDeleteCascade="false" schema="public" table="application"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="short_label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="background_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="text_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_b53229d75c2fe5a617ecbff82f3" unique="true">
-            <column ascending="true" name="uuid"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="short_label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="background_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="text_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_c11f09867d33ab9bea127b7fa87" unique="true">
+            <column ascending="true" name="code"/>
          </index>
          <index name="UQ_a5eabdc27d5f23d654bb51bae24" unique="true">
             <column ascending="true" name="description"/>
-         </index>
-         <index name="UQ_c11f09867d33ab9bea127b7fa87" unique="true">
-            <column ascending="true" name="code"/>
          </index>
       </table>
       <table name="board" remarks="" schema="public" type="TABLE">
@@ -340,19 +324,19 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="order" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="board_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_30cd0aba1ecf48c3687eaa215e1" implied="false" onDeleteCascade="false" schema="public" table="board"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="status_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_97cd2800c2e17e3cb8c24c78987" implied="false" onDeleteCascade="false" schema="public" table="card_status"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="status_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_f7dd22f525a7b3712256f63ebcb" implied="false" onDeleteCascade="false" schema="public" table="card_status"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_011eeedcd1eb7802ad33e26a32c" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
-         <index name="UQ_3b9caa6927f2f478fa0778fd6d8" unique="true">
+         <index name="UQ_cf22f0a664bdb4efafd1bce647d" unique="true">
             <column ascending="true" name="board_uuid"/>
-            <column ascending="true" name="status_uuid"/>
+            <column ascending="true" name="status_code"/>
          </index>
       </table>
       <table name="card" remarks="" schema="public" type="TABLE">
@@ -362,7 +346,7 @@
             <child column="card_uuid" foreignKey="FK_b9537303955ebb0430c46d95997" implied="false" onDeleteCascade="false" schema="public" table="card_history"/>
             <child column="card_uuid" foreignKey="FK_27ad2b929d07d4c4e43943f8e62" implied="false" onDeleteCascade="false" schema="public" table="card_subtask"/>
             <child column="card_uuid" foreignKey="FK_acb37fb28b6e19312217e12aaa2" implied="false" onDeleteCascade="false" schema="public" table="comment"/>
-            <child column="card_uuid" foreignKey="FK_03a05aa8fefbc2fc1cdf138d807" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
+            <child column="card_uuid" foreignKey="FK_735dcdd4fa909a60d0fa1828f24" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -370,18 +354,18 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="false" digits="0" id="6" name="high_priority" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="'f9f4244f-9741-45f0-9724-ce13e8aa09eb'::uuid" digits="0" id="7" name="status_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_f3fd3dde1c00cd754841b8b696b" implied="false" onDeleteCascade="false" schema="public" table="card_status"/>
-         </column>
-         <column autoUpdated="false" defaultValue="'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2'::uuid" digits="0" id="8" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2'::uuid" digits="0" id="7" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_38a14bc9166d9fac12861d07cdd" implied="false" onDeleteCascade="false" schema="public" table="board"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="assignee_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="assignee_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_e91ded29d40ce244c61402e65fe" implied="false" onDeleteCascade="false" schema="public" table="user"/>
          </column>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="10" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="'f6df265f-3163-4201-858a-87d4fbd75cbe'::uuid" digits="0" id="11" name="type_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_5a9e11f5a58d23866e129e6981d" implied="false" onDeleteCascade="false" schema="public" table="card_type"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="9" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="'SUBM'::text" digits="0" id="10" name="status_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_3e1a5a0591f4b54698ea641c38d" implied="false" onDeleteCascade="false" schema="public" table="card_status"/>
+         </column>
+         <column autoUpdated="false" defaultValue="'APP'::text" digits="0" id="11" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_30b9e07ab7c729f90911604179f" implied="false" onDeleteCascade="false" schema="public" table="card_type"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_dc3046f87b3ecabadae16bc4a8b" unique="true">
@@ -398,33 +382,29 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="start_date" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="end_date" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="user_id" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="status_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_b9537303955ebb0430c46d95997" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="status_code" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_72bac9dd2ac14e72ea407e000f3" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="card_status" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="status_uuid" foreignKey="FK_97cd2800c2e17e3cb8c24c78987" implied="false" onDeleteCascade="false" schema="public" table="board_status"/>
-            <child column="status_uuid" foreignKey="FK_f3fd3dde1c00cd754841b8b696b" implied="false" onDeleteCascade="false" schema="public" table="card"/>
+      <table name="card_status" numRows="15" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="status_code" foreignKey="FK_f7dd22f525a7b3712256f63ebcb" implied="false" onDeleteCascade="false" schema="public" table="board_status"/>
+            <child column="status_code" foreignKey="FK_3e1a5a0591f4b54698ea641c38d" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_f3fd3dde1c00cd754841b8b696b" unique="true">
-            <column ascending="true" name="uuid"/>
-         </index>
-         <index name="UQ_3e1a5a0591f4b54698ea641c38d" unique="true">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_3e1a5a0591f4b54698ea641c38d" unique="true">
             <column ascending="true" name="code"/>
          </index>
          <index name="UQ_9743541eb8e42b744016f9d14f9" unique="true">
@@ -471,23 +451,19 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="card_type" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="type_uuid" foreignKey="FK_5a9e11f5a58d23866e129e6981d" implied="false" onDeleteCascade="false" schema="public" table="card"/>
+      <table name="card_type" numRows="3" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="type_code" foreignKey="FK_30b9e07ab7c729f90911604179f" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_5a9e11f5a58d23866e129e6981d" unique="true">
-            <column ascending="true" name="uuid"/>
-         </index>
-         <index name="UQ_30b9e07ab7c729f90911604179f" unique="true">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_30b9e07ab7c729f90911604179f" unique="true">
             <column ascending="true" name="code"/>
          </index>
          <index name="UQ_715d4a7d408c461949a6f007a71" unique="true">
@@ -597,27 +573,23 @@
             <column ascending="true" name="description"/>
          </index>
       </table>
-      <table name="decision_outcome_code" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="outcome_uuid" foreignKey="FK_cd7126f6177b068f58e05d47b8f" implied="false" onDeleteCascade="false" schema="public" table="application_decision"/>
+      <table name="decision_outcome_code" numRows="3" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="outcome_code" foreignKey="FK_d00682751a3d4cdd7c9a16ab041" implied="false" onDeleteCascade="false" schema="public" table="application_decision"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <primaryKey column="uuid" sequenceNumberInPK="1"/>
-         <index name="PK_cd7126f6177b068f58e05d47b8f" unique="true">
-            <column ascending="true" name="uuid"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_6601a2660a07574e6a960efbc07" unique="true">
+            <column ascending="true" name="code"/>
          </index>
          <index name="UQ_77e04acc3bb3e8b5226c481c039" unique="true">
             <column ascending="true" name="description"/>
-         </index>
-         <index name="UQ_d00682751a3d4cdd7c9a16ab041" unique="true">
-            <column ascending="true" name="code"/>
          </index>
       </table>
       <table name="document" remarks="" schema="public" type="TABLE">
@@ -650,7 +622,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" numRows="49" remarks="" schema="public" type="TABLE">
+      <table name="holiday_entity" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="day" nullable="false" remarks="" size="13" type="date" typeCode="91"/>
@@ -662,7 +634,7 @@
             <column ascending="true" name="day"/>
          </index>
       </table>
-      <table name="migrations" numRows="67" remarks="" schema="public" type="TABLE">
+      <table name="migrations" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
@@ -700,13 +672,13 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_03a05aa8fefbc2fc1cdf138d807" implied="false" onDeleteCascade="false" schema="public" table="card"/>
+            <parent column="uuid" foreignKey="FK_735dcdd4fa909a60d0fa1828f24" implied="false" onDeleteCascade="false" schema="public" table="card"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_aa000ca980238643bb70df5270b" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
+            <parent column="uuid" foreignKey="FK_5a57c8d407eb6132ed39cb8fe6f" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="region_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_3afd8e13199baffc02bd7b0ccba" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_409473aef1f92b6675e3f7c00ad" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_8831458aaa7f36b0672d238c032" unique="true">

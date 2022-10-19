@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>card_status</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>card_status</h1><p><span id="recordNumber">15</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -108,31 +108,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>gen_random_uuid()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="board_status.status_uuid references card_status.uuid via FK_97cd2800c2e17e3cb8c24c78987"><a href='board_status.html'>board_status</a><span class='relatedKey'>.status_uuid</span></td>
-                                                <td class="constraint detail">FK_97cd2800c2e17e3cb8c24c78987<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="card.status_uuid references card_status.uuid via FK_f3fd3dde1c00cd754841b8b696b"><a href='card.html'>card</a><span class='relatedKey'>.status_uuid</span></td>
-                                                <td class="constraint detail">FK_f3fd3dde1c00cd754841b8b696b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
                                 <tr>
                                     <td><span id="audit_deleted_date_at">audit_deleted_date_at</span></td>
                                     <td>timestamptz</td>
@@ -236,7 +211,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="code">code</span></td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="code">code</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -244,6 +219,14 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="board_status.status_code references card_status.code via FK_f7dd22f525a7b3712256f63ebcb"><a href='board_status.html'>board_status</a><span class='relatedKey'>.status_code</span></td>
+                                                <td class="constraint detail">FK_f7dd22f525a7b3712256f63ebcb<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="card.status_code references card_status.code via FK_3e1a5a0591f4b54698ea641c38d"><a href='card.html'>card</a><span class='relatedKey'>.status_code</span></td>
+                                                <td class="constraint detail">FK_3e1a5a0591f4b54698ea641c38d<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -300,14 +283,8 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_f3fd3dde1c00cd754841b8b696b</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_3e1a5a0591f4b54698ea641c38d</td>
                                     <td>Primary key</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>uuid</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_3e1a5a0591f4b54698ea641c38d</td>
-                                    <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>code</td>
                                 </tr>
@@ -340,26 +317,26 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="board_status.html" target="_top" title="board_status" alt="" coords="428,5,652,181">
-<area shape="rect" id="node2" href="card_status.html" target="_top" title="card_status" alt="" coords="5,144,384,477">
-<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="428,199,652,433">
+<area shape="rect" id="node1" href="board_status.html" target="_top" title="board_status" alt="" coords="428,13,652,189">
+<area shape="rect" id="node2" href="card_status.html" target="_top" title="card_status" alt="" coords="5,5,384,309">
+<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="428,207,652,441">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/card_status.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="716,332,885,420">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="428,328,652,563">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="716,303,885,391">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="428,299,652,533">
 <area shape="rect" id="node5" href="board.html" target="_top" title="board" alt="" coords="131,5,258,93">
-<area shape="rect" id="node6" href="card_status.html" target="_top" title="card_status" alt="" coords="5,111,384,444">
-<area shape="rect" id="node7" href="user.html" target="_top" title="user" alt="" coords="137,567,252,655">
-<area shape="rect" id="node8" href="card_type.html" target="_top" title="card_type" alt="" coords="116,461,273,549">
-<area shape="rect" id="node3" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="949,367,1252,455">
-<area shape="rect" id="node4" href="board_status.html" target="_top" title="board_status" alt="" coords="428,15,652,191">
-<area shape="rect" id="node9" href="card_history.html" target="_top" title="card_history" alt="" coords="712,121,889,209">
-<area shape="rect" id="node10" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="709,473,893,561">
-<area shape="rect" id="node11" href="comment.html" target="_top" title="comment" alt="" coords="723,579,879,667">
-<area shape="rect" id="node12" href="planning_review.html" target="_top" title="planning_review" alt="" coords="696,227,905,315">
+<area shape="rect" id="node6" href="card_status.html" target="_top" title="card_status" alt="" coords="5,111,384,415">
+<area shape="rect" id="node7" href="user.html" target="_top" title="user" alt="" coords="137,537,252,625">
+<area shape="rect" id="node8" href="card_type.html" target="_top" title="card_type" alt="" coords="116,432,273,520">
+<area shape="rect" id="node3" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="949,337,1252,425">
+<area shape="rect" id="node4" href="board_status.html" target="_top" title="board_status" alt="" coords="428,45,652,221">
+<area shape="rect" id="node9" href="card_history.html" target="_top" title="card_history" alt="" coords="712,92,889,180">
+<area shape="rect" id="node10" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="709,444,893,532">
+<area shape="rect" id="node11" href="comment.html" target="_top" title="comment" alt="" coords="723,549,879,637">
+<area shape="rect" id="node12" href="planning_review.html" target="_top" title="planning_review" alt="" coords="696,197,905,285">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card_status.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
