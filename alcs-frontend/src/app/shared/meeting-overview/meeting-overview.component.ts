@@ -235,4 +235,9 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
       return board;
     });
   }
+
+  isEllipsisActive(e: string): boolean {
+    const el = document.getElementById(e);
+    return el ? el.offsetWidth < el.scrollWidth : false;
+  }
 }
