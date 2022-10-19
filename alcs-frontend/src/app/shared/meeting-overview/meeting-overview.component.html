@@ -95,6 +95,7 @@
         <mat-expansion-panel
           class="meeting-panel"
           hideToggle="true"
+          [(expanded)]="upcomingMeeting.isExpanded"
           *ngFor="let upcomingMeeting of boardMeeting.upcomingMeetings"
         >
           <mat-expansion-panel-header
