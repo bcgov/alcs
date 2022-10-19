@@ -38,8 +38,8 @@ export class ApplicationDecision extends Base {
   outcome: DecisionOutcomeCode;
 
   @AutoMap()
-  @Column({ type: 'uuid' })
-  outcomeUuid: string;
+  @Column()
+  outcomeCode: string;
 
   @AutoMap()
   @ManyToOne(() => Application)

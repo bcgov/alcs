@@ -8,10 +8,8 @@ export class CardHistory extends EntityHistory {
     super();
   }
 
-  @Column({
-    type: 'uuid',
-  })
-  statusUuid: string;
+  @Column()
+  statusCode: string;
 
   @ManyToOne(() => Card, (card) => card.history)
   card: Card;

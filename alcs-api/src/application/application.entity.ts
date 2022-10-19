@@ -98,18 +98,14 @@ export class Application extends Base {
   })
   type: ApplicationType;
 
-  @Column({
-    type: 'uuid',
-  })
-  typeUuid: string;
+  @Column()
+  typeCode: string;
 
   @ManyToOne(() => ApplicationRegion)
   region: ApplicationRegion;
 
-  @Column({
-    type: 'uuid',
-  })
-  regionUuid: string;
+  @Column()
+  regionCode: string;
 
   @ManyToOne(() => ApplicationLocalGovernment)
   localGovernment: ApplicationLocalGovernment;

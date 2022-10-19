@@ -83,32 +83,28 @@ describe('CodeService', () => {
         uuid: '1',
       },
     ];
-    mockTypeRepository.find.mockResolvedValue(mockTypes as ApplicationType[]);
+    mockTypeRepository.find.mockResolvedValue(mockTypes as any[]);
 
     const mockStatuses = [
       {
         uuid: '2',
       },
     ];
-    mockStatusRepository.find.mockResolvedValue(mockStatuses as CardStatus[]);
+    mockStatusRepository.find.mockResolvedValue(mockStatuses as any[]);
 
     const mockRegions = [
       {
         uuid: '3',
       },
     ];
-    mockRegionRepository.find.mockResolvedValue(
-      mockRegions as ApplicationRegion[],
-    );
+    mockRegionRepository.find.mockResolvedValue(mockRegions as any[]);
 
     const mockMeetingTypes = [
       {
         uuid: '4',
       },
     ];
-    mockMeetingRepository.find.mockResolvedValue(
-      mockMeetingTypes as ApplicationMeetingType[],
-    );
+    mockMeetingRepository.find.mockResolvedValue(mockMeetingTypes as any[]);
 
     const mockReconsiderationTypes = [
       {
@@ -116,7 +112,7 @@ describe('CodeService', () => {
       },
     ];
     mockReconsiderationTypeRepository.find.mockResolvedValue(
-      mockReconsiderationTypes as ApplicationReconsiderationType[],
+      mockReconsiderationTypes as any[],
     );
 
     const res = await service.getAll();
@@ -132,7 +128,7 @@ describe('CodeService', () => {
     const mockType = {
       uuid: '1',
     };
-    mockTypeRepository.findOne.mockResolvedValue(mockType as ApplicationType);
+    mockTypeRepository.findOne.mockResolvedValue(mockType as any);
 
     const res = await service.fetchApplicationType('code');
 
@@ -144,7 +140,7 @@ describe('CodeService', () => {
     const mockStatus = {
       uuid: '2',
     };
-    mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
+    mockStatusRepository.findOne.mockResolvedValue(mockStatus as any);
 
     const res = await service.fetchCardStatus('code');
 
@@ -156,9 +152,7 @@ describe('CodeService', () => {
     const mockRegion = {
       uuid: '1',
     };
-    mockRegionRepository.findOne.mockResolvedValue(
-      mockRegion as ApplicationRegion,
-    );
+    mockRegionRepository.findOne.mockResolvedValue(mockRegion as any);
 
     const res = await service.fetchRegion('code');
 
@@ -170,9 +164,7 @@ describe('CodeService', () => {
     const mockMeetingType = {
       uuid: '1',
     };
-    mockMeetingRepository.findOne.mockResolvedValue(
-      mockMeetingType as ApplicationMeetingType,
-    );
+    mockMeetingRepository.findOne.mockResolvedValue(mockMeetingType as any);
 
     const res = await service.fetchMeetingType('code');
 

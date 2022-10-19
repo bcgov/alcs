@@ -24,7 +24,6 @@ const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();
   cardStatus.code = 'status_1';
   cardStatus.description = 'app desc 1';
-  cardStatus.uuid = '1111-1111-1111-1111';
   cardStatus.label = 'app_label';
   cardStatus.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
   cardStatus.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
@@ -59,7 +58,6 @@ const initBoardMockEntity = (): Board => {
 
 const initCardTypeMockEntity = (): CardType => {
   const type = new CardType();
-  type.uuid = 'fake-uuid';
   type.code = 'fake-code';
   return type;
 };
@@ -68,7 +66,6 @@ const initCardMockEntity = (subtaskUuid?: string): Card => {
   const card = new Card();
   card.highPriority = true;
   card.status = initCardStatusMockEntity();
-  card.statusUuid = '1111-1111-1111-1111';
   card.uuid = '1111-1111-1111-1111';
   card.assigneeUuid = '1111-1111-1111';
   card.assignee = initAssigneeMockEntity();
@@ -78,7 +75,6 @@ const initCardMockEntity = (subtaskUuid?: string): Card => {
   card.board = initBoardMockEntity();
   card.boardUuid = card.board.uuid;
   card.type = initCardTypeMockEntity();
-  card.typeUuid = card.type.uuid;
 
   return card;
 };
@@ -87,7 +83,6 @@ const initApplicationTypeMockEntity = (): ApplicationType => {
   const applicationType = new ApplicationType();
   applicationType.code = 'type_1';
   applicationType.description = 'app desc 1';
-  applicationType.uuid = '1111-1111-1111-1111';
   applicationType.label = 'app_label';
   applicationType.shortLabel = 'short_label';
   applicationType.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
@@ -134,7 +129,6 @@ const initApplicationReconsiderationMockEntity = (
   reconsiderationType.code = '33';
   reconsiderationType.label = '33';
   reconsiderationType.description = '33';
-  reconsiderationType.uuid = 'fake-33';
   reconsideration.type = reconsiderationType;
 
   reconsideration.isReviewApproved = true;
@@ -155,7 +149,6 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.region = {
     code: 'fake',
     label: 'fake',
-    uuid: 'fake',
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
   } as ApplicationRegion;
@@ -247,7 +240,6 @@ const initApplicationDecisionMock = (application?: Application) => {
   return new ApplicationDecision({
     outcome: {
       code: 'CODE',
-      uuid: 'uuid',
       label: 'label',
     } as DecisionOutcomeCode,
     date: new Date(),

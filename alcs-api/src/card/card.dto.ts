@@ -35,7 +35,7 @@ export class CardUpdateServiceDto {
 
   @AutoMap()
   @IsOptional()
-  statusUuid?: string;
+  statusCode?: string;
 
   @AutoMap()
   @IsOptional()

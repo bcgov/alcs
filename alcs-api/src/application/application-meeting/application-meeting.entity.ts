@@ -19,10 +19,8 @@ export class ApplicationMeeting extends Base {
   @Column({ nullable: true, type: 'text' })
   description?: string;
 
-  @Column({
-    type: 'uuid',
-  })
-  typeUuid: string;
+  @Column()
+  typeCode: string;
 
   @ManyToOne(() => ApplicationMeetingType, {
     nullable: false,

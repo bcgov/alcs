@@ -9,7 +9,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from '../../../../services/application/application-code.dto';
-import { ApplicationDetailedDto } from '../../../../services/application/application.dto';
+import { ApplicationDto } from '../../../../services/application/application.dto';
 import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { UserDto } from '../../../../services/user/user.dto';
@@ -36,13 +36,7 @@ describe('ApplicationDialogComponent', () => {
     clientRoles: [],
   };
 
-  const mockApplicationStatusDetails: CardStatusDto = {
-    label: 'test_st',
-    code: 'STATUS',
-    description: 'this is a test status',
-  };
-
-  const mockApplicationRegionDetails: ApplicationRegionDto = {
+  const mockApplicationRegion: ApplicationRegionDto = {
     label: 'test_st',
     code: 'STATUS',
     description: 'this is a test status',
@@ -57,15 +51,11 @@ describe('ApplicationDialogComponent', () => {
     backgroundColor: '#fff',
   };
 
-  const mockCardDetail: ApplicationDetailedDto = {
-    statusDetails: mockApplicationStatusDetails,
-    typeDetails: mockApplicationType,
-    regionDetails: mockApplicationRegionDetails,
-    type: 'TYPE',
+  const mockApplication: ApplicationDto = {
+    type: mockApplicationType,
+    region: mockApplicationRegion,
     fileNumber: '1111',
     applicant: 'I am an applicant',
-    status: 'STATUS',
-    region: 'REGION',
     localGovernment: {
       uuid: 'fake',
       name: 'Local Government',
@@ -75,12 +65,17 @@ describe('ApplicationDialogComponent', () => {
     activeDays: 10,
     pausedDays: 5,
     paused: true,
-    board: 'board',
     decisionMeetings: [],
     dateReceived: Date.now(),
     card: {
       assignee: mockAssignee,
       highPriority: false,
+      board: {
+        code: 'board-code',
+      },
+      status: {
+        code: 'card-status',
+      },
     } as CardDto,
   };
 
@@ -116,7 +111,7 @@ describe('ApplicationDialogComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationDialogComponent);
     component = fixture.componentInstance;
-    component.data = mockCardDetail;
+    component.data = mockApplication;
     fixture.detectChanges();
   });
 
@@ -130,8 +125,8 @@ describe('ApplicationDialogComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('.card-assignee')).toBeTruthy();
     expect(compiled.querySelector('.region')).toBeTruthy();
-    expect(compiled.querySelector('.card-active-days').textContent).toContain(`${mockCardDetail.activeDays}`);
-    expect(compiled.querySelector('.card-paused-days').textContent).toContain(`${mockCardDetail.pausedDays} `);
+    expect(compiled.querySelector('.card-active-days').textContent).toContain(`${mockApplication.activeDays}`);
+    expect(compiled.querySelector('.card-paused-days').textContent).toContain(`${mockApplication.pausedDays} `);
     expect(compiled.querySelector('.card-comments-wrapper')).toBeTruthy();
   });
 });

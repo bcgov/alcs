@@ -11,11 +11,11 @@
         <span
           class="center application-type"
           [ngStyle]="{
-            backgroundColor: application.typeDetails.backgroundColor,
-            color: application.typeDetails.textColor
+            backgroundColor: application.type.backgroundColor,
+            color: application.type.textColor
           }"
         >
-          {{ application.typeDetails.label }}
+          {{ application.type.label }}
         </span>
       </h3>
     </div>
@@ -47,7 +47,7 @@
     </div>
   </div>
   <div>
-    <span class="region">{{ application.localGovernment.name }} - {{ application.regionDetails.label }} Region</span>
+    <span class="region">{{ application.localGovernment.name }} - {{ application.region.label }} Region</span>
   </div>
   <div class="header-row">
     <div class="left">
@@ -86,7 +86,7 @@
             ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
           </span>
           <span>{{ board.title }}</span>
-          <span *ngIf="application.board === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+          <span *ngIf="application.card.board.code === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
         </button>
       </mat-menu>
       <button

@@ -5,7 +5,7 @@ import { ApplicationDecisionService } from '../../../services/application/applic
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { TimelineEvent } from '../../../shared/timeline/timeline.component';
   styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent implements OnInit {
-  private application?: ApplicationDetailedDto;
+  private application?: ApplicationDto;
   private $decisions = new BehaviorSubject<ApplicationDecisionDto[]>([]);
   events: TimelineEvent[] = [];
   summary = '';

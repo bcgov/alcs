@@ -84,10 +84,12 @@ export class ApplicationService {
       );
     }
 
-    const type = await this.codeService.fetchApplicationType(application.type);
+    const type = await this.codeService.fetchApplicationType(
+      application.typeCode,
+    );
 
-    const region = application.region
-      ? await this.codeService.fetchRegion(application.region)
+    const region = application.regionCode
+      ? await this.codeService.fetchRegion(application.regionCode)
       : undefined;
 
     const newApplication = new Application({

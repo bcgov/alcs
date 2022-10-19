@@ -308,7 +308,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.APP:
         this.applicationService
           .updateApplicationCard($event.id, {
-            status: $event.status,
+            statusCode: $event.status,
           })
           .then((r) => {
             this.toastService.showSuccessToast('Application updated');
@@ -329,9 +329,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
-    const mappedType = this.applicationTypes.find((type) => type.code === application.type);
+    const mappedType = this.applicationTypes.find((type) => type.code === application.type.code);
     return {
-      status: application.status,
+      status: application.card.status.code,
       title: `${application.fileNumber} (${application.applicant})`,
       assignee: application.card.assignee,
       id: application.fileNumber,

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDetailedDto, UpdateApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto, UpdateApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 })
 export class IntakeComponent implements OnInit {
   dateReceived?: string;
-  application?: ApplicationDetailedDto;
+  application?: ApplicationDto;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 

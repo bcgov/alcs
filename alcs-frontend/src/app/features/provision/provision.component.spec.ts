@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailService } from '../../services/application/application-detail.service';
-import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 
 import { ProvisionComponent } from './provision.component';

@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDetailedDto } from '../../services/application/application.dto';
+import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 
 import { ApplicationComponent } from './application.component';
@@ -18,7 +18,7 @@ describe('ApplicationComponent', () => {
     const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
       'loadApplication',
     ]);
-    mockAppDetailService.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+    mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     const mockReconsiderationService = jasmine.createSpyObj<ApplicationReconsiderationService>(
       'ApplicationReconsiderationService',

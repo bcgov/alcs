@@ -63,14 +63,12 @@ export class GisSubtasksComponent implements OnInit {
     return subtasks
       .filter((subtask) => subtask.application)
       .map((subtask) => {
-        const statusDto = this.statuses.find((status) => status.code === subtask.application.status);
         const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
         return {
           ...subtask,
           assignee: userDto ? userDto.name : undefined,
           application: {
             ...subtask.application,
-            status: statusDto!.label,
           },
         };
       });

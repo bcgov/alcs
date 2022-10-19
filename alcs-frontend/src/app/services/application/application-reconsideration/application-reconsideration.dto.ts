@@ -50,7 +50,7 @@ export interface CreateApplicationReconsiderationDto {
   applicationTypeCode: string;
   applicationFileNumber: string;
   applicant: string;
-  region: string;
+  regionCode: string;
   localGovernmentUuid: string;
   submittedDate: Date;
   reconTypeCode: string;

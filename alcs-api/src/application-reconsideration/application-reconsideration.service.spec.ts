@@ -129,7 +129,7 @@ describe('ReconsiderationService', () => {
       reconTypeCode: code,
       applicationFileNumber: 'fake-app-number',
       applicationTypeCode: 'fake',
-      region: 'fake-region',
+      regionCode: 'fake-region',
       localGovernmentUuid: 'fake-local-government-uuid',
       applicant: 'fake-applicant',
       submittedDate: 11111111111,
@@ -138,8 +138,8 @@ describe('ReconsiderationService', () => {
 
     const mockApplicationCreateDto = {
       fileNumber: mockReconsiderationCreateDto.applicationFileNumber,
-      type: mockReconsiderationCreateDto.applicationTypeCode,
-      region: mockReconsiderationCreateDto.region,
+      typeCode: mockReconsiderationCreateDto.applicationTypeCode,
+      regionCode: mockReconsiderationCreateDto.regionCode,
       localGovernmentUuid: mockReconsiderationCreateDto.localGovernmentUuid,
       applicant: mockReconsiderationCreateDto.applicant,
       dateReceived: mockReconsiderationCreateDto.submittedDate,
@@ -170,7 +170,7 @@ describe('ReconsiderationService', () => {
       reconTypeCode: code,
       applicationFileNumber: 'fake-app-number',
       applicationTypeCode: 'fake',
-      region: 'fake-region',
+      regionCode: 'fake-region',
       localGovernmentUuid: 'fake-local-government-uuid',
       applicant: 'fake-applicant',
       submittedDate: 11111111111,

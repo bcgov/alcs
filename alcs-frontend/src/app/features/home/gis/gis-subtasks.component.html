@@ -21,7 +21,7 @@
         </td>
         <td>{{ subtask.application.fileNumber }} ({{ subtask.application.applicant }})</td>
         <td>{{ subtask.reconsideration ? '-' : subtask.application.activeDays }}</td>
-        <td [innerHTML]="subtask.application.status"></td>
+        <td [innerHTML]="subtask.application.card.status.label"></td>
         <td class="assignee-column">
           <ng-select
             class="subtask-assignee"
@@ -45,7 +45,7 @@
         <td class="action-column">
           <button
             *ngIf="!subtask.reconsideration"
-            (click)="openCard(subtask.application.fileNumber, subtask.application.board, 'APP')"
+            (click)="openCard(subtask.application.fileNumber, subtask.application.card.board.code, 'APP')"
             mat-flat-button
             color="accent"
           >

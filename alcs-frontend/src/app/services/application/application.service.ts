@@ -9,7 +9,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from './application-code.dto';
-import { ApplicationDetailedDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
+import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +30,7 @@ export class ApplicationService {
   async updateApplication(fileNumber: string, application: UpdateApplicationDto) {
     await this.setup();
     try {
-      return await firstValueFrom(
-        this.http.patch<ApplicationDetailedDto>(`${this.baseUrl}/${fileNumber}`, application)
-      );
+      return await firstValueFrom(this.http.patch<ApplicationDto>(`${this.baseUrl}/${fileNumber}`, application));
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
     }
@@ -42,24 +40,22 @@ export class ApplicationService {
   async updateApplicationCard(cardUuid: string, application: UpdateApplicationDto) {
     await this.setup();
     try {
-      return await firstValueFrom(
-        this.http.patch<ApplicationDetailedDto>(`${this.baseUrl}/card/${cardUuid}`, application)
-      );
+      return await firstValueFrom(this.http.patch<ApplicationDto>(`${this.baseUrl}/card/${cardUuid}`, application));
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application');
     }
     return;
   }
 
-  async fetchApplication(fileNumber: string): Promise<ApplicationDetailedDto> {
+  async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
     await this.setup();
-    return firstValueFrom(this.http.get<ApplicationDetailedDto>(`${this.baseUrl}/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDto>(`${this.baseUrl}/${fileNumber}`));
   }
 
   async createApplication(application: CreateApplicationDto) {
     await this.setup();
     try {
-      return await firstValueFrom(this.http.post<ApplicationDetailedDto>(`${this.baseUrl}`, application));
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}`, application));
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 400) {
         this.toastService.showErrorToast(`Application with File ID ${application.fileNumber} already exists`);
@@ -90,6 +86,6 @@ export class ApplicationService {
   }
 
   searchApplicationsByNumber(fileNumber: string) {
-    return firstValueFrom(this.http.get<ApplicationDetailedDto[]>(`${this.baseUrl}/search/${fileNumber}`));
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/search/${fileNumber}`));
   }
 }

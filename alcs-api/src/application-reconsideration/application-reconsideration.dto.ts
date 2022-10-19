@@ -33,7 +33,7 @@ export class ApplicationReconsiderationCreateDto {
   @AutoMap()
   @IsNotEmpty()
   @IsString()
-  region: string;
+  regionCode: string;
 
   @IsString()
   localGovernmentUuid: string;
@@ -79,7 +79,7 @@ export class ApplicationReconsiderationUpdateDto {
 export class ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
-  status: string;
+  statusCode: string;
   applicant: string;
   region: ApplicationRegionDto;
   localGovernment: string;

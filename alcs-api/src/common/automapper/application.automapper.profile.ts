@@ -14,13 +14,8 @@ import {
 } from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../application/application-paused.entity';
-import {
-  ApplicationDetailedDto,
-  ApplicationDto,
-} from '../../application/application.dto';
+import { ApplicationDto } from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
-import { CardStatusDto } from '../../card/card-status/card-status.dto';
-import { CardStatus } from '../../card/card-status/card-status.entity';
 import { CardDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
 import { ApplicationMeetingTypeDto } from '../../code/application-code/application-meeting-type/application-meeting-type.dto';
@@ -29,14 +24,10 @@ import { ApplicationRegionDto } from '../../code/application-code/application-re
 import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
-import { CodeService } from '../../code/code.service';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
-  constructor(
-    @InjectMapper() mapper: Mapper,
-    private codeService: CodeService,
-  ) {
+  constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 
@@ -71,22 +62,6 @@ export class ApplicationProfile extends AutomapperProfile {
         Application,
         ApplicationDto,
         forMember(
-          (ad) => ad.status,
-          mapFrom((a) => a.card.status.code),
-        ),
-        forMember(
-          (ad) => ad.type,
-          mapFrom((a) => a.type.code),
-        ),
-        forMember(
-          (ad) => ad.board,
-          mapFrom((a) => a.card.board.code),
-        ),
-        forMember(
-          (ad) => ad.region,
-          mapFrom((a) => (a.region ? a.region.code : undefined)),
-        ),
-        forMember(
           (ad) => ad.localGovernment,
           mapFrom((a) =>
             this.mapper.map(
@@ -111,62 +86,6 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((a) => {
             return this.mapper.map(a.card, Card, CardDto);
           }),
-        ),
-      );
-
-      createMap(
-        mapper,
-        Application,
-        ApplicationDetailedDto,
-        forMember(
-          (ad) => ad.statusDetails,
-          mapFrom((a) =>
-            this.mapper.map(a.card.status, CardStatus, CardStatusDto),
-          ),
-        ),
-        forMember(
-          (ad) => ad.typeDetails,
-          mapFrom((a) =>
-            this.mapper.map(a.type, ApplicationType, ApplicationTypeDto),
-          ),
-        ),
-        forMember(
-          (ad) => ad.regionDetails,
-          mapFrom((a) =>
-            this.mapper.map(a.type, ApplicationRegion, ApplicationRegionDto),
-          ),
-        ),
-        forMember(
-          (ad) => ad.card,
-          mapFrom((a) => {
-            return this.mapper.map(a.card, Card, CardDto);
-          }),
-        ),
-      );
-
-      createMap(
-        mapper,
-        ApplicationDto,
-        Application,
-        forMember(
-          async (a) => a.card.status,
-          mapFrom(async (ad) => {
-            return await this.codeService.fetchCardStatus(ad.status);
-          }),
-        ),
-        forMember(
-          async (a) => a.type,
-          mapFrom(async (ad) => {
-            return await this.codeService.fetchApplicationType(ad.type);
-          }),
-        ),
-        forMember(
-          async (a) => a.region,
-          mapFrom(async (ad) =>
-            ad.region
-              ? await this.codeService.fetchRegion(ad.region)
-              : undefined,
-          ),
         ),
       );
 

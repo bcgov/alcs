@@ -73,7 +73,7 @@ describe('BoardsService', () => {
 
     const zeroOrderStatus = {
       order: 0,
-      status: { uuid: 'correct-status' },
+      status: { code: 'correct-status' },
       uuid: 's-uuid',
     };
 
@@ -84,7 +84,7 @@ describe('BoardsService', () => {
 
     cardService.get.mockResolvedValue({
       uuid: cardUuid,
-      status: { uuid: 'fake-status' },
+      status: { code: 'fake-status' },
       board: { uuid: 'fake-board' },
     } as Card);
     mockRepository.findOne.mockResolvedValue(mockBoard);
@@ -99,7 +99,7 @@ describe('BoardsService', () => {
     const updatedCard = cardService.update.mock.calls[0][1];
     expect(updatedCardUuid).toEqual(cardUuid);
     expect(updatedCard.boardUuid).toEqual(mockBoard.uuid);
-    expect(updatedCard.statusUuid).toEqual(zeroOrderStatus.status.uuid);
+    expect(updatedCard.statusCode).toEqual(zeroOrderStatus.status.code);
   });
 
   it("should throw an exception when updating an card that doesn't exist", async () => {

@@ -2,10 +2,8 @@ import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from 'nest-keycloak-connect';
-import { CodeService } from '../code/code.service';
 import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { CardStatus } from './card-status/card-status.entity';
 import { CardUpdateDto } from './card.dto';
 import { CardService } from './card.service';
 
@@ -13,10 +11,7 @@ import { CardService } from './card.service';
 @UseGuards(RoleGuard)
 @Controller('card')
 export class CardController {
-  constructor(
-    private cardService: CardService,
-    private codeService: CodeService,
-  ) {}
+  constructor(private cardService: CardService) {}
 
   @Patch('/:uuid')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
@@ -24,17 +19,10 @@ export class CardController {
     @Param('uuid') uuid: string,
     @Body() cardToUpdate: CardUpdateDto,
   ) {
-    let status: CardStatus | undefined;
-    if (cardToUpdate.statusCode) {
-      status = await this.codeService.fetchCardStatus(cardToUpdate.statusCode);
-    }
-
-    const updatedCard = await this.cardService.update(uuid, {
-      statusUuid: status ? status.uuid : undefined,
+    return await this.cardService.update(uuid, {
+      statusCode: cardToUpdate.statusCode,
       assigneeUuid: cardToUpdate.assigneeUuid,
       highPriority: cardToUpdate.highPriority,
     });
-
-    return updatedCard;
   }
 }

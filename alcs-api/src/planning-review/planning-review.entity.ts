@@ -39,8 +39,6 @@ export class PlanningReview extends Base {
   @ManyToOne(() => ApplicationRegion)
   region: ApplicationRegion;
 
-  @Column({
-    type: 'uuid',
-  })
-  regionUuid: string;
+  @Column()
+  regionCode: string;
 }

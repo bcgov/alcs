@@ -3,11 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  ApplicationDetailedDto,
-  ApplicationDto,
-  UpdateApplicationDto,
-} from '../../../../services/application/application.dto';
+import { ApplicationDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
@@ -30,14 +26,14 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   selectedBoard?: string;
   selectedRegion?: string;
 
-  application: ApplicationDetailedDto = this.data;
+  application: ApplicationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ApplicationDetailedDto,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
     private dialogRef: MatDialogRef<ApplicationDialogComponent>,
     private userService: UserService,
     private applicationService: ApplicationService,
@@ -66,13 +62,13 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  populateData(application: ApplicationDetailedDto) {
+  populateData(application: ApplicationDto) {
     this.application = application;
     this.selectedAssignee = application.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = application.statusDetails.code;
-    this.selectedBoard = application.board;
-    this.selectedRegion = application.regionDetails?.code;
+    this.selectedApplicationStatus = application.card.status.code;
+    this.selectedBoard = application.card.board.code;
+    this.selectedRegion = application.region.code;
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -93,7 +89,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   onStatusSelected(applicationStatus: BoardStatusDto) {
     this.selectedApplicationStatus = applicationStatus.statusCode;
     this.updateCard({
-      status: applicationStatus.statusCode,
+      statusCode: applicationStatus.statusCode,
     });
   }
 

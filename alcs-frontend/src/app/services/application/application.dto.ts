@@ -7,9 +7,9 @@ import { ApplicationLocalGovernmentDto } from './application-local-government/ap
 export interface CreateApplicationDto {
   fileNumber: string;
   applicant: string;
-  type: string;
+  typeCode: string;
   dateReceived: number;
-  region?: string;
+  regionCode?: string;
   localGovernmentUuid?: string;
 }
 
@@ -20,10 +20,8 @@ export interface ApplicationDecisionMeetingDto {
 export interface ApplicationDto {
   fileNumber: string;
   applicant: string;
-  status: string;
   summary?: string;
-  type: string;
-  board: string;
+  type: ApplicationTypeDto;
   dateReceived: number;
   datePaid?: number;
   dateAcknowledgedIncomplete?: number;
@@ -31,7 +29,7 @@ export interface ApplicationDto {
   dateAcknowledgedComplete?: number;
   decisionDate?: number;
   notificationSentDate?: number;
-  region: string;
+  region: ApplicationRegionDto;
   localGovernment: ApplicationLocalGovernmentDto;
   activeDays: number;
   pausedDays: number;
@@ -42,23 +40,16 @@ export interface ApplicationDto {
 
 export interface UpdateApplicationDto {
   applicant?: string;
-  status?: string;
-  region?: string;
+  statusCode?: string;
+  regionCode?: string;
   summary?: string;
   datePaid?: number;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
-  type?: string;
+  typeCode?: string;
   assigneeUuid?: string | null;
   assignee?: UserDto;
   highPriority?: boolean;
   notificationSentDate?: number;
-}
-
-export interface ApplicationDetailedDto extends ApplicationDto {
-  statusDetails: CardStatusDto;
-  typeDetails: ApplicationTypeDto;
-  regionDetails: ApplicationRegionDto;
-  boardDetails?: BoardDto;
 }
