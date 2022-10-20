@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsUUID } from 'class-validator';
 import { ApplicationReconsiderationDto } from '../../application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../application/application.dto';
+import { AssigneeDto } from '../../user/user.dto';
 
 export class UpdateCardSubtaskDto {
   @AutoMap()
@@ -14,10 +15,7 @@ export class UpdateCardSubtaskDto {
   completedAt?: number | null;
 }
 
-export class CardSubtaskDto {
-  @AutoMap()
-  uuid: string;
-
+export class CardSubtaskTypeDto {
   @AutoMap()
   type: string;
 
@@ -26,9 +24,17 @@ export class CardSubtaskDto {
 
   @AutoMap()
   textColor: string;
+}
+
+export class CardSubtaskDto {
+  @AutoMap()
+  uuid: string;
 
   @AutoMap()
-  assignee?: string;
+  type: CardSubtaskTypeDto;
+
+  @AutoMap()
+  assignee?: AssigneeDto;
 
   @AutoMap()
   createdAt: number;

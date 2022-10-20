@@ -20,13 +20,16 @@
       <div class="center">
         <app-avatar-circle
           *ngIf="subtask.assignee"
-          [initials]="subtask.assignee ? users.get(subtask.assignee)!.initials : ''"
-          [name]="subtask.assignee ? users.get(subtask.assignee)!.name : ''"
+          [initials]="subtask.assignee.initials || ''"
+          [name]="subtask.assignee.name"
         ></app-avatar-circle>
         <app-avatar-circle class="unassigned-circle" *ngIf="!subtask.assignee" initials="-"></app-avatar-circle>
       </div>
       <div class="center">
-        <div class="type badge" [ngStyle]="{ backgroundColor: subtask.backgroundColor, color: subtask.textColor }">
+        <div
+          class="type badge"
+          [ngStyle]="{ backgroundColor: subtask.type.backgroundColor, color: subtask.type.textColor }"
+        >
           {{ subtask.type }}
         </div>
       </div>

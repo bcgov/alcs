@@ -4,7 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
-import { initAssigneeMockDto } from '../common/utils/test-helpers/mockEntities';
+import {
+  initMockAssigneeDto,
+  initMockUserDto,
+} from '../common/utils/test-helpers/mockEntities';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -79,7 +82,7 @@ describe('UserController', () => {
   });
 
   it('should call update user on the service', async () => {
-    const mockUserDto = initAssigneeMockDto();
+    const mockUserDto = initMockUserDto();
     mockService.get.mockResolvedValueOnce(mockRes);
     mockService.update.mockResolvedValueOnce(undefined);
     request.user.entity.uuid = mockRes.uuid = mockUserDto.uuid;
@@ -91,7 +94,7 @@ describe('UserController', () => {
 
   it('should fail on user update if user not found', async () => {
     mockService.get.mockResolvedValueOnce(undefined);
-    const mockUserDto = initAssigneeMockDto();
+    const mockUserDto = initMockUserDto();
 
     await expect(controller.update(mockUserDto, request)).rejects.toMatchObject(
       new Error(`User with provided email not found ${mockUserDto.email}`),
@@ -99,7 +102,7 @@ describe('UserController', () => {
   });
 
   it('should fail on user update if current user does not mach updating user', async () => {
-    const mockUserDto = initAssigneeMockDto();
+    const mockUserDto = initMockUserDto();
     mockService.get.mockResolvedValueOnce(mockRes);
     mockService.update.mockResolvedValueOnce(undefined);
 

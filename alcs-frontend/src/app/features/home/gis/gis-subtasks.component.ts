@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CardStatusDto } from '../../../services/application/application-code.dto';
-import { ApplicationSubtaskWithApplicationDto } from '../../../services/application/application-subtask/application-subtask.dto';
-import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
 import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationSubtaskWithApplicationDto } from '../../../services/card/card-subtask/card-subtask.dto';
+import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
@@ -15,7 +14,6 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class GisSubtasksComponent implements OnInit {
   subtasks: ApplicationSubtaskWithApplicationDto[] = [];
-  private statuses: CardStatusDto[] = [];
   public gisUsers: UserDto[] = [];
 
   constructor(
@@ -23,14 +21,10 @@ export class GisSubtasksComponent implements OnInit {
     private applicationService: ApplicationService,
     private userService: UserService,
     private router: Router,
-    private applicationSubtaskService: ApplicationSubtaskService
+    private applicationSubtaskService: CardSubtaskService
   ) {}
 
   ngOnInit(): void {
-    this.applicationService.$cardStatuses.subscribe((statuses) => {
-      this.statuses = statuses;
-    });
-
     this.userService.$users.subscribe((users) => {
       this.gisUsers = users.filter((user) => user.clientRoles.includes('GIS'));
     });
@@ -42,9 +36,9 @@ export class GisSubtasksComponent implements OnInit {
   private async loadSubtasks() {
     const subtasks = await this.homeService.fetchGisSubtasks();
 
-    this.subtasks = this.getMappedApplicationSubtasks(subtasks);
+    this.subtasks = subtasks.filter((subtask) => subtask.application);
 
-    const reconsiderationSubtasks = this.getMappedReconsiderationSubtasks(subtasks);
+    const reconsiderationSubtasks = this.mapReconsiderationSubtasks(subtasks);
     this.subtasks.push(...reconsiderationSubtasks);
 
     this.subtasks.sort((a, b) => {
@@ -59,36 +53,15 @@ export class GisSubtasksComponent implements OnInit {
     });
   }
 
-  private getMappedApplicationSubtasks(subtasks: ApplicationSubtaskWithApplicationDto[]) {
-    return subtasks
-      .filter((subtask) => subtask.application)
-      .map((subtask) => {
-        const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
-        return {
-          ...subtask,
-          assignee: userDto ? userDto.name : undefined,
-          application: {
-            ...subtask.application,
-          },
-        };
-      });
-  }
-
-  private getMappedReconsiderationSubtasks(subtasks: ApplicationSubtaskWithApplicationDto[]) {
+  private mapReconsiderationSubtasks(subtasks: ApplicationSubtaskWithApplicationDto[]) {
     return subtasks
       .filter((subtask) => subtask.reconsideration)
       .map((subtask) => {
-        const statusDto = this.statuses.find((status) => status.code === subtask.reconsideration.card.status.code);
-        const userDto = this.gisUsers.find((user) => user.uuid === subtask.assignee);
         return {
           ...subtask,
-          assignee: userDto ? userDto.name : undefined,
           application: {
             ...(subtask.reconsideration.application as any),
-            status: statusDto!.label,
-            card: {
-              ...subtask.reconsideration.card,
-            },
+            card: subtask.reconsideration.card,
           },
         };
       });

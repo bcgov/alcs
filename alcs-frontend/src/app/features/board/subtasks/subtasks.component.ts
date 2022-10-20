@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ApplicationSubtaskDto } from '../../../services/application/application-subtask/application-subtask.dto';
-import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
+import { CardSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
+import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -13,11 +13,11 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 export class SubtasksComponent implements OnInit {
   @Input() cardUuid: string = '';
 
-  subtasks: ApplicationSubtaskDto[] = [];
+  subtasks: CardSubtaskDto[] = [];
   users: Map<string, UserDto> = new Map();
 
   constructor(
-    private subtaskService: ApplicationSubtaskService,
+    private subtaskService: CardSubtaskService,
     private userService: UserService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}

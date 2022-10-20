@@ -14,7 +14,7 @@ import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { ConfigModule } from '../common/config/config.module';
 import {
   initApplicationMockEntity,
-  initAssigneeMockDto,
+  initMockAssigneeDto,
 } from '../common/utils/test-helpers/mockEntities';
 import {
   mockKeyCloakProviders,
@@ -57,7 +57,7 @@ describe('ApplicationController', () => {
     decisionMeetings: [],
     dateReceived: Date.now(),
     card: {
-      assignee: initAssigneeMockDto(),
+      assignee: initMockAssigneeDto(),
       status: {} as CardStatusDto,
       type: 'fake',
       uuid: 'fake',

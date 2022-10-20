@@ -1,9 +1,11 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { CardSubtaskType } from '../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
 import {
   ApplicationSubtaskWithApplicationDTO,
   CardSubtaskDto,
+  CardSubtaskTypeDto,
 } from '../../card/card-subtask/card-subtask.dto';
 import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 
@@ -20,18 +22,6 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
         CardSubtask,
         CardSubtaskDto,
         forMember(
-          (a) => a.backgroundColor,
-          mapFrom((ad) => ad.type.backgroundColor),
-        ),
-        forMember(
-          (a) => a.textColor,
-          mapFrom((ad) => ad.type.textColor),
-        ),
-        forMember(
-          (a) => a.assignee,
-          mapFrom((ad) => (ad.assignee ? ad.assignee.uuid : undefined)),
-        ),
-        forMember(
           (a) => a.completedAt,
           mapFrom((ad) =>
             ad.completedAt ? ad.completedAt.getTime() : undefined,
@@ -42,28 +32,20 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
           mapFrom((ad) => ad.createdAt.getTime()),
         ),
         forMember(
-          (a) => a.type,
-          mapFrom((ad) => ad.type.type),
+          (ad) => ad.type,
+          mapFrom((a) =>
+            this.mapper.map(a.type, CardSubtaskType, CardSubtaskTypeDto),
+          ),
         ),
       );
+
+      createMap(mapper, CardSubtaskType, CardSubtaskTypeDto);
 
       createMap(
         mapper,
         CardSubtask,
         ApplicationSubtaskWithApplicationDTO,
         forMember(
-          (a) => a.backgroundColor,
-          mapFrom((ad) => ad.type.backgroundColor),
-        ),
-        forMember(
-          (a) => a.textColor,
-          mapFrom((ad) => ad.type.textColor),
-        ),
-        forMember(
-          (a) => a.assignee,
-          mapFrom((ad) => (ad.assignee ? ad.assignee.uuid : undefined)),
-        ),
-        forMember(
           (a) => a.completedAt,
           mapFrom((ad) =>
             ad.completedAt ? ad.completedAt.getTime() : undefined,
@@ -72,10 +54,6 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
         forMember(
           (a) => a.createdAt,
           mapFrom((ad) => ad.createdAt.getTime()),
-        ),
-        forMember(
-          (a) => a.type,
-          mapFrom((ad) => ad.type.type),
         ),
       );
     };
