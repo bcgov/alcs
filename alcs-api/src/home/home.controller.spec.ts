@@ -81,13 +81,15 @@ describe('HomeController', () => {
 
     mockApplicationService.getAll.mockResolvedValue([]);
     mockApplicationService.mapToDtos.mockResolvedValue([]);
+    mockApplicationReconsiderationService.getBy.mockResolvedValue([]);
+    mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call ApplicationService with the correct filter for assigned', async () => {
+  it('should call ApplicationService and ReconsiderationsService with the correct filter for assigned', async () => {
     const userId = 'fake-user-id';
     await controller.getAssignedToMe({
       user: {
@@ -96,12 +98,21 @@ describe('HomeController', () => {
         },
       },
     });
-    expect(mockApplicationService.getAll).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual({
+    const filterCondition = {
       card: {
         assigneeUuid: userId,
       },
-    });
+    };
+    expect(mockApplicationService.getAll).toHaveBeenCalledTimes(1);
+    expect(mockApplicationReconsiderationService.getBy).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual(
+      filterCondition,
+    );
+    expect(
+      mockApplicationReconsiderationService.getBy.mock.calls[0][0],
+    ).toEqual(filterCondition);
   });
 
   it('should call ApplicationService and map the types back for type', async () => {
