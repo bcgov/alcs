@@ -21,7 +21,7 @@ export class GisSubtasksComponent implements OnInit {
     private applicationService: ApplicationService,
     private userService: UserService,
     private router: Router,
-    private applicationSubtaskService: CardSubtaskService
+    private cardSubtaskService: CardSubtaskService
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +79,6 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   async onAssigneeSelected(assignee: UserDto, uuid: string) {
-    await this.applicationSubtaskService.update(uuid, { assignee: assignee ? assignee.uuid : null });
+    await this.cardSubtaskService.update(uuid, { assignee: assignee ? assignee.uuid : null });
   }
 }
