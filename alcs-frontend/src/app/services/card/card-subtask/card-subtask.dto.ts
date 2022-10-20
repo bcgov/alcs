@@ -1,6 +1,7 @@
 import { ApplicationReconsiderationDto } from '../../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../application/application.dto';
 import { AssigneeDto } from '../../user/user.dto';
+import { CardDto } from '../card.dto';
 
 export interface UpdateApplicationSubtaskDto {
   assignee?: string | null;
@@ -21,7 +22,9 @@ export interface CardSubtaskTypeDto {
   textColor: string;
 }
 
-export interface ApplicationSubtaskWithApplicationDto extends CardSubtaskDto {
-  application: ApplicationDto;
-  reconsideration: ApplicationReconsiderationDto;
+export interface HomepageSubtaskDto extends CardSubtaskDto {
+  card: CardDto;
+  title: string;
+  activeDays?: number;
+  paused: boolean;
 }

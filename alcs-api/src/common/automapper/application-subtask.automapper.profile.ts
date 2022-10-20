@@ -3,7 +3,7 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { CardSubtaskType } from '../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
 import {
-  ApplicationSubtaskWithApplicationDTO,
+  HomepageSubtaskDTO,
   CardSubtaskDto,
   CardSubtaskTypeDto,
 } from '../../card/card-subtask/card-subtask.dto';
@@ -44,7 +44,7 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
       createMap(
         mapper,
         CardSubtask,
-        ApplicationSubtaskWithApplicationDTO,
+        HomepageSubtaskDTO,
         forMember(
           (a) => a.completedAt,
           mapFrom((ad) =>

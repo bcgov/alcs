@@ -3,10 +3,8 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../application/application.dto';
-import { Application } from '../application/application.entity';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationService } from '../application/application.service';
 import { CardSubtaskType } from '../card/card-subtask/card-subtask-type/card-subtask-type.entity';
 import { CardSubtask } from '../card/card-subtask/card-subtask.entity';
@@ -14,11 +12,16 @@ import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CodeService } from '../code/code.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { CardProfile } from '../common/automapper/card.automapper.profile';
+import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
+  initCardMockEntity,
 } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { PlanningReview } from '../planning-review/planning-review.entity';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { HomeController } from './home.controller';
 
 describe('HomeController', () => {
@@ -26,6 +29,8 @@ describe('HomeController', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationSubtaskService: DeepMocked<CardSubtaskService>;
   let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
+  let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
+  let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
 
   const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
@@ -42,6 +47,9 @@ describe('HomeController', () => {
     mockApplicationSubtaskService = createMock<CardSubtaskService>();
     mockApplicationReconsiderationService =
       createMock<ApplicationReconsiderationService>();
+    mockPlanningReviewService = createMock<PlanningReviewService>();
+    mockApplicationTimeTrackingService =
+      createMock<ApplicationTimeTrackingService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -71,8 +79,18 @@ describe('HomeController', () => {
           provide: ApplicationReconsiderationService,
           useValue: mockApplicationReconsiderationService,
         },
+        {
+          provide: ApplicationTimeTrackingService,
+          useValue: mockApplicationTimeTrackingService,
+        },
+        {
+          provide: PlanningReviewService,
+          useValue: mockPlanningReviewService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
+        UserProfile,
+        CardProfile,
         ...mockKeyCloakProviders,
       ],
     }).compile();
@@ -83,6 +101,13 @@ describe('HomeController', () => {
     mockApplicationService.mapToDtos.mockResolvedValue([]);
     mockApplicationReconsiderationService.getBy.mockResolvedValue([]);
     mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([]);
+
+    mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
+      new Map(),
+    );
+    mockApplicationTimeTrackingService.getPausedStatus.mockResolvedValue(
+      new Map(),
+    );
   });
 
   it('should be defined', () => {
@@ -115,34 +140,86 @@ describe('HomeController', () => {
     ).toEqual(filterCondition);
   });
 
-  it('should call ApplicationService and map the types back for type', async () => {
+  it('should call ApplicationService and map an Application', async () => {
     const mockApplication = initApplicationMockEntity();
-    mockApplicationService.getAllApplicationsWithIncompleteSubtasks.mockResolvedValue(
-      [{ ...mockApplication } as Application],
+    const activeDays = 5;
+    mockApplicationService.getBySubtaskType.mockResolvedValue([
+      mockApplication,
+    ]);
+    mockApplicationTimeTrackingService.getPausedStatus.mockResolvedValue(
+      new Map([[mockApplication.uuid, true]]),
     );
-    mockApplicationReconsiderationService.getSubtasks.mockResolvedValue([
-      {
-        ...initApplicationReconsiderationMockEntity(),
-      } as ApplicationReconsideration,
-    ]);
+    mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
+      new Map([
+        [
+          mockApplication.uuid,
+          {
+            activeDays,
+            pausedDays: 0,
+          },
+        ],
+      ]),
+    );
 
-    mockApplicationService.mapToDtos.mockResolvedValue([
-      mockApplication as any as ApplicationDto,
-    ]);
-    mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([
-      mockApplication.reconsiderations[0] as any,
+    mockApplicationReconsiderationService.getBySubtaskType.mockResolvedValue(
+      [],
+    );
+    mockPlanningReviewService.getBySubtaskType.mockResolvedValue([]);
+
+    const res = await controller.getIncompleteSubtasksByType();
+
+    expect(res.length).toEqual(1);
+    expect(mockApplicationService.getBySubtaskType).toBeCalledTimes(1);
+    expect(res[0].title).toContain(mockApplication.fileNumber);
+    expect(res[0].title).toContain(mockApplication.applicant);
+    expect(res[0].activeDays).toBe(activeDays);
+    expect(res[0].paused).toBeTruthy();
+  });
+
+  it('should call Reconsideration Service and map it', async () => {
+    mockApplicationService.getBySubtaskType.mockResolvedValue([]);
+    mockPlanningReviewService.getBySubtaskType.mockResolvedValue([]);
+
+    const mockReconsideration = initApplicationReconsiderationMockEntity();
+    mockApplicationReconsiderationService.getBySubtaskType.mockResolvedValue([
+      mockReconsideration,
     ]);
 
     const res = await controller.getIncompleteSubtasksByType();
 
-    expect(res.length).toEqual(2);
-    expect(mockApplicationService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
     expect(
-      mockApplicationService.getAllApplicationsWithIncompleteSubtasks,
+      mockApplicationReconsiderationService.getBySubtaskType,
     ).toBeCalledTimes(1);
-    expect(mockApplicationReconsiderationService.getSubtasks).toBeCalledTimes(
-      1,
+    expect(res[0].title).toContain(mockReconsideration.application.fileNumber);
+    expect(res[0].title).toContain(mockReconsideration.application.applicant);
+    expect(res[0].activeDays).toBeUndefined();
+    expect(res[0].paused).toBeFalsy();
+  });
+
+  it('should call Reconsideration Service and map it', async () => {
+    const mockPlanningReview = {
+      type: 'fake-type',
+      fileNumber: 'fileNumber',
+      card: initCardMockEntity('222'),
+    } as PlanningReview;
+
+    mockApplicationService.getBySubtaskType.mockResolvedValue([]);
+    mockApplicationReconsiderationService.getBySubtaskType.mockResolvedValue(
+      [],
     );
-    expect(res[0].application).toEqual(mockApplication);
+    mockPlanningReviewService.getBySubtaskType.mockResolvedValue([
+      mockPlanningReview,
+    ]);
+
+    const res = await controller.getIncompleteSubtasksByType();
+
+    expect(res.length).toEqual(1);
+    expect(mockPlanningReviewService.getBySubtaskType).toHaveBeenCalledTimes(1);
+
+    expect(res[0].title).toContain(mockPlanningReview.fileNumber);
+    expect(res[0].title).toContain(mockPlanningReview.type);
+    expect(res[0].activeDays).toBeUndefined();
+    expect(res[0].paused).toBeFalsy();
   });
 });

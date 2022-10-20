@@ -105,6 +105,18 @@ export class ApplicationController {
     await this.applicationService.delete(applicationNumber);
   }
 
+  @Get('/card/:uuid')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async getByCardUuid(@Param('uuid') cardUuid): Promise<ApplicationDto> {
+    const application = await this.applicationService.getByCard(cardUuid);
+    if (application) {
+      const mappedApplication = await this.applicationService.mapToDtos([
+        application,
+      ]);
+      return mappedApplication[0];
+    }
+  }
+
   @Patch('/card/:cardUuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async updateCard(

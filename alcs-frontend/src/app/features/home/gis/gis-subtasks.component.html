@@ -12,16 +12,16 @@
     <tbody class="assigned-body">
       <tr
         [ngClass]="{
-          paused: subtask.application.paused
+          paused: subtask.paused
         }"
         *ngFor="let subtask of subtasks"
       >
         <td class="priority-column">
-          <span class="high-priority" *ngIf="subtask.application.card.highPriority">!</span>
+          <span class="high-priority" *ngIf="subtask.card.highPriority">!</span>
         </td>
-        <td>{{ subtask.application.fileNumber }} ({{ subtask.application.applicant }})</td>
-        <td>{{ subtask.reconsideration ? '-' : subtask.application.activeDays }}</td>
-        <td [innerHTML]="subtask.application.card.status.label"></td>
+        <td>{{ subtask.title }}</td>
+        <td>{{ subtask.activeDays !== undefined ? subtask.activeDays : '-' }}</td>
+        <td [innerHTML]="subtask.card.status.label"></td>
         <td class="assignee-column">
           <ng-select
             class="subtask-assignee"
@@ -43,23 +43,7 @@
           </ng-select>
         </td>
         <td class="action-column">
-          <button
-            *ngIf="!subtask.reconsideration"
-            (click)="openCard(subtask.application.fileNumber, subtask.application.card.board.code, 'APP')"
-            mat-flat-button
-            color="accent"
-          >
-            View
-          </button>
-
-          <button
-            *ngIf="!!subtask.reconsideration"
-            (click)="openCard(subtask.reconsideration.card.uuid, subtask.reconsideration.card.board.code, 'RECON')"
-            mat-flat-button
-            color="accent"
-          >
-            View
-          </button>
+          <button (click)="openCard(subtask)" mat-flat-button color="accent">View</button>
         </td>
       </tr>
     </tbody>

@@ -2,7 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
 import {
@@ -106,6 +106,29 @@ export class PlanningReviewService {
   async getCards() {
     return this.repository.find({
       relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  async getBySubtaskType(subtaskType: string) {
+    return this.repository.find({
+      where: {
+        card: {
+          subtasks: {
+            completedAt: IsNull(),
+            type: {
+              type: subtaskType,
+            },
+          },
+        },
+      },
+      relations: {
+        card: {
+          status: true,
+          board: true,
+          type: true,
+          subtasks: { type: true, assignee: true },
+        },
+      },
     });
   }
 }

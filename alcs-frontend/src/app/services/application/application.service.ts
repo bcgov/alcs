@@ -88,4 +88,8 @@ export class ApplicationService {
   searchApplicationsByNumber(fileNumber: string) {
     return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/search/${fileNumber}`));
   }
+
+  async fetchByCardUuid(uuid: string) {
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/card/${uuid}`));
+  }
 }

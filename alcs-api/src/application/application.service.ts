@@ -199,7 +199,7 @@ export class ApplicationService {
     return application;
   }
 
-  async getAllApplicationsWithIncompleteSubtasks(subtaskType: string) {
+  async getBySubtaskType(subtaskType: string) {
     return this.applicationRepository.find({
       where: {
         card: {

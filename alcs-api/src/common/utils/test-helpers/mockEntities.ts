@@ -75,6 +75,7 @@ const initCardMockEntity = (subtaskUuid?: string): Card => {
   card.board = initBoardMockEntity();
   card.boardUuid = card.board.uuid;
   card.type = initCardTypeMockEntity();
+  card.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return card;
 };

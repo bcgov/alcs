@@ -3,6 +3,7 @@ import { IsOptional, IsUUID } from 'class-validator';
 import { ApplicationReconsiderationDto } from '../../application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../application/application.dto';
 import { AssigneeDto } from '../../user/user.dto';
+import { CardDto } from '../card.dto';
 
 export class UpdateCardSubtaskDto {
   @AutoMap()
@@ -43,10 +44,9 @@ export class CardSubtaskDto {
   completedAt?: number;
 }
 
-export class ApplicationSubtaskWithApplicationDTO extends CardSubtaskDto {
-  @AutoMap()
-  application: ApplicationDto;
-
-  @AutoMap()
-  reconsideration?: ApplicationReconsiderationDto;
+export class HomepageSubtaskDTO extends CardSubtaskDto {
+  card: CardDto;
+  title: string;
+  activeDays?: number;
+  paused: boolean;
 }

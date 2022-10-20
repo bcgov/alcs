@@ -4,24 +4,33 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationReconsiderationDto } from '../application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationDto } from '../application/application.dto';
+import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
-import { ApplicationSubtaskWithApplicationDTO } from '../card/card-subtask/card-subtask.dto';
-import { CardSubtask } from '../card/card-subtask/card-subtask.entity';
-
+import { HomepageSubtaskDTO } from '../card/card-subtask/card-subtask.dto';
+import { CardDto } from '../card/card.dto';
+import { Card } from '../card/card.entity';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { PlanningReview } from '../planning-review/planning-review.entity';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
+import { AssigneeDto } from '../user/user.dto';
+import { User } from '../user/user.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('home')
 @UseGuards(RoleGuard)
 export class HomeController {
   constructor(
-    private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
+    private applicationService: ApplicationService,
+    private timeService: ApplicationTimeTrackingService,
     private reconsiderationService: ApplicationReconsiderationService,
+    private planningReviewService: PlanningReviewService,
   ) {}
 
   @Get('/assigned')
@@ -55,49 +64,93 @@ export class HomeController {
 
   @Get('/subtask')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getIncompleteSubtasksByType(): Promise<
-    ApplicationSubtaskWithApplicationDTO[]
-  > {
+  async getIncompleteSubtasksByType(): Promise<HomepageSubtaskDTO[]> {
     const subtaskType = 'GIS';
-    const applications =
-      await this.applicationService.getAllApplicationsWithIncompleteSubtasks(
-        subtaskType,
-      );
+
+    const applicationsWithSubtasks =
+      await this.applicationService.getBySubtaskType(subtaskType);
+    const applicationSubtasks = await this.mapApplicationsToDtos(
+      applicationsWithSubtasks,
+    );
 
     const reconsiderationWithSubtasks =
-      await this.reconsiderationService.getSubtasks(subtaskType);
+      await this.reconsiderationService.getBySubtaskType(subtaskType);
+    const reconSubtasks = this.mapReconToDto(reconsiderationWithSubtasks);
 
-    const mappedApps = new Map();
-    const subtasks: CardSubtask[] = [];
+    const planningReviewsWithSubtasks =
+      await this.planningReviewService.getBySubtaskType(subtaskType);
+    const planningReviewSubtasks = this.mapPlanningReviewsToDTOs(
+      planningReviewsWithSubtasks,
+    );
+
+    return [
+      ...applicationSubtasks,
+      ...reconSubtasks,
+      ...planningReviewSubtasks,
+    ];
+  }
+
+  private mapReconToDto(recons: ApplicationReconsideration[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const recon of recons) {
+      for (const subtask of recon.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(recon.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${recon.application.fileNumber} (${recon.application.applicant})`,
+        });
+      }
+    }
+    return result;
+  }
+
+  private async mapApplicationsToDtos(applications: Application[]) {
+    const applicationTimes = await this.timeService.fetchActiveTimes(
+      applications,
+    );
+
+    const appPausedMap = await this.timeService.getPausedStatus(applications);
+    const result: HomepageSubtaskDTO[] = [];
     for (const application of applications) {
       application.decisionMeetings = [];
-      const mappedApp = await this.applicationService.mapToDtos([application]);
       for (const subtask of application.card?.subtasks) {
-        mappedApps.set(subtask.uuid, { app: mappedApp[0], recon: null });
-        subtasks.push(subtask);
-      }
-    }
-
-    for (const recon of reconsiderationWithSubtasks) {
-      const mappedRecon = await this.reconsiderationService.mapToDtos([recon]);
-      for (const subtask of recon.card.subtasks) {
-        mappedApps.set(subtask.uuid, {
-          recon: mappedRecon[0],
-          app: null,
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(application.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          activeDays: applicationTimes.get(application.uuid)?.activeDays || 0,
+          paused: appPausedMap.get(application.uuid) || false,
+          title: `${application.fileNumber} (${application.applicant})`,
         });
-        subtasks.push(subtask);
       }
     }
+    return result;
+  }
 
-    const mappedTasks = this.mapper.mapArray(
-      subtasks,
-      CardSubtask,
-      ApplicationSubtaskWithApplicationDTO,
-    );
-    return mappedTasks.map((task) => ({
-      ...task,
-      application: mappedApps.get(task.uuid)?.app,
-      reconsideration: mappedApps.get(task.uuid)?.recon,
-    }));
+  private mapPlanningReviewsToDTOs(planingReviews: PlanningReview[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const planningReview of planingReviews) {
+      for (const subtask of planningReview.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(planningReview.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${planningReview.fileNumber} (${planningReview.type})`,
+        });
+      }
+    }
+    return result;
   }
 }

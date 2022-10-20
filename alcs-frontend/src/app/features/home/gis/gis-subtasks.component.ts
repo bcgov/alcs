@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationService } from '../../../services/application/application.service';
-import { ApplicationSubtaskWithApplicationDto } from '../../../services/card/card-subtask/card-subtask.dto';
+import { HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
 import { UserDto } from '../../../services/user/user.dto';
@@ -13,7 +13,7 @@ import { UserService } from '../../../services/user/user.service';
   styleUrls: ['./gis-subtasks.component.scss'],
 })
 export class GisSubtasksComponent implements OnInit {
-  subtasks: ApplicationSubtaskWithApplicationDto[] = [];
+  subtasks: HomepageSubtaskDto[] = [];
   public gisUsers: UserDto[] = [];
 
   constructor(
@@ -34,37 +34,24 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const subtasks = await this.homeService.fetchGisSubtasks();
-
-    this.subtasks = subtasks.filter((subtask) => subtask.application);
-
-    const reconsiderationSubtasks = this.mapReconsiderationSubtasks(subtasks);
-    this.subtasks.push(...reconsiderationSubtasks);
+    this.subtasks = await this.homeService.fetchGisSubtasks();
 
     this.subtasks.sort((a, b) => {
-      if (a.application.card.highPriority === b.application.card.highPriority) {
-        return b.application.activeDays - a.application.activeDays;
+      if (a.card.highPriority === b.card.highPriority) {
+        if (b.activeDays && !a.activeDays) {
+          return 1;
+        }
+        if (a.activeDays && !b.activeDays) {
+          return -1;
+        }
+        return b.createdAt - a.createdAt;
       }
-      if (a.application.card.highPriority) {
+      if (a.card.highPriority) {
         return -1;
       } else {
         return 1;
       }
     });
-  }
-
-  private mapReconsiderationSubtasks(subtasks: ApplicationSubtaskWithApplicationDto[]) {
-    return subtasks
-      .filter((subtask) => subtask.reconsideration)
-      .map((subtask) => {
-        return {
-          ...subtask,
-          application: {
-            ...(subtask.reconsideration.application as any),
-            card: subtask.reconsideration.card,
-          },
-        };
-      });
   }
 
   filterAssigneeList(term: string, item: UserDto) {
@@ -74,8 +61,8 @@ export class GisSubtasksComponent implements OnInit {
     );
   }
 
-  openCard(fileNumber: string, boardCode: string, cardType: string) {
-    this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&&type=${cardType}`);
+  openCard(subtask: HomepageSubtaskDto) {
+    this.router.navigateByUrl(`/board/${subtask.card.board.code}?card=${subtask.card.uuid}&type=${subtask.card.type}`);
   }
 
   async onAssigneeSelected(assignee: UserDto, uuid: string) {

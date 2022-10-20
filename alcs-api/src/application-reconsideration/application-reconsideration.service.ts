@@ -200,7 +200,7 @@ export class ApplicationReconsiderationService {
     });
   }
 
-  getSubtasks(subtaskType: string) {
+  getBySubtaskType(subtaskType: string) {
     return this.reconsiderationRepository.find({
       where: {
         card: {

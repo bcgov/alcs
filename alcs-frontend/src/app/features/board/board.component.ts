@@ -1,3 +1,4 @@
+import { ComponentType } from '@angular/cdk/portal';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -93,7 +94,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
 
     // open card if cardUuid and type present in url
-    const app = this.activatedRoute.snapshot.queryParamMap.get('app');
+    const app = this.activatedRoute.snapshot.queryParamMap.get('card');
     const type = this.activatedRoute.snapshot.queryParamMap.get('type');
     if (app && type) {
       this.onSelected({ uuid: app, cardType: type as CardType });
@@ -103,6 +104,59 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  async onSelected(card: CardSelectedEvent) {
+    switch (card.cardType) {
+      case CardType.APP:
+        await this.openAppCardDetailDialog(card.uuid, card.cardType);
+        break;
+      case CardType.RECON:
+        await this.openReconCardDetailDialog(card.uuid, card.cardType);
+        break;
+      case CardType.PLAN:
+        await this.openPlanningCardDialog(card.uuid, card.cardType);
+        break;
+      default:
+        console.error('Card type is not configured for a dialog');
+    }
+  }
+
+  async onCreate() {
+    this.openDialog(this.cardDialogType, {
+      currentBoardCode: this.selectedBoardCode,
+    });
+  }
+
+  onCreatePlanningReview() {
+    this.openDialog(CreatePlanningReviewDialogComponent, {
+      currentBoardCode: this.selectedBoardCode,
+    });
+  }
+
+  onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
+    switch ($event.cardTypeCode) {
+      case CardType.APP:
+        this.applicationService
+          .updateApplicationCard($event.id, {
+            statusCode: $event.status,
+          })
+          .then((r) => {
+            this.toastService.showSuccessToast('Application updated');
+          });
+        break;
+      case CardType.RECON:
+      case CardType.PLAN:
+        this.cardService
+          .updateCard({
+            uuid: $event.id,
+            statusCode: $event.status,
+          })
+          .then((r) => {
+            this.toastService.showSuccessToast('Card updated');
+          });
+        break;
+    }
   }
 
   private setupCreateCardButton(boardCode: string = '') {
@@ -158,176 +212,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async openAppCardDetailDialog(id: string, cardTypeCode: string) {
-    try {
-      this.setUrl(id, cardTypeCode);
-
-      const application = await this.applicationService.fetchApplication(id);
-
-      const dialogRef = this.dialog.open(ApplicationDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        data: application,
-      });
-
-      dialogRef.afterClosed().subscribe((isDirty) => {
-        this.setUrl();
-
-        if (isDirty && this.selectedBoardCode) {
-          this.loadCards(this.selectedBoardCode);
-        }
-      });
-    } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the application, please try again');
-      console.error(err);
-    }
-  }
-
-  private async openReconCardDetailDialog(id: string, cardTypeCode: string) {
-    try {
-      this.setUrl(id, cardTypeCode);
-
-      const recon = await this.reconsiderationService.fetchByCardUuid(id);
-
-      const dialogRef = this.dialog.open(ReconsiderationDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        data: recon,
-      });
-
-      dialogRef.afterClosed().subscribe((isDirty) => {
-        this.setUrl();
-
-        if (isDirty && this.selectedBoardCode) {
-          this.loadCards(this.selectedBoardCode);
-        }
-      });
-    } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the application, please try again');
-      console.error(err);
-    }
-  }
-
-  private async openPlanningCardDialog(id: string, cardTypeCode: string) {
-    try {
-      this.setUrl(id, cardTypeCode);
-
-      const planningReview = await this.planningReviewService.fetchByCardUuid(id);
-
-      const dialogRef = this.dialog.open(PlanningReviewDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        data: planningReview,
-      });
-
-      dialogRef.afterClosed().subscribe((isDirty) => {
-        this.setUrl();
-
-        if (isDirty && this.selectedBoardCode) {
-          this.loadCards(this.selectedBoardCode);
-        }
-      });
-    } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the application, please try again');
-      console.error(err);
-    }
-  }
-
-  async onSelected(card: CardSelectedEvent) {
-    switch (card.cardType) {
-      case CardType.APP:
-        await this.openAppCardDetailDialog(card.uuid, card.cardType);
-        break;
-      case CardType.RECON:
-        await this.openReconCardDetailDialog(card.uuid, card.cardType);
-        break;
-      case CardType.PLAN:
-        await this.openPlanningCardDialog(card.uuid, card.cardType);
-        break;
-      default:
-        console.error('Card type is not configured for a dialog');
-    }
-  }
-
-  private setUrl(cardUuid: string = '', cardTypeCode: string = '') {
-    const url = this.router
-      .createUrlTree([], {
-        relativeTo: this.activatedRoute,
-        queryParams: cardUuid && cardTypeCode ? { app: cardUuid, type: cardTypeCode } : {},
-      })
-      .toString();
-    this.location.go(url);
-  }
-
-  async onCreate() {
-    this.dialog
-      .open(this.cardDialogType, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        data: {
-          currentBoardCode: this.selectedBoardCode,
-        },
-      })
-      .afterClosed()
-      .subscribe((didCreate) => {
-        if (didCreate && this.selectedBoardCode) {
-          this.loadCards(this.selectedBoardCode);
-        }
-      });
-  }
-
-  onCreatePlanningReview() {
-    this.dialog
-      .open(CreatePlanningReviewDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        data: {
-          currentBoardCode: this.selectedBoardCode,
-        },
-      })
-      .afterClosed()
-      .subscribe((didCreate) => {
-        if (didCreate && this.selectedBoardCode) {
-          this.loadCards(this.selectedBoardCode);
-        }
-      });
-  }
-
-  onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
-    switch ($event.cardTypeCode) {
-      case CardType.APP:
-        this.applicationService
-          .updateApplicationCard($event.id, {
-            statusCode: $event.status,
-          })
-          .then((r) => {
-            this.toastService.showSuccessToast('Application updated');
-          });
-        break;
-      case CardType.RECON:
-      case CardType.PLAN:
-        this.cardService
-          .updateCard({
-            uuid: $event.id,
-            statusCode: $event.status,
-          })
-          .then((r) => {
-            this.toastService.showSuccessToast('Card updated');
-          });
-        break;
-    }
-  }
-
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
     return {
       status: application.card.status.code,
@@ -377,5 +261,68 @@ export class BoardComponent implements OnInit, OnDestroy {
       cardUuid: meeting.card.uuid,
       dateReceived: meeting.card.createdAt,
     };
+  }
+
+  private async openAppCardDetailDialog(id: string, cardTypeCode: CardType) {
+    try {
+      this.setUrl(id, cardTypeCode);
+
+      const application = await this.applicationService.fetchByCardUuid(id);
+      this.openDialog(ApplicationDialogComponent, application);
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
+    }
+  }
+
+  private async openReconCardDetailDialog(id: string, cardTypeCode: CardType) {
+    try {
+      this.setUrl(id, cardTypeCode);
+
+      const recon = await this.reconsiderationService.fetchByCardUuid(id);
+      this.openDialog(ReconsiderationDialogComponent, recon);
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
+    }
+  }
+
+  private async openPlanningCardDialog(id: string, cardTypeCode: CardType) {
+    try {
+      this.setUrl(id, cardTypeCode);
+      const planningReview = await this.planningReviewService.fetchByCardUuid(id);
+      this.openDialog(PlanningReviewDialogComponent, planningReview);
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      console.error(err);
+    }
+  }
+
+  private openDialog(component: ComponentType<any>, data: any) {
+    const dialogRef = this.dialog.open(component, {
+      minWidth: '600px',
+      maxWidth: '900px',
+      maxHeight: '80vh',
+      width: '90%',
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((isDirty) => {
+      this.setUrl();
+
+      if (isDirty && this.selectedBoardCode) {
+        this.loadCards(this.selectedBoardCode);
+      }
+    });
+  }
+
+  private setUrl(cardUuid?: string, cardTypeCode?: CardType) {
+    const url = this.router
+      .createUrlTree([], {
+        relativeTo: this.activatedRoute,
+        queryParams: cardUuid && cardTypeCode ? { card: cardUuid, type: cardTypeCode } : {},
+      })
+      .toString();
+    this.location.go(url);
   }
 }
