@@ -32,6 +32,7 @@ describe('DragDropBoardComponent', () => {
     cardUuid: 'fake',
     cardType: CardType.APP,
     dateReceived: 11111,
+    displayTypes: [],
   };
 
   beforeEach(async () => {

@@ -5,6 +5,7 @@ import { ApplicationDetailService } from '../../services/application/application
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
+import { RECON_TYPE_LABEL } from '../board/dialogs/reconsiderations/reconsideration-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -60,6 +61,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   application?: ApplicationDto;
   fileNumber?: string;
+  reconLabel = RECON_TYPE_LABEL;
 
   childRoutes = childRoutes;
   reconsiderations: ApplicationReconsiderationDto[] = [];

@@ -5,8 +5,17 @@ import { ApplicationDecisionService } from '../../../services/application/applic
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
+import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
+
+const editLink = new Map<string, string>([
+  ['IR', './info-request'],
+  ['AM', './site-visit-meeting'],
+  ['SV', './site-visit-meeting'],
+  ['RR', './post-decision'],
+]);
 
 @Component({
   selector: 'app-overview',
@@ -22,7 +31,8 @@ export class OverviewComponent implements OnInit {
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private meetingService: ApplicationMeetingService,
-    private decisionService: ApplicationDecisionService
+    private decisionService: ApplicationDecisionService,
+    private reconsiderationService: ApplicationReconsiderationService
   ) {}
 
   ngOnInit(): void {
@@ -34,15 +44,18 @@ export class OverviewComponent implements OnInit {
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
               this.$decisions.next(res);
             });
+            this.reconsiderationService.fetchByApplication(app.fileNumber);
           }
         })
       )
-      .pipe(combineLatestWith(this.meetingService.$meetings, this.$decisions))
-      .subscribe(([application, meetings, decisions]) => {
+      .pipe(
+        combineLatestWith(this.meetingService.$meetings, this.$decisions, this.reconsiderationService.$reconsiderations)
+      )
+      .subscribe(([application, meetings, decisions, reconsiderations]) => {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
-          this.events = this.mapApplicationToEvents(application, meetings, decisions);
+          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations);
         }
       });
   }
@@ -50,14 +63,9 @@ export class OverviewComponent implements OnInit {
   mapApplicationToEvents(
     application: ApplicationDto,
     meetings: ApplicationMeetingDto[],
-    decisions: ApplicationDecisionDto[]
+    decisions: ApplicationDecisionDto[],
+    reconsiderations: ApplicationReconsiderationDto[]
   ): TimelineEvent[] {
-    const editLink = new Map<string, string>([
-      ['IR', './info-request'],
-      ['AM', './site-visit-meeting'],
-      ['SV', './site-visit-meeting'],
-    ]);
-
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateReceived) {
       mappedEvents.push({
@@ -150,9 +158,44 @@ export class OverviewComponent implements OnInit {
       typeCount.set(meeting.meetingType.code, count + 1);
     });
 
+    const mappedReconsiderations = this.mapReconsiderationsToEvents(reconsiderations);
+    mappedEvents.push(...mappedReconsiderations);
+
     mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
     return mappedEvents;
+  }
+
+  private mapReconsiderationsToEvents(reconsiderations: ApplicationReconsiderationDto[]) {
+    const events: TimelineEvent[] = [];
+    for (const [index, reconsideration] of reconsiderations
+      .sort((a, b) => b.submittedDate - a.submittedDate)
+      .entries()) {
+      if (reconsideration.type.code === '33.1') {
+        events.push({
+          name: `Reconsideration Request #${reconsiderations.length - index} ${reconsideration.type.code}`,
+          startDate: new Date(reconsideration.submittedDate),
+          isFulfilled: true,
+        });
+      } else {
+        events.push({
+          name: `Reconsideration requested #${reconsiderations.length - index} ${reconsideration.type.code}`,
+          startDate: new Date(reconsideration.submittedDate),
+          isFulfilled: false,
+          link: editLink.get('RR'),
+        });
+        if (reconsideration.reviewDate) {
+          events.push({
+            name: `Reconsideration Request reviewed #${reconsiderations.length - index} ${
+              reconsideration.isReviewApproved ? 'Proceed' : 'Refused'
+            }`,
+            startDate: new Date(reconsideration.reviewDate),
+            isFulfilled: true,
+          });
+        }
+      }
+    }
+    return events;
   }
 
   onSaveSummary(updatedSummary: string) {

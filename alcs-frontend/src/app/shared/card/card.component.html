@@ -12,8 +12,14 @@
     <div class="upper-card">
       {{ cardData.title }}
       <span class="high-priority" *ngIf="cardData.highPriority">!</span>
-      <div class="type" [ngStyle]="{ backgroundColor: cardData.type.backgroundColor, color: cardData.type.textColor }">
-        <span class="center">{{ cardData.type.shortLabel }}</span>
+      <div>
+        <span
+          *ngFor="let type of cardData.displayTypes"
+          class="type"
+          [ngStyle]="{ backgroundColor: type.backgroundColor, color: type.textColor }"
+        >
+          <span class="center">{{ type.shortLabel }}</span>
+        </span>
       </div>
     </div>
     <div class="lower-card">

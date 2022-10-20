@@ -12,6 +12,15 @@
             }"
             >{{ application.type.label }}</span
           >
+          <span
+            *ngIf="reconsiderations.length"
+            class="application-type"
+            [ngStyle]="{
+              backgroundColor: reconLabel.backgroundColor,
+              color: reconLabel.textColor
+            }"
+            >{{ reconLabel.label }}</span
+          >
         </div>
         <div class="center">
           <button
@@ -45,7 +54,7 @@
           <div class="subheading2">Local Government:</div>
           <div class="body1-text">{{ application.localGovernment.name }}</div>
         </div>
-        <div>
+        <div *ngIf="!reconsiderations.length">
           <div class="subheading2">Business Days:</div>
           <div class="body1-text left time-tracking">
             <div *ngIf="!application.paused"><span class="dot"></span>Active</div>

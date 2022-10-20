@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardStatusDto } from '../../../services/application/application-code.dto';
+import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomeService } from '../../../services/home/home.service';
@@ -11,7 +12,10 @@ import { HomeService } from '../../../services/home/home.service';
   styleUrls: ['./assigned.component.scss'],
 })
 export class AssignedComponent implements OnInit {
-  applications: ApplicationDto[] = [];
+  assignedToMe: { applications: ApplicationDto[]; reconsiderations: ApplicationReconsiderationDto[] } = {
+    applications: [],
+    reconsiderations: [],
+  };
   private statuses: CardStatusDto[] = [];
 
   constructor(
@@ -31,10 +35,22 @@ export class AssignedComponent implements OnInit {
   }
 
   async loadApplications() {
-    this.applications = await this.homeService.fetchAssignedToMe();
-    this.applications.sort((a, b) => {
+    this.assignedToMe = await this.homeService.fetchAssignedToMe();
+
+    this.assignedToMe.applications.sort((a, b) => {
       if (a.card.highPriority === b.card.highPriority) {
         return b.activeDays - a.activeDays;
+      }
+      if (a.card.highPriority) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
+    this.assignedToMe.reconsiderations.sort((a, b) => {
+      if (a.card.highPriority === b.card.highPriority) {
+        return b.submittedDate - a.submittedDate;
       }
       if (a.card.highPriority) {
         return -1;
