@@ -31,7 +31,7 @@
       </div>
       <app-avatar-circle
         *ngIf="cardData.assignee"
-        [initials]="cardData.assignee.initials"
+        [initials]="cardData.assignee?.initials || ''"
         [name]="cardData.assignee.name"
       ></app-avatar-circle>
     </div>

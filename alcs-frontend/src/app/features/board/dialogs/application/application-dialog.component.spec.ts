@@ -1,18 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  ApplicationRegionDto,
-  ApplicationTypeDto,
-  CardStatusDto,
-} from '../../../../services/application/application-code.dto';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
-import { UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto } from '../../../../services/user/user.dto';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ApplicationDialogComponent } from './application-dialog.component';
@@ -21,19 +17,10 @@ describe('ApplicationDialogComponent', () => {
   let component: ApplicationDialogComponent;
   let fixture: ComponentFixture<ApplicationDialogComponent>;
 
-  const mockAssignee: UserDto = {
+  const mockAssignee: AssigneeDto = {
     uuid: '11111-11111-11111',
-    email: '11111@1111.11',
     name: 'Dart',
-    displayName: 'Dart P',
-    identityProvider: 'star',
-    preferredUsername: 'Dart Placeholder',
-    givenName: 'Dart',
-    familyName: 'Placeholder',
-    mentionLabel: 'DartPlaceholder',
     initials: 'DP',
-    settings: { favoriteBoards: [] },
-    clientRoles: [],
   };
 
   const mockApplicationRegion: ApplicationRegionDto = {

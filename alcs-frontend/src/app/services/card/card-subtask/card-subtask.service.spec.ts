@@ -1,17 +1,17 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ApplicationSubtaskService } from './application-subtask.service';
+import { CardSubtaskService } from './card-subtask.service';
 
 describe('CommentService', () => {
-  let service: ApplicationSubtaskService;
+  let service: CardSubtaskService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, MatSnackBarModule],
       providers: [],
     });
-    service = TestBed.inject(ApplicationSubtaskService);
+    service = TestBed.inject(CardSubtaskService);
   });
 
   it('should be created', () => {

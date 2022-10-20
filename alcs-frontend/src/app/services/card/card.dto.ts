@@ -1,7 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { CardStatusDto } from '../application/application-code.dto';
 import { BoardDto } from '../board/board.dto';
-import { UserDto } from '../user/user.dto';
+import { AssigneeDto, UserDto } from '../user/user.dto';
 
 export interface CardTypeDto extends BaseCodeDto {}
 
@@ -33,7 +33,7 @@ export interface CardDto {
   type: string;
   highPriority: boolean;
   status: CardStatusDto;
-  assignee?: UserDto;
+  assignee?: AssigneeDto;
   board: BoardDto;
   createdAt: number;
 }

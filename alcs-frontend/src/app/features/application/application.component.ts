@@ -87,7 +87,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
       }
     });
     this.reconsiderationService.$reconsiderations.pipe(takeUntil(this.destroy)).subscribe((recons) => {
-      this.reconsiderations = recons;
+      this.reconsiderations = [...recons].reverse(); //Reverse since we go low to high versus normally high to low
     });
   }
 

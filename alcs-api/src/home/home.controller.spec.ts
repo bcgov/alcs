@@ -132,7 +132,6 @@ describe('HomeController', () => {
     expect(mockApplicationReconsiderationService.getSubtasks).toBeCalledTimes(
       1,
     );
-    expect(res[0].type).toEqual(mockSubtask.type.type);
     expect(res[0].application).toEqual(mockApplication);
   });
 });

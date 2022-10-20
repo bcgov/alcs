@@ -8,7 +8,7 @@ import { ApplicationService } from '../../../../services/application/application
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -20,7 +20,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 export class ApplicationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
-  selectedAssignee?: UserDto;
+  selectedAssignee?: AssigneeDto;
   selectedAssigneeName?: string;
   selectedApplicationStatus = '';
   selectedBoard?: string;

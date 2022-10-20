@@ -2,6 +2,7 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import {
+  AssigneeDto,
   CreateOrUpdateUserDto,
   UserDto,
   UserSettingsDto,
@@ -45,6 +46,20 @@ export class UserProfile extends AutomapperProfile {
         forMember(
           (ud) => ud.clientRoles,
           mapFrom((u) => u.clientRoles),
+        ),
+      );
+
+      createMap(
+        mapper,
+        User,
+        AssigneeDto,
+        forMember(
+          (ud) => ud.initials,
+          mapFrom(
+            (u) =>
+              u.givenName?.charAt(0).toUpperCase() +
+              u.familyName?.charAt(0).toUpperCase(),
+          ),
         ),
       );
     };
