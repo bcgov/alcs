@@ -28,7 +28,7 @@
             [items]="gisUsers"
             bindLabel="name"
             bindValue="name"
-            [ngModel]="subtask.assignee"
+            [ngModel]="subtask.assignee?.name"
             [searchFn]="filterAssigneeList"
             (change)="onAssigneeSelected($event, subtask.uuid)"
           >

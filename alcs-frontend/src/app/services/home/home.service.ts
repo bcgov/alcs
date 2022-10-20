@@ -2,10 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import {
-  ApplicationSubtaskDto,
-  ApplicationSubtaskWithApplicationDto,
-} from '../application/application-subtask/application-subtask.dto';
+import { CardSubtaskDto, ApplicationSubtaskWithApplicationDto } from '../card/card-subtask/card-subtask.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { UserDto } from '../user/user.dto';
 

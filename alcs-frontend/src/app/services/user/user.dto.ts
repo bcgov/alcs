@@ -33,3 +33,9 @@ export interface UserDto {
 export interface IUserSettings {
   favoriteBoards: string[];
 }
+
+export interface AssigneeDto {
+  uuid: string;
+  initials?: string;
+  name: string;
+}

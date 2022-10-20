@@ -10,7 +10,7 @@ import { BoardService, BoardWithFavourite } from '../../../../services/board/boa
 import { CardUpdateDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -31,7 +31,7 @@ export const RECON_TYPE_LABEL = {
 export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $users: Observable<UserDto[]> | undefined;
-  selectedAssignee?: UserDto;
+  selectedAssignee?: AssigneeDto;
   selectedAssigneeName?: string;
   selectedApplicationStatus = '';
   selectedBoard?: string;

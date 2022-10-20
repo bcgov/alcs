@@ -83,3 +83,14 @@ export class UserDto extends CreateOrUpdateUserDto {
   @IsString()
   mentionLabel: string;
 }
+
+export class AssigneeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  initials?: string;
+
+  @AutoMap()
+  name?: string;
+}

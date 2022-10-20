@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationSubtaskService } from '../../../services/application/application-subtask/application-subtask.service';
+import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -20,7 +20,7 @@ describe('SubtasksComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationSubtaskService,
+          provide: CardSubtaskService,
           useValue: {},
         },
         {

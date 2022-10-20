@@ -17,7 +17,7 @@ import { ApplicationRegion } from '../../../code/application-code/application-re
 import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { Comment } from '../../../comment/comment.entity';
 import { CommentMention } from '../../../comment/mention/comment-mention.entity';
-import { UserDto } from '../../../user/user.dto';
+import { AssigneeDto, UserDto } from '../../../user/user.dto';
 import { User } from '../../../user/user.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
@@ -160,7 +160,7 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   return applicationEntity;
 };
 
-const initAssigneeMockDto = (assignee?: User): UserDto => {
+const initMockUserDto = (assignee?: User): UserDto => {
   const userEntity = assignee ?? initAssigneeMockEntity();
   const userDto = new UserDto();
   userDto.familyName = userEntity.familyName;
@@ -184,6 +184,17 @@ const initAssigneeMockDto = (assignee?: User): UserDto => {
     userEntity.familyName.charAt(0).toUpperCase() +
     userEntity.familyName.slice(1);
   return userDto;
+};
+
+const initMockAssigneeDto = (assignee?: User): AssigneeDto => {
+  const userEntity = assignee ?? initAssigneeMockEntity();
+  const assigneeDto = new AssigneeDto();
+  assigneeDto.uuid = userEntity.uuid;
+  assigneeDto.name = userEntity.name;
+  assigneeDto.initials =
+    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.familyName.charAt(0).toUpperCase();
+  return assigneeDto;
 };
 
 const initCommentMock = (author?: any): Comment => {
@@ -277,7 +288,8 @@ const initApplicationMeetingMock = (
 export {
   initCardStatusMockEntity,
   initApplicationMockEntity,
-  initAssigneeMockDto,
+  initMockAssigneeDto,
+  initMockUserDto,
   initAssigneeMockEntity,
   initApplicationTypeMockEntity,
   initCommentMentionMock,

@@ -18,18 +18,21 @@ describe('CardSubtaskController', () => {
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
   let cardService: DeepMocked<CardService>;
 
+  const mockSubtaskType = new CardSubtaskType();
+
   const mockSubtask: Partial<CardSubtask> = {
     uuid: 'fake-uuid',
     createdAt: new Date(1662762964667),
-    type: {
-      backgroundColor: 'back-color',
-      textColor: 'text-color',
-    } as CardSubtaskType,
+    type: mockSubtaskType,
   };
 
   beforeEach(async () => {
     mockSubtaskService = createMock<CardSubtaskService>();
     cardService = createMock<CardService>();
+
+    mockSubtaskType.backgroundColor = 'color';
+    mockSubtaskType.type = 'fake-subtask-type';
+    mockSubtaskType.uuid = 'uuid';
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -70,9 +73,9 @@ describe('CardSubtaskController', () => {
     const res = await controller.create('mock-file', 'mock-type');
 
     expect(mockSubtaskService.create).toHaveBeenCalledTimes(1);
-    expect(res.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
     expect(cardService.get).toHaveBeenCalledTimes(1);
-    expect(res.textColor).toEqual(mockSubtask.type.textColor);
+    expect(res.type.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
+    expect(res.type.textColor).toEqual(mockSubtask.type.textColor);
     expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
   });
 

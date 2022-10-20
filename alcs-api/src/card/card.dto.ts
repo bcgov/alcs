@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BoardSmallDto } from '../board/board.dto';
-import { UserDto } from '../user/user.dto';
+import { AssigneeDto, UserDto } from '../user/user.dto';
 import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
 
 export class CardUpdateDto {
@@ -62,7 +62,7 @@ export class CardCreateDto {
 
 export class CardDto {
   @AutoMap()
-  assignee?: UserDto;
+  assignee?: AssigneeDto;
 
   @AutoMap()
   status: CardStatusDto;
