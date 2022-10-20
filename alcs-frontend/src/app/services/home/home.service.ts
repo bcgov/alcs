@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
-import { ApplicationSubtaskWithApplicationDto } from '../card/card-subtask/card-subtask.dto';
+import { HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +21,6 @@ export class HomeService {
   }
 
   async fetchGisSubtasks() {
-    return await firstValueFrom(
-      this.http.get<ApplicationSubtaskWithApplicationDto[]>(`${environment.apiUrl}/home/subtask`)
-    );
+    return await firstValueFrom(this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask`));
   }
 }

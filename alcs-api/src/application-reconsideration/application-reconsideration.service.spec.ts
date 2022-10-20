@@ -344,7 +344,7 @@ describe('ReconsiderationService', () => {
         },
       },
     };
-    await service.getSubtasks(subtaskType);
+    await service.getWithIncompleteSubtaskByType(subtaskType);
 
     expect(reconsiderationRepositoryMock.find).toBeCalledWith(findOptions);
   });
