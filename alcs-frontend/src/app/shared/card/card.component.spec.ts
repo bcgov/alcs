@@ -31,6 +31,7 @@ describe('CardComponent', () => {
       cardUuid: 'fake',
       cardType: CardType.APP,
       dateReceived: 11111,
+      displayTypes: [],
     };
 
     fixture.detectChanges();
@@ -72,6 +73,7 @@ describe('CardComponent', () => {
       cardUuid: 'fake',
       cardType: CardType.APP,
       dateReceived: 11111,
+      displayTypes: [],
     };
     fixture.detectChanges();
 

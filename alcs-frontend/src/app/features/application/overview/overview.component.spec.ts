@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
+import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 
 import { OverviewComponent } from './overview.component';
@@ -25,6 +26,10 @@ describe('OverviewComponent', () => {
         },
         {
           provide: ApplicationDecisionService,
+          useValue: {},
+        },
+        {
+          provide: ApplicationReconsiderationService,
           useValue: {},
         },
         {
