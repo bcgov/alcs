@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
+import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,11 @@ export class HomeService {
 
   async fetchAssignedToMe() {
     return await firstValueFrom(
-      this.http.get<{ applications: ApplicationDto[]; reconsiderations: ApplicationReconsiderationDto[] }>(
-        `${environment.apiUrl}/home/assigned`
-      )
+      this.http.get<{
+        applications: ApplicationDto[];
+        reconsiderations: ApplicationReconsiderationDto[];
+        planningReviews: PlanningReviewDto[];
+      }>(`${environment.apiUrl}/home/assigned`)
     );
   }
 

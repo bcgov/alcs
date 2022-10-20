@@ -16,6 +16,7 @@ import { Card } from '../card/card.entity';
 import { RoleGuard } from '../common/authorization/role.guard';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { AssigneeDto } from '../user/user.dto';
@@ -38,6 +39,7 @@ export class HomeController {
   async getAssignedToMe(@Req() req): Promise<{
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
+    planningReviews: PlanningReviewDto[];
   }> {
     const userId = req.user.entity.uuid;
     if (userId) {
@@ -48,16 +50,24 @@ export class HomeController {
         card: { assigneeUuid: userId },
       });
 
+      const planningReviews = await this.planningReviewService.getBy({
+        card: { assigneeUuid: userId },
+      });
+
       return {
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
           reconsiderations,
+        ),
+        planningReviews: await this.planningReviewService.mapToDtos(
+          planningReviews,
         ),
       };
     } else {
       return {
         applications: [],
         reconsiderations: [],
+        planningReviews: [],
       };
     }
   }
