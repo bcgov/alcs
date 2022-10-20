@@ -19,13 +19,13 @@ import { ApplicationDialogComponent } from './dialogs/application/application-di
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import {
-  PLANNING_TYPE_LABEL,
   PlanningReviewDialogComponent,
+  PLANNING_TYPE_LABEL,
 } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import {
-  RECON_TYPE_LABEL,
   ReconsiderationDialogComponent,
+  RECON_TYPE_LABEL,
 } from './dialogs/reconsiderations/reconsideration-dialog.component';
 
 export const BOARD_TYPE_CODES = {
@@ -336,6 +336,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       assignee: application.card.assignee,
       id: application.fileNumber,
       type: mappedType!,
+      displayTypes: [mappedType!],
       activeDays: application.activeDays,
       paused: application.paused,
       highPriority: application.card.highPriority,
@@ -347,11 +348,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private mapReconsiderationDtoToCard(recon: ApplicationReconsiderationDto): CardData {
+    const mappedType = this.applicationTypes.find((type) => type.code === recon.application.type.code);
     return {
       status: recon.card.status.code,
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
       assignee: recon.card.assignee,
       id: recon.card.uuid,
+      displayTypes: [mappedType!, RECON_TYPE_LABEL],
       type: RECON_TYPE_LABEL,
       cardType: CardType.RECON,
       paused: false,
@@ -369,6 +372,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       assignee: meeting.card.assignee,
       id: meeting.card.uuid,
       type: PLANNING_TYPE_LABEL,
+      displayTypes: [PLANNING_TYPE_LABEL],
       cardType: CardType.PLAN,
       paused: false,
       highPriority: meeting.card.highPriority,

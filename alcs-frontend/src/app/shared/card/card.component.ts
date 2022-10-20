@@ -6,6 +6,7 @@ import { UserDto } from '../../services/user/user.dto';
 export interface CardData {
   id: string;
   title: string;
+  displayTypes: ApplicationTypeDto[];
   type: ApplicationTypeDto;
   status: string;
   assignee?: UserDto;

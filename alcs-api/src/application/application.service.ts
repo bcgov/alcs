@@ -270,6 +270,7 @@ export class ApplicationService {
       activeDays: appTimeMap.get(app.uuid).activeDays || 0,
       pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
       paused: appPausedMap.get(app.uuid) || false,
+      hasReconsideration: app.reconsiderations?.length > 0 || false,
     }));
   }
 

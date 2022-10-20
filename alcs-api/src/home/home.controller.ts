@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationReconsiderationDto } from '../application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
@@ -25,15 +26,30 @@ export class HomeController {
 
   @Get('/assigned')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getAssignedToMe(@Req() req): Promise<ApplicationDto[]> {
+  async getAssignedToMe(@Req() req): Promise<{
+    applications: ApplicationDto[];
+    reconsiderations: ApplicationReconsiderationDto[];
+  }> {
     const userId = req.user.entity.uuid;
     if (userId) {
       const applications = await this.applicationService.getAll({
         card: { assigneeUuid: userId },
       });
-      return this.applicationService.mapToDtos(applications);
+      const reconsiderations = await this.reconsiderationService.getBy({
+        card: { assigneeUuid: userId },
+      });
+
+      return {
+        applications: await this.applicationService.mapToDtos(applications),
+        reconsiderations: await this.reconsiderationService.mapToDtos(
+          reconsiderations,
+        ),
+      };
     } else {
-      return [];
+      return {
+        applications: [],
+        reconsiderations: [],
+      };
     }
   }
 

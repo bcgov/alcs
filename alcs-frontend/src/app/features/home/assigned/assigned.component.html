@@ -1,5 +1,5 @@
 <div class="assignee">
-  <h4>Assigned Applications: {{ applications.length }}</h4>
+  <h4>Assigned Applications: {{ assignedToMe.applications.length + assignedToMe.reconsiderations.length }}</h4>
   <table class="assigned-table">
     <thead>
       <td style="padding: 4px"></td>
@@ -13,7 +13,7 @@
           paused: application.paused
         }"
         (click)="onSelectCard(application.fileNumber, application.card.board.code, application.card.type)"
-        *ngFor="let application of applications"
+        *ngFor="let application of assignedToMe.applications"
       >
         <td class="center" style="padding: 4px">
           <span class="high-priority" *ngIf="application.card.highPriority">!</span>
@@ -21,6 +21,18 @@
         <td>{{ application.fileNumber }} ({{ application.applicant }})</td>
         <td>{{ application.activeDays }}</td>
         <td [innerHTML]="application.card.status.label"></td>
+      </tr>
+
+      <tr
+        (click)="onSelectCard(reconsideration.card.uuid, reconsideration.card.board.code, reconsideration.card.type)"
+        *ngFor="let reconsideration of assignedToMe.reconsiderations"
+      >
+        <td class="center" style="padding: 4px">
+          <span class="high-priority" *ngIf="reconsideration.card.highPriority">!</span>
+        </td>
+        <td>{{ reconsideration.application.fileNumber }} ({{ reconsideration.application.applicant }})</td>
+        <td>-</td>
+        <td [innerHTML]="reconsideration.card.status.label"></td>
       </tr>
     </tbody>
   </table>
