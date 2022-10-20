@@ -143,7 +143,7 @@ describe('HomeController', () => {
   it('should call ApplicationService and map an Application', async () => {
     const mockApplication = initApplicationMockEntity();
     const activeDays = 5;
-    mockApplicationService.getBySubtaskType.mockResolvedValue([
+    mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([
       mockApplication,
     ]);
     mockApplicationTimeTrackingService.getPausedStatus.mockResolvedValue(
@@ -161,15 +161,19 @@ describe('HomeController', () => {
       ]),
     );
 
-    mockApplicationReconsiderationService.getBySubtaskType.mockResolvedValue(
+    mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
-    mockPlanningReviewService.getBySubtaskType.mockResolvedValue([]);
+    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [],
+    );
 
     const res = await controller.getIncompleteSubtasksByType();
 
     expect(res.length).toEqual(1);
-    expect(mockApplicationService.getBySubtaskType).toBeCalledTimes(1);
+    expect(
+      mockApplicationService.getWithIncompleteSubtaskByType,
+    ).toBeCalledTimes(1);
     expect(res[0].title).toContain(mockApplication.fileNumber);
     expect(res[0].title).toContain(mockApplication.applicant);
     expect(res[0].activeDays).toBe(activeDays);
@@ -177,19 +181,21 @@ describe('HomeController', () => {
   });
 
   it('should call Reconsideration Service and map it', async () => {
-    mockApplicationService.getBySubtaskType.mockResolvedValue([]);
-    mockPlanningReviewService.getBySubtaskType.mockResolvedValue([]);
+    mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [],
+    );
 
     const mockReconsideration = initApplicationReconsiderationMockEntity();
-    mockApplicationReconsiderationService.getBySubtaskType.mockResolvedValue([
-      mockReconsideration,
-    ]);
+    mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [mockReconsideration],
+    );
 
     const res = await controller.getIncompleteSubtasksByType();
 
     expect(res.length).toEqual(1);
     expect(
-      mockApplicationReconsiderationService.getBySubtaskType,
+      mockApplicationReconsiderationService.getWithIncompleteSubtaskByType,
     ).toBeCalledTimes(1);
     expect(res[0].title).toContain(mockReconsideration.application.fileNumber);
     expect(res[0].title).toContain(mockReconsideration.application.applicant);
@@ -204,18 +210,20 @@ describe('HomeController', () => {
       card: initCardMockEntity('222'),
     } as PlanningReview;
 
-    mockApplicationService.getBySubtaskType.mockResolvedValue([]);
-    mockApplicationReconsiderationService.getBySubtaskType.mockResolvedValue(
+    mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+    mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
-    mockPlanningReviewService.getBySubtaskType.mockResolvedValue([
+    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue([
       mockPlanningReview,
     ]);
 
     const res = await controller.getIncompleteSubtasksByType();
 
     expect(res.length).toEqual(1);
-    expect(mockPlanningReviewService.getBySubtaskType).toHaveBeenCalledTimes(1);
+    expect(
+      mockPlanningReviewService.getWithIncompleteSubtaskByType,
+    ).toHaveBeenCalledTimes(1);
 
     expect(res[0].title).toContain(mockPlanningReview.fileNumber);
     expect(res[0].title).toContain(mockPlanningReview.type);

@@ -68,17 +68,21 @@ export class HomeController {
     const subtaskType = 'GIS';
 
     const applicationsWithSubtasks =
-      await this.applicationService.getBySubtaskType(subtaskType);
+      await this.applicationService.getWithIncompleteSubtaskByType(subtaskType);
     const applicationSubtasks = await this.mapApplicationsToDtos(
       applicationsWithSubtasks,
     );
 
     const reconsiderationWithSubtasks =
-      await this.reconsiderationService.getBySubtaskType(subtaskType);
+      await this.reconsiderationService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
     const reconSubtasks = this.mapReconToDto(reconsiderationWithSubtasks);
 
     const planningReviewsWithSubtasks =
-      await this.planningReviewService.getBySubtaskType(subtaskType);
+      await this.planningReviewService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
     const planningReviewSubtasks = this.mapPlanningReviewsToDTOs(
       planningReviewsWithSubtasks,
     );

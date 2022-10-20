@@ -200,7 +200,7 @@ export class ApplicationReconsiderationService {
     });
   }
 
-  getBySubtaskType(subtaskType: string) {
+  getWithIncompleteSubtaskByType(subtaskType: string) {
     return this.reconsiderationRepository.find({
       where: {
         card: {

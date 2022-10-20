@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
-import { CardSubtaskDto, HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
 import { ApplicationDto } from '../application/application.dto';
-import { ApplicationSubtaskWithApplicationDto } from '../card/card-subtask/card-subtask.dto';
+import { HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
 
 @Injectable({
   providedIn: 'root',

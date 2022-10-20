@@ -107,18 +107,20 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   async onSelected(card: CardSelectedEvent) {
+    this.setUrl(card.uuid, card.cardType);
     switch (card.cardType) {
       case CardType.APP:
-        await this.openAppCardDetailDialog(card.uuid, card.cardType);
+        await this.openAppCardDetailDialog(card.uuid);
         break;
       case CardType.RECON:
-        await this.openReconCardDetailDialog(card.uuid, card.cardType);
+        await this.openReconCardDetailDialog(card.uuid);
         break;
       case CardType.PLAN:
-        await this.openPlanningCardDialog(card.uuid, card.cardType);
+        await this.openPlanningCardDialog(card.uuid);
         break;
       default:
         console.error('Card type is not configured for a dialog');
+        this.toastService.showErrorToast('Failed to open card');
     }
   }
 
@@ -263,10 +265,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
-  private async openAppCardDetailDialog(id: string, cardTypeCode: CardType) {
+  private async openAppCardDetailDialog(id: string) {
     try {
-      this.setUrl(id, cardTypeCode);
-
       const application = await this.applicationService.fetchByCardUuid(id);
       this.openDialog(ApplicationDialogComponent, application);
     } catch (err) {
@@ -275,25 +275,22 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async openReconCardDetailDialog(id: string, cardTypeCode: CardType) {
+  private async openReconCardDetailDialog(id: string) {
     try {
-      this.setUrl(id, cardTypeCode);
-
       const recon = await this.reconsiderationService.fetchByCardUuid(id);
       this.openDialog(ReconsiderationDialogComponent, recon);
     } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      this.toastService.showErrorToast('There was an issue loading the reconsideration, please try again');
       console.error(err);
     }
   }
 
-  private async openPlanningCardDialog(id: string, cardTypeCode: CardType) {
+  private async openPlanningCardDialog(id: string) {
     try {
-      this.setUrl(id, cardTypeCode);
       const planningReview = await this.planningReviewService.fetchByCardUuid(id);
       this.openDialog(PlanningReviewDialogComponent, planningReview);
     } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the application, please try again');
+      this.toastService.showErrorToast('There was an issue loading the planning review, please try again');
       console.error(err);
     }
   }

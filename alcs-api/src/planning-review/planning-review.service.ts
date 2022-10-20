@@ -109,7 +109,7 @@ export class PlanningReviewService {
     });
   }
 
-  async getBySubtaskType(subtaskType: string) {
+  async getWithIncompleteSubtaskByType(subtaskType: string) {
     return this.repository.find({
       where: {
         card: {
