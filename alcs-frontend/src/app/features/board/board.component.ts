@@ -329,14 +329,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
-    const mappedType = this.applicationTypes.find((type) => type.code === application.type.code);
     return {
       status: application.card.status.code,
       title: `${application.fileNumber} (${application.applicant})`,
       assignee: application.card.assignee,
       id: application.fileNumber,
-      type: mappedType!,
-      displayTypes: [mappedType!],
+      type: application.type,
+      displayTypes: [application.type],
       activeDays: application.activeDays,
       paused: application.paused,
       highPriority: application.card.highPriority,
@@ -348,13 +347,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private mapReconsiderationDtoToCard(recon: ApplicationReconsiderationDto): CardData {
-    const mappedType = this.applicationTypes.find((type) => type.code === recon.application.type.code);
     return {
       status: recon.card.status.code,
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
       assignee: recon.card.assignee,
       id: recon.card.uuid,
-      displayTypes: [mappedType!, RECON_TYPE_LABEL],
+      displayTypes: [recon.application.type, RECON_TYPE_LABEL],
       type: RECON_TYPE_LABEL,
       cardType: CardType.RECON,
       paused: false,
