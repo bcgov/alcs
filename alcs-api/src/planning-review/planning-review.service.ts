@@ -2,7 +2,13 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
+import {
+  FindOptionsRelations,
+  FindOptionsWhere,
+  IsNull,
+  Repository,
+} from 'typeorm';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
 import {
@@ -92,6 +98,13 @@ export class PlanningReviewService {
     }
 
     return planningReview;
+  }
+
+  getBy(findOptions: FindOptionsWhere<PlanningReview>) {
+    return this.repository.find({
+      where: findOptions,
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 
   private get(uuid: string) {

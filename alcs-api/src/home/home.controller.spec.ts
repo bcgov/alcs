@@ -6,8 +6,6 @@ import { ClsService } from 'nestjs-cls';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationService } from '../application/application.service';
-import { CardSubtaskType } from '../card/card-subtask/card-subtask-type/card-subtask-type.entity';
-import { CardSubtask } from '../card/card-subtask/card-subtask.entity';
 import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CodeService } from '../code/code.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
@@ -31,16 +29,6 @@ describe('HomeController', () => {
   let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
-
-  const mockSubtask: Partial<CardSubtask> = {
-    uuid: 'fake-uuid',
-    createdAt: new Date(1662762964667),
-    type: {
-      type: 'fake-type',
-      backgroundColor: 'back-color',
-      textColor: 'text-color',
-    } as CardSubtaskType,
-  };
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
@@ -101,6 +89,8 @@ describe('HomeController', () => {
     mockApplicationService.mapToDtos.mockResolvedValue([]);
     mockApplicationReconsiderationService.getBy.mockResolvedValue([]);
     mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([]);
+    mockPlanningReviewService.getBy.mockResolvedValue([]);
+    mockPlanningReviewService.mapToDtos.mockResolvedValue([]);
 
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
@@ -114,120 +104,136 @@ describe('HomeController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call ApplicationService and ReconsiderationsService with the correct filter for assigned', async () => {
-    const userId = 'fake-user-id';
-    await controller.getAssignedToMe({
-      user: {
-        entity: {
-          uuid: userId,
-        },
-      },
-    });
-    const filterCondition = {
-      card: {
-        assigneeUuid: userId,
-      },
-    };
-    expect(mockApplicationService.getAll).toHaveBeenCalledTimes(1);
-    expect(mockApplicationReconsiderationService.getBy).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual(
-      filterCondition,
-    );
-    expect(
-      mockApplicationReconsiderationService.getBy.mock.calls[0][0],
-    ).toEqual(filterCondition);
-  });
-
-  it('should call ApplicationService and map an Application', async () => {
-    const mockApplication = initApplicationMockEntity();
-    const activeDays = 5;
-    mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([
-      mockApplication,
-    ]);
-    mockApplicationTimeTrackingService.getPausedStatus.mockResolvedValue(
-      new Map([[mockApplication.uuid, true]]),
-    );
-    mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
-      new Map([
-        [
-          mockApplication.uuid,
-          {
-            activeDays,
-            pausedDays: 0,
+  describe('Assigned To Me', () => {
+    it('should call ApplicationService with the correct filter for assigned', async () => {
+      const userId = 'fake-user-id';
+      await controller.getAssignedToMe({
+        user: {
+          entity: {
+            uuid: userId,
           },
-        ],
-      ]),
-    );
+        },
+      });
+      const filterCondition = {
+        card: {
+          assigneeUuid: userId,
+        },
+      };
+      expect(mockApplicationService.getAll).toHaveBeenCalledTimes(1);
+      expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual(
+        filterCondition,
+      );
 
-    mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
-      [],
-    );
-    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
-      [],
-    );
+      expect(mockApplicationReconsiderationService.getBy).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(
+        mockApplicationReconsiderationService.getBy.mock.calls[0][0],
+      ).toEqual(filterCondition);
 
-    const res = await controller.getIncompleteSubtasksByType();
-
-    expect(res.length).toEqual(1);
-    expect(
-      mockApplicationService.getWithIncompleteSubtaskByType,
-    ).toBeCalledTimes(1);
-    expect(res[0].title).toContain(mockApplication.fileNumber);
-    expect(res[0].title).toContain(mockApplication.applicant);
-    expect(res[0].activeDays).toBe(activeDays);
-    expect(res[0].paused).toBeTruthy();
+      expect(mockPlanningReviewService.getBy).toHaveBeenCalledTimes(1);
+      expect(mockPlanningReviewService.getBy.mock.calls[0][0]).toEqual(
+        filterCondition,
+      );
+    });
   });
 
-  it('should call Reconsideration Service and map it', async () => {
-    mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
-    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
-      [],
-    );
+  describe('Subtasks', () => {
+    it('should call ApplicationService and map an Application', async () => {
+      const mockApplication = initApplicationMockEntity();
+      const activeDays = 5;
+      mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([
+        mockApplication,
+      ]);
+      mockApplicationTimeTrackingService.getPausedStatus.mockResolvedValue(
+        new Map([[mockApplication.uuid, true]]),
+      );
+      mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
+        new Map([
+          [
+            mockApplication.uuid,
+            {
+              activeDays,
+              pausedDays: 0,
+            },
+          ],
+        ]),
+      );
 
-    const mockReconsideration = initApplicationReconsiderationMockEntity();
-    mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
-      [mockReconsideration],
-    );
+      mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [],
+      );
+      mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [],
+      );
 
-    const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType();
 
-    expect(res.length).toEqual(1);
-    expect(
-      mockApplicationReconsiderationService.getWithIncompleteSubtaskByType,
-    ).toBeCalledTimes(1);
-    expect(res[0].title).toContain(mockReconsideration.application.fileNumber);
-    expect(res[0].title).toContain(mockReconsideration.application.applicant);
-    expect(res[0].activeDays).toBeUndefined();
-    expect(res[0].paused).toBeFalsy();
-  });
+      expect(res.length).toEqual(1);
+      expect(
+        mockApplicationService.getWithIncompleteSubtaskByType,
+      ).toBeCalledTimes(1);
+      expect(res[0].title).toContain(mockApplication.fileNumber);
+      expect(res[0].title).toContain(mockApplication.applicant);
+      expect(res[0].activeDays).toBe(activeDays);
+      expect(res[0].paused).toBeTruthy();
+    });
 
-  it('should call Reconsideration Service and map it', async () => {
-    const mockPlanningReview = {
-      type: 'fake-type',
-      fileNumber: 'fileNumber',
-      card: initCardMockEntity('222'),
-    } as PlanningReview;
+    it('should call Reconsideration Service and map it', async () => {
+      mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [],
+      );
+      mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [],
+      );
 
-    mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
-    mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
-      [],
-    );
-    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue([
-      mockPlanningReview,
-    ]);
+      const mockReconsideration = initApplicationReconsiderationMockEntity();
+      mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [mockReconsideration],
+      );
 
-    const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType();
 
-    expect(res.length).toEqual(1);
-    expect(
-      mockPlanningReviewService.getWithIncompleteSubtaskByType,
-    ).toHaveBeenCalledTimes(1);
+      expect(res.length).toEqual(1);
+      expect(
+        mockApplicationReconsiderationService.getWithIncompleteSubtaskByType,
+      ).toBeCalledTimes(1);
+      expect(res[0].title).toContain(
+        mockReconsideration.application.fileNumber,
+      );
+      expect(res[0].title).toContain(mockReconsideration.application.applicant);
+      expect(res[0].activeDays).toBeUndefined();
+      expect(res[0].paused).toBeFalsy();
+    });
 
-    expect(res[0].title).toContain(mockPlanningReview.fileNumber);
-    expect(res[0].title).toContain(mockPlanningReview.type);
-    expect(res[0].activeDays).toBeUndefined();
-    expect(res[0].paused).toBeFalsy();
+    it('should call Reconsideration Service and map it', async () => {
+      const mockPlanningReview = {
+        type: 'fake-type',
+        fileNumber: 'fileNumber',
+        card: initCardMockEntity('222'),
+      } as PlanningReview;
+
+      mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [],
+      );
+      mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [],
+      );
+      mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [mockPlanningReview],
+      );
+
+      const res = await controller.getIncompleteSubtasksByType();
+
+      expect(res.length).toEqual(1);
+      expect(
+        mockPlanningReviewService.getWithIncompleteSubtaskByType,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(res[0].title).toContain(mockPlanningReview.fileNumber);
+      expect(res[0].title).toContain(mockPlanningReview.type);
+      expect(res[0].activeDays).toBeUndefined();
+      expect(res[0].paused).toBeFalsy();
+    });
   });
 });
