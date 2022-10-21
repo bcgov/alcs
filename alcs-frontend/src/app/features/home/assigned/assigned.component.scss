@@ -26,8 +26,17 @@
   }
 
   tr:hover {
-    box-shadow: 0 0 0 1px rgba($primary-color, .9);
+    box-shadow: 0 0 0 1px rgba($primary-color, 0.9);
     cursor: pointer;
+  }
+
+  tr.no-assigned-to-me {
+    border: none;
+    background-color: $grey-light;
+    align-items: center;
+    justify-content: center;
+    cursor: auto;
+    box-shadow: none !important;
   }
 }
 
