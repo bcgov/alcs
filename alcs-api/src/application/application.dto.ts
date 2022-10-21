@@ -7,9 +7,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  MaxLength,
 } from 'class-validator';
-import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -43,6 +41,10 @@ export class CreateApplicationDto {
 }
 
 export class UpdateApplicationDto {
+  @IsOptional()
+  @IsNumber()
+  dateReceived?: number;
+
   @AutoMap()
   @IsOptional()
   @IsString()
@@ -170,6 +172,7 @@ export class ApplicationDto {
 }
 
 export class ApplicationUpdateServiceDto {
+  dateReceived?: Date | null | undefined;
   applicant?: string;
   typeCode?: string;
   regionCode?: string;
@@ -180,4 +183,13 @@ export class ApplicationUpdateServiceDto {
   decisionDate?: Date | null | undefined;
   summary?: string;
   notificationSentDate?: Date | null;
+}
+
+export class CreateApplicationServiceDto {
+  fileNumber: string;
+  applicant: string;
+  typeCode: string;
+  dateReceived?: Date | null | undefined;
+  regionCode?: string;
+  localGovernmentUuid: string;
 }

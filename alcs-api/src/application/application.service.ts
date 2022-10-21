@@ -24,7 +24,7 @@ import {
 import {
   ApplicationDto,
   ApplicationUpdateServiceDto,
-  CreateApplicationDto,
+  CreateApplicationServiceDto,
 } from './application.dto';
 import { Application } from './application.entity';
 
@@ -71,7 +71,7 @@ export class ApplicationService {
   ) {}
 
   async create(
-    application: CreateApplicationDto,
+    application: CreateApplicationServiceDto,
     persist = true,
   ): Promise<Application> {
     const existingApplication = await this.applicationRepository.findOne({
@@ -95,7 +95,7 @@ export class ApplicationService {
     const newApplication = new Application({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
-      dateReceived: new Date(application.dateReceived),
+      dateReceived: application.dateReceived,
       localGovernmentUuid: application.localGovernmentUuid,
       type,
       region,

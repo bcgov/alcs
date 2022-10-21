@@ -62,7 +62,10 @@ export class ApplicationController {
   async create(
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
-    const app = await this.applicationService.create(application);
+    const app = await this.applicationService.create({
+      ...application,
+      dateReceived: formatIncomingDate(application.dateReceived),
+    });
     const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
   }
@@ -77,6 +80,7 @@ export class ApplicationController {
     const updatedApplication = await this.applicationService.update(
       application,
       {
+        dateReceived: formatIncomingDate(updates.dateReceived),
         applicant: updates.applicant,
         typeCode: updates.typeCode,
         regionCode: updates.regionCode,
@@ -150,7 +154,7 @@ export class ApplicationController {
         receiverUuid: updatedCard.assigneeUuid,
         title: "You've been assigned",
         body: `${application.fileNumber} (${application.applicant})`,
-        link: `${frontEnd}/board/${application.card.board.code}?app=${application.card.uuid}&type=${application.card.type.code}`,
+        link: `${frontEnd}/board/${application.card.board.code}?card=${application.card.uuid}&type=${application.card.type.code}`,
         targetType: 'application',
       });
     }

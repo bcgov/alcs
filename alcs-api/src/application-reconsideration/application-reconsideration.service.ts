@@ -120,7 +120,6 @@ export class ApplicationReconsiderationService {
           regionCode: reconsideration.regionCode,
           localGovernmentUuid: reconsideration.localGovernmentUuid,
           applicant: reconsideration.applicant,
-          dateReceived: reconsideration.submittedDate,
         },
         false,
       );

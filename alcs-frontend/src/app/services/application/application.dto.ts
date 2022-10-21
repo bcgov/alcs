@@ -1,7 +1,6 @@
-import { BoardDto } from '../board/board.dto';
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
-import { ApplicationRegionDto, ApplicationTypeDto, CardStatusDto } from './application-code.dto';
+import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
 export interface CreateApplicationDto {
@@ -39,6 +38,7 @@ export interface ApplicationDto {
 }
 
 export interface UpdateApplicationDto {
+  dateReceived?: number;
   applicant?: string;
   statusCode?: string;
   regionCode?: string;
