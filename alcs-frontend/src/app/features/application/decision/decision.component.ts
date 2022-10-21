@@ -9,6 +9,7 @@ import {
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
@@ -29,7 +30,8 @@ export class DecisionComponent implements OnInit {
     public dialog: MatDialog,
     private applicationDetailService: ApplicationDetailService,
     private decisionService: ApplicationDecisionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
@@ -108,9 +110,17 @@ export class DecisionComponent implements OnInit {
   }
 
   async deleteDecision(uuid: string) {
-    await this.decisionService.delete(uuid);
-    this.applicationDetailService.loadApplication(this.fileNumber);
-    this.toastService.showSuccessToast('Decision deleted');
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to delete the selected decision?',
+      })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          await this.decisionService.delete(uuid);
+          await this.applicationDetailService.loadApplication(this.fileNumber);
+          this.toastService.showSuccessToast('Decision deleted');
+        }
+      });
   }
 
   async attachFile(decisionUuid: string, event: Event) {
@@ -133,9 +143,18 @@ export class DecisionComponent implements OnInit {
     await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName);
   }
 
-  async deleteFile(decisionUuid: string, decisionDocumentUuid: string) {
-    await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
-    await this.loadDecisions(this.fileNumber);
+  async deleteFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to delete the file ${fileName}?`,
+      })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
+          await this.loadDecisions(this.fileNumber);
+          this.toastService.showSuccessToast('File deleted');
+        }
+      });
   }
 
   async onSaveChairReviewDate(decisionUuid: string, chairReviewDate: number) {
