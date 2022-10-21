@@ -14,7 +14,6 @@ const editLink = new Map<string, string>([
   ['IR', './info-request'],
   ['AM', './site-visit-meeting'],
   ['SV', './site-visit-meeting'],
-  ['RR', './post-decision'],
 ]);
 
 @Component({
@@ -181,8 +180,7 @@ export class OverviewComponent implements OnInit {
         events.push({
           name: `Reconsideration requested #${reconsiderations.length - index} ${reconsideration.type.code}`,
           startDate: new Date(reconsideration.submittedDate),
-          isFulfilled: false,
-          link: editLink.get('RR'),
+          isFulfilled: true,
         });
         if (reconsideration.reviewDate) {
           events.push({
