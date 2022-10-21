@@ -52,7 +52,7 @@ export class DragDropBoardComponent {
     });
   }
 
-  cardClicked(card: CardSelectedEvent) {
-    this.cardSelected.emit({ uuid: card.uuid, cardType: card.cardType });
+  cardClicked(card: CardData) {
+    this.cardSelected.emit({ uuid: card.cardUuid, cardType: card.cardType });
   }
 }

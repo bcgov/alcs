@@ -11,7 +11,7 @@
         [id]="'card-' + card.id"
         *ngFor="let card of cards | statusfilter: column.status"
         [cardData]="card"
-        (cardSelected)="cardClicked($event)"
+        (cardSelected)="cardClicked(card)"
       >
       </app-card>
     </div>
