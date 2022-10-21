@@ -126,4 +126,15 @@ describe('PlanningReviewService', () => {
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
+
+  it('should call through to the repo for getby', async () => {
+    const mockFilter = {
+      uuid: '5',
+    };
+    mockRepository.find.mockResolvedValue([]);
+    await service.getBy(mockFilter);
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockRepository.find.mock.calls[0][0].where).toEqual(mockFilter);
+  });
 });
