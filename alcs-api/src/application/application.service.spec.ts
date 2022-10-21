@@ -17,10 +17,7 @@ import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
-import {
-  ApplicationUpdateServiceDto,
-  CreateApplicationDto,
-} from './application.dto';
+import { ApplicationUpdateServiceDto, CreateApplicationServiceDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -97,13 +94,13 @@ describe('ApplicationService', () => {
     );
     mockCodeService.fetchRegion.mockResolvedValue({} as ApplicationRegion);
 
-    const payload: CreateApplicationDto = {
+    const payload: CreateApplicationServiceDto = {
       fileNumber: applicationMockEntity.fileNumber,
       applicant: applicationMockEntity.applicant,
       localGovernmentUuid: 'government-uuid',
       typeCode: 'type',
       regionCode: 'region',
-      dateReceived: new Date().getTime(),
+      dateReceived: new Date(),
     };
 
     expect(await applicationService.create(payload)).toStrictEqual(

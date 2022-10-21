@@ -7,7 +7,6 @@ import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import { CreateApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
-import { CardCreateDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { CodeService } from '../code/code.service';
@@ -21,12 +20,12 @@ import {
   MockType,
   repositoryMockFactory,
 } from '../common/utils/test-helpers/mockTypes';
-import { ApplicationReconsideration } from './application-reconsideration.entity';
-import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
 } from './application-reconsideration.dto';
+import { ApplicationReconsideration } from './application-reconsideration.entity';
+import { ApplicationReconsiderationService } from './application-reconsideration.service';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 describe('ReconsiderationService', () => {
@@ -142,7 +141,6 @@ describe('ReconsiderationService', () => {
       regionCode: mockReconsiderationCreateDto.regionCode,
       localGovernmentUuid: mockReconsiderationCreateDto.localGovernmentUuid,
       applicant: mockReconsiderationCreateDto.applicant,
-      dateReceived: mockReconsiderationCreateDto.submittedDate,
     } as CreateApplicationDto;
 
     reconsiderationTypeRepositoryMock.find.mockReturnValue([

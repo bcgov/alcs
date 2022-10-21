@@ -62,7 +62,10 @@ export class ApplicationController {
   async create(
     @Body() application: CreateApplicationDto,
   ): Promise<ApplicationDto> {
-    const app = await this.applicationService.create(application);
+    const app = await this.applicationService.create({
+      ...application,
+      dateReceived: formatIncomingDate(application.dateReceived),
+    });
     const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
   }
