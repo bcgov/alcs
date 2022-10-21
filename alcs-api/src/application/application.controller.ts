@@ -77,6 +77,7 @@ export class ApplicationController {
     const updatedApplication = await this.applicationService.update(
       application,
       {
+        dateReceived: formatIncomingDate(updates.dateReceived),
         applicant: updates.applicant,
         typeCode: updates.typeCode,
         regionCode: updates.regionCode,

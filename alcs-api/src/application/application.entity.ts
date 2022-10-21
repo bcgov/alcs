@@ -48,6 +48,7 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'timestamptz',
+    nullable: true,
   })
   dateReceived: Date;
 

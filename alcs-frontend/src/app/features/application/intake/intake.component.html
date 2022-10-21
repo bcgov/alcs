@@ -2,7 +2,10 @@
   <h3>ALC Intake</h3>
   <div>
     <div class="subheading2">Submitted to ALC</div>
-    <div class="date-received">{{ dateReceived }}</div>
+    <app-inline-datepicker
+    [selectedValue]="application?.dateReceived"
+    (save)="updateApplication('dateReceived', $event)"
+  ></app-inline-datepicker>
   </div>
   <div>
     <div class="subheading2">Paid</div>
