@@ -41,7 +41,7 @@
         <td [innerHTML]="planningReview.card.status.label"></td>
       </tr>
       <tr
-        class="no-assigned-to-me"
+        class="no-data"
         *ngIf="
           assignedToMe.applications.length === 0 &&
           assignedToMe.reconsiderations.length === 0 &&

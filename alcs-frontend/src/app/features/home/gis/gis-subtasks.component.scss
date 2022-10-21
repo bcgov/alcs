@@ -28,6 +28,14 @@
   td.priority-column {
     padding: 4px 4px 4px 16px;
   }
+
+  tr.no-data {
+    border: none;
+    background-color: $grey-light;
+    align-items: center;
+    justify-content: center;
+    cursor: auto;
+  }
 }
 
 .high-priority {
