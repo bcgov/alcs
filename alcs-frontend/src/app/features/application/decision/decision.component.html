@@ -86,7 +86,7 @@
           matTooltip="Delete File"
           class="delete-file-icon"
           mat-icon-button
-          (click)="deleteFile(decision.uuid, document.uuid)"
+          (click)="deleteFile(decision.uuid, document.uuid, document.fileName)"
         >
           <mat-icon>delete</mat-icon>
         </button>

@@ -3,8 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { CommentService } from '../../services/comment/comment.service';
+import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 import { CommentsComponent } from './comments.component';
 
 describe('CommentsComponent', () => {
@@ -25,6 +27,14 @@ describe('CommentsComponent', () => {
         {
           provide: UserService,
           useValue: mockUserService,
+        },
+        {
+          provide: ConfirmationDialogService,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
+          useValue: {},
         },
       ],
       declarations: [CommentsComponent],

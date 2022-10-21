@@ -85,7 +85,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         if (answer) {
           await this.applicationReconsiderationService.delete(uuid);
           await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
-          this.toastService.showSuccessToast('Post-Decision deleted');
+          this.toastService.showSuccessToast('Reconsideration request deleted');
         }
       });
   }

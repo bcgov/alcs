@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 import { CommentService } from '../../services/comment/comment.service';
+import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-comments[cardUuid]',
@@ -27,7 +29,12 @@ export class CommentsComponent implements OnInit {
     isEditable: false,
   };
 
-  constructor(private commentService: CommentService, private userService: UserService) {}
+  constructor(
+    private commentService: CommentService,
+    private userService: UserService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadComments(this.cardUuid);
@@ -71,7 +78,16 @@ export class CommentsComponent implements OnInit {
   }
 
   async onDeleteComment(commentId: string) {
-    await this.commentService.deleteComment(commentId);
-    await this.loadComments(this.cardUuid);
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to delete the selected comment?',
+      })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          await this.commentService.deleteComment(commentId);
+          await this.loadComments(this.cardUuid);
+          this.toastService.showSuccessToast('Comment deleted');
+        }
+      });
   }
 }

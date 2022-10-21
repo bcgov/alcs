@@ -5,6 +5,8 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
+import { ToastService } from '../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionComponent } from './decision.component';
 
@@ -32,6 +34,14 @@ describe('DecisionComponent', () => {
         },
         {
           provide: MatDialogRef,
+          useValue: {},
+        },
+        {
+          provide: ConfirmationDialogService,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
         {
