@@ -92,20 +92,12 @@ docker-compose up --build pgtap
 nestjs Bull
 use this link for validating/generating cron expressions [crontab.cronhub.io](https://crontab.cronhub.io/)
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-
+## Dependency Graph
+```bash
+npm run graph
+```
+Paste console output into https://mermaid-js.github.io/mermaid-live-editor and configure
 # DATES
 
 **_NOTE:_** ALL DATES ON API MUST BE OF TYPE DATE IN UTC  

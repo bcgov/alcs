@@ -1,4 +1,5 @@
 import fastifyHelmet from '@fastify/helmet';
+import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -7,11 +8,11 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
+import fastify from 'fastify';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
-import fastifyMultipart from '@fastify/multipart';
-import fastify from 'fastify';
+import { generateModuleGraph } from './tools/graph';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -112,6 +113,12 @@ async function bootstrap() {
   );
   app.useLogger(app.get(Logger));
 
+  const isGraph = process.argv[2];
+  if (isGraph === 'graph-only') {
+    await generateModuleGraph(app);
+    process.exit(0);
+  }
+
   // config variables
   const port: number = config.get<number>('PORT');
 
@@ -119,7 +126,7 @@ async function bootstrap() {
   registerSwagger(app);
   await registerHelmet(app);
   registerGlobalFilters(app);
-  registerMultiPart(app);
+  await registerMultiPart(app);
   registerPipes(app);
 
   // start app n port
@@ -127,4 +134,5 @@ async function bootstrap() {
     console.log('[WEB]', config.get<string>('BASE_URL'));
   });
 }
+
 bootstrap();
