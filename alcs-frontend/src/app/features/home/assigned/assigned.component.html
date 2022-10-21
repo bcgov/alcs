@@ -40,6 +40,16 @@
         <td>-</td>
         <td [innerHTML]="planningReview.card.status.label"></td>
       </tr>
+      <tr
+        class="no-data"
+        *ngIf="
+          assignedToMe.applications.length === 0 &&
+          assignedToMe.reconsiderations.length === 0 &&
+          assignedToMe.planningReviews.length === 0
+        "
+      >
+        <td class="text-center" colspan="4">No applications assigned</td>
+      </tr>
     </tbody>
   </table>
 </div>

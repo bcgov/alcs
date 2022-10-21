@@ -47,5 +47,8 @@
         </td>
       </tr>
     </tbody>
+    <tr class="no-data" *ngIf="subtasks.length === 0">
+      <td class="text-center" colspan="7">No GIS subtasks</td>
+    </tr>
   </table>
 </div>
