@@ -1,50 +1,42 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { mockKeyCloakProviders } from './common/utils/test-helpers/mockTypes';
 import {
   HealthCheckDbDto,
   HealthCheckDto,
 } from './healthcheck/healthcheck.dto';
-import { HealthCheck } from './healthcheck/healthcheck.entity';
-import {
-  repositoryMockFactory,
-  mockKeyCloakProviders,
-} from './common/utils/test-helpers/mockTypes';
 
 describe('AppController', () => {
   let appController: AppController;
-  let appService: AppService;
+  let mockAppService: DeepMocked<AppService>;
 
   beforeEach(async () => {
+    mockAppService = createMock<AppService>();
+
     const appModule: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [
-        AppService,
         {
-          provide: getRepositoryToken(HealthCheck),
-          useFactory: repositoryMockFactory,
+          provide: AppService,
+          useValue: mockAppService,
         },
         ...mockKeyCloakProviders,
       ],
     }).compile();
 
-    appService = appModule.get<AppService>(AppService);
     appController = appModule.get<AppController>(AppController);
   });
 
   describe('root', () => {
-    it('AppController should return HealthCheckDto', async () => {
+    it('AppController should call through to AppService', async () => {
       const dbDto: HealthCheckDbDto = {
         read: true,
         write: false,
       };
       const result: HealthCheckDto = { alive: true, db: dbDto };
-
-      jest
-        .spyOn(appService, 'getHealthStatus')
-        .mockImplementation(async () => result);
-
+      mockAppService.getHealthStatus.mockResolvedValue(result);
       expect(await appController.getHealthStatus()).toBe(result);
     });
   });

@@ -10,10 +10,6 @@ import {
   initApplicationMeetingMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
-import {
-  MockType,
-  repositoryMockFactory,
-} from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationService } from '../application.service';
 import { UpdateApplicationMeetingDto } from './application-meeting.dto';
 import { ApplicationMeeting } from './application-meeting.entity';
@@ -22,7 +18,7 @@ import { ApplicationMeetingService } from './application-meeting.service';
 describe('ApplicationMeetingService', () => {
   let service: ApplicationMeetingService;
 
-  let mockAppMeetingRepository: MockType<Repository<ApplicationMeeting>>;
+  let mockAppMeetingRepository: DeepMocked<Repository<ApplicationMeeting>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
 
   let mockApplication;
@@ -30,13 +26,14 @@ describe('ApplicationMeetingService', () => {
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
+    mockAppMeetingRepository = createMock<Repository<ApplicationMeeting>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationMeetingService,
         {
           provide: getRepositoryToken(ApplicationMeeting),
-          useFactory: repositoryMockFactory,
+          useValue: mockAppMeetingRepository,
         },
         {
           provide: ApplicationService,
@@ -50,14 +47,9 @@ describe('ApplicationMeetingService', () => {
     mockApplication = initApplicationMockEntity();
     mockMeeting = initApplicationMeetingMock(mockApplication);
 
-    mockAppMeetingRepository = module.get(
-      getRepositoryToken(ApplicationMeeting),
-    );
-    mockAppMeetingRepository = module.get(
-      getRepositoryToken(ApplicationMeeting),
-    );
-    mockAppMeetingRepository.find.mockReturnValue([mockMeeting]);
-    mockAppMeetingRepository.findOne.mockReturnValue(mockMeeting);
+    mockAppMeetingRepository.find.mockResolvedValue([mockMeeting]);
+    mockAppMeetingRepository.findOne.mockResolvedValue(mockMeeting);
+    mockAppMeetingRepository.save.mockResolvedValue(mockMeeting);
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
   });
 
@@ -72,7 +64,7 @@ describe('ApplicationMeetingService', () => {
   });
 
   it('should return empty array if no meetings for application', async () => {
-    mockAppMeetingRepository.find.mockReturnValue([]);
+    mockAppMeetingRepository.find.mockResolvedValue([]);
     const result = await service.getByAppFileNumber('non-existing number');
 
     expect(result).toStrictEqual([]);
@@ -85,6 +77,7 @@ describe('ApplicationMeetingService', () => {
   });
 
   it('should delete meeting with uuid', async () => {
+    mockAppMeetingRepository.softRemove.mockResolvedValue({} as any);
     await service.remove(mockMeeting);
 
     expect(mockAppMeetingRepository.softRemove).toBeCalledTimes(1);

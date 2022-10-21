@@ -7,17 +7,13 @@ import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
-import {
-  MockType,
-  repositoryMockFactory,
-} from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationService } from '../application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 
 describe('ApplicationDecisionMeetingService', () => {
   let service: ApplicationDecisionMeetingService;
-  let mockAppDecisionMeetingRepository: MockType<
+  let mockAppDecisionMeetingRepository: DeepMocked<
     Repository<ApplicationDecisionMeeting>
   >;
   let mockApplicationService: DeepMocked<ApplicationService>;
@@ -27,13 +23,15 @@ describe('ApplicationDecisionMeetingService', () => {
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
+    mockAppDecisionMeetingRepository =
+      createMock<Repository<ApplicationDecisionMeeting>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationDecisionMeetingService,
         {
           provide: getRepositoryToken(ApplicationDecisionMeeting),
-          useFactory: repositoryMockFactory,
+          useValue: mockAppDecisionMeetingRepository,
         },
         {
           provide: ApplicationService,
@@ -52,8 +50,8 @@ describe('ApplicationDecisionMeetingService', () => {
     mockAppDecisionMeetingRepository = module.get(
       getRepositoryToken(ApplicationDecisionMeeting),
     );
-    mockAppDecisionMeetingRepository.find.mockReturnValue([mockMeeting]);
-    mockAppDecisionMeetingRepository.findOne.mockReturnValue(mockMeeting);
+    mockAppDecisionMeetingRepository.find.mockResolvedValue([mockMeeting]);
+    mockAppDecisionMeetingRepository.findOne.mockResolvedValue(mockMeeting);
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
   });
 
@@ -68,7 +66,7 @@ describe('ApplicationDecisionMeetingService', () => {
   });
 
   it('should return empty array if no meetings for application', async () => {
-    mockAppDecisionMeetingRepository.find.mockReturnValue([]);
+    mockAppDecisionMeetingRepository.find.mockResolvedValue([]);
     const result = await service.getByAppFileNumber('non-existing number');
 
     expect(result).toStrictEqual([]);
@@ -81,12 +79,16 @@ describe('ApplicationDecisionMeetingService', () => {
   });
 
   it('should delete meeting with uuid', async () => {
+    mockAppDecisionMeetingRepository.softRemove.mockResolvedValue({} as any);
+
     await service.delete(mockMeeting.uuid);
 
     expect(mockAppDecisionMeetingRepository.softRemove).toBeCalledTimes(1);
   });
 
   it('should create meeting', async () => {
+    mockAppDecisionMeetingRepository.save.mockResolvedValue({} as any);
+
     const meetingToCreate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2),
     } as ApplicationDecisionMeeting;
@@ -98,6 +100,8 @@ describe('ApplicationDecisionMeetingService', () => {
   });
 
   it('should update meeting', async () => {
+    mockAppDecisionMeetingRepository.save.mockResolvedValue({} as any);
+
     const meetingToUpdate = {
       uuid: mockMeeting.uuid,
       date: new Date(2022, 2, 2, 2, 2, 2, 2),

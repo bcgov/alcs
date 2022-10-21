@@ -1,23 +1,15 @@
-import { createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initCardStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
-import {
-  MockType,
-  repositoryMockFactory,
-} from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
-import { Application } from '../../application/application.entity';
-import { ApplicationService } from '../../application/application.service';
 import { CardStatusDto } from './card-status.dto';
 import { CardStatus } from './card-status.entity';
 import { CardStatusService } from './card-status.service';
 
 describe('CardStatusService', () => {
   let cardStatusService: CardStatusService;
-  let cardStatusRepositoryMock: MockType<Repository<CardStatus>>;
-  let applicationService: ApplicationService;
+  let cardStatusRepositoryMock: DeepMocked<Repository<CardStatus>>;
 
   const cardStatusDto: CardStatusDto = {
     code: 'app_1',
@@ -27,42 +19,28 @@ describe('CardStatusService', () => {
   const cardStatusMockEntity = initCardStatusMockEntity();
 
   beforeEach(async () => {
-    applicationService = createMock<ApplicationService>();
+    cardStatusRepositoryMock = createMock<Repository<CardStatus>>();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CardStatusService,
         {
-          provide: ApplicationService,
-          useValue: applicationService,
-        },
-        {
-          provide: ApplicationTimeTrackingService,
-          useValue: {},
-        },
-        {
           provide: getRepositoryToken(CardStatus),
-          useFactory: repositoryMockFactory,
-        },
-        {
-          provide: getRepositoryToken(Application),
-          useFactory: repositoryMockFactory,
+          useValue: cardStatusRepositoryMock,
         },
       ],
     }).compile();
 
     cardStatusRepositoryMock = module.get(getRepositoryToken(CardStatus));
     cardStatusService = module.get<CardStatusService>(CardStatusService);
-    applicationService = module.get<ApplicationService>(ApplicationService);
 
-    cardStatusRepositoryMock.findOne.mockReturnValue(cardStatusMockEntity);
-    cardStatusRepositoryMock.save.mockReturnValue(cardStatusMockEntity);
-    cardStatusRepositoryMock.find.mockReturnValue([cardStatusMockEntity]);
+    cardStatusRepositoryMock.findOne.mockResolvedValue(cardStatusMockEntity);
+    cardStatusRepositoryMock.save.mockResolvedValue(cardStatusMockEntity);
+    cardStatusRepositoryMock.find.mockResolvedValue([cardStatusMockEntity]);
   });
 
   it('should be defined', () => {
     expect(cardStatusService).toBeDefined();
-    expect(applicationService).toBeDefined();
   });
 
   it('should create card_status', async () => {
