@@ -102,14 +102,14 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   async onGoToCard() {
     const boardCode = this.application?.card.board.code;
-    const fileNumber = this.application?.fileNumber;
+    const fileNumber = this.application?.card.uuid;
     const cardTypeCode = this.application?.card.type;
-    await this.router.navigateByUrl(`/board/${boardCode}?app=${fileNumber}&type=${cardTypeCode}`);
+    await this.router.navigateByUrl(`/board/${boardCode}?card=${fileNumber}&type=${cardTypeCode}`);
   }
 
   async onGoToReconCard(recon: ApplicationReconsiderationDto) {
     const boardCode = recon.card.board.code;
     const cardTypeCode = recon.card.type;
-    await this.router.navigateByUrl(`/board/${boardCode}?app=${recon.card.uuid}&type=${cardTypeCode}`);
+    await this.router.navigateByUrl(`/board/${boardCode}?card=${recon.card.uuid}&type=${cardTypeCode}`);
   }
 }

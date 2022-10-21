@@ -184,3 +184,12 @@ export class ApplicationUpdateServiceDto {
   summary?: string;
   notificationSentDate?: Date | null;
 }
+
+export class CreateApplicationServiceDto {
+  fileNumber: string;
+  applicant: string;
+  typeCode: string;
+  dateReceived?: Date | null | undefined;
+  regionCode?: string;
+  localGovernmentUuid: string;
+}
