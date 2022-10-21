@@ -201,10 +201,12 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   }
 
   private scrollToApplication(fileNumber: string) {
-    const el = document.getElementById(fileNumber);
-    if (el) {
-      el.scrollIntoView();
-    }
+    setTimeout(() => {
+      const el = document.getElementById(fileNumber);
+      if (el) {
+        el.scrollIntoView();
+      }
+    }, 300);
   }
 
   clearHighlight() {
