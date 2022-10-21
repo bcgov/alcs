@@ -2,7 +2,6 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { BoardSmallDto } from '../board/board.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
@@ -16,10 +15,7 @@ import {
   initApplicationMockEntity,
   initMockAssigneeDto,
 } from '../common/utils/test-helpers/mockEntities';
-import {
-  mockKeyCloakProviders,
-  repositoryMockFactory,
-} from '../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
@@ -87,10 +83,6 @@ describe('ApplicationController', () => {
         {
           provide: CardService,
           useValue: cardService,
-        },
-        {
-          provide: getRepositoryToken(Application),
-          useFactory: repositoryMockFactory,
         },
         ...mockKeyCloakProviders,
       ],

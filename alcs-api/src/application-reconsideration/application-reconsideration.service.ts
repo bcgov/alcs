@@ -17,7 +17,6 @@ import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationUpdateDto,
-  ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
 } from './application-reconsideration.dto';
 import { ApplicationReconsideration } from './application-reconsideration.entity';
@@ -74,16 +73,6 @@ export class ApplicationReconsiderationService {
       reconsiderations,
       ApplicationReconsideration,
       ApplicationReconsiderationDto,
-    );
-  }
-
-  mapToDtosWithoutApplication(
-    reconsiderations: ApplicationReconsideration[],
-  ): Promise<ApplicationReconsiderationWithoutApplicationDto[]> {
-    return this.mapper.mapArrayAsync(
-      reconsiderations,
-      ApplicationReconsideration,
-      ApplicationReconsiderationWithoutApplicationDto,
     );
   }
 

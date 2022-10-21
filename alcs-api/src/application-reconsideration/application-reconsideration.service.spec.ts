@@ -17,10 +17,6 @@ import {
   initApplicationReconsiderationMockEntity,
 } from '../common/utils/test-helpers/mockEntities';
 import {
-  MockType,
-  repositoryMockFactory,
-} from '../common/utils/test-helpers/mockTypes';
-import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
 } from './application-reconsideration.dto';
@@ -29,16 +25,18 @@ import { ApplicationReconsiderationService } from './application-reconsideration
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 describe('ReconsiderationService', () => {
-  let reconsiderationRepositoryMock: MockType<
+  let reconsiderationRepositoryMock: DeepMocked<
     Repository<ApplicationReconsideration>
   >;
-  let reconsiderationTypeRepositoryMock: MockType<
+  let reconsiderationTypeRepositoryMock: DeepMocked<
     Repository<ApplicationReconsiderationType>
   >;
   let service: ApplicationReconsiderationService;
   let codeServiceMock: DeepMocked<CodeService>;
   let applicationServiceMock: DeepMocked<ApplicationService>;
   let cardServiceMock: DeepMocked<CardService>;
+
+  let mockReconsideration;
 
   const DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
     {
@@ -61,6 +59,10 @@ describe('ReconsiderationService', () => {
     codeServiceMock = createMock<CodeService>();
     applicationServiceMock = createMock<ApplicationService>();
     cardServiceMock = createMock<CardService>();
+    reconsiderationRepositoryMock =
+      createMock<Repository<ApplicationReconsideration>>();
+    reconsiderationTypeRepositoryMock =
+      createMock<Repository<ApplicationReconsiderationType>>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -84,24 +86,32 @@ describe('ReconsiderationService', () => {
         },
         {
           provide: getRepositoryToken(ApplicationReconsideration),
-          useFactory: repositoryMockFactory,
+          useValue: reconsiderationRepositoryMock,
         },
         {
           provide: getRepositoryToken(ApplicationReconsiderationType),
-          useFactory: repositoryMockFactory,
+          useValue: reconsiderationTypeRepositoryMock,
         },
         ReconsiderationProfile,
       ],
     }).compile();
-
-    reconsiderationRepositoryMock = module.get(
-      getRepositoryToken(ApplicationReconsideration),
-    );
-    reconsiderationTypeRepositoryMock = module.get(
-      getRepositoryToken(ApplicationReconsideration),
-    );
     service = module.get<ApplicationReconsiderationService>(
       ApplicationReconsiderationService,
+    );
+
+    mockReconsideration = initApplicationReconsiderationMockEntity();
+    reconsiderationRepositoryMock.findOneOrFail.mockResolvedValue(
+      mockReconsideration,
+    );
+    reconsiderationRepositoryMock.findOneByOrFail.mockResolvedValue(
+      mockReconsideration,
+    );
+    reconsiderationRepositoryMock.find.mockResolvedValue([mockReconsideration]);
+    reconsiderationTypeRepositoryMock.find.mockResolvedValue([
+      mockReconsideration.type,
+    ]);
+    reconsiderationTypeRepositoryMock.findOneByOrFail.mockResolvedValue(
+      mockReconsideration.type,
     );
   });
 
@@ -123,7 +133,6 @@ describe('ReconsiderationService', () => {
 
   it('should successfully create application and reconsideration card if app does not exist', async () => {
     const code = '33';
-    const mockReconsideration = initApplicationReconsiderationMockEntity();
     const mockReconsiderationCreateDto = {
       reconTypeCode: code,
       applicationFileNumber: 'fake-app-number',
@@ -143,9 +152,7 @@ describe('ReconsiderationService', () => {
       applicant: mockReconsiderationCreateDto.applicant,
     } as CreateApplicationDto;
 
-    reconsiderationTypeRepositoryMock.find.mockReturnValue([
-      mockReconsideration.type,
-    ]);
+    reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
     cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(undefined);
     applicationServiceMock.create.mockResolvedValue(
@@ -153,6 +160,7 @@ describe('ReconsiderationService', () => {
     );
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
+
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledWith(
@@ -163,7 +171,6 @@ describe('ReconsiderationService', () => {
 
   it('should successfully create reconsideration and link to existing application', async () => {
     const code = '33';
-    const mockReconsideration = initApplicationReconsiderationMockEntity();
     const mockReconsiderationCreateDto = {
       reconTypeCode: code,
       applicationFileNumber: 'fake-app-number',
@@ -174,18 +181,16 @@ describe('ReconsiderationService', () => {
       submittedDate: 11111111111,
       boardCode: 'fake-board',
     } as ApplicationReconsiderationCreateDto;
-
-    reconsiderationTypeRepositoryMock.find.mockReturnValue([
-      mockReconsideration.type,
-    ]);
     cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(
       initApplicationMockEntity(
         mockReconsiderationCreateDto.applicationFileNumber,
       ),
     );
+    reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
+
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledTimes(0);
@@ -194,13 +199,8 @@ describe('ReconsiderationService', () => {
   it('should successfully update reconsideration', async () => {
     const uuid = 'fake';
     const code = '33';
-    const mockReconsideration = initApplicationReconsiderationMockEntity();
-    reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
-      mockReconsideration,
-    );
-    reconsiderationTypeRepositoryMock.find.mockReturnValue(
-      mockReconsideration.type,
-    );
+
+    reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
 
     await service.update(uuid, {
       typeCode: code,
@@ -234,19 +234,19 @@ describe('ReconsiderationService', () => {
   });
 
   it('should set reviewDate and isReviewApproved to null if reconsideration type is updated to 33.1', async () => {
+    reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
+
     const uuid = 'fake';
     const code = '33.1';
-    const mockReconsideration = initApplicationReconsiderationMockEntity();
-    reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
-      mockReconsideration,
-    );
-    reconsiderationTypeRepositoryMock.find.mockReturnValue(
-      mockReconsideration.type,
-    );
+
+    reconsiderationTypeRepositoryMock.findOneByOrFail.mockResolvedValue({
+      code: code,
+      label: 'fake-label',
+    } as ApplicationReconsiderationType);
 
     await service.update(uuid, {
       typeCode: code,
-    } as ApplicationReconsiderationUpdateDto);
+    });
 
     expect(reconsiderationRepositoryMock.findOneByOrFail).toBeCalledWith({
       uuid,
@@ -255,14 +255,12 @@ describe('ReconsiderationService', () => {
       ...mockReconsideration,
       reviewDate: null,
       isReviewApproved: null,
-    });
+    } as ApplicationReconsideration);
   });
 
   it('should call softRemove on delete', async () => {
     const uuid = 'fake';
-    reconsiderationRepositoryMock.findOneByOrFail.mockReturnValue(
-      initApplicationReconsiderationMockEntity(),
-    );
+    reconsiderationRepositoryMock.softRemove.mockResolvedValue({} as any);
 
     await service.delete(uuid);
 
