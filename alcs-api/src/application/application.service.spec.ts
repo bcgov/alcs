@@ -9,11 +9,6 @@ import { ApplicationType } from '../code/application-code/application-type/appli
 import { CodeService } from '../code/code.service';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
-  MockType,
-  repositoryMockFactory,
-} from '../common/utils/test-helpers/mockTypes';
-import { ApplicationPaused } from './application-paused.entity';
-import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
@@ -26,14 +21,16 @@ import { ApplicationService } from './application.service';
 
 describe('ApplicationService', () => {
   let applicationService: ApplicationService;
-  let applicationRepositoryMock: MockType<Repository<Application>>;
-  const applicationMockEntity = initApplicationMockEntity();
+  let applicationRepositoryMock: DeepMocked<Repository<Application>>;
+  let applicationMockEntity;
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
   let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
     mockCodeService = createMock<CodeService>();
+    applicationRepositoryMock = createMock<Repository<Application>>();
+    applicationMockEntity = initApplicationMockEntity();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -52,12 +49,8 @@ describe('ApplicationService', () => {
           useValue: mockCodeService,
         },
         {
-          provide: getRepositoryToken(ApplicationPaused),
-          useFactory: repositoryMockFactory,
-        },
-        {
           provide: getRepositoryToken(Application),
-          useFactory: repositoryMockFactory,
+          useValue: applicationRepositoryMock,
         },
       ],
     }).compile();
@@ -65,8 +58,7 @@ describe('ApplicationService', () => {
     applicationRepositoryMock = module.get(getRepositoryToken(Application));
     applicationService = module.get<ApplicationService>(ApplicationService);
 
-    const applicationMockEntity = initApplicationMockEntity();
-    applicationRepositoryMock.find.mockReturnValue([applicationMockEntity]);
+    applicationRepositoryMock.find.mockResolvedValue([applicationMockEntity]);
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.save.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.update.mockReturnValue(applicationMockEntity);
@@ -83,15 +75,17 @@ describe('ApplicationService', () => {
   });
 
   it('should delete application', async () => {
+    applicationRepositoryMock.softRemove.mockResolvedValue({} as any);
+
     await applicationService.delete(applicationMockEntity.fileNumber);
-    expect(applicationService.delete).toBeDefined();
+    expect(applicationRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
   });
 
   it('should call save when an Application is created', async () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne
-      .mockReturnValueOnce(null)
-      .mockReturnValueOnce(applicationMockEntity);
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(applicationMockEntity);
     mockCodeService.fetchApplicationType.mockResolvedValue(
       {} as ApplicationType,
     );
@@ -116,7 +110,7 @@ describe('ApplicationService', () => {
 
   it('should call save when an Application is updated', async () => {
     const applicationMockEntity = initApplicationMockEntity();
-    applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
+    applicationRepositoryMock.findOne.mockResolvedValue(applicationMockEntity);
 
     const payload: ApplicationUpdateServiceDto = {
       applicant: applicationMockEntity.applicant,
@@ -136,7 +130,7 @@ describe('ApplicationService', () => {
     const applicationMockEntity2 = initApplicationMockEntity();
     applicationMockEntity2.uuid = applicationMockEntity2.uuid + '2';
 
-    applicationRepositoryMock.find.mockReturnValue([
+    applicationRepositoryMock.find.mockResolvedValue([
       applicationMockEntity,
       applicationMockEntity2,
     ]);
@@ -167,7 +161,9 @@ describe('ApplicationService', () => {
   it('should not return applications near expiry', async () => {
     const applicationMockEntity = initApplicationMockEntity();
 
-    applicationRepositoryMock.find.mockReturnValue([applicationMockEntity]);
+    applicationRepositoryMock.find.mockResolvedValueOnce([
+      applicationMockEntity,
+    ]);
 
     mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(
       new Map<string, ApplicationTimeData>(),

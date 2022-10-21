@@ -1,5 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,22 +10,22 @@ import {
   initBoardMockEntity,
   initCardMockEntity,
 } from '../common/utils/test-helpers/mockEntities';
-import {
-  MockType,
-  repositoryMockFactory,
-} from '../common/utils/test-helpers/mockTypes';
 import { CardType } from './card-type/card-type.entity';
-import { CardCreateDto, CardUpdateServiceDto } from './card.dto';
+import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
 
 describe('CardService', () => {
   let service: CardService;
-  let cardRepositoryMock: MockType<Repository<Card>>;
-  let cardTypeRepositoryMock: MockType<Repository<CardType>>;
-  const mockCardEntity = initCardMockEntity();
+  let cardRepositoryMock: DeepMocked<Repository<Card>>;
+  let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
+  let mockCardEntity;
 
   beforeEach(async () => {
+    cardRepositoryMock = createMock<Repository<Card>>();
+    cardTypeRepositoryMock = createMock<Repository<CardType>>();
+    mockCardEntity = initCardMockEntity();
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         AutomapperModule.forRoot({
@@ -35,19 +36,19 @@ describe('CardService', () => {
         CardService,
         {
           provide: getRepositoryToken(Card),
-          useFactory: repositoryMockFactory,
+          useValue: cardRepositoryMock,
         },
         {
           provide: getRepositoryToken(CardType),
-          useFactory: repositoryMockFactory,
+          useValue: cardTypeRepositoryMock,
         },
       ],
     }).compile();
 
     service = module.get<CardService>(CardService);
 
-    cardRepositoryMock = module.get(getRepositoryToken(Card));
-    cardRepositoryMock.findOne.mockReturnValue(mockCardEntity);
+    cardRepositoryMock.findOne.mockResolvedValue(mockCardEntity);
+    cardRepositoryMock.save.mockResolvedValue(mockCardEntity);
     cardTypeRepositoryMock = module.get(getRepositoryToken(CardType));
   });
 
@@ -98,10 +99,9 @@ describe('CardService', () => {
       statuses: [{ order: 0, status: { code: 'fake-status' } }],
     } as Board;
 
-    cardTypeRepositoryMock.findOneOrFail.mockReturnValue({
+    cardTypeRepositoryMock.findOneOrFail.mockResolvedValue({
       code: 'fake-type',
-      uuid: 'fake',
-    });
+    } as CardType);
 
     await service.create('fake-type', board);
 

@@ -1,8 +1,8 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppService } from './app.service';
-import { MockType, repositoryMockFactory } from './common/utils/test-helpers/mockTypes';
 import {
   HealthCheckDbDto,
   HealthCheckDto,
@@ -11,20 +11,21 @@ import { HealthCheck } from './healthcheck/healthcheck.entity';
 
 describe('AppService', () => {
   let service: AppService;
-  let repositoryMock: MockType<Repository<HealthCheck>>;
+  let repositoryMock: DeepMocked<Repository<HealthCheck>>;
 
   beforeEach(async () => {
+    repositoryMock = createMock<Repository<HealthCheck>>();
+
     const appServiceModule: TestingModule = await Test.createTestingModule({
       providers: [
         AppService,
         {
           provide: getRepositoryToken(HealthCheck),
-          useFactory: repositoryMockFactory,
+          useValue: repositoryMock,
         },
       ],
     }).compile();
 
-    repositoryMock = appServiceModule.get(getRepositoryToken(HealthCheck));
     service = appServiceModule.get<AppService>(AppService);
   });
 
@@ -37,8 +38,9 @@ describe('AppService', () => {
       read: true,
       write: true,
     };
-    const result: HealthCheckDto = { alive: true, db: dbDto };
-    repositoryMock.findOne.mockReturnValue(HealthCheckDto);
+    const result = { alive: true, db: dbDto };
+    repositoryMock.findOne.mockResolvedValue({} as HealthCheck);
+    repositoryMock.save.mockResolvedValue({} as HealthCheck);
 
     expect(await service.getHealthStatus()).toStrictEqual(result);
   });
@@ -49,9 +51,7 @@ describe('AppService', () => {
       write: false,
     };
     const result: HealthCheckDto = { alive: true, db: dbDto };
-    repositoryMock.findOne.mockImplementation(async () => {
-      throw Error('Expected error');
-    });
+    repositoryMock.findOne.mockRejectedValue(new Error('Expected error'));
 
     expect(await service.getHealthStatus()).toStrictEqual(result);
   });
