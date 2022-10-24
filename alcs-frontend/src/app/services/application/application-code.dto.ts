@@ -9,6 +9,7 @@ export interface ApplicationTypeDto extends BaseCodeDto {
   backgroundColor: string;
   textColor: string;
 }
+
 export interface ApplicationMasterCodesDto {
   type: ApplicationTypeDto[];
   status: CardStatusDto[];

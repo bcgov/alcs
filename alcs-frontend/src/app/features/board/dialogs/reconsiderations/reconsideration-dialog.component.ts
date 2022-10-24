@@ -12,15 +12,15 @@ import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
+import { CardLabel } from '../../../../shared/card/card.component';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-export const RECON_TYPE_LABEL = {
-  label: 'Recon',
-  code: 'RECON',
+export const RECON_TYPE_LABEL: CardLabel = {
+  label: 'Reconsideration',
   shortLabel: 'RECON',
-  backgroundColor: '#454545',
-  description: 'Reconsideration',
-  textColor: 'white',
+  backgroundColor: '#fff',
+  borderColor: '#454545',
+  textColor: '#000',
 };
 
 @Component({

@@ -8,7 +8,8 @@
             class="application-type"
             [ngStyle]="{
               backgroundColor: application.type.backgroundColor,
-              color: application.type.textColor
+              color: application.type.textColor,
+              borderColor: application.type.backgroundColor
             }"
             >{{ application.type.label }}</span
           >
@@ -17,7 +18,8 @@
             class="application-type"
             [ngStyle]="{
               backgroundColor: reconLabel.backgroundColor,
-              color: reconLabel.textColor
+              color: reconLabel.textColor,
+              borderColor: reconLabel.borderColor
             }"
             >{{ reconLabel.label }}</span
           >

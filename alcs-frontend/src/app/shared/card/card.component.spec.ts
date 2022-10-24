@@ -15,14 +15,6 @@ describe('CardComponent', () => {
     component.cardData = {
       id: '1',
       status: '',
-      type: {
-        textColor: '#000',
-        shortLabel: 'LUP',
-        backgroundColor: '#fff',
-        code: 'LUP',
-        label: 'LUP',
-        description: 'LUP',
-      },
       title: 'Title',
       activeDays: 2,
       paused: false,
@@ -31,7 +23,14 @@ describe('CardComponent', () => {
       cardUuid: 'fake',
       cardType: CardType.APP,
       dateReceived: 11111,
-      displayTypes: [],
+      labels: [
+        {
+          textColor: '#000',
+          shortLabel: 'LUP',
+          backgroundColor: '#fff',
+          label: 'LUP',
+        },
+      ],
     };
 
     fixture.detectChanges();
@@ -57,14 +56,6 @@ describe('CardComponent', () => {
     component.cardData = {
       id: '1',
       status: '',
-      type: {
-        textColor: '#000',
-        shortLabel: 'LUP',
-        backgroundColor: '#fff',
-        code: 'LUP',
-        label: 'LUP',
-        description: 'LUP',
-      },
       title: 'Title',
       activeDays: 2,
       paused: true,
@@ -73,7 +64,14 @@ describe('CardComponent', () => {
       cardUuid: 'fake',
       cardType: CardType.APP,
       dateReceived: 11111,
-      displayTypes: [],
+      labels: [
+        {
+          textColor: '#000',
+          shortLabel: 'LUP',
+          backgroundColor: '#fff',
+          label: 'LUP',
+        },
+      ],
     };
     fixture.detectChanges();
 

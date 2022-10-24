@@ -15,6 +15,8 @@ export class FavoriteButtonComponent implements OnInit {
   boardCode?: string;
   @Input()
   isFavorite?: boolean = false;
+  @Input()
+  disableTooltip?: boolean = false;
 
   constructor(private userService: UserService, private toastService: ToastService) {}
 

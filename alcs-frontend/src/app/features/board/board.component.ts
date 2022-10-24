@@ -1,10 +1,8 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
@@ -20,13 +18,13 @@ import { ApplicationDialogComponent } from './dialogs/application/application-di
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import {
-  PlanningReviewDialogComponent,
   PLANNING_TYPE_LABEL,
+  PlanningReviewDialogComponent,
 } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import {
-  ReconsiderationDialogComponent,
   RECON_TYPE_LABEL,
+  ReconsiderationDialogComponent,
 } from './dialogs/reconsiderations/reconsideration-dialog.component';
 
 export const BOARD_TYPE_CODES = {
@@ -49,7 +47,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   boardHasPlanningReviews: boolean = false;
   createCardTitle = '';
 
-  private applicationTypes: ApplicationTypeDto[] = [];
   selectedBoardCode?: string;
   boards: BoardWithFavourite[] = [];
   cardDialogType: any = CreateApplicationDialogComponent;
@@ -60,7 +57,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
-    private location: Location,
     private router: Router,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
@@ -81,6 +77,14 @@ export class BoardComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.activatedRoute.queryParamMap.subscribe((queryParamMap) => {
+      const app = queryParamMap.get('card');
+      const type = queryParamMap.get('type');
+      if (app && type) {
+        this.openCardDialog({ uuid: app, cardType: type as CardType });
+      }
+    });
+
     this.boardService.$boards.pipe(takeUntil(this.destroy)).subscribe((boards) => {
       this.boards = boards;
       const selectedBoard = boards.find((board) => board.code === this.selectedBoardCode);
@@ -88,17 +92,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.setupBoard(selectedBoard);
       }
     });
-
-    this.applicationService.$applicationTypes.pipe(takeUntil(this.destroy)).subscribe((types) => {
-      this.applicationTypes = types;
-    });
-
-    // open card if cardUuid and type present in url
-    const app = this.activatedRoute.snapshot.queryParamMap.get('card');
-    const type = this.activatedRoute.snapshot.queryParamMap.get('type');
-    if (app && type) {
-      this.onSelected({ uuid: app, cardType: type as CardType });
-    }
   }
 
   ngOnDestroy(): void {
@@ -108,20 +101,6 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   async onSelected(card: CardSelectedEvent) {
     this.setUrl(card.uuid, card.cardType);
-    switch (card.cardType) {
-      case CardType.APP:
-        await this.openAppCardDetailDialog(card.uuid);
-        break;
-      case CardType.RECON:
-        await this.openReconCardDetailDialog(card.uuid);
-        break;
-      case CardType.PLAN:
-        await this.openPlanningCardDialog(card.uuid);
-        break;
-      default:
-        console.error('Card type is not configured for a dialog');
-        this.toastService.showErrorToast('Failed to open card');
-    }
   }
 
   async onCreate() {
@@ -220,8 +199,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       title: `${application.fileNumber} (${application.applicant})`,
       assignee: application.card.assignee,
       id: application.fileNumber,
-      type: application.type,
-      displayTypes: [application.type],
+      labels: [application.type],
       activeDays: application.activeDays,
       paused: application.paused,
       highPriority: application.card.highPriority,
@@ -238,8 +216,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
       assignee: recon.card.assignee,
       id: recon.card.uuid,
-      displayTypes: [recon.application.type, RECON_TYPE_LABEL],
-      type: RECON_TYPE_LABEL,
+      labels: [recon.application.type, RECON_TYPE_LABEL],
       cardType: CardType.RECON,
       paused: false,
       highPriority: recon.card.highPriority,
@@ -255,44 +232,13 @@ export class BoardComponent implements OnInit, OnDestroy {
       title: `${meeting.fileNumber} (${meeting.type})`,
       assignee: meeting.card.assignee,
       id: meeting.card.uuid,
-      type: PLANNING_TYPE_LABEL,
-      displayTypes: [PLANNING_TYPE_LABEL],
+      labels: [PLANNING_TYPE_LABEL],
       cardType: CardType.PLAN,
       paused: false,
       highPriority: meeting.card.highPriority,
       cardUuid: meeting.card.uuid,
       dateReceived: meeting.card.createdAt,
     };
-  }
-
-  private async openAppCardDetailDialog(id: string) {
-    try {
-      const application = await this.applicationService.fetchByCardUuid(id);
-      this.openDialog(ApplicationDialogComponent, application);
-    } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the application, please try again');
-      console.error(err);
-    }
-  }
-
-  private async openReconCardDetailDialog(id: string) {
-    try {
-      const recon = await this.reconsiderationService.fetchByCardUuid(id);
-      this.openDialog(ReconsiderationDialogComponent, recon);
-    } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the reconsideration, please try again');
-      console.error(err);
-    }
-  }
-
-  private async openPlanningCardDialog(id: string) {
-    try {
-      const planningReview = await this.planningReviewService.fetchByCardUuid(id);
-      this.openDialog(PlanningReviewDialogComponent, planningReview);
-    } catch (err) {
-      this.toastService.showErrorToast('There was an issue loading the planning review, please try again');
-      console.error(err);
-    }
   }
 
   private openDialog(component: ComponentType<any>, data: any) {
@@ -314,12 +260,34 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private setUrl(cardUuid?: string, cardTypeCode?: CardType) {
-    const url = this.router
-      .createUrlTree([], {
-        relativeTo: this.activatedRoute,
-        queryParams: cardUuid && cardTypeCode ? { card: cardUuid, type: cardTypeCode } : {},
-      })
-      .toString();
-    this.location.go(url);
+    this.router.navigate(this.activatedRoute.snapshot.url, {
+      queryParams: cardUuid && cardTypeCode ? { card: cardUuid, type: cardTypeCode } : {},
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  private async openCardDialog(card: CardSelectedEvent) {
+    try {
+      switch (card.cardType) {
+        case CardType.APP:
+          const application = await this.applicationService.fetchByCardUuid(card.uuid);
+          this.openDialog(ApplicationDialogComponent, application);
+          break;
+        case CardType.RECON:
+          const recon = await this.reconsiderationService.fetchByCardUuid(card.uuid);
+          this.openDialog(ReconsiderationDialogComponent, recon);
+          break;
+        case CardType.PLAN:
+          const planningReview = await this.planningReviewService.fetchByCardUuid(card.uuid);
+          this.openDialog(PlanningReviewDialogComponent, planningReview);
+          break;
+        default:
+          console.error('Card type is not configured for a dialog');
+          this.toastService.showErrorToast('Failed to open card');
+      }
+    } catch (err) {
+      this.toastService.showErrorToast('There was an issue loading the card, please try again');
+      console.error(err);
+    }
   }
 }

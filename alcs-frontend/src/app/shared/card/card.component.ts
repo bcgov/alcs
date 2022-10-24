@@ -6,8 +6,7 @@ import { AssigneeDto } from '../../services/user/user.dto';
 export interface CardData {
   id: string;
   title: string;
-  displayTypes: ApplicationTypeDto[];
-  type: ApplicationTypeDto;
+  labels: CardLabel[];
   status: string;
   assignee?: AssigneeDto;
   activeDays?: number;
@@ -18,6 +17,14 @@ export interface CardData {
   cardUuid: string;
   cardType: CardType;
   dateReceived: number;
+}
+
+export interface CardLabel {
+  shortLabel: string;
+  label: string;
+  backgroundColor: string;
+  borderColor?: string;
+  textColor: string;
 }
 
 export interface CardSelectedEvent {

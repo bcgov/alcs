@@ -16,9 +16,10 @@ export const PLANNING_TYPE_LABEL = {
   label: 'Planning Review',
   code: 'PLAN',
   shortLabel: 'PLAN',
-  backgroundColor: '#454545',
+  backgroundColor: '#fff',
+  borderColor: '#b2ff59',
   description: 'Planning Review',
-  textColor: 'white',
+  textColor: '#000',
 };
 
 @Component({
