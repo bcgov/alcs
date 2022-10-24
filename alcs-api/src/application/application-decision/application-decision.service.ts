@@ -42,7 +42,9 @@ export class ApplicationDecisionService {
     const application = await this.applicationService.getOrFail(number);
 
     const records = await this.appDecisionRepository.find({
-      where: { applicationUuid: application.uuid },
+      where: {
+        applicationUuid: application.uuid,
+      },
       order: {
         date: 'DESC',
         documents: {
@@ -72,16 +74,25 @@ export class ApplicationDecisionService {
     });
   }
 
-  get(uuid) {
-    return this.appDecisionRepository.findOne({
-      where: { uuid },
+  async get(uuid) {
+    const decision = await this.appDecisionRepository.findOne({
+      where: {
+        uuid,
+      },
       relations: {
         outcome: true,
+        decisionMaker: true,
+        ceoCriterion: true,
         documents: {
           document: true,
         },
       },
     });
+
+    decision.documents = decision.documents.filter(
+      (document) => !!document.document,
+    );
+    return decision;
   }
 
   async update(uuid: string, updateData: UpdateApplicationDecisionDto) {

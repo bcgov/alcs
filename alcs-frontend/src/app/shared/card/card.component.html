@@ -14,9 +14,13 @@
       <span class="high-priority" *ngIf="cardData.highPriority">!</span>
       <div>
         <span
-          *ngFor="let type of cardData.displayTypes"
+          *ngFor="let type of cardData.labels"
           class="type"
-          [ngStyle]="{ backgroundColor: type.backgroundColor, color: type.textColor }"
+          [ngStyle]="{
+            backgroundColor: type.backgroundColor,
+            color: type.textColor,
+            borderColor: type.borderColor ? type.borderColor : type.backgroundColor
+          }"
         >
           <span class="center">{{ type.shortLabel }}</span>
         </span>

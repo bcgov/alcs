@@ -16,14 +16,6 @@ describe('DragDropBoardComponent', () => {
       name: 'Name',
       initials: 'initials',
     } as UserDto,
-    type: {
-      textColor: '#000',
-      shortLabel: 'LUP',
-      backgroundColor: '#fff',
-      code: 'LUP',
-      label: 'LUP',
-      description: 'LUP',
-    },
     title: 'Im Title',
     activeDays: 2,
     paused: false,
@@ -32,7 +24,14 @@ describe('DragDropBoardComponent', () => {
     cardUuid: 'fake',
     cardType: CardType.APP,
     dateReceived: 11111,
-    displayTypes: [],
+    labels: [
+      {
+        textColor: '#000',
+        shortLabel: 'LUP',
+        backgroundColor: '#fff',
+        label: 'LUP',
+      },
+    ],
   };
 
   beforeEach(async () => {

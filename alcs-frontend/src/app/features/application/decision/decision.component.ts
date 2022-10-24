@@ -13,6 +13,8 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
+type LoadingDecision = ApplicationDecisionDto & { loading: boolean };
+
 @Component({
   selector: 'app-decision',
   templateUrl: './decision.component.html',
@@ -21,7 +23,7 @@ import { DecisionDialogComponent } from './decision-dialog/decision-dialog.compo
 export class DecisionComponent implements OnInit {
   fileNumber: string = '';
   decisionDate: number | undefined;
-  decisions: ApplicationDecisionDto[] = [];
+  decisions: LoadingDecision[] = [];
   outcomes: ApplicationDecisionOutcomeTypeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
@@ -46,7 +48,11 @@ export class DecisionComponent implements OnInit {
 
   async loadDecisions(fileNumber: string) {
     const codes = await this.decisionService.fetchCodes();
-    this.decisions = await this.decisionService.fetchByApplication(fileNumber);
+    const loadedDecision = await this.decisionService.fetchByApplication(fileNumber);
+    this.decisions = loadedDecision.map((decision) => ({
+      ...decision,
+      loading: false,
+    }));
     this.outcomes = codes.outcomes;
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
@@ -80,7 +86,7 @@ export class DecisionComponent implements OnInit {
       });
   }
 
-  onEdit(decision: ApplicationDecisionDto) {
+  onEdit(decision: LoadingDecision) {
     const decisionIndex = this.decisions.indexOf(decision);
     let minDate = new Date(0);
     if (decisionIndex !== this.decisions.length - 1) {
@@ -116,6 +122,12 @@ export class DecisionComponent implements OnInit {
       })
       .subscribe(async (confirmed) => {
         if (confirmed) {
+          this.decisions = this.decisions.map((decision) => {
+            return {
+              ...decision,
+              loading: decision.uuid === uuid,
+            };
+          });
           await this.decisionService.delete(uuid);
           await this.applicationDetailService.loadApplication(this.fileNumber);
           this.toastService.showSuccessToast('Decision deleted');
@@ -124,6 +136,12 @@ export class DecisionComponent implements OnInit {
   }
 
   async attachFile(decisionUuid: string, event: Event) {
+    this.decisions = this.decisions.map((decision) => {
+      return {
+        ...decision,
+        loading: decision.uuid === decisionUuid,
+      };
+    });
     const element = event.target as HTMLInputElement;
     const fileList = element.files;
     if (fileList && fileList.length > 0) {
@@ -150,6 +168,13 @@ export class DecisionComponent implements OnInit {
       })
       .subscribe(async (confirmed) => {
         if (confirmed) {
+          this.decisions = this.decisions.map((decision) => {
+            return {
+              ...decision,
+              loading: decision.uuid === decisionUuid,
+            };
+          });
+
           await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
           await this.loadDecisions(this.fileNumber);
           this.toastService.showSuccessToast('File deleted');
