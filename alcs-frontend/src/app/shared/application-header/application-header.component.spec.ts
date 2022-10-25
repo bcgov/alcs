@@ -1,25 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 import { ApplicationHeaderComponent } from './application-header.component';
 
-describe('DecisionDocumentComponent', () => {
+describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
   let fixture: ComponentFixture<ApplicationHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: ApplicationDocumentService,
-          useValue: {},
-        },
-        {
-          provide: ConfirmationDialogService,
-          useValue: {},
-        },
-      ],
+      imports: [RouterTestingModule],
       declarations: [ApplicationHeaderComponent],
     }).compileComponents();
 

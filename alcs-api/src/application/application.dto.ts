@@ -160,6 +160,7 @@ export class ApplicationDto {
   @AutoMap()
   region: ApplicationRegionDto;
 
+  @AutoMap()
   localGovernment: ApplicationLocalGovernmentDto;
 
   @AutoMap()

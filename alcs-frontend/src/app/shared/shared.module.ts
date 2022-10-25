@@ -27,6 +27,7 @@ import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { DatetimeAdapter } from '@ng-matero/extensions/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationHeaderComponent } from './application-header/application-header.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
@@ -47,6 +48,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MeetingOverviewComponent,
     InlineEditComponent,
     ApplicationHeaderComponent,
+    ApplicationDocumentComponent,
   ],
   imports: [
     CommonModule,
@@ -58,6 +60,8 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MatTooltipModule,
     MatCardModule,
     MatMenuModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     CommonModule,
@@ -90,6 +94,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MatAutocompleteModule,
     MatButtonToggleModule,
     ApplicationHeaderComponent,
+    ApplicationDocumentComponent,
     MeetingOverviewComponent,
     FavoriteButtonComponent,
     AvatarCircleComponent,

@@ -1,0 +1,14 @@
+<div class="layout">
+  <div class="application">
+    <app-application-header [application]="application"></app-application-header>
+    <section class="content">
+      <app-document
+        *ngIf="fileNumber"
+        [fileNumber]="fileNumber"
+        documentType="reviewDocument"
+        title="Evidentiary Record"
+        [readOnly]="true"
+      ></app-document>
+    </section>
+  </div>
+</div>

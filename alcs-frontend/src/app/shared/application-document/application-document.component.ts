@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
-} from '../../../services/application/application-document/application-document.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+} from '../../services/application/application-document/application-document.service';
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-document[title][documentType][fileNumber]',
@@ -16,6 +15,7 @@ export class ApplicationDocumentComponent implements OnInit {
   @Input() fileNumber = '';
   @Input() documentType: DOCUMENT_TYPE = 'decisionDocument';
   @Input() title = '';
+  @Input() readOnly = false;
 
   isUploading = false;
 
@@ -49,6 +49,10 @@ export class ApplicationDocumentComponent implements OnInit {
   }
 
   async onDownload(uuid: string, fileName: string) {
+    await this.applicationDocumentService.download(uuid, fileName, false);
+  }
+
+  async onOpen(uuid: string, fileName: string) {
     await this.applicationDocumentService.download(uuid, fileName);
   }
 
