@@ -35,10 +35,10 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const noneOrderedSubtasks = await this.homeService.fetchGisSubtasks();
-    const applications = noneOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
-    const reconsiderations = noneOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
-    const planningReviews = noneOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
+    const nonOrderedSubtasks = await this.homeService.fetchGisSubtasks();
+    const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
+    const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
+    const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
 
     this.subtasks.push(
       // high priority
