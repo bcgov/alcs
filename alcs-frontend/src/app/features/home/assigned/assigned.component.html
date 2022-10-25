@@ -4,6 +4,7 @@
     <thead>
       <td style="padding: 4px"></td>
       <td class="header">Cards</td>
+      <td class="header">Type</td>
       <td class="header">Active Days</td>
       <td class="header">Workflow Stage</td>
     </thead>
@@ -19,11 +20,24 @@
           <span class="high-priority" *ngIf="file.highPriority">!</span>
         </td>
         <td>{{ file.title }}</td>
+        <td class="labels">
+          <span
+            *ngFor="let type of file.labels"
+            class="type"
+            [ngStyle]="{
+              backgroundColor: type.backgroundColor,
+              color: type.textColor,
+              borderColor: type.borderColor ? type.borderColor : type.backgroundColor
+            }"
+          >
+            <span class="center">{{ type.shortLabel }}</span>
+          </span>
+        </td>
         <td>{{ file.activeDays ?? '-' }}</td>
         <td [innerHTML]="file.card.status.label"></td>
       </tr>
       <tr class="no-data" *ngIf="sortedFiles.length === 0">
-        <td class="text-center" colspan="4">No Cards Assigned</td>
+        <td class="text-center" colspan="5">No Cards Assigned</td>
       </tr>
     </tbody>
   </table>

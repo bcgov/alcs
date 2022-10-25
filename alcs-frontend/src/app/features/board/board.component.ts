@@ -170,9 +170,12 @@ export class BoardComponent implements OnInit, OnDestroy {
     const mappedRecons = apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
     const mappedReviewMeetings = apps.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
     if (boardCode === BOARD_TYPE_CODES.VETT) {
-      this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings].sort(
-        (a, b) => b.dateReceived - a.dateReceived
-      );
+      this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings].sort((a, b) => {
+        if (a.highPriority === b.highPriority) {
+          return b.dateReceived - a.dateReceived;
+        }
+        return b.highPriority ? 1 : -1;
+      });
     } else {
       const sorted = [];
       sorted.push(

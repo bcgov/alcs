@@ -6,6 +6,9 @@ import { ApplicationService } from '../../../services/application/application.se
 import { CardDto } from '../../../services/card/card.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
+import { CardLabel } from '../../../shared/card/card.component';
+import { PLANNING_TYPE_LABEL } from '../../board/dialogs/planning-review/planning-review-dialog.component';
+import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
 
 interface AssignedToMeFile {
   title: string;
@@ -15,6 +18,7 @@ interface AssignedToMeFile {
   paused?: boolean;
   card: CardDto;
   highPriority?: boolean;
+  labels: CardLabel[];
 }
 
 @Component({
@@ -80,6 +84,7 @@ export class AssignedComponent implements OnInit {
       date: p.card.createdAt,
       card: p.card,
       highPriority: p.card.highPriority,
+      labels: [PLANNING_TYPE_LABEL],
     };
   }
 
@@ -90,6 +95,7 @@ export class AssignedComponent implements OnInit {
       date: r.submittedDate,
       card: r.card,
       highPriority: r.card.highPriority,
+      labels: [r.application.type, RECON_TYPE_LABEL],
     };
   }
 
@@ -101,6 +107,7 @@ export class AssignedComponent implements OnInit {
       paused: a.paused,
       card: a.card,
       highPriority: a.card.highPriority,
+      labels: [a.type],
     } as AssignedToMeFile;
   }
 
