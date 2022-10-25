@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
-import { ApplicationMeetingService } from '../../services/application/application-meeting/application-meeting.service';
+import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 import { BoardService } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -16,6 +15,9 @@ describe('MeetingOverviewComponent', () => {
   beforeEach(async () => {
     const mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
     mockBoardService.$boards = new BehaviorSubject([]);
+
+    const mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', ['clearTokens']);
+    mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [
@@ -34,6 +36,10 @@ describe('MeetingOverviewComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: {},
+        },
+        {
+          provide: AuthenticationService,
+          useValue: mockAuthService,
         },
       ],
       declarations: [MeetingOverviewComponent],

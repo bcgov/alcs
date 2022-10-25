@@ -5,7 +5,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -52,15 +51,7 @@ export class ApplicationDecisionMeetingController {
     const allApps = await this.applicationService.getAll({
       uuid: Any(allAppIds),
     });
-    const allFileNumbers = allApps.map((app) => app.fileNumber);
-    const allDocuments = await this.appDecDocumentService.listAll(
-      allFileNumbers,
-      'reviewDocument',
-    );
     const mappedApps = allApps.map((app): UpcomingMeetingDto => {
-      const files = allDocuments.filter(
-        (doc) => doc.applicationUuid === app.uuid,
-      );
       const meetingDate = upcomingApps.find(
         (meeting) => meeting.uuid === app.uuid,
       );
@@ -70,11 +61,6 @@ export class ApplicationDecisionMeetingController {
         applicant: app.applicant,
         boardCode: app.card.board.code,
         assignee: this.mapper.map(app.card.assignee, User, UserDto),
-        files: this.mapper.mapArray(
-          files,
-          ApplicationDocument,
-          ApplicationDocumentDto,
-        ),
       };
     });
 

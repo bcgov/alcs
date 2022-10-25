@@ -45,6 +45,14 @@ const routes: Routes = [
     loadChildren: () => import('./features/meeting/meeting.module').then((m) => m.MeetingModule),
   },
   {
+    path: 'commissioner',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: [ROLES.COMMISSIONER],
+    },
+    loadChildren: () => import('./features/commissioner/commissioner.module').then((m) => m.CommissionerModule),
+  },
+  {
     path: 'login',
     component: LoginComponent,
   },

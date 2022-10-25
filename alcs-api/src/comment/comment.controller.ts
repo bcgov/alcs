@@ -16,10 +16,7 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RoleGuard } from '../common/authorization/role.guard';
-import {
-  ANY_AUTH_ROLE,
-  ROLES_ALLOWED_BOARDS,
-} from '../common/authorization/roles';
+import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
 import { Comment } from './comment.entity';

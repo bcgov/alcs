@@ -27,6 +27,7 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
+import { CommissionerModule } from './commissioner/commissioner.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { UserService } from './user/user.service';
             : undefined,
       },
     }),
+    CommissionerModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [
