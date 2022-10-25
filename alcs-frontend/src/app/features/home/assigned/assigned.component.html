@@ -1,9 +1,9 @@
 <div class="assignee">
-  <h4>Assigned Applications: {{ sortedFiles.length }}</h4>
+  <h4>Cards Assigned to Me: {{ sortedFiles.length }}</h4>
   <table class="assigned-table">
     <thead>
       <td style="padding: 4px"></td>
-      <td class="header">Application</td>
+      <td class="header">Cards</td>
       <td class="header">Active Days</td>
       <td class="header">Workflow Stage</td>
     </thead>
@@ -23,7 +23,7 @@
         <td [innerHTML]="file.card.status.label"></td>
       </tr>
       <tr class="no-data" *ngIf="sortedFiles.length === 0">
-        <td class="text-center" colspan="4">No applications assigned</td>
+        <td class="text-center" colspan="4">No Cards Assigned</td>
       </tr>
     </tbody>
   </table>
