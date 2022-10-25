@@ -117,7 +117,7 @@
             <column ascending="true" name="document_uuid"/>
          </index>
       </table>
-      <table name="application_local_government" remarks="" schema="public" type="TABLE">
+      <table name="application_local_government" numRows="148" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="local_government_uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="public" table="application"/>
             <child column="local_government_uuid" foreignKey="FK_5a57c8d407eb6132ed39cb8fe6f" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
@@ -316,7 +316,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_status" numRows="115" remarks="" schema="public" type="TABLE">
+      <table name="board_status" numRows="114" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -622,7 +622,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" remarks="" schema="public" type="TABLE">
+      <table name="holiday_entity" numRows="49" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="day" nullable="false" remarks="" size="13" type="date" typeCode="91"/>
@@ -634,7 +634,7 @@
             <column ascending="true" name="day"/>
          </index>
       </table>
-      <table name="migrations" remarks="" schema="public" type="TABLE">
+      <table name="migrations" numRows="78" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
