@@ -18,13 +18,13 @@ import { ApplicationDialogComponent } from './dialogs/application/application-di
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import {
-  PLANNING_TYPE_LABEL,
   PlanningReviewDialogComponent,
+  PLANNING_TYPE_LABEL,
 } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import {
-  RECON_TYPE_LABEL,
   ReconsiderationDialogComponent,
+  RECON_TYPE_LABEL,
 } from './dialogs/reconsiderations/reconsideration-dialog.component';
 
 export const BOARD_TYPE_CODES = {
@@ -169,27 +169,26 @@ export class BoardComponent implements OnInit, OnDestroy {
     const mappedApps = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
     const mappedRecons = apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
     const mappedReviewMeetings = apps.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
-    this.cards = [
-      ...this.sortCards(boardCode, mappedApps),
-      ...this.sortCards(boardCode, mappedRecons),
-      ...this.sortCards(boardCode, mappedReviewMeetings),
-    ];
-  }
-
-  private sortCards(boardCode: string, cards: CardData[]) {
     if (boardCode === BOARD_TYPE_CODES.VETT) {
-      return cards.sort((a, b) => b.dateReceived - a.dateReceived);
-    } else {
-      return cards.sort((a, b) => {
+      this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings].sort((a, b) => {
         if (a.highPriority === b.highPriority) {
-          return b.activeDays && a.activeDays ? b.activeDays - a.activeDays : 0;
+          return b.dateReceived - a.dateReceived;
         }
-        if (a.highPriority) {
-          return -1;
-        } else {
-          return 1;
-        }
+        return b.highPriority ? 1 : -1;
       });
+    } else {
+      const sorted = [];
+      sorted.push(
+        // high priority
+        ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        // none high priority
+        ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedReviewMeetings.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived)
+      );
+      this.cards = sorted;
     }
   }
 
