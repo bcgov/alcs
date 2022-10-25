@@ -31,9 +31,9 @@ export class ApplicationHeaderComponent implements OnInit {
   async onGoToCard() {
     if (this.application && 'card' in this.application) {
       const boardCode = this.application.card.board.code;
-      const fileNumber = this.application.card.uuid;
+      const cardUuid = this.application.card.uuid;
       const cardTypeCode = this.application.card.type;
-      await this.router.navigateByUrl(`/board/${boardCode}?card=${fileNumber}&type=${cardTypeCode}`);
+      await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);
     }
   }
 
