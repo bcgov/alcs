@@ -117,56 +117,22 @@
 </div>
 
 <ng-template #applicationPanel let-application>
-  <mat-expansion-panel
-    class="application-panel"
-    [ngClass]="{
-      'application-highlighted': application.isHighlighted
-    }"
-    [(expanded)]="application.isExpanded"
-    hideToggle="true"
-  >
-    <mat-expansion-panel-header
-      (click)="clearHighlight()"
-      class="application-header"
-      expandedHeight="48px"
-      collapsedHeight="48px"
+  <mat-card (click)="openApplication(application.fileNumber)" class="application-panel">
+    <div
+      class="ellipsis"
+      [id]="'title_' + application.fileNumber"
+      matTooltipClass="no-wrap-tooltip"
+      [matTooltip]="application.fileNumber + ' (' + application.applicant + ')'"
+      [matTooltipDisabled]="!isEllipsisActive('title_' + application.fileNumber)"
     >
-      <mat-panel-title id="{{ application.fileNumber }}" class="split">
-        <div
-          class="ellipsis"
-          [id]="'title_' + application.fileNumber"
-          matTooltipClass="no-wrap-tooltip"
-          [matTooltip]="application.fileNumber + ' (' + application.applicant + ')'"
-          [matTooltipDisabled]="!isEllipsisActive('title_' + application.fileNumber)"
-        >
-          {{ application.fileNumber }} ({{ application.applicant }})
-        </div>
-        <div>
-          <app-avatar-circle
-            *ngIf="application.assignee"
-            [initials]="application.assignee.initials"
-            [name]="application.assignee.name"
-          ></app-avatar-circle>
-        </div>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div class="application-file" *ngFor="let file of application.files, let i = index">
-      <a
-        [id]="i + '_file'"
-        class="ellipsis"
-        [matTooltip]="file.fileName"
-        [matTooltipDisabled]="!isEllipsisActive(i + '_file')"
-        matTooltipClass="no-wrap-tooltip"
-        (click)="onOpen(file.uuid, file.fileName)"
-        onKeyPress =
-        >{{ file.fileName }}</a
-      >
-      <div>
-        <button mat-icon-button title="Download" (click)="onDownload(file.uuid, file.fileName)">
-          <mat-icon>download</mat-icon>
-        </button>
-      </div>
+      {{ application.fileNumber }} ({{ application.applicant }})
     </div>
-    <span *ngIf="application.files.length === 0"> No Files </span>
-  </mat-expansion-panel>
+    <div>
+      <app-avatar-circle
+        *ngIf="application.assignee"
+        [initials]="application.assignee.initials"
+        [name]="application.assignee.name"
+      ></app-avatar-circle>
+    </div>
+  </mat-card>
 </ng-template>

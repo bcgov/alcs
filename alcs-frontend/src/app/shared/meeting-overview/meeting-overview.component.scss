@@ -229,25 +229,18 @@ mat-panel-description {
   }
 }
 
-:host::ng-deep .application-panel {
+.application-panel {
   margin-bottom: 16px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 
   &.application-highlighted {
     border: 5px solid rgba($primary-color, 0.5);
     animation: border-pulsate 2s infinite;
-  }
-
-  mat-expansion-panel-header {
-    background-color: #fff;
-  }
-
-  .mat-card-title {
-  }
-
-  .mat-expansion-panel-body {
-    background-color: #fff;
-    padding: 12px 8px 12px 16px;
-    text-align: left;
   }
 }
 

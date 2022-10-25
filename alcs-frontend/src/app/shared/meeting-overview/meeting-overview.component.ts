@@ -1,15 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { ROLES_ALLOWED_APPLICATIONS } from '../../app-routing.module';
 import { BOARD_TYPE_CODES } from '../../features/board/board.component';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
+import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
-import { UpcomingMeeting, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
+import { UpcomingMeetingDto, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
 
 type MeetingWithApplications = {
   meetingDate: number;
-  applications: (UpcomingMeeting & { isExpanded: boolean; isHighlighted: boolean })[];
+  applications: (UpcomingMeetingDto & { isExpanded: boolean; isHighlighted: boolean })[];
   isExpanded: boolean;
 };
 
@@ -36,6 +38,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   private meetings: UpcomingMeetingBoardMapDto | undefined;
   customDateFormat = 'ddd YYYY-MM-DD';
   searchText = '';
+  isCommissioner = false;
 
   viewData: BoardWithDecisionMeetings[] = [];
 
@@ -43,13 +46,23 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     private meetingService: DecisionMeetingService,
     private boardService: BoardService,
     private applicationDocumentService: ApplicationDocumentService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
     this.boardService.$boards.pipe(takeUntil(this.destroy)).subscribe((boards) => {
       this.boards = boards;
       this.loadMeetings();
+    });
+
+    this.authService.$currentUser.subscribe((currentUser) => {
+      if (currentUser) {
+        this.isCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
+      }
     });
   }
 
@@ -99,7 +112,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   }
 
   private sortApplications(
-    applications: UpcomingMeeting[],
+    applications: UpcomingMeetingDto[],
     pastMeetings: MeetingWithApplications[],
     upcomingMeetings: MeetingWithApplications[]
   ) {
@@ -112,7 +125,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  private mapApplicationsIntoMeetings(pastMeetings: MeetingWithApplications[], app: UpcomingMeeting) {
+  private mapApplicationsIntoMeetings(pastMeetings: MeetingWithApplications[], app: UpcomingMeetingDto) {
     const meeting = pastMeetings.find((meeting) => meeting.meetingDate === app.meetingDate);
     if (meeting) {
       meeting.applications.push({
@@ -133,16 +146,6 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
         isExpanded: false,
       });
     }
-  }
-
-  async onOpen(uuid: string, fileName: string) {
-    this.clearHighlight();
-    await this.applicationDocumentService.download(uuid, fileName);
-  }
-
-  async onDownload(uuid: string, fileName: string) {
-    this.clearHighlight();
-    await this.applicationDocumentService.download(uuid, fileName, false);
   }
 
   onSearch() {
@@ -240,5 +243,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   isEllipsisActive(e: string): boolean {
     const el = document.getElementById(e);
     return el ? el.offsetWidth < el.scrollWidth : false;
+  }
+
+  openApplication(fileNumber: string) {
+    this.clearHighlight();
+    const url = this.isCommissioner ? `/commissioner/${fileNumber}` : `/application/${fileNumber}`;
+    window.open(url, '_blank');
   }
 }

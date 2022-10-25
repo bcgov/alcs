@@ -54,8 +54,8 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MatInputModule,
     FormsModule,
     MatTooltipModule,
+    MatCardModule,
   ],
-
   exports: [
     CommonModule,
     FormsModule,

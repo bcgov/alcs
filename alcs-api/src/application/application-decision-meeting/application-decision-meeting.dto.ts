@@ -1,7 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsString } from 'class-validator';
 import { UserDto } from '../../user/user.dto';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 
 export class CreateApplicationDecisionMeetingDto {
   @AutoMap()
@@ -25,7 +24,6 @@ export type UpcomingMeetingDto = {
   applicant: string;
   boardCode: string;
   assignee: UserDto;
-  files: ApplicationDocumentDto[];
 };
 
 export type UpcomingMeetingBoardMapDto = Record<string, UpcomingMeetingDto[]>;
