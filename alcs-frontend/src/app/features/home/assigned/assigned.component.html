@@ -1,5 +1,5 @@
 <div class="assignee">
-  <h4>Assigned Applications: {{ assignedToMe.applications.length + assignedToMe.reconsiderations.length }}</h4>
+  <h4>Assigned Applications: {{ sortedFiles.length }}</h4>
   <table class="assigned-table">
     <thead>
       <td style="padding: 4px"></td>
@@ -10,44 +10,19 @@
     <tbody class="assigned-body">
       <tr
         [ngClass]="{
-          paused: application.paused
+          paused: file.paused
         }"
-        (click)="onSelectCard(application.card)"
-        *ngFor="let application of assignedToMe.applications"
+        (click)="onSelectCard(file.card)"
+        *ngFor="let file of sortedFiles"
       >
         <td class="center" style="padding: 4px">
-          <span class="high-priority" *ngIf="application.card.highPriority">!</span>
+          <span class="high-priority" *ngIf="file.highPriority">!</span>
         </td>
-        <td>{{ application.fileNumber }} ({{ application.applicant }})</td>
-        <td>{{ application.activeDays }}</td>
-        <td [innerHTML]="application.card.status.label"></td>
+        <td>{{ file.title }}</td>
+        <td>{{ file.activeDays ?? '-' }}</td>
+        <td [innerHTML]="file.card.status.label"></td>
       </tr>
-
-      <tr (click)="onSelectCard(reconsideration.card)" *ngFor="let reconsideration of assignedToMe.reconsiderations">
-        <td class="center" style="padding: 4px">
-          <span class="high-priority" *ngIf="reconsideration.card.highPriority">!</span>
-        </td>
-        <td>{{ reconsideration.application.fileNumber }} ({{ reconsideration.application.applicant }})</td>
-        <td>-</td>
-        <td [innerHTML]="reconsideration.card.status.label"></td>
-      </tr>
-
-      <tr (click)="onSelectCard(planningReview.card)" *ngFor="let planningReview of assignedToMe.planningReviews">
-        <td class="center" style="padding: 4px">
-          <span class="high-priority" *ngIf="planningReview.card.highPriority">!</span>
-        </td>
-        <td>{{ planningReview.fileNumber }} ({{ planningReview.type }})</td>
-        <td>-</td>
-        <td [innerHTML]="planningReview.card.status.label"></td>
-      </tr>
-      <tr
-        class="no-data"
-        *ngIf="
-          assignedToMe.applications.length === 0 &&
-          assignedToMe.reconsiderations.length === 0 &&
-          assignedToMe.planningReviews.length === 0
-        "
-      >
+      <tr class="no-data" *ngIf="sortedFiles.length === 0">
         <td class="text-center" colspan="4">No applications assigned</td>
       </tr>
     </tbody>

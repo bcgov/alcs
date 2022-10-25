@@ -6,6 +6,7 @@ import { CardSubtaskService } from '../../../services/card/card-subtask/card-sub
 import { HomeService } from '../../../services/home/home.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
+import { CardType } from '../../../shared/card/card.component';
 
 @Component({
   selector: 'app-gis-subtasks',
@@ -34,24 +35,21 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    this.subtasks = await this.homeService.fetchGisSubtasks();
+    const noneOrderedSubtasks = await this.homeService.fetchGisSubtasks();
+    const applications = noneOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
+    const reconsiderations = noneOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
+    const planningReviews = noneOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
 
-    this.subtasks.sort((a, b) => {
-      if (a.card.highPriority === b.card.highPriority) {
-        if (b.activeDays && !a.activeDays) {
-          return 1;
-        }
-        if (a.activeDays && !b.activeDays) {
-          return -1;
-        }
-        return b.createdAt - a.createdAt;
-      }
-      if (a.card.highPriority) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
+    this.subtasks.push(
+      // high priority
+      ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...reconsiderations.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      ...planningReviews.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      // none high priority
+      ...applications.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...reconsiderations.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      ...planningReviews.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!)
+    );
   }
 
   filterAssigneeList(term: string, item: UserDto) {

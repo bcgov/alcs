@@ -47,10 +47,9 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadMeetings();
     this.boardService.$boards.pipe(takeUntil(this.destroy)).subscribe((boards) => {
       this.boards = boards;
-      this.populateViewData();
+      this.loadMeetings();
     });
   }
 
