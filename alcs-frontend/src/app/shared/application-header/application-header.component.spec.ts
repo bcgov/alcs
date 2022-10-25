@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 import { ApplicationHeaderComponent } from './application-header.component';
 

@@ -9,7 +9,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { DATE_FORMATS } from '../../shared/utils/date-format';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
-import { ApplicationHeaderComponent } from './application-header/application-header.component';
+import { ApplicationHeaderComponent } from '../../shared/application-header/application-header.component';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
@@ -45,7 +45,6 @@ const routes: Routes = [
   ],
   declarations: [
     ApplicationComponent,
-    ApplicationHeaderComponent,
     OverviewComponent,
     ReviewComponent,
     DecisionMeetingDialogComponent,

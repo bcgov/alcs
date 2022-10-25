@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
+import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -56,9 +58,11 @@ export const childRoutes = [
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
-  fileNumber?: string;
-
   childRoutes = childRoutes;
+
+  fileNumber?: string;
+  application: ApplicationDto | undefined;
+  reconsiderations: ApplicationReconsiderationDto[] = [];
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -75,8 +79,13 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
     this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       if (application) {
+        this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
       }
+    });
+
+    this.reconsiderationService.$reconsiderations.pipe(takeUntil(this.destroy)).subscribe((recons) => {
+      this.reconsiderations = [...recons].reverse(); //Reverse since we go low to high versus normally high to low
     });
   }
 

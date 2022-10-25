@@ -1,6 +1,6 @@
 <div class="layout">
   <div class="application">
-    <app-application-header></app-application-header>
+    <app-application-header [application]="application" [reconsiderations]="reconsiderations"></app-application-header>
     <div class="content">
       <div class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">

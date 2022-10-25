@@ -22,7 +22,7 @@
       >{{ reconLabel.label }}</span
       >
     </div>
-    <div class="center">
+    <div *ngIf="showCardMenu" class="center">
       <button
         *ngIf="!reconsiderations.length"
         class="menu-item center"
