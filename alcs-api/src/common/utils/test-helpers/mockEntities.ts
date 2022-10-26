@@ -164,21 +164,15 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
 const initMockUserDto = (assignee?: User): UserDto => {
   const userEntity = assignee ?? initAssigneeMockEntity();
   const userDto = new UserDto();
-  userDto.familyName = userEntity.familyName;
+  userDto.uuid = 'user-uuid';
   userDto.email = userEntity.email;
-  userDto.uuid = userEntity.uuid;
-  userDto.givenName = userEntity.givenName;
   userDto.identityProvider = userEntity.identityProvider;
   userDto.name = userEntity.name;
-  userDto.displayName = userEntity.displayName;
-  userDto.preferredUsername = userEntity.preferredUsername;
-  userDto.idirUserGuid = userEntity.idirUserGuid;
   userDto.idirUserName = userEntity.idirUserName;
   userDto.initials =
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
-  userDto.bceidGuid = undefined;
   userDto.mentionLabel =
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.givenName.slice(1) +

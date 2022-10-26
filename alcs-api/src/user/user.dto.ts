@@ -1,87 +1,61 @@
 import { AutoMap } from '@automapper/classes';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsDefined,
-  IsEmail,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDefined } from 'class-validator';
 
 export class UserSettingsDto {
+  @AutoMap()
   favoriteBoards: string[];
 }
 
-export class CreateOrUpdateUserDto {
-  @AutoMap()
-  @IsOptional()
-  uuid?: string;
-
-  @AutoMap()
-  @IsEmail()
-  email: string;
-
-  @AutoMap()
-  @IsString()
-  displayName: string;
-
-  @AutoMap()
-  @IsString()
-  identityProvider: string;
-
-  @AutoMap()
-  @IsString()
-  preferredUsername: string;
-
-  @AutoMap()
-  @IsString()
-  name?: string;
-
-  @AutoMap()
-  @IsString()
-  givenName?: string;
-
-  @AutoMap()
-  @IsString()
-  familyName?: string;
-
-  @AutoMap()
-  @IsString()
-  idirUserGuid?: string;
-
-  @AutoMap()
-  @IsString()
-  idirUserName?: string;
-
-  @AutoMap()
-  @IsString()
-  @IsOptional()
-  bceidGuid?: string;
-
-  @AutoMap()
-  @IsString()
-  @IsOptional()
-  bceidUserName?: string;
-
-  @AutoMap()
-  @IsArray()
-  @IsOptional()
-  clientRoles?: string[];
-
+export class UpdateUserDto {
   @AutoMap()
   @Type(() => UserSettingsDto)
   @IsDefined()
-  settings?: UserSettingsDto;
+  settings: UserSettingsDto;
 }
 
-export class UserDto extends CreateOrUpdateUserDto {
+export class UserDto extends UpdateUserDto {
   @AutoMap()
-  @IsString()
-  initials?: string;
+  uuid: string;
 
   @AutoMap()
-  @IsString()
+  initials: string;
+
+  @AutoMap()
   mentionLabel: string;
+
+  @AutoMap()
+  email: string;
+
+  @AutoMap()
+  name: string;
+
+  @AutoMap()
+  identityProvider: string;
+
+  @AutoMap()
+  clientRoles: string[];
+
+  @AutoMap()
+  idirUserName: string;
+
+  @AutoMap()
+  bceidUserName: string;
+}
+
+export class CreateUserDto {
+  email: string;
+  name?: string;
+  displayName: string;
+  givenName?: string;
+  familyName?: string;
+  preferredUsername: string;
+  identityProvider: string;
+  clientRoles: string[];
+  idirUserName?: string;
+  bceidUserName?: string;
+  idirUserGuid?: string;
+  bceidGuid?: string;
 }
 
 export class AssigneeDto {

@@ -13,11 +13,11 @@ import { ClsService } from 'nestjs-cls';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { mockAppLoggerService } from '../utils/test-helpers/mockLogger';
-import { RoleGuard } from './role.guard';
+import { RolesGuard } from './roles-guard.service';
 import { AUTH_ROLE } from './roles';
 
 describe('RoleGuard', () => {
-  let guard: RoleGuard;
+  let guard: RolesGuard;
   let reflector: DeepMocked<Reflector>;
   let mockContext;
   let mockClsService: DeepMocked<ClsService>;
@@ -25,12 +25,15 @@ describe('RoleGuard', () => {
 
   const mockUser = {};
 
+  const decodedToken = {
+    client_roles: [AUTH_ROLE.ADMIN, AUTH_ROLE.LUP],
+    email: 'fake-email',
+    bceid_user_guid: 'fake-guid',
+  };
+
   const mockHttpContext = {
     getRequest: () => ({
-      user: {
-        client_roles: [AUTH_ROLE.ADMIN, AUTH_ROLE.LUP],
-        email: 'fake-email',
-      },
+      user: decodedToken,
     }),
   } as any;
 
@@ -44,11 +47,11 @@ describe('RoleGuard', () => {
     mockClsService = createMock<ClsService>();
     mockUserService = createMock<UserService>();
 
-    mockUserService.get.mockResolvedValue(mockUser as User);
+    mockUserService.getByGuid.mockResolvedValue(mockUser as User);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        RoleGuard,
+        RolesGuard,
         {
           provide: KEYCLOAK_INSTANCE,
           useValue: {},
@@ -77,7 +80,7 @@ describe('RoleGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<RoleGuard>(RoleGuard);
+    guard = module.get<RolesGuard>(RolesGuard);
     guard.keyCloakGuard = createMock<KeyCloakRoleGuard>();
     guard.keyCloakGuard.canActivate = jest.fn(async () => true);
   });
@@ -89,7 +92,10 @@ describe('RoleGuard', () => {
   it('should accept and set the user into CLS if users has all of the roles', async () => {
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();
-    expect(mockClsService.set).toHaveBeenCalledWith('userEmail', 'fake-email');
+    expect(mockClsService.set).toHaveBeenCalledWith('userGuids', {
+      bceidGuid: decodedToken.bceid_user_guid,
+      idirUserGuid: undefined,
+    });
   });
 
   it('should reject if underlying keycloak fails', async () => {

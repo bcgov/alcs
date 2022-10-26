@@ -65,7 +65,9 @@ export class FavoriteButtonComponent implements OnInit {
     this.updateFavoriteBoardsList(this.boardCode);
 
     try {
-      await this.userService.updateUser(this.currentUserProfile);
+      await this.userService.updateUser(this.currentUserProfile.uuid, {
+        settings: this.currentUserProfile.settings,
+      });
     } catch {
       this.toastService.showErrorToast('Failed to set favourites');
     }

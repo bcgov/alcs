@@ -1,5 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { initCardStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { CardStatusController } from './card-status.controller';
@@ -25,6 +26,10 @@ describe('CardStatusController', () => {
         {
           provide: CardStatusService,
           useValue: mockCardStatusService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],

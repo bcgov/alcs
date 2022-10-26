@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from '../common/authorization/role.guard';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { NotificationDto } from './notification.dto';
@@ -20,7 +20,7 @@ import { NotificationService } from './notification.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notification')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class NotificationController {
   constructor(
     private notificationService: NotificationService,

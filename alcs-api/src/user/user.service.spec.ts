@@ -64,8 +64,8 @@ describe('UserService', () => {
     expect(users[0]).toEqual(mockUser);
   });
 
-  it('should return the user by email from the repository', async () => {
-    const user = await service.get(mockUser.email);
+  it('should return the user by uuid from the repository', async () => {
+    const user = await service.getByUuid(mockUser.uuid);
 
     expect(user).toStrictEqual(mockUser);
   });
@@ -82,14 +82,14 @@ describe('UserService', () => {
 
     it('should reject if user already exists', async () => {
       await expect(service.create(mockUser)).rejects.toMatchObject(
-        new Error(`Email already exists: ${mockUser.email}`),
+        new Error(`User already exists in the system`),
       );
     });
   });
 
   describe('deleteUser', () => {
     it('should call delete user on the repository', async () => {
-      await service.delete(mockUser.email);
+      await service.delete(mockUser.uuid);
 
       expect(repositoryMock.softRemove).toHaveBeenCalledTimes(1);
       expect(repositoryMock.softRemove).toHaveBeenCalledWith(mockUser);
@@ -98,8 +98,8 @@ describe('UserService', () => {
     it('should reject when user does not exist', async () => {
       repositoryMock.findOne.mockResolvedValue(undefined);
 
-      await expect(service.delete(mockUser.email)).rejects.toMatchObject(
-        new Error(`User with provided email not found ${mockUser.email}`),
+      await expect(service.delete(mockUser.uuid)).rejects.toMatchObject(
+        new Error(`User with provided uuid ${mockUser.uuid} was not found`),
       );
     });
   });
@@ -130,7 +130,7 @@ describe('UserService', () => {
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
-<a href='https://bcgov.github.io/sso-requests/my-dashboard/integrations'>CSS</a>`;
+<a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
 
     await service.sendNewUserRequestEmail(email, userIdentifier);
 

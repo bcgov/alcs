@@ -26,7 +26,7 @@ describe('AuditSubscriber', () => {
     mockUserService = createMock<UserService>();
     subscribersArray = [];
 
-    mockUserService.get.mockResolvedValue({
+    mockUserService.getByGuid.mockResolvedValue({
       uuid: fakeUserId,
     } as User);
     updateEvent = createMock<UpdateEvent<any>>();
@@ -78,7 +78,7 @@ describe('AuditSubscriber', () => {
     });
 
     it('should throw an error if user is not found in beforeUpdate', async () => {
-      mockUserService.get.mockResolvedValue(undefined);
+      mockUserService.getByGuid.mockResolvedValue(undefined);
 
       await expect(
         updatedBySubscriber.beforeInsert(updateEvent),
@@ -108,7 +108,7 @@ describe('AuditSubscriber', () => {
     });
 
     it('should throw an error if user is not found in beforeUpdate', async () => {
-      mockUserService.get.mockResolvedValue(undefined);
+      mockUserService.getByGuid.mockResolvedValue(undefined);
 
       await expect(
         updatedBySubscriber.beforeUpdate(updateEvent),

@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from '../../common/authorization/role.guard';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationService } from '../application.service';
@@ -34,7 +34,7 @@ import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class ApplicationDecisionController {
   constructor(
     private appDecisionService: ApplicationDecisionService,

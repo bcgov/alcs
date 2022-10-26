@@ -16,11 +16,12 @@ import {
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
-import { UserService } from '../../user/user.service';
+import { UserGuids, UserService } from '../../user/user.service';
+import { BaseToken } from './authorization.service';
 import { AUTH_ROLE } from './roles';
 
 @Injectable()
-export class RoleGuard implements CanActivate {
+export class RolesGuard implements CanActivate {
   public keyCloakGuard: KeyCloakRoleGuard;
 
   constructor(
@@ -60,7 +61,7 @@ export class RoleGuard implements CanActivate {
     );
 
     const request = context.switchToHttp().getRequest();
-    const email = request.user.email;
+    const token = request.user as BaseToken;
     const userRoles = request.user.client_roles
       ? (request.user.client_roles as AUTH_ROLE[])
       : [];
@@ -69,11 +70,15 @@ export class RoleGuard implements CanActivate {
       requiredRoles.includes(value),
     );
 
-    this.cls.set('userEmail', email);
+    const userGuids: UserGuids = {
+      bceidGuid: token['bceid_user_guid'],
+      idirUserGuid: token['idir_user_guid'],
+    };
+    this.cls.set('userGuids', userGuids);
 
     if (matchingRoles.length === 0) {
       this.logger.debug(
-        `Received request but user ${email} has wrong roles. Required: ${requiredRoles} Has: ${userRoles}`,
+        `Received request but user ${token.email} has wrong roles. Required: ${requiredRoles} Has: ${userRoles}`,
       );
     } else {
       this.logger.verbose(
@@ -82,7 +87,7 @@ export class RoleGuard implements CanActivate {
     }
 
     if (matchingRoles.length > 0) {
-      request.user.entity = await this.userService.get(email);
+      request.user.entity = await this.userService.getByGuid(userGuids);
       return true;
     }
 

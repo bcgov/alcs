@@ -7,8 +7,13 @@ import { Repository } from 'typeorm';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { EmailService } from '../providers/email/email.service';
-import { CreateOrUpdateUserDto, UserDto } from './user.dto';
+import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
+
+export type UserGuids = {
+  bceidGuid?: string;
+  idirUserGuid?: string;
+};
 
 @Injectable()
 export class UserService {
@@ -26,33 +31,38 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  async create(dto: CreateOrUpdateUserDto) {
-    const existingUser = await this.get(dto.email);
+  async create(dto: CreateUserDto) {
+    const existingUser = await this.getByGuid(dto);
 
     if (existingUser) {
-      throw new Error(`Email already exists: ${dto.email}`);
+      throw new Error(`User already exists in the system`);
     }
 
-    const user = await this.userMapper.mapAsync(dto, UserDto, User);
+    const user = await this.userMapper.mapAsync(dto, CreateUserDto, User);
     return this.userRepository.save(user);
   }
 
-  async delete(email: string) {
-    const existingUser = await this.get(email);
+  async delete(uuid: string) {
+    const existingUser = await this.getByUuid(uuid);
 
     if (!existingUser) {
       throw new ServiceNotFoundException(
-        `User with provided email not found ${email}`,
+        `User with provided uuid ${uuid} was not found`,
       );
     }
 
     return this.userRepository.softRemove(existingUser);
   }
 
-  async get(email: string) {
+  async getByGuid({ bceidGuid, idirUserGuid }: UserGuids) {
+    if (!bceidGuid && !idirUserGuid) {
+      throw new Error('Need to pass either bceidGuid or idirUserGuide');
+    }
+
     return await this.userRepository.findOne({
       where: {
-        email,
+        bceidGuid,
+        idirUserGuid,
       },
     });
   }
@@ -81,7 +91,7 @@ export class UserService {
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
-<a href='https://bcgov.github.io/sso-requests/my-dashboard/integrations'>CSS</a>`;
+<a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
 
     await this.emailService.sendEmail({
       to: this.config.get('EMAIL.DEFAULT_ADMINS'),

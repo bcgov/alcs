@@ -33,7 +33,7 @@ describe('CardSubscriber', () => {
     mockUserService = createMock<UserService>();
     subscribersArray = [];
 
-    mockUserService.get.mockResolvedValue({
+    mockUserService.getByGuid.mockResolvedValue({
       uuid: 'fake-uuid',
     } as User);
     updateEvent = createMock<UpdateEvent<Card>>();
@@ -87,7 +87,7 @@ describe('CardSubscriber', () => {
   });
 
   it('should throw an error if user is not found', async () => {
-    mockUserService.get.mockResolvedValue(undefined);
+    mockUserService.getByGuid.mockResolvedValue(undefined);
 
     await expect(
       cardSubscriber.beforeUpdate(updateEvent),

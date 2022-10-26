@@ -14,7 +14,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
-import { RoleGuard } from '../../common/authorization/role.guard';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import {
   ANY_AUTH_ROLE,
   ROLES_ALLOWED_BOARDS,
@@ -25,7 +25,7 @@ import { CardService } from '../card.service';
 import { CardSubtaskDto, UpdateCardSubtaskDto } from './card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 @Controller('card-subtask')
 export class CardSubtaskController {
   constructor(

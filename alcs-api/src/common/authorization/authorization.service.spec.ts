@@ -45,11 +45,14 @@ describe('AuthorizationService', () => {
       } as any),
     );
 
-    mockUserService.create.mockResolvedValue(createMock<Promise<User>>());
-    mockUserService.sendNewUserRequestEmail.mockResolvedValue(
-      createMock<Promise<void>>(),
-    );
-    mockUserService.get.mockResolvedValue(null);
+    mockUserService.create.mockResolvedValue({
+      clientRoles: [],
+      bceidGuid: '',
+      displayName: '',
+    } as User);
+
+    mockUserService.getByGuid.mockResolvedValue(null);
+    mockUserService.sendNewUserRequestEmail.mockResolvedValue(null);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -89,6 +92,7 @@ describe('AuthorizationService', () => {
 
   it('should call out CreateUser and SendEmail on receiving token if user is not registered', async () => {
     await service.exchangeCodeForToken('fake-code');
+
     expect(mockUserService.create).toBeCalledTimes(1);
     expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(1);
   });
@@ -97,13 +101,15 @@ describe('AuthorizationService', () => {
     mockUserService.create.mockResolvedValue({
       clientRoles: ['fake-role'],
     } as User);
+
     await service.exchangeCodeForToken('fake-code');
+
     expect(mockUserService.create).toBeCalledTimes(1);
     expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
   });
 
   it('should not call out CreateUser on receiving token if user is registered', async () => {
-    mockUserService.get.mockResolvedValue(createMock<User>({} as User));
+    mockUserService.getByGuid.mockResolvedValue(createMock<User>({} as User));
     mockUserService.update.mockResolvedValue(createMock<User>({} as User));
     await service.exchangeCodeForToken('fake-code');
     expect(mockUserService.create).toBeCalledTimes(0);
