@@ -27,6 +27,7 @@ export class DecisionComponent implements OnInit {
   outcomes: ApplicationDecisionOutcomeTypeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
+  isPaused = true;
 
   constructor(
     public dialog: MatDialog,
@@ -41,6 +42,7 @@ export class DecisionComponent implements OnInit {
       if (application) {
         this.fileNumber = application.fileNumber;
         this.decisionDate = application.decisionDate;
+        this.isPaused = application.paused;
         this.loadDecisions(application.fileNumber);
       }
     });

@@ -1,6 +1,11 @@
 <div class="split">
   <h3>Decision</h3>
-  <button mat-flat-button color="primary" (click)="onCreate()">+ New Decision</button>
+  <div
+    matTooltip="This application is currently paused. Only active applications can have decisions."
+    [matTooltipDisabled]="!isPaused"
+  >
+    <button [disabled]="isPaused" mat-flat-button color="primary" (click)="onCreate()">+ New Decision</button>
+  </div>
 </div>
 <section class="no-decisions" *ngIf="!decisions.length">
   <div>No Decisions</div>
