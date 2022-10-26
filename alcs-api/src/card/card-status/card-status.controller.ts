@@ -1,15 +1,15 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from 'nest-keycloak-connect';
 import { AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { CardStatusDto } from './card-status.dto';
 import { CardStatusService } from './card-status.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('card-status')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class CardStatusController {
   constructor(private cardStatusService: CardStatusService) {}
 

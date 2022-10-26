@@ -2,30 +2,34 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoleGuard } from '../common/authorization/role.guard';
+import { ClsService } from 'nestjs-cls';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
-import {
-  initMockAssigneeDto,
-  initMockUserDto,
-} from '../common/utils/test-helpers/mockEntities';
+import { initMockUserDto } from '../common/utils/test-helpers/mockEntities';
+import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { UserController } from './user.controller';
+import { UserDto } from './user.dto';
+import { User } from './user.entity';
 import { UserService } from './user.service';
-
-jest.mock('../common/authorization/role.guard', () => ({
-  RoleGuard: createMock<RoleGuard>(),
-}));
 
 describe('UserController', () => {
   let controller: UserController;
   let mockService: DeepMocked<UserService>;
-  let mockRes;
+  let mockUser: Partial<User>;
+  let mockUserDto: UserDto;
   let request;
 
   beforeEach(async () => {
     mockService = createMock<UserService>();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController, UserProfile],
       providers: [
+        {
+          provide: ClsService,
+          useValue: {},
+        },
+        ...mockKeyCloakProviders,
+        //Keep this below mockKeyCloak as it overrides the one from there
         {
           provide: UserService,
           useValue: mockService,
@@ -46,19 +50,32 @@ describe('UserController', () => {
       },
     };
 
-    mockRes = {
+    mockUser = {
       email: 'bruce@wayne.com',
-      name: 'bruce',
-      displayName: 'bruce wayne',
+      name: 'bruce wayne',
       identityProvider: 'test',
-      preferredUsername: 'wayne',
-      givenName: 'bruce',
-      familyName: 'wayne',
-      idirUserGuid: '001bat',
       idirUserName: 'bat',
-      initials: 'BW',
-      mentionLabel: 'BruceWayne',
+      clientRoles: [],
+      bceidUserName: '',
       uuid: undefined,
+      settings: {
+        favoriteBoards: ['cats'],
+      },
+    };
+
+    mockUserDto = {
+      email: 'bruce@wayne.com',
+      name: 'bruce wayne',
+      identityProvider: 'test',
+      initials: 'b',
+      mentionLabel: '',
+      idirUserName: 'bat',
+      clientRoles: [],
+      bceidUserName: '',
+      uuid: undefined,
+      settings: {
+        favoriteBoards: ['cats'],
+      },
     };
 
     controller = module.get<UserController>(UserController);
@@ -68,45 +85,54 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
   it('should call listUser on the service', async () => {
-    mockService.getAll.mockResolvedValue([mockRes]);
+    mockService.getAll.mockResolvedValue([mockUser as User]);
+
     const res = await controller.getUsers();
-    expect(res).toEqual([mockRes]);
+
+    expect(res).toEqual([mockUserDto]);
     expect(mockService.getAll).toHaveBeenCalledTimes(1);
   });
 
   it('should call deleteUser on the service', async () => {
-    mockService.delete.mockResolvedValue(mockRes);
+    mockService.delete.mockResolvedValue(mockUser as User);
+
     const res = await controller.deleteUser('');
-    expect(res).toEqual(mockRes);
+
+    expect(res).toEqual(mockUserDto);
     expect(mockService.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call update user on the service', async () => {
     const mockUserDto = initMockUserDto();
-    mockService.get.mockResolvedValueOnce(mockRes);
+    mockService.getByUuid.mockResolvedValueOnce(mockUser as User);
     mockService.update.mockResolvedValueOnce(undefined);
-    request.user.entity.uuid = mockRes.uuid = mockUserDto.uuid;
+    request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
-    await controller.update(mockUserDto, request);
+    await controller.update(mockUserDto.uuid, mockUserDto, request);
 
     expect(mockService.update).toBeCalledTimes(1);
   });
 
   it('should fail on user update if user not found', async () => {
-    mockService.get.mockResolvedValueOnce(undefined);
+    mockService.getByUuid.mockResolvedValueOnce(undefined);
     const mockUserDto = initMockUserDto();
+    request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
-    await expect(controller.update(mockUserDto, request)).rejects.toMatchObject(
-      new Error(`User with provided email not found ${mockUserDto.email}`),
+    await expect(
+      controller.update(mockUserDto.uuid, mockUserDto, request),
+    ).rejects.toMatchObject(
+      new Error(`User with uuid not found ${mockUserDto.uuid}`),
     );
   });
 
   it('should fail on user update if current user does not mach updating user', async () => {
     const mockUserDto = initMockUserDto();
-    mockService.get.mockResolvedValueOnce(mockRes);
+    mockService.getByUuid.mockResolvedValueOnce(mockUser as User);
     mockService.update.mockResolvedValueOnce(undefined);
 
-    await expect(controller.update(mockUserDto, request)).rejects.toMatchObject(
+    await expect(
+      controller.update(mockUserDto.uuid, mockUserDto, request),
+    ).rejects.toMatchObject(
       new Error('You can update only your user details.'),
     );
   });

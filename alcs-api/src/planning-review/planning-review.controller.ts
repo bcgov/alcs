@@ -1,19 +1,16 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from 'nest-keycloak-connect';
 import { BoardService } from '../board/board.service';
-import {
-  ANY_AUTH_ROLE,
-  ROLES_ALLOWED_BOARDS,
-} from '../common/authorization/roles';
+import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CreatePlanningReviewDto } from './planning-review.dto';
 import { PlanningReviewService } from './planning-review.service';
 
 @Controller('planning-review')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class PlanningReviewController {
   constructor(
     private planningReviewService: PlanningReviewService,

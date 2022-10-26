@@ -2,12 +2,12 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { BoardSmallDto } from '../board/board.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { RoleGuard } from '../common/authorization/role.guard';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { ConfigModule } from '../common/config/config.module';
@@ -22,10 +22,6 @@ import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-
-jest.mock('../common/authorization/role.guard', () => ({
-  RoleGuard: createMock<RoleGuard>(),
-}));
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
@@ -83,6 +79,10 @@ describe('ApplicationController', () => {
         {
           provide: CardService,
           useValue: cardService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],

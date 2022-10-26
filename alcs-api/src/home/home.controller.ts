@@ -13,7 +13,7 @@ import { ApplicationService } from '../application/application.service';
 import { HomepageSubtaskDTO } from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
-import { RoleGuard } from '../common/authorization/role.guard';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
@@ -24,7 +24,7 @@ import { User } from '../user/user.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('home')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class HomeController {
   constructor(
     @InjectMapper() private mapper: Mapper,

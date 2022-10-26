@@ -1,5 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { mockKeyCloakProviders } from './common/utils/test-helpers/mockTypes';
@@ -21,6 +22,10 @@ describe('AppController', () => {
         {
           provide: AppService,
           useValue: mockAppService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],

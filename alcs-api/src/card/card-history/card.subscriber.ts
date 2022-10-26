@@ -29,8 +29,8 @@ export class CardSubscriber implements EntitySubscriberInterface<Card> {
     const oldApplication = event.databaseEntity;
     const newApplication = event.entity as Card;
 
-    const userEmail = this.cls.get('userEmail');
-    const user = await this.userService.get(userEmail);
+    const userGuids = this.cls.get('userGuids');
+    const user = await this.userService.getByGuid(userGuids);
     if (!user) {
       throw new Error('User not found from token! Has their email changed?');
     }

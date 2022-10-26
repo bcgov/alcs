@@ -13,7 +13,7 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { CardService } from '../card/card.service';
-import { RoleGuard } from '../common/authorization/role.guard';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CONFIG_TOKEN } from '../common/config/config.module';
@@ -29,7 +29,7 @@ import { ApplicationService } from './application.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,

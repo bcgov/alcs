@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JWK, JWS } from 'node-jose';
 import { firstValueFrom } from 'rxjs';
-import { CreateOrUpdateUserDto } from '../../user/user.dto';
+import { CreateUserDto } from '../../user/user.dto';
 import { UserService } from '../../user/user.service';
 import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
@@ -22,8 +22,8 @@ export type TokenResponse = {
   scope: string;
 };
 
-type BaseToken = {
-  identity_provider: string;
+export type BaseToken = {
+  identity_provider: 'idir' | 'bceidboth';
   preferred_username: string;
   display_name: string;
   email: string;
@@ -52,8 +52,8 @@ export class AuthorizationService {
   private logger: Logger = new Logger(AuthorizationService.name);
 
   constructor(
-    private httpService: HttpService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
+    private httpService: HttpService,
     private userService: UserService,
   ) {
     this.initKeys();
@@ -98,7 +98,6 @@ export class AuthorizationService {
         Buffer.from(payload.payload).toString(),
       ) as BaseToken;
       this.logger.debug(decodedToken);
-
       await this.registerOrUpdateUser(decodedToken);
 
       return res.data;
@@ -127,7 +126,7 @@ export class AuthorizationService {
     return res.data;
   }
 
-  private mapUserFromTokenToCreateDto(user: BaseToken): CreateOrUpdateUserDto {
+  private mapUserFromTokenToCreateDto(user: BaseToken): CreateUserDto {
     if (user.identity_provider === 'idir') {
       const idirToken = user as IdirToken;
       return {
@@ -147,6 +146,7 @@ export class AuthorizationService {
       const bceidToken = user as BCeIDBasicToken;
       return {
         email: bceidToken.email,
+        name: bceidToken.display_name,
         displayName: bceidToken.display_name,
         identityProvider: bceidToken.identity_provider,
         preferredUsername: bceidToken.preferred_username,
@@ -158,7 +158,12 @@ export class AuthorizationService {
   }
 
   private async registerOrUpdateUser(payload: BaseToken) {
-    const existingUser = await this.userService.get(payload.email);
+    const bceidGuid = payload['bceid_user_guid'];
+    const idirUserGuid = payload['idir_user_guid'];
+    const existingUser = await this.userService.getByGuid({
+      idirUserGuid,
+      bceidGuid,
+    });
     if (existingUser) {
       await this.userService.update(
         existingUser.uuid,
@@ -173,7 +178,7 @@ export class AuthorizationService {
       if (user.clientRoles.length === 0) {
         await this.userService.sendNewUserRequestEmail(
           user.email,
-          user.displayName ?? user.bceidGuid,
+          user.bceidGuid ?? user.displayName,
         );
       }
     }

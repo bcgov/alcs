@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from '../common/authorization/role.guard';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CommentDto, CreateCommentDto, UpdateCommentDto } from './comment.dto';
@@ -26,7 +26,7 @@ import { CommentMention } from './mention/comment-mention.entity';
 
 @Controller('comment')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class CommentController {
   constructor(
     private commentService: CommentService,

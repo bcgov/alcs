@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from '../../common/authorization/role.guard';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationDocumentDto } from './application-document.dto';
@@ -25,7 +25,7 @@ import {
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 @Controller('application-document')
 export class ApplicationDocumentController {
   constructor(

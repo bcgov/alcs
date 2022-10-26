@@ -5,7 +5,7 @@ import {
   EventSubscriber,
   UpdateEvent,
 } from 'typeorm';
-import { UserService } from '../../user/user.service';
+import { UserGuids, UserService } from '../../user/user.service';
 import { Base } from './base.entity';
 
 export const SYSTEM_ID = 'alcs-api';
@@ -25,25 +25,25 @@ export class AuditSubscriber implements EntitySubscriberInterface {
   }
 
   async beforeInsert(event: UpdateEvent<any>) {
-    const userEmail = this.cls.get('userEmail');
-    if (userEmail) {
-      event.entity.auditCreatedBy = await this.fetchUserUuid(userEmail);
+    const userGuids = this.cls.get('userGuids');
+    if (userGuids) {
+      event.entity.auditCreatedBy = await this.fetchUserUuid(userGuids);
     } else {
       event.entity.auditCreatedBy = SYSTEM_ID;
     }
   }
 
   async beforeUpdate(event: UpdateEvent<any>) {
-    const userEmail = this.cls.get('userEmail');
-    if (userEmail) {
-      event.entity.auditUpdatedBy = await this.fetchUserUuid(userEmail);
+    const userGuids = this.cls.get('userGuids');
+    if (userGuids) {
+      event.entity.auditUpdatedBy = await this.fetchUserUuid(userGuids);
     } else {
       event.entity.auditUpdatedBy = SYSTEM_ID;
     }
   }
 
-  private async fetchUserUuid(userEmail: string) {
-    const user = await this.userService.get(userEmail);
+  private async fetchUserUuid(guids: UserGuids) {
+    const user = await this.userService.getByGuid(guids);
     if (!user) {
       throw new Error('User not found from token! Has their email changed?');
     }

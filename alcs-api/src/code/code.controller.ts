@@ -3,12 +3,12 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RoleGuard } from 'nest-keycloak-connect';
 import { ReconsiderationTypeDto } from '../application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { MasterCodesDto } from './application-code/application-code.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
@@ -19,7 +19,7 @@ import { CodeService } from './code.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('code')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class CodeController {
   constructor(
     private codeService: CodeService,

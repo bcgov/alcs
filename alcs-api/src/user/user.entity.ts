@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { Card } from '../card/card.entity';
 import { CommentMention } from '../comment/mention/comment-mention.entity';
 import { Base } from '../common/entities/base.entity';
@@ -12,7 +12,7 @@ export class UserSettings {
 @Entity()
 export class User extends Base {
   @AutoMap()
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @AutoMap()
@@ -40,6 +40,7 @@ export class User extends Base {
   familyName: string;
 
   @AutoMap()
+  @Index({ unique: true })
   @Column({ nullable: true })
   idirUserGuid: string;
 
@@ -48,6 +49,7 @@ export class User extends Base {
   idirUserName: string;
 
   @AutoMap()
+  @Index({ unique: true })
   @Column({ nullable: true })
   bceidGuid: string;
 

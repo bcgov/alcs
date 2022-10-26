@@ -1,36 +1,20 @@
-export interface UserDto {
-  uuid: string;
-
-  email: string;
-
-  name: string;
-
-  displayName: string;
-
-  identityProvider: string;
-
-  preferredUsername: string;
-
-  givenName?: string;
-
-  familyName?: string;
-
-  idirUserGuid?: string;
-
-  idirUserName?: string;
-
-  bceidUserName?: string;
-
-  initials: string;
-
-  mentionLabel: string;
-
-  settings: IUserSettings;
-
-  clientRoles: string[];
+export interface UpdateUserDto {
+  settings: UserSettingsDto;
 }
 
-export interface IUserSettings {
+export interface UserDto extends UpdateUserDto {
+  uuid: string;
+  initials: string;
+  mentionLabel: string;
+  email: string;
+  name: string;
+  identityProvider: string;
+  clientRoles: string[];
+  idirUserName: string;
+  bceidUserName: string;
+}
+
+export interface UserSettingsDto {
   favoriteBoards: string[];
 }
 

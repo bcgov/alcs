@@ -1,5 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { initCardMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { CardController } from './card.controller';
@@ -19,8 +20,12 @@ describe('CardController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CardController],
       providers: [
-        ...mockKeyCloakProviders,
         { provide: CardService, useValue: cardService },
+        {
+          provide: ClsService,
+          useValue: {},
+        },
+        ...mockKeyCloakProviders,
       ],
     }).compile();
 

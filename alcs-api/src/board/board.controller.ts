@@ -7,7 +7,7 @@ import { ApplicationReconsiderationService } from '../application-reconsideratio
 import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
-import { RoleGuard } from '../common/authorization/role.guard';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import {
   ANY_AUTH_ROLE,
   ROLES_ALLOWED_BOARDS,
@@ -21,7 +21,7 @@ import { BoardService } from './board.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('board')
-@UseGuards(RoleGuard)
+@UseGuards(RolesGuard)
 export class BoardController {
   constructor(
     private boardService: BoardService,

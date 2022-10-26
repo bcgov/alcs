@@ -2,6 +2,7 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
 import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
@@ -45,6 +46,10 @@ describe('ApplicationReconsiderationController', () => {
         {
           provide: BoardService,
           useValue: mockBoardService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],

@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatestWith, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService, ICurrentUser } from '../authentication/authentication.service';
 import { ToastService } from '../toast/toast.service';
-import { UserDto } from './user.dto';
+import { UpdateUserDto, UserDto } from './user.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +41,7 @@ export class UserService {
     this.$users.next(this.users);
   }
 
-  public async updateUser(user: UserDto) {
+  public async updateUser(uuid: string, user: UpdateUserDto) {
     try {
       await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user`, user));
       await this.fetchUsers();
