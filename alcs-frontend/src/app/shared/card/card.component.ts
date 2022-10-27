@@ -36,6 +36,7 @@ export enum CardType {
   APP = 'APP',
   RECON = 'RECON',
   PLAN = 'PLAN',
+  AMEND = 'AMEND',
 }
 
 @Component({

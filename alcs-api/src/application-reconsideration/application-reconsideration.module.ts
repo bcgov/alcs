@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../application/application.module';
 import { BoardModule } from '../board/board.module';
@@ -15,7 +15,7 @@ import { ApplicationReconsiderationType } from './reconsideration-type/applicati
       ApplicationReconsideration,
       ApplicationReconsiderationType,
     ]),
-    BoardModule,
+    forwardRef(() => BoardModule),
     ApplicationModule,
     CardModule,
   ],

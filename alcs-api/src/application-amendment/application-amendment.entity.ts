@@ -4,11 +4,10 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { Card } from '../card/card.entity';
 import { Base } from '../common/entities/base.entity';
-import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Entity()
-export class ApplicationReconsideration extends Base {
-  constructor(data?: Partial<ApplicationReconsideration>) {
+export class ApplicationAmendment extends Base {
+  constructor(data?: Partial<ApplicationAmendment>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -20,14 +19,12 @@ export class ApplicationReconsideration extends Base {
   submittedDate: Date;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationReconsiderationType, {
-    nullable: false,
-  })
-  type: ApplicationReconsiderationType;
-
-  @AutoMap()
   @Column({ nullable: true })
   isReviewApproved: boolean;
+
+  @AutoMap()
+  @Column()
+  isTimeExtension: boolean;
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })

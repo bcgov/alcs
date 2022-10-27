@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationAmendmentModule } from '../application-amendment/application-amendment.module';
 import { ApplicationReconsiderationModule } from '../application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from '../application/application.module';
 import { CardModule } from '../card/card.module';
@@ -16,6 +17,7 @@ import { BoardService } from './board.service';
     ApplicationModule,
     CardModule,
     forwardRef(() => ApplicationReconsiderationModule),
+    forwardRef(() => ApplicationAmendmentModule),
     PlanningReviewModule,
   ],
   controllers: [BoardController],

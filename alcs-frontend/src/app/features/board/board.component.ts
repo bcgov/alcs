@@ -3,6 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { ApplicationAmendmentDto } from '../../services/application/application-amendment/application-amendment.dto';
+import { ApplicationAmendmentService } from '../../services/application/application-amendment/application-amendment.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
@@ -14,6 +16,8 @@ import { PlanningReviewService } from '../../services/planning-review/planning-r
 import { ToastService } from '../../services/toast/toast.service';
 import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
+import { AMENDMENT_TYPE_LABEL, AmendmentDialogComponent } from './dialogs/amendment/amendment-dialog.component';
+import { CreateAmendmentDialogComponent } from './dialogs/amendment/create/create-amendment-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
@@ -45,6 +49,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   boardTitle = '';
   boardIsFavourite: boolean = false;
   boardHasPlanningReviews: boolean = false;
+  boardHasAmendments: boolean = false;
   createCardTitle = '';
 
   selectedBoardCode?: string;
@@ -60,7 +65,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     private router: Router,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private planningReviewService: PlanningReviewService
+    private planningReviewService: PlanningReviewService,
+    private amendmentService: ApplicationAmendmentService
   ) {}
 
   ngOnInit() {
@@ -115,6 +121,12 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
+  onCreateAmendment() {
+    this.openDialog(CreateAmendmentDialogComponent, {
+      currentBoardCode: this.selectedBoardCode,
+    });
+  }
+
   onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
     switch ($event.cardTypeCode) {
       case CardType.APP:
@@ -128,6 +140,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         break;
       case CardType.RECON:
       case CardType.PLAN:
+      case CardType.AMEND:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -137,6 +150,8 @@ export class BoardComponent implements OnInit, OnDestroy {
             this.toastService.showSuccessToast('Card updated');
           });
         break;
+      default:
+        console.error('Card type is not configured for dropped event');
     }
   }
 
@@ -155,6 +170,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
     this.boardHasPlanningReviews = board.code === BOARD_TYPE_CODES.EXEC;
+    this.boardHasAmendments = board.code === BOARD_TYPE_CODES.CEO;
     const allStatuses = board.statuses.map((status) => status.statusCode);
 
     this.columns = board.statuses.map((status) => ({
@@ -165,10 +181,11 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private async loadCards(boardCode: string) {
-    const apps = await this.boardService.fetchCards(boardCode);
-    const mappedApps = apps.applications.map(this.mapApplicationDtoToCard.bind(this));
-    const mappedRecons = apps.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
-    const mappedReviewMeetings = apps.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
+    const thingsWithCards = await this.boardService.fetchCards(boardCode);
+    const mappedApps = thingsWithCards.applications.map(this.mapApplicationDtoToCard.bind(this));
+    const mappedRecons = thingsWithCards.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
+    const mappedReviewMeetings = thingsWithCards.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
+    const mappedAmendments = thingsWithCards.amendments.map(this.mapAmendmentToCard.bind(this));
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings].sort((a, b) => {
         if (a.highPriority === b.highPriority) {
@@ -181,10 +198,12 @@ export class BoardComponent implements OnInit, OnDestroy {
       sorted.push(
         // high priority
         ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedAmendments.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // none high priority
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedAmendments.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived)
       );
@@ -217,6 +236,22 @@ export class BoardComponent implements OnInit, OnDestroy {
       id: recon.card.uuid,
       labels: [recon.application.type, RECON_TYPE_LABEL],
       cardType: CardType.RECON,
+      paused: false,
+      highPriority: recon.card.highPriority,
+      cardUuid: recon.card.uuid,
+      decisionMeetings: recon.application.decisionMeetings,
+      dateReceived: recon.submittedDate,
+    };
+  }
+
+  private mapAmendmentToCard(recon: ApplicationAmendmentDto): CardData {
+    return {
+      status: recon.card.status.code,
+      title: `${recon.application.fileNumber} (${recon.application.applicant})`,
+      assignee: recon.card.assignee,
+      id: recon.card.uuid,
+      labels: [recon.application.type, AMENDMENT_TYPE_LABEL],
+      cardType: CardType.AMEND,
       paused: false,
       highPriority: recon.card.highPriority,
       cardUuid: recon.card.uuid,
@@ -279,6 +314,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.PLAN:
           const planningReview = await this.planningReviewService.fetchByCardUuid(card.uuid);
           this.openDialog(PlanningReviewDialogComponent, planningReview);
+          break;
+        case CardType.AMEND:
+          const amendment = await this.amendmentService.fetchByCardUuid(card.uuid);
+          this.openDialog(AmendmentDialogComponent, amendment);
           break;
         default:
           console.error('Card type is not configured for a dialog');

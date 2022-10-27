@@ -86,6 +86,7 @@ export class ApplicationReconsiderationService {
 
     const newReconsideration = new ApplicationReconsideration({
       submittedDate: new Date(reconsideration.submittedDate),
+      type,
     });
 
     newReconsideration.card = await this.cardService.create(
@@ -93,7 +94,6 @@ export class ApplicationReconsiderationService {
       board,
       false,
     );
-    newReconsideration.type = type;
 
     newReconsideration.application = await this.getOrCreateApplication(
       reconsideration,

@@ -7,14 +7,17 @@
       </h2>
     </div>
     <div class="button-container">
-      <ng-container *ngIf="boardHasPlanningReviews">
+      <ng-container *ngIf="boardHasPlanningReviews || boardHasAmendments">
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
           <button mat-menu-item (click)="onCreate()">Reconsideration</button>
-          <button mat-menu-item (click)="onCreatePlanningReview()">Planning Review</button>
+          <button *ngIf="boardHasPlanningReviews" mat-menu-item (click)="onCreatePlanningReview()">
+            Planning Review
+          </button>
+          <button *ngIf="boardHasAmendments" mat-menu-item (click)="onCreateAmendment()">Amendment</button>
         </mat-menu>
       </ng-container>
-      <button *ngIf="!boardHasPlanningReviews" mat-flat-button color="primary" (click)="onCreate()">
+      <button *ngIf="!boardHasPlanningReviews && !boardHasAmendments" mat-flat-button color="primary" (click)="onCreate()">
         {{ createCardTitle }}
       </button>
     </div>

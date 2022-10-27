@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { AMENDMENT_TYPE_LABEL } from '../../features/board/dialogs/amendment/amendment-dialog.component';
+import { ApplicationAmendmentDto } from '../../services/application/application-amendment/application-amendment.dto';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
@@ -24,8 +26,19 @@ export class ApplicationHeaderComponent {
     }
   }
   @Input() reconsiderations: ApplicationReconsiderationDto[] = [];
+
+  @Input() set amendments(amendments: ApplicationAmendmentDto[]) {
+    this.showAmendmentLabel = amendments.reduce((showLabel, amendment) => {
+      return amendment.isReviewApproved === null;
+    }, false);
+    this._amendments = amendments;
+  }
+  _amendments: ApplicationAmendmentDto[] = [];
+
   reconLabel = RECON_TYPE_LABEL;
+  amendmentLabel = AMENDMENT_TYPE_LABEL;
   showCardMenu = false;
+  showAmendmentLabel = false;
 
   constructor(private router: Router) {}
 

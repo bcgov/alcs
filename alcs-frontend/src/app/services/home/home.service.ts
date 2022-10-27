@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ApplicationAmendmentDto } from '../application/application-amendment/application-amendment.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
@@ -19,6 +20,7 @@ export class HomeService {
         applications: ApplicationDto[];
         reconsiderations: ApplicationReconsiderationDto[];
         planningReviews: PlanningReviewDto[];
+        amendments: ApplicationAmendmentDto[];
       }>(`${environment.apiUrl}/home/assigned`)
     );
   }

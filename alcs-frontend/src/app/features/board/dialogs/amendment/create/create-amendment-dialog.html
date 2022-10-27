@@ -1,0 +1,173 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Create Amendment</h2>
+</div>
+<form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="two-item-row">
+      <mat-form-field appearance="outline">
+        <mat-label>File ID</mat-label>
+        <input
+          id="fileNumber"
+          matInput
+          placeholder="791262"
+          formControlName="fileNumber"
+          [matAutocomplete]="auto"
+          [class.valid]="
+            createForm.get('fileNumber')!.valid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('fileNumber')!.invalid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+        />
+
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="autocompleteDisplay">
+          <mat-option
+            *ngFor="let option of filteredApplications | async"
+            [value]="option"
+            (onSelectionChange)="onApplicationSelected($event)"
+          >
+            {{ option.fileNumber }}
+          </mat-option>
+        </mat-autocomplete>
+
+        <mat-error
+          class="text-danger"
+          *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
+        >
+          This field is required.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Applicant Last Name</mat-label>
+        <input
+          matInput
+          id="applicant"
+          formControlName="applicant"
+          type="text"
+          [class.valid]="
+            createForm.get('applicant')!.valid &&
+            (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('applicant')!.invalid &&
+            (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
+          "
+        />
+        <mat-error
+          class="text-danger"
+          *ngIf="createForm.get('applicant')!.touched && createForm.get('applicant')!.hasError('required')"
+        >
+          This field is required.
+        </mat-error>
+      </mat-form-field>
+      <div class="full-grid">
+        <ng-select
+          appearance="outline"
+          class="card-type"
+          [items]="applicationTypes"
+          appendTo="body"
+          placeholder="Type *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="applicationType"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            <div class="application-type">
+              <div
+                [style]="{
+                  'background-color': item.backgroundColor
+                }"
+                class="application-color"
+              ></div>
+              <span>{{ item.label }}</span>
+            </div>
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item">
+            <div class="application-type">
+              <div
+                [style]="{
+                  'background-color': item.backgroundColor
+                }"
+                class="application-color"
+              ></div>
+              <span>{{ item.label }}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          appearance="outline"
+          class="card-local-government"
+          [items]="localGovernments"
+          appendTo="body"
+          placeholder="Local Government *"
+          bindLabel="name"
+          bindValue="uuid"
+          [clearable]="false"
+          formControlName="localGovernment"
+          (change)="onSelectGovernment($event)"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.name }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          appearance="outline"
+          class="card-region"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Region *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="region"
+        >
+        </ng-select>
+      </div>
+      <div>
+        <mat-label class="toggle-label">Condition to be Modified</mat-label>
+        <mat-button-toggle-group id="isTimeExtension" formControlName="isTimeExtension" name="isTimeExtension">
+          <mat-button-toggle value="true">Time extension</mat-button-toggle>
+          <mat-button-toggle value="false">Other</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div>
+        <mat-form-field class="date-picker" appearance="outline">
+          <mat-label>Request Submitted to ALC</mat-label>
+          <input
+            matInput
+            (click)="datePicker.open()"
+            [matDatepicker]="datePicker"
+            formControlName="submittedDate"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker type="date"> </mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="warning-section">
+      <div class="warning" *ngIf="isDecisionDateEmpty"><mat-icon>warning</mat-icon>File does not have a decision</div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div>
+      <button type="reset" class="button-container" (click)="onReset()" mat-stroked-button color="primary">
+        Reset
+      </button>
+    </div>
+    <div class="btn-wrapper-right">
+      <button class="button-container" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

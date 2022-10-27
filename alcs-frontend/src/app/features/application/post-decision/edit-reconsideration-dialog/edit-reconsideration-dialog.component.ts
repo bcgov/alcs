@@ -8,11 +8,11 @@ import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
 @Component({
-  selector: 'app-post-decision-dialog',
-  templateUrl: './post-decision-dialog.component.html',
-  styleUrls: ['./post-decision-dialog.component.scss'],
+  selector: 'app-edit-reconsideration-dialog',
+  templateUrl: './edit-reconsideration-dialog.component.html',
+  styleUrls: ['./edit-reconsideration-dialog.component.scss'],
 })
-export class PostDecisionDialogComponent {
+export class EditReconsiderationDialogComponent {
   isLoading = false;
   codes: BaseCodeDto[] = [];
 
@@ -33,7 +33,7 @@ export class PostDecisionDialogComponent {
       existingDecision: ApplicationReconsiderationDetailedDto;
       codes: BaseCodeDto[];
     },
-    private dialogRef: MatDialogRef<PostDecisionDialogComponent>,
+    private dialogRef: MatDialogRef<EditReconsiderationDialogComponent>,
     private applicationReconsiderationService: ApplicationReconsiderationService,
     private toastService: ToastService
   ) {

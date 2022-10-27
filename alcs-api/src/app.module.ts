@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as config from 'config';
@@ -9,6 +9,7 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ApplicationAmendmentModule } from './application-amendment/application-amendment.module';
 import { ApplicationReconsiderationModule } from './application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
@@ -52,6 +53,7 @@ import { CommissionerModule } from './commissioner/commissioner.module';
     BoardModule,
     ApplicationReconsiderationModule,
     PlanningReviewModule,
+    ApplicationAmendmentModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: config.get('LOG_LEVEL'),

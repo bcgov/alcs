@@ -1,32 +1,32 @@
 <div mat-dialog-title>
   <div class="close">
-    <button mat-icon-button [mat-dialog-close]="isApplicationDirty">
+    <button mat-icon-button [mat-dialog-close]="isDirty">
       <mat-icon>close</mat-icon>
     </button>
   </div>
   <div class="header-row">
     <div class="left">
       <h3 class="card-title">
-        {{ recon.application.fileNumber }} ({{ recon.application.applicant }})
+        {{ amendment.application.fileNumber }} ({{ amendment.application.applicant }})
         <span
           class="center application-type"
           [ngStyle]="{
-            backgroundColor: recon.application.type.backgroundColor,
-            color: recon.application.type.textColor,
-            borderColor: recon.application.type.backgroundColor
+            backgroundColor: amendment.application.type.backgroundColor,
+            color: amendment.application.type.textColor,
+            borderColor: amendment.application.type.backgroundColor
           }"
         >
-          {{ recon.application.type.label }}
+          {{ amendment.application.type.label }}
         </span>
         <span
           class="center application-type"
           [ngStyle]="{
-            backgroundColor: reconType.backgroundColor,
-            color: reconType.textColor,
-            borderColor: reconType.borderColor
+            backgroundColor: amendmentType.backgroundColor,
+            color: amendmentType.textColor,
+            borderColor: amendmentType.borderColor
           }"
         >
-          {{ reconType.label }}
+          {{ amendmentType.label }}
         </span>
       </h3>
     </div>
@@ -34,35 +34,23 @@
       <button
         color="accent"
         mat-flat-button
-        [mat-dialog-close]="isApplicationDirty"
-        [routerLink]="['application', recon.application.fileNumber]"
+        [mat-dialog-close]="isDirty"
+        [routerLink]="['application', amendment.application.fileNumber]"
       >
         View Detail
       </button>
     </div>
   </div>
   <div>
-    <span class="region">{{ recon.application.localGovernment }} - {{ recon.application.region.label }} Region</span>
+    <span class="region"
+      >{{ amendment.application.localGovernment }} - {{ amendment.application.region.label }} Region</span
+    >
   </div>
   <div class="header-row">
     <div class="left"></div>
     <div style="margin-right: -16px" class="right">
-      <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
-        <mat-icon>move_down</mat-icon>
-      </button>
-      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
-        <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
-          <span class="favourite-board-icon-container"
-          ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
-          </span>
-          <span>{{ board.title }}</span>
-          <span *ngIf="recon.card.board.code === board.code"
-          ><mat-icon class="selected-board-icon">check</mat-icon></span
-          >
-        </button>
-      </mat-menu>
       <button
-        [matTooltip]="recon.card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        [matTooltip]="amendment.card.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
         mat-icon-button
@@ -70,8 +58,8 @@
         <div
           class="priority"
           [ngClass]="{
-            'filled-priority': recon.card.highPriority,
-            'empty-priority': !recon.card.highPriority
+            'filled-priority': amendment.card.highPriority,
+            'empty-priority': !amendment.card.highPriority
           }"
         ></div>
       </button>
@@ -118,9 +106,9 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks [cardUuid]="recon.card.uuid"></app-subtasks>
+    <app-subtasks [cardUuid]="amendment.card.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
-    <app-comments [cardUuid]="recon.card.uuid"></app-comments>
+    <app-comments [cardUuid]="amendment.card.uuid"></app-comments>
   </div>
 </mat-dialog-content>
