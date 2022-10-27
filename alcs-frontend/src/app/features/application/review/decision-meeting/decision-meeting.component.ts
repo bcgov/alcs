@@ -16,8 +16,13 @@ export class DecisionMeetingComponent implements OnInit {
   displayedColumns: string[] = ['date', 'action'];
   decisionMeetings: ApplicationDecisionMeetingDto[] = [];
 
-  @Input()
-  fileNumber: string = '';
+  _fileNumber: string = '';
+  @Input() set fileNumber(fileNumber: string) {
+    this._fileNumber = fileNumber;
+    if (fileNumber) {
+      this.decisionMeetingService.fetch(this._fileNumber);
+    }
+  }
 
   constructor(
     public dialog: MatDialog,
@@ -27,7 +32,6 @@ export class DecisionMeetingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.decisionMeetingService.fetch(this.fileNumber);
     this.decisionMeetingService.$decisionMeetings.subscribe(
       (meetings) => (this.decisionMeetings = meetings.sort((a, b) => (a.date >= b.date ? -1 : 1)))
     );
@@ -52,7 +56,7 @@ export class DecisionMeetingComponent implements OnInit {
         maxWidth: '800px',
         width: '70%',
         data: {
-          fileNumber: this.fileNumber,
+          fileNumber: this._fileNumber,
           uuid: meeting.uuid,
           date: meeting.date,
         },
@@ -69,7 +73,7 @@ export class DecisionMeetingComponent implements OnInit {
     answer.subscribe((answer) => {
       if (answer) {
         this.decisionMeetingService.delete(uuid).then(() => {
-          this.decisionMeetingService.fetch(this.fileNumber);
+          this.decisionMeetingService.fetch(this._fileNumber);
         });
       }
     });

@@ -118,21 +118,23 @@
 
 <ng-template #applicationPanel let-application>
   <mat-card (click)="openApplication(application.fileNumber)" class="application-panel">
-    <div
-      class="ellipsis"
-      [id]="'title_' + application.fileNumber"
-      matTooltipClass="no-wrap-tooltip"
-      [matTooltip]="application.fileNumber + ' (' + application.applicant + ')'"
-      [matTooltipDisabled]="!isEllipsisActive('title_' + application.fileNumber)"
-    >
-      {{ application.fileNumber }} ({{ application.applicant }})
-    </div>
-    <div>
-      <app-avatar-circle
-        *ngIf="application.assignee"
-        [initials]="application.assignee.initials"
-        [name]="application.assignee.name"
-      ></app-avatar-circle>
+    <div class="split">
+      <div
+        class="ellipsis"
+        [id]="'title_' + application.fileNumber"
+        matTooltipClass="no-wrap-tooltip"
+        [matTooltip]="application.fileNumber + ' (' + application.applicant + ')'"
+        [matTooltipDisabled]="!isEllipsisActive('title_' + application.fileNumber)"
+      >
+        {{ application.fileNumber }} ({{ application.applicant }})
+      </div>
+      <div>
+        <app-avatar-circle
+          *ngIf="application.assignee"
+          [initials]="application.assignee.initials"
+          [name]="application.assignee.name"
+        ></app-avatar-circle>
+      </div>
     </div>
   </mat-card>
 </ng-template>

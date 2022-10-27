@@ -1,25 +1,25 @@
 <div class="header">
-  <div *ngIf="application" class="heading">
+  <div *ngIf="_application" class="heading">
     <div class="center">
-      <h5>{{ application?.fileNumber }} ({{ application?.applicant }})</h5>
+      <h5>{{ _application?.fileNumber }} ({{ _application?.applicant }})</h5>
       <span
         class="application-type"
         [ngStyle]="{
-              backgroundColor: application.type.backgroundColor,
-              color: application.type.textColor,
-              borderColor: application.type.backgroundColor
-            }"
-      >{{ application.type.label }}</span
+          backgroundColor: _application.type.backgroundColor,
+          color: _application.type.textColor,
+          borderColor: _application.type.backgroundColor
+        }"
+        >{{ _application.type.label }}</span
       >
       <span
         *ngIf="reconsiderations.length"
         class="application-type"
         [ngStyle]="{
-              backgroundColor: reconLabel.backgroundColor,
-              color: reconLabel.textColor,
-              borderColor: reconLabel.borderColor
-            }"
-      >{{ reconLabel.label }}</span
+          backgroundColor: reconLabel.backgroundColor,
+          color: reconLabel.textColor,
+          borderColor: reconLabel.borderColor
+        }"
+        >{{ reconLabel.label }}</span
       >
     </div>
     <div *ngIf="showCardMenu" class="center">
@@ -38,46 +38,42 @@
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
           <button mat-menu-item (click)="onGoToCard()">Standard Application</button>
-          <button
-            *ngFor="let recon of reconsiderations; let i = index"
-            mat-menu-item
-            (click)="onGoToReconCard(recon)"
-          >
+          <button *ngFor="let recon of reconsiderations; let i = index" mat-menu-item (click)="onGoToReconCard(recon)">
             Reconsideration Request #{{ i + 1 }}
           </button>
         </mat-menu>
       </ng-container>
     </div>
   </div>
-  <div *ngIf="application" class="sub-heading">
+  <div *ngIf="_application" class="sub-heading">
     <div>
       <div class="subheading2">Local Government:</div>
-      <div class="body1-text">{{ application.localGovernment.name }}</div>
+      <div class="body1-text">{{ _application.localGovernment.name }}</div>
     </div>
     <div *ngIf="!reconsiderations.length">
       <div class="subheading2">Business Days:</div>
       <div class="body1-text left time-tracking">
-        <div *ngIf="!application.paused"><span class="dot"></span>Active</div>
-        <div *ngIf="application.paused"><span class="dot paused"></span>Paused</div>
+        <div *ngIf="!_application.paused"><span class="dot"></span>Active</div>
+        <div *ngIf="_application.paused"><span class="dot paused"></span>Paused</div>
         <div
           matTooltip="Active Days"
           class="card-active-days"
           [ngClass]="{
-                'inactive-timer': application.paused
-              }"
+            'inactive-timer': _application.paused
+          }"
         >
           <mat-icon class="icon">calendar_month</mat-icon>
-          {{ application.activeDays }}
+          {{ _application.activeDays }}
         </div>
         <div
           matTooltip="Paused Days"
           class="card-paused-days"
           [ngClass]="{
-                'inactive-timer': !application.paused
-              }"
+            'inactive-timer': !_application.paused
+          }"
         >
           <mat-icon class="icon">pause</mat-icon>
-          {{ application.pausedDays }}
+          {{ _application.pausedDays }}
         </div>
       </div>
     </div>

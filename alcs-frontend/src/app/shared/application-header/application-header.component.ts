@@ -13,26 +13,27 @@ import { CommissionerApplicationDto } from '../../services/commissioner/commissi
   templateUrl: './application-header.component.html',
   styleUrls: ['./application-header.component.scss'],
 })
-export class ApplicationHeaderComponent implements OnInit {
+export class ApplicationHeaderComponent {
   destroy = new Subject<void>();
-  @Input() application: ApplicationDto | CommissionerApplicationDto | undefined;
+
+  _application: ApplicationDto | CommissionerApplicationDto | undefined;
+  @Input() set application(application: ApplicationDto | CommissionerApplicationDto | undefined) {
+    if (application && 'card' in application) {
+      this.showCardMenu = true;
+      this._application = application;
+    }
+  }
   @Input() reconsiderations: ApplicationReconsiderationDto[] = [];
   reconLabel = RECON_TYPE_LABEL;
   showCardMenu = false;
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    if (this.application && 'card' in this.application) {
-      this.showCardMenu = true;
-    }
-  }
-
   async onGoToCard() {
-    if (this.application && 'card' in this.application) {
-      const boardCode = this.application.card.board.code;
-      const cardUuid = this.application.card.uuid;
-      const cardTypeCode = this.application.card.type;
+    if (this._application && 'card' in this._application) {
+      const boardCode = this._application.card.board.code;
+      const cardUuid = this._application.card.uuid;
+      const cardTypeCode = this._application.card.type;
       await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);
     }
   }
