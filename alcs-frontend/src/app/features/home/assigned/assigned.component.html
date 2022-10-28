@@ -1,44 +1,60 @@
 <div class="assignee">
   <h4>Cards Assigned to Me: {{ sortedFiles.length }}</h4>
-  <table class="assigned-table">
-    <thead>
-      <td style="padding: 4px"></td>
-      <td class="header">Cards</td>
-      <td class="header">Type</td>
-      <td class="header">Active Days</td>
-      <td class="header">Workflow Stage</td>
-    </thead>
-    <tbody class="assigned-body">
-      <tr
-        [ngClass]="{
-          paused: file.paused
-        }"
-        (click)="onSelectCard(file.card)"
-        *ngFor="let file of sortedFiles"
-      >
-        <td class="center" style="padding: 4px">
-          <span class="high-priority" *ngIf="file.highPriority">!</span>
-        </td>
-        <td>{{ file.title }}</td>
-        <td class="labels">
-          <span
-            *ngFor="let type of file.labels"
-            class="type"
-            [ngStyle]="{
-              backgroundColor: type.backgroundColor,
-              color: type.textColor,
-              borderColor: type.borderColor ? type.borderColor : type.backgroundColor
-            }"
-          >
-            <span class="center">{{ type.shortLabel }}</span>
-          </span>
-        </td>
-        <td>{{ file.activeDays ?? '-' }}</td>
-        <td [innerHTML]="file.card.status.label"></td>
-      </tr>
-      <tr class="no-data" *ngIf="sortedFiles.length === 0">
-        <td class="text-center" colspan="5">No Cards Assigned</td>
-      </tr>
-    </tbody>
+  <table mat-table [dataSource]="sortedFiles" class="mat-elevation-z8 table">
+    <ng-container matColumnDef="highPriority">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <span class="high-priority" *ngIf="element.highPriority">!</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Cards</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.title }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell class="labels" *matCellDef="let element">
+        <span
+          *ngFor="let type of element.labels"
+          class="type"
+          [ngStyle]="{
+            backgroundColor: type.backgroundColor,
+            color: type.textColor,
+            borderColor: type.borderColor ? type.borderColor : type.backgroundColor
+          }"
+        >
+          <span class="center">{{ type.shortLabel }}</span>
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="activeDays">
+      <th mat-header-cell *matHeaderCellDef>Active Days</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.activeDays ?? '-' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="stage">
+      <th mat-header-cell *matHeaderCellDef>Workflow Stage</th>
+      <td mat-cell *matCellDef="let element" [innerHTML]="element.card.status.label"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      [ngClass]="{
+        paused: row.paused
+      }"
+      (click)="onSelectCard(row.card)"
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+    <tr class="mat-row no-data" *matNoDataRow>
+      <td class="text-center" colspan="5">No Cards Assigned</td>
+    </tr>
   </table>
 </div>

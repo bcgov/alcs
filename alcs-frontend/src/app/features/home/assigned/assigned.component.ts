@@ -28,6 +28,7 @@ interface AssignedToMeFile {
 })
 export class AssignedComponent implements OnInit {
   sortedFiles: AssignedToMeFile[] = [];
+  displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage'];
 
   constructor(
     private homeService: HomeService,

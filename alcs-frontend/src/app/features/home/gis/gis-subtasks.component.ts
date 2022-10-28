@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
@@ -14,8 +15,9 @@ import { CardType } from '../../../shared/card/card.component';
   styleUrls: ['./gis-subtasks.component.scss'],
 })
 export class GisSubtasksComponent implements OnInit {
-  subtasks: HomepageSubtaskDto[] = [];
+  subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
   public gisUsers: UserDto[] = [];
+  displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
 
   constructor(
     private homeService: HomeService,
@@ -40,7 +42,7 @@ export class GisSubtasksComponent implements OnInit {
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
 
-    this.subtasks.push(
+    const sortedSubtasks = [
       // high priority
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...reconsiderations.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
@@ -48,8 +50,9 @@ export class GisSubtasksComponent implements OnInit {
       // none high priority
       ...applications.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...reconsiderations.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
-      ...planningReviews.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!)
-    );
+      ...planningReviews.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+    ];
+    this.subtasks = new MatTableDataSource(sortedSubtasks);
   }
 
   filterAssigneeList(term: string, item: UserDto) {

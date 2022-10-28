@@ -1,54 +1,74 @@
 <div class="assignee">
-  <h4>GIS Subtasks: {{ subtasks.length }}</h4>
-  <table class="assigned-table">
-    <thead>
-      <th></th>
-      <th class="header">Cards</th>
-      <th class="header">Active Days</th>
-      <th class="header">Workflow Stage</th>
-      <th class="header">Assignee</th>
-      <th class="header action-column">Action</th>
-    </thead>
-    <tbody class="assigned-body">
-      <tr
-        [ngClass]="{
-          paused: subtask.paused
-        }"
-        *ngFor="let subtask of subtasks"
-      >
-        <td class="priority-column">
-          <span class="high-priority" *ngIf="subtask.card.highPriority">!</span>
-        </td>
-        <td>{{ subtask.title }}</td>
-        <td>{{ subtask.activeDays !== undefined ? subtask.activeDays : '-' }}</td>
-        <td [innerHTML]="subtask.card.status.label"></td>
-        <td class="assignee-column">
-          <ng-select
-            class="subtask-assignee"
-            [items]="gisUsers"
-            bindLabel="name"
-            bindValue="name"
-            [ngModel]="subtask.assignee?.name"
-            [searchFn]="filterAssigneeList"
-            (change)="onAssigneeSelected($event, subtask.uuid)"
-          >
-            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-              <div class="assignee-card-body">
-                <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
-                <p class="assignee-card-email" [ngOptionHighlight]="search">
-                  {{ item.email }}
-                </p>
-              </div>
-            </ng-template>
-          </ng-select>
-        </td>
-        <td class="action-column">
-          <button (click)="openCard(subtask)" mat-flat-button color="accent">View</button>
-        </td>
-      </tr>
-    </tbody>
-    <tr class="no-data" *ngIf="subtasks.length === 0">
-      <td class="text-center" colspan="7">No GIS subtasks</td>
+  <h4>GIS Subtasks: {{ subtasks.data.length }}</h4>
+
+  <table mat-table [dataSource]="subtasks" class="mat-elevation-z8 assigned-table">
+    <ng-container matColumnDef="highPriority">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <span class="high-priority" *ngIf="element.card.highPriority">!</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Cards</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.title }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="activeDays">
+      <th mat-header-cell *matHeaderCellDef>Active Days</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.activeDays ?? '-' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="stage">
+      <th mat-header-cell *matHeaderCellDef>Workflow Stage</th>
+      <td mat-cell *matCellDef="let element" [innerHTML]="element.card.status.label"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="assignee">
+      <th mat-header-cell *matHeaderCellDef>Assignee</th>
+      <td class="assignee-column" mat-cell *matCellDef="let element">
+        <ng-select
+          class="subtask-assignee"
+          [items]="gisUsers"
+          bindLabel="name"
+          bindValue="name"
+          [ngModel]="element.assignee?.name"
+          [searchFn]="filterAssigneeList"
+          (change)="onAssigneeSelected($event, element.uuid)"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div class="assignee-card-body">
+              <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+              <p class="assignee-card-email" [ngOptionHighlight]="search">
+                {{ item.email }}
+              </p>
+            </div>
+          </ng-template>
+        </ng-select>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td class="action-column" mat-cell *matCellDef="let element">
+        <button (click)="openCard(element)" mat-flat-button color="accent">View</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      [ngClass]="{
+        paused: row.paused
+      }"
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+    <tr class="mat-row no-data" *matNoDataRow>
+      <td class="text-center" colspan="6">No Incomplete Subtasks</td>
     </tr>
   </table>
 </div>
