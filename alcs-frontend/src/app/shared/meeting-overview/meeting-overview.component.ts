@@ -247,7 +247,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
 
   openApplication(fileNumber: string) {
     this.clearHighlight();
-    const url = this.isCommissioner ? `/commissioner/${fileNumber}` : `/application/${fileNumber}`;
+    const url = this.isCommissioner ? `/commissioner/${fileNumber}` : `/application/${fileNumber}/review`;
     window.open(url, '_blank');
   }
 }
