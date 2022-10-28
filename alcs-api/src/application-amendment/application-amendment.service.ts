@@ -127,7 +127,7 @@ export class ApplicationAmendmentService {
   }
 
   private async getByUuidOrFail(uuid: string) {
-    const amendment = await this.amendmentRepository.findOneByOrFail({
+    const amendment = await this.amendmentRepository.findOneBy({
       uuid,
     });
 

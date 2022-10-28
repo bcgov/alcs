@@ -104,13 +104,13 @@ export class HomeController {
       await this.planningReviewService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const planningReviewSubtasks = this.mapPlanningReviewsToDTOs(
+    const planningReviewSubtasks = this.mapPlanningReviewsToDtos(
       planningReviewsWithSubtasks,
     );
 
     const amendmentsWithSubtasks =
       await this.amendmentService.getWithIncompleteSubtaskByType(subtaskType);
-    const amendmentSubtasks = this.mapAmendmentsToDTOs(amendmentsWithSubtasks);
+    const amendmentSubtasks = this.mapAmendmentsToDtos(amendmentsWithSubtasks);
 
     return [
       ...applicationSubtasks,
@@ -165,7 +165,7 @@ export class HomeController {
     return result;
   }
 
-  private mapPlanningReviewsToDTOs(planingReviews: PlanningReview[]) {
+  private mapPlanningReviewsToDtos(planingReviews: PlanningReview[]) {
     const result: HomepageSubtaskDTO[] = [];
     for (const planningReview of planingReviews) {
       for (const subtask of planningReview.card.subtasks) {
@@ -184,7 +184,7 @@ export class HomeController {
     return result;
   }
 
-  private mapAmendmentsToDTOs(amendments: ApplicationAmendment[]) {
+  private mapAmendmentsToDtos(amendments: ApplicationAmendment[]) {
     const result: HomepageSubtaskDTO[] = [];
     for (const amendment of amendments) {
       for (const subtask of amendment.card.subtasks) {

@@ -29,6 +29,7 @@ describe('AmendmentService', () => {
   let cardServiceMock: DeepMocked<CardService>;
 
   let mockAmendment;
+  let mockAmendmentCreateDto;
 
   const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationAmendment> = {
     application: {
@@ -79,8 +80,19 @@ describe('AmendmentService', () => {
 
     mockAmendment = initApplicationAmendementMockEntity();
     amendmentRepoMock.findOneOrFail.mockResolvedValue(mockAmendment);
-    amendmentRepoMock.findOneByOrFail.mockResolvedValue(mockAmendment);
+    amendmentRepoMock.findOneBy.mockResolvedValue(mockAmendment);
     amendmentRepoMock.find.mockResolvedValue([mockAmendment]);
+
+    mockAmendmentCreateDto = {
+      applicationFileNumber: 'fake-app-number',
+      applicationTypeCode: 'fake',
+      regionCode: 'fake-region',
+      localGovernmentUuid: 'fake-local-government-uuid',
+      applicant: 'fake-applicant',
+      submittedDate: 11111111111,
+      boardCode: 'fake-board',
+      isTimeExtension: false,
+    } as ApplicationAmendmentCreateDto;
   });
 
   it('should be defined', () => {
@@ -100,23 +112,12 @@ describe('AmendmentService', () => {
   });
 
   it('should successfully create application and amendment card if app does not exist', async () => {
-    const mockamendmentCreateDto = {
-      applicationFileNumber: 'fake-app-number',
-      applicationTypeCode: 'fake',
-      regionCode: 'fake-region',
-      localGovernmentUuid: 'fake-local-government-uuid',
-      applicant: 'fake-applicant',
-      submittedDate: 11111111111,
-      boardCode: 'fake-board',
-      isTimeExtension: false,
-    } as ApplicationAmendmentCreateDto;
-
     const mockApplicationCreateDto = {
-      fileNumber: mockamendmentCreateDto.applicationFileNumber,
-      typeCode: mockamendmentCreateDto.applicationTypeCode,
-      regionCode: mockamendmentCreateDto.regionCode,
-      localGovernmentUuid: mockamendmentCreateDto.localGovernmentUuid,
-      applicant: mockamendmentCreateDto.applicant,
+      fileNumber: mockAmendmentCreateDto.applicationFileNumber,
+      typeCode: mockAmendmentCreateDto.applicationTypeCode,
+      regionCode: mockAmendmentCreateDto.regionCode,
+      localGovernmentUuid: mockAmendmentCreateDto.localGovernmentUuid,
+      applicant: mockAmendmentCreateDto.applicant,
     } as CreateApplicationDto;
 
     amendmentRepoMock.save.mockResolvedValue({} as any);
@@ -126,7 +127,7 @@ describe('AmendmentService', () => {
       mockApplicationCreateDto as any,
     );
 
-    await service.create(mockamendmentCreateDto, {} as Board);
+    await service.create(mockAmendmentCreateDto, {} as Board);
 
     expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.create).toBeCalledWith('AMEND', {} as Board, false);
@@ -137,16 +138,6 @@ describe('AmendmentService', () => {
   });
 
   it('should successfully create amendment and link to existing application', async () => {
-    const mockAmendmentCreateDto = {
-      applicationFileNumber: 'fake-app-number',
-      applicationTypeCode: 'fake',
-      regionCode: 'fake-region',
-      localGovernmentUuid: 'fake-local-government-uuid',
-      applicant: 'fake-applicant',
-      submittedDate: 11111111111,
-      boardCode: 'fake-board',
-      isTimeExtension: false,
-    } as ApplicationAmendmentCreateDto;
     cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(
       initApplicationMockEntity(mockAmendmentCreateDto.applicationFileNumber),
@@ -169,7 +160,7 @@ describe('AmendmentService', () => {
       isReviewApproved: true,
     } as ApplicationAmendmentUpdateDto);
 
-    expect(amendmentRepoMock.findOneByOrFail).toBeCalledWith({
+    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
     expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
@@ -178,14 +169,14 @@ describe('AmendmentService', () => {
 
   it('should throw an exception when updating an amendment if it does not exist', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.findOneByOrFail.mockReturnValue(undefined);
+    amendmentRepoMock.findOneBy.mockReturnValue(undefined);
 
     await expect(
       service.update(uuid, {} as ApplicationAmendmentUpdateDto),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`Amendment with uuid ${uuid} not found`),
     );
-    expect(amendmentRepoMock.findOneByOrFail).toBeCalledWith({
+    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
     expect(amendmentRepoMock.save).toHaveBeenCalledTimes(0);
@@ -197,7 +188,7 @@ describe('AmendmentService', () => {
 
     await service.delete(uuid);
 
-    expect(amendmentRepoMock.findOneByOrFail).toBeCalledWith({
+    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
     expect(amendmentRepoMock.softRemove).toHaveBeenCalledTimes(1);
@@ -205,12 +196,12 @@ describe('AmendmentService', () => {
 
   it('should fail on delete if amendment does not exist', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.findOneByOrFail.mockReturnValue(undefined);
+    amendmentRepoMock.findOneBy.mockReturnValue(undefined);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(`Amendment with uuid ${uuid} not found`),
     );
-    expect(amendmentRepoMock.findOneByOrFail).toBeCalledWith({
+    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
     expect(amendmentRepoMock.softRemove).toHaveBeenCalledTimes(0);
