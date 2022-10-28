@@ -5,28 +5,12 @@
 }
 
 .assigned-table {
-  margin-top: 12px;
-  padding: 0;
-  border-collapse: collapse;
+  margin-top: 24px;
+  margin-bottom: 48px;
   width: 100%;
-
-  .header {
-    font-weight: bold;
-    text-align: left;
-  }
 
   .paused {
     background-color: #efefef;
-  }
-
-  td {
-    margin: 0;
-    border: 0;
-    padding: 4px 28px 4px 4px;
-  }
-
-  td.priority-column {
-    padding: 4px 4px 4px 16px;
   }
 
   tr.no-data {
@@ -61,10 +45,9 @@
 }
 
 .assignee-column {
-  min-width: 200px;
+  padding-right: 12px;
 }
 
 .action-column {
-  width: 40px;
-  padding: 4px 16px 4px 28px;
+  width: 97px;
 }
