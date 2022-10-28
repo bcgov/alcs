@@ -189,8 +189,6 @@ export class ApplicationDecisionController {
     @Param('fileUuid') documentUuid: string,
   ) {
     await this.appDecisionService.deleteDocument(documentUuid);
-    return {
-      deleted: true,
-    };
+    return {};
   }
 }

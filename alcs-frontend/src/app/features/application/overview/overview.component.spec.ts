@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationAmendmentService } from '../../../services/application/application-amendment/application-amendment.service';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -30,6 +31,10 @@ describe('OverviewComponent', () => {
         },
         {
           provide: ApplicationReconsiderationService,
+          useValue: {},
+        },
+        {
+          provide: ApplicationAmendmentService,
           useValue: {},
         },
         {

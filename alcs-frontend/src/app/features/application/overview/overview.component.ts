@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatestWith, tap } from 'rxjs';
+import { ApplicationAmendmentDto } from '../../../services/application/application-amendment/application-amendment.dto';
+import { ApplicationAmendmentService } from '../../../services/application/application-amendment/application-amendment.service';
 import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -31,7 +33,8 @@ export class OverviewComponent implements OnInit {
     private applicationDetailService: ApplicationDetailService,
     private meetingService: ApplicationMeetingService,
     private decisionService: ApplicationDecisionService,
-    private reconsiderationService: ApplicationReconsiderationService
+    private reconsiderationService: ApplicationReconsiderationService,
+    private amendmentService: ApplicationAmendmentService
   ) {}
 
   ngOnInit(): void {
@@ -43,18 +46,22 @@ export class OverviewComponent implements OnInit {
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
               this.$decisions.next(res);
             });
-            this.reconsiderationService.fetchByApplication(app.fileNumber);
           }
         })
       )
       .pipe(
-        combineLatestWith(this.meetingService.$meetings, this.$decisions, this.reconsiderationService.$reconsiderations)
+        combineLatestWith(
+          this.meetingService.$meetings,
+          this.$decisions,
+          this.reconsiderationService.$reconsiderations,
+          this.amendmentService.$amendments
+        )
       )
-      .subscribe(([application, meetings, decisions, reconsiderations]) => {
+      .subscribe(([application, meetings, decisions, reconsiderations, amendments]) => {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
-          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations);
+          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations, amendments);
         }
       });
   }
@@ -63,7 +70,8 @@ export class OverviewComponent implements OnInit {
     application: ApplicationDto,
     meetings: ApplicationMeetingDto[],
     decisions: ApplicationDecisionDto[],
-    reconsiderations: ApplicationReconsiderationDto[]
+    reconsiderations: ApplicationReconsiderationDto[],
+    amendments: ApplicationAmendmentDto[]
   ): TimelineEvent[] {
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateReceived) {
@@ -160,6 +168,9 @@ export class OverviewComponent implements OnInit {
     const mappedReconsiderations = this.mapReconsiderationsToEvents(reconsiderations);
     mappedEvents.push(...mappedReconsiderations);
 
+    const mappedAmendments = this.mapAmendmentsToEvents(amendments);
+    mappedEvents.push(...mappedAmendments);
+
     mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
     return mappedEvents;
@@ -178,19 +189,42 @@ export class OverviewComponent implements OnInit {
         });
       } else {
         events.push({
-          name: `Reconsideration requested #${reconsiderations.length - index} ${reconsideration.type.code}`,
+          name: `Reconsideration Requested #${reconsiderations.length - index} ${reconsideration.type.code}`,
           startDate: new Date(reconsideration.submittedDate),
           isFulfilled: true,
         });
         if (reconsideration.reviewDate) {
           events.push({
-            name: `Reconsideration Request reviewed #${reconsiderations.length - index} ${
+            name: `Reconsideration Request Reviewed #${reconsiderations.length - index} ${
               reconsideration.isReviewApproved ? 'Proceed' : 'Refused'
             }`,
             startDate: new Date(reconsideration.reviewDate),
             isFulfilled: true,
           });
         }
+      }
+    }
+    return events;
+  }
+
+  private mapAmendmentsToEvents(amendments: ApplicationAmendmentDto[]) {
+    const events: TimelineEvent[] = [];
+    for (const [index, amendment] of amendments.sort((a, b) => b.submittedDate - a.submittedDate).entries()) {
+      events.push({
+        name: `Amendment Requested #${amendments.length - index} - ${
+          amendment.isTimeExtension ? 'Time Extension' : 'Other'
+        }`,
+        startDate: new Date(amendment.submittedDate),
+        isFulfilled: true,
+      });
+      if (amendment.reviewDate) {
+        events.push({
+          name: `Amendment Request Reviewed #${amendments.length - index} ${
+            amendment.isReviewApproved ? 'Proceed' : 'Refused'
+          }`,
+          startDate: new Date(amendment.reviewDate),
+          isFulfilled: true,
+        });
       }
     }
     return events;
