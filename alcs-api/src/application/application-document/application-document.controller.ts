@@ -116,6 +116,6 @@ export class ApplicationDocumentController {
   async delete(@Param('uuid') fileUuid: string) {
     const document = await this.applicationDocumentService.get(fileUuid);
     await this.applicationDocumentService.delete(document);
-    return { deleted: true };
+    return {};
   }
 }

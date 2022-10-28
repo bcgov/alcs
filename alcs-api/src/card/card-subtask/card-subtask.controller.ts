@@ -70,6 +70,6 @@ export class CardSubtaskController {
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async delete(@Param('uuid') subtaskUuid: string) {
     await this.cardSubtaskService.delete(subtaskUuid);
-    return { deleted: true };
+    return {};
   }
 }

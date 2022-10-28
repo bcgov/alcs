@@ -57,7 +57,7 @@ export class ApplicationAmendmentController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async delete(@Param('uuid') uuid: string) {
     await this.amendmentService.delete(uuid);
-    return { deleted: true };
+    return {};
   }
 
   @Get('/card/:uuid')
