@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
-import { PostDecisionDialogComponent } from './post-decision-dialog.component';
+import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog.component';
 
-describe('PostDecisionDialogComponent', () => {
-  let component: PostDecisionDialogComponent;
-  let fixture: ComponentFixture<PostDecisionDialogComponent>;
+describe('EditReconsiderationDialogComponent', () => {
+  let component: EditReconsiderationDialogComponent;
+  let fixture: ComponentFixture<EditReconsiderationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PostDecisionDialogComponent],
+      declarations: [EditReconsiderationDialogComponent],
       providers: [
         {
           provide: ApplicationReconsiderationService,
@@ -26,7 +26,7 @@ describe('PostDecisionDialogComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PostDecisionDialogComponent);
+    fixture = TestBed.createComponent(EditReconsiderationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

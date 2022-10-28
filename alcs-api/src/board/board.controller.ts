@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
@@ -29,6 +30,7 @@ export class BoardController {
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
+    private amendmentService: ApplicationAmendmentService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -53,12 +55,18 @@ export class BoardController {
       planningReviews = await this.planningReviewService.getCards();
     }
 
+    let amendments = [];
+    if (boardCode === 'ceo') {
+      amendments = await this.amendmentService.getByBoardCode(boardCode);
+    }
+
     return {
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
       planningReviews: await this.planningReviewService.mapToDtos(
         planningReviews,
       ),
+      amendments: await this.amendmentService.mapToDtos(amendments),
     };
   }
 

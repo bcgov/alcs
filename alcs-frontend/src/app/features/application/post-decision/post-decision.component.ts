@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { ApplicationAmendmentDto } from '../../../services/application/application-amendment/application-amendment.dto';
+import { ApplicationAmendmentService } from '../../../services/application/application-amendment/application-amendment.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationReconsiderationDetailedDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -8,7 +10,8 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
-import { PostDecisionDialogComponent } from './post-decision-dialog/post-decision-dialog.component';
+import { EditAmendmentDialogComponent } from './edit-amendment-dialog/edit-amendment-dialog.component';
+import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 
 @Component({
   selector: 'app-post-decision',
@@ -18,13 +21,15 @@ import { PostDecisionDialogComponent } from './post-decision-dialog/post-decisio
 export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   fileNumber: string = '';
-  postDecisions: ApplicationReconsiderationDetailedDto[] = [];
-  codes: BaseCodeDto[] = [];
+  reconsiderations: ApplicationReconsiderationDetailedDto[] = [];
+  amendments: ApplicationAmendmentDto[] = [];
+  reconCodes: BaseCodeDto[] = [];
 
   constructor(
     public dialog: MatDialog,
     private applicationDetailService: ApplicationDetailService,
     private applicationReconsiderationService: ApplicationReconsiderationService,
+    private amendmentService: ApplicationAmendmentService,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
@@ -32,32 +37,31 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.applicationDetailService.$application
       .pipe(
-        tap((application) => {
-          if (application) {
-            this.applicationReconsiderationService.fetchByApplication(application.fileNumber);
-          }
+        tap(() => {
           this.applicationReconsiderationService.fetchCodes();
         })
       )
       .pipe(
         combineLatestWith(
           this.applicationReconsiderationService.$reconsiderations,
-          this.applicationReconsiderationService.$codes
+          this.applicationReconsiderationService.$codes,
+          this.amendmentService.$amendments
         )
       )
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([application, reconsiderations, codes]) => {
+      .subscribe(([application, reconsiderations, reconCodes, amendments]) => {
         if (application) {
           this.fileNumber = application.fileNumber;
-          this.postDecisions = reconsiderations ?? [];
-          this.codes = codes;
+          this.reconsiderations = reconsiderations ?? [];
+          this.reconCodes = reconCodes;
+          this.amendments = amendments;
         }
       });
   }
 
-  onEdit(reconsideration: ApplicationReconsiderationDetailedDto) {
+  onEditReconsideration(reconsideration: ApplicationReconsiderationDetailedDto) {
     this.dialog
-      .open(PostDecisionDialogComponent, {
+      .open(EditReconsiderationDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
@@ -65,18 +69,38 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         data: {
           fileNumber: this.fileNumber,
           existingDecision: reconsideration,
-          codes: this.codes,
+          codes: this.reconCodes,
         },
       })
       .afterClosed()
-      .subscribe((didCreate) => {
-        if (didCreate) {
+      .subscribe((wasModified) => {
+        if (wasModified) {
           this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
   }
 
-  async deletePostDecision(uuid: string, reconsiderationIndex: number) {
+  onEditAmendment(amendment: ApplicationAmendmentDto) {
+    this.dialog
+      .open(EditAmendmentDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          fileNumber: this.fileNumber,
+          existingAmendment: amendment,
+        },
+      })
+      .afterClosed()
+      .subscribe((wasModified) => {
+        if (wasModified) {
+          this.applicationDetailService.loadApplication(this.fileNumber);
+        }
+      });
+  }
+
+  async deleteReconsideration(uuid: string, reconsiderationIndex: number) {
     this.confirmationDialogService
       .openDialog({
         body: `Are you sure you want to delete Reconsideration Request #${reconsiderationIndex}?`,
@@ -90,18 +114,46 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       });
   }
 
-  async onSaveReviewDate(reconsiderationUuid: string, reviewDate: number) {
+  async deleteAmendment(uuid: string, index: number) {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to delete Amendment Request #${index}?`,
+      })
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.amendmentService.delete(uuid);
+          await this.amendmentService.fetchByApplication(this.fileNumber);
+          this.toastService.showSuccessToast('Amendment request deleted');
+        }
+      });
+  }
+
+  async onSaveReconsiderationReviewDate(reconsiderationUuid: string, reviewDate: number) {
     await this.applicationReconsiderationService.update(reconsiderationUuid, {
       reviewDate: formatDateForApi(reviewDate),
     });
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }
 
-  async onSaveReviewOutcome(reconsiderationUuid: string, isReviewApproved: boolean) {
+  async onSaveReconsiderationReviewOutcome(reconsiderationUuid: string, isReviewApproved: boolean) {
     await this.applicationReconsiderationService.update(reconsiderationUuid, {
       isReviewApproved,
     });
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
+  }
+
+  async onSaveAmendmentReviewDate(uuid: string, reviewDate: number) {
+    await this.amendmentService.update(uuid, {
+      reviewDate: formatDateForApi(reviewDate),
+    });
+    await this.amendmentService.fetchByApplication(this.fileNumber);
+  }
+
+  async onSaveAmendmentOutcome(uuid: string, isReviewApproved: boolean) {
+    await this.amendmentService.update(uuid, {
+      isReviewApproved,
+    });
+    await this.amendmentService.fetchByApplication(this.fileNumber);
   }
 
   getReviewOutcomeLabel(reviewOutcome: boolean) {
@@ -115,5 +167,19 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  goToRecons() {
+    const el = document.getElementById('recons');
+    if (el) {
+      el.scrollIntoView();
+    }
+  }
+
+  goToAmendments() {
+    const el = document.getElementById('amendments');
+    if (el) {
+      el.scrollIntoView();
+    }
   }
 }

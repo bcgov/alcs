@@ -15,12 +15,20 @@
         *ngIf="reconsiderations.length"
         class="application-type"
         [ngStyle]="{
-          backgroundColor: reconLabel.backgroundColor,
-          color: reconLabel.textColor,
-          borderColor: reconLabel.borderColor
-        }"
-        >{{ reconLabel.label }}</span
-      >
+              backgroundColor: reconLabel.backgroundColor,
+              color: reconLabel.textColor,
+              borderColor: reconLabel.borderColor
+            }"
+      >{{ reconLabel.label }}</span>
+      <span
+        *ngIf="showAmendmentLabel"
+        class="application-type"
+        [ngStyle]="{
+              backgroundColor: amendmentLabel.backgroundColor,
+              color: amendmentLabel.textColor,
+              borderColor: amendmentLabel.borderColor
+            }"
+      >{{ amendmentLabel.label }}</span>
     </div>
     <div *ngIf="showCardMenu" class="center">
       <button

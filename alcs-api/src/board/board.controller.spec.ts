@@ -3,6 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
@@ -10,7 +11,6 @@ import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
-import { PlanningReviewController } from '../planning-review/planning-review.controller';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { Board } from './board.entity';
@@ -22,6 +22,7 @@ describe('BoardController', () => {
   let boardService: DeepMocked<BoardService>;
   let appService: DeepMocked<ApplicationService>;
   let appReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
+  let amendmentService: DeepMocked<ApplicationAmendmentService>;
   let cardService: DeepMocked<CardService>;
   let planningReviewService: DeepMocked<PlanningReviewService>;
 
@@ -29,6 +30,7 @@ describe('BoardController', () => {
     boardService = createMock<BoardService>();
     appService = createMock<ApplicationService>();
     appReconsiderationService = createMock<ApplicationReconsiderationService>();
+    amendmentService = createMock<ApplicationAmendmentService>();
     planningReviewService = createMock<PlanningReviewService>();
     cardService = createMock<CardService>();
 
@@ -38,6 +40,8 @@ describe('BoardController', () => {
     appReconsiderationService.mapToDtos.mockResolvedValue([]);
     planningReviewService.getCards.mockResolvedValue([]);
     planningReviewService.mapToDtos.mockResolvedValue([]);
+    amendmentService.getByBoardCode.mockResolvedValue([]);
+    amendmentService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -51,6 +55,10 @@ describe('BoardController', () => {
         {
           provide: ApplicationReconsiderationService,
           useValue: appReconsiderationService,
+        },
+        {
+          provide: ApplicationAmendmentService,
+          useValue: amendmentService,
         },
         { provide: CardService, useValue: cardService },
         {
@@ -93,17 +101,28 @@ describe('BoardController', () => {
     );
     expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
-    expect(planningReviewService.getCards).not.toHaveBeenCalled();
+    expect(amendmentService.getByBoardCode).toHaveBeenCalledTimes(0);
+    expect(amendmentService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(planningReviewService.getCards).toHaveBeenCalledTimes(0);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through to planning meeting service for exec board', async () => {
+  it('should call through to planning review service for exec board', async () => {
     const boardCode = 'exec';
 
     await controller.getCards(boardCode);
 
     expect(planningReviewService.getCards).toHaveBeenCalledTimes(1);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to amendment service for ceo board', async () => {
+    const boardCode = 'ceo';
+
+    await controller.getCards(boardCode);
+
+    expect(amendmentService.getByBoardCode).toHaveBeenCalledTimes(1);
+    expect(amendmentService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service when changing boards', async () => {

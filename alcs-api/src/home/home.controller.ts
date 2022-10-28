@@ -3,6 +3,9 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationAmendmentDto } from '../application-amendment/application-amendment.dto';
+import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
+import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
 import { ApplicationReconsiderationDto } from '../application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
@@ -32,6 +35,7 @@ export class HomeController {
     private timeService: ApplicationTimeTrackingService,
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
+    private amendmentService: ApplicationAmendmentService,
   ) {}
 
   @Get('/assigned')
@@ -40,6 +44,7 @@ export class HomeController {
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
+    amendments: ApplicationAmendmentDto[];
   }> {
     const userId = req.user.entity.uuid;
     if (userId) {
@@ -54,6 +59,10 @@ export class HomeController {
         card: { assigneeUuid: userId },
       });
 
+      const amendments = await this.amendmentService.getBy({
+        card: { assigneeUuid: userId },
+      });
+
       return {
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
@@ -62,12 +71,14 @@ export class HomeController {
         planningReviews: await this.planningReviewService.mapToDtos(
           planningReviews,
         ),
+        amendments: await this.amendmentService.mapToDtos(amendments),
       };
     } else {
       return {
         applications: [],
         reconsiderations: [],
         planningReviews: [],
+        amendments: [],
       };
     }
   }
@@ -93,13 +104,18 @@ export class HomeController {
       await this.planningReviewService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const planningReviewSubtasks = this.mapPlanningReviewsToDTOs(
+    const planningReviewSubtasks = this.mapPlanningReviewsToDtos(
       planningReviewsWithSubtasks,
     );
+
+    const amendmentsWithSubtasks =
+      await this.amendmentService.getWithIncompleteSubtaskByType(subtaskType);
+    const amendmentSubtasks = this.mapAmendmentsToDtos(amendmentsWithSubtasks);
 
     return [
       ...applicationSubtasks,
       ...reconSubtasks,
+      ...amendmentSubtasks,
       ...planningReviewSubtasks,
     ];
   }
@@ -149,7 +165,7 @@ export class HomeController {
     return result;
   }
 
-  private mapPlanningReviewsToDTOs(planingReviews: PlanningReview[]) {
+  private mapPlanningReviewsToDtos(planingReviews: PlanningReview[]) {
     const result: HomepageSubtaskDTO[] = [];
     for (const planningReview of planingReviews) {
       for (const subtask of planningReview.card.subtasks) {
@@ -162,6 +178,25 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${planningReview.fileNumber} (${planningReview.type})`,
+        });
+      }
+    }
+    return result;
+  }
+
+  private mapAmendmentsToDtos(amendments: ApplicationAmendment[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const amendment of amendments) {
+      for (const subtask of amendment.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(amendment.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${amendment.application.fileNumber} (${amendment.application.applicant})`,
         });
       }
     }

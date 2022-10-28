@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ApplicationAmendmentModule } from '../application-amendment/application-amendment.module';
 import { ApplicationReconsiderationModule } from '../application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from '../application/application.module';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
@@ -12,6 +13,7 @@ import { HomeController } from './home.controller';
     UserModule,
     ApplicationReconsiderationModule,
     PlanningReviewModule,
+    ApplicationAmendmentModule,
   ],
   providers: [ApplicationSubtaskProfile],
   controllers: [HomeController],
