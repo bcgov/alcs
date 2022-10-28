@@ -19,6 +19,7 @@ comment
 application_decision
 application_decision_meeting
 card_history
+application_amendment
 application_document
 board_status
 comment_mention

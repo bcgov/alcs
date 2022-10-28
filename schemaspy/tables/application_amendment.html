@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>application_type - postgres Database</title>
+        <title>application_amendment - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_type</h1><p><span id="recordNumber">9</span> rows</p><br />
+                    <h1>application_amendment</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -194,9 +194,26 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="label">label</span></td>
-                                    <td>varchar</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
+                                    <td>uuid</td>
                                     <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>gen_random_uuid()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="submitted_date">submitted_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
                                     <td title=''></td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -211,29 +228,80 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="code">code</span></td>
-                                    <td>text</td>
+                                    <td><span id="is_review_approved">is_review_approved</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="is_time_extension">is_time_extension</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="review_date">review_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="card_uuid">card_uuid</span></td>
+                                    <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
                                     <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application.type_code references application_type.code via FK_c11f09867d33ab9bea127b7fa87"><a href='application.html'>application</a><span class='relatedKey'>.type_code</span></td>
-                                                <td class="constraint detail">FK_c11f09867d33ab9bea127b7fa87<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="application_amendment.card_uuid references card.uuid via FK_673f2b816b3ef5e11c8c1e0e980"><a href='card.html'>card</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_673f2b816b3ef5e11c8c1e0e980<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="description">description</span></td>
-                                    <td>text</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_uuid">application_uuid</span></td>
+                                    <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
@@ -244,57 +312,10 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="short_label">short_label</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="background_color">background_color</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="text_color">text_color</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_amendment.application_uuid references application.uuid via FK_3e941d0e00fafdb9830799dc804"><a href='application.html'>application</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_3e941d0e00fafdb9830799dc804<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -330,16 +351,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_c11f09867d33ab9bea127b7fa87</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_f11ed60b151cc0ea4f1862eca19</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>code</td>
+                                    <td>uuid</td>
                                 </tr>
                                 <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_a5eabdc27d5f23d654bb51bae24</td>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> REL_673f2b816b3ef5e11c8c1e0e98</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>description</td>
+                                    <td>card_uuid</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -364,27 +385,36 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="428,67,731,331">
-<area shape="rect" id="node2" href="application_type.html" target="_top" title="application_type" alt="" coords="5,5,384,397">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="273,353,576,617">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="5,345,229,580">
+<area shape="rect" id="node3" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="620,5,1017,427">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_type.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_amendment.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="699,319,1001,583">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="408,76,523,164">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="307,181,624,269">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,420,232,508">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="276,287,655,679">
-<area shape="rect" id="node6" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="1066,111,1339,199">
-<area shape="rect" id="node7" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1082,216,1323,304">
-<area shape="rect" id="node8" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1045,321,1360,409">
-<area shape="rect" id="node9" href="application_document.html" target="_top" title="application_document" alt="" coords="1074,427,1331,515">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1404,532,1645,620">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1086,532,1319,620">
-<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1051,5,1354,93">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="657,624,827,712">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,343,492,431">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,553,593,641">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,553,232,641">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,695,541,783">
+<area shape="rect" id="node13" href="user.html" target="_top" title="user" alt="" coords="61,132,176,220">
+<area shape="rect" id="node14" href="board.html" target="_top" title="board" alt="" coords="55,237,182,325">
+<area shape="rect" id="node15" href="card_status.html" target="_top" title="card_status" alt="" coords="33,343,204,431">
+<area shape="rect" id="node16" href="card_type.html" target="_top" title="card_type" alt="" coords="40,448,197,536">
+<area shape="rect" id="node6" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="891,5,1288,427">
+<area shape="rect" id="node7" href="application_decision.html" target="_top" title="application_decision" alt="" coords="969,585,1210,673">
+<area shape="rect" id="node8" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="932,691,1247,779">
+<area shape="rect" id="node9" href="application_document.html" target="_top" title="application_document" alt="" coords="961,796,1218,884">
+<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1332,901,1573,989">
+<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="973,901,1206,989">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="938,444,1241,532">
+<area shape="rect" id="node17" href="card_history.html" target="_top" title="card_history" alt="" coords="653,413,831,501">
+<area shape="rect" id="node18" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="650,236,834,324">
+<area shape="rect" id="node19" href="comment.html" target="_top" title="comment" alt="" coords="664,131,820,219">
+<area shape="rect" id="node20" href="planning_review.html" target="_top" title="planning_review" alt="" coords="637,519,847,607">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_type.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_amendment.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

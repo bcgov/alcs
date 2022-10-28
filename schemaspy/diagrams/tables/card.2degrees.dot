@@ -4,6 +4,8 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application":"local_government_uuid":w -> "application_local_government":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"region_code":w -> "application_region":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"type_code":w -> "application_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_amendment":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_amendment":"card_uuid":w -> "card":"uuid.type":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_decision":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_meeting":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_document":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -41,11 +43,22 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="67" HEIGHT="16"><B>application</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">6 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">7 &gt;</TD></TR>
     </TABLE>>
     URL="application.html"
     target="_top"
     tooltip="application"
+  ];
+  "application_amendment" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="145" HEIGHT="16"><B>application_amendment</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="application_amendment.html"
+    target="_top"
+    tooltip="application_amendment"
   ];
   "application_decision" [
    label=<
@@ -197,7 +210,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="created_at" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">created_at</TD></TR></TABLE></TD><TD PORT="created_at.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
       <TR><TD PORT="status_code" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">status_code</TD></TR></TABLE></TD><TD PORT="status_code.type" ALIGN="LEFT">text[2147483647]</TD></TR>
       <TR><TD PORT="type_code" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">type_code</TD></TR></TABLE></TD><TD PORT="type_code.type" ALIGN="LEFT">text[2147483647]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">6 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">7 &gt;</TD></TR>
     </TABLE>>
     URL="card.html"
     target="_top"

@@ -10,6 +10,7 @@ decision_document
 comment_mention
 board_status
 application_document
+application_amendment
 card_history
 application_decision_meeting
 application_decision
