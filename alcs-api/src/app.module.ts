@@ -29,6 +29,7 @@ import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { CommissionerModule } from './commissioner/commissioner.module';
+import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { CommissionerModule } from './commissioner/commissioner.module';
       },
     }),
     CommissionerModule,
+    ImportModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [
