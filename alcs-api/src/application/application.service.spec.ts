@@ -12,7 +12,10 @@ import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
-import { ApplicationUpdateServiceDto, CreateApplicationServiceDto } from './application.dto';
+import {
+  ApplicationUpdateServiceDto,
+  CreateApplicationServiceDto,
+} from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -83,9 +86,6 @@ describe('ApplicationService', () => {
     applicationRepositoryMock.findOne
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(applicationMockEntity);
-    mockCodeService.fetchApplicationType.mockResolvedValue(
-      {} as ApplicationType,
-    );
     mockCodeService.fetchRegion.mockResolvedValue({} as ApplicationRegion);
 
     const payload: CreateApplicationServiceDto = {
@@ -100,7 +100,6 @@ describe('ApplicationService', () => {
     expect(await applicationService.create(payload)).toStrictEqual(
       applicationMockEntity,
     );
-    expect(mockCodeService.fetchApplicationType).toHaveBeenCalledTimes(1);
     expect(mockCodeService.fetchRegion).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
   });

@@ -67,7 +67,7 @@ const initCardMockEntity = (subtaskUuid?: string): Card => {
   const card = new Card();
   card.highPriority = true;
   card.status = initCardStatusMockEntity();
-  card.uuid = '1111-1111-1111-1111';
+  card.uuid = '1111-1111-1111-1112';
   card.assigneeUuid = '1111-1111-1111';
   card.assignee = initAssigneeMockEntity();
   card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
@@ -168,6 +168,7 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   applicationEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.card = initCardMockEntity();
+  applicationEntity.cardUuid = applicationEntity.card.uuid;
   applicationEntity.type = initApplicationTypeMockEntity();
   applicationEntity.card.highPriority = false;
   applicationEntity.region = {

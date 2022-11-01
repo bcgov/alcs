@@ -20,4 +20,12 @@ export class ApplicationLocalGovernmentService {
       },
     });
   }
+
+  async getByName(name: string) {
+    return this.repository.findOne({
+      where: {
+        name,
+      },
+    });
+  }
 }

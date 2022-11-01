@@ -87,6 +87,9 @@ import { ApplicationService } from './application.service';
     ApplicationTimeTrackingService,
     ApplicationProfile,
     ApplicationSubtaskProfile,
+    ApplicationMeetingService,
+    ApplicationPausedService,
+    ApplicationLocalGovernmentService,
   ],
 })
 export class ApplicationModule {}

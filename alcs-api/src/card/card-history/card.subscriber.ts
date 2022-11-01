@@ -30,12 +30,17 @@ export class CardSubscriber implements EntitySubscriberInterface<Card> {
     const newApplication = event.entity as Card;
 
     const userGuids = this.cls.get('userGuids');
-    const user = await this.userService.getByGuid(userGuids);
-    if (!user) {
-      throw new Error('User not found from token! Has their email changed?');
+    if (userGuids) {
+      const user = await this.userService.getByGuid(userGuids);
+      if (!user) {
+        throw new Error('User not found from token! Has their email changed?');
+      }
+      await this.trackHistory(oldApplication, newApplication, event, user);
+    } else {
+      await this.trackHistory(oldApplication, newApplication, event, {
+        uuid: 'import-job',
+      } as User);
     }
-
-    await this.trackHistory(oldApplication, newApplication, event, user);
   }
 
   private async trackHistory(

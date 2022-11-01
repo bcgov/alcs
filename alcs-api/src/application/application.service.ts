@@ -84,10 +84,6 @@ export class ApplicationService {
       );
     }
 
-    const type = await this.codeService.fetchApplicationType(
-      application.typeCode,
-    );
-
     const region = application.regionCode
       ? await this.codeService.fetchRegion(application.regionCode)
       : undefined;
@@ -97,7 +93,7 @@ export class ApplicationService {
       applicant: application.applicant,
       dateReceived: application.dateReceived,
       localGovernmentUuid: application.localGovernmentUuid,
-      type,
+      typeCode: application.typeCode,
       region,
     });
 
