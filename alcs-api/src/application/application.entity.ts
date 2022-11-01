@@ -50,7 +50,7 @@ export class Application extends Base {
     type: 'timestamptz',
     nullable: true,
   })
-  dateReceived: Date;
+  dateReceived?: Date;
 
   @AutoMap()
   @Column({
