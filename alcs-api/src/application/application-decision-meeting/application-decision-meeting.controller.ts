@@ -13,13 +13,11 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Any } from 'typeorm';
-import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { UserDto } from '../../user/user.dto';
 import { User } from '../../user/user.entity';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
-import { ApplicationDocument } from '../application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application-document/application-document.service';
 import { ApplicationService } from '../application.service';
 import {
