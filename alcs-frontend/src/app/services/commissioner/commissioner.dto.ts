@@ -10,4 +10,6 @@ export interface CommissionerApplicationDto {
   type: ApplicationTypeDto;
   region: ApplicationRegionDto;
   localGovernment: ApplicationLocalGovernmentDto;
+  hasRecons: boolean;
+  hasAmendments: boolean;
 }

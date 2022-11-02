@@ -12,27 +12,29 @@
         >{{ _application.type.label }}</span
       >
       <span
-        *ngIf="reconsiderations.length"
+        *ngIf="showReconLabel"
         class="application-type"
         [ngStyle]="{
-              backgroundColor: reconLabel.backgroundColor,
-              color: reconLabel.textColor,
-              borderColor: reconLabel.borderColor
-            }"
-      >{{ reconLabel.label }}</span>
+          backgroundColor: reconLabel.backgroundColor,
+          color: reconLabel.textColor,
+          borderColor: reconLabel.borderColor
+        }"
+        >{{ reconLabel.label }}</span
+      >
       <span
         *ngIf="showAmendmentLabel"
         class="application-type"
         [ngStyle]="{
-              backgroundColor: amendmentLabel.backgroundColor,
-              color: amendmentLabel.textColor,
-              borderColor: amendmentLabel.borderColor
-            }"
-      >{{ amendmentLabel.label }}</span>
+          backgroundColor: amendmentLabel.backgroundColor,
+          color: amendmentLabel.textColor,
+          borderColor: amendmentLabel.borderColor
+        }"
+        >{{ amendmentLabel.label }}</span
+      >
     </div>
     <div *ngIf="showCardMenu" class="center">
       <button
-        *ngIf="!reconsiderations.length"
+        *ngIf="!_reconsiderations.length"
         class="menu-item center"
         mat-flat-button
         color="accent"
@@ -40,13 +42,13 @@
       >
         Go to card <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
       </button>
-      <ng-container *ngIf="reconsiderations.length">
+      <ng-container *ngIf="_reconsiderations.length">
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
           <button mat-menu-item (click)="onGoToCard()">Standard Application</button>
-          <button *ngFor="let recon of reconsiderations; let i = index" mat-menu-item (click)="onGoToReconCard(recon)">
+          <button *ngFor="let recon of _reconsiderations; let i = index" mat-menu-item (click)="onGoToReconCard(recon)">
             Reconsideration Request #{{ i + 1 }}
           </button>
         </mat-menu>
@@ -58,7 +60,7 @@
       <div class="subheading2">Local Government:</div>
       <div class="body1-text">{{ _application.localGovernment.name }}</div>
     </div>
-    <div *ngIf="!reconsiderations.length">
+    <div *ngIf="!_reconsiderations.length">
       <div class="subheading2">Business Days:</div>
       <div class="body1-text left time-tracking">
         <div *ngIf="!_application.paused"><span class="dot"></span>Active</div>

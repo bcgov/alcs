@@ -11,11 +11,18 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
   templateUrl: './application-document.component.html',
   styleUrls: ['./application-document.component.scss'],
 })
-export class ApplicationDocumentComponent implements OnInit {
-  @Input() fileNumber = '';
+export class ApplicationDocumentComponent {
   @Input() documentType: DOCUMENT_TYPE = 'decisionDocument';
   @Input() title = '';
   @Input() readOnly = false;
+
+  _fileNumber: string = '';
+  @Input() set fileNumber(fileNumber: string) {
+    this._fileNumber = fileNumber;
+    if (fileNumber) {
+      this.loadDocuments();
+    }
+  }
 
   isUploading = false;
 
@@ -27,12 +34,8 @@ export class ApplicationDocumentComponent implements OnInit {
     private confirmationDialogService: ConfirmationDialogService
   ) {}
 
-  ngOnInit(): void {
-    this.loadDocuments();
-  }
-
   async loadDocuments() {
-    this.documents = await this.applicationDocumentService.list(this.fileNumber, this.documentType);
+    this.documents = await this.applicationDocumentService.list(this._fileNumber, this.documentType);
   }
 
   async onDelete(uuid: string, fileName: string) {
