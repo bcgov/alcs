@@ -51,7 +51,7 @@ export class CardSubtaskController {
       card.subtasks.some((s) => s.type.type === 'Audit')
     ) {
       throw new ServiceValidationException(
-        `Card can have only one Audit subtasks ${cardUuid}`,
+        `Card can have only one Audit subtask`,
       );
     }
 

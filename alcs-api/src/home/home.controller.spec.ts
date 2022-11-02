@@ -3,7 +3,6 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
 import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
@@ -182,7 +181,7 @@ describe('HomeController', () => {
         ]),
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType('GIS');
 
       expect(res.length).toEqual(1);
       expect(
@@ -200,7 +199,7 @@ describe('HomeController', () => {
         [mockReconsideration],
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType('GIS');
 
       expect(res.length).toEqual(1);
       expect(
@@ -224,7 +223,7 @@ describe('HomeController', () => {
         [mockPlanningReview],
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType('GIS');
 
       expect(res.length).toEqual(1);
       expect(
@@ -243,7 +242,7 @@ describe('HomeController', () => {
         [mockAmendment],
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType('GIS');
 
       expect(res.length).toEqual(1);
       expect(
