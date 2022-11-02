@@ -1,7 +1,13 @@
 <div>
   <div class="subheading2 header split">
     <div>Sub-Tasks ({{ subtasks.length }})</div>
-    <div><button (click)="create('GIS')" mat-flat-button color="primary">+ GIS</button></div>
+    <div>
+      <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ NEW SUB-TASK ▾</button>
+      <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
+        <button mat-menu-item (click)="create('Audit')">Audit</button>
+        <button mat-menu-item (click)="create('GIS')">GIS</button>
+      </mat-menu>
+    </div>
   </div>
   <div class="no-subtasks" *ngIf="!subtasks.length">No Sub-Tasks</div>
   <div class="subtasks" *ngIf="subtasks.length">
