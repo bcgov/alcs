@@ -1,3 +1,10 @@
-<div [matTooltipDisabled]="!name" matTooltip="Assignee: {{name}}" class="avatar-circle">
+<div
+  [matTooltipDisabled]="!name"
+  matTooltip="Assignee: {{ name }}"
+  class="avatar-circle"
+  [ngClass]="{
+    large: large
+  }"
+>
   <span class="center">{{ initials }}</span>
 </div>

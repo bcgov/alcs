@@ -1,9 +1,10 @@
 <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
   <mat-icon
+    class="icon"
     [ngClass]="{
       'unread-notifications': hasUnread
     }"
-    >notifications</mat-icon
+    >notifications_outlined</mat-icon
   >
 </button>
 <mat-menu #notificationMenu="matMenu" xPosition="before">
