@@ -155,21 +155,21 @@ docker ps
   - run ora2pg container:
 
   ```sh
-   docker run \
-   --name ora2pg \
-   --network <network specified for oracle container above> \
-   -it \
-   -v <path on the host to config folder with ora2pg.conf>:/config \
-   -v <path on the host to data folder where you will see the output of migration>:/data \
-   georgmoser/ora2pg
+   # docker run \
+   # --name ora2pg \
+   # --network <network specified for oracle container above> \
+   # -it \
+   # -v <path on the host to config folder with ora2pg.conf>:/config \
+   # -v <path on the host to data folder where you will see the output of migration>:/data \
+   # georgmoser/ora2pg
 
    # example of command above with populated values
    docker run \
    --name ora2pg \
    --network alpine-net \
    -it \
-   -v /Users/mekhti/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/config:/config \
-   -v /Users/mekhti/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/data:/data \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/config:/config \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/data:/data \
    georgmoser/ora2pg
   ```
 
@@ -219,8 +219,8 @@ docker ps
    --name ora2pg \
    --network alpine-net \
    -it \
-   -v /Users/mekhti/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/config:/config \
-   -v /Users/mekhti/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/data:/data \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/config:/config \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/data:/data \
    georgmoser/ora2pg
   ```
 
