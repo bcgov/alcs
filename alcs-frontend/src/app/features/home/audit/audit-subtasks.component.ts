@@ -8,15 +8,14 @@ import { HomeService } from '../../../services/home/home.service';
 import { UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { CardType } from '../../../shared/card/card.component';
-
 @Component({
-  selector: 'app-gis-subtasks',
-  templateUrl: './gis-subtasks.component.html',
-  styleUrls: ['./gis-subtasks.component.scss'],
+  selector: 'app-audit-subtasks',
+  templateUrl: './audit-subtasks.component.html',
+  styleUrls: ['./audit-subtasks.component.scss'],
 })
-export class GisSubtasksComponent implements OnInit {
+export class AuditSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
-  public gisUsers: UserDto[] = [];
+  public auditUsers: UserDto[] = [];
   displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
 
   constructor(
@@ -27,8 +26,11 @@ export class GisSubtasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(ROLES.APP_SPECIALIST.valueOf());
     this.userService.$users.subscribe((users) => {
-      this.gisUsers = users.filter((user) => user.clientRoles.includes(ROLES.GIS.valueOf()));
+      this.auditUsers = users.filter((user) =>
+        [ROLES.APP_SPECIALIST.valueOf(), ROLES.LUP].some((role) => user.clientRoles.includes(role))
+      );
     });
     this.userService.fetchUsers();
 
@@ -36,7 +38,7 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const nonOrderedSubtasks = await this.homeService.fetchSubtasks('GIS');
+    const nonOrderedSubtasks = await this.homeService.fetchSubtasks('Audit');
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);

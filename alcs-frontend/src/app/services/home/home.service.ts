@@ -25,7 +25,9 @@ export class HomeService {
     );
   }
 
-  async fetchGisSubtasks() {
-    return await firstValueFrom(this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask`));
+  async fetchSubtasks(subtaskType: string) {
+    return await firstValueFrom(
+      this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask/${subtaskType}`)
+    );
   }
 }
