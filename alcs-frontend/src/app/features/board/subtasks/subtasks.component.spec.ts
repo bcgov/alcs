@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
@@ -33,7 +34,7 @@ describe('SubtasksComponent', () => {
         },
       ],
       declarations: [SubtasksComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
+      imports: [HttpClientTestingModule, MatSnackBarModule, MatMenuModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SubtasksComponent);
