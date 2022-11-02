@@ -4,7 +4,11 @@
     <div>
       <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ NEW SUB-TASK ▾</button>
       <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
-        <span matTooltip="Only one Audit subtask per card." [matTooltipDisabled]="!hasAuditSubtask">
+        <span
+          matTooltip="Only one Audit subtask per card."
+          [matTooltipDisabled]="!hasAuditSubtask"
+          matTooltipPosition="left"
+        >
           <button mat-menu-item (click)="create('Audit')" [disabled]="hasAuditSubtask">Audit</button>
         </span>
         <button mat-menu-item (click)="create('GIS')">GIS</button>

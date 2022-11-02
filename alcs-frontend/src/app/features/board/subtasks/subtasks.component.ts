@@ -40,10 +40,8 @@ export class SubtasksComponent implements OnInit {
   }
 
   async create(type: string) {
-    const task = await this.subtaskService.create(this.cardUuid, type);
-    if (task) {
-      this.subtasks.push(task);
-    }
+    await this.subtaskService.create(this.cardUuid, type);
+    await this.loadSubtasks(this.cardUuid);
   }
 
   async onDelete(uuid: string) {
