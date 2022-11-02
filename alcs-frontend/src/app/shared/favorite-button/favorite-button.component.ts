@@ -9,14 +9,10 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./favorite-button.component.scss'],
 })
 export class FavoriteButtonComponent implements OnInit {
-  @Input()
-  currentUserProfile?: UserDto;
-  @Input()
-  boardCode?: string;
-  @Input()
-  isFavorite?: boolean = false;
-  @Input()
-  disableTooltip?: boolean = false;
+  @Input() currentUserProfile?: UserDto;
+  @Input() boardCode?: string;
+  @Input() isFavorite?: boolean = false;
+  @Input() disableTooltip?: boolean = false;
 
   constructor(private userService: UserService, private toastService: ToastService) {}
 

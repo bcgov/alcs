@@ -19,8 +19,9 @@
         </div>
       </div>
       <div class="col">
-        <button *ngIf="hasRoles && !isCommissioner" class="menu-item" [matMenuTriggerFor]="navigationMenu">
-          Boards ▾
+        <button *ngIf="hasRoles && !isCommissioner" class="menu-item" [class.open]="menuTrigger.menuOpen"
+                #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="navigationMenu">
+          Boards <span class="board-menu-arrow">▾</span>
         </button>
         <mat-menu #navigationMenu="matMenu">
           <div class="board-item menu-item" *ngFor="let board of sortedBoards" (click)="onSelectBoard(board.code)">
@@ -38,25 +39,25 @@
       </div>
       <div *ngIf="currentUserProfile" class="col right">
         <app-search-bar *ngIf="allowedSearch"></app-search-bar>
-        <app-notifications *ngIf="hasRoles"></app-notifications>
+        <app-notifications class="notification" *ngIf="hasRoles"></app-notifications>
         <button
           [class.open]="menuTrigger.menuOpen"
           *ngIf="hasRoles"
-          class="menu-item avatar-menu"
+          class="avatar-menu-button"
           #menuTrigger="matMenuTrigger"
           [matMenuTriggerFor]="avatarMenu"
         >
-          <app-avatar-circle [initials]="currentUserProfile.initials"></app-avatar-circle>
+          <app-avatar-circle [initials]="currentUserProfile.initials" [large]="true"></app-avatar-circle>
           <span class="avatar-menu-arrow">▾</span>
         </button>
-        <mat-menu #avatarMenu="matMenu" xPosition="before">
+        <mat-menu #avatarMenu="matMenu" class="avatar-menu" xPosition="before">
           <div class="name-text">
             Signed in as <br />
             <strong>{{ currentUserProfile.idirUserName }}{{ currentUserProfile.bceidUserName }}</strong>
           </div>
           <hr />
           <div class="avatar-menu-items">
-            <button class="menu-item" (click)="onLogout()">Log Out</button>
+            <button (click)="onLogout()">Log Out</button>
           </div>
         </mat-menu>
       </div>

@@ -43,7 +43,7 @@ export class UserService {
 
   public async updateUser(uuid: string, user: UpdateUserDto) {
     try {
-      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user`, user));
+      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user/${uuid}`, user));
       await this.fetchUsers();
     } catch (e) {
       this.toastService.showErrorToast('Failed to update User');

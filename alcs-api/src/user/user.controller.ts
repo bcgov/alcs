@@ -44,11 +44,11 @@ export class UserController {
     return this.userMapper.mapAsync(deleted, User, UserDto);
   }
 
-  @Patch(':/uuid')
+  @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
     @Param('uuid') userUuid: string,
-    @Body() user: UpdateUserDto,
+    @Body() updateDto: UpdateUserDto,
     @Req() req,
   ) {
     if (userUuid !== req.user.entity.uuid) {
@@ -62,11 +62,6 @@ export class UserController {
       throw new NotFoundException(`User with uuid not found ${userUuid}`);
     }
 
-    const userEntity = await this.userMapper.mapAsync(
-      user,
-      UpdateUserDto,
-      User,
-    );
-    return this.userService.update(userEntity.uuid, userEntity);
+    return this.userService.update(userUuid, updateDto);
   }
 }

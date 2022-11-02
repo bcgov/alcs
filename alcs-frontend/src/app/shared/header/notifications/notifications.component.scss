@@ -1,15 +1,23 @@
 @import '../../../../styles/colors';
 
+.icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  margin-top: 4px;
+}
+
 .unread-notifications::before {
   content: '';
   position: absolute;
-  top: 13px;
+  top: 9px;
   background: $error-color;
-  width: 7px;
-  height: 7px;
-  border: 1px solid whitesmoke;
+  width: 8px;
+  height: 8px;
+  border: 1px solid $primary-color;
   border-radius: 100%;
-  right: calc(50% - 10px);
+  right: calc(50% - 12px);
 }
 
 .notifications-header {
