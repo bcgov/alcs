@@ -15,6 +15,7 @@ export class SubtasksComponent implements OnInit {
 
   subtasks: CardSubtaskDto[] = [];
   users: Map<string, UserDto> = new Map();
+  hasAuditSubtask = true;
 
   constructor(
     private subtaskService: CardSubtaskService,
@@ -35,11 +36,14 @@ export class SubtasksComponent implements OnInit {
 
   private async loadSubtasks(fileNumber: string) {
     this.subtasks = await this.subtaskService.fetch(fileNumber);
+    this.hasAuditSubtask = this.subtasks.some((s) => s.type.type === 'Audit');
   }
 
   async create(type: string) {
     const task = await this.subtaskService.create(this.cardUuid, type);
-    this.subtasks.push(task);
+    if (task) {
+      this.subtasks.push(task);
+    }
   }
 
   async onDelete(uuid: string) {

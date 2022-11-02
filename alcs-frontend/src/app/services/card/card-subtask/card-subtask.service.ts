@@ -18,9 +18,17 @@ export class CardSubtaskService {
   }
 
   async create(cardUuid: string, type: string) {
-    const createdSubtask = firstValueFrom(this.http.post<CardSubtaskDto>(`${this.baseUrl}/${cardUuid}/${type}`, {}));
-    this.toastService.showSuccessToast('Subtask created');
-    return createdSubtask;
+    try {
+      const createdSubtask = await firstValueFrom(
+        this.http.post<CardSubtaskDto>(`${this.baseUrl}/${cardUuid}/${type}`, {})
+      );
+      this.toastService.showSuccessToast('Subtask created');
+      return createdSubtask;
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to create Subtask');
+    }
+    return;
   }
 
   async update(uuid: string, update: UpdateApplicationSubtaskDto) {
