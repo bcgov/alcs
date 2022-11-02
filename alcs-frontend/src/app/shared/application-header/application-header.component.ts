@@ -1,13 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AMENDMENT_TYPE_LABEL } from '../../features/board/dialogs/amendment/amendment-dialog.component';
-import { ApplicationAmendmentDto } from '../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationDetailService } from '../../services/application/application-detail.service';
-import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../services/application/application.dto';
 import { RECON_TYPE_LABEL } from '../../features/board/dialogs/reconsiderations/reconsideration-dialog.component';
+import { ApplicationAmendmentDto } from '../../services/application/application-amendment/application-amendment.dto';
+import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationDto } from '../../services/application/application.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 
 @Component({
@@ -20,12 +18,26 @@ export class ApplicationHeaderComponent {
 
   _application: ApplicationDto | CommissionerApplicationDto | undefined;
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | undefined) {
-    if (application && 'card' in application) {
-      this.showCardMenu = true;
+    if (application) {
       this._application = application;
+      if ('card' in application) {
+        this.showCardMenu = true;
+      }
+      if ('hasRecons' in application) {
+        this.showReconLabel = application.hasRecons;
+      }
+      if ('hasAmendments' in application) {
+        this.showAmendmentLabel = application.hasAmendments;
+      }
     }
   }
-  @Input() reconsiderations: ApplicationReconsiderationDto[] = [];
+
+  @Input() set reconsiderations(reconsiderations: ApplicationReconsiderationDto[]) {
+    this.showReconLabel = reconsiderations.length > 0;
+    this._reconsiderations = reconsiderations;
+  }
+
+  _reconsiderations: ApplicationReconsiderationDto[] = [];
 
   @Input() set amendments(amendments: ApplicationAmendmentDto[]) {
     this.showAmendmentLabel = amendments.reduce((showLabel, amendment) => {
@@ -33,12 +45,14 @@ export class ApplicationHeaderComponent {
     }, false);
     this._amendments = amendments;
   }
+
   _amendments: ApplicationAmendmentDto[] = [];
 
   reconLabel = RECON_TYPE_LABEL;
   amendmentLabel = AMENDMENT_TYPE_LABEL;
   showCardMenu = false;
   showAmendmentLabel = false;
+  showReconLabel = false;
 
   constructor(private router: Router) {}
 

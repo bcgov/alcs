@@ -27,4 +27,7 @@ export class CommissionerApplicationDto {
 
   @AutoMap()
   localGovernment: ApplicationLocalGovernmentDto;
+
+  hasRecons: boolean;
+  hasAmendments: boolean;
 }

@@ -43,7 +43,7 @@ export class DecisionMeetingComponent implements OnInit {
       maxWidth: '800px',
       width: '70%',
       data: {
-        fileNumber: this.fileNumber,
+        fileNumber: this._fileNumber,
       },
     });
   }
