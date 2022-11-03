@@ -9,32 +9,31 @@
 
 ## Oracle 12.2 in Docker container
 
-- login to Oracle Docker registry with your oracle account
-
+Login to Oracle Docker registry with your oracle account
 ```sh
 docker login container-registry.oracle.com
 ```
 
-- navigate to https://container-registry.oracle.com/ -> Database -> enterprise -> Sign in -> accept license agreement
-- select an image that you are interested in and
+Navigate to https://container-registry.oracle.com/ -> Database -> enterprise -> Sign in and accept the license agreement
 
+Create network
 ```sh
-docker pull <image>
+docker network create alpine-net
 ```
 
-- run container, where 5g is 5GB allocated to Oracle. !NOTE: Container has network specified and it will not be available from the host OS.
+Run container, where 5GB is amount allocated to Oracle. !NOTE: Container has network specified and it will not be available from the host OS.
 
 ```sh
 docker run -d  -p 1527:1521 -p 5507:5500 -it --name oraDB --shm-size="5g" --network alpine-net container-registry.oracle.com/database/enterprise:12.2.0.1
 ```
 
-- keep an eye on the container. If everything goes successfully, you should see a container in the list. !NOTE, it takes a couple of minutes for the container to start up fully.
+Keep an eye on the container. If everything goes successfully, you should see a container in the list. !NOTE, it takes a couple of minutes for the container to start up fully.
 
 ```
 docker ps
 ```
 
-- in container logs you will see tnsnames.ora configuration if you ever need that.
+In container logs you will see tnsnames.ora configuration if you ever need that.
 
 !NOTE: the default values for container 12c (12.2.0.1 image)
 
@@ -56,36 +55,31 @@ Service Name: ORCLPDB1.localdomain
 
 ## Dump import
 
-- exec into the container
-
+Exec into the container
 ```sh
 # docker exec -it <db container name> bash
 docker exec -it oraDB bash
 ```
 
-- create a directory in the Oracle container
-
+Create a directory in the Oracle container for the dump
 ```sh
 # -p create parents if do not exist
 mkdir -p /u01/app/oracle/admin/ORCL/dpdump
 ```
 
-- copy the dump file from the host there
-
+Launch a new terminal window and copy the dump file from the host into it
 ```sh
 # docker cp <path to source dump file on host> <db container>:<path to dump file on container>
-docker cp ./expdp.OATS-395.20220831.dmp b6c68d998848:/u01/app/oracle/admin/ORCL/dpdump
+docker cp ./expdp.OATS-395.20220831.dmp abc38c2849e0:/u01/app/oracle/admin/ORCL/dpdump
 ```
 
-- set DATA_PUMP_DIRECTORY in CDB. '/u01/app/oracle/admin/ORCL/dpdump' is a location in the Oracle container where the dump file is.
-
+Set DATA_PUMP_DIRECTORY in CDB. '/u01/app/oracle/admin/ORCL/dpdump' is the location where the dump file was copied to
 ```sh
 # connect to oracle CDB inside container
 sqlplus sys/Oradoc_db1@localhost:1521/ORCLCDB
 ```
 
-- you can check the current connection by executing
-
+You can check the current connection by executing
 ```SQL
 show con_name;
 ```
@@ -95,13 +89,12 @@ show con_name;
 CREATE OR REPLACE DIRECTORY "DATA_PUMP_DIR" as '/u01/app/oracle/admin/ORCL/dpdump';
 ```
 
-- switch to the PDB in sqlplus
-
+Switch to the PDB in sqlplus
 ```SQL
 alter session set container=ORCLPDB1;
 ```
 
-- create a table space in PDB
+Create a table space in PDB
 
 ```sql
 CREATE TABLESPACE OATS_TABLES
@@ -110,7 +103,7 @@ CREATE TABLESPACE OATS_TABLES
    AUTOEXTEND ON;
 ```
 
-- create a PDB import user, where 'IMPOATS' is username, 'Oradoc_db1' is password
+Create a PDB import user, where 'IMPOATS' is username, 'Oradoc_db1' is password
 
 ```sql
 -- USER SQL
@@ -131,7 +124,7 @@ GRANT "CONNECT" TO "IMPOATS" WITH ADMIN OPTION;
 GRANT "DATAPUMP_IMP_FULL_DATABASE" TO "IMPOATS" WITH ADMIN OPTION;
 ```
 
-- start importing data with impdp
+Start importing data with impdp
 
 ```sh
 impdp IMPOATS/Oradoc_db1@localhost:1521/ORCLPDB1.localdomain directory=DATA_PUMP_DIR dumpfile=expdp.OATS-395.20220831.dmp full=y
@@ -168,8 +161,8 @@ docker ps
    --name ora2pg \
    --network alpine-net \
    -it \
-   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/config:/config \
-   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/data:/data \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/config:/config \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/data:/data \
    georgmoser/ora2pg
   ```
 
@@ -219,8 +212,8 @@ docker ps
    --name ora2pg \
    --network alpine-net \
    -it \
-   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/config:/config \
-   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/OracleToPg/ora2pg/data:/data \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/config:/config \
+   -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/data:/data \
    georgmoser/ora2pg
   ```
 

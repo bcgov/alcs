@@ -58,7 +58,6 @@ export class ApplicationDecisionMeetingService {
       .createQueryBuilder('meeting')
       .select('application.uuid, MAX(meeting.date) as next_meeting')
       .leftJoin('meeting.application', 'application')
-      .where('application.decision_date IS NULL')
       .groupBy('application.uuid')
       .getRawMany();
   }

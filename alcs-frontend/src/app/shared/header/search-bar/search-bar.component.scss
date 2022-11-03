@@ -1,9 +1,30 @@
+@import '../../../../styles/colors';
+
 .search-bar {
-  font-size: 14px;
+  background-color: $primary-color-dark;
+  font-size: 16px;
+  color: #fff;
+  border-radius: 4px;
 
   .mat-icon {
     font-size: 125%;
   }
+}
+
+input {
+  color: #fff;
+}
+
+.mat-input-element {
+  color: #fff;
+  &::placeholder {
+    color: $grey-light;
+    letter-spacing: 0.5px;
+  }
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  border-radius: 4px;
 }
 
 :host ::ng-deep .mat-form-field-wrapper{
