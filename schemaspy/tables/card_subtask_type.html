@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>card_subtask_type</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>card_subtask_type</h1><p><span id="recordNumber">2</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -109,7 +109,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
+                                    <td><span id="uuid">uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -117,10 +117,6 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="card_subtask.type_uuid references card_subtask_type.uuid via FK_b2ea292f93c675defa3b3cc93dd"><a href='card_subtask.html'>card_subtask</a><span class='relatedKey'>.type_uuid</span></td>
-                                                <td class="constraint detail">FK_b2ea292f93c675defa3b3cc93dd<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -215,7 +211,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="type">type</span></td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="code">code</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -223,6 +219,10 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="card_subtask.type_code references card_subtask_type.code via FK_ea97b0efe5b7c84d8146e8c9184"><a href='card_subtask.html'>card_subtask</a><span class='relatedKey'>.type_code</span></td>
+                                                <td class="constraint detail">FK_ea97b0efe5b7c84d8146e8c9184<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -251,6 +251,40 @@
                                 <tr>
                                     <td><span id="text_color">text_color</span></td>
                                     <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="label">label</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="description">description</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
@@ -296,10 +330,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_b2ea292f93c675defa3b3cc93dd</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_ea97b0efe5b7c84d8146e8c9184</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>uuid</td>
+                                    <td>code</td>
+                                </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_b0fe71e81495b000b2fd3637ef5</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>description</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -324,8 +364,8 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="428,5,652,211">
-<area shape="rect" id="node2" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="5,91,384,424">
+<area shape="rect" id="node1" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="428,96,652,301">
+<area shape="rect" id="node2" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="5,5,384,397">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/card_subtask_type.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
@@ -334,7 +374,7 @@
 <area shape="rect" id="node1" href="card.html" target="_top" title="card" alt="" coords="296,67,411,155">
 <area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,31,120,119">
 <area shape="rect" id="node3" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="587,5,811,211">
-<area shape="rect" id="node4" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="164,172,543,505">
+<area shape="rect" id="node4" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="164,172,543,564">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card_subtask_type.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
