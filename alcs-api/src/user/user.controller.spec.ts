@@ -4,7 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
-import { initMockUserDto } from '../common/utils/test-helpers/mockEntities';
+import {
+  initMockUserDto,
+  initUserMockEntity,
+} from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { UserController } from './user.controller';
 import { UserDto } from './user.dto';
@@ -64,11 +67,9 @@ describe('UserController', () => {
     };
 
     mockUserDto = {
-      email: 'bruce@wayne.com',
       name: 'bruce wayne',
       identityProvider: 'test',
       initials: 'b',
-      mentionLabel: '',
       idirUserName: 'bat',
       clientRoles: [],
       bceidUserName: '',
@@ -84,13 +85,14 @@ describe('UserController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-  it('should call listUser on the service', async () => {
-    mockService.getAll.mockResolvedValue([mockUser as User]);
+  it('should call getAssignableUsers on the service', async () => {
+    mockService.getAssignableUsers.mockResolvedValue([mockUser as User]);
 
-    const res = await controller.getUsers();
+    const res = await controller.getAssignableUsers();
 
-    expect(res).toEqual([mockUserDto]);
-    expect(mockService.getAll).toHaveBeenCalledTimes(1);
+    expect(res[0].name).toEqual(mockUserDto.name);
+    expect(res[0].initials).toEqual(mockUserDto.initials);
+    expect(mockService.getAssignableUsers).toHaveBeenCalledTimes(1);
   });
 
   it('should call deleteUser on the service', async () => {
@@ -135,5 +137,17 @@ describe('UserController', () => {
     ).rejects.toMatchObject(
       new Error('You can update only your user details.'),
     );
+  });
+
+  it('return the current user', async () => {
+    const mockEntity = initUserMockEntity();
+
+    const res = await controller.getMyself({
+      user: {
+        entity: mockEntity,
+      },
+    });
+    expect(res.name).toEqual(mockEntity.name);
+    expect(res.identityProvider).toEqual(mockEntity.identityProvider);
   });
 });

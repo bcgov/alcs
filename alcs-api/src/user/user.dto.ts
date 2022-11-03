@@ -22,12 +22,6 @@ export class UserDto extends UpdateUserDto {
   initials: string;
 
   @AutoMap()
-  mentionLabel: string;
-
-  @AutoMap()
-  email: string;
-
-  @AutoMap()
   name: string;
 
   @AutoMap()
@@ -67,4 +61,13 @@ export class AssigneeDto {
 
   @AutoMap()
   name?: string;
+
+  @AutoMap()
+  mentionLabel: string;
+
+  @AutoMap()
+  email: string;
+
+  @AutoMap()
+  clientRoles: string[];
 }

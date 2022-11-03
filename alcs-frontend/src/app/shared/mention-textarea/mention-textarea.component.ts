@@ -33,7 +33,7 @@ export class MentionTextareaComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.$users.subscribe((users) => {
+    this.userService.$assignableUsers.subscribe((users) => {
       this.users = users;
     });
 

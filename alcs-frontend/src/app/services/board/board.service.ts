@@ -21,7 +21,7 @@ export class BoardService {
   $boards = this.boardsEmitter.asObservable();
 
   constructor(private http: HttpClient, private userService: UserService) {
-    this.userService.$currentUserProfile.subscribe((user) => {
+    this.userService.$userProfile.subscribe((user) => {
       this.userProfile = user;
       this.publishBoards();
     });

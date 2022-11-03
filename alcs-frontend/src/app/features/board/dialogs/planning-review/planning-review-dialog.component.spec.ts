@@ -11,7 +11,7 @@ import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { PlanningReviewDto } from '../../../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
@@ -50,8 +50,8 @@ describe('PlanningReviewDialogComponent', () => {
     const mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close', 'afterClosed', 'backdropClick', 'subscribe']);
     mockDialogRef.backdropClick = () => new EventEmitter();
 
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
-    mockUserService.$users = new BehaviorSubject<UserDto[]>([]);
+    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);

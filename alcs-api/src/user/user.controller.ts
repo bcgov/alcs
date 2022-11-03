@@ -17,7 +17,7 @@ import * as config from 'config';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE, AUTH_ROLE } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { UpdateUserDto, UserDto } from './user.dto';
+import { AssigneeDto, UpdateUserDto, UserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -30,11 +30,18 @@ export class UserController {
     @InjectMapper() private userMapper: Mapper,
   ) {}
 
-  @Get()
+  @Get('/profile')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getUsers() {
-    const users = await this.userService.getAll();
-    return this.userMapper.mapArrayAsync(users, User, UserDto);
+  async getMyself(@Req() req) {
+    const user = req.user.entity;
+    return this.userMapper.mapAsync(user, User, UserDto);
+  }
+
+  @Get('/assignable')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getAssignableUsers() {
+    const users = await this.userService.getAssignableUsers();
+    return this.userMapper.mapArrayAsync(users, User, AssigneeDto);
   }
 
   @Delete()

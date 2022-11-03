@@ -32,21 +32,19 @@ export class ApplicationHeaderComponent {
     }
   }
 
+  _reconsiderations: ApplicationReconsiderationDto[] = [];
   @Input() set reconsiderations(reconsiderations: ApplicationReconsiderationDto[]) {
     this.showReconLabel = reconsiderations.length > 0;
     this._reconsiderations = reconsiderations;
   }
 
-  _reconsiderations: ApplicationReconsiderationDto[] = [];
-
+  _amendments: ApplicationAmendmentDto[] = [];
   @Input() set amendments(amendments: ApplicationAmendmentDto[]) {
     this.showAmendmentLabel = amendments.reduce((showLabel, amendment) => {
       return amendment.isReviewApproved === null;
     }, false);
     this._amendments = amendments;
   }
-
-  _amendments: ApplicationAmendmentDto[] = [];
 
   reconLabel = RECON_TYPE_LABEL;
   amendmentLabel = AMENDMENT_TYPE_LABEL;

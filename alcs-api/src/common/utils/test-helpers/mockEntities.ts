@@ -35,7 +35,7 @@ const initCardStatusMockEntity = (): CardStatus => {
 
 const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   const subtask = new CardSubtask();
-  subtask.assignee = initAssigneeMockEntity();
+  subtask.assignee = initUserMockEntity();
   subtask.uuid = uuid ?? '11111';
   subtask.assigneeUuid = subtask.assignee.uuid;
   subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
@@ -69,7 +69,7 @@ const initCardMockEntity = (subtaskUuid?: string): Card => {
   card.status = initCardStatusMockEntity();
   card.uuid = '1111-1111-1111-1112';
   card.assigneeUuid = '1111-1111-1111';
-  card.assignee = initAssigneeMockEntity();
+  card.assignee = initUserMockEntity();
   card.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   card.subtasks = [initCardSubtaskMockEntity(card, subtaskUuid)];
@@ -94,7 +94,7 @@ const initApplicationTypeMockEntity = (): ApplicationType => {
   return applicationType;
 };
 
-const initAssigneeMockEntity = (): User => {
+const initUserMockEntity = (): User => {
   const user = new User();
   user.familyName = 'familyName';
   user.email = 'email_1@emai.com';
@@ -186,10 +186,10 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
 };
 
 const initMockUserDto = (assignee?: User): UserDto => {
-  const userEntity = assignee ?? initAssigneeMockEntity();
+  const userEntity = assignee ?? initUserMockEntity();
   const userDto = new UserDto();
   userDto.uuid = 'user-uuid';
-  userDto.email = userEntity.email;
+
   userDto.identityProvider = userEntity.identityProvider;
   userDto.name = userEntity.name;
   userDto.idirUserName = userEntity.idirUserName;
@@ -197,22 +197,24 @@ const initMockUserDto = (assignee?: User): UserDto => {
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
-  userDto.mentionLabel =
-    userEntity.givenName.charAt(0).toUpperCase() +
-    userEntity.givenName.slice(1) +
-    userEntity.familyName.charAt(0).toUpperCase() +
-    userEntity.familyName.slice(1);
+
   return userDto;
 };
 
 const initMockAssigneeDto = (assignee?: User): AssigneeDto => {
-  const userEntity = assignee ?? initAssigneeMockEntity();
+  const userEntity = assignee ?? initUserMockEntity();
   const assigneeDto = new AssigneeDto();
   assigneeDto.uuid = userEntity.uuid;
   assigneeDto.name = userEntity.name;
   assigneeDto.initials =
     userEntity.givenName.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
+  assigneeDto.mentionLabel =
+    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.givenName.slice(1) +
+    userEntity.familyName.charAt(0).toUpperCase() +
+    userEntity.familyName.slice(1);
+  assigneeDto.email = userEntity.email;
   return assigneeDto;
 };
 
@@ -244,7 +246,7 @@ const initCommentMentionMock = (
 ): CommentMention => {
   const mention = new CommentMention();
   const commentEntity = comment ?? initCommentMock();
-  const userEntity = user ?? initAssigneeMockEntity();
+  const userEntity = user ?? initUserMockEntity();
   mention.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   mention.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   mention.commentUuid = commentEntity.uuid;
@@ -309,7 +311,7 @@ export {
   initApplicationMockEntity,
   initMockAssigneeDto,
   initMockUserDto,
-  initAssigneeMockEntity,
+  initUserMockEntity,
   initApplicationTypeMockEntity,
   initCommentMentionMock,
   initCommentMock,

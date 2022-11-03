@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastService } from '../../services/toast/toast.service';
-import { UserDto } from '../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { CardData, CardType } from '../card/card.component';
 
 import { DragDropBoardComponent } from './drag-drop-board.component';
@@ -15,7 +15,7 @@ describe('DragDropBoardComponent', () => {
     assignee: {
       name: 'Name',
       initials: 'initials',
-    } as UserDto,
+    } as AssigneeDto,
     title: 'Im Title',
     activeDays: 2,
     paused: false,

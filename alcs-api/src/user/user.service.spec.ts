@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
-import { initAssigneeMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { initUserMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { EmailService } from '../providers/email/email.service';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -19,7 +19,7 @@ describe('UserService', () => {
   let emailServiceMock: DeepMocked<EmailService>;
 
   const email = 'bruce.wayne@gotham.com';
-  const mockUser = initAssigneeMockEntity();
+  const mockUser = initUserMockEntity();
   mockUser.email = email;
 
   beforeEach(async () => {
@@ -58,7 +58,7 @@ describe('UserService', () => {
   });
 
   it('should return the users from the repository', async () => {
-    const users = await service.getAll();
+    const users = await service.getAssignableUsers();
 
     expect(users.length).toEqual(1);
     expect(users[0]).toEqual(mockUser);
@@ -106,7 +106,7 @@ describe('UserService', () => {
 
   describe('updateUser', () => {
     it('should update existing user', async () => {
-      const mockUserEntity = initAssigneeMockEntity();
+      const mockUserEntity = initUserMockEntity();
       mockUserEntity.settings = { favoriteBoards: ['CEO', 'SOI'] };
       mockUserEntity.email = 'some test email';
 

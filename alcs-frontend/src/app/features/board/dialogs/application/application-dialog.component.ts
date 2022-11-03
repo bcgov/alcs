@@ -19,7 +19,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 })
 export class ApplicationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  $users: Observable<UserDto[]> | undefined;
+  $users: Observable<AssigneeDto[]> | undefined;
   selectedAssignee?: AssigneeDto;
   selectedAssigneeName?: string;
   selectedApplicationStatus = '';
@@ -46,8 +46,8 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.populateData(this.data);
 
-    this.$users = this.userService.$users;
-    this.userService.fetchUsers();
+    this.$users = this.userService.$assignableUsers;
+    this.userService.fetchAssignableUsers();
 
     this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
@@ -71,14 +71,14 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
     this.selectedRegion = application.region.code;
   }
 
-  filterAssigneeList(term: string, item: UserDto) {
+  filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
       item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 
-  onAssigneeSelected(assignee: UserDto) {
+  onAssigneeSelected(assignee: AssigneeDto) {
     this.selectedAssignee = assignee;
     this.application.card.assignee = assignee;
     this.updateCard({

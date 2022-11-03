@@ -17,7 +17,7 @@ export class FavoriteButtonComponent implements OnInit {
   constructor(private userService: UserService, private toastService: ToastService) {}
 
   ngOnInit(): void {
-    this.userService.$currentUserProfile.subscribe((user) => {
+    this.userService.$userProfile.subscribe((user) => {
       this.currentUserProfile = user;
 
       if (user && this.boardCode && this.currentUserProfile) {
@@ -61,7 +61,7 @@ export class FavoriteButtonComponent implements OnInit {
     this.updateFavoriteBoardsList(this.boardCode);
 
     try {
-      await this.userService.updateUser(this.currentUserProfile.uuid, {
+      await this.userService.updateUserProfile(this.currentUserProfile.uuid, {
         settings: this.currentUserProfile.settings,
       });
     } catch {
