@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AssignedComponent } from './assigned/assigned.component';
+import { AuditSubtasksComponent } from './audit/audit-subtasks.component';
 import { GisSubtasksComponent } from './gis/gis-subtasks.component';
 import { HomeComponent } from './home.component';
 
@@ -14,7 +15,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, AssignedComponent, GisSubtasksComponent],
+  declarations: [HomeComponent, AssignedComponent, GisSubtasksComponent, AuditSubtasksComponent],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes)],
   providers: [],
 })

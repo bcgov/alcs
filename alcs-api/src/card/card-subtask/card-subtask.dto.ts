@@ -1,7 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsUUID } from 'class-validator';
-import { ApplicationReconsiderationDto } from '../../application-reconsideration/application-reconsideration.dto';
-import { ApplicationDto } from '../../application/application.dto';
 import { AssigneeDto } from '../../user/user.dto';
 import { CardDto } from '../card.dto';
 
@@ -18,7 +16,10 @@ export class UpdateCardSubtaskDto {
 
 export class CardSubtaskTypeDto {
   @AutoMap()
-  type: string;
+  code: string;
+
+  @AutoMap()
+  label: string;
 
   @AutoMap()
   backgroundColor: string;
@@ -49,4 +50,9 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
   title: string;
   activeDays?: number;
   paused: boolean;
+}
+
+export enum CARD_SUBTASK_TYPE {
+  GIS = 'GIS',
+  AUDIT = 'AUDIT',
 }

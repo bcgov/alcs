@@ -14,15 +14,19 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
 import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
+import { ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
-import {
-  ANY_AUTH_ROLE,
-  ROLES_ALLOWED_BOARDS,
-} from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../../common/exceptions/base.exception';
 import { CardService } from '../card.service';
-import { CardSubtaskDto, UpdateCardSubtaskDto } from './card-subtask.dto';
+import {
+  CardSubtaskDto,
+  CARD_SUBTASK_TYPE,
+  UpdateCardSubtaskDto,
+} from './card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -43,6 +47,16 @@ export class CardSubtaskController {
     const card = await this.cardService.get(cardUuid);
     if (!card) {
       throw new ServiceNotFoundException(`Card not found ${cardUuid}`);
+    }
+
+    if (
+      card.subtasks &&
+      subtaskType === CARD_SUBTASK_TYPE.AUDIT &&
+      card.subtasks.some((s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT)
+    ) {
+      throw new ServiceValidationException(
+        `Card can have only one Audit subtask`,
+      );
     }
 
     const savedTask = await this.cardSubtaskService.create(card, subtaskType);

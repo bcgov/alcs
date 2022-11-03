@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ROLES } from '../../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
 import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { CardType } from '../../../shared/card/card.component';
-
 @Component({
-  selector: 'app-gis-subtasks',
-  templateUrl: './gis-subtasks.component.html',
-  styleUrls: ['./gis-subtasks.component.scss'],
+  selector: 'app-audit-subtasks',
+  templateUrl: './audit-subtasks.component.html',
+  styleUrls: ['./audit-subtasks.component.scss'],
 })
-export class GisSubtasksComponent implements OnInit {
+export class AuditSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
-  public gisUsers: AssigneeDto[] = [];
+  public users: AssigneeDto[] = [];
   displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
 
   constructor(
@@ -28,7 +26,7 @@ export class GisSubtasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.$assignableUsers.subscribe((users) => {
-      this.gisUsers = users.filter((user) => user.clientRoles.includes(ROLES.GIS));
+      this.users = users;
     });
     this.userService.fetchAssignableUsers();
 
@@ -36,7 +34,7 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.GIS);
+    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.AUDIT);
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);

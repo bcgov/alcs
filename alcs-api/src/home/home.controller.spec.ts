@@ -3,11 +3,11 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
 import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationService } from '../application/application.service';
+import { CARD_SUBTASK_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CodeService } from '../code/code.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
@@ -182,7 +182,9 @@ describe('HomeController', () => {
         ]),
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.GIS,
+      );
 
       expect(res.length).toEqual(1);
       expect(
@@ -200,7 +202,9 @@ describe('HomeController', () => {
         [mockReconsideration],
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.GIS,
+      );
 
       expect(res.length).toEqual(1);
       expect(
@@ -224,7 +228,9 @@ describe('HomeController', () => {
         [mockPlanningReview],
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.GIS,
+      );
 
       expect(res.length).toEqual(1);
       expect(
@@ -243,7 +249,9 @@ describe('HomeController', () => {
         [mockAmendment],
       );
 
-      const res = await controller.getIncompleteSubtasksByType();
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.GIS,
+      );
 
       expect(res.length).toEqual(1);
       expect(

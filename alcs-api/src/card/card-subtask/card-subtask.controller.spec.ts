@@ -4,7 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { Card } from '../card.entity';
 import { CardService } from '../card.service';
@@ -31,8 +34,7 @@ describe('CardSubtaskController', () => {
     cardService = createMock<CardService>();
 
     mockSubtaskType.backgroundColor = 'color';
-    mockSubtaskType.type = 'fake-subtask-type';
-    mockSubtaskType.uuid = 'uuid';
+    mockSubtaskType.code = 'fake-subtask-type';
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -77,6 +79,25 @@ describe('CardSubtaskController', () => {
     expect(res.type.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
     expect(res.type.textColor).toEqual(mockSubtask.type.textColor);
     expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
+  });
+
+  it('should fail if second subtask of type Audit being created', async () => {
+    const mockCard: Partial<Card> = {
+      subtasks: [
+        {
+          ...mockSubtask,
+          type: { ...mockSubtaskType, code: 'AUDIT' },
+        } as CardSubtask,
+      ],
+    };
+    cardService.get.mockResolvedValue({ ...mockCard } as Card);
+
+    await expect(controller.create('mock-file', 'AUDIT')).rejects.toMatchObject(
+      new ServiceValidationException('Card can have only one Audit subtask'),
+    );
+
+    expect(mockSubtaskService.create).toHaveBeenCalledTimes(0);
+    expect(cardService.get).toHaveBeenCalledTimes(1);
   });
 
   it('should return the new entity for update', async () => {

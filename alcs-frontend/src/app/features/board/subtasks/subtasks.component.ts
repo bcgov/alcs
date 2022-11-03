@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CardSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
+import { CardSubtaskDto, CARD_SUBTASK_TYPE } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { AssigneeDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
@@ -15,6 +15,7 @@ export class SubtasksComponent implements OnInit {
 
   subtasks: CardSubtaskDto[] = [];
   users: Map<string, AssigneeDto> = new Map();
+  hasAuditSubtask = true;
 
   constructor(
     private subtaskService: CardSubtaskService,
@@ -35,11 +36,12 @@ export class SubtasksComponent implements OnInit {
 
   private async loadSubtasks(fileNumber: string) {
     this.subtasks = await this.subtaskService.fetch(fileNumber);
+    this.hasAuditSubtask = this.subtasks.some((s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT);
   }
 
   async create(type: string) {
-    const task = await this.subtaskService.create(this.cardUuid, type);
-    this.subtasks.push(task);
+    await this.subtaskService.create(this.cardUuid, type);
+    await this.loadSubtasks(this.cardUuid);
   }
 
   async onDelete(uuid: string) {

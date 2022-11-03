@@ -120,6 +120,7 @@ export class ApplicationReconsiderationService {
           regionCode: reconsideration.regionCode,
           localGovernmentUuid: reconsideration.localGovernmentUuid,
           applicant: reconsideration.applicant,
+          cardDeletedDateAt: new Date(Date.now()),
         },
         false,
       );
@@ -195,7 +196,7 @@ export class ApplicationReconsiderationService {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

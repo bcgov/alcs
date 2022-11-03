@@ -239,7 +239,7 @@ describe('AmendmentService', () => {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

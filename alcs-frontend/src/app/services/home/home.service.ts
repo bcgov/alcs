@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ApplicationAmendmentDto } from '../application/application-amendment/application-amendment.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
-import { HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
+import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 
 @Injectable({
@@ -25,7 +25,9 @@ export class HomeService {
     );
   }
 
-  async fetchGisSubtasks() {
-    return await firstValueFrom(this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask`));
+  async fetchSubtasks(subtaskType: CARD_SUBTASK_TYPE) {
+    return await firstValueFrom(
+      this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask/${subtaskType}`)
+    );
   }
 }

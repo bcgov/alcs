@@ -1,44 +1,41 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
-import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
+import { HomeService } from '../../../services/home/home.service';
+import { AssigneeDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SubtasksComponent } from './subtasks.component';
 
-describe('SubtasksComponent', () => {
-  let component: SubtasksComponent;
-  let fixture: ComponentFixture<SubtasksComponent>;
-  let mockUserService: jasmine.SpyObj<UserService>;
+import { AuditSubtasksComponent } from './audit-subtasks.component';
+
+describe('AuditComponent', () => {
+  let component: AuditSubtasksComponent;
+  let fixture: ComponentFixture<AuditSubtasksComponent>;
+  let mockUserService;
 
   beforeEach(async () => {
     mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       providers: [
         {
           provide: CardSubtaskService,
           useValue: {},
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: {},
-        },
-        {
           provide: UserService,
           useValue: mockUserService,
         },
+        { provide: HomeService, useValue: {} },
       ],
-      declarations: [SubtasksComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule, MatMenuModule],
+      declarations: [AuditSubtasksComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SubtasksComponent);
+    fixture = TestBed.createComponent(AuditSubtasksComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {

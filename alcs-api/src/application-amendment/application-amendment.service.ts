@@ -162,7 +162,7 @@ export class ApplicationAmendmentService {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

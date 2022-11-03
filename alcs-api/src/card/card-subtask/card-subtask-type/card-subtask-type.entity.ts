@@ -1,13 +1,9 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity } from 'typeorm';
-import { Base } from '../../../common/entities/base.entity';
+import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 
 @Entity()
-export class CardSubtaskType extends Base {
-  @AutoMap()
-  @Column()
-  type: string;
-
+export class CardSubtaskType extends BaseCodeEntity {
   @AutoMap()
   @Column()
   backgroundColor: string;

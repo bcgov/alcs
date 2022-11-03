@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
   hasGIS = false;
   hasCommissioner = false;
   hasOtherRole = false;
+  hasApplicationSpecialist = false;
 
   constructor(private authService: AuthenticationService) {}
 
@@ -28,6 +29,8 @@ export class HomeComponent implements OnInit {
           currentUser.client_roles.filter((role) => {
             return role !== ROLES.COMMISSIONER && role !== ROLES.GIS;
           }).length > 0;
+        this.hasApplicationSpecialist =
+          !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.APP_SPECIALIST);
       }
     });
   }

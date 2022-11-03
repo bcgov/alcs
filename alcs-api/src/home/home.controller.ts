@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationAmendmentDto } from '../application-amendment/application-amendment.dto';
@@ -13,11 +13,14 @@ import { ApplicationTimeTrackingService } from '../application/application-time-
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
-import { HomepageSubtaskDTO } from '../card/card-subtask/card-subtask.dto';
+import {
+  CARD_SUBTASK_TYPE,
+  HomepageSubtaskDTO,
+} from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
-import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -83,11 +86,11 @@ export class HomeController {
     }
   }
 
-  @Get('/subtask')
+  @Get('/subtask/:subtaskType')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getIncompleteSubtasksByType(): Promise<HomepageSubtaskDTO[]> {
-    const subtaskType = 'GIS';
-
+  async getIncompleteSubtasksByType(
+    @Param('subtaskType') subtaskType: CARD_SUBTASK_TYPE,
+  ): Promise<HomepageSubtaskDTO[]> {
     const applicationsWithSubtasks =
       await this.applicationService.getWithIncompleteSubtaskByType(subtaskType);
     const applicationSubtasks = await this.mapApplicationsToDtos(

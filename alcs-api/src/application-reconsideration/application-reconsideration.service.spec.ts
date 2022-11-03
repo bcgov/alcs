@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
-import { CreateApplicationDto } from '../application/application.dto';
+import { CreateApplicationServiceDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
@@ -56,6 +56,7 @@ describe('ReconsiderationService', () => {
     };
 
   beforeEach(async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2022-01-01'));
     codeServiceMock = createMock<CodeService>();
     applicationServiceMock = createMock<ApplicationService>();
     cardServiceMock = createMock<CardService>();
@@ -150,7 +151,8 @@ describe('ReconsiderationService', () => {
       regionCode: mockReconsiderationCreateDto.regionCode,
       localGovernmentUuid: mockReconsiderationCreateDto.localGovernmentUuid,
       applicant: mockReconsiderationCreateDto.applicant,
-    } as CreateApplicationDto;
+      cardDeletedDateAt: new Date(Date.now()),
+    } as CreateApplicationServiceDto;
 
     reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
     cardServiceMock.create.mockResolvedValue(new Card());
@@ -321,7 +323,7 @@ describe('ReconsiderationService', () => {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

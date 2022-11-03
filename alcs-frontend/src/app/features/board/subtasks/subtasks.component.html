@@ -1,7 +1,19 @@
 <div>
   <div class="subheading2 header split">
     <div>Sub-Tasks ({{ subtasks.length }})</div>
-    <div><button (click)="create('GIS')" mat-flat-button color="primary">+ GIS</button></div>
+    <div>
+      <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ NEW SUB-TASK ▾</button>
+      <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
+        <span
+          matTooltip="Only one Audit subtask per card."
+          [matTooltipDisabled]="!hasAuditSubtask"
+          matTooltipPosition="left"
+        >
+          <button mat-menu-item (click)="create('AUDIT')" [disabled]="hasAuditSubtask">Audit</button>
+        </span>
+        <button mat-menu-item (click)="create('GIS')">GIS</button>
+      </mat-menu>
+    </div>
   </div>
   <div class="no-subtasks" *ngIf="!subtasks.length">No Sub-Tasks</div>
   <div class="subtasks" *ngIf="subtasks.length">
@@ -30,7 +42,7 @@
           class="type badge"
           [ngStyle]="{ backgroundColor: subtask.type.backgroundColor, color: subtask.type.textColor }"
         >
-          {{ subtask.type.type }}
+          {{ subtask.type.label }}
         </div>
       </div>
       <div class="center"></div>
