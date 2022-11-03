@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
-import { UserDto } from '../../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SubtasksComponent } from './subtasks.component';
@@ -14,8 +14,8 @@ describe('SubtasksComponent', () => {
   let mockUserService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
-    mockUserService.$users = new BehaviorSubject<UserDto[]>([]);
+    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
       providers: [

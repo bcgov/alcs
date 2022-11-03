@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ApplicationService } from '../../../services/application/application.service';
+import { ROLES } from '../../../services/authentication/authentication.service';
 import { HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
-import { UserDto } from '../../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { CardType } from '../../../shared/card/card.component';
 
@@ -16,7 +17,7 @@ import { CardType } from '../../../shared/card/card.component';
 })
 export class GisSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
-  public gisUsers: UserDto[] = [];
+  public gisUsers: AssigneeDto[] = [];
   displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
 
   constructor(
@@ -28,10 +29,10 @@ export class GisSubtasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.$users.subscribe((users) => {
-      this.gisUsers = users.filter((user) => user.clientRoles.includes('GIS'));
+    this.userService.$assignableUsers.subscribe((users) => {
+      this.gisUsers = users.filter((user) => user.clientRoles.includes(ROLES.GIS));
     });
-    this.userService.fetchUsers();
+    this.userService.fetchAssignableUsers();
 
     this.loadSubtasks();
   }
@@ -58,7 +59,7 @@ export class GisSubtasksComponent implements OnInit {
     this.subtasks = new MatTableDataSource(sortedSubtasks);
   }
 
-  filterAssigneeList(term: string, item: UserDto) {
+  filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
       item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1

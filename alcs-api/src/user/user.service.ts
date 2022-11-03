@@ -27,8 +27,12 @@ export class UserService {
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 
-  async getAll() {
-    return this.userRepository.find();
+  async getAssignableUsers() {
+    return this.userRepository.find({
+      where: {
+        identityProvider: 'idir',
+      },
+    });
   }
 
   async create(dto: CreateUserDto) {

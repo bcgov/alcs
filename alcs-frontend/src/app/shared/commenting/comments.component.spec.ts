@@ -4,7 +4,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { CommentService } from '../../services/comment/comment.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { UserDto } from '../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 import { CommentsComponent } from './comments.component';
@@ -15,8 +15,8 @@ describe('CommentsComponent', () => {
   let mockUserService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
-    mockUserService.$users = new BehaviorSubject<UserDto[]>([]);
+    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
       providers: [

@@ -5,6 +5,8 @@ import { AuthenticationService, ICurrentUser } from '../../services/authenticati
 import { BoardService } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { AssigneeDto, UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
 
@@ -16,8 +18,8 @@ describe('MeetingOverviewComponent', () => {
     const mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
     mockBoardService.$boards = new BehaviorSubject([]);
 
-    const mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', ['clearTokens']);
-    mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+    const mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [
@@ -38,8 +40,8 @@ describe('MeetingOverviewComponent', () => {
           useValue: {},
         },
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+          provide: UserService,
+          useValue: mockUserService,
         },
       ],
       declarations: [MeetingOverviewComponent],

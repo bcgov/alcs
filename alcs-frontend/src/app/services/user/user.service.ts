@@ -4,47 +4,46 @@ import { BehaviorSubject, combineLatestWith, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService, ICurrentUser } from '../authentication/authentication.service';
 import { ToastService } from '../toast/toast.service';
-import { UpdateUserDto, UserDto } from './user.dto';
+import { AssigneeDto, UpdateUserDto, UserDto } from './user.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  public $users = new BehaviorSubject<UserDto[]>([]);
-  public $currentUserProfile = new BehaviorSubject<UserDto | undefined>(undefined);
+  public $assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
+  private assignableUsers: AssigneeDto[] = [];
 
-  private users: UserDto[] = [];
+  public $userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
+  private userProfile: UserDto | undefined;
+
+  private baseUrl = `${environment.apiUrl}/user`;
 
   constructor(
     private http: HttpClient,
     private toastService: ToastService,
     private authService: AuthenticationService
   ) {
-    this.authService.$currentUser.pipe(combineLatestWith(this.$users)).subscribe(([currentUser, users]) => {
-      if (currentUser && users.length > 0) {
-        this.populateUserProfile(currentUser);
+    this.authService.$currentUser.subscribe((userToken) => {
+      if (userToken && !this.userProfile) {
+        this.populateUserProfile();
       }
     });
   }
 
-  private populateUserProfile(currentUser: ICurrentUser) {
-    const currentUserDto = this.users.find((u) => u.email === currentUser.email);
-    if (currentUserDto) {
-      this.$currentUserProfile.next(currentUserDto);
-    } else {
-      console.error('Failed to find current user in users');
-    }
+  private async populateUserProfile() {
+    this.userProfile = await firstValueFrom(this.http.get<UserDto>(`${this.baseUrl}/profile`));
+    this.$userProfile.next(this.userProfile);
   }
 
-  public async fetchUsers() {
-    this.users = await firstValueFrom(this.http.get<UserDto[]>(`${environment.apiUrl}/user`));
-    this.$users.next(this.users);
+  public async fetchAssignableUsers() {
+    this.assignableUsers = await firstValueFrom(this.http.get<AssigneeDto[]>(`${this.baseUrl}/assignable`));
+    this.$assignableUsers.next(this.assignableUsers);
   }
 
-  public async updateUser(uuid: string, user: UpdateUserDto) {
+  public async updateUserProfile(uuid: string, updateDto: UpdateUserDto) {
     try {
-      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user/${uuid}`, user));
-      await this.fetchUsers();
+      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user/${uuid}`, updateDto));
+      await this.populateUserProfile();
     } catch (e) {
       this.toastService.showErrorToast('Failed to update User');
     }
