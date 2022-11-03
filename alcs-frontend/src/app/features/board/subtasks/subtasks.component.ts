@@ -36,7 +36,7 @@ export class SubtasksComponent implements OnInit {
 
   private async loadSubtasks(fileNumber: string) {
     this.subtasks = await this.subtaskService.fetch(fileNumber);
-    this.hasAuditSubtask = this.subtasks.some((s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT.valueOf());
+    this.hasAuditSubtask = this.subtasks.some((s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT);
   }
 
   async create(type: string) {

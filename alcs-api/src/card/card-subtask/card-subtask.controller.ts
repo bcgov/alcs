@@ -51,10 +51,8 @@ export class CardSubtaskController {
 
     if (
       card.subtasks &&
-      subtaskType === CARD_SUBTASK_TYPE.AUDIT.valueOf() &&
-      card.subtasks.some(
-        (s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT.valueOf(),
-      )
+      subtaskType === CARD_SUBTASK_TYPE.AUDIT &&
+      card.subtasks.some((s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT)
     ) {
       throw new ServiceValidationException(
         `Card can have only one Audit subtask`,
