@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ROLES } from '../../../services/authentication/authentication.service';
 import { HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
@@ -15,7 +14,7 @@ import { CardType } from '../../../shared/card/card.component';
 })
 export class AuditSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
-  public auditUsers: UserDto[] = [];
+  public users: UserDto[] = [];
   displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
 
   constructor(
@@ -27,9 +26,7 @@ export class AuditSubtasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.$users.subscribe((users) => {
-      this.auditUsers = users.filter((user) =>
-        [ROLES.APP_SPECIALIST.valueOf(), ROLES.LUP].some((role) => user.clientRoles.includes(role))
-      );
+      this.users = users;
     });
     this.userService.fetchUsers();
 

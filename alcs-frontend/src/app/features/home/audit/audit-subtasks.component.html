@@ -33,7 +33,7 @@
       <td class="assignee-column" mat-cell *matCellDef="let element">
         <ng-select
           class="subtask-assignee"
-          [items]="auditUsers"
+          [items]="users"
           bindLabel="name"
           bindValue="name"
           [ngModel]="element.assignee?.name"
