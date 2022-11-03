@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ROLES } from '../../../services/authentication/authentication.service';
-import { HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
+import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
 import { UserDto } from '../../../services/user/user.dto';
@@ -36,7 +36,7 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const nonOrderedSubtasks = await this.homeService.fetchSubtasks('GIS');
+    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.GIS.valueOf());
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);

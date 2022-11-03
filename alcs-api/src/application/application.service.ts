@@ -205,7 +205,7 @@ export class ApplicationService {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

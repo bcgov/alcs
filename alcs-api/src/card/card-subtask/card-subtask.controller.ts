@@ -22,7 +22,11 @@ import {
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
 import { CardService } from '../card.service';
-import { CardSubtaskDto, UpdateCardSubtaskDto } from './card-subtask.dto';
+import {
+  CardSubtaskDto,
+  CARD_SUBTASK_TYPE,
+  UpdateCardSubtaskDto,
+} from './card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -47,8 +51,10 @@ export class CardSubtaskController {
 
     if (
       card.subtasks &&
-      subtaskType === 'Audit' &&
-      card.subtasks.some((s) => s.type.type === 'Audit')
+      subtaskType === CARD_SUBTASK_TYPE.AUDIT.valueOf() &&
+      card.subtasks.some(
+        (s) => s.type.code === CARD_SUBTASK_TYPE.AUDIT.valueOf(),
+      )
     ) {
       throw new ServiceValidationException(
         `Card can have only one Audit subtask`,

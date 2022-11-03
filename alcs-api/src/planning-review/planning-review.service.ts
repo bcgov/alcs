@@ -8,7 +8,6 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
-import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
 import {
@@ -129,7 +128,7 @@ export class PlanningReviewService {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

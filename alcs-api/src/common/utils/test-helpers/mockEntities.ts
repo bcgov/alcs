@@ -46,7 +46,7 @@ const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   subtask.type = new CardSubtaskType();
   subtask.type.backgroundColor = 'fake-bg-color';
   subtask.type.textColor = 'fake-color';
-  subtask.type.type = 'fake-type';
+  subtask.type.code = 'fake-type';
   return subtask;
 };
 

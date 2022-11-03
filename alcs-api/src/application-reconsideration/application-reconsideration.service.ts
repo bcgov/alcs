@@ -196,7 +196,7 @@ export class ApplicationReconsiderationService {
           subtasks: {
             completedAt: IsNull(),
             type: {
-              type: subtaskType,
+              code: subtaskType,
             },
           },
         },

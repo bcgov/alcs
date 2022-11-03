@@ -1,5 +1,3 @@
-import { ApplicationReconsiderationDto } from '../../application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationDto } from '../../application/application.dto';
 import { AssigneeDto } from '../../user/user.dto';
 import { CardDto } from '../card.dto';
 
@@ -17,7 +15,8 @@ export interface CardSubtaskDto {
 }
 
 export interface CardSubtaskTypeDto {
-  type: string;
+  code: string;
+  label: string;
   backgroundColor: string;
   textColor: string;
 }
@@ -27,4 +26,9 @@ export interface HomepageSubtaskDto extends CardSubtaskDto {
   title: string;
   activeDays?: number;
   paused: boolean;
+}
+
+export enum CARD_SUBTASK_TYPE {
+  GIS = 'GIS',
+  AUDIT = 'AUDIT',
 }

@@ -34,8 +34,7 @@ describe('CardSubtaskController', () => {
     cardService = createMock<CardService>();
 
     mockSubtaskType.backgroundColor = 'color';
-    mockSubtaskType.type = 'fake-subtask-type';
-    mockSubtaskType.uuid = 'uuid';
+    mockSubtaskType.code = 'fake-subtask-type';
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -87,13 +86,13 @@ describe('CardSubtaskController', () => {
       subtasks: [
         {
           ...mockSubtask,
-          type: { ...mockSubtaskType, type: 'Audit' },
+          type: { ...mockSubtaskType, code: 'AUDIT' },
         } as CardSubtask,
       ],
     };
     cardService.get.mockResolvedValue({ ...mockCard } as Card);
 
-    await expect(controller.create('mock-file', 'Audit')).rejects.toMatchObject(
+    await expect(controller.create('mock-file', 'AUDIT')).rejects.toMatchObject(
       new ServiceValidationException('Card can have only one Audit subtask'),
     );
 

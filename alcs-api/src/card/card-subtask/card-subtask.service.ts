@@ -21,14 +21,14 @@ export class CardSubtaskService {
     private cardSubtaskTypeRepository: Repository<CardSubtaskType>,
   ) {}
 
-  async create(card: Card, type: string) {
+  async create(card: Card, typeCode: string) {
     const selectedType = await this.cardSubtaskTypeRepository.findOne({
       where: {
-        type: type,
+        code: typeCode,
       },
     });
     if (!selectedType) {
-      throw new BadRequestException(`Invalid subtask type ${type}`);
+      throw new BadRequestException(`Invalid subtask type ${typeCode}`);
     }
 
     const subtask = new CardSubtask({

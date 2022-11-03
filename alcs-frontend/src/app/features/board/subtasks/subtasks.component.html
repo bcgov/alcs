@@ -9,7 +9,7 @@
           [matTooltipDisabled]="!hasAuditSubtask"
           matTooltipPosition="left"
         >
-          <button mat-menu-item (click)="create('Audit')" [disabled]="hasAuditSubtask">Audit</button>
+          <button mat-menu-item (click)="create('AUDIT')" [disabled]="hasAuditSubtask">Audit</button>
         </span>
         <button mat-menu-item (click)="create('GIS')">GIS</button>
       </mat-menu>
@@ -42,7 +42,7 @@
           class="type badge"
           [ngStyle]="{ backgroundColor: subtask.type.backgroundColor, color: subtask.type.textColor }"
         >
-          {{ subtask.type.type }}
+          {{ subtask.type.label }}
         </div>
       </div>
       <div class="center"></div>
