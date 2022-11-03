@@ -97,7 +97,10 @@ export class ApplicationService {
       region,
     });
 
-    newApplication.card = new Card();
+    newApplication.card = new Card({
+      auditDeletedDateAt: application.cardDeletedDateAt,
+    });
+
     if (persist) {
       await this.applicationRepository.save(newApplication);
       return this.get(application.fileNumber);

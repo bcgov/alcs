@@ -193,4 +193,5 @@ export class CreateApplicationServiceDto {
   dateReceived?: Date | null | undefined;
   regionCode?: string;
   localGovernmentUuid: string;
+  cardDeletedDateAt?: Date | null | undefined;
 }

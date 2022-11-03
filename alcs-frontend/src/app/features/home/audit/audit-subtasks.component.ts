@@ -26,7 +26,6 @@ export class AuditSubtasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(ROLES.APP_SPECIALIST.valueOf());
     this.userService.$users.subscribe((users) => {
       this.auditUsers = users.filter((user) =>
         [ROLES.APP_SPECIALIST.valueOf(), ROLES.LUP].some((role) => user.clientRoles.includes(role))
