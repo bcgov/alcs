@@ -18,8 +18,8 @@ export class ApplicationDocumentComponent {
 
   _fileNumber: string = '';
   @Input() set fileNumber(fileNumber: string) {
-    this._fileNumber = fileNumber;
     if (fileNumber) {
+      this._fileNumber = fileNumber;
       this.loadDocuments();
     }
   }
@@ -65,7 +65,7 @@ export class ApplicationDocumentComponent {
     if (fileList && fileList.length > 0) {
       const file: File = fileList[0];
       this.isUploading = true;
-      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, this.documentType, file);
+      const uploadedFile = await this.applicationDocumentService.upload(this._fileNumber, this.documentType, file);
       if (uploadedFile) {
         await this.loadDocuments();
       }
