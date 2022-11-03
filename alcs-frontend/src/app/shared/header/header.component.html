@@ -28,7 +28,7 @@
             <app-favorite-button
               [boardCode]="board.code"
               [isFavorite]="board.isFavourite"
-              [currentUserProfile]="currentUserProfile"
+              [currentUserProfile]="userProfile"
               [disableTooltip]="true"
             ></app-favorite-button>
             <button mat-menu-item>
@@ -37,7 +37,7 @@
           </div>
         </mat-menu>
       </div>
-      <div *ngIf="currentUserProfile" class="col right">
+      <div *ngIf="userProfile" class="col right">
         <app-search-bar *ngIf="allowedSearch"></app-search-bar>
         <app-notifications class="notification" *ngIf="hasRoles"></app-notifications>
         <button
@@ -47,13 +47,13 @@
           #menuTrigger="matMenuTrigger"
           [matMenuTriggerFor]="avatarMenu"
         >
-          <app-avatar-circle [initials]="currentUserProfile.initials" [large]="true"></app-avatar-circle>
+          <app-avatar-circle [initials]="userProfile.initials" [large]="true"></app-avatar-circle>
           <span class="avatar-menu-arrow">▾</span>
         </button>
         <mat-menu #avatarMenu="matMenu" class="avatar-menu" xPosition="before">
           <div class="name-text">
             Signed in as <br />
-            <strong>{{ currentUserProfile.idirUserName }}{{ currentUserProfile.bceidUserName }}</strong>
+            <strong>{{ userProfile.idirUserName }}{{ userProfile.bceidUserName }}</strong>
           </div>
           <hr />
           <div class="avatar-menu-items">

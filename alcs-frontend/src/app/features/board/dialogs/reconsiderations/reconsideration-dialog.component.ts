@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
@@ -10,7 +10,7 @@ import { BoardService, BoardWithFavourite } from '../../../../services/board/boa
 import { CardUpdateDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { CardLabel } from '../../../../shared/card/card.component';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -30,7 +30,7 @@ export const RECON_TYPE_LABEL: CardLabel = {
 })
 export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  $users: Observable<UserDto[]> | undefined;
+  $users: Observable<AssigneeDto[]> | undefined;
   selectedAssignee?: AssigneeDto;
   selectedAssigneeName?: string;
   selectedApplicationStatus = '';
@@ -60,8 +60,8 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.populateData(this.data);
 
-    this.$users = this.userService.$users;
-    this.userService.fetchUsers();
+    this.$users = this.userService.$assignableUsers;
+    this.userService.fetchAssignableUsers();
 
     this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
@@ -87,14 +87,14 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
     this.selectedRegion = recon.application.region.code;
   }
 
-  filterAssigneeList(term: string, item: UserDto) {
+  filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
       item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 
-  onAssigneeSelected(assignee: UserDto) {
+  onAssigneeSelected(assignee: AssigneeDto) {
     this.selectedAssignee = assignee;
     this.recon.card.assignee = assignee;
     this.updateCard({

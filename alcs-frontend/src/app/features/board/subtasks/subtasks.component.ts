@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CardSubtaskDto, CARD_SUBTASK_TYPE } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
-import { UserDto } from '../../../services/user/user.dto';
+import { AssigneeDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -14,7 +14,7 @@ export class SubtasksComponent implements OnInit {
   @Input() cardUuid: string = '';
 
   subtasks: CardSubtaskDto[] = [];
-  users: Map<string, UserDto> = new Map();
+  users: Map<string, AssigneeDto> = new Map();
   hasAuditSubtask = true;
 
   constructor(
@@ -26,7 +26,7 @@ export class SubtasksComponent implements OnInit {
   ngOnInit(): void {
     this.loadSubtasks(this.cardUuid);
 
-    this.userService.$users.subscribe((users) => {
+    this.userService.$assignableUsers.subscribe((users) => {
       this.users.clear();
       users.forEach((user) => {
         this.users.set(user.uuid, user);

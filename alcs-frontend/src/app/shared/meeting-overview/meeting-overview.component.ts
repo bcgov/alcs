@@ -8,6 +8,7 @@ import { BoardService, BoardWithFavourite } from '../../services/board/board.ser
 import { UpcomingMeetingDto, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { UserService } from '../../services/user/user.service';
 
 type MeetingWithApplications = {
   meetingDate: number;
@@ -47,7 +48,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     private boardService: BoardService,
     private applicationDocumentService: ApplicationDocumentService,
     private toastService: ToastService,
-    private authService: AuthenticationService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -56,11 +57,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
       this.loadMeetings();
     });
 
-    this.authService.$currentUser.subscribe((currentUser) => {
+    this.userService.$userProfile.pipe(takeUntil(this.destroy)).subscribe((currentUser) => {
       if (currentUser) {
         this.isCommissioner =
-          currentUser.client_roles && currentUser.client_roles.length === 1
-            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+          currentUser.clientRoles && currentUser.clientRoles.length === 1
+            ? currentUser.clientRoles.includes(ROLES.COMMISSIONER)
             : false;
       }
     });

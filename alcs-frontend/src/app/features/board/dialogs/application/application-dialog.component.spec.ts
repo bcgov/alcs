@@ -21,6 +21,9 @@ describe('ApplicationDialogComponent', () => {
     uuid: '11111-11111-11111',
     name: 'Dart',
     initials: 'DP',
+    clientRoles: [],
+    email: 'email',
+    mentionLabel: 'mention-label',
   };
 
   const mockApplicationRegion: ApplicationRegionDto = {

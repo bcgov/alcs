@@ -13,8 +13,8 @@ describe('FavoriteButtonComponent', () => {
   let mockUserService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
-    mockUserService.$currentUserProfile = new BehaviorSubject<UserDto | undefined>(undefined);
+    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [

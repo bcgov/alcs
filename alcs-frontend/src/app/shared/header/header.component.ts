@@ -18,7 +18,7 @@ import { UserService } from '../../services/user/user.service';
 })
 export class HeaderComponent implements OnInit {
   homeUrl = environment.homeUrl;
-  currentUserProfile?: UserDto;
+  userProfile?: UserDto;
   currentUser?: ICurrentUser;
   hasRoles = false;
   allowedSearch = false;
@@ -47,7 +47,6 @@ export class HeaderComponent implements OnInit {
             : false;
 
         if (this.hasRoles) {
-          this.userService.fetchUsers();
           this.applicationService.setup();
           this.loadNotifications();
 
@@ -59,8 +58,8 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    this.userService.$currentUserProfile.subscribe((user) => {
-      this.currentUserProfile = user;
+    this.userService.$userProfile.subscribe((user) => {
+      this.userProfile = user;
     });
 
     this.boardService.$boards.subscribe(

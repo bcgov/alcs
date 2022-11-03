@@ -39,7 +39,7 @@ export class CommentsComponent implements OnInit {
   ngOnInit(): void {
     this.loadComments(this.cardUuid);
 
-    this.userService.$users.subscribe((users) => {
+    this.userService.$assignableUsers.subscribe((users) => {
       this.users = users.map((user) => ({
         mentionLabel: user.mentionLabel,
         email: user.email,

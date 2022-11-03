@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
-import { UserDto } from '../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 
 import { MentionTextareaComponent } from './mention-textarea.component';
@@ -13,8 +13,8 @@ describe('MentionTextareaComponent', () => {
   let mockUserService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchUsers']);
-    mockUserService.$users = new BehaviorSubject<UserDto[]>([]);
+    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
       providers: [

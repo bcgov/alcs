@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import {
   AssigneeDto,
   CreateUserDto,
-  UpdateUserDto,
   UserDto,
   UserSettingsDto,
 } from '../../user/user.dto';
@@ -38,22 +37,6 @@ export class UserProfile extends AutomapperProfile {
           }),
         ),
         forMember(
-          (ud) => ud.mentionLabel,
-          mapFrom((u) => {
-            if (u.givenName && u.familyName) {
-              return (
-                u.givenName?.charAt(0).toUpperCase() +
-                u.givenName?.slice(1) +
-                u.familyName?.charAt(0).toUpperCase() +
-                u.familyName?.slice(1)
-              );
-            } else {
-              //TODO: how do mentions work for bceid users?
-              return '';
-            }
-          }),
-        ),
-        forMember(
           (ud) => ud.clientRoles,
           mapFrom((u) => u.clientRoles),
         ),
@@ -77,6 +60,26 @@ export class UserProfile extends AutomapperProfile {
               );
             }
             return u.name.charAt(0);
+          }),
+        ),
+        forMember(
+          (ud) => ud.clientRoles,
+          mapFrom((u) => u.clientRoles),
+        ),
+        forMember(
+          (ud) => ud.mentionLabel,
+          mapFrom((u) => {
+            if (u.givenName && u.familyName) {
+              return (
+                u.givenName?.charAt(0).toUpperCase() +
+                u.givenName?.slice(1) +
+                u.familyName?.charAt(0).toUpperCase() +
+                u.familyName?.slice(1)
+              );
+            } else {
+              //TODO: how do mentions work for bceid users?
+              return '';
+            }
           }),
         ),
       );
