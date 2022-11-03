@@ -28,7 +28,7 @@ export class GisSubtasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.$assignableUsers.subscribe((users) => {
-      this.gisUsers = users.filter((user) => user.clientRoles.includes(ROLES.GIS.valueOf()));
+      this.gisUsers = users.filter((user) => user.clientRoles.includes(ROLES.GIS));
     });
     this.userService.fetchAssignableUsers();
 
@@ -36,7 +36,7 @@ export class GisSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.GIS.valueOf());
+    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.GIS);
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);

@@ -34,7 +34,7 @@ export class AuditSubtasksComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.AUDIT.valueOf());
+    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.AUDIT);
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
