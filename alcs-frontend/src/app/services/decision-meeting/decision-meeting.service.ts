@@ -17,7 +17,7 @@ export class DecisionMeetingService {
     try {
       return await firstValueFrom(this.http.get<UpcomingMeetingBoardMapDto>(`${this.url}/overview/meetings`));
     } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch review meetings');
+      this.toastService.showErrorToast('Failed to fetch scheduled discussions');
     }
     return;
   }

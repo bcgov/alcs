@@ -21,7 +21,7 @@ export class ApplicationDecisionMeetingService {
     try {
       meetings = await firstValueFrom(this.http.get<ApplicationDecisionMeetingDto[]>(`${this.url}/${fileNumber}`));
     } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch review meetings');
+      this.toastService.showErrorToast('Failed to fetch discussion schedule');
     }
 
     this.$decisionMeetings.next(meetings);
@@ -37,7 +37,7 @@ export class ApplicationDecisionMeetingService {
       );
       await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update review meeting');
+      this.toastService.showErrorToast('Failed to update scheduled discussion');
     }
   }
 
@@ -51,7 +51,7 @@ export class ApplicationDecisionMeetingService {
       );
       return await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {
-      this.toastService.showErrorToast('Failed to create review meeting');
+      this.toastService.showErrorToast('Failed to create scheduled discussion');
     }
   }
 
@@ -59,7 +59,7 @@ export class ApplicationDecisionMeetingService {
     try {
       return firstValueFrom(this.http.get<ApplicationDecisionMeetingDto>(`${this.url}/meeting/${uuid}`));
     } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch review meeting');
+      this.toastService.showErrorToast('Failed to fetch scheduled discussion');
     }
     return;
   }
@@ -67,9 +67,9 @@ export class ApplicationDecisionMeetingService {
   async delete(uuid: string) {
     try {
       await firstValueFrom(this.http.delete<ApplicationDecisionMeetingDto>(`${this.url}/${uuid}`));
-      this.toastService.showSuccessToast('Meeting deleted');
+      this.toastService.showSuccessToast('Discussion deleted');
     } catch (err) {
-      this.toastService.showErrorToast('Failed to delete meeting');
+      this.toastService.showErrorToast('Failed to scheduled discussion');
     }
   }
 }

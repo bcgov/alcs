@@ -1,5 +1,5 @@
 <div>
-  <span *ngIf="!isEditing">
+  <span class="left" *ngIf="!isEditing">
     <a (click)="toggleEdit()" class="add-date" *ngIf="!selectedValue"> Add date </a>
     <span *ngIf="selectedValue">
       {{ formattedDate }}
