@@ -82,7 +82,11 @@ describe('CommissionerController', () => {
   });
 
   it('should set recon and amendment flags if they exist', async () => {
-    mockAmendmentService.getByApplication.mockResolvedValue([{} as any]);
+    mockAmendmentService.getByApplication.mockResolvedValue([
+      {
+        isReviewApproved: true,
+      } as any,
+    ]);
     mockReconsiderationService.getByApplication.mockResolvedValue([{} as any]);
 
     const res = await controller.get(fileNumber);
@@ -93,6 +97,20 @@ describe('CommissionerController', () => {
     );
     expect(res.hasRecons).toBeTruthy();
     expect(res.hasAmendments).toBeTruthy();
+  });
+
+  it('should set amendment flag to false if it was not approved', async () => {
+    mockAmendmentService.getByApplication.mockResolvedValue([
+      {
+        isReviewApproved: false,
+      } as any,
+    ]);
+    mockReconsiderationService.getByApplication.mockResolvedValue([{} as any]);
+
+    const res = await controller.get(fileNumber);
+
+    expect(mockAmendmentService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(res.hasAmendments).toBeFalsy();
   });
 
   it('should map to the dto correctly', async () => {

@@ -48,8 +48,11 @@
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
           <button mat-menu-item (click)="onGoToCard()">Standard Application</button>
-          <button *ngFor="let recon of _reconsiderations; let i = index" mat-menu-item (click)="onGoToReconCard(recon)">
+          <button *ngFor="let recon of _reconsiderations; let i = index" mat-menu-item (click)="onGoToSubCard(recon)">
             Reconsideration Request #{{ i + 1 }}
+          </button>
+          <button *ngFor="let amendment of _amendments; let i = index" mat-menu-item (click)="onGoToSubCard(amendment)">
+            Amendment Request #{{ i + 1 }}
           </button>
         </mat-menu>
       </ng-container>
