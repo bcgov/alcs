@@ -30,5 +30,5 @@ export interface HomepageSubtaskDto extends CardSubtaskDto {
 
 export enum CARD_SUBTASK_TYPE {
   GIS = 'GIS',
-  AUDIT = 'AUDIT',
+  AUDIT = 'AUDT',
 }
