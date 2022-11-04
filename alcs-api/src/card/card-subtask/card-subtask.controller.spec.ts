@@ -86,13 +86,13 @@ describe('CardSubtaskController', () => {
       subtasks: [
         {
           ...mockSubtask,
-          type: { ...mockSubtaskType, code: 'AUDIT' },
+          type: { ...mockSubtaskType, code: 'AUDT' },
         } as CardSubtask,
       ],
     };
     cardService.get.mockResolvedValue({ ...mockCard } as Card);
 
-    await expect(controller.create('mock-file', 'AUDIT')).rejects.toMatchObject(
+    await expect(controller.create('mock-file', 'AUDT')).rejects.toMatchObject(
       new ServiceValidationException('Card can have only one Audit subtask'),
     );
 

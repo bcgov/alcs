@@ -5,6 +5,7 @@ import { ApplicationReconsiderationModule } from '../application-reconsideration
 import { ApplicationModule } from '../application/application.module';
 import { CardModule } from '../card/card.module';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
+import { CovenantModule } from '../covenant/covenant.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { BoardStatus } from './board-status.entity';
 import { BoardController } from './board.controller';
@@ -19,6 +20,7 @@ import { BoardService } from './board.service';
     forwardRef(() => ApplicationReconsiderationModule),
     forwardRef(() => ApplicationAmendmentModule),
     PlanningReviewModule,
+    CovenantModule,
   ],
   controllers: [BoardController],
   providers: [BoardService, BoardAutomapperProfile],

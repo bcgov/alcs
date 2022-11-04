@@ -8,13 +8,14 @@ import { ApplicationReconsiderationService } from '../application-reconsideratio
 import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
-import { RolesGuard } from '../common/authorization/roles-guard.service';
 import {
   ANY_AUTH_ROLE,
   ROLES_ALLOWED_BOARDS,
 } from '../common/authorization/roles';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
+import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardDto } from './board.dto';
 import { Board } from './board.entity';
@@ -31,6 +32,7 @@ export class BoardController {
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
     private amendmentService: ApplicationAmendmentService,
+    private covenantService: CovenantService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -49,6 +51,7 @@ export class BoardController {
     );
 
     const recons = await this.reconsiderationService.getByBoardCode(boardCode);
+    const covenants = await this.covenantService.getByBoardCode(boardCode);
 
     let planningReviews = [];
     if (boardCode === 'exec') {
@@ -67,6 +70,7 @@ export class BoardController {
         planningReviews,
       ),
       amendments: await this.amendmentService.mapToDtos(amendments),
+      covenants: await this.covenantService.mapToDtos(covenants),
     };
   }
 

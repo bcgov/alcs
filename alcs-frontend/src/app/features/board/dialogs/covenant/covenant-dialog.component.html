@@ -1,0 +1,106 @@
+<div mat-dialog-title>
+  <div class="close">
+    <button mat-icon-button [mat-dialog-close]="isDirty">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="header-row">
+    <div class="left">
+      <h3 class="card-title">
+        {{ covenant.fileNumber }} ({{ covenant.applicant }})
+        <span
+          class="center application-type"
+          [ngStyle]="{
+            backgroundColor: covenantType.backgroundColor,
+            color: covenantType.textColor,
+            borderColor: covenantType.borderColor
+          }"
+        >
+          {{ covenantType.label }}
+        </span>
+      </h3>
+    </div>
+  </div>
+  <div>
+    <span class="region">{{ covenant.localGovernment.name }} - {{ covenant.region.label }} Region</span>
+  </div>
+  <div class="header-row">
+    <div class="left"></div>
+    <div style="margin-right: -16px" class="right">
+      <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <mat-icon>move_down</mat-icon>
+      </button>
+      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
+        <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
+          <span class="favourite-board-icon-container"
+            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+          </span>
+          <span>{{ board.title }}</span>
+          <span *ngIf="covenant.card.board.code === board.code"
+            ><mat-icon class="selected-board-icon">check</mat-icon></span
+          >
+        </button>
+      </mat-menu>
+      <button
+        [matTooltip]="covenant.card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        class="toggle-priority"
+        (click)="onTogglePriority()"
+        mat-icon-button
+      >
+        <div
+          class="priority"
+          [ngClass]="{
+            'filled-priority': covenant.card.highPriority,
+            'empty-priority': !covenant.card.highPriority
+          }"
+        ></div>
+      </button>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="select-container">
+    <ng-select
+      class="card-type"
+      appearance="outline"
+      [items]="boardStatuses"
+      placeholder="Workflow Stage"
+      bindLabel="label"
+      bindValue="statusCode"
+      [clearable]="false"
+      [(ngModel)]="selectedApplicationStatus"
+      (change)="onStatusSelected($event)"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
+      <ng-template ng-label-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
+    </ng-select>
+    <ng-select
+      class="card-assignee"
+      appearance="outline"
+      [items]="$users | async"
+      placeholder="Assigned Planner"
+      bindLabel="name"
+      bindValue="name"
+      [(ngModel)]="selectedAssigneeName"
+      [searchFn]="filterAssigneeList"
+      (change)="onAssigneeSelected($event)"
+    >
+      <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+        <div class="assignee-card-body">
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+          <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="subtasks-wrapper">
+    <app-subtasks [cardUuid]="covenant.card.uuid"></app-subtasks>
+  </div>
+  <div class="card-comments-wrapper">
+    <app-comments [cardUuid]="covenant.card.uuid"></app-comments>
+  </div>
+</mat-dialog-content>
