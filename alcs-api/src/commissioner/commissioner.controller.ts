@@ -41,10 +41,18 @@ export class CommissionerController {
       ApplicationDto,
       CommissionerApplicationDto,
     );
+    const hasApprovedOrPendingAmendment = amendments.reduce(
+      (showLabel, amendment) => {
+        return (
+          amendment.isReviewApproved === null || amendment.isReviewApproved
+        );
+      },
+      false,
+    );
     const mappedRecords = finalMap[0];
     return {
       ...mappedRecords,
-      hasAmendments: amendments.length > 0,
+      hasAmendments: hasApprovedOrPendingAmendment,
       hasRecons: recons.length > 0,
     };
   }

@@ -41,7 +41,7 @@ export class ApplicationHeaderComponent {
   _amendments: ApplicationAmendmentDto[] = [];
   @Input() set amendments(amendments: ApplicationAmendmentDto[]) {
     this.showAmendmentLabel = amendments.reduce((showLabel, amendment) => {
-      return amendment.isReviewApproved === null;
+      return amendment.isReviewApproved === null || amendment.isReviewApproved;
     }, false);
     this._amendments = amendments;
   }
@@ -63,9 +63,9 @@ export class ApplicationHeaderComponent {
     }
   }
 
-  async onGoToReconCard(recon: ApplicationReconsiderationDto) {
-    const boardCode = recon.card.board.code;
-    const cardTypeCode = recon.card.type;
-    await this.router.navigateByUrl(`/board/${boardCode}?card=${recon.card.uuid}&type=${cardTypeCode}`);
+  async onGoToSubCard(subcard: ApplicationReconsiderationDto | ApplicationAmendmentDto) {
+    const boardCode = subcard.card.board.code;
+    const cardTypeCode = subcard.card.type;
+    await this.router.navigateByUrl(`/board/${boardCode}?card=${subcard.card.uuid}&type=${cardTypeCode}`);
   }
 }
