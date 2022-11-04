@@ -6,19 +6,16 @@ import { ClsService } from 'nestjs-cls';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
 import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
-import {
-  initApplicationAmendementMockEntity,
-  initApplicationReconsiderationMockEntity,
-} from '../common/utils/test-helpers/mockEntities';
+import { initApplicationAmendmentMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { ApplicationAmendmentController } from './application-amendment.controller';
-import { ApplicationAmendment } from './application-amendment.entity';
-import { ApplicationAmendmentService } from './application-amendment.service';
 import {
   ApplicationAmendmentCreateDto,
   ApplicationAmendmentDto,
   ApplicationAmendmentUpdateDto,
 } from './application-amendment.dto';
+import { ApplicationAmendment } from './application-amendment.entity';
+import { ApplicationAmendmentService } from './application-amendment.service';
 
 describe('ApplicationAmendmentController', () => {
   let controller: ApplicationAmendmentController;
@@ -85,14 +82,14 @@ describe('ApplicationAmendmentController', () => {
   });
 
   it('should call service update method', async () => {
-    const amendment = initApplicationAmendementMockEntity();
+    const amendment = initApplicationAmendmentMockEntity();
     mockAmendmentService.update.mockResolvedValue(amendment);
     await controller.update('fake', {} as ApplicationAmendmentUpdateDto);
     expect(mockAmendmentService.update).toBeCalledTimes(1);
   });
 
   it('should call service create method', async () => {
-    const amendment = initApplicationAmendementMockEntity();
+    const amendment = initApplicationAmendmentMockEntity();
     mockAmendmentService.create.mockResolvedValue(amendment);
     mockBoardService.getOne.mockResolvedValue({} as Board);
     await controller.create({} as ApplicationAmendmentCreateDto);

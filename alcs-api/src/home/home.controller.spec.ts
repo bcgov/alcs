@@ -16,7 +16,7 @@ import { CardProfile } from '../common/automapper/card.automapper.profile';
 import { CovenantProfile } from '../common/automapper/covenant.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
-  initApplicationAmendementMockEntity,
+  initApplicationAmendmentMockEntity,
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
   initCardMockEntity,
@@ -254,7 +254,7 @@ describe('HomeController', () => {
     });
 
     it('should call Amendment Service and map it', async () => {
-      const mockAmendment = initApplicationAmendementMockEntity();
+      const mockAmendment = initApplicationAmendmentMockEntity();
       mockApplicationAmendmentService.getWithIncompleteSubtaskByType.mockResolvedValue(
         [mockAmendment],
       );

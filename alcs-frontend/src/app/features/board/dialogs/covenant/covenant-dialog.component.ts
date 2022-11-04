@@ -76,13 +76,12 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
   }
 
   populateData(covenant: CovenantDto) {
-    this.covenant = this.data;
-    this.selectedAssignee = this.data.card.assignee;
+    this.covenant = covenant;
+    this.selectedAssignee = covenant.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = this.data.card.status.code;
-    this.selectedBoard = this.data.card.board.code;
-    this.selectedRegion = this.data.region.code;
-
+    this.selectedApplicationStatus = covenant.card.status.code;
+    this.selectedBoard = covenant.card.board.code;
+    this.selectedRegion = covenant.region.code;
     this.$users = this.userService.$assignableUsers;
     this.userService.fetchAssignableUsers();
   }
@@ -142,9 +141,9 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
   }
 
   private async reloadCovenant() {
-    const reconsideration = await this.covenantService.fetchByCardUuid(this.covenant.card.uuid);
-    if (reconsideration) {
-      this.populateData(reconsideration);
+    const covenant = await this.covenantService.fetchByCardUuid(this.covenant.card.uuid);
+    if (covenant) {
+      this.populateData(covenant);
     }
   }
 

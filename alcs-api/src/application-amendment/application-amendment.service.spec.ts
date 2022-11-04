@@ -12,7 +12,7 @@ import { CardService } from '../card/card.service';
 import { AmendmentProfile } from '../common/automapper/amendment.automapper.profile';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import {
-  initApplicationAmendementMockEntity,
+  initApplicationAmendmentMockEntity,
   initApplicationMockEntity,
 } from '../common/utils/test-helpers/mockEntities';
 import {
@@ -78,7 +78,7 @@ describe('AmendmentService', () => {
       ApplicationAmendmentService,
     );
 
-    mockAmendment = initApplicationAmendementMockEntity();
+    mockAmendment = initApplicationAmendmentMockEntity();
     amendmentRepoMock.findOneOrFail.mockResolvedValue(mockAmendment);
     amendmentRepoMock.findOneBy.mockResolvedValue(mockAmendment);
     amendmentRepoMock.find.mockResolvedValue([mockAmendment]);
