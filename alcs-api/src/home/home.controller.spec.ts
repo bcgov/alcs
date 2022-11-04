@@ -13,14 +13,17 @@ import { CodeService } from '../code/code.service';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { CardProfile } from '../common/automapper/card.automapper.profile';
+import { CovenantProfile } from '../common/automapper/covenant.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
-  initApplicationAmendementMockEntity,
+  initApplicationAmendmentMockEntity,
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
   initCardMockEntity,
 } from '../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { Covenant } from '../covenant/covenant.entity';
+import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { HomeController } from './home.controller';
@@ -32,6 +35,7 @@ describe('HomeController', () => {
   let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockApplicationAmendmentService: DeepMocked<ApplicationAmendmentService>;
   let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
+  let mockCovenantService: DeepMocked<CovenantService>;
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
 
   beforeEach(async () => {
@@ -43,6 +47,7 @@ describe('HomeController', () => {
     mockApplicationTimeTrackingService =
       createMock<ApplicationTimeTrackingService>();
     mockApplicationAmendmentService = createMock<ApplicationAmendmentService>();
+    mockCovenantService = createMock<CovenantService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -84,8 +89,13 @@ describe('HomeController', () => {
           provide: PlanningReviewService,
           useValue: mockPlanningReviewService,
         },
+        {
+          provide: CovenantService,
+          useValue: mockCovenantService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
+        CovenantProfile,
         UserProfile,
         CardProfile,
         ...mockKeyCloakProviders,
@@ -102,6 +112,8 @@ describe('HomeController', () => {
     mockApplicationAmendmentService.mapToDtos.mockResolvedValue([]);
     mockPlanningReviewService.getBy.mockResolvedValue([]);
     mockPlanningReviewService.mapToDtos.mockResolvedValue([]);
+    mockCovenantService.getBy.mockResolvedValue([]);
+    mockCovenantService.mapToDtos.mockResolvedValue([]);
 
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
@@ -120,6 +132,8 @@ describe('HomeController', () => {
       [],
     );
     mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+
+    mockCovenantService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -244,7 +258,7 @@ describe('HomeController', () => {
     });
 
     it('should call Amendment Service and map it', async () => {
-      const mockAmendment = initApplicationAmendementMockEntity();
+      const mockAmendment = initApplicationAmendmentMockEntity();
       mockApplicationAmendmentService.getWithIncompleteSubtaskByType.mockResolvedValue(
         [mockAmendment],
       );
@@ -262,6 +276,29 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(mockAmendment.application.applicant);
       expect(res[0].activeDays).toBeUndefined();
       expect(res[0].paused).toBeFalsy();
+    });
+
+    it('should call Covenant Service and map it', async () => {
+      const mockCovenant = {
+        applicant: 'fake-applicant',
+        fileNumber: 'fileNumber',
+        card: initCardMockEntity('222'),
+      } as Covenant;
+      mockCovenantService.getWithIncompleteSubtaskByType.mockResolvedValue([
+        mockCovenant,
+      ]);
+
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.GIS,
+      );
+
+      expect(res.length).toEqual(1);
+      expect(
+        mockPlanningReviewService.getWithIncompleteSubtaskByType,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(res[0].title).toContain(mockCovenant.fileNumber);
+      expect(res[0].title).toContain(mockCovenant.applicant);
     });
   });
 });

@@ -16,10 +16,12 @@ import { AmendmentDialogComponent } from './dialogs/amendment/amendment-dialog.c
 import { CreateAmendmentDialogComponent } from './dialogs/amendment/create/create-amendment-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
-import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
+import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
+import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
-import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
+import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
+import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
 
 const routes: Routes = [
@@ -47,6 +49,8 @@ const routes: Routes = [
     PlanningReviewDialogComponent,
     CreateAmendmentDialogComponent,
     AmendmentDialogComponent,
+    CovenantDialogComponent,
+    CreateCovenantDialogComponent,
   ],
   imports: [
     CommonModule,

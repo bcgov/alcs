@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as config from 'config';
@@ -14,13 +14,16 @@ import { ApplicationReconsiderationModule } from './application-reconsideration/
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
+import { CommissionerModule } from './commissioner/commissioner.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { ConfigModule } from './common/config/config.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
+import { CovenantModule } from './covenant/covenant.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { HomeModule } from './home/home.module';
+import { ImportModule } from './import/import.module';
 import { LogoutController } from './logout/logout.controller';
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
@@ -28,8 +31,6 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
-import { CommissionerModule } from './commissioner/commissioner.module';
-import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { ImportModule } from './import/import.module';
     BoardModule,
     ApplicationReconsiderationModule,
     PlanningReviewModule,
+    CovenantModule,
     ApplicationAmendmentModule,
     LoggerModule.forRoot({
       pinoHttp: {

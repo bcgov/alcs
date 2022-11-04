@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationDecisionMeetingDto } from '../../services/application/application.dto';
 import { AssigneeDto } from '../../services/user/user.dto';
 
@@ -37,6 +36,7 @@ export enum CardType {
   RECON = 'RECON',
   PLAN = 'PLAN',
   AMEND = 'AMEND',
+  COV = 'COV',
 }
 
 @Component({

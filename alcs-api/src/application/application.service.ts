@@ -97,9 +97,7 @@ export class ApplicationService {
       region,
     });
 
-    newApplication.card = new Card({
-      auditDeletedDateAt: application.cardDeletedDateAt,
-    });
+    newApplication.card = new Card();
 
     if (persist) {
       await this.applicationRepository.save(newApplication);

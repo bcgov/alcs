@@ -22,6 +22,9 @@ import { Card } from '../card/card.entity';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { CovenantDto } from '../covenant/covenant.dto';
+import { Covenant } from '../covenant/covenant.entity';
+import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
@@ -39,6 +42,7 @@ export class HomeController {
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
     private amendmentService: ApplicationAmendmentService,
+    private covenantService: CovenantService,
   ) {}
 
   @Get('/assigned')
@@ -48,6 +52,7 @@ export class HomeController {
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
     amendments: ApplicationAmendmentDto[];
+    covenants: CovenantDto[];
   }> {
     const userId = req.user.entity.uuid;
     if (userId) {
@@ -66,6 +71,10 @@ export class HomeController {
         card: { assigneeUuid: userId },
       });
 
+      const covenants = await this.covenantService.getBy({
+        card: { assigneeUuid: userId },
+      });
+
       return {
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
@@ -75,6 +84,7 @@ export class HomeController {
           planningReviews,
         ),
         amendments: await this.amendmentService.mapToDtos(amendments),
+        covenants: await this.covenantService.mapToDtos(covenants),
       };
     } else {
       return {
@@ -82,6 +92,7 @@ export class HomeController {
         reconsiderations: [],
         planningReviews: [],
         amendments: [],
+        covenants: [],
       };
     }
   }
@@ -115,11 +126,16 @@ export class HomeController {
       await this.amendmentService.getWithIncompleteSubtaskByType(subtaskType);
     const amendmentSubtasks = this.mapAmendmentsToDtos(amendmentsWithSubtasks);
 
+    const covenantWithSubtasks =
+      await this.covenantService.getWithIncompleteSubtaskByType(subtaskType);
+    const covenantReviewSubtasks = this.mapCovenantToDtos(covenantWithSubtasks);
+
     return [
       ...applicationSubtasks,
       ...reconSubtasks,
       ...amendmentSubtasks,
       ...planningReviewSubtasks,
+      ...covenantReviewSubtasks,
     ];
   }
 
@@ -181,6 +197,25 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${planningReview.fileNumber} (${planningReview.type})`,
+        });
+      }
+    }
+    return result;
+  }
+
+  private mapCovenantToDtos(covenants: Covenant[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const covenant of covenants) {
+      for (const subtask of covenant.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(covenant.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${covenant.fileNumber} (${covenant.applicant})`,
         });
       }
     }

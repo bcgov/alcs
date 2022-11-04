@@ -137,7 +137,7 @@ const initApplicationReconsiderationMockEntity = (
   return reconsideration;
 };
 
-const initApplicationAmendementMockEntity = (
+const initApplicationAmendmentMockEntity = (
   application?: Application,
   card?: Card,
 ): ApplicationAmendment => {
@@ -323,5 +323,5 @@ export {
   initCardTypeMockEntity,
   initApplicationDecisionMock,
   initApplicationReconsiderationMockEntity,
-  initApplicationAmendementMockEntity,
+  initApplicationAmendmentMockEntity,
 };

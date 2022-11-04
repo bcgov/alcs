@@ -1,0 +1,95 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Create Covenant</h2>
+</div>
+<form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="two-item-row">
+      <mat-form-field appearance="outline">
+        <mat-label>File ID</mat-label>
+        <input
+          id="fileNumber"
+          matInput
+          placeholder="791262"
+          formControlName="fileNumber"
+          [class.valid]="
+            createForm.get('fileNumber')!.valid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('fileNumber')!.invalid &&
+            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
+          "
+        />
+        <mat-error
+          class="text-danger"
+          *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
+        >
+          This field is required.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Applicant Last Name</mat-label>
+        <input
+          matInput
+          id="applicant"
+          formControlName="applicant"
+          type="text"
+          [class.valid]="
+            createForm.get('applicant')!.valid &&
+            (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('applicant')!.invalid &&
+            (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
+          "
+        />
+        <mat-error
+          class="text-danger"
+          *ngIf="createForm.get('applicant')!.touched && createForm.get('applicant')!.hasError('required')"
+        >
+          This field is required.
+        </mat-error>
+      </mat-form-field>
+      <div>
+        <ng-select
+          appearance="outline"
+          class="card-local-government"
+          [items]="localGovernments"
+          appendTo="body"
+          placeholder="Local Government *"
+          bindLabel="name"
+          bindValue="uuid"
+          [clearable]="false"
+          formControlName="localGovernment"
+          (change)="onSelectGovernment($event)"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.name }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div>
+        <ng-select
+          appearance="outline"
+          class="card-region"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Region *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          formControlName="region"
+        >
+        </ng-select>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

@@ -6,49 +6,37 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
-import {
-  ApplicationReconsiderationDto,
-  ReconsiderationTypeDto,
-} from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
+import { CovenantDto } from '../../../../services/covenant/covenant.dto';
+import { CovenantService } from '../../../../services/covenant/covenant.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
+import { CovenantDialogComponent } from './covenant-dialog.component';
 
-import { ReconsiderationDialogComponent } from './reconsideration-dialog.component';
-
-describe('ReconsiderationDialogComponent', () => {
-  let component: ReconsiderationDialogComponent;
-  let fixture: ComponentFixture<ReconsiderationDialogComponent>;
+describe('CovenantDialogComponent', () => {
+  let component: CovenantDialogComponent;
+  let fixture: ComponentFixture<CovenantDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockBoardService: jasmine.SpyObj<BoardService>;
 
-  const mockReconDto: ApplicationReconsiderationDto = {
-    uuid: '',
-    board: {
-      code: 'fake',
-      title: 'Fake',
-      decisionMaker: '',
+  const mockCovenantDto: CovenantDto = {
+    applicant: 'fake-type',
+    region: {
+      code: 'region-code',
+      label: 'region',
+      description: 'WHY',
     },
-    type: {} as ReconsiderationTypeDto,
-    submittedDate: 111111,
-    application: {
-      fileNumber: '',
-      type: {} as ApplicationTypeDto,
-      applicant: '',
-      region: {
-        code: 'FAKE_REGION',
-      } as ApplicationRegionDto,
-      localGovernment: {} as ApplicationLocalGovernmentDto,
-      decisionMeetings: [],
+    localGovernment: {
+      name: 'local-gov',
+      uuid: 'uuid',
+      preferredRegionCode: 'CODE',
     },
+    fileNumber: 'file-number',
     card: {
       status: {
         code: 'FAKE_STATUS',
@@ -66,19 +54,15 @@ describe('ReconsiderationDialogComponent', () => {
     mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
-    mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
+    mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards', 'changeBoard']);
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [ReconsiderationDialogComponent],
+      declarations: [CovenantDialogComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: {
-            statusDetails: {
-              code: 'fake',
-            },
-          },
+          useValue: mockCovenantDto,
         },
         {
           provide: UserService,
@@ -89,7 +73,7 @@ describe('ReconsiderationDialogComponent', () => {
           useValue: {},
         },
         {
-          provide: ApplicationReconsiderationService,
+          provide: CovenantService,
           useValue: {},
         },
         {
@@ -109,9 +93,9 @@ describe('ReconsiderationDialogComponent', () => {
       imports: [MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, RouterTestingModule, SharedModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReconsiderationDialogComponent);
+    fixture = TestBed.createComponent(CovenantDialogComponent);
     component = fixture.componentInstance;
-    component.data = mockReconDto;
+    component.data = mockCovenantDto;
     fixture.detectChanges();
   });
 
