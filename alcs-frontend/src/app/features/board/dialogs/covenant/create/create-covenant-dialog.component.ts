@@ -18,7 +18,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 export class CreateCovenantDialogComponent implements OnInit {
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
-  isLoading = false;
+  isLoading: boolean = false;
+  currentBoardCode: string = '';
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
@@ -43,6 +44,7 @@ export class CreateCovenantDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.currentBoardCode = this.data.currentBoardCode;
     this.cardService.fetchCodes();
 
     this.localGovernmentService.list().then((res) => {
@@ -63,6 +65,7 @@ export class CreateCovenantDialogComponent implements OnInit {
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         applicant: formValues.applicant!.trim(),
+        boardCode: this.currentBoardCode,
       };
 
       await this.covenantService.create(planningReview);

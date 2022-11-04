@@ -7,6 +7,7 @@ export interface CreateCovenantDto {
   localGovernmentUuid: string;
   regionCode: string;
   applicant: string;
+  boardCode: string;
 }
 
 export interface CovenantDto {

@@ -20,6 +20,10 @@ export class CreateCovenantDto {
   @IsString()
   @IsNotEmpty()
   regionCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  boardCode: string;
 }
 
 export class CovenantDto {

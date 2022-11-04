@@ -14,25 +14,25 @@ export class CovenantController {
 
   @Post()
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async create(@Body() createPlanningReviewDto: CreateCovenantDto) {
+  async create(@Body() createCovenantDto: CreateCovenantDto) {
     const board = await this.boardService.getOne({
-      code: 'exec',
+      code: createCovenantDto.boardCode,
     });
 
-    const createdReview = await this.covenantService.create(
-      createPlanningReviewDto,
+    const createdCovenant = await this.covenantService.create(
+      createCovenantDto,
       board,
     );
 
-    const mapped = this.covenantService.mapToDtos([createdReview]);
+    const mapped = this.covenantService.mapToDtos([createdCovenant]);
     return mapped[0];
   }
 
   @Get('/card/:uuid')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getByCard(@Param('uuid') cardUuid: string) {
-    const planningReview = await this.covenantService.getByCardUuid(cardUuid);
-    const mapped = await this.covenantService.mapToDtos([planningReview]);
+    const covenant = await this.covenantService.getByCardUuid(cardUuid);
+    const mapped = await this.covenantService.mapToDtos([covenant]);
     return mapped[0];
   }
 }
