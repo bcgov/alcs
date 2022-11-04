@@ -29,6 +29,7 @@ import {
   PlanningReviewDialogComponent,
   PLANNING_TYPE_LABEL,
 } from './dialogs/planning-review/planning-review-dialog.component';
+import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import {
   ReconsiderationDialogComponent,
   RECON_TYPE_LABEL,
@@ -118,6 +119,12 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   async onCreate() {
     this.openDialog(this.cardDialogType, {
+      currentBoardCode: this.selectedBoardCode,
+    });
+  }
+
+  async onReconsiderationCreate() {
+    this.openDialog(CreateReconsiderationDialogComponent, {
       currentBoardCode: this.selectedBoardCode,
     });
   }

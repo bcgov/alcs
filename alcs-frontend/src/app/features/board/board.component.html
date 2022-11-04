@@ -10,12 +10,12 @@
       <ng-container *ngIf="boardHasPlanningReviews || boardHasAmendments || boardHasCovenant">
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
-          <button mat-menu-item (click)="onCreate()">Reconsideration</button>
+          <button mat-menu-item (click)="onReconsiderationCreate()">Reconsideration</button>
           <button *ngIf="boardHasPlanningReviews" mat-menu-item (click)="onCreatePlanningReview()">
             Planning Review
           </button>
           <button *ngIf="boardHasAmendments" mat-menu-item (click)="onCreateAmendment()">Amendment</button>
-          <button *ngIf="boardHasCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
+          <button *ngIf="boardHasCovenant" mat-menu-item (click)="onCreateAmendment()">Covenant</button>
         </mat-menu>
       </ng-container>
       <button *ngIf="currentBoardCode === 'vett'" mat-flat-button color="primary" (click)="onCreate()">
