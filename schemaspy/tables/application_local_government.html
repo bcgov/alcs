@@ -122,6 +122,10 @@
                                                 <td class="constraint detail">FK_58853fcb8957e8b2c131cc12da1<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
+                                                <td title="covenant.local_government_uuid references application_local_government.uuid via FK_0fa742d800bc0e0b3f2451e0f0b"><a href='covenant.html'>covenant</a><span class='relatedKey'>.local_government_uuid</span></td>
+                                                <td class="constraint detail">FK_0fa742d800bc0e0b3f2451e0f0b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="planning_review.local_government_uuid references application_local_government.uuid via FK_5a57c8d407eb6132ed39cb8fe6f"><a href='planning_review.html'>planning_review</a><span class='relatedKey'>.local_government_uuid</span></td>
                                                 <td class="constraint detail">FK_5a57c8d407eb6132ed39cb8fe6f<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
@@ -316,27 +320,29 @@
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
 <area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="761,5,1064,269">
-<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,201,717,505">
-<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,409,232,556">
-<area shape="rect" id="node4" href="planning_review.html" target="_top" title="planning_review" alt="" coords="796,313,1029,548">
+<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,271,717,575">
+<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,516,232,663">
+<area shape="rect" id="node4" href="covenant.html" target="_top" title="covenant" alt="" coords="796,287,1029,521">
+<area shape="rect" id="node5" href="planning_review.html" target="_top" title="planning_review" alt="" coords="796,539,1029,773">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_local_government.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="781,355,951,443">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="439,531,554,619">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,68,717,372">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,282,232,370">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="391,426,603,514">
-<area shape="rect" id="node6" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="1035,636,1309,724">
-<area shape="rect" id="node7" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1051,110,1293,198">
-<area shape="rect" id="node8" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1015,215,1329,303">
-<area shape="rect" id="node9" href="application_document.html" target="_top" title="application_document" alt="" coords="1043,320,1301,408">
-<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1373,426,1615,514">
-<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1055,426,1289,514">
-<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1021,531,1323,619">
-<area shape="rect" id="node13" href="planning_review.html" target="_top" title="planning_review" alt="" coords="761,76,971,164">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="781,360,951,448">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="439,471,554,559">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,612,717,916">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,684,232,772">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="391,365,603,453">
+<area shape="rect" id="node6" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="1035,463,1309,551">
+<area shape="rect" id="node7" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1051,252,1293,340">
+<area shape="rect" id="node8" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1015,357,1329,445">
+<area shape="rect" id="node9" href="application_document.html" target="_top" title="application_document" alt="" coords="1043,5,1301,93">
+<area shape="rect" id="node10" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1373,111,1615,199">
+<area shape="rect" id="node11" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1055,111,1289,199">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1021,568,1323,656">
+<area shape="rect" id="node13" href="covenant.html" target="_top" title="covenant" alt="" coords="789,668,943,756">
+<area shape="rect" id="node14" href="planning_review.html" target="_top" title="planning_review" alt="" coords="761,563,971,651">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_local_government.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

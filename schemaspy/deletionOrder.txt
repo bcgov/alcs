@@ -3,6 +3,7 @@ holiday_entity
 health_check
 application_meeting
 planning_review
+covenant
 card_subtask
 application_reconsideration
 notification

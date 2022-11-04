@@ -146,6 +146,7 @@
       <table name="application_local_government" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="local_government_uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="public" table="application"/>
+            <child column="local_government_uuid" foreignKey="FK_0fa742d800bc0e0b3f2451e0f0b" implied="false" onDeleteCascade="false" schema="public" table="covenant"/>
             <child column="local_government_uuid" foreignKey="FK_5a57c8d407eb6132ed39cb8fe6f" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -288,6 +289,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <child column="region_code" foreignKey="FK_805ded031f6340b59f60b6f76f5" implied="false" onDeleteCascade="false" schema="public" table="application"/>
             <child column="preferred_region_code" foreignKey="FK_b7e4525de796ada01f43f464d9d" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
+            <child column="region_code" foreignKey="FK_a62eb808822aabedb56e1c9d928" implied="false" onDeleteCascade="false" schema="public" table="covenant"/>
             <child column="region_code" foreignKey="FK_409473aef1f92b6675e3f7c00ad" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
@@ -373,6 +375,7 @@
             <child column="card_uuid" foreignKey="FK_b9537303955ebb0430c46d95997" implied="false" onDeleteCascade="false" schema="public" table="card_history"/>
             <child column="card_uuid" foreignKey="FK_27ad2b929d07d4c4e43943f8e62" implied="false" onDeleteCascade="false" schema="public" table="card_subtask"/>
             <child column="card_uuid" foreignKey="FK_acb37fb28b6e19312217e12aaa2" implied="false" onDeleteCascade="false" schema="public" table="comment"/>
+            <child column="card_uuid" foreignKey="FK_4dbfa43fa598901ae71504afabf" implied="false" onDeleteCascade="false" schema="public" table="covenant"/>
             <child column="card_uuid" foreignKey="FK_735dcdd4fa909a60d0fa1828f24" implied="false" onDeleteCascade="false" schema="public" table="planning_review"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -567,6 +570,35 @@
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_feed00139ed51070bcebe19773f" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="covenant" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="applicant" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_4dbfa43fa598901ae71504afabf" implied="false" onDeleteCascade="false" schema="public" table="card"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_0fa742d800bc0e0b3f2451e0f0b" implied="false" onDeleteCascade="false" schema="public" table="application_local_government"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_a62eb808822aabedb56e1c9d928" implied="false" onDeleteCascade="false" schema="public" table="application_region"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_cefaa63a1ab0918cbda7dc123aa" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="REL_4dbfa43fa598901ae71504afab" unique="true">
+            <column ascending="true" name="card_uuid"/>
+         </index>
+         <index name="UQ_a5dfb1e8f2d584102ea62cc2eed" unique="true">
+            <column ascending="true" name="file_number"/>
          </index>
       </table>
       <table name="decision_document" remarks="" schema="public" type="TABLE">

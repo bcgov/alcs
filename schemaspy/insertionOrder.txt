@@ -27,6 +27,7 @@ decision_document
 notification
 application_reconsideration
 card_subtask
+covenant
 planning_review
 application_meeting
 health_check
