@@ -22,6 +22,8 @@ import { Card } from '../card/card.entity';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { Covenant } from '../covenant/covenant.entity';
+import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
@@ -39,6 +41,7 @@ export class HomeController {
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
     private amendmentService: ApplicationAmendmentService,
+    private covenantService: CovenantService,
   ) {}
 
   @Get('/assigned')
@@ -115,11 +118,16 @@ export class HomeController {
       await this.amendmentService.getWithIncompleteSubtaskByType(subtaskType);
     const amendmentSubtasks = this.mapAmendmentsToDtos(amendmentsWithSubtasks);
 
+    const covenantWithSubtasks =
+      await this.covenantService.getWithIncompleteSubtaskByType(subtaskType);
+    const covenantReviewSubtasks = this.mapCovenantToDtos(covenantWithSubtasks);
+
     return [
       ...applicationSubtasks,
       ...reconSubtasks,
       ...amendmentSubtasks,
       ...planningReviewSubtasks,
+      ...covenantReviewSubtasks,
     ];
   }
 
@@ -181,6 +189,25 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${planningReview.fileNumber} (${planningReview.type})`,
+        });
+      }
+    }
+    return result;
+  }
+
+  private mapCovenantToDtos(covenants: Covenant[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const covenant of covenants) {
+      for (const subtask of covenant.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(covenant.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${covenant.fileNumber} (${covenant.applicant})`,
         });
       }
     }
