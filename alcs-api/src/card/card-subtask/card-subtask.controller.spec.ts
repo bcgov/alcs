@@ -13,6 +13,7 @@ import { Card } from '../card.entity';
 import { CardService } from '../card.service';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
 import { CardSubtaskController } from './card-subtask.controller';
+import { CARD_SUBTASK_TYPE } from './card-subtask.dto';
 import { CardSubtask } from './card-subtask.entity';
 import { CardSubtaskService } from './card-subtask.service';
 
@@ -86,13 +87,15 @@ describe('CardSubtaskController', () => {
       subtasks: [
         {
           ...mockSubtask,
-          type: { ...mockSubtaskType, code: 'AUDIT' },
+          type: { ...mockSubtaskType, code: CARD_SUBTASK_TYPE.AUDIT },
         } as CardSubtask,
       ],
     };
     cardService.get.mockResolvedValue({ ...mockCard } as Card);
 
-    await expect(controller.create('mock-file', 'AUDIT')).rejects.toMatchObject(
+    await expect(
+      controller.create('mock-file', CARD_SUBTASK_TYPE.AUDIT),
+    ).rejects.toMatchObject(
       new ServiceValidationException('Card can have only one Audit subtask'),
     );
 
