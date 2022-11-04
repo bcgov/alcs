@@ -1,11 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { Public } from 'nest-keycloak-connect';
+import { Public, RoleGuard } from 'nest-keycloak-connect';
 import { AppService } from './app.service';
-import { ANY_AUTH_ROLE } from './common/authorization/roles';
-import { RolesGuard } from './common/authorization/roles-guard.service';
-import { UserRoles } from './common/authorization/roles.decorator';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 
 @Controller()
@@ -20,8 +17,8 @@ export class AppController {
 
   @Get('token')
   @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-  @UseGuards(RolesGuard)
-  @UserRoles(...ANY_AUTH_ROLE)
+  //One place this should be RoleGuard as this is used by users without any roles
+  @UseGuards(RoleGuard)
   adminRoute(): string {
     return 'Admin!';
   }
