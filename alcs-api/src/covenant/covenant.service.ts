@@ -8,6 +8,7 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
+import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
 import {
@@ -35,6 +36,7 @@ export class CovenantService {
     @InjectRepository(Covenant)
     private repository: Repository<Covenant>,
     @InjectMapper() private mapper: Mapper,
+    private applicationService: ApplicationService,
   ) {}
 
   async create(data: CreateCovenantDto, board: Board) {
@@ -43,10 +45,19 @@ export class CovenantService {
         fileNumber: data.fileNumber,
       },
     });
-
     if (existingCovenant) {
       throw new ServiceValidationException(
         `Covenant already exists with File ID ${data.fileNumber}`,
+      );
+    }
+
+    const existingApplication = await this.applicationService.get(
+      data.fileNumber,
+    );
+
+    if (existingApplication) {
+      throw new ServiceValidationException(
+        `Application already exists with File ID ${data.fileNumber}`,
       );
     }
 

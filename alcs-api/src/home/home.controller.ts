@@ -22,6 +22,7 @@ import { Card } from '../card/card.entity';
 import { ANY_AUTH_ROLE } from '../common/authorization/roles';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { CovenantDto } from '../covenant/covenant.dto';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
@@ -51,6 +52,7 @@ export class HomeController {
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
     amendments: ApplicationAmendmentDto[];
+    covenants: CovenantDto[];
   }> {
     const userId = req.user.entity.uuid;
     if (userId) {
@@ -69,6 +71,10 @@ export class HomeController {
         card: { assigneeUuid: userId },
       });
 
+      const covenants = await this.covenantService.getBy({
+        card: { assigneeUuid: userId },
+      });
+
       return {
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
@@ -78,6 +84,7 @@ export class HomeController {
           planningReviews,
         ),
         amendments: await this.amendmentService.mapToDtos(amendments),
+        covenants: await this.covenantService.mapToDtos(covenants),
       };
     } else {
       return {
@@ -85,6 +92,7 @@ export class HomeController {
         reconsiderations: [],
         planningReviews: [],
         amendments: [],
+        covenants: [],
       };
     }
   }

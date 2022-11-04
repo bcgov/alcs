@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationModule } from '../application/application.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
@@ -12,6 +13,7 @@ import { CovenantService } from './covenant.service';
   imports: [
     TypeOrmModule.forFeature([Covenant]),
     forwardRef(() => BoardModule),
+    ApplicationModule,
     CardModule,
     CodeModule,
   ],

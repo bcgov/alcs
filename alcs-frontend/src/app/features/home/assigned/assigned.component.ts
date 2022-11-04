@@ -5,10 +5,12 @@ import { ApplicationReconsiderationDto } from '../../../services/application/app
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { CardDto } from '../../../services/card/card.dto';
+import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import { CardLabel } from '../../../shared/card/card.component';
 import { AMENDMENT_TYPE_LABEL } from '../../board/dialogs/amendment/amendment-dialog.component';
+import { COVENANT_TYPE_LABEL } from '../../board/dialogs/covenant/covenant-dialog.component';
 import { PLANNING_TYPE_LABEL } from '../../board/dialogs/planning-review/planning-review-dialog.component';
 import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
 
@@ -44,7 +46,8 @@ export class AssignedComponent implements OnInit {
   }
 
   async loadApplications() {
-    const { applications, reconsiderations, planningReviews, amendments } = await this.homeService.fetchAssignedToMe();
+    const { applications, reconsiderations, planningReviews, amendments, covenants } =
+      await this.homeService.fetchAssignedToMe();
 
     const sorted = [];
     sorted.push(
@@ -65,6 +68,10 @@ export class AssignedComponent implements OnInit {
         .filter((r) => r.card.highPriority)
         .map((r) => this.mapPlanning(r))
         .sort((a, b) => a.date! - b.date!),
+      ...covenants
+        .filter((r) => r.card.highPriority)
+        .map((r) => this.mapCovenant(r))
+        .sort((a, b) => a.date! - b.date!),
 
       // none high priority
       ...applications
@@ -82,10 +89,25 @@ export class AssignedComponent implements OnInit {
       ...planningReviews
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapPlanning(r))
+        .sort((a, b) => a.date! - b.date!),
+      ...covenants
+        .filter((r) => !r.card.highPriority)
+        .map((r) => this.mapCovenant(r))
         .sort((a, b) => a.date! - b.date!)
     );
 
     this.sortedFiles = sorted;
+  }
+
+  private mapCovenant(c: CovenantDto): AssignedToMeFile {
+    return {
+      title: `${c.fileNumber} (${c.applicant})`,
+      type: c.card.type,
+      date: c.card.createdAt,
+      card: c.card,
+      highPriority: c.card.highPriority,
+      labels: [COVENANT_TYPE_LABEL],
+    };
   }
 
   private mapPlanning(p: PlanningReviewDto): AssignedToMeFile {

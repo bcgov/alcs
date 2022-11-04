@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -13,12 +13,17 @@ export class CovenantService {
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  async create(meeting: CreateCovenantDto) {
+  async create(covenant: CreateCovenantDto) {
     try {
-      return await firstValueFrom(this.http.post<CreateCovenantDto>(`${this.url}`, meeting));
-    } catch (err) {
-      console.error(err);
-      this.toastService.showErrorToast('Failed to create covenant');
+      return await firstValueFrom(this.http.post<CreateCovenantDto>(`${this.url}`, covenant));
+    } catch (e) {
+      console.error(e);
+      if (e instanceof HttpErrorResponse && e.status === 400) {
+        this.toastService.showErrorToast(`Covenant or Application with File ID ${covenant.fileNumber} already exists`);
+      } else {
+        this.toastService.showErrorToast('Failed to create Covenant');
+      }
+      throw e;
     }
     return;
   }
@@ -26,8 +31,8 @@ export class CovenantService {
   async fetchByCardUuid(id: string) {
     try {
       return await firstValueFrom(this.http.get<CovenantDto>(`${this.url}/card/${id}`));
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
       this.toastService.showErrorToast('Failed to fetch covenant');
     }
     return;

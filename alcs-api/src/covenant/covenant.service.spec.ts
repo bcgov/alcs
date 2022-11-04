@@ -4,6 +4,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Application } from '../application/application.entity';
+import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -14,9 +16,11 @@ describe('CovenantService', () => {
   let service: CovenantService;
   let mockRepository: DeepMocked<Repository<Covenant>>;
   let mockCardService: DeepMocked<CardService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockCardService = createMock<CardService>();
+    mockApplicationService = createMock<ApplicationService>();
     mockRepository = createMock<Repository<Covenant>>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -33,6 +37,10 @@ describe('CovenantService', () => {
         {
           provide: CardService,
           useValue: mockCardService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
         CovenantService,
       ],
@@ -70,7 +78,37 @@ describe('CovenantService', () => {
     expect(mockRepository.save.mock.calls[0][0].card).toBe(mockCard);
   });
 
-  it('should throw an exception when creating a meeting with an existing file ID', async () => {
+  it('should throw an exception when creating a covenant with an existing covenant file ID', async () => {
+    const mockCard = {} as Card;
+    const fakeBoard = {} as Board;
+    const existingFileNumber = '1512311';
+
+    mockApplicationService.get.mockResolvedValueOnce({} as Application);
+    mockRepository.save.mockResolvedValue({} as Covenant);
+    mockCardService.create.mockResolvedValue(mockCard);
+
+    const promise = service.create(
+      {
+        applicant: 'fake-applicant',
+        fileNumber: existingFileNumber,
+        localGovernmentUuid: 'fake-uuid',
+        regionCode: 'region-code',
+      },
+      fakeBoard,
+    );
+
+    await expect(promise).rejects.toMatchObject(
+      new Error(
+        `Application already exists with File ID ${existingFileNumber}`,
+      ),
+    );
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockCardService.create).not.toHaveBeenCalled();
+    expect(mockRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('should throw an exception when creating a covenant with an existing application file ID', async () => {
     const mockCard = {} as Card;
     const fakeBoard = {} as Board;
     const existingFileNumber = '1512311';

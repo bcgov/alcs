@@ -6,6 +6,7 @@ import { ApplicationAmendmentDto } from '../application/application-amendment/ap
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
+import { CovenantDto } from '../covenant/covenant.dto';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 
 @Injectable({
@@ -21,6 +22,7 @@ export class HomeService {
         reconsiderations: ApplicationReconsiderationDto[];
         planningReviews: PlanningReviewDto[];
         amendments: ApplicationAmendmentDto[];
+        covenants: CovenantDto[];
       }>(`${environment.apiUrl}/home/assigned`)
     );
   }
