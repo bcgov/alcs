@@ -205,6 +205,8 @@ export class ApplicationDecisionService {
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
+      resolutionNumber: createDto.resolutionNumber,
+      resolutionYear: createDto.resolutionYear,
       chairReviewRequired: createDto.chairReviewRequired,
       auditDate: createDto.auditDate
         ? new Date(createDto.auditDate)

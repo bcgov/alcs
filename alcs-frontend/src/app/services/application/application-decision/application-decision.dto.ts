@@ -15,6 +15,8 @@ export interface UpdateApplicationDecisionDto {
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   date: number;
   outcomeCode: string;
+  resolutionNumber: number;
+  resolutionYear: number;
   chairReviewRequired: boolean;
   applicationFileNumber: string;
 }
@@ -23,6 +25,8 @@ export interface ApplicationDecisionDto {
   uuid: string;
   date: number;
   outcome: ApplicationDecisionOutcomeTypeDto;
+  resolutionNumber: number;
+  resolutionYear: number;
   auditDate?: number | null;
   chairReviewDate?: number | null;
   decisionMaker?: DecisionMakerDto;
@@ -34,18 +38,18 @@ export interface ApplicationDecisionDto {
   isTimeExtension?: boolean | null;
 }
 
-export interface DecisionMakerDto extends BaseCodeDto {}
-
-export interface CeoCriterionDto extends BaseCodeDto {
-  number: number;
-}
-
 export interface DecisionDocumentDto {
   uuid: string;
   fileName: string;
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+}
+
+export interface DecisionMakerDto extends BaseCodeDto {}
+
+export interface CeoCriterionDto extends BaseCodeDto {
+  number: number;
 }
 
 export interface ApplicationDecisionOutcomeTypeDto extends BaseCodeDto {}

@@ -2,7 +2,6 @@ version: '3.6'
 services:
   db:
     image: postgres:12.4
-    restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -41,7 +40,6 @@ services:
 
   minio:
     image: minio/minio:latest
-    restart: always
     command: "server --console-address :9001 --address :80 /data"
     environment:
       - MINIO_ROOT_USER=minio
@@ -55,6 +53,20 @@ services:
       - "9001:9001"
     networks:
       - alcs
+
+#  metabase:
+#    image: metabase/metabase:latest
+#    environment:
+#      - MB_DB_TYPE=postgres
+#      - MB_DB_DBNAME=postgres
+#      - MB_DB_PORT=5432
+#      - MB_DB_USER=postgres
+#      - MB_DB_PASS=postgres
+#      - MB_DB_HOST=db
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - alcs
 
 volumes:
   postgres:
