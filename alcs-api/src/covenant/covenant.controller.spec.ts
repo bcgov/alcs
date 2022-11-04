@@ -53,6 +53,7 @@ describe('CovenantController', () => {
       localGovernmentUuid: 'local-gov-uuid',
       fileNumber: 'file-number',
       regionCode: 'region-code',
+      boardCode: 'fake',
     });
 
     expect(mockBoardService.getOne).toHaveBeenCalledTimes(1);

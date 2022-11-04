@@ -46,6 +46,8 @@ describe('CovenantService', () => {
       ],
     }).compile();
 
+    mockApplicationService.get.mockResolvedValue(undefined);
+
     service = module.get<CovenantService>(CovenantService);
   });
 
@@ -68,6 +70,7 @@ describe('CovenantService', () => {
         fileNumber: '1512311',
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'fake',
       },
       fakeBoard,
     );
@@ -83,7 +86,7 @@ describe('CovenantService', () => {
     const fakeBoard = {} as Board;
     const existingFileNumber = '1512311';
 
-    mockApplicationService.get.mockResolvedValueOnce({} as Application);
+    mockRepository.findOne.mockResolvedValueOnce({} as Covenant);
     mockRepository.save.mockResolvedValue({} as Covenant);
     mockCardService.create.mockResolvedValue(mockCard);
 
@@ -93,14 +96,13 @@ describe('CovenantService', () => {
         fileNumber: existingFileNumber,
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'fake',
       },
       fakeBoard,
     );
 
     await expect(promise).rejects.toMatchObject(
-      new Error(
-        `Application already exists with File ID ${existingFileNumber}`,
-      ),
+      new Error(`Covenant already exists with File ID ${existingFileNumber}`),
     );
 
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
@@ -113,7 +115,8 @@ describe('CovenantService', () => {
     const fakeBoard = {} as Board;
     const existingFileNumber = '1512311';
 
-    mockRepository.findOne.mockResolvedValueOnce({} as Covenant);
+    mockRepository.findOne.mockResolvedValue(undefined);
+    mockApplicationService.get.mockResolvedValue({} as Application);
     mockRepository.save.mockResolvedValue({} as Covenant);
     mockCardService.create.mockResolvedValue(mockCard);
 
@@ -123,12 +126,15 @@ describe('CovenantService', () => {
         fileNumber: existingFileNumber,
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'fake',
       },
       fakeBoard,
     );
 
     await expect(promise).rejects.toMatchObject(
-      new Error(`Covenant already exists with File ID ${existingFileNumber}`),
+      new Error(
+        `Application already exists with File ID ${existingFileNumber}`,
+      ),
     );
 
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
