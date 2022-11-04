@@ -4,6 +4,7 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
+import { ApplicationDecisionService } from '../../../../../services/application/application-decision/application-decision.service';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
 import {
@@ -30,6 +31,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
   isDecisionDateEmpty = false;
   currentBoardCode: string = '';
 
+  decisions: { uuid: string; resolution: string }[] = [];
   filteredApplications: Observable<ApplicationDto[]> | undefined;
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
@@ -39,6 +41,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   reconTypeControl = new FormControl<string | null>(null, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
+  reconsidersDecisions = new FormControl<string[]>([], [Validators.required]);
 
   createForm = new FormGroup({
     applicationType: this.applicationTypeControl,
@@ -48,6 +51,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
     localGovernment: this.localGovernmentControl,
     submittedDate: this.submittedDateControl,
     reconType: this.reconTypeControl,
+    reconsidersDecisions: this.reconsidersDecisions,
   });
 
   constructor(
@@ -57,7 +61,8 @@ export class CreateReconsiderationDialogComponent implements OnInit {
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private decisionService: ApplicationDecisionService
   ) {}
 
   ngOnInit(): void {
@@ -113,6 +118,8 @@ export class CreateReconsiderationDialogComponent implements OnInit {
     this.applicationTypeControl.disable();
     this.localGovernmentControl.disable();
 
+    await this.loadDecisions(application.fileNumber);
+
     this.createForm.patchValue({
       applicant: application.applicant,
       region: application.region.code,
@@ -141,6 +148,7 @@ export class CreateReconsiderationDialogComponent implements OnInit {
         reconTypeCode: formValues.reconType!,
         // card details
         boardCode: this.currentBoardCode,
+        reconsideredDecisionUuids: formValues.reconsidersDecisions!,
       };
 
       if (!recon.boardCode) {
@@ -163,12 +171,14 @@ export class CreateReconsiderationDialogComponent implements OnInit {
     this.applicationTypeControl.reset();
     this.submittedDateControl.reset();
     this.reconTypeControl.reset();
+    this.reconsidersDecisions.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();
     this.regionControl.enable();
     this.applicationTypeControl.enable();
     this.localGovernmentControl.enable();
+    this.reconsidersDecisions.disable();
 
     // clear warnings
     this.isDecisionDateEmpty = false;
@@ -178,5 +188,16 @@ export class CreateReconsiderationDialogComponent implements OnInit {
     this.createForm.patchValue({
       region: value.preferredRegionCode,
     });
+  }
+
+  async loadDecisions(fileNumber: string) {
+    const decisions = await this.decisionService.fetchByApplication(fileNumber);
+    if (decisions.length > 0) {
+      this.decisions = decisions.map((decision) => ({
+        uuid: decision.uuid,
+        resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+      }));
+      this.reconsidersDecisions.enable();
+    }
   }
 }

@@ -30,7 +30,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.documents,
           mapFrom((a) =>
             this.mapper.mapArray(
-              a.documents,
+              a.documents || [],
               DecisionDocument,
               DecisionDocumentDto,
             ),

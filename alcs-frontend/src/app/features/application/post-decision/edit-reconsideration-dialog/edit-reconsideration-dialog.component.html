@@ -18,7 +18,14 @@
         <mat-datepicker #datePicker type="date"> </mat-datepicker>
       </mat-form-field>
 
-      <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Decisions to be Reconsidered</mat-label>
+        <mat-select formControlName="reconsidersDecisions" multiple>
+          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label">Reconsideration Type *</mat-label>
         <mat-button-toggle-group id="reviewOutcome" formControlName="type" name="reviewOutcome">
           <mat-button-toggle *ngFor="let type of codes" value="{{ type.code }}">{{ type.label }}</mat-button-toggle>

@@ -1,8 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationAmendmentDto } from '../../../../services/application/application-amendment/application-amendment.dto';
+import {
+  ApplicationAmendmentDto,
+  ApplicationAmendmentUpdateDto,
+} from '../../../../services/application/application-amendment/application-amendment.dto';
 import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
@@ -11,7 +15,9 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
   templateUrl: './edit-amendment-dialog.component.html',
   styleUrls: ['./edit-amendment-dialog.component.scss'],
 })
-export class EditAmendmentDialogComponent {
+export class EditAmendmentDialogComponent implements OnInit {
+  decisions: { uuid: string; resolution: string }[] = [];
+
   isLoading = false;
 
   isReviewApprovedControl = new FormControl<string | null>(null);
@@ -22,6 +28,7 @@ export class EditAmendmentDialogComponent {
     isReviewApproved: this.isReviewApprovedControl,
     isTimeExtension: this.isTimeExtensionControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
+    amendedDecisions: new FormControl<string[]>([], [Validators.required]),
   });
 
   constructor(
@@ -32,6 +39,7 @@ export class EditAmendmentDialogComponent {
     },
     private dialogRef: MatDialogRef<EditAmendmentDialogComponent>,
     private amendmentService: ApplicationAmendmentService,
+    private decisionService: ApplicationDecisionService,
     private toastService: ToastService
   ) {
     this.form.patchValue({
@@ -39,26 +47,42 @@ export class EditAmendmentDialogComponent {
       isReviewApproved: JSON.stringify(data.existingAmendment.isReviewApproved),
       isTimeExtension: data.existingAmendment.isTimeExtension ? 'true' : 'false',
       reviewDate: data.existingAmendment.reviewDate ? new Date(data.existingAmendment.reviewDate) : null,
+      amendedDecisions: data.existingAmendment.amendedDecisions.map((dec) => dec.uuid),
     });
+  }
+
+  ngOnInit(): void {
+    this.loadDecisions(this.data.fileNumber);
   }
 
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, isTimeExtension, isReviewApproved, reviewDate } = this.form.getRawValue();
-    const data = {
+    const { submittedDate, isTimeExtension, isReviewApproved, reviewDate, amendedDecisions } = this.form.getRawValue();
+    const updateDto: ApplicationAmendmentUpdateDto = {
       submittedDate: formatDateForApi(submittedDate!),
       isReviewApproved: isReviewApproved != undefined ? JSON.parse(isReviewApproved) : null,
       isTimeExtension: isTimeExtension === 'true',
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
+      amendedDecisionUuids: amendedDecisions!,
     };
 
     try {
-      await this.amendmentService.update(this.data.existingAmendment.uuid, { ...data });
+      await this.amendmentService.update(this.data.existingAmendment.uuid, updateDto);
       this.toastService.showSuccessToast('Amendment updated');
     } finally {
       this.isLoading = false;
     }
     this.dialogRef.close(true);
+  }
+
+  async loadDecisions(fileNumber: string) {
+    const decisions = await this.decisionService.fetchByApplication(fileNumber);
+    if (decisions.length > 0) {
+      this.decisions = decisions.map((decision) => ({
+        uuid: decision.uuid,
+        resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+      }));
+    }
   }
 }

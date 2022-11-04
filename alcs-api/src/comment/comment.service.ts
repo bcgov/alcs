@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { FindOptionsRelations } from 'typeorm/browser';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';

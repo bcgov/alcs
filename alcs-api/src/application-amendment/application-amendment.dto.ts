@@ -1,5 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsBoolean,
   IsDefined,
   IsNotEmpty,
@@ -9,27 +11,24 @@ import {
 } from 'class-validator';
 import { ApplicationLocalGovernmentDto } from '../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionDto } from '../application/application-decision/application-decision.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 
 export class ApplicationAmendmentCreateDto {
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   applicationFileNumber: string;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   applicationTypeCode: string;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   applicant: string;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   regionCode: string;
@@ -37,19 +36,20 @@ export class ApplicationAmendmentCreateDto {
   @IsString()
   localGovernmentUuid: string;
 
-  @AutoMap()
   @IsNumber()
   @IsDefined()
   submittedDate: number;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   boardCode: string;
 
-  @AutoMap()
   @IsBoolean()
   isTimeExtension: boolean;
+
+  @IsArray({})
+  @ArrayNotEmpty()
+  amendedDecisionUuids: string[];
 }
 
 export class ApplicationAmendmentUpdateDto {
@@ -72,6 +72,11 @@ export class ApplicationAmendmentUpdateDto {
   @IsBoolean()
   @IsOptional()
   isTimeExtension?: boolean;
+
+  @IsOptional()
+  @IsArray({})
+  @ArrayNotEmpty()
+  amendedDecisionUuids?: string[];
 }
 
 export class ApplicationForAmendmentDto {
@@ -92,4 +97,5 @@ export class ApplicationAmendmentDto {
   reviewDate: number;
   isReviewApproved: boolean | null;
   isTimeExtension: boolean | null;
+  amendedDecisions: ApplicationDecisionDto[];
 }

@@ -32,6 +32,7 @@ describe('ReconsiderationDialogComponent', () => {
 
   const mockReconDto: ApplicationReconsiderationDto = {
     uuid: '',
+    reconsideredDecisions: [],
     board: {
       code: 'fake',
       title: 'Fake',

@@ -1,6 +1,15 @@
 import { AutoMap } from '@automapper/classes';
 import { Type } from 'class-transformer';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
+import { ApplicationDecision } from '../application/application-decision/application-decision.entity';
 import { Application } from '../application/application.entity';
 import { Card } from '../card/card.entity';
 import { Base } from '../common/entities/base.entity';
@@ -39,12 +48,18 @@ export class ApplicationAmendment extends Base {
   applicationUuid: string;
 
   @AutoMap()
-  @Column({ type: 'uuid' })
-  cardUuid: string;
-
-  @AutoMap()
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
   card: Card;
+
+  @AutoMap()
+  @Column({ type: 'uuid' })
+  cardUuid: string;
+
+  @ManyToMany(() => ApplicationDecision, (decision) => decision.amendedBy)
+  @JoinTable({
+    name: 'amended_decisions',
+  })
+  amendsDecisions: ApplicationDecision[];
 }

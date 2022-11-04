@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -98,6 +99,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MeetingOverviewComponent,
     FavoriteButtonComponent,
     AvatarCircleComponent,
+    MatSelectModule,
   ],
 })
 export class SharedModule {

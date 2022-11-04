@@ -130,6 +130,12 @@
         >
         </ng-select>
       </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Decisions to be Reconsidered</mat-label>
+        <mat-select [formControl]="reconsidersDecisions" multiple>
+          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
+        </mat-select>
+      </mat-form-field>
       <div>
         <ng-select
           appearance="outline"
@@ -155,12 +161,15 @@
             required
           />
           <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-          <mat-datepicker #datePicker type="date"> </mat-datepicker>
+          <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
       </div>
     </div>
     <div class="warning-section">
-      <div class="warning" *ngIf="isDecisionDateEmpty"><mat-icon>warning</mat-icon>File does not have a decision</div>
+      <div class="warning" *ngIf="isDecisionDateEmpty">
+        <mat-icon>warning</mat-icon>
+        File does not have a decision
+      </div>
     </div>
   </mat-dialog-content>
 
