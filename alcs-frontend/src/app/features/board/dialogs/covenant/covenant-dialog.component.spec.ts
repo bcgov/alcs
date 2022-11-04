@@ -18,7 +18,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { SharedModule } from '../../../../shared/shared.module';
 import { CovenantDialogComponent } from './covenant-dialog.component';
 
-describe('ReconsiderationDialogComponent', () => {
+describe('CovenantDialogComponent', () => {
   let component: CovenantDialogComponent;
   let fixture: ComponentFixture<CovenantDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;

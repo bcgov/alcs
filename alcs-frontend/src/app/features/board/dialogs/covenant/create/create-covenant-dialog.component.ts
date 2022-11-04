@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { ApplicationRegionDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
@@ -15,7 +16,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
   templateUrl: './create-covenant-dialog.component.html',
   styleUrls: ['./create-covenant-dialog.component.scss'],
 })
-export class CreateCovenantDialogComponent implements OnInit {
+export class CreateCovenantDialogComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading: boolean = false;
@@ -81,5 +83,10 @@ export class CreateCovenantDialogComponent implements OnInit {
     this.createForm.patchValue({
       region: value.preferredRegionCode,
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 }

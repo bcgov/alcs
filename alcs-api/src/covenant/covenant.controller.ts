@@ -1,10 +1,15 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
+import * as config from 'config';
 import { BoardService } from '../board/board.service';
 import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CreateCovenantDto } from './covenant.dto';
 import { CovenantService } from './covenant.service';
 
+@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
+@UseGuards(RolesGuard)
 @Controller('covenant')
 export class CovenantController {
   constructor(

@@ -122,7 +122,7 @@ describe('BoardController', () => {
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through to covenant service', async () => {
+  it('should call through to amendment service for ceo board', async () => {
     const boardCode = 'ceo';
 
     await controller.getCards(boardCode);

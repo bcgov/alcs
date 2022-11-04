@@ -15,7 +15,7 @@
             Planning Review
           </button>
           <button *ngIf="boardHasAmendments" mat-menu-item (click)="onCreateAmendment()">Amendment</button>
-          <button *ngIf="boardHasCovenant" mat-menu-item (click)="onCreateAmendment()">Covenant</button>
+          <button *ngIf="boardHasCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
         </mat-menu>
       </ng-container>
       <button *ngIf="currentBoardCode === 'vett'" mat-flat-button color="primary" (click)="onCreate()">
