@@ -151,7 +151,6 @@ describe('ReconsiderationService', () => {
       regionCode: mockReconsiderationCreateDto.regionCode,
       localGovernmentUuid: mockReconsiderationCreateDto.localGovernmentUuid,
       applicant: mockReconsiderationCreateDto.applicant,
-      cardDeletedDateAt: new Date(Date.now()),
     } as CreateApplicationServiceDto;
 
     reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
