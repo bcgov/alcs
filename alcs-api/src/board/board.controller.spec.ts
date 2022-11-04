@@ -11,6 +11,7 @@ import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { Board } from './board.entity';
@@ -25,6 +26,7 @@ describe('BoardController', () => {
   let amendmentService: DeepMocked<ApplicationAmendmentService>;
   let cardService: DeepMocked<CardService>;
   let planningReviewService: DeepMocked<PlanningReviewService>;
+  let covenantService: DeepMocked<CovenantService>;
 
   beforeEach(async () => {
     boardService = createMock<BoardService>();
@@ -33,6 +35,7 @@ describe('BoardController', () => {
     amendmentService = createMock<ApplicationAmendmentService>();
     planningReviewService = createMock<PlanningReviewService>();
     cardService = createMock<CardService>();
+    covenantService = createMock<CovenantService>();
 
     boardService.getApplicationsByCode.mockResolvedValue([]);
     appService.mapToDtos.mockResolvedValue([]);
@@ -42,6 +45,8 @@ describe('BoardController', () => {
     planningReviewService.mapToDtos.mockResolvedValue([]);
     amendmentService.getByBoardCode.mockResolvedValue([]);
     amendmentService.mapToDtos.mockResolvedValue([]);
+    covenantService.getByBoardCode.mockResolvedValue([]);
+    covenantService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -65,6 +70,7 @@ describe('BoardController', () => {
           provide: PlanningReviewService,
           useValue: planningReviewService,
         },
+        { provide: CovenantService, useValue: covenantService },
         {
           provide: ClsService,
           useValue: {},
@@ -116,7 +122,7 @@ describe('BoardController', () => {
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through to amendment service for ceo board', async () => {
+  it('should call through to covenant service', async () => {
     const boardCode = 'ceo';
 
     await controller.getCards(boardCode);

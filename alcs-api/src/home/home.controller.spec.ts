@@ -112,6 +112,8 @@ describe('HomeController', () => {
     mockApplicationAmendmentService.mapToDtos.mockResolvedValue([]);
     mockPlanningReviewService.getBy.mockResolvedValue([]);
     mockPlanningReviewService.mapToDtos.mockResolvedValue([]);
+    mockCovenantService.getBy.mockResolvedValue([]);
+    mockCovenantService.mapToDtos.mockResolvedValue([]);
 
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
@@ -130,6 +132,8 @@ describe('HomeController', () => {
       [],
     );
     mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+
+    mockCovenantService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
