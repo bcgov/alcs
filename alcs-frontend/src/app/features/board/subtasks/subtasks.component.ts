@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CardSubtaskDto, CARD_SUBTASK_TYPE } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { AssigneeDto } from '../../../services/user/user.dto';
@@ -10,9 +11,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
   templateUrl: './subtasks.component.html',
   styleUrls: ['./subtasks.component.scss'],
 })
-export class SubtasksComponent implements OnInit {
+export class SubtasksComponent implements OnInit, OnDestroy {
   @Input() cardUuid: string = '';
 
+  $destroy = new Subject<void>();
   subtasks: CardSubtaskDto[] = [];
   users: Map<string, AssigneeDto> = new Map();
   hasAuditSubtask = true;
@@ -26,7 +28,7 @@ export class SubtasksComponent implements OnInit {
   ngOnInit(): void {
     this.loadSubtasks(this.cardUuid);
 
-    this.userService.$assignableUsers.subscribe((users) => {
+    this.userService.$assignableUsers.pipe(takeUntil(this.$destroy)).subscribe((users) => {
       this.users.clear();
       users.forEach((user) => {
         this.users.set(user.uuid, user);
@@ -77,5 +79,10 @@ export class SubtasksComponent implements OnInit {
       completedAt: null,
     });
     await this.loadSubtasks(this.cardUuid);
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

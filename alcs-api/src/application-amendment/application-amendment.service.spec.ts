@@ -4,7 +4,6 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
-import { ApplicationReconsiderationCreateDto } from '../application-reconsideration/application-reconsideration.dto';
 import { ApplicationDecision } from '../application/application-decision/application-decision.entity';
 import { ApplicationDecisionService } from '../application/application-decision/application-decision.service';
 import { CreateApplicationDto } from '../application/application.dto';
@@ -104,7 +103,7 @@ describe('AmendmentService', () => {
       isTimeExtension: false,
     } as ApplicationAmendmentCreateDto;
 
-    mockAmendment = initApplicationAmendementMockEntity();
+    mockAmendment = initApplicationAmendmentMockEntity();
     amendmentRepoMock.findOneOrFail.mockResolvedValue(mockAmendment);
     amendmentRepoMock.findOneBy.mockResolvedValue(mockAmendment);
     amendmentRepoMock.find.mockResolvedValue([mockAmendment]);

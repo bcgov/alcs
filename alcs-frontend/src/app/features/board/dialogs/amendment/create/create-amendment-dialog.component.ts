@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationAmendmentCreateDto } from '../../../../../services/application/application-amendment/application-amendment.dto';
 import { ApplicationAmendmentService } from '../../../../../services/application/application-amendment/application-amendment.service';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
@@ -18,7 +18,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
   templateUrl: './create-amendment-dialog.html',
   styleUrls: ['./create-amendment-dialog.component.scss'],
 })
-export class CreateAmendmentDialogComponent implements OnInit {
+export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
@@ -61,11 +62,11 @@ export class CreateAmendmentDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentBoardCode = this.data.currentBoardCode;
-    this.applicationService.$applicationTypes.subscribe((types) => {
+    this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
-    this.applicationService.$applicationRegions.subscribe((regions) => {
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
 
@@ -187,5 +188,10 @@ export class CreateAmendmentDialogComponent implements OnInit {
       }));
       this.amendsDecisions.enable();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

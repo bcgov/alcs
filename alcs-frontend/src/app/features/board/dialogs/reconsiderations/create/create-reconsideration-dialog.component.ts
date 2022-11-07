@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationDecisionService } from '../../../../../services/application/application-decision/application-decision.service';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
@@ -22,7 +22,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
   templateUrl: './create-reconsideration-dialog.html',
   styleUrls: ['./create-reconsideration-dialog.component.scss'],
 })
-export class CreateReconsiderationDialogComponent implements OnInit {
+export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   reconTypes: ReconsiderationTypeDto[] = [];
@@ -68,15 +69,15 @@ export class CreateReconsiderationDialogComponent implements OnInit {
   ngOnInit(): void {
     this.currentBoardCode = this.data.currentBoardCode;
     this.cardService.fetchCodes();
-    this.applicationService.$applicationTypes.subscribe((types) => {
+    this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
-    this.applicationService.$applicationRegions.subscribe((regions) => {
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
 
-    this.cardService.$cardReconTypes.subscribe((reconTypes) => {
+    this.cardService.$cardReconTypes.pipe(takeUntil(this.$destroy)).subscribe((reconTypes) => {
       this.reconTypes = reconTypes;
     });
 
@@ -199,5 +200,10 @@ export class CreateReconsiderationDialogComponent implements OnInit {
       }));
       this.reconsidersDecisions.enable();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

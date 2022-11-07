@@ -47,7 +47,7 @@ export const BOARD_TYPE_CODES = {
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, OnDestroy {
-  destroy = new Subject<void>();
+  $destroy = new Subject<void>();
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
   boardTitle = '';
@@ -77,7 +77,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.params.pipe(takeUntil(this.destroy)).subscribe((params) => {
+    this.activatedRoute.params.pipe(takeUntil(this.$destroy)).subscribe((params) => {
       const boardCode = params['boardCode'];
       if (boardCode) {
         this.selectedBoardCode = boardCode;
@@ -99,7 +99,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.boardService.$boards.pipe(takeUntil(this.destroy)).subscribe((boards) => {
+    this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       this.boards = boards;
       const selectedBoard = boards.find((board) => board.code === this.selectedBoardCode);
       if (selectedBoard) {
@@ -109,8 +109,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy.next();
-    this.destroy.complete();
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   async onSelected(card: CardSelectedEvent) {
