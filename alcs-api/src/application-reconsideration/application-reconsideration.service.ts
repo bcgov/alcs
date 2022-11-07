@@ -8,6 +8,7 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
+import { ApplicationDecisionService } from '../application/application-decision/application-decision.service';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
@@ -32,6 +33,7 @@ export class ApplicationReconsiderationService {
     private cardService: CardService,
     @InjectRepository(ApplicationReconsiderationType)
     private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
+    private decisionService: ApplicationDecisionService,
   ) {}
 
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
@@ -49,6 +51,7 @@ export class ApplicationReconsiderationService {
         assignee: true,
       },
       type: true,
+      reconsidersDecisions: true,
     };
 
   getByBoardCode(boardCode: string) {
@@ -76,38 +79,31 @@ export class ApplicationReconsiderationService {
     );
   }
 
-  async create(
-    reconsideration: ApplicationReconsiderationCreateDto,
-    board: Board,
-  ) {
-    const type = await this.getReconsiderationType(
-      reconsideration.reconTypeCode,
-    );
+  async create(createDto: ApplicationReconsiderationCreateDto, board: Board) {
+    const type = await this.getReconsiderationType(createDto.reconTypeCode);
 
-    const newReconsideration = new ApplicationReconsideration({
-      submittedDate: new Date(reconsideration.submittedDate),
+    const reconsideration = new ApplicationReconsideration({
+      submittedDate: new Date(createDto.submittedDate),
       type,
     });
 
-    newReconsideration.card = await this.cardService.create(
-      'RECON',
-      board,
-      false,
+    reconsideration.card = await this.cardService.create('RECON', board, false);
+
+    reconsideration.application = await this.getOrCreateApplication(createDto);
+
+    reconsideration.reconsidersDecisions = await this.decisionService.getMany(
+      createDto.reconsideredDecisionUuids,
     );
 
-    newReconsideration.application = await this.getOrCreateApplication(
-      reconsideration,
-    );
-
-    const recon = await this.reconsiderationRepository.save(newReconsideration);
+    const recon = await this.reconsiderationRepository.save(reconsideration);
     return this.getByUuid(recon.uuid);
   }
 
   private async getOrCreateApplication(
-    reconsideration: ApplicationReconsiderationCreateDto,
+    createDto: ApplicationReconsiderationCreateDto,
   ) {
     const existingApplication = await this.applicationService.get(
-      reconsideration.applicationFileNumber,
+      createDto.applicationFileNumber,
     );
 
     if (existingApplication) {
@@ -115,41 +111,41 @@ export class ApplicationReconsiderationService {
     } else {
       return await this.applicationService.create(
         {
-          fileNumber: reconsideration.applicationFileNumber,
-          typeCode: reconsideration.applicationTypeCode,
-          regionCode: reconsideration.regionCode,
-          localGovernmentUuid: reconsideration.localGovernmentUuid,
-          applicant: reconsideration.applicant,
+          fileNumber: createDto.applicationFileNumber,
+          typeCode: createDto.applicationTypeCode,
+          regionCode: createDto.regionCode,
+          localGovernmentUuid: createDto.localGovernmentUuid,
+          applicant: createDto.applicant,
         },
         false,
       );
     }
   }
 
-  async update(uuid: string, updates: ApplicationReconsiderationUpdateDto) {
-    const existingReconsideration = await this.fetchAndValidateReconsideration(
-      uuid,
+  async update(uuid: string, updateDto: ApplicationReconsiderationUpdateDto) {
+    const reconsideration = await this.fetchAndValidateReconsideration(uuid);
+
+    reconsideration.reviewDate = formatIncomingDate(updateDto.reviewDate);
+    reconsideration.submittedDate = formatIncomingDate(updateDto.submittedDate);
+
+    reconsideration.type = await this.getReconsiderationType(
+      updateDto.typeCode,
     );
 
-    existingReconsideration.reviewDate = formatIncomingDate(updates.reviewDate);
-    existingReconsideration.submittedDate = formatIncomingDate(
-      updates.submittedDate,
-    );
-
-    existingReconsideration.type = await this.getReconsiderationType(
-      updates.typeCode,
-    );
-
-    if (existingReconsideration.type.code === '33.1') {
-      existingReconsideration.isReviewApproved = null;
-      existingReconsideration.reviewDate = null;
-    } else {
-      existingReconsideration.isReviewApproved = updates.isReviewApproved;
+    if (updateDto.reconsideredDecisionUuids) {
+      reconsideration.reconsidersDecisions = await this.decisionService.getMany(
+        updateDto.reconsideredDecisionUuids,
+      );
     }
 
-    const recon = await this.reconsiderationRepository.save(
-      existingReconsideration,
-    );
+    if (reconsideration.type.code === '33.1') {
+      reconsideration.isReviewApproved = null;
+      reconsideration.reviewDate = null;
+    } else {
+      reconsideration.isReviewApproved = updateDto.isReviewApproved;
+    }
+
+    const recon = await this.reconsiderationRepository.save(reconsideration);
 
     return this.getByUuid(recon.uuid);
   }

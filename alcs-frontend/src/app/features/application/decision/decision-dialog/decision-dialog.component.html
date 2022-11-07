@@ -16,8 +16,28 @@
           [min]="minDate | startOfDay"
         />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker type="date"> </mat-datepicker>
+        <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
+      <div style="display: grid; grid-template-columns: 1fr 8px 2fr; grid-column-gap: 8px">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>Resolution Number</mat-label>
+          <input matInput formControlName="resolutionNumber" type="number" required>
+          <span matPrefix>#&nbsp;</span>
+        </mat-form-field>
+        <div class="center resolution-separator">
+          /
+        </div>
+        <ng-select
+          appearance="outline"
+          class="resolution-year"
+          [items]="resolutionYears"
+          formControlName="resolutionYear"
+          appendTo="body"
+          required
+          placeholder="Resolution Year *"
+          [clearable]="false"
+        ></ng-select>
+      </div>
       <ng-select
         appearance="outline"
         class="decision-outcome"
@@ -32,7 +52,6 @@
       ></ng-select>
       <ng-select
         appearance="outline"
-        class="full-width"
         [items]="data.decisionMakers"
         formControlName="decisionMaker"
         appendTo="body"
@@ -78,7 +97,7 @@
           name="auditDate"
         />
         <mat-datepicker-toggle matSuffix [for]="auditDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #auditDatePicker type="date"> </mat-datepicker>
+        <mat-datepicker #auditDatePicker type="date"></mat-datepicker>
       </mat-form-field>
       <div>
         <mat-label class="toggle-label">Chair Review</mat-label>
@@ -106,7 +125,7 @@
           name="chairReviewDate"
         />
         <mat-datepicker-toggle matSuffix [for]="chairReviewDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #chairReviewDatePicker type="date"> </mat-datepicker>
+        <mat-datepicker #chairReviewDatePicker type="date"></mat-datepicker>
       </mat-form-field>
       <div *ngIf="form.get('chairReviewRequired')!.value === 'true'">
         <mat-label class="toggle-label">Chair Review Outcome</mat-label>

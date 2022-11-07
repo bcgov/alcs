@@ -5,12 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Between,
   FindOptionsOrder,
+  FindOptionsRelations,
   FindOptionsWhere,
   IsNull,
   Like,
   Repository,
 } from 'typeorm';
-import { FindOptionsRelations } from 'typeorm/browser';
 import { Card } from '../card/card.entity';
 import { CodeService } from '../code/code.service';
 import {

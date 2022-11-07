@@ -4,6 +4,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
+import { ApplicationDecision } from '../application/application-decision/application-decision.entity';
+import { ApplicationDecisionService } from '../application/application-decision/application-decision.service';
 import { CreateApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
@@ -27,11 +29,13 @@ describe('AmendmentService', () => {
   let service: ApplicationAmendmentService;
   let applicationServiceMock: DeepMocked<ApplicationService>;
   let cardServiceMock: DeepMocked<CardService>;
+  let decisionServiceMock: DeepMocked<ApplicationDecisionService>;
 
   let mockAmendment;
   let mockAmendmentCreateDto;
 
   const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationAmendment> = {
+    amendsDecisions: true,
     application: {
       type: true,
       region: true,
@@ -47,9 +51,10 @@ describe('AmendmentService', () => {
   };
 
   beforeEach(async () => {
-    applicationServiceMock = createMock<ApplicationService>();
-    cardServiceMock = createMock<CardService>();
-    amendmentRepoMock = createMock<Repository<ApplicationAmendment>>();
+    applicationServiceMock = createMock();
+    cardServiceMock = createMock();
+    amendmentRepoMock = createMock();
+    decisionServiceMock = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -66,6 +71,10 @@ describe('AmendmentService', () => {
         {
           provide: CardService,
           useValue: cardServiceMock,
+        },
+        {
+          provide: ApplicationDecisionService,
+          useValue: decisionServiceMock,
         },
         {
           provide: getRepositoryToken(ApplicationAmendment),
@@ -93,6 +102,20 @@ describe('AmendmentService', () => {
       boardCode: 'fake-board',
       isTimeExtension: false,
     } as ApplicationAmendmentCreateDto;
+
+    mockAmendment = initApplicationAmendmentMockEntity();
+    amendmentRepoMock.findOneOrFail.mockResolvedValue(mockAmendment);
+    amendmentRepoMock.findOneBy.mockResolvedValue(mockAmendment);
+    amendmentRepoMock.find.mockResolvedValue([mockAmendment]);
+    amendmentRepoMock.save.mockResolvedValue({} as any);
+
+    cardServiceMock.create.mockResolvedValue(new Card());
+
+    decisionServiceMock.getMany.mockResolvedValue([]);
+
+    applicationServiceMock.get.mockResolvedValue(
+      initApplicationMockEntity(mockAmendmentCreateDto.applicationFileNumber),
+    );
   });
 
   it('should be defined', () => {
@@ -120,8 +143,6 @@ describe('AmendmentService', () => {
       applicant: mockAmendmentCreateDto.applicant,
     } as CreateApplicationDto;
 
-    amendmentRepoMock.save.mockResolvedValue({} as any);
-    cardServiceMock.create.mockResolvedValue(new Card());
     applicationServiceMock.get.mockResolvedValue(undefined);
     applicationServiceMock.create.mockResolvedValue(
       mockApplicationCreateDto as any,
@@ -138,12 +159,6 @@ describe('AmendmentService', () => {
   });
 
   it('should successfully create amendment and link to existing application', async () => {
-    cardServiceMock.create.mockResolvedValue(new Card());
-    applicationServiceMock.get.mockResolvedValue(
-      initApplicationMockEntity(mockAmendmentCreateDto.applicationFileNumber),
-    );
-    amendmentRepoMock.save.mockResolvedValue({} as any);
-
     await service.create(mockAmendmentCreateDto, {} as Board);
 
     expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
@@ -151,10 +166,36 @@ describe('AmendmentService', () => {
     expect(applicationServiceMock.create).toBeCalledTimes(0);
   });
 
+  it('should successfully create amendment and link to decisions', async () => {
+    const decisionUuid = 'decision-uuid';
+
+    const mockDecision = {
+      uuid: decisionUuid,
+    };
+    decisionServiceMock.getMany.mockResolvedValue([
+      mockDecision as ApplicationDecision,
+    ]);
+
+    await service.create(
+      {
+        ...mockAmendmentCreateDto,
+        amendedDecisionUuids: [decisionUuid],
+      },
+      {} as Board,
+    );
+
+    expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.create).toBeCalledWith('AMEND', {} as Board, false);
+    expect(applicationServiceMock.create).toBeCalledTimes(0);
+    expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
+    expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
+    expect(amendmentRepoMock.save.mock.calls[0][0].amendsDecisions).toEqual([
+      mockDecision,
+    ]);
+  });
+
   it('should successfully update amendment', async () => {
     const uuid = 'fake';
-
-    amendmentRepoMock.save.mockResolvedValue({} as any);
 
     await service.update(uuid, {
       isReviewApproved: true,

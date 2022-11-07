@@ -90,6 +90,7 @@ import { ApplicationService } from './application.service';
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationLocalGovernmentService,
+    ApplicationDecisionService,
   ],
 })
 export class ApplicationModule {}

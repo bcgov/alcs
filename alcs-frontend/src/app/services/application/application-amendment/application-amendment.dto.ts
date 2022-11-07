@@ -1,5 +1,6 @@
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../application-code.dto';
+import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application.dto';
 
@@ -12,6 +13,7 @@ export interface ApplicationAmendmentCreateDto {
   submittedDate: number;
   boardCode: string;
   isTimeExtension: boolean;
+  amendedDecisionUuids: string[];
 }
 
 export interface ApplicationAmendmentUpdateDto {
@@ -19,6 +21,7 @@ export interface ApplicationAmendmentUpdateDto {
   reviewDate?: number | null;
   isReviewApproved?: boolean | null;
   isTimeExtension?: boolean | null;
+  amendedDecisionUuids?: string[];
 }
 
 export interface ApplicationForAmendmentDto {
@@ -39,4 +42,5 @@ export interface ApplicationAmendmentDto {
   reviewDate: number;
   isReviewApproved: boolean | null;
   isTimeExtension: boolean | null;
+  amendedDecisions: ApplicationDecisionDto[];
 }

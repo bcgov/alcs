@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
@@ -15,7 +16,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
   templateUrl: './create-planning-review-dialog.component.html',
   styleUrls: ['./create-planning-review-dialog.component.scss'],
 })
-export class CreatePlanningReviewDialogComponent implements OnInit {
+export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
@@ -49,7 +51,7 @@ export class CreatePlanningReviewDialogComponent implements OnInit {
       this.localGovernments = res;
     });
 
-    this.applicationService.$applicationRegions.subscribe((regions) => {
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
   }
@@ -78,5 +80,10 @@ export class CreatePlanningReviewDialogComponent implements OnInit {
     this.createForm.patchValue({
       region: value.preferredRegionCode,
     });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

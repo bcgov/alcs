@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
@@ -18,10 +19,14 @@ describe('EditReconsiderationDialogComponent', () => {
           useValue: {},
         },
         {
+          provide: ApplicationDecisionService,
+          useValue: {},
+        },
+        {
           provide: ToastService,
           useValue: {},
         },
-        { provide: MAT_DIALOG_DATA, useValue: { existingDecision: { type: {} } } },
+        { provide: MAT_DIALOG_DATA, useValue: { existingDecision: { type: {}, reconsideredDecisions: [] } } },
         { provide: MatDialogRef, useValue: {} },
       ],
     }).compileComponents();

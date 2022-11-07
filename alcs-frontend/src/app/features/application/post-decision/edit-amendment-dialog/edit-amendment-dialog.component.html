@@ -15,10 +15,17 @@
           required
         />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker type="date"> </mat-datepicker>
+        <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
 
-      <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Decisions to be Amended</mat-label>
+        <mat-select formControlName="amendedDecisions" multiple>
+          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label">Condition to be Modified</mat-label>
         <mat-button-toggle-group id="isTimeExtension" formControlName="isTimeExtension" name="isTimeExtension">
           <mat-button-toggle value="true">Time extension</mat-button-toggle>

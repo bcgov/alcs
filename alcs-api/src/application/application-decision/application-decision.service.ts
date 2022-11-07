@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -205,6 +205,8 @@ export class ApplicationDecisionService {
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
+      resolutionNumber: createDto.resolutionNumber,
+      resolutionYear: createDto.resolutionYear,
       chairReviewRequired: createDto.chairReviewRequired,
       auditDate: createDto.auditDate
         ? new Date(createDto.auditDate)
@@ -339,5 +341,13 @@ export class ApplicationDecisionService {
       decisionMakers: values[1],
       ceoCriterion: values[2],
     };
+  }
+
+  getMany(amendedDecisionUuids: string[]) {
+    return this.appDecisionRepository.find({
+      where: {
+        uuid: In(amendedDecisionUuids),
+      },
+    });
   }
 }

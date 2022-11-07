@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationAmendmentDto } from '../../../../services/application/application-amendment/application-amendment.dto';
 import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationDecisionDto } from '../../../../services/application/application-decision/application-decision.dto';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardUpdateDto } from '../../../../services/card/card.dto';

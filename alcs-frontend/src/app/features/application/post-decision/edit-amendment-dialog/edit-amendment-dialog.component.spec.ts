@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
-import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { EditAmendmentDialogComponent } from './edit-amendment-dialog.component';
@@ -19,10 +19,14 @@ describe('EditAmendmentDialogComponent', () => {
           useValue: {},
         },
         {
+          provide: ApplicationDecisionService,
+          useValue: {},
+        },
+        {
           provide: ToastService,
           useValue: {},
         },
-        { provide: MAT_DIALOG_DATA, useValue: { existingAmendment: { submittedDate: 121231 } } },
+        { provide: MAT_DIALOG_DATA, useValue: { existingAmendment: { submittedDate: 121231, amendedDecisions: [] } } },
         { provide: MatDialogRef, useValue: {} },
       ],
     }).compileComponents();

@@ -54,6 +54,12 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   @IsString()
   outcomeCode: string;
 
+  @IsNumber()
+  resolutionNumber: number;
+
+  @IsNumber()
+  resolutionYear: number;
+
   @IsBoolean()
   chairReviewRequired: boolean;
 }
@@ -70,6 +76,12 @@ export class ApplicationDecisionDto {
 
   @AutoMap()
   outcome: ApplicationDecisionOutcomeTypeDto;
+
+  @AutoMap()
+  resolutionNumber: number;
+
+  @AutoMap()
+  resolutionYear: number;
 
   @AutoMap()
   chairReviewRequired: boolean;

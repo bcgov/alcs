@@ -5,8 +5,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import {
   ApplicationTimeData,
@@ -104,6 +104,28 @@ describe('ApplicationService', () => {
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
+  it('should call faile to create if file number already exists', async () => {
+    const applicationMockEntity = initApplicationMockEntity();
+
+    const createDto: CreateApplicationServiceDto = {
+      fileNumber: applicationMockEntity.fileNumber,
+      applicant: applicationMockEntity.applicant,
+      localGovernmentUuid: 'government-uuid',
+      typeCode: 'type',
+      regionCode: 'region',
+      dateReceived: new Date(),
+    };
+
+    const promise = applicationService.create(createDto);
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceNotFoundException(
+        'Application with file number already exists',
+      ),
+    );
+    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
+  });
+
   it('should call save when an Application is updated', async () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne.mockResolvedValue(applicationMockEntity);
@@ -172,5 +194,36 @@ describe('ApplicationService', () => {
 
     expect(result).toStrictEqual([]);
     expect(mockApplicationTimeService.fetchActiveTimes).toBeCalledTimes(1);
+  });
+
+  it('should call through for updateByUuid', async () => {
+    applicationRepositoryMock.softRemove.mockResolvedValue({} as any);
+
+    await applicationService.updateByUuid(applicationMockEntity.uuid, {
+      applicant: 'new-applicant',
+    });
+
+    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
+    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fail to update if application does not exist', async () => {
+    applicationRepositoryMock.findOne.mockResolvedValue(undefined);
+
+    const promise = applicationService.updateByUuid(
+      applicationMockEntity.uuid,
+      {
+        applicant: 'new-applicant',
+      },
+    );
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceNotFoundException(
+        `Application not found with file number ${applicationMockEntity.uuid}`,
+      ),
+    );
+
+    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 });

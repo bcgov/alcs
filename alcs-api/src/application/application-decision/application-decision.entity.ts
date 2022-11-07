@@ -1,5 +1,15 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  Unique,
+} from 'typeorm';
+import { ApplicationAmendment } from '../../application-amendment/application-amendment.entity';
+import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
@@ -8,6 +18,7 @@ import { DecisionDocument } from './decision-document.entity';
 import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 @Entity()
+@Unique('resolution', ['resolutionNumber', 'resolutionYear'])
 export class ApplicationDecision extends Base {
   constructor(data?: Partial<ApplicationDecision>) {
     super();
@@ -46,6 +57,14 @@ export class ApplicationDecision extends Base {
   application: Application;
 
   @AutoMap()
+  @Column({ type: 'smallint' })
+  resolutionNumber: number;
+
+  @AutoMap()
+  @Column({ type: 'smallint' })
+  resolutionYear: number;
+
+  @AutoMap()
   @ManyToOne(() => DecisionMakerCode, { nullable: true })
   decisionMaker?: DecisionMakerCode;
 
@@ -76,4 +95,16 @@ export class ApplicationDecision extends Base {
   @AutoMap()
   @OneToMany(() => DecisionDocument, (document) => document.decision)
   documents: DecisionDocument[];
+
+  @ManyToMany(
+    () => ApplicationReconsideration,
+    (reconsideration) => reconsideration.reconsidersDecisions,
+  )
+  reconsideredBy: ApplicationReconsideration[];
+
+  @ManyToMany(
+    () => ApplicationAmendment,
+    (amendment) => amendment.amendsDecisions,
+  )
+  amendedBy: ApplicationAmendment[];
 }

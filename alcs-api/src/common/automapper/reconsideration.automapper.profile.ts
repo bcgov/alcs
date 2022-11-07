@@ -12,6 +12,8 @@ import {
 import { ApplicationReconsiderationType } from '../../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../application/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 
 @Injectable()
@@ -78,6 +80,16 @@ export class ReconsiderationProfile extends AutomapperProfile {
           (a) => a.reviewDate,
           mapFrom((rd) =>
             rd.reviewDate ? rd.reviewDate.getTime() : undefined,
+          ),
+        ),
+        forMember(
+          (a) => a.reconsideredDecisions,
+          mapFrom((rd) =>
+            this.mapper.mapArray(
+              rd.reconsidersDecisions,
+              ApplicationDecision,
+              ApplicationDecisionDto,
+            ),
           ),
         ),
       );

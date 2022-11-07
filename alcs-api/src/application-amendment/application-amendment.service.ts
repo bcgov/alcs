@@ -8,6 +8,7 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
+import { ApplicationDecisionService } from '../application/application-decision/application-decision.service';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
@@ -27,6 +28,7 @@ export class ApplicationAmendmentService {
     private amendmentRepository: Repository<ApplicationAmendment>,
     @InjectMapper() private mapper: Mapper,
     private applicationService: ApplicationService,
+    private applicationDecisionService: ApplicationDecisionService,
     private cardService: CardService,
   ) {}
 
@@ -43,6 +45,7 @@ export class ApplicationAmendmentService {
       status: true,
       assignee: true,
     },
+    amendsDecisions: true,
   };
 
   getByBoardCode(boardCode: string) {
@@ -78,6 +81,9 @@ export class ApplicationAmendmentService {
 
     amendment.card = await this.cardService.create('AMEND', board, false);
     amendment.application = await this.getOrCreateApplication(createDto);
+    amendment.amendsDecisions = await this.applicationDecisionService.getMany(
+      createDto.amendedDecisionUuids,
+    );
 
     const savedAmendment = await this.amendmentRepository.save(amendment);
     return this.getByUuid(savedAmendment.uuid);
@@ -115,6 +121,13 @@ export class ApplicationAmendmentService {
     );
     existingAmendment.isReviewApproved = updateDto.isReviewApproved;
     existingAmendment.isTimeExtension = updateDto.isTimeExtension;
+
+    if (updateDto.amendedDecisionUuids) {
+      existingAmendment.amendsDecisions =
+        await this.applicationDecisionService.getMany(
+          updateDto.amendedDecisionUuids,
+        );
+    }
 
     const amendment = await this.amendmentRepository.save(existingAmendment);
 

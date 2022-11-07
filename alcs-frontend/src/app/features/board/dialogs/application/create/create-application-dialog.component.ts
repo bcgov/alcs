@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
@@ -14,7 +15,8 @@ import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter
   templateUrl: './create-application-dialog.html',
   styleUrls: ['./create-application-dialog.component.scss'],
 })
-export class CreateApplicationDialogComponent implements OnInit {
+export class CreateApplicationDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
@@ -38,11 +40,11 @@ export class CreateApplicationDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationService.$applicationTypes.subscribe((types) => {
+    this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
-    this.applicationService.$applicationRegions.subscribe((regions) => {
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
 
@@ -74,5 +76,10 @@ export class CreateApplicationDialogComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

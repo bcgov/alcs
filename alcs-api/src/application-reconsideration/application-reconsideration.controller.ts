@@ -29,20 +29,6 @@ export class ApplicationReconsiderationController {
     private boardService: BoardService,
   ) {}
 
-  @Patch('/:uuid')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async update(
-    @Param('uuid') uuid: string,
-    @Body() reconsideration: ApplicationReconsiderationUpdateDto,
-  ) {
-    const updatedRecon = await this.reconsiderationService.update(
-      uuid,
-      reconsideration,
-    );
-
-    return this.reconsiderationService.mapToDtos([updatedRecon]);
-  }
-
   @Post()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async create(@Body() reconsideration: ApplicationReconsiderationCreateDto) {
@@ -56,6 +42,20 @@ export class ApplicationReconsiderationController {
     );
 
     return this.reconsiderationService.mapToDtos([createdRecon]);
+  }
+
+  @Patch('/:uuid')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async update(
+    @Param('uuid') uuid: string,
+    @Body() reconsideration: ApplicationReconsiderationUpdateDto,
+  ) {
+    const updatedRecon = await this.reconsiderationService.update(
+      uuid,
+      reconsideration,
+    );
+
+    return this.reconsiderationService.mapToDtos([updatedRecon]);
   }
 
   @Delete('/:uuid')

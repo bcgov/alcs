@@ -1,5 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsBoolean,
   IsDefined,
   IsNotEmpty,
@@ -8,6 +10,7 @@ import {
   IsString,
 } from 'class-validator';
 import { ApplicationDecisionMeetingDto } from '../application/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionDto } from '../application/application-decision/application-decision.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -16,11 +19,9 @@ import { BaseCodeDto } from '../common/dtos/base.dto';
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
 export class ApplicationReconsiderationCreateDto {
-  @AutoMap()
   @IsString()
   applicationTypeCode: string;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   applicationFileNumber: string;
@@ -35,6 +36,7 @@ export class ApplicationReconsiderationCreateDto {
   @IsString()
   regionCode: string;
 
+  @AutoMap()
   @IsString()
   localGovernmentUuid: string;
 
@@ -43,37 +45,40 @@ export class ApplicationReconsiderationCreateDto {
   @IsDefined()
   submittedDate: number;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   reconTypeCode: string;
 
-  @AutoMap()
   @IsNotEmpty()
   @IsString()
   boardCode: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  reconsideredDecisionUuids: string[];
 }
 
 export class ApplicationReconsiderationUpdateDto {
-  @AutoMap()
   @IsNumber()
   @IsOptional()
   submittedDate?: number;
 
-  @AutoMap()
   @IsString()
   @IsOptional()
   typeCode?: string;
 
-  @AutoMap()
   @IsNumber()
   @IsOptional()
   reviewDate?: number;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   isReviewApproved?: boolean | null;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  reconsideredDecisionUuids?: string[];
 }
 
 export class ApplicationForReconsiderationDto {
@@ -94,6 +99,7 @@ export class ApplicationReconsiderationDto {
   submittedDate: number;
   reviewDate: number;
   isReviewApproved: boolean | null;
+  reconsideredDecisions: ApplicationDecisionDto[];
 }
 
 export class ApplicationReconsiderationWithoutApplicationDto {

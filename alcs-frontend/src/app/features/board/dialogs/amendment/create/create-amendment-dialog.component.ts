@@ -1,16 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { debounceTime, distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationAmendmentCreateDto } from '../../../../../services/application/application-amendment/application-amendment.dto';
 import { ApplicationAmendmentService } from '../../../../../services/application/application-amendment/application-amendment.service';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
+import { ApplicationDecisionService } from '../../../../../services/application/application-decision/application-decision.service';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
 import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
-import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
@@ -18,7 +18,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
   templateUrl: './create-amendment-dialog.html',
   styleUrls: ['./create-amendment-dialog.component.scss'],
 })
-export class CreateAmendmentDialogComponent implements OnInit {
+export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
@@ -26,6 +27,7 @@ export class CreateAmendmentDialogComponent implements OnInit {
   isDecisionDateEmpty = false;
   currentBoardCode: string = '';
 
+  decisions: { uuid: string; resolution: string }[] = [];
   filteredApplications: Observable<ApplicationDto[]> | undefined;
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
@@ -35,6 +37,7 @@ export class CreateAmendmentDialogComponent implements OnInit {
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
   isTimeExtensionControl = new FormControl<string>('true', [Validators.required]);
+  amendsDecisions = new FormControl<string[]>([], [Validators.required]);
 
   createForm = new FormGroup({
     applicationType: this.applicationTypeControl,
@@ -44,26 +47,26 @@ export class CreateAmendmentDialogComponent implements OnInit {
     localGovernment: this.localGovernmentControl,
     submittedDate: this.submittedDateControl,
     isTimeExtension: this.isTimeExtensionControl,
+    amendedDecisions: this.amendsDecisions,
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CreateAmendmentDialogComponent>,
     private applicationService: ApplicationService,
-    private cardService: CardService,
     private amendmentService: ApplicationAmendmentService,
     private localGovernmentService: ApplicationLocalGovernmentService,
+    private decisionService: ApplicationDecisionService,
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.currentBoardCode = this.data.currentBoardCode;
-    this.cardService.fetchCodes();
-    this.applicationService.$applicationTypes.subscribe((types) => {
+    this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
-    this.applicationService.$applicationRegions.subscribe((regions) => {
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
 
@@ -71,6 +74,7 @@ export class CreateAmendmentDialogComponent implements OnInit {
       this.localGovernments = res;
     });
 
+    this.amendsDecisions.disable();
     this.initApplicationFileNumberAutocomplete();
   }
 
@@ -105,6 +109,8 @@ export class CreateAmendmentDialogComponent implements OnInit {
     this.applicationTypeControl.disable();
     this.localGovernmentControl.disable();
 
+    this.loadDecisions(application.fileNumber);
+
     this.createForm.patchValue({
       applicant: application.applicant,
       region: application.region.code,
@@ -132,6 +138,7 @@ export class CreateAmendmentDialogComponent implements OnInit {
         submittedDate: formValues.submittedDate!.getTime(),
         boardCode: this.currentBoardCode,
         isTimeExtension: formValues.isTimeExtension === 'true',
+        amendedDecisionUuids: formValues.amendedDecisions!,
       };
 
       if (!amendment.boardCode) {
@@ -153,12 +160,14 @@ export class CreateAmendmentDialogComponent implements OnInit {
     this.regionControl.reset();
     this.applicationTypeControl.reset();
     this.submittedDateControl.reset();
+    this.amendsDecisions.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();
     this.regionControl.enable();
     this.applicationTypeControl.enable();
     this.localGovernmentControl.enable();
+    this.amendsDecisions.disable();
 
     // clear warnings
     this.isDecisionDateEmpty = false;
@@ -168,5 +177,21 @@ export class CreateAmendmentDialogComponent implements OnInit {
     this.createForm.patchValue({
       region: value.preferredRegionCode,
     });
+  }
+
+  async loadDecisions(fileNumber: string) {
+    const decisions = await this.decisionService.fetchByApplication(fileNumber);
+    if (decisions.length > 0) {
+      this.decisions = decisions.map((decision) => ({
+        uuid: decision.uuid,
+        resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+      }));
+      this.amendsDecisions.enable();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

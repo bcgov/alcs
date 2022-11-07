@@ -6,11 +6,10 @@
 </div>
 
 <h5 id="recons" class="post-decision-header">
-  Reconsideration Requests<mat-icon
-    class="icon"
-    matTooltip="Create new Reconsideration Request from application tracking boards"
-    >info_outline</mat-icon
-  >
+  Reconsideration Requests
+  <mat-icon class="icon" matTooltip="Create new Reconsideration Request from application tracking boards"
+    >info_outline
+  </mat-icon>
 </h5>
 
 <section class="no-decisions" *ngIf="!reconsiderations.length">
@@ -18,13 +17,13 @@
 </section>
 
 <section>
-  <div class="post-decision" *ngFor="let decision of reconsiderations; let i = index">
+  <div class="post-decision" *ngFor="let reconsideration of reconsiderations; let i = index">
     <div class="decision-menu recon">
-      <button (click)="onEditReconsideration(decision)" matTooltip="Edit Request" mat-icon-button>
+      <button (click)="onEditReconsideration(reconsideration)" matTooltip="Edit Request" mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button>
       <button
-        (click)="deleteReconsideration(decision.uuid, reconsiderations.length - i)"
+        (click)="deleteReconsideration(reconsideration.uuid, reconsiderations.length - i)"
         matTooltip="Delete Request"
         mat-icon-button
       >
@@ -35,41 +34,51 @@
     <div class="decision-content">
       <div>
         <div class="subheading2">Request Submission Date</div>
-        {{ decision.submittedDate | momentFormat }}
+        {{ reconsideration.submittedDate | momentFormat }}
       </div>
       <div>
         <div class="subheading2">Reconsideration Type</div>
-        {{ decision.type.code }}
+        {{ reconsideration.type.code }}
       </div>
       <div></div>
-      <div *ngIf="decision.type.code === '33'">
+      <div *ngIf="reconsideration.type.code === '33'">
         <div class="subheading2">Review Date</div>
-        <span *ngIf="decision.reviewDate">{{ decision.reviewDate | momentFormat }}</span>
-        <span *ngIf="!decision.reviewDate">
+        <span *ngIf="reconsideration.reviewDate">{{ reconsideration.reviewDate | momentFormat }}</span>
+        <span *ngIf="!reconsideration.reviewDate">
           <app-inline-datepicker
-            (save)="onSaveReconsiderationReviewDate(decision.uuid, $event)"
+            (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
           ></app-inline-datepicker>
         </span>
       </div>
-      <div *ngIf="decision.type.code === '33'">
-        <div class="subheading2">Review Outcome</div>
-        <span *ngIf="!isReviewOutcomeSet(decision.isReviewApproved)">
-          <app-inline-review-outcome
-            (save)="onSaveReconsiderationReviewOutcome(decision.uuid, $event)"
-          ></app-inline-review-outcome>
-        </span>
-        <span *ngIf="isReviewOutcomeSet(decision.isReviewApproved)">{{
-          getReviewOutcomeLabel(decision.isReviewApproved!)
-        }}</span>
+      <div>
+        <ng-container *ngIf="reconsideration.type.code === '33'">
+          <div class="subheading2">Review Outcome</div>
+          <span *ngIf="!isReviewOutcomeSet(reconsideration.isReviewApproved)">
+            <app-inline-review-outcome
+              (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
+            ></app-inline-review-outcome>
+          </span>
+          <span *ngIf="isReviewOutcomeSet(reconsideration.isReviewApproved)">{{
+            getReviewOutcomeLabel(reconsideration.isReviewApproved!)
+          }}</span>
+        </ng-container>
+      </div>
+      <div></div>
+      <div>
+        <div class="subheading2">Resolutions to be Reconsidered</div>
+        <ng-container *ngFor="let decision of reconsideration.reconsideredDecisions">
+          #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+        </ng-container>
       </div>
     </div>
   </div>
 </section>
 
 <h5 id="amendments" class="post-decision-header">
-  Amendment Requests<mat-icon class="icon" matTooltip="Create new Amendment Requests from application tracking boards"
-    >info_outline</mat-icon
-  >
+  Amendment Requests
+  <mat-icon class="icon" matTooltip="Create new Amendment Requests from application tracking boards"
+    >info_outline
+  </mat-icon>
 </h5>
 
 <section class="no-decisions" *ngIf="!amendments.length">
@@ -90,7 +99,8 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="body-large">Amendment Request #{{ amendments.length - i }}</div>
+    <div class="body-large">
+      Amendment Request #{{ amendments.length - i }}</div>
     <div class="decision-content">
       <div>
         <div class="subheading2">Request Submission Date</div>
@@ -118,6 +128,13 @@
         <span *ngIf="isReviewOutcomeSet(amendment.isReviewApproved)">{{
           getReviewOutcomeLabel(amendment.isReviewApproved!)
         }}</span>
+      </div>
+      <div></div>
+      <div>
+        <div class="subheading2">Resolutions to be Amended</div>
+        <ng-container *ngFor="let decision of amendment.amendedDecisions">
+          #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+        </ng-container>
       </div>
     </div>
   </div>

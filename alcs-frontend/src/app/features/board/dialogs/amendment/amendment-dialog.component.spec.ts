@@ -40,6 +40,7 @@ describe('AmendmentDialogComponent', () => {
 
   const mockAmendmentDto: ApplicationAmendmentDto = {
     uuid: '',
+    amendedDecisions: [],
     isReviewApproved: false,
     isTimeExtension: true,
     reviewDate: 111111,

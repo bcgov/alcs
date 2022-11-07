@@ -18,8 +18,8 @@ import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/i
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { EditAmendmentDialogComponent } from './post-decision/edit-amendment-dialog/edit-amendment-dialog.component';
-import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
+import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
