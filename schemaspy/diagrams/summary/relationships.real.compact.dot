@@ -48,8 +48,10 @@ digraph "compactRelationshipsDiagram" {
       <TR><TD PORT="decision_maker_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">decision_maker_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="ceo_criterion_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">ceo_criterion_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="outcome_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">outcome_code</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="resolution_number" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">resolution_number</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="resolution_year" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">resolution_year</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR>
     </TABLE>>
     URL="tables/application_decision.html"
     target="_top"
@@ -119,7 +121,7 @@ digraph "compactRelationshipsDiagram" {
       <TR><TD PORT="card_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="145" HEIGHT="16">card_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="application_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="145" HEIGHT="16">application_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR>
     </TABLE>>
     URL="tables/application_amendment.html"
     target="_top"
@@ -152,21 +154,6 @@ digraph "compactRelationshipsDiagram" {
     target="_top"
     tooltip="comment"
   ];
-  "application_reconsideration" [
-   label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16"><B>application_reconsideration</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="application_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">application_uuid</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="card_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">card_uuid</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="type_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">type_code</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
-    </TABLE>>
-    URL="tables/application_reconsideration.html"
-    target="_top"
-    tooltip="application_reconsideration"
-  ];
   "card" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -183,6 +170,21 @@ digraph "compactRelationshipsDiagram" {
     target="_top"
     tooltip="card"
   ];
+  "application_reconsideration" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16"><B>application_reconsideration</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">application_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="card_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">card_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="type_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="167" HEIGHT="16">type_code</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR>
+    </TABLE>>
+    URL="tables/application_reconsideration.html"
+    target="_top"
+    tooltip="application_reconsideration"
+  ];
   "document" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -195,19 +197,6 @@ digraph "compactRelationshipsDiagram" {
     URL="tables/document.html"
     target="_top"
     tooltip="document"
-  ];
-  "application_meeting_type" [
-   label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="153" HEIGHT="16"><B>application_meeting_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="153" HEIGHT="16">code</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="description" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="153" HEIGHT="16">description</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR>
-    </TABLE>>
-    URL="tables/application_meeting_type.html"
-    target="_top"
-    tooltip="application_meeting_type"
   ];
   "board_status" [
    label=<
@@ -222,6 +211,19 @@ digraph "compactRelationshipsDiagram" {
     URL="tables/board_status.html"
     target="_top"
     tooltip="board_status"
+  ];
+  "application_meeting_type" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="153" HEIGHT="16"><B>application_meeting_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="153" HEIGHT="16">code</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="description" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="153" HEIGHT="16">description</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR>
+    </TABLE>>
+    URL="tables/application_meeting_type.html"
+    target="_top"
+    tooltip="application_meeting_type"
   ];
   "card_history" [
    label=<
@@ -292,6 +294,18 @@ digraph "compactRelationshipsDiagram" {
     target="_top"
     tooltip="application_meeting"
   ];
+  "amended_decisions" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="116" HEIGHT="16"><B>amended_decisions</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_amendment_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="177" HEIGHT="16">application_amendment_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_decision_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="177" HEIGHT="16">application_decision_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="tables/amended_decisions.html"
+    target="_top"
+    tooltip="amended_decisions"
+  ];
   "user" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -305,6 +319,18 @@ digraph "compactRelationshipsDiagram" {
     URL="tables/user.html"
     target="_top"
     tooltip="user"
+  ];
+  "reconsidered_decisions" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="138" HEIGHT="16"><B>reconsidered_decisions</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_reconsideration_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="199" HEIGHT="16">application_reconsideration_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_decision_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="199" HEIGHT="16">application_decision_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="tables/reconsidered_decisions.html"
+    target="_top"
+    tooltip="reconsidered_decisions"
   ];
   "notification" [
    label=<
@@ -447,6 +473,8 @@ digraph "compactRelationshipsDiagram" {
     target="_top"
     tooltip="application_paused"
   ];
+  "amended_decisions":"application_amendment_uuid":w -> "application_amendment":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "amended_decisions":"application_decision_uuid":w -> "application_decision":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"card_uuid":w -> "card":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "application":"local_government_uuid":w -> "application_local_government":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"region_code":w -> "application_region":"code":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -494,4 +522,6 @@ digraph "compactRelationshipsDiagram" {
   "planning_review":"card_uuid":w -> "card":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "planning_review":"local_government_uuid":w -> "application_local_government":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "planning_review":"region_code":w -> "application_region":"code":e [arrowhead=none dir=back arrowtail=crowodot];
+  "reconsidered_decisions":"application_decision_uuid":w -> "application_decision":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "reconsidered_decisions":"application_reconsideration_uuid":w -> "application_reconsideration":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
 }

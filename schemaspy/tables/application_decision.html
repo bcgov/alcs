@@ -118,8 +118,16 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="amended_decisions.application_decision_uuid references application_decision.uuid via FK_af9d814b83e6425505742b574a0"><a href='amended_decisions.html'>amended_decisions</a><span class='relatedKey'>.application_decision_uuid</span></td>
+                                                <td class="constraint detail">FK_af9d814b83e6425505742b574a0<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="decision_document.decision_uuid references application_decision.uuid via FK_a86632c9a6ab56e984cf1cc9e6b"><a href='decision_document.html'>decision_document</a><span class='relatedKey'>.decision_uuid</span></td>
                                                 <td class="constraint detail">FK_a86632c9a6ab56e984cf1cc9e6b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="reconsidered_decisions.application_decision_uuid references application_decision.uuid via FK_09a58410db3f332490181279771"><a href='reconsidered_decisions.html'>reconsidered_decisions</a><span class='relatedKey'>.application_decision_uuid</span></td>
+                                                <td class="constraint detail">FK_09a58410db3f332490181279771<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -400,6 +408,40 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="resolution_number">resolution_number</span></td>
+                                    <td>int2</td>
+                                    <td>5</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="resolution_year">resolution_year</span></td>
+                                    <td>int2</td>
+                                    <td>5</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -436,6 +478,12 @@
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
                                 </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> resolution</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+                                    <td>resolution_number + resolution_year</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
@@ -459,34 +507,38 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="352,32,733,571">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,37,308,301">
-<area shape="rect" id="node3" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="43,483,270,659">
-<area shape="rect" id="node4" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="33,319,281,465">
-<area shape="rect" id="node5" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="23,676,290,823">
-<area shape="rect" id="node6" href="decision_document.html" target="_top" title="decision_document" alt="" coords="777,5,1011,157">
+<area shape="rect" id="node1" href="amended_decisions.html" target="_top" title="amended_decisions" alt="" coords="792,5,1077,128">
+<area shape="rect" id="node2" href="application_decision.html" target="_top" title="application_decision" alt="" coords="352,172,733,769">
+<area shape="rect" id="node3" href="application.html" target="_top" title="application" alt="" coords="5,177,308,441">
+<area shape="rect" id="node4" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="43,623,270,799">
+<area shape="rect" id="node5" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="33,459,281,605">
+<area shape="rect" id="node6" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="23,816,290,963">
+<area shape="rect" id="node7" href="decision_document.html" target="_top" title="decision_document" alt="" coords="818,145,1051,297">
+<area shape="rect" id="node8" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="777,315,1092,437">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_decision.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,225,940,489">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,111,492,199">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,240,593,328">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,327,232,415">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,345,541,433">
-<area shape="rect" id="node6" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="1038,5,1311,93">
-<area shape="rect" id="node7" href="application_decision.html" target="_top" title="application_decision" alt="" coords="984,604,1365,1143">
-<area shape="rect" id="node8" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="675,988,902,1164">
-<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="665,824,913,971">
-<area shape="rect" id="node10" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="655,1181,922,1328">
-<area shape="rect" id="node11" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1017,499,1332,587">
-<area shape="rect" id="node12" href="application_document.html" target="_top" title="application_document" alt="" coords="1409,376,1667,464">
-<area shape="rect" id="node13" href="document.html" target="_top" title="document" alt="" coords="1094,393,1255,481">
-<area shape="rect" id="node14" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1417,252,1659,340">
-<area shape="rect" id="node15" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1058,252,1291,340">
-<area shape="rect" id="node16" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1023,111,1326,199">
-<area shape="rect" id="node17" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1421,539,1655,691">
+<area shape="rect" id="node1" href="amended_decisions.html" target="_top" title="amended_decisions" alt="" coords="1424,44,1709,167">
+<area shape="rect" id="node2" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="1038,5,1311,93">
+<area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="984,111,1365,708">
+<area shape="rect" id="node4" href="application.html" target="_top" title="application" alt="" coords="637,856,940,1120">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="377,745,492,833">
+<area shape="rect" id="node9" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="675,425,902,601">
+<area shape="rect" id="node10" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="665,261,913,408">
+<area shape="rect" id="node11" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="655,619,922,765">
+<area shape="rect" id="node6" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,871,593,959">
+<area shape="rect" id="node7" href="application_region.html" target="_top" title="application_region" alt="" coords="5,957,232,1045">
+<area shape="rect" id="node8" href="application_type.html" target="_top" title="application_type" alt="" coords="329,976,541,1064">
+<area shape="rect" id="node12" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1017,972,1332,1060">
+<area shape="rect" id="node13" href="application_document.html" target="_top" title="application_document" alt="" coords="1438,864,1695,952">
+<area shape="rect" id="node14" href="document.html" target="_top" title="document" alt="" coords="1094,831,1255,919">
+<area shape="rect" id="node15" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1446,1113,1687,1201">
+<area shape="rect" id="node16" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1058,1113,1291,1201">
+<area shape="rect" id="node17" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1023,725,1326,813">
+<area shape="rect" id="node18" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1450,572,1683,724">
+<area shape="rect" id="node19" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1409,267,1724,389">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_decision.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
