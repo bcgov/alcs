@@ -1,6 +1,12 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
-import { ApplicationAmendmentDto } from '../application-amendment/application-amendment.dto';
-import { ApplicationReconsiderationDto } from '../application-reconsideration/application-reconsideration.dto';
+
+export enum DecisionMaker {
+  CEO = 'CEOP',
+}
+
+export enum CeoCriterion {
+  MODIFICATION = 'MODI',
+}
 
 export interface UpdateApplicationDecisionDto {
   date?: number;

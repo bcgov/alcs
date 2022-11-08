@@ -11,6 +11,8 @@ import {
   CeoCriterionDto,
   CreateApplicationDecisionDto,
   DecisionMakerDto,
+  DecisionMaker,
+  CeoCriterion,
 } from '../../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -191,7 +193,7 @@ export class DecisionDialogComponent implements OnInit {
       amendsUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
     };
-    if (ceoCriterion && ceoCriterion === 'MODI' && isTimeExtension !== null) {
+    if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION && isTimeExtension !== null) {
       data.isTimeExtension = isTimeExtension === 'true';
     }
     if (chairReviewOutcome !== null) {
@@ -214,7 +216,7 @@ export class DecisionDialogComponent implements OnInit {
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
-    if (decisionMaker.code === 'CEOP') {
+    if (decisionMaker.code === DecisionMaker.CEO) {
       this.form.controls['ceoCriterion'].setValidators([Validators.required]);
     } else {
       this.form.patchValue({
@@ -239,17 +241,21 @@ export class DecisionDialogComponent implements OnInit {
       this.form.controls.ceoCriterion.disable();
       this.form.controls.outcome.disable();
       this.form.controls.decisionMaker.disable();
-      this.ceoCriterion = this.data.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === 'MODI');
+      this.ceoCriterion = this.data.ceoCriterion.filter(
+        (ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION
+      );
       this.form.patchValue({
-        decisionMaker: 'CEOP',
-        ceoCriterion: 'MODI',
+        decisionMaker: DecisionMaker.CEO,
+        ceoCriterion: CeoCriterion.MODIFICATION,
         outcome: 'VARY',
       });
     } else {
       this.form.controls.decisionMaker.enable();
       this.form.controls.outcome.enable();
       this.form.controls.ceoCriterion.enable();
-      this.ceoCriterion = this.data.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== 'MODI');
+      this.ceoCriterion = this.data.ceoCriterion.filter(
+        (ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION
+      );
     }
   }
 }

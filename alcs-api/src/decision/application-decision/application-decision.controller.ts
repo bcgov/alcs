@@ -14,17 +14,17 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RolesGuard } from '../../common/authorization/roles-guard.service';
-import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
-import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationService } from '../../application/application.service';
+import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
+import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  DecisionOutcomeCodeDto,
   CreateApplicationDecisionDto,
+  DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecision } from './application-decision.entity';
@@ -54,12 +54,11 @@ export class ApplicationDecisionController {
     const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
     );
-    const mappedRecords = await this.mapper.mapArrayAsync(
+    return await this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,
       ApplicationDecisionDto,
     );
-    return mappedRecords;
   }
 
   @Get('/codes')
@@ -103,7 +102,7 @@ export class ApplicationDecisionController {
   ): Promise<ApplicationDecisionDto> {
     if (createDto.amendsUuid && createDto.reconsidersUuid) {
       throw new BadRequestException(
-        'Cannot set both an amends and reconsiders',
+        'Cannot create a Decision linked to both an amendment and a reconsideration',
       );
     }
 
@@ -141,7 +140,7 @@ export class ApplicationDecisionController {
   ): Promise<ApplicationDecisionDto> {
     if (updateDto.amendsUuid && updateDto.reconsidersUuid) {
       throw new BadRequestException(
-        'Cannot set both an amends and reconsiders',
+        'Cannot create a Decision linked to both an amendment and a reconsideration',
       );
     }
 

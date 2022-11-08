@@ -9,7 +9,6 @@ import { CodeService } from '../../code/code.service';
 import { ApplicationDecisionProfile } from '../../common/automapper/application-decision.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
@@ -229,7 +228,9 @@ describe('ApplicationDecisionController', () => {
 
     const promise = controller.create(decisionToCreate);
     await expect(promise).rejects.toMatchObject(
-      new BadRequestException('Cannot set both an amends and reconsiders'),
+      new BadRequestException(
+        'Cannot create a Decision linked to both an amendment and a reconsideration',
+      ),
     );
   });
 
@@ -244,7 +245,9 @@ describe('ApplicationDecisionController', () => {
 
     const promise = controller.update('uuid', updateDto);
     await expect(promise).rejects.toMatchObject(
-      new BadRequestException('Cannot set both an amends and reconsiders'),
+      new BadRequestException(
+        'Cannot create a Decision linked to both an amendment and a reconsideration',
+      ),
     );
   });
 
