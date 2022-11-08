@@ -6,7 +6,7 @@
         >{{ boardTitle }}
       </h2>
     </div>
-    <div class="button-container">
+    <div>
       <ng-container *ngIf="boardHasPlanningReviews || boardHasAmendments || boardHasCovenant">
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
