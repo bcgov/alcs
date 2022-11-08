@@ -122,6 +122,12 @@ async function bootstrap() {
   // config variables
   const port: number = config.get<number>('PORT');
 
+  if (config.get<string>('API_PREFIX')) {
+    app.setGlobalPrefix(config.get<string>('API_PREFIX'), {
+      exclude: [''],
+    });
+  }
+
   registerCors(app);
   registerSwagger(app);
   await registerHelmet(app);
