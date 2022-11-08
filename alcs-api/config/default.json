@@ -2,6 +2,7 @@
   "PORT": 8080,
   "BASE_URL": "http://localhost:8080",
   "ENV": "production",
+  "API_PREFIX": "",
   "DATABASE_HOST": "db",
   "DATABASE_PORT": 5432,
   "DATABASE_NAME": "postgres",
