@@ -29,20 +29,21 @@
           color: amendmentLabel.textColor,
           borderColor: amendmentLabel.borderColor
         }"
-        >{{ amendmentLabel.label }}</span
-      >
+        >{{ amendmentLabel.label }}
+      </span>
     </div>
     <div *ngIf="showCardMenu" class="center">
       <button
-        *ngIf="!_reconsiderations.length"
+        *ngIf="!_reconsiderations.length && !_amendments.length"
         class="menu-item center"
         mat-flat-button
         color="accent"
         (click)="onGoToCard()"
       >
-        Go to card <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+        Go to card
+        <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
       </button>
-      <ng-container *ngIf="_reconsiderations.length">
+      <ng-container *ngIf="_reconsiderations.length || _amendments.length">
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
         </button>
