@@ -26,7 +26,7 @@ export class addAmendsReconsToDecisions1667855147312
     );
 
     await queryRunner.query(`INSERT INTO "decision_outcome_code"
-        ("audit_deleted_date_at", "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "label", "code", "description", "for_first_decision") VALUES
+        ("audit_deleted_date_at", "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "label", "code", "description", "is_first_decision") VALUES
         (NULL, '2022-10-31 17:55:34.498608+00', NULL, 'alcs-api', NULL, 'Confirm', 'CONF', 'Decision confirms previous resolution', false),
         (NULL, '2022-10-31 17:55:34.498608+00', NULL, 'alcs-api', NULL, 'Reverse', 'REVE', 'Decision reverses the previous resolution', false),
         (NULL, '2022-10-31 17:55:34.498608+00', NULL, 'alcs-api', NULL, 'Vary', 'VARY', 'Decision varies the previous resolution', false);
