@@ -3,15 +3,26 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
+import { combineLatestWith } from 'rxjs';
+import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeTypeDto,
+  DecisionOutcomeCodeDto,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
   DecisionMakerDto,
+  DecisionMaker,
+  CeoCriterion,
 } from '../../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
+import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
+
+type MappedPostDecision = {
+  label: string;
+  uuid: string;
+  type: string;
+};
 
 @Component({
   selector: 'app-decision-dialog',
@@ -23,12 +34,17 @@ export class DecisionDialogComponent implements OnInit {
   isEdit = false;
   minDate = new Date(0);
 
+  postDecisions: MappedPostDecision[] = [];
+  ceoCriterion: CeoCriterionDto[] = [];
+  outcomes: DecisionOutcomeCodeDto[] = [];
+
   resolutionYears: number[] = [];
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
     date: new FormControl<Date | undefined>(undefined, [Validators.required]),
     decisionMaker: new FormControl<string | null>(null, [Validators.required]),
+    postDecision: new FormControl<string | null>(null),
     resolutionNumber: new FormControl<number | null>(null, [Validators.required]),
     resolutionYear: new FormControl<number | null>(null, [Validators.required]),
     ceoCriterion: new FormControl<string | null>(null),
@@ -42,8 +58,9 @@ export class DecisionDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
+      isFirstDecision: boolean;
       fileNumber: string;
-      outcomes: ApplicationDecisionOutcomeTypeDto[];
+      outcomes: DecisionOutcomeCodeDto[];
       decisionMakers: DecisionMakerDto[];
       ceoCriterion: CeoCriterionDto[];
       existingDecision?: ApplicationDecisionDto;
@@ -51,20 +68,43 @@ export class DecisionDialogComponent implements OnInit {
       isTimeExtension?: boolean;
     },
     private dialogRef: MatDialogRef<DecisionDialogComponent>,
-    private decisionService: ApplicationDecisionService
+    private decisionService: ApplicationDecisionService,
+    private reconsiderationService: ApplicationReconsiderationService,
+    private amendmentService: ApplicationAmendmentService
   ) {
+    this.ceoCriterion = this.data.ceoCriterion;
     if (data.minDate) {
       this.minDate = data.minDate;
     }
 
-    this.form.controls['decisionMaker']!.valueChanges.subscribe((val) => {
-      if (val === 'CEOP') {
-        this.form.controls['ceoCriterion'].setValidators([Validators.required]);
-      } else {
-        this.form.controls['ceoCriterion'].clearValidators();
-      }
-      this.form.controls['ceoCriterion'].updateValueAndValidity();
-    });
+    if (!data.isFirstDecision) {
+      this.form.controls.postDecision.addValidators([Validators.required]);
+      this.form.controls.decisionMaker.disable();
+      this.form.controls.outcome.disable();
+    }
+
+    this.outcomes = data.outcomes.filter((outcome) => outcome.isFirstDecision === data.isFirstDecision);
+
+    this.amendmentService.$amendments
+      .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
+      .subscribe(([amendments, reconsiderations]) => {
+        const mappedAmendments = amendments.map((amendment, index) => ({
+          label: `Amendment Request #${amendments.length - index} - ${amendment.amendedDecisions
+            .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+            .join(', ')}`,
+          uuid: amendment.uuid,
+          type: 'amendment',
+        }));
+
+        const mappedRecons = reconsiderations.map((reconsideration, index) => ({
+          label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
+            .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+            .join(', ')}`,
+          uuid: reconsideration.uuid,
+          type: 'reconsideration',
+        }));
+        this.postDecisions = [...mappedAmendments, ...mappedRecons];
+      });
 
     if (data.existingDecision) {
       this.isEdit = true;
@@ -80,7 +120,18 @@ export class DecisionDialogComponent implements OnInit {
           ? new Date(data.existingDecision.chairReviewDate)
           : undefined,
         auditDate: data.existingDecision.auditDate ? new Date(data.existingDecision.auditDate) : undefined,
+        postDecision: data.existingDecision.amends?.uuid || data.existingDecision.reconsiders?.uuid,
       });
+      if (data.existingDecision.reconsiders) {
+        this.onSelectPostDecision({
+          type: 'reconsideration',
+        });
+      }
+      if (data.existingDecision.amends) {
+        this.onSelectPostDecision({
+          type: 'amendment',
+        });
+      }
       if (data.existingDecision.isTimeExtension !== null) {
         this.form.patchValue({
           isTimeExtension: data.existingDecision.isTimeExtension ? 'true' : 'false',
@@ -121,7 +172,12 @@ export class DecisionDialogComponent implements OnInit {
       auditDate,
       chairReviewDate,
       chairReviewOutcome,
+      postDecision,
     } = this.form.getRawValue();
+
+    const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
+    const isPostDecisionReconsideration = selectedDecision && selectedDecision.type === 'reconsideration';
+
     const data: CreateApplicationDecisionDto = {
       date: date!.getTime(),
       resolutionNumber: resolutionNumber!,
@@ -134,8 +190,10 @@ export class DecisionDialogComponent implements OnInit {
       ceoCriterionCode: ceoCriterion,
       isTimeExtension: null,
       applicationFileNumber: this.data.fileNumber,
+      amendsUuid: isPostDecisionReconsideration ? null : postDecision!,
+      reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
     };
-    if (ceoCriterion && ceoCriterion === 'MODI' && isTimeExtension !== null) {
+    if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION && isTimeExtension !== null) {
       data.isTimeExtension = isTimeExtension === 'true';
     }
     if (chairReviewOutcome !== null) {
@@ -158,11 +216,15 @@ export class DecisionDialogComponent implements OnInit {
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
-    if (decisionMaker.code !== 'CEOP') {
+    if (decisionMaker.code === DecisionMaker.CEO) {
+      this.form.controls['ceoCriterion'].setValidators([Validators.required]);
+    } else {
       this.form.patchValue({
         ceoCriterion: null,
       });
+      this.form.controls['ceoCriterion'].clearValidators();
     }
+    this.form.controls['ceoCriterion'].updateValueAndValidity();
   }
 
   onSelectChairReviewRequired($event: MatButtonToggleChange) {
@@ -171,6 +233,29 @@ export class DecisionDialogComponent implements OnInit {
         chairReviewOutcome: null,
         chairReviewDate: null,
       });
+    }
+  }
+
+  onSelectPostDecision(postDecision: { type: string }) {
+    if (postDecision.type === 'amendment') {
+      this.form.controls.ceoCriterion.disable();
+      this.form.controls.outcome.disable();
+      this.form.controls.decisionMaker.disable();
+      this.ceoCriterion = this.data.ceoCriterion.filter(
+        (ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION
+      );
+      this.form.patchValue({
+        decisionMaker: DecisionMaker.CEO,
+        ceoCriterion: CeoCriterion.MODIFICATION,
+        outcome: 'VARY',
+      });
+    } else {
+      this.form.controls.decisionMaker.enable();
+      this.form.controls.outcome.enable();
+      this.form.controls.ceoCriterion.enable();
+      this.ceoCriterion = this.data.ceoCriterion.filter(
+        (ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION
+      );
     }
   }
 }

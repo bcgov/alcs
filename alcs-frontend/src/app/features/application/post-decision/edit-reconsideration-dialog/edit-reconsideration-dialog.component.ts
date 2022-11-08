@@ -2,7 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
-import { ApplicationReconsiderationDetailedDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import {
+  ApplicationReconsiderationDetailedDto,
+  UpdateApplicationReconsiderationDto,
+} from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
@@ -59,12 +62,12 @@ export class EditReconsiderationDialogComponent implements OnInit {
     this.isLoading = true;
 
     const { submittedDate, type, isReviewApproved, reviewDate, reconsidersDecisions } = this.form.getRawValue();
-    const data = {
+    const data: UpdateApplicationReconsiderationDto = {
       submittedDate: formatDateForApi(submittedDate!),
       isReviewApproved: isReviewApproved != undefined && isReviewApproved != null ? JSON.parse(isReviewApproved) : null,
       typeCode: type!,
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
-      reconsidersDecisions: reconsidersDecisions,
+      reconsideredDecisionUuids: reconsidersDecisions || [],
     };
 
     try {

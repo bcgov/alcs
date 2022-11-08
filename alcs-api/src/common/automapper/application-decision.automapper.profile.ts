@@ -1,18 +1,18 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { DecisionOutcomeCode } from '../../application/application-decision/application-decision-outcome.entity';
+import { DecisionOutcomeCode } from '../../decision/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeTypeDto,
+  DecisionOutcomeCodeDto,
   DecisionDocumentDto,
-} from '../../application/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
-import { CeoCriterionCodeDto } from '../../application/application-decision/ceo-criterion/ceo-criterion.dto';
-import { CeoCriterionCode } from '../../application/application-decision/ceo-criterion/ceo-criterion.entity';
-import { DecisionDocument } from '../../application/application-decision/decision-document.entity';
-import { DecisionMakerCodeDto } from '../../application/application-decision/decision-maker/decision-maker.dto';
-import { DecisionMakerCode } from '../../application/application-decision/decision-maker/decision-maker.entity';
+} from '../../decision/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
+import { CeoCriterionCodeDto } from '../../decision/application-decision/ceo-criterion/ceo-criterion.dto';
+import { CeoCriterionCode } from '../../decision/application-decision/ceo-criterion/ceo-criterion.entity';
+import { DecisionDocument } from '../../decision/application-decision/decision-document.entity';
+import { DecisionMakerCodeDto } from '../../decision/application-decision/decision-maker/decision-maker.dto';
+import { DecisionMakerCode } from '../../decision/application-decision/decision-maker/decision-maker.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -36,12 +36,38 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             ),
           ),
         ),
+        forMember(
+          (a) => a.reconsiders,
+          mapFrom((dec) =>
+            dec.reconsiders
+              ? {
+                  uuid: dec.reconsiders.uuid,
+                  linkedResolutions: dec.reconsiders.reconsidersDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${dec.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
+        ),
+        forMember(
+          (a) => a.amends,
+          mapFrom((dec) =>
+            dec.amends
+              ? {
+                  uuid: dec.amends.uuid,
+                  linkedResolutions: dec.amends.amendsDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${dec.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
+        ),
       );
 
-      createMap(mapper, DecisionOutcomeCode, ApplicationDecisionOutcomeTypeDto);
-
+      createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
-
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
 
       createMap(

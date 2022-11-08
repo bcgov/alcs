@@ -1,10 +1,14 @@
 import { AutoMap } from '@automapper/classes';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
-
-export class ApplicationDecisionOutcomeTypeDto extends BaseCodeDto {}
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
@@ -42,6 +46,14 @@ export class UpdateApplicationDecisionDto {
   @IsBoolean()
   @IsOptional()
   chairReviewOutcome?: boolean | null;
+
+  @IsUUID()
+  @IsOptional()
+  amendsUuid?: string | null;
+
+  @IsUUID()
+  @IsOptional()
+  reconsidersUuid?: string | null;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -62,6 +74,19 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
 
   @IsBoolean()
   chairReviewRequired: boolean;
+
+  @IsUUID()
+  @IsOptional()
+  amendsUuid?: string;
+
+  @IsUUID()
+  @IsOptional()
+  reconsidersUuid?: string;
+}
+
+export class DecisionOutcomeCodeDto extends BaseCodeDto {
+  @AutoMap()
+  isFirstDecision: boolean;
 }
 
 export class ApplicationDecisionDto {
@@ -75,7 +100,7 @@ export class ApplicationDecisionDto {
   date: number;
 
   @AutoMap()
-  outcome: ApplicationDecisionOutcomeTypeDto;
+  outcome: DecisionOutcomeCodeDto;
 
   @AutoMap()
   resolutionNumber: number;
@@ -106,6 +131,14 @@ export class ApplicationDecisionDto {
 
   @AutoMap()
   isTimeExtension?: boolean | null;
+
+  reconsiders?: LinkedResolutionDto;
+  amends?: LinkedResolutionDto;
+}
+
+export class LinkedResolutionDto {
+  uuid: string;
+  linkedResolutions: string[];
 }
 
 export class DecisionDocumentDto {

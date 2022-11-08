@@ -6,7 +6,7 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeTypeDto,
+  DecisionOutcomeCodeDto,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
   DecisionMakerDto,
@@ -34,13 +34,13 @@ export class ApplicationDecisionService {
   }
 
   async fetchCodes() {
-    let outcomes: ApplicationDecisionOutcomeTypeDto[] = [];
+    let outcomes: DecisionOutcomeCodeDto[] = [];
     let decisionMakers: DecisionMakerDto[] = [];
     let ceoCriterion: CeoCriterionDto[] = [];
     try {
       const res = await firstValueFrom(
         this.http.get<{
-          outcomes: ApplicationDecisionOutcomeTypeDto[];
+          outcomes: DecisionOutcomeCodeDto[];
           decisionMakers: DecisionMakerDto[];
           ceoCriterion: CeoCriterionDto[];
         }>(`${this.url}/codes`)

@@ -2,16 +2,15 @@ import { AutoMap } from '@automapper/classes';
 import {
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
   Unique,
 } from 'typeorm';
-import { ApplicationAmendment } from '../../application-amendment/application-amendment.entity';
-import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
+import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { Base } from '../../common/entities/base.entity';
-import { Application } from '../application.entity';
+import { Application } from '../../application/application.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './decision-document.entity';
@@ -107,4 +106,12 @@ export class ApplicationDecision extends Base {
     (amendment) => amendment.amendsDecisions,
   )
   amendedBy: ApplicationAmendment[];
+
+  @AutoMap()
+  @ManyToOne(() => ApplicationAmendment, { nullable: true })
+  amends?: ApplicationAmendment;
+
+  @AutoMap()
+  @ManyToOne(() => ApplicationReconsideration, { nullable: true })
+  reconsiders?: ApplicationReconsideration;
 }

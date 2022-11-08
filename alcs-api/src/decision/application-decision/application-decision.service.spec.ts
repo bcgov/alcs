@@ -13,7 +13,7 @@ import {
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { DocumentService } from '../../document/document.service';
-import { ApplicationService } from '../application.service';
+import { ApplicationService } from '../../application/application.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
@@ -159,7 +159,12 @@ describe('ApplicationDecisionService', () => {
         outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
-      await service.create(meetingToCreate, mockApplication);
+      await service.create(
+        meetingToCreate,
+        mockApplication,
+        undefined,
+        undefined,
+      );
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(1);
@@ -179,7 +184,12 @@ describe('ApplicationDecisionService', () => {
         outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
-      await service.create(meetingToCreate, mockApplication);
+      await service.create(
+        meetingToCreate,
+        mockApplication,
+        undefined,
+        undefined,
+      );
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.update).not.toHaveBeenCalled();
@@ -192,7 +202,12 @@ describe('ApplicationDecisionService', () => {
         outcomeCode: 'New Outcome',
       };
 
-      await service.update(mockDecision.uuid, decisionUpdate);
+      await service.update(
+        mockDecision.uuid,
+        decisionUpdate,
+        undefined,
+        undefined,
+      );
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
@@ -220,7 +235,12 @@ describe('ApplicationDecisionService', () => {
         outcomeCode: 'New Outcome',
       };
 
-      await service.update(mockDecision.uuid, decisionUpdate);
+      await service.update(
+        mockDecision.uuid,
+        decisionUpdate,
+        undefined,
+        undefined,
+      );
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
@@ -234,15 +254,18 @@ describe('ApplicationDecisionService', () => {
         date: new Date(2022, 2, 2, 2, 2, 2, 2).getTime(),
         outcomeCode: 'New Outcome',
       };
+      const promise = service.update(
+        nonExistantUuid,
+        decisionUpdate,
+        undefined,
+        undefined,
+      );
 
-      await expect(
-        service.update(nonExistantUuid, decisionUpdate),
-      ).rejects.toMatchObject(
+      await expect(promise).rejects.toMatchObject(
         new ServiceNotFoundException(
           `Decision with UUID ${nonExistantUuid} not found`,
         ),
       );
-
       expect(mockDecisionRepository.save).toBeCalledTimes(0);
     });
 
@@ -252,12 +275,18 @@ describe('ApplicationDecisionService', () => {
         ceoCriterionCode: 'fake-code',
       };
 
-      await expect(service.update(uuid, decisionUpdate)).rejects.toMatchObject(
+      const promise = service.update(
+        uuid,
+        decisionUpdate,
+        undefined,
+        undefined,
+      );
+
+      await expect(promise).rejects.toMatchObject(
         new ServiceValidationException(
           `Cannot set ceo criterion code unless ceo the decision maker`,
         ),
       );
-
       expect(mockDecisionRepository.save).toBeCalledTimes(0);
     });
 
@@ -268,7 +297,7 @@ describe('ApplicationDecisionService', () => {
         decisionMakerCode: 'CEOP',
       };
 
-      await service.update(uuid, decisionUpdate);
+      await service.update(uuid, decisionUpdate, undefined, undefined);
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
@@ -280,12 +309,19 @@ describe('ApplicationDecisionService', () => {
         isTimeExtension: true,
       };
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
-      await expect(service.update(uuid, decisionUpdate)).rejects.toMatchObject(
+      const promise = service.update(
+        uuid,
+        decisionUpdate,
+        undefined,
+        undefined,
+      );
+
+      await expect(promise).rejects.toMatchObject(
         new ServiceValidationException(
           `Cannot set time extension unless ceo criterion is modification`,
         ),
       );
+      expect(mockDecisionRepository.save).toBeCalledTimes(0);
     });
 
     it('should call through for get code', async () => {

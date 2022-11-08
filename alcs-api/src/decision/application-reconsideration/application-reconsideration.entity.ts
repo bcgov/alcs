@@ -9,10 +9,10 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { ApplicationDecision } from '../application/application-decision/application-decision.entity';
-import { Application } from '../application/application.entity';
-import { Card } from '../card/card.entity';
-import { Base } from '../common/entities/base.entity';
+import { ApplicationDecision } from '../application-decision/application-decision.entity';
+import { Application } from '../../application/application.entity';
+import { Card } from '../../card/card.entity';
+import { Base } from '../../common/entities/base.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Entity()

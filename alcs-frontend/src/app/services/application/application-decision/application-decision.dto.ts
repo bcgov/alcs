@@ -1,5 +1,13 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 
+export enum DecisionMaker {
+  CEO = 'CEOP',
+}
+
+export enum CeoCriterion {
+  MODIFICATION = 'MODI',
+}
+
 export interface UpdateApplicationDecisionDto {
   date?: number;
   outcomeCode?: string;
@@ -10,6 +18,8 @@ export interface UpdateApplicationDecisionDto {
   decisionMakerCode?: string | null;
   ceoCriterionCode?: string | null;
   isTimeExtension?: boolean | null;
+  amendsUuid?: string | null;
+  reconsidersUuid?: string | null;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -19,12 +29,14 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   resolutionYear: number;
   chairReviewRequired: boolean;
   applicationFileNumber: string;
+  amendsUuid: string | null;
+  reconsidersUuid: string | null;
 }
 
 export interface ApplicationDecisionDto {
   uuid: string;
   date: number;
-  outcome: ApplicationDecisionOutcomeTypeDto;
+  outcome: DecisionOutcomeCodeDto;
   resolutionNumber: number;
   resolutionYear: number;
   auditDate?: number | null;
@@ -36,6 +48,13 @@ export interface ApplicationDecisionDto {
   applicationFileNumber: string;
   documents: DecisionDocumentDto[];
   isTimeExtension?: boolean | null;
+  amends?: LinkedResolutionDto;
+  reconsiders?: LinkedResolutionDto;
+}
+
+export interface LinkedResolutionDto {
+  uuid: string;
+  linkedResolutions: string[];
 }
 
 export interface DecisionDocumentDto {
@@ -52,4 +71,6 @@ export interface CeoCriterionDto extends BaseCodeDto {
   number: number;
 }
 
-export interface ApplicationDecisionOutcomeTypeDto extends BaseCodeDto {}
+export interface DecisionOutcomeCodeDto extends BaseCodeDto {
+  isFirstDecision: boolean;
+}

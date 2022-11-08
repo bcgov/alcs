@@ -4,14 +4,14 @@ import { Injectable } from '@nestjs/common';
 import {
   ApplicationAmendmentDto,
   ApplicationForAmendmentDto,
-} from '../../application-amendment/application-amendment.dto';
-import { ApplicationAmendment } from '../../application-amendment/application-amendment.entity';
+} from '../../decision/application-amendment/application-amendment.dto';
+import { ApplicationAmendment } from '../../decision/application-amendment/application-amendment.entity';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../application/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
+import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 
 @Injectable()
