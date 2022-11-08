@@ -3,11 +3,11 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { Board } from '../board/board.entity';
-import { BoardService } from '../board/board.service';
-import { ReconsiderationProfile } from '../common/automapper/reconsideration.automapper.profile';
-import { initApplicationAmendmentMockEntity } from '../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { Board } from '../../board/board.entity';
+import { BoardService } from '../../board/board.service';
+import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
+import { initApplicationAmendmentMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
 import { ApplicationAmendmentController } from './application-amendment.controller';
 import {
   ApplicationAmendmentCreateDto,

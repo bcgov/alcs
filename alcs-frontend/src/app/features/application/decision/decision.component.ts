@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeTypeDto,
+  DecisionOutcomeCodeDto,
   CeoCriterionDto,
   DecisionMakerDto,
 } from '../../../services/application/application-decision/application-decision.dto';
@@ -20,11 +21,12 @@ type LoadingDecision = ApplicationDecisionDto & { loading: boolean };
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.scss'],
 })
-export class DecisionComponent implements OnInit {
+export class DecisionComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: LoadingDecision[] = [];
-  outcomes: ApplicationDecisionOutcomeTypeDto[] = [];
+  outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
   isPaused = true;
@@ -38,7 +40,7 @@ export class DecisionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileNumber = application.fileNumber;
         this.decisionDate = application.decisionDate;
@@ -73,6 +75,7 @@ export class DecisionComponent implements OnInit {
         maxHeight: '80vh',
         width: '90%',
         data: {
+          isFirstDecision: this.decisions.length === 0,
           minDate,
           fileNumber: this.fileNumber,
           outcomes: this.outcomes,
@@ -101,6 +104,7 @@ export class DecisionComponent implements OnInit {
         maxHeight: '80vh',
         width: '90%',
         data: {
+          isFirstDecision: decisionIndex === this.decisions.length - 1,
           minDate,
           fileNumber: this.fileNumber,
           outcomes: this.outcomes,
@@ -110,8 +114,8 @@ export class DecisionComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe((didCreate) => {
-        if (didCreate) {
+      .subscribe((didModify) => {
+        if (didModify) {
           this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
@@ -197,5 +201,10 @@ export class DecisionComponent implements OnInit {
       auditDate: formatDateForApi(auditReviewDate),
     });
     await this.loadDecisions(this.fileNumber);
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

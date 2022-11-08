@@ -9,7 +9,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';

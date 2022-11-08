@@ -21,12 +21,10 @@
       <div style="display: grid; grid-template-columns: 1fr 8px 2fr; grid-column-gap: 8px">
         <mat-form-field appearance="outline" class="date-picker">
           <mat-label>Resolution Number</mat-label>
-          <input matInput formControlName="resolutionNumber" type="number" required>
+          <input matInput formControlName="resolutionNumber" type="number" required />
           <span matPrefix>#&nbsp;</span>
         </mat-form-field>
-        <div class="center resolution-separator">
-          /
-        </div>
+        <div class="center resolution-separator">/</div>
         <ng-select
           appearance="outline"
           class="resolution-year"
@@ -38,10 +36,25 @@
           [clearable]="false"
         ></ng-select>
       </div>
+      <div class="full-width" *ngIf="!data.isFirstDecision">
+        <ng-select
+          appearance="outline"
+          class="card-post-decision"
+          [items]="postDecisions"
+          appendTo="body"
+          placeholder="Linked Request *"
+          bindLabel="label"
+          bindValue="uuid"
+          [clearable]="false"
+          formControlName="postDecision"
+          (change)="onSelectPostDecision($event)"
+        >
+        </ng-select>
+      </div>
       <ng-select
         appearance="outline"
         class="decision-outcome"
-        [items]="data.outcomes"
+        [items]="outcomes"
         formControlName="outcome"
         appendTo="body"
         bindLabel="label"
@@ -65,7 +78,7 @@
         *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
         appearance="outline"
         class="full-width"
-        [items]="data.ceoCriterion"
+        [items]="ceoCriterion"
         formControlName="ceoCriterion"
         appendTo="body"
         bindLabel="label"
@@ -138,7 +151,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div class="button-container">
-      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button mat-stroked-button color="primary" [mat-dialog-close]="false">Close</button>
       <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
     </div>
   </mat-dialog-actions>

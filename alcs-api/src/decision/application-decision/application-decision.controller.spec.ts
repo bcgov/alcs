@@ -1,19 +1,24 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationService } from '../../application/application.service';
 import { CodeService } from '../../code/code.service';
 import { ApplicationDecisionProfile } from '../../common/automapper/application-decision.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
+import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationService } from '../application.service';
+import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
+import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision.controller';
 import {
@@ -27,11 +32,21 @@ describe('ApplicationDecisionController', () => {
   let mockDecisionService: DeepMocked<ApplicationDecisionService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockAmendmentService: DeepMocked<ApplicationAmendmentService>;
+  let mockReconService: DeepMocked<ApplicationReconsiderationService>;
+
+  let mockApplication;
+  let mockDecision;
 
   beforeEach(async () => {
-    mockDecisionService = createMock<ApplicationDecisionService>();
-    mockApplicationService = createMock<ApplicationService>();
-    mockCodeService = createMock<CodeService>();
+    mockDecisionService = createMock();
+    mockApplicationService = createMock();
+    mockCodeService = createMock();
+    mockAmendmentService = createMock();
+    mockReconService = createMock();
+
+    mockApplication = initApplicationMockEntity();
+    mockDecision = initApplicationDecisionMock(mockApplication);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -55,6 +70,14 @@ describe('ApplicationDecisionController', () => {
         {
           provide: CodeService,
           useValue: mockCodeService,
+        },
+        {
+          provide: ApplicationAmendmentService,
+          useValue: mockAmendmentService,
+        },
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: mockReconService,
         },
         {
           provide: ClsService,
@@ -85,8 +108,6 @@ describe('ApplicationDecisionController', () => {
   });
 
   it('should get all for application', async () => {
-    const mockApplication = initApplicationMockEntity();
-    const mockDecision = initApplicationDecisionMock(mockApplication);
     mockDecisionService.getByAppFileNumber.mockResolvedValue([mockDecision]);
 
     const result = await controller.getByFileNumber('fake-number');
@@ -96,8 +117,6 @@ describe('ApplicationDecisionController', () => {
   });
 
   it('should get a specific decision', async () => {
-    const mockApplication = initApplicationMockEntity();
-    const mockDecision = initApplicationDecisionMock(mockApplication);
     mockDecisionService.get.mockResolvedValue(mockDecision);
     const result = await controller.get('fake-uuid');
 
@@ -115,14 +134,12 @@ describe('ApplicationDecisionController', () => {
   });
 
   it('should create the decision if application exists', async () => {
-    const appMock = initApplicationMockEntity();
-    const mockDecision = initApplicationDecisionMock(appMock);
-    mockApplicationService.getOrFail.mockResolvedValue(appMock);
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockDecisionService.create.mockResolvedValue(mockDecision);
 
     const decisionToCreate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      applicationFileNumber: appMock.fileNumber,
+      applicationFileNumber: mockApplication.fileNumber,
       outcomeCode: 'outcome',
     } as CreateApplicationDecisionDto;
 
@@ -131,17 +148,107 @@ describe('ApplicationDecisionController', () => {
     expect(mockDecisionService.create).toBeCalledTimes(1);
     expect(mockDecisionService.create).toBeCalledWith(
       {
-        applicationFileNumber: appMock.fileNumber,
+        applicationFileNumber: mockApplication.fileNumber,
         outcomeCode: 'outcome',
         date: decisionToCreate.date,
       },
-      appMock,
+      mockApplication,
+      undefined,
+      undefined,
+    );
+  });
+
+  it('should load the linked amendment for create', async () => {
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
+    mockDecisionService.create.mockResolvedValue(mockDecision);
+    const mockAmendment = {} as ApplicationAmendment;
+    mockAmendmentService.getByUuid.mockResolvedValue(mockAmendment);
+
+    const decisionToCreate = {
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      applicationFileNumber: mockApplication.fileNumber,
+      outcomeCode: 'outcome',
+      amendsUuid: 'fake-amendment',
+    } as CreateApplicationDecisionDto;
+
+    await controller.create(decisionToCreate);
+
+    expect(mockAmendmentService.getByUuid).toBeCalledTimes(1);
+    expect(mockDecisionService.create).toBeCalledTimes(1);
+    expect(mockDecisionService.create).toBeCalledWith(
+      {
+        applicationFileNumber: mockApplication.fileNumber,
+        outcomeCode: 'outcome',
+        date: decisionToCreate.date,
+        amendsUuid: 'fake-amendment',
+      },
+      mockApplication,
+      mockAmendment,
+      undefined,
+    );
+  });
+
+  it('should load the linked reconsideration for create', async () => {
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
+    mockDecisionService.create.mockResolvedValue(mockDecision);
+    const mockReconsideration = {} as ApplicationReconsideration;
+    mockReconService.getByUuid.mockResolvedValue(mockReconsideration);
+
+    const decisionToCreate = {
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      applicationFileNumber: mockApplication.fileNumber,
+      outcomeCode: 'outcome',
+      reconsidersUuid: 'fake-recon',
+    } as CreateApplicationDecisionDto;
+
+    await controller.create(decisionToCreate);
+
+    expect(mockReconService.getByUuid).toBeCalledTimes(1);
+    expect(mockDecisionService.create).toBeCalledTimes(1);
+    expect(mockDecisionService.create).toBeCalledWith(
+      {
+        applicationFileNumber: mockApplication.fileNumber,
+        outcomeCode: 'outcome',
+        date: decisionToCreate.date,
+        reconsidersUuid: 'fake-recon',
+      },
+      mockApplication,
+      undefined,
+      mockReconsideration,
+    );
+  });
+
+  it('should throw an exception when trying to create with both amendment and recon', async () => {
+    const decisionToCreate = {
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      applicationFileNumber: mockApplication.fileNumber,
+      outcomeCode: 'outcome',
+      reconsidersUuid: 'fake-recon',
+      amendsUuid: 'fake-amendment',
+    } as CreateApplicationDecisionDto;
+
+    const promise = controller.create(decisionToCreate);
+    await expect(promise).rejects.toMatchObject(
+      new BadRequestException('Cannot set both an amends and reconsiders'),
+    );
+  });
+
+  it('should throw an exception when trying to update with both amendment and recon', async () => {
+    const updateDto = {
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      applicationFileNumber: mockApplication.fileNumber,
+      outcomeCode: 'outcome',
+      reconsidersUuid: 'fake-recon',
+      amendsUuid: 'fake-amendment',
+    } as UpdateApplicationDecisionDto;
+
+    const promise = controller.update('uuid', updateDto);
+    await expect(promise).rejects.toMatchObject(
+      new BadRequestException('Cannot set both an amends and reconsiders'),
     );
   });
 
   it('should update the decision', async () => {
-    const appMock = initApplicationMockEntity();
-    const mockDecision = initApplicationDecisionMock(appMock);
     mockDecisionService.update.mockResolvedValue(mockDecision);
     const updates = {
       outcome: 'New Outcome',
@@ -151,10 +258,15 @@ describe('ApplicationDecisionController', () => {
     await controller.update('fake-uuid', updates);
 
     expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith('fake-uuid', {
-      outcome: 'New Outcome',
-      date: updates.date,
-    });
+    expect(mockDecisionService.update).toBeCalledWith(
+      'fake-uuid',
+      {
+        outcome: 'New Outcome',
+        date: updates.date,
+      },
+      undefined,
+      undefined,
+    );
   });
 
   it('should call through for attaching the document', async () => {

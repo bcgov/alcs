@@ -8,12 +8,12 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
-import { ApplicationDecisionService } from '../application/application-decision/application-decision.service';
-import { ApplicationService } from '../application/application.service';
-import { Board } from '../board/board.entity';
-import { CardService } from '../card/card.service';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
-import { formatIncomingDate } from '../utils/incoming-date.formatter';
+import { ApplicationDecisionService } from '../application-decision/application-decision.service';
+import { ApplicationService } from '../../application/application.service';
+import { Board } from '../../board/board.entity';
+import { CardService } from '../../card/card.service';
+import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import {
   ApplicationAmendmentCreateDto,
   ApplicationAmendmentDto,

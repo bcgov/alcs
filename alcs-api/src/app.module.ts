@@ -9,8 +9,6 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ApplicationAmendmentModule } from './application-amendment/application-amendment.module';
-import { ApplicationReconsiderationModule } from './application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
@@ -31,6 +29,7 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
+import { DecisionModule } from './decision/decision.module';
 
 @Module({
   imports: [
@@ -53,10 +52,8 @@ import { UserService } from './user/user.service';
     HomeModule,
     NotificationModule,
     BoardModule,
-    ApplicationReconsiderationModule,
     PlanningReviewModule,
     CovenantModule,
-    ApplicationAmendmentModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: config.get('LOG_LEVEL'),
@@ -77,6 +74,7 @@ import { UserService } from './user/user.service';
     }),
     CommissionerModule,
     ImportModule,
+    DecisionModule,
   ],
   controllers: [AppController, LogoutController],
   providers: [

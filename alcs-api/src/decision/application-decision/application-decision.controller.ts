@@ -17,11 +17,13 @@ import * as config from 'config';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ApplicationService } from '../application.service';
+import { ApplicationService } from '../../application/application.service';
+import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  ApplicationDecisionOutcomeTypeDto,
+  DecisionOutcomeCodeDto,
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
@@ -39,6 +41,8 @@ export class ApplicationDecisionController {
   constructor(
     private appDecisionService: ApplicationDecisionService,
     private applicationService: ApplicationService,
+    private amendmentService: ApplicationAmendmentService,
+    private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -50,11 +54,12 @@ export class ApplicationDecisionController {
     const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
     );
-    return this.mapper.mapArrayAsync(
+    const mappedRecords = await this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,
       ApplicationDecisionDto,
     );
+    return mappedRecords;
   }
 
   @Get('/codes')
@@ -65,7 +70,7 @@ export class ApplicationDecisionController {
       outcomes: await this.mapper.mapArrayAsync(
         codes.outcomes,
         DecisionOutcomeCode,
-        ApplicationDecisionOutcomeTypeDto,
+        DecisionOutcomeCodeDto,
       ),
       decisionMakers: await this.mapper.mapArrayAsync(
         codes.decisionMakers,
@@ -94,15 +99,31 @@ export class ApplicationDecisionController {
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
   async create(
-    @Body() meeting: CreateApplicationDecisionDto,
+    @Body() createDto: CreateApplicationDecisionDto,
   ): Promise<ApplicationDecisionDto> {
+    if (createDto.amendsUuid && createDto.reconsidersUuid) {
+      throw new BadRequestException(
+        'Cannot set both an amends and reconsiders',
+      );
+    }
+
     const application = await this.applicationService.getOrFail(
-      meeting.applicationFileNumber,
+      createDto.applicationFileNumber,
     );
 
+    const amends = createDto.amendsUuid
+      ? await this.amendmentService.getByUuid(createDto.amendsUuid)
+      : undefined;
+
+    const reconsiders = createDto.reconsidersUuid
+      ? await this.reconsiderationService.getByUuid(createDto.reconsidersUuid)
+      : undefined;
+
     const newDecision = await this.appDecisionService.create(
-      meeting,
+      createDto,
       application,
+      amends,
+      reconsiders,
     );
 
     return this.mapper.mapAsync(
@@ -116,11 +137,35 @@ export class ApplicationDecisionController {
   @UserRoles(...ANY_AUTH_ROLE)
   async update(
     @Param('uuid') uuid: string,
-    @Body() appDecMeeting: UpdateApplicationDecisionDto,
+    @Body() updateDto: UpdateApplicationDecisionDto,
   ): Promise<ApplicationDecisionDto> {
+    if (updateDto.amendsUuid && updateDto.reconsidersUuid) {
+      throw new BadRequestException(
+        'Cannot set both an amends and reconsiders',
+      );
+    }
+
+    let amends;
+    if (updateDto.amendsUuid) {
+      amends = await this.amendmentService.getByUuid(updateDto.amendsUuid);
+    } else if (updateDto.amendsUuid === null) {
+      amends = null;
+    }
+
+    let reconsiders;
+    if (updateDto.reconsidersUuid) {
+      reconsiders = await this.reconsiderationService.getByUuid(
+        updateDto.amendsUuid,
+      );
+    } else if (updateDto.reconsidersUuid === null) {
+      reconsiders = null;
+    }
+
     const updatedMeeting = await this.appDecisionService.update(
       uuid,
-      appDecMeeting,
+      updateDto,
+      amends,
+      reconsiders,
     );
     return this.mapper.mapAsync(
       updatedMeeting,

@@ -34,7 +34,7 @@ section {
   padding: 32px;
 }
 
-.recon-label {
+.corner-label {
   font-size: 11px;
   position: absolute;
   left: 0;
@@ -42,9 +42,16 @@ section {
   height: 32px;
   padding: 6px 12px;
   color: $white;
-  background: $grey-dark;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px 0 10px;
+
+  &.recon {
+    background: $accent-color;
+  }
+
+  &.amendment {
+    background: $secondary-color-dark;
+  }
 }
 
 .decision-menu {

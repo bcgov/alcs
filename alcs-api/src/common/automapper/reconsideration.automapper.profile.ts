@@ -1,19 +1,19 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsideration } from '../../decision/application-reconsideration/application-reconsideration.entity';
 import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
   ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
-} from '../../application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationType } from '../../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+} from '../../decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationType } from '../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../application/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../application/application-decision/application-decision.entity';
+import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 
 @Injectable()

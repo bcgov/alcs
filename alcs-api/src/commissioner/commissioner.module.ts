@@ -1,16 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ApplicationAmendmentModule } from '../application-amendment/application-amendment.module';
-import { ApplicationReconsiderationModule } from '../application-reconsideration/application-reconsideration.module';
 import { ApplicationModule } from '../application/application.module';
 import { CommissionerProfile } from '../common/automapper/commissioner.automapper.profile';
+import { DecisionModule } from '../decision/decision.module';
 import { CommissionerController } from './commissioner.controller';
 
 @Module({
-  imports: [
-    ApplicationModule,
-    ApplicationAmendmentModule,
-    ApplicationReconsiderationModule,
-  ],
+  imports: [ApplicationModule, DecisionModule],
   providers: [CommissionerProfile],
   controllers: [CommissionerController],
 })

@@ -15,18 +15,23 @@
     <mat-spinner></mat-spinner>
   </div>
   <div class="decision">
-    <div *ngIf="decisions.length - 1 !== i" class="recon-label">Recon</div>
+    <div *ngIf="decisions.length - 1 !== i && decision.reconsiders" class="corner-label recon">Recon</div>
+    <div *ngIf="decisions.length - 1 !== i && decision.amends" class="corner-label amendment">Amendment</div>
     <input hidden type="file" #file (change)="attachFile(decision.uuid, $event)" placeholder="Upload file" />
     <div class="decision-menu">
       <button (click)="file.click()" matTooltip="Attach Document" mat-icon-button>
         <mat-icon>attach_file</mat-icon>
       </button>
-      <button (click)="onEdit(decision)" matTooltip="Edit Decision" mat-icon-button><mat-icon>edit</mat-icon></button>
+      <button (click)="onEdit(decision)" matTooltip="Edit Decision" mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button>
       <button (click)="deleteDecision(decision.uuid)" matTooltip="Delete Decision" mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="body-large">Decision #{{ decisions.length - i }} - #{{decision.resolutionNumber}}/{{decision.resolutionYear}}</div>
+    <div class="body-large">
+      Decision #{{ decisions.length - i }} - #{{ decision.resolutionNumber }} /{{ decision.resolutionYear }}
+    </div>
     <div class="decision-content">
       <div>
         <div class="subheading2">Decision Date</div>
@@ -34,7 +39,8 @@
       </div>
       <div>
         <div class="subheading2">Decision Outcome</div>
-        {{ decision.outcome.label }}
+        {{ decision.outcome.label }} {{ decision.amends?.linkedResolutions?.join(', ') }}
+        {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
       </div>
       <div></div>
       <div>
@@ -60,7 +66,7 @@
         <div class="subheading2">Chair Review Outcome</div>
         <span *ngIf="decision.chairReviewOutcome !== null">{{
           decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
-        }}</span>
+          }}</span>
         <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
       </div>
       <div *ngIf="decision.chairReviewRequired"></div>

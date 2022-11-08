@@ -8,12 +8,12 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
-import { ApplicationDecisionService } from '../application/application-decision/application-decision.service';
-import { ApplicationService } from '../application/application.service';
-import { Board } from '../board/board.entity';
-import { CardService } from '../card/card.service';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
-import { formatIncomingDate } from '../utils/incoming-date.formatter';
+import { ApplicationDecisionService } from '../application-decision/application-decision.service';
+import { ApplicationService } from '../../application/application.service';
+import { Board } from '../../board/board.entity';
+import { CardService } from '../../card/card.service';
+import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
@@ -26,14 +26,14 @@ import { ApplicationReconsiderationType } from './reconsideration-type/applicati
 @Injectable()
 export class ApplicationReconsiderationService {
   constructor(
+    @InjectMapper() private mapper: Mapper,
     @InjectRepository(ApplicationReconsideration)
     private reconsiderationRepository: Repository<ApplicationReconsideration>,
-    @InjectMapper() private mapper: Mapper,
-    private applicationService: ApplicationService,
-    private cardService: CardService,
     @InjectRepository(ApplicationReconsiderationType)
     private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
-    private decisionService: ApplicationDecisionService,
+    private applicationService: ApplicationService,
+    private cardService: CardService,
+    private applicationDecisionService: ApplicationDecisionService,
   ) {}
 
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
@@ -91,9 +91,10 @@ export class ApplicationReconsiderationService {
 
     reconsideration.application = await this.getOrCreateApplication(createDto);
 
-    reconsideration.reconsidersDecisions = await this.decisionService.getMany(
-      createDto.reconsideredDecisionUuids,
-    );
+    reconsideration.reconsidersDecisions =
+      await this.applicationDecisionService.getMany(
+        createDto.reconsideredDecisionUuids,
+      );
 
     const recon = await this.reconsiderationRepository.save(reconsideration);
     return this.getByUuid(recon.uuid);
@@ -133,9 +134,10 @@ export class ApplicationReconsiderationService {
     );
 
     if (updateDto.reconsideredDecisionUuids) {
-      reconsideration.reconsidersDecisions = await this.decisionService.getMany(
-        updateDto.reconsideredDecisionUuids,
-      );
+      reconsideration.reconsidersDecisions =
+        await this.applicationDecisionService.getMany(
+          updateDto.reconsideredDecisionUuids,
+        );
     }
 
     if (reconsideration.type.code === '33.1') {

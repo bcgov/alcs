@@ -2,6 +2,8 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { Application } from '../../application/application.entity';
+import { ApplicationService } from '../../application/application.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -9,8 +11,8 @@ import {
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
-import { Application } from '../application.entity';
-import { ApplicationService } from '../application.service';
+import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
@@ -62,6 +64,12 @@ export class ApplicationDecisionService {
             uploadedBy: true,
           },
         },
+        amends: {
+          amendsDecisions: true,
+        },
+        reconsiders: {
+          reconsidersDecisions: true,
+        },
       },
     });
 
@@ -95,41 +103,45 @@ export class ApplicationDecisionService {
     return decision;
   }
 
-  async update(uuid: string, updateData: UpdateApplicationDecisionDto) {
+  async update(
+    uuid: string,
+    updateDto: UpdateApplicationDecisionDto,
+    amends: ApplicationAmendment | undefined | null,
+    reconsiders: ApplicationReconsideration | undefined | null,
+  ) {
     const existingDecision = await this.getOrFail(uuid);
 
-    this.validateDecisionChanges(updateData);
+    this.validateDecisionChanges(updateDto);
 
-    existingDecision.decisionMakerCode = updateData.decisionMakerCode;
-    existingDecision.ceoCriterionCode = updateData.ceoCriterionCode;
-    existingDecision.isTimeExtension = updateData.isTimeExtension;
-    existingDecision.auditDate = formatIncomingDate(updateData.auditDate);
+    existingDecision.decisionMakerCode = updateDto.decisionMakerCode;
+    existingDecision.ceoCriterionCode = updateDto.ceoCriterionCode;
+    existingDecision.isTimeExtension = updateDto.isTimeExtension;
+    existingDecision.auditDate = formatIncomingDate(updateDto.auditDate);
     existingDecision.chairReviewDate = formatIncomingDate(
-      updateData.chairReviewDate,
+      updateDto.chairReviewDate,
     );
-    existingDecision.chairReviewOutcome = updateData.chairReviewOutcome;
+    existingDecision.chairReviewOutcome = updateDto.chairReviewOutcome;
+    existingDecision.amends = amends;
+    existingDecision.reconsiders = reconsiders;
 
-    if (updateData.outcomeCode) {
+    if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
-        updateData.outcomeCode,
+        updateDto.outcomeCode,
       );
     }
 
-    if (updateData.chairReviewRequired !== undefined) {
-      existingDecision.chairReviewRequired = updateData.chairReviewRequired;
-      if (updateData.chairReviewRequired === false) {
+    if (updateDto.chairReviewRequired !== undefined) {
+      existingDecision.chairReviewRequired = updateDto.chairReviewRequired;
+      if (updateDto.chairReviewRequired === false) {
         existingDecision.chairReviewDate = null;
         existingDecision.chairReviewOutcome = null;
       }
     }
 
     let dateHasChanged = false;
-    if (
-      updateData.date &&
-      existingDecision.date !== new Date(updateData.date)
-    ) {
+    if (updateDto.date && existingDecision.date !== new Date(updateDto.date)) {
       dateHasChanged = true;
-      existingDecision.date = new Date(updateData.date);
+      existingDecision.date = new Date(updateDto.date);
     }
 
     const updatedDecision = await this.appDecisionRepository.save(
@@ -201,6 +213,8 @@ export class ApplicationDecisionService {
   async create(
     createDto: CreateApplicationDecisionDto,
     application: Application,
+    amends: ApplicationAmendment | undefined | null,
+    reconsiders: ApplicationReconsideration | undefined | null,
   ) {
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
@@ -219,6 +233,8 @@ export class ApplicationDecisionService {
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
       application,
+      amends,
+      reconsiders,
     });
 
     this.validateDecisionChanges(createDto);
