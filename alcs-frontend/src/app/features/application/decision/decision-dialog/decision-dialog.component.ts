@@ -83,7 +83,7 @@ export class DecisionDialogComponent implements OnInit {
       this.form.controls.outcome.disable();
     }
 
-    this.outcomes = data.outcomes.filter((outcome) => outcome.forFirstDecision === data.isFirstDecision);
+    this.outcomes = data.outcomes.filter((outcome) => outcome.isFirstDecision === data.isFirstDecision);
 
     this.amendmentService.$amendments
       .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))

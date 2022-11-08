@@ -22,7 +22,7 @@ export class addAmendsReconsToDecisions1667855147312
     );
 
     await queryRunner.query(
-      `ALTER TABLE "decision_outcome_code" ADD "for_first_decision" boolean NOT NULL DEFAULT true`,
+      `ALTER TABLE "decision_outcome_code" ADD "is_first_decision" boolean NOT NULL DEFAULT true`,
     );
 
     await queryRunner.query(`INSERT INTO "decision_outcome_code"
@@ -35,7 +35,7 @@ export class addAmendsReconsToDecisions1667855147312
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "decision_outcome_code" DROP COLUMN "for_first_decision"`,
+      `ALTER TABLE "decision_outcome_code" DROP COLUMN "is_first_decision"`,
     );
     await queryRunner.query(
       `ALTER TABLE "application_decision" DROP CONSTRAINT "FK_36c741e57451dc780e6968fe485"`,

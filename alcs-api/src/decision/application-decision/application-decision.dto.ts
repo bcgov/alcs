@@ -86,7 +86,7 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
 
 export class DecisionOutcomeCodeDto extends BaseCodeDto {
   @AutoMap()
-  forFirstDecision: boolean;
+  isFirstDecision: boolean;
 }
 
 export class ApplicationDecisionDto {

@@ -72,5 +72,5 @@ export interface CeoCriterionDto extends BaseCodeDto {
 }
 
 export interface DecisionOutcomeCodeDto extends BaseCodeDto {
-  forFirstDecision: boolean;
+  isFirstDecision: boolean;
 }

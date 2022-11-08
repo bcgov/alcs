@@ -6,5 +6,5 @@ export class DecisionOutcomeCode extends BaseCodeEntity {
   @Column({
     default: true,
   })
-  forFirstDecision: boolean;
+  isFirstDecision: boolean;
 }
