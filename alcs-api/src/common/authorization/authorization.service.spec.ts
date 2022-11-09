@@ -49,7 +49,9 @@ describe('AuthorizationService', () => {
       clientRoles: [],
       bceidGuid: '',
       displayName: '',
-    } as any);
+      identityProvider: 'idir',
+      uuid: 'user-uuid',
+    } as Partial<User> as User);
 
     mockUserService.getByGuid.mockResolvedValue(null);
     mockUserService.sendNewUserRequestEmail.mockResolvedValue();

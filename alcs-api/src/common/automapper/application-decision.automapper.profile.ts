@@ -1,6 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
 import { DecisionOutcomeCode } from '../../decision/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
@@ -113,6 +115,21 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
+
+      createMap(
+        mapper,
+        ApplicationDecisionMeeting,
+        ApplicationDecisionMeetingDto,
+      );
+      createMap(
+        mapper,
+        ApplicationDecisionMeetingDto,
+        ApplicationDecisionMeeting,
+        forMember(
+          (a) => a.date,
+          mapFrom((ad) => new Date(ad.date)),
+        ),
+      );
 
       createMap(
         mapper,

@@ -3,8 +3,6 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import {
@@ -35,20 +33,6 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
-      createMap(
-        mapper,
-        ApplicationDecisionMeeting,
-        ApplicationDecisionMeetingDto,
-      );
-      createMap(
-        mapper,
-        ApplicationDecisionMeetingDto,
-        ApplicationDecisionMeeting,
-        forMember(
-          (a) => a.date,
-          mapFrom((ad) => new Date(ad.date)),
-        ),
-      );
 
       createMap(
         mapper,

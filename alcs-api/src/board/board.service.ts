@@ -44,7 +44,7 @@ export class BoardService {
   }
 
   getApplicationsByCode(code: string) {
-    return this.applicationService.getAll({
+    return this.applicationService.getMany({
       card: {
         board: { code },
       },

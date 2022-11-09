@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
+  In,
   IsNull,
   Repository,
 } from 'typeorm';
@@ -236,6 +237,15 @@ export class ApplicationReconsiderationService {
   ): Promise<ApplicationReconsiderationType> {
     return this.reconsiderationTypeRepository.findOneByOrFail({
       code,
+    });
+  }
+
+  getMany(reconUuids: string[]) {
+    return this.reconsiderationRepository.find({
+      where: {
+        uuid: In(reconUuids),
+      },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });
   }
 }

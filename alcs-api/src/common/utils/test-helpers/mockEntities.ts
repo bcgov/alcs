@@ -1,7 +1,7 @@
 import { ApplicationAmendment } from '../../../decision/application-amendment/application-amendment.entity';
 import { ApplicationReconsideration } from '../../../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationType } from '../../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeeting } from '../../../decision/application-decision-meeting/application-decision-meeting.entity';
 import { DecisionOutcomeCode } from '../../../decision/application-decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../../decision/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';

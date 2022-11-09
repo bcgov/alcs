@@ -7,7 +7,7 @@ import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
-import { ApplicationService } from '../application.service';
+import { ApplicationService } from '../../application/application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 
@@ -55,6 +55,9 @@ describe('ApplicationDecisionMeetingService', () => {
       mockMeeting,
     );
     mockAppDecisionMeetingRepository.findOne.mockResolvedValue(mockMeeting);
+    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(
+      mockMeeting,
+    );
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
   });
 

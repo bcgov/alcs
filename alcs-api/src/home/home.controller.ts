@@ -56,7 +56,7 @@ export class HomeController {
   }> {
     const userId = req.user.entity.uuid;
     if (userId) {
-      const applications = await this.applicationService.getAll({
+      const applications = await this.applicationService.getMany({
         card: { assigneeUuid: userId },
       });
       const reconsiderations = await this.reconsiderationService.getBy({

@@ -142,9 +142,8 @@ export class ApplicationService {
     existingApplication: Application,
     updates: ApplicationUpdateServiceDto,
   ): Promise<Application> {
-    const updatedApp = Object.assign(existingApplication, updates);
-    await this.applicationRepository.save(updatedApp);
-    return this.getOrFail(updatedApp.fileNumber);
+    await this.applicationRepository.update(existingApplication.uuid, updates);
+    return this.getOrFail(existingApplication.fileNumber);
   }
 
   async delete(applicationNumber: string): Promise<void> {
@@ -153,7 +152,7 @@ export class ApplicationService {
     return;
   }
 
-  async getAll(
+  async getMany(
     findOptions?: FindOptionsWhere<Application>,
     sortOptions?: FindOptionsOrder<Application>,
   ): Promise<Application[]> {
@@ -262,7 +261,7 @@ export class ApplicationService {
   }
 
   searchApplicationsByFileNumber(fileNumber: string) {
-    return this.getAll(
+    return this.getMany(
       {
         fileNumber: Like(`${fileNumber}%`),
       },

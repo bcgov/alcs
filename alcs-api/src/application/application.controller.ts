@@ -44,7 +44,7 @@ export class ApplicationController {
   @Get()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getAll(): Promise<ApplicationDto[]> {
-    const applications = await this.applicationService.getAll();
+    const applications = await this.applicationService.getMany();
     return this.applicationService.mapToDtos(applications);
   }
 

@@ -10,6 +10,9 @@ import { DocumentModule } from '../document/document.module';
 import { ApplicationAmendmentController } from './application-amendment/application-amendment.controller';
 import { ApplicationAmendment } from './application-amendment/application-amendment.entity';
 import { ApplicationAmendmentService } from './application-amendment/application-amendment.service';
+import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
+import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
 import { DecisionOutcomeCode } from './application-decision/application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision/application-decision.controller';
 import { ApplicationDecision } from './application-decision/application-decision.entity';
@@ -33,6 +36,7 @@ import { ApplicationReconsiderationType } from './application-reconsideration/re
       ApplicationAmendment,
       ApplicationReconsideration,
       ApplicationReconsiderationType,
+      ApplicationDecisionMeeting,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
@@ -46,11 +50,13 @@ import { ApplicationReconsiderationType } from './application-reconsideration/re
     ApplicationDecisionProfile,
     ApplicationReconsiderationService,
     ReconsiderationProfile,
+    ApplicationDecisionMeetingService,
   ],
   controllers: [
     ApplicationAmendmentController,
     ApplicationDecisionController,
     ApplicationReconsiderationController,
+    ApplicationDecisionMeetingController,
   ],
   exports: [
     ApplicationAmendmentService,

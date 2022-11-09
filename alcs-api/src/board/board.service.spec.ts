@@ -53,12 +53,12 @@ describe('BoardsService', () => {
   });
 
   it('should call app service to get apps with board code', async () => {
-    applicationService.getAll.mockResolvedValue([]);
+    applicationService.getMany.mockResolvedValue([]);
 
     const boardCode = 'board-code';
     await service.getApplicationsByCode(boardCode);
-    expect(applicationService.getAll).toHaveBeenCalledTimes(1);
-    expect(applicationService.getAll.mock.calls[0][0]).toEqual({
+    expect(applicationService.getMany).toHaveBeenCalledTimes(1);
+    expect(applicationService.getMany.mock.calls[0][0]).toEqual({
       card: {
         board: {
           code: boardCode,

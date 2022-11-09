@@ -13,13 +13,13 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Any } from 'typeorm';
+import { ApplicationService } from '../../application/application.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { UserDto } from '../../user/user.dto';
 import { User } from '../../user/user.entity';
-import { ApplicationDocumentService } from '../application-document/application-document.service';
-import { ApplicationService } from '../application.service';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import {
   ApplicationDecisionMeetingDto,
   CreateApplicationDecisionMeetingDto,
@@ -36,35 +36,18 @@ export class ApplicationDecisionMeetingController {
   constructor(
     private appDecisionMeetingService: ApplicationDecisionMeetingService,
     private applicationService: ApplicationService,
-    private appDecDocumentService: ApplicationDocumentService,
+    private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/overview/meetings')
   @UserRoles(...ANY_AUTH_ROLE)
   async getMeetings(): Promise<UpcomingMeetingBoardMapDto> {
-    const upcomingApps =
-      await this.appDecisionMeetingService.getUpcomingMeetings();
-    const allAppIds = upcomingApps.map((a) => a.uuid);
-    const allApps = await this.applicationService.getAll({
-      uuid: Any(allAppIds),
-    });
-    const mappedApps = allApps.map((app): UpcomingMeetingDto => {
-      const meetingDate = upcomingApps.find(
-        (meeting) => meeting.uuid === app.uuid,
-      );
-      //TODO: Remove nullability checks
-      return {
-        meetingDate: new Date(meetingDate!.next_meeting).getTime(),
-        fileNumber: app.fileNumber,
-        applicant: app.applicant,
-        boardCode: app.card!.board.code,
-        assignee: this.mapper.map(app.card!.assignee, User, UserDto),
-      };
-    });
+    const mappedApps = await this.getMappedApplicationMeetings();
+    const mappedRecons = await this.getMappedReconsiderationMeetings();
 
     const boardCodeToApps: UpcomingMeetingBoardMapDto = {};
-    mappedApps.forEach((mappedApp) => {
+    [...mappedApps, ...mappedRecons].forEach((mappedApp) => {
       const boardMeetings = boardCodeToApps[mappedApp.boardCode] || [];
       boardMeetings.push(mappedApp);
       boardCodeToApps[mappedApp.boardCode] = boardMeetings;
@@ -146,5 +129,48 @@ export class ApplicationDecisionMeetingController {
       ApplicationDecisionMeeting,
       ApplicationDecisionMeetingDto,
     );
+  }
+
+  private async getMappedApplicationMeetings() {
+    const upcomingApplicationMeetings =
+      await this.appDecisionMeetingService.getUpcomingApplicationMeetings();
+    const allAppIds = upcomingApplicationMeetings.map((a) => a.uuid);
+    const allApps = await this.applicationService.getMany({
+      uuid: Any(allAppIds),
+    });
+    return allApps.map((app): UpcomingMeetingDto => {
+      const meetingDate = upcomingApplicationMeetings.find(
+        (meeting) => meeting.uuid === app.uuid,
+      );
+      return {
+        meetingDate: new Date(meetingDate!.next_meeting).getTime(),
+        fileNumber: app.fileNumber,
+        applicant: app.applicant,
+        boardCode: app.card!.board.code,
+        assignee: this.mapper.map(app.card!.assignee, User, UserDto),
+      };
+    });
+  }
+
+  private async getMappedReconsiderationMeetings() {
+    const upcomingReconsiderationMeetings =
+      await this.appDecisionMeetingService.getUpcomingReconsiderationMeetings();
+
+    const reconIds = upcomingReconsiderationMeetings.map((a) => a.uuid);
+    const reconsiderations = await this.reconsiderationService.getMany(
+      reconIds,
+    );
+    return reconsiderations.map((recon): UpcomingMeetingDto => {
+      const meetingDate = upcomingReconsiderationMeetings.find(
+        (meeting) => meeting.uuid === recon.uuid,
+      );
+      return {
+        meetingDate: new Date(meetingDate!.next_meeting).getTime(),
+        fileNumber: recon.application.fileNumber,
+        applicant: recon.application.applicant,
+        boardCode: recon.card!.board.code,
+        assignee: this.mapper.map(recon.card!.assignee, User, UserDto),
+      };
+    });
   }
 }
