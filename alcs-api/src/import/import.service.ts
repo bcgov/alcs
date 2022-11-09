@@ -19,7 +19,7 @@ export type ApplicationRow = {
   fileNumber: string;
   applicant: string;
   submittedToAlc: Date;
-  feeReceived: Date;
+  feeReceived: Date | undefined;
   ackDeficient: Date | undefined;
   ackDeficientComplete: Date | undefined;
   ackComplete: Date | undefined;
@@ -102,7 +102,7 @@ export class ImportService {
 
       const filePath = path.resolve(__dirname, '..', 'Tracking_Sheet.csv');
       const stream = fs.createReadStream(filePath);
-      const processing = [];
+      const processing: Promise<any>[] = [];
       let i = 0;
       stream
         .pipe(csv())
@@ -282,7 +282,7 @@ export class ImportService {
         await this.meetingService.create({
           typeCode,
           application,
-          meetingPause: pause,
+          meetingPause: pause || undefined,
           reportPause: pause2,
         });
       }

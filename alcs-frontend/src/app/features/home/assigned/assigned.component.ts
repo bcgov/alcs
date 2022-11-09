@@ -53,7 +53,7 @@ export class AssignedComponent implements OnInit {
     sorted.push(
       // high priority
       ...applications
-        .filter((a) => a.card.highPriority)
+        .filter((a) => a.card!.highPriority)
         .map((a) => this.mapApplication(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
       ...amendments
@@ -75,7 +75,7 @@ export class AssignedComponent implements OnInit {
 
       // none high priority
       ...applications
-        .filter((a) => !a.card.highPriority)
+        .filter((a) => !a.card!.highPriority)
         .map((a) => this.mapApplication(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
       ...amendments
@@ -136,10 +136,10 @@ export class AssignedComponent implements OnInit {
     return {
       title: `${a.fileNumber} (${a.applicant})`,
       activeDays: a.activeDays,
-      type: a.card.type,
+      type: a.card!.type,
       paused: a.paused,
       card: a.card,
-      highPriority: a.card.highPriority,
+      highPriority: a.card!.highPriority,
       labels: [a.type],
     } as AssignedToMeFile;
   }

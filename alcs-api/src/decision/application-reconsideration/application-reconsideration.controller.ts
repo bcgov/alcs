@@ -32,7 +32,7 @@ export class ApplicationReconsiderationController {
   @Post()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async create(@Body() reconsideration: ApplicationReconsiderationCreateDto) {
-    const board = await this.boardService.getOne({
+    const board = await this.boardService.getOneOrFail({
       code: reconsideration.boardCode,
     });
 

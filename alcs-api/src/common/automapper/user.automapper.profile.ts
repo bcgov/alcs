@@ -33,7 +33,10 @@ export class UserProfile extends AutomapperProfile {
                 u.familyName?.charAt(0).toUpperCase()
               );
             }
-            return u.name.charAt(0);
+            if (u.name) {
+              return u.name.charAt(0);
+            }
+            return 'NA';
           }),
         ),
         forMember(
@@ -59,7 +62,10 @@ export class UserProfile extends AutomapperProfile {
                 u.familyName?.charAt(0).toUpperCase()
               );
             }
-            return u.name.charAt(0);
+            if (u.name) {
+              return u.name.charAt(0);
+            }
+            return 'NA';
           }),
         ),
         forMember(
@@ -77,8 +83,7 @@ export class UserProfile extends AutomapperProfile {
                 u.familyName?.slice(1)
               );
             } else {
-              //TODO: how do mentions work for bceid users?
-              return '';
+              return 'NA';
             }
           }),
         ),

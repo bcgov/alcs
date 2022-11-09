@@ -147,8 +147,9 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
-  @AutoMap(() => CardDto)
-  card: CardDto;
+  @AutoMap()
+  @Type(() => CardDto)
+  card?: CardDto;
 }
 
 export class ApplicationUpdateServiceDto {

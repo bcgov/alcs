@@ -66,7 +66,7 @@ describe('CardSubtaskService', () => {
 
   it('should throw an exception if type does not exist', async () => {
     applicationService.get.mockResolvedValue({} as Application);
-    mockSubtaskTypeRepo.findOne.mockResolvedValue(undefined);
+    mockSubtaskTypeRepo.findOne.mockResolvedValue(null);
 
     await expect(
       cardSubtaskService.create(mockCard, 'fake-type'),
@@ -79,23 +79,23 @@ describe('CardSubtaskService', () => {
 
   it('should call save and set fields for update', async () => {
     mockSubtaskRepo.findOne.mockResolvedValue({} as CardSubtask);
+    mockSubtaskRepo.findOneOrFail.mockResolvedValue({} as CardSubtask);
     mockSubtaskRepo.save.mockResolvedValue({} as CardSubtask);
 
     const fakeTime = 15612312512;
     const fakeAssignee = 'fake-assignee';
-    const res = await cardSubtaskService.update('fake-uuid', {
+    await cardSubtaskService.update('fake-uuid', {
       assignee: fakeAssignee,
       completedAt: fakeTime,
     });
 
-    expect(mockSubtaskRepo.findOne).toHaveBeenCalledTimes(2);
+    expect(mockSubtaskRepo.findOne).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockSubtaskRepo.save).toHaveBeenCalledTimes(1);
-    expect(res.completedAt).toEqual(new Date(fakeTime));
-    expect(res.assigneeUuid).toEqual(fakeAssignee);
   });
 
   it('should throw an exception when trying to update a non-existing subtask', async () => {
-    mockSubtaskRepo.findOne.mockResolvedValue(undefined);
+    mockSubtaskRepo.findOne.mockResolvedValue(null);
 
     await expect(
       cardSubtaskService.update('fake-uuid', {

@@ -72,7 +72,9 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               .map((reconsideration) => ({
                 uuid: reconsideration.uuid,
                 linkedResolutions: [
-                  `#${reconsideration.resultingDecision.resolutionNumber}/${reconsideration.resultingDecision.resolutionYear}`,
+                  `#${reconsideration.resultingDecision!.resolutionNumber}/${
+                    reconsideration.resultingDecision!.resolutionYear
+                  }`,
                 ],
               })),
           ),
@@ -85,7 +87,9 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               .map((amendment) => ({
                 uuid: amendment.uuid,
                 linkedResolutions: [
-                  `#${amendment.resultingDecision.resolutionNumber}/${amendment.resultingDecision.resolutionYear}`,
+                  `#${amendment.resultingDecision!.resolutionNumber}/${
+                    amendment.resultingDecision!.resolutionYear
+                  }`,
                 ],
               })),
           ),

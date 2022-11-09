@@ -47,7 +47,7 @@ export class ApplicationMeeting extends Base {
   })
   @JoinColumn()
   @Type(() => ApplicationPaused)
-  meetingPause: ApplicationPaused;
+  meetingPause: ApplicationPaused | null;
 
   @AutoMap()
   @Column({ type: 'uuid', nullable: true })
@@ -61,5 +61,5 @@ export class ApplicationMeeting extends Base {
   })
   @JoinColumn()
   @Type(() => ApplicationPaused)
-  reportPause?: ApplicationPaused;
+  reportPause?: ApplicationPaused | null;
 }

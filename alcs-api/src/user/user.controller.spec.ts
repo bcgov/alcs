@@ -73,7 +73,7 @@ describe('UserController', () => {
       idirUserName: 'bat',
       clientRoles: [],
       bceidUserName: '',
-      uuid: undefined,
+      uuid: 'mock-uuid',
       settings: {
         favoriteBoards: ['cats'],
       },
@@ -100,14 +100,14 @@ describe('UserController', () => {
 
     const res = await controller.deleteUser('');
 
-    expect(res).toEqual(mockUserDto);
+    expect(res).toBeTruthy();
     expect(mockService.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call update user on the service', async () => {
     const mockUserDto = initMockUserDto();
     mockService.getByUuid.mockResolvedValueOnce(mockUser as User);
-    mockService.update.mockResolvedValueOnce(undefined);
+    mockService.update.mockResolvedValueOnce({} as any);
     request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
     await controller.update(mockUserDto.uuid, mockUserDto, request);
@@ -116,7 +116,7 @@ describe('UserController', () => {
   });
 
   it('should fail on user update if user not found', async () => {
-    mockService.getByUuid.mockResolvedValueOnce(undefined);
+    mockService.getByUuid.mockResolvedValueOnce(null);
     const mockUserDto = initMockUserDto();
     request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
@@ -130,7 +130,7 @@ describe('UserController', () => {
   it('should fail on user update if current user does not mach updating user', async () => {
     const mockUserDto = initMockUserDto();
     mockService.getByUuid.mockResolvedValueOnce(mockUser as User);
-    mockService.update.mockResolvedValueOnce(undefined);
+    mockService.update.mockResolvedValueOnce({} as any);
 
     await expect(
       controller.update(mockUserDto.uuid, mockUserDto, request),

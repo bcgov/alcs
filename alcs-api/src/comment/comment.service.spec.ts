@@ -123,7 +123,7 @@ describe('CommentService', () => {
   });
 
   it('throw an exception when saving a comment to a non-existing application', async () => {
-    mockCardService.get.mockResolvedValue(undefined);
+    mockCardService.get.mockResolvedValue(null);
 
     await expect(
       service.create(

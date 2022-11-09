@@ -108,7 +108,7 @@ describe('ApplicationDecisionService', () => {
     mockApplicationService.updateByUuid.mockResolvedValue({} as any);
 
     mockDecisionOutcomeRepository.find.mockResolvedValue([]);
-    mockDecisionOutcomeRepository.findOne.mockResolvedValue(undefined);
+    mockDecisionOutcomeRepository.findOneOrFail.mockResolvedValue({} as any);
 
     mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
     mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
@@ -249,7 +249,7 @@ describe('ApplicationDecisionService', () => {
 
     it('should fail on update if the decision is not found', async () => {
       const nonExistantUuid = 'bad-uuid';
-      mockDecisionRepository.findOne.mockReturnValue(undefined);
+      mockDecisionRepository.findOne.mockResolvedValue(null);
       const decisionUpdate: UpdateApplicationDecisionDto = {
         date: new Date(2022, 2, 2, 2, 2, 2, 2).getTime(),
         outcomeCode: 'New Outcome',
@@ -351,7 +351,7 @@ describe('ApplicationDecisionService', () => {
     });
 
     it('should throw an exception when attaching a document to a non-existent decision', async () => {
-      mockDecisionRepository.findOne.mockResolvedValue(undefined);
+      mockDecisionRepository.findOne.mockResolvedValue(null);
       await expect(
         service.attachDocument('uuid', {} as any, {} as any),
       ).rejects.toMatchObject(
@@ -368,7 +368,7 @@ describe('ApplicationDecisionService', () => {
     });
 
     it('should throw an exception when document not found for deletion', async () => {
-      mockDecisionDocumentRepository.findOne.mockResolvedValue(undefined);
+      mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.deleteDocument('fake-uuid')).rejects.toMatchObject(
         new ServiceNotFoundException(
           `Failed to find document with uuid fake-uuid`,
@@ -388,7 +388,7 @@ describe('ApplicationDecisionService', () => {
     });
 
     it('should throw an exception when document not found for download', async () => {
-      mockDecisionDocumentRepository.findOne.mockResolvedValue(undefined);
+      mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.getDownloadUrl('fake-uuid')).rejects.toMatchObject(
         new ServiceNotFoundException(
           `Failed to find document with uuid fake-uuid`,

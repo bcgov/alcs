@@ -85,7 +85,7 @@ describe('ImportService', () => {
       Region: 'fake-region',
     };
 
-    mockApplicationservice.get.mockResolvedValue(undefined);
+    mockApplicationservice.get.mockResolvedValue(null);
     mockApplication = initApplicationMockEntity(mockDataRow['App ID']);
     mockApplicationservice.create.mockResolvedValue(mockApplication);
     mockApplicationservice.update.mockResolvedValue(mockApplication);
@@ -166,7 +166,7 @@ describe('ImportService', () => {
   });
 
   it('should should do a fallback search for local government', async () => {
-    mockLocalGovernmentService.getByName.mockResolvedValueOnce(undefined);
+    mockLocalGovernmentService.getByName.mockResolvedValueOnce(null);
     mockLocalGovernmentService.getByName.mockResolvedValueOnce(
       {} as ApplicationLocalGovernment,
     );

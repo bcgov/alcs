@@ -46,7 +46,7 @@ describe('CovenantService', () => {
       ],
     }).compile();
 
-    mockApplicationService.get.mockResolvedValue(undefined);
+    mockApplicationService.get.mockResolvedValue(null);
 
     service = module.get<CovenantService>(CovenantService);
   });
@@ -59,7 +59,7 @@ describe('CovenantService', () => {
     const mockCard = {} as Card;
     const fakeBoard = {} as Board;
 
-    mockRepository.findOne.mockResolvedValueOnce(undefined);
+    mockRepository.findOne.mockResolvedValueOnce(null);
     mockRepository.findOne.mockResolvedValueOnce({} as Covenant);
     mockRepository.save.mockResolvedValue({} as Covenant);
     mockCardService.create.mockResolvedValue(mockCard);
@@ -115,7 +115,7 @@ describe('CovenantService', () => {
     const fakeBoard = {} as Board;
     const existingFileNumber = '1512311';
 
-    mockRepository.findOne.mockResolvedValue(undefined);
+    mockRepository.findOne.mockResolvedValue(null);
     mockApplicationService.get.mockResolvedValue({} as Application);
     mockRepository.save.mockResolvedValue({} as Covenant);
     mockCardService.create.mockResolvedValue(mockCard);
@@ -151,7 +151,7 @@ describe('CovenantService', () => {
   });
 
   it('should throw an exception when getting by card fails', async () => {
-    mockRepository.findOne.mockResolvedValue(undefined);
+    mockRepository.findOne.mockResolvedValue(null);
     const cardUuid = 'fake-card-uuid';
     const promise = service.getByCardUuid(cardUuid);
 
@@ -177,6 +177,6 @@ describe('CovenantService', () => {
     await service.getBy(mockFilter);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
-    expect(mockRepository.find.mock.calls[0][0].where).toEqual(mockFilter);
+    expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
   });
 });

@@ -122,7 +122,7 @@ describe('CommentController', () => {
   });
 
   it("should throw an exception when trying to update a comment that doesn't exist", async () => {
-    mockCommentService.get.mockResolvedValue(undefined);
+    mockCommentService.get.mockResolvedValue(null);
     mockCommentService.update.mockResolvedValue(comment);
 
     await expect(
@@ -176,7 +176,7 @@ describe('CommentController', () => {
   });
 
   it("should throw an exception when trying to delete a comment that doesn't exist", async () => {
-    mockCommentService.get.mockResolvedValue(undefined);
+    mockCommentService.get.mockResolvedValue(null);
     mockCommentService.delete.mockResolvedValue(comment);
 
     await expect(controller.softDelete('uuid', request)).rejects.toMatchObject(

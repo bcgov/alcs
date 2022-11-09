@@ -44,7 +44,7 @@ describe('CovenantController', () => {
   });
 
   it('should call board service then main service for create', async () => {
-    mockBoardService.getOne.mockResolvedValue({} as Board);
+    mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
     mockService.create.mockResolvedValue({} as Covenant);
     mockService.mapToDtos.mockResolvedValue([]);
 
@@ -56,7 +56,7 @@ describe('CovenantController', () => {
       boardCode: 'fake',
     });
 
-    expect(mockBoardService.getOne).toHaveBeenCalledTimes(1);
+    expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockService.create).toHaveBeenCalledTimes(1);
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });

@@ -77,9 +77,9 @@ describe('CardSubtaskController', () => {
 
     expect(mockSubtaskService.create).toHaveBeenCalledTimes(1);
     expect(cardService.get).toHaveBeenCalledTimes(1);
-    expect(res.type.backgroundColor).toEqual(mockSubtask.type.backgroundColor);
-    expect(res.type.textColor).toEqual(mockSubtask.type.textColor);
-    expect(res.createdAt).toEqual(mockSubtask.createdAt.getTime());
+    expect(res.type.backgroundColor).toEqual(mockSubtask.type!.backgroundColor);
+    expect(res.type.textColor).toEqual(mockSubtask.type!.textColor);
+    expect(res.createdAt).toEqual(mockSubtask.createdAt!.getTime());
   });
 
   it('should fail if second subtask of type Audit being created', async () => {
@@ -110,7 +110,7 @@ describe('CardSubtaskController', () => {
       completedAt: completionDate,
     } as CardSubtask);
 
-    const res = await controller.update(mockSubtask.uuid, {
+    const res = await controller.update(mockSubtask.uuid!, {
       completedAt: 1662762964677,
     });
 
@@ -121,7 +121,7 @@ describe('CardSubtaskController', () => {
   it('should call through for delete', async () => {
     mockSubtaskService.delete.mockResolvedValue();
 
-    await controller.delete(mockSubtask.uuid);
+    await controller.delete(mockSubtask.uuid!);
 
     expect(mockSubtaskService.delete).toHaveBeenCalledTimes(1);
     expect(mockSubtaskService.delete.mock.calls[0][0]).toEqual(
@@ -130,7 +130,7 @@ describe('CardSubtaskController', () => {
   });
 
   it("should throw an exception if card doesn't exist for create", async () => {
-    cardService.get.mockResolvedValue(undefined);
+    cardService.get.mockResolvedValue(null);
 
     await expect(
       controller.create('mock-card', 'mock-type'),

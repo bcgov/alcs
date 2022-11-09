@@ -22,7 +22,7 @@ export class ApplicationDecisionMeetingService {
   }
 
   get(uuid) {
-    return this.appDecisionMeetingRepository.findOne({
+    return this.appDecisionMeetingRepository.findOneOrFail({
       where: { uuid },
     });
   }
@@ -30,7 +30,9 @@ export class ApplicationDecisionMeetingService {
   async createOrUpdate(decisionMeeting: Partial<ApplicationDecisionMeeting>) {
     let existingMeeting;
     if (decisionMeeting.uuid) {
-      existingMeeting = await this.get(decisionMeeting.uuid);
+      existingMeeting = await this.appDecisionMeetingRepository.findOne({
+        where: { uuid: decisionMeeting.uuid },
+      });
       if (!existingMeeting) {
         throw new ServiceNotFoundException(
           `Decision meeting not found ${decisionMeeting.uuid}`,

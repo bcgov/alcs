@@ -17,13 +17,13 @@ export class CardSubtask extends Base {
   createdAt: Date;
 
   @Column({ nullable: true, type: 'timestamptz' })
-  completedAt?: Date;
+  completedAt?: Date | null;
 
   @ManyToOne(() => User)
   assignee?: User;
 
   @Column({ nullable: true })
-  assigneeUuid?: string;
+  assigneeUuid?: string | null;
 
   @Column()
   cardUuid?: string;

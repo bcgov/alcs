@@ -158,11 +158,11 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.meetingStartDate,
-          mapFrom((a) => a.meetingPause.startDate.valueOf()),
+          mapFrom((a) => a.meetingPause?.startDate.valueOf()),
         ),
         forMember(
           (ad) => ad.meetingEndDate,
-          mapFrom((a) => a.meetingPause.endDate?.valueOf()),
+          mapFrom((a) => a.meetingPause?.endDate?.valueOf()),
         ),
         forMember(
           (ad) => ad.reportStartDate,
@@ -202,7 +202,7 @@ export class ApplicationProfile extends AutomapperProfile {
     };
   }
 
-  private numberToDateSafe(date: number | null): Date | null {
+  private numberToDateSafe(date?: number | null): Date | null {
     return date ? new Date(date) : null;
   }
 }

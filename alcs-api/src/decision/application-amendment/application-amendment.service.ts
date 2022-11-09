@@ -114,12 +114,14 @@ export class ApplicationAmendmentService {
   }
 
   async update(uuid: string, updateDto: ApplicationAmendmentUpdateDto) {
-    const existingAmendment = await this.getByUuidOrFail(uuid);
+    const existingAmendment: Partial<ApplicationAmendment> =
+      await this.getByUuidOrFail(uuid);
 
     existingAmendment.reviewDate = formatIncomingDate(updateDto.reviewDate);
-    existingAmendment.submittedDate = formatIncomingDate(
-      updateDto.submittedDate,
-    );
+
+    if (updateDto.submittedDate) {
+      existingAmendment.submittedDate = new Date(updateDto.submittedDate);
+    }
     existingAmendment.isReviewApproved = updateDto.isReviewApproved;
     existingAmendment.isTimeExtension = updateDto.isTimeExtension;
 

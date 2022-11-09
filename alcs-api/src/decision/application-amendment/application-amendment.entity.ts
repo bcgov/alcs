@@ -28,8 +28,8 @@ export class ApplicationAmendment extends Base {
   submittedDate: Date;
 
   @AutoMap()
-  @Column({ nullable: true })
-  isReviewApproved: boolean;
+  @Column({ type: 'boolean', nullable: true })
+  isReviewApproved: boolean | null;
 
   @AutoMap()
   @Column()
@@ -37,7 +37,7 @@ export class ApplicationAmendment extends Base {
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
-  reviewDate: Date;
+  reviewDate: Date | null;
 
   @AutoMap()
   @ManyToOne(() => Application, { cascade: ['insert'] })
@@ -51,7 +51,7 @@ export class ApplicationAmendment extends Base {
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
-  card: Card;
+  card: Card | null;
 
   @AutoMap()
   @Column({ type: 'uuid' })

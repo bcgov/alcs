@@ -30,7 +30,7 @@ describe('AuthorizationService', () => {
       },
       keystore.all(),
     )
-      .update(`{"test_signer":"test-signer"}`)
+      .update(`{"test_signer":"test-signer","identity_provider":"idir"}`)
       .final();
 
     mockHttpService.get.mockReturnValue(
@@ -49,10 +49,10 @@ describe('AuthorizationService', () => {
       clientRoles: [],
       bceidGuid: '',
       displayName: '',
-    } as User);
+    } as any);
 
     mockUserService.getByGuid.mockResolvedValue(null);
-    mockUserService.sendNewUserRequestEmail.mockResolvedValue(null);
+    mockUserService.sendNewUserRequestEmail.mockResolvedValue();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

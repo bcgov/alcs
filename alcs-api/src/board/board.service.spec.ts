@@ -103,7 +103,7 @@ describe('BoardsService', () => {
   });
 
   it("should throw an exception when updating an card that doesn't exist", async () => {
-    cardService.get.mockResolvedValue(undefined);
+    cardService.get.mockResolvedValue(null);
 
     await expect(
       service.changeBoard('card-uuid', 'board-code'),
@@ -114,7 +114,7 @@ describe('BoardsService', () => {
 
   it("should throw an exception when trying to set a board that doesn't exist", async () => {
     cardService.get.mockResolvedValue({} as Card);
-    mockRepository.findOne.mockResolvedValue(undefined);
+    mockRepository.findOne.mockResolvedValue(null);
 
     await expect(
       service.changeBoard('file-number', 'board-code'),

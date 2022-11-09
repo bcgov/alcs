@@ -45,7 +45,7 @@ export class CommentMentionService {
     currentMentions: CommentMention[],
     commentUuid: string,
   ) {
-    const addedMentions = [];
+    const addedMentions: CommentMention[] = [];
     const mentionsToAdd = mentions.filter(
       (m) => !currentMentions.some((cm) => cm.userUuid === m.userUuid),
     );

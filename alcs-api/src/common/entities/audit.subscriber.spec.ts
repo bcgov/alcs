@@ -31,7 +31,7 @@ describe('AuditSubscriber', () => {
     } as User);
     updateEvent = createMock<UpdateEvent<any>>();
     mockEntity = {
-      auditUpdatedBy: null,
+      auditUpdatedBy: undefined,
       auditCreatedBy: SYSTEM_ID,
     };
 
@@ -78,7 +78,7 @@ describe('AuditSubscriber', () => {
     });
 
     it('should throw an error if user is not found in beforeUpdate', async () => {
-      mockUserService.getByGuid.mockResolvedValue(undefined);
+      mockUserService.getByGuid.mockResolvedValue(null);
 
       await expect(
         updatedBySubscriber.beforeInsert(updateEvent),
@@ -108,7 +108,7 @@ describe('AuditSubscriber', () => {
     });
 
     it('should throw an error if user is not found in beforeUpdate', async () => {
-      mockUserService.getByGuid.mockResolvedValue(undefined);
+      mockUserService.getByGuid.mockResolvedValue(null);
 
       await expect(
         updatedBySubscriber.beforeUpdate(updateEvent),

@@ -92,7 +92,7 @@ describe('ApplicationReconsiderationController', () => {
   it('should call service create method', async () => {
     const recon = initApplicationReconsiderationMockEntity();
     mockReconsiderationService.create.mockResolvedValue(recon);
-    mockBoardService.getOne.mockResolvedValue({} as Board);
+    mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
     await controller.create({} as ApplicationReconsiderationCreateDto);
     expect(mockReconsiderationService.create).toBeCalledTimes(1);
   });

@@ -31,10 +31,10 @@ export class UserDto extends UpdateUserDto {
   clientRoles: string[];
 
   @AutoMap()
-  idirUserName: string;
+  idirUserName: string | undefined;
 
   @AutoMap()
-  bceidUserName: string;
+  bceidUserName: string | undefined;
 }
 
 export class CreateUserDto {

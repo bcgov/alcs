@@ -35,7 +35,7 @@ export class CleanUpNotificationsConsumer {
 
       this.logger.debug(
         `notification cleanup complete, deleted ${
-          readDeleteResult.affected + unreadDeleteResult.affected
+          (readDeleteResult.affected || 0) + (unreadDeleteResult.affected || 0)
         } records`,
       );
     } catch (e) {

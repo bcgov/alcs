@@ -8,7 +8,7 @@ export class BaseErrorResponseModel {
   }
 
   statusCode: number;
-  path: string;
+  path: string | undefined;
   message: string;
 }
 

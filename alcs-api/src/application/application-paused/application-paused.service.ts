@@ -33,19 +33,19 @@ export class ApplicationPausedService {
       }
     }
 
-    await this.validateDateRange(pause.startDate, pause.endDate);
+    if (pause.startDate) {
+      await this.validateDateRange(pause.startDate, pause.endDate);
+    }
 
     const updatedPause = Object.assign(
       existingPause || new ApplicationPaused(),
       pause,
     );
 
-    const savedPause = await this.appPausedRepository.save(updatedPause);
-
-    return this.get(savedPause.uuid);
+    return await this.appPausedRepository.save(updatedPause);
   }
 
-  private validateDateRange(startDate: Date, endDate: Date) {
+  private validateDateRange(startDate: Date, endDate?: Date | null) {
     if (endDate && startDate > endDate) {
       throw new ServiceValidationException(
         'Start Date must be smaller(earlier) than End Date',

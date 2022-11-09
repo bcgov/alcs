@@ -46,10 +46,10 @@ describe('ApplicationTimeTrackingService', () => {
     const res = await applicationPausedService.fetchActiveTimes([
       { uuid: fakeUuid, auditCreatedAt: new Date() } as Application,
     ]);
-
+    const mappedRes = res.get(fakeUuid);
     expect(res.size).toEqual(1);
-    expect(res.get(fakeUuid)).toBeTruthy();
-    expect(res.get(fakeUuid).activeDays).toEqual(activeTime);
-    expect(res.get(fakeUuid).pausedDays).toEqual(pausedTime);
+    expect(mappedRes).toBeTruthy();
+    expect(mappedRes!.activeDays).toEqual(activeTime);
+    expect(mappedRes!.pausedDays).toEqual(pausedTime);
   });
 });

@@ -44,7 +44,7 @@ describe('PlanningReviewController', () => {
   });
 
   it('should call board service then main service for create', async () => {
-    mockBoardService.getOne.mockResolvedValue({} as Board);
+    mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
     mockService.create.mockResolvedValue({} as PlanningReview);
     mockService.mapToDtos.mockResolvedValue([]);
 
@@ -55,7 +55,7 @@ describe('PlanningReviewController', () => {
       regionCode: 'region-code',
     });
 
-    expect(mockBoardService.getOne).toHaveBeenCalledTimes(1);
+    expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockService.create).toHaveBeenCalledTimes(1);
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });

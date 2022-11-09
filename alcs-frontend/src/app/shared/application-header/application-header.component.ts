@@ -20,7 +20,7 @@ export class ApplicationHeaderComponent {
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | undefined) {
     if (application) {
       this._application = application;
-      if ('card' in application) {
+      if ('card' in application && application.card) {
         this.showCardMenu = true;
       }
       if ('hasRecons' in application) {
@@ -55,7 +55,7 @@ export class ApplicationHeaderComponent {
   constructor(private router: Router) {}
 
   async onGoToCard() {
-    if (this._application && 'card' in this._application) {
+    if (this._application && 'card' in this._application && this._application.card) {
       const boardCode = this._application.card.board.code;
       const cardUuid = this._application.card.uuid;
       const cardTypeCode = this._application.card.type;

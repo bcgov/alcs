@@ -53,12 +53,13 @@ export class ApplicationDecisionMeetingController {
       const meetingDate = upcomingApps.find(
         (meeting) => meeting.uuid === app.uuid,
       );
+      //TODO: Remove nullability checks
       return {
-        meetingDate: new Date(meetingDate.next_meeting).getTime(),
+        meetingDate: new Date(meetingDate!.next_meeting).getTime(),
         fileNumber: app.fileNumber,
         applicant: app.applicant,
-        boardCode: app.card.board.code,
-        assignee: this.mapper.map(app.card.assignee, User, UserDto),
+        boardCode: app.card!.board.code,
+        assignee: this.mapper.map(app.card!.assignee, User, UserDto),
       };
     });
 

@@ -144,7 +144,7 @@ describe('AmendmentService', () => {
       applicant: mockAmendmentCreateDto.applicant,
     } as CreateApplicationDto;
 
-    applicationServiceMock.get.mockResolvedValue(undefined);
+    applicationServiceMock.get.mockResolvedValue(null);
     applicationServiceMock.create.mockResolvedValue(
       mockApplicationCreateDto as any,
     );
@@ -211,7 +211,7 @@ describe('AmendmentService', () => {
 
   it('should throw an exception when updating an amendment if it does not exist', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.findOneBy.mockReturnValue(undefined);
+    amendmentRepoMock.findOneBy.mockResolvedValue(null);
 
     await expect(
       service.update(uuid, {} as ApplicationAmendmentUpdateDto),
@@ -238,7 +238,7 @@ describe('AmendmentService', () => {
 
   it('should fail on delete if amendment does not exist', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.findOneBy.mockReturnValue(undefined);
+    amendmentRepoMock.findOneBy.mockResolvedValue(null);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(`Amendment with uuid ${uuid} not found`),

@@ -87,7 +87,7 @@ describe('CardSubscriber', () => {
   });
 
   it('should throw an error if user is not found', async () => {
-    mockUserService.getByGuid.mockResolvedValue(undefined);
+    mockUserService.getByGuid.mockResolvedValue(null);
 
     await expect(
       cardSubscriber.beforeUpdate(updateEvent),
@@ -112,7 +112,7 @@ describe('CardSubscriber', () => {
 
     it('should fallback to createdAt if old entity has no updatedAt', async () => {
       updateEvent.databaseEntity = {
-        auditUpdatedAt: null,
+        auditUpdatedAt: undefined,
         auditCreatedAt: new Date(3, 3, 3, 3, 3, 3, 3),
       } as Card;
 

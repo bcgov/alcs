@@ -103,6 +103,12 @@ export class ApplicationDecisionService {
       },
     });
 
+    if (!decision) {
+      throw new ServiceNotFoundException(
+        `Failed to load decision with uuid ${uuid}`,
+      );
+    }
+
     decision.documents = decision.documents.filter(
       (document) => !!document.document,
     );
@@ -115,7 +121,9 @@ export class ApplicationDecisionService {
     amends: ApplicationAmendment | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
-    const existingDecision = await this.getOrFail(uuid);
+    const existingDecision: Partial<ApplicationDecision> = await this.getOrFail(
+      uuid,
+    );
 
     this.validateDecisionChanges(updateDto);
 
@@ -157,7 +165,7 @@ export class ApplicationDecisionService {
     //If we are updating the date, we need to check if it's the first decision and if so update the application decisionDate
     if (dateHasChanged) {
       const existingDecisions = await this.getByAppFileNumber(
-        existingDecision.application.fileNumber,
+        existingDecision.application!.fileNumber,
       );
 
       const decisionIndex = existingDecisions.findIndex(
@@ -166,7 +174,7 @@ export class ApplicationDecisionService {
 
       if (decisionIndex === existingDecisions.length - 1) {
         await this.applicationService.updateByUuid(
-          existingDecision.applicationUuid,
+          existingDecision.applicationUuid!,
           {
             decisionDate: updatedDecision.date,
           },
@@ -271,6 +279,12 @@ export class ApplicationDecisionService {
       },
     });
 
+    if (!applicationDecision) {
+      throw new ServiceNotFoundException(
+        `Failed to find decision with uuid ${uuid}`,
+      );
+    }
+
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
@@ -344,7 +358,7 @@ export class ApplicationDecisionService {
   }
 
   getOutcomeByCode(code: string) {
-    return this.decisionOutcomeRepository.findOne({
+    return this.decisionOutcomeRepository.findOneOrFail({
       where: {
         code,
       },

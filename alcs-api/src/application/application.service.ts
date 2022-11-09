@@ -91,7 +91,7 @@ export class ApplicationService {
     const newApplication = new Application({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
-      dateReceived: application.dateReceived,
+      dateReceived: application.dateReceived || undefined,
       localGovernmentUuid: application.localGovernmentUuid,
       typeCode: application.typeCode,
       region,
@@ -101,7 +101,7 @@ export class ApplicationService {
 
     if (persist) {
       await this.applicationRepository.save(newApplication);
-      return this.get(application.fileNumber);
+      return this.getOrFail(application.fileNumber);
     } else {
       return newApplication;
     }
@@ -144,20 +144,11 @@ export class ApplicationService {
   ): Promise<Application> {
     const updatedApp = Object.assign(existingApplication, updates);
     await this.applicationRepository.save(updatedApp);
-
-    return this.applicationRepository.findOne({
-      where: {
-        uuid: updatedApp.uuid,
-      },
-      relations: this.DEFAULT_RELATIONS,
-    });
+    return this.getOrFail(updatedApp.fileNumber);
   }
 
   async delete(applicationNumber: string): Promise<void> {
-    const application = await this.applicationRepository.findOne({
-      where: { fileNumber: applicationNumber },
-    });
-
+    const application = await this.getOrFail(applicationNumber);
     await this.applicationRepository.softRemove([application]);
     return;
   }
@@ -215,7 +206,7 @@ export class ApplicationService {
   }
 
   async getByCard(cardUuid: string) {
-    return this.applicationRepository.findOne({
+    return this.applicationRepository.findOneOrFail({
       where: {
         card: { uuid: cardUuid },
       },
@@ -230,8 +221,8 @@ export class ApplicationService {
       },
     });
 
-    let applicationsProcessingTimes: Map<string, ApplicationTimeData>;
-
+    let applicationsProcessingTimes: Map<string, ApplicationTimeData> =
+      new Map();
     if (applications && applications.length > 0) {
       applicationsProcessingTimes =
         await this.applicationTimeTrackingService.fetchActiveTimes(
@@ -246,7 +237,7 @@ export class ApplicationService {
         val.activeDays >= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_START &&
         val.activeDays <= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_END
       ) {
-        applicationsToProcess.push(applications.find((ap) => ap.uuid === key));
+        applicationsToProcess.push(applications.find((ap) => ap.uuid === key)!);
       } else {
         applicationsProcessingTimes.delete(key);
       }
@@ -264,8 +255,8 @@ export class ApplicationService {
 
     return applications.map((app) => ({
       ...this.applicationMapper.map(app, Application, ApplicationDto),
-      activeDays: appTimeMap.get(app.uuid).activeDays || 0,
-      pausedDays: appTimeMap.get(app.uuid).pausedDays || 0,
+      activeDays: appTimeMap.get(app.uuid)!.activeDays || 0,
+      pausedDays: appTimeMap.get(app.uuid)!.pausedDays || 0,
       paused: appPausedMap.get(app.uuid) || false,
     }));
   }

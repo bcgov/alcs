@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { Card } from '../../card/card.entity';
+import { Card } from '../card.entity';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
 import { UpdateCardSubtaskDto } from './card-subtask.dto';
@@ -69,8 +69,7 @@ export class CardSubtaskService {
     }
 
     const savedTask = await this.cardSubtaskRepository.save(existingTask);
-
-    return this.cardSubtaskRepository.findOne({
+    return this.cardSubtaskRepository.findOneOrFail({
       where: {
         uuid: savedTask.uuid,
       },

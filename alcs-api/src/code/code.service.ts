@@ -48,7 +48,7 @@ export class CodeService {
   }
 
   async fetchApplicationType(code: string): Promise<ApplicationType> {
-    return this.typeRepository.findOne({
+    return this.typeRepository.findOneOrFail({
       where: {
         code,
       },
@@ -56,7 +56,7 @@ export class CodeService {
   }
 
   async fetchCardStatus(code: string): Promise<CardStatus> {
-    return this.statusRepository.findOne({
+    return this.statusRepository.findOneOrFail({
       where: {
         code,
       },
@@ -64,7 +64,7 @@ export class CodeService {
   }
 
   async fetchRegion(code: string): Promise<ApplicationRegion> {
-    return this.regionRepository.findOne({
+    return this.regionRepository.findOneOrFail({
       where: {
         code,
       },
@@ -72,7 +72,7 @@ export class CodeService {
   }
 
   async fetchMeetingType(code: string): Promise<ApplicationMeetingType> {
-    return this.meetingTypesRepository.findOne({
+    return this.meetingTypesRepository.findOneOrFail({
       where: {
         code,
       },

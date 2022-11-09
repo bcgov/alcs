@@ -1,4 +1,4 @@
-export const formatIncomingDate = (date?: number) => {
+export const formatIncomingDate = (date?: number | null) => {
   if (date) {
     return new Date(date);
   } else if (date === null) {

@@ -208,7 +208,7 @@ describe('ApplicationService', () => {
   });
 
   it('should fail to update if application does not exist', async () => {
-    applicationRepositoryMock.findOne.mockResolvedValue(undefined);
+    applicationRepositoryMock.findOne.mockResolvedValue(null);
 
     const promise = applicationService.updateByUuid(
       applicationMockEntity.uuid,

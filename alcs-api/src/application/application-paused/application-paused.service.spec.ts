@@ -52,7 +52,6 @@ describe('ApplicationPausedService', () => {
 
   it('should call save in the create happy path', async () => {
     const mockPause = {} as ApplicationPaused;
-    mockRepository.findOne.mockResolvedValue(mockPause);
     mockRepository.save.mockResolvedValue(mockPause);
 
     const res = await service.createOrUpdate({
@@ -60,13 +59,12 @@ describe('ApplicationPausedService', () => {
       endDate: new Date(),
     });
 
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(res).toBe(mockPause);
   });
 
   it('should throw an exception if the given uuid is not found', async () => {
-    mockRepository.findOne.mockResolvedValue(undefined);
+    mockRepository.findOne.mockResolvedValue(null);
 
     const res = service.createOrUpdate({
       startDate: new Date(),
