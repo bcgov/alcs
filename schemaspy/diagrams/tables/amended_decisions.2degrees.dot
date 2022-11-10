@@ -5,12 +5,12 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_amendment":"application_uuid":w -> "application":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_amendment":"card_uuid":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
-  "application_decision":"amends_uuid":w -> "application_amendment":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision":"amends_uuid":w -> "application_amendment":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_decision":"application_uuid":w -> "application":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"ceo_criterion_code":w -> "ceo_criterion_code":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"decision_maker_code":w -> "decision_maker_code":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"outcome_code":w -> "decision_outcome_code":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_decision":"reconsiders_uuid":w -> "application_reconsideration":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision":"reconsiders_uuid":w -> "application_reconsideration":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_reconsideration":"elipses":w -> "application":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_reconsideration":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "decision_document":"elipses":w -> "application_decision":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];

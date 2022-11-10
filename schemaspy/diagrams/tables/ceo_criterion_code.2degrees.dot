@@ -3,12 +3,12 @@ digraph "twoDegreesRelationshipsDiagram" {
   "amended_decisions":"elipses":w -> "application_amendment":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "amended_decisions":"elipses":w -> "application_decision":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_amendment":"elipses":w -> "application":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_decision":"amends_uuid":w -> "application_amendment":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision":"amends_uuid":w -> "application_amendment":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_decision":"application_uuid":w -> "application":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"ceo_criterion_code":w -> "ceo_criterion_code":"code.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"decision_maker_code":w -> "decision_maker_code":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"outcome_code":w -> "decision_outcome_code":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_decision":"reconsiders_uuid":w -> "application_reconsideration":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision":"reconsiders_uuid":w -> "application_reconsideration":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_reconsideration":"elipses":w -> "application":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "decision_document":"elipses":w -> "application_decision":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "reconsidered_decisions":"elipses":w -> "application_decision":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -57,8 +57,8 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="outcome_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">outcome_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="resolution_number" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">resolution_number</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="resolution_year" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">resolution_year</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="amends_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">amends_uuid</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="reconsiders_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">reconsiders_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="amends_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">amends_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="reconsiders_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="133" HEIGHT="16">reconsiders_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 6</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR>
     </TABLE>>
