@@ -62,4 +62,7 @@ export class ApplicationAmendment extends Base {
     name: 'amended_decisions',
   })
   amendsDecisions: ApplicationDecision[];
+
+  @OneToOne(() => ApplicationDecision, (dec) => dec.amends)
+  resultingDecision?: ApplicationDecision;
 }

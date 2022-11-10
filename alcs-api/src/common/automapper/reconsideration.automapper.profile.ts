@@ -92,6 +92,16 @@ export class ReconsiderationProfile extends AutomapperProfile {
             ),
           ),
         ),
+        forMember(
+          (a) => a.resultingDecision,
+          mapFrom((rd) =>
+            this.mapper.map(
+              rd.resultingDecision,
+              ApplicationDecision,
+              ApplicationDecisionDto,
+            ),
+          ),
+        ),
       );
 
       createMap(

@@ -70,6 +70,14 @@
           #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
         </ng-container>
       </div>
+      <div>
+        <ng-container *ngIf="!!reconsideration.resultingDecision">
+          <div class="subheading2">Resolution of Resulting Decision</div>
+          #{{ reconsideration.resultingDecision?.resolutionNumber }}/{{
+            reconsideration.resultingDecision?.resolutionYear
+          }}
+        </ng-container>
+      </div>
     </div>
   </div>
 </section>
@@ -99,8 +107,7 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="body-large">
-      Amendment Request #{{ amendments.length - i }}</div>
+    <div class="body-large">Amendment Request #{{ amendments.length - i }}</div>
     <div class="decision-content">
       <div>
         <div class="subheading2">Request Submission Date</div>
@@ -134,6 +141,12 @@
         <div class="subheading2">Resolutions to be Amended</div>
         <ng-container *ngFor="let decision of amendment.amendedDecisions">
           #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+        </ng-container>
+      </div>
+      <div>
+        <ng-container *ngIf="!!amendment.resultingDecision">
+          <div class="subheading2">Resolution of Resulting Decision</div>
+          #{{ amendment.resultingDecision?.resolutionNumber }}/{{ amendment.resultingDecision?.resolutionYear }}
         </ng-container>
       </div>
     </div>

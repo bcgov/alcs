@@ -82,6 +82,16 @@ export class AmendmentProfile extends AutomapperProfile {
             ),
           ),
         ),
+        forMember(
+          (a) => a.resultingDecision,
+          mapFrom((rd) =>
+            this.mapper.map(
+              rd.resultingDecision,
+              ApplicationDecision,
+              ApplicationDecisionDto,
+            ),
+          ),
+        ),
       );
     };
   }

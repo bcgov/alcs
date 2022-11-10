@@ -65,4 +65,7 @@ export class ApplicationReconsideration extends Base {
     name: 'reconsidered_decisions',
   })
   reconsidersDecisions: ApplicationDecision[];
+
+  @OneToOne(() => ApplicationDecision, (dec) => dec.reconsiders)
+  resultingDecision?: ApplicationDecision;
 }

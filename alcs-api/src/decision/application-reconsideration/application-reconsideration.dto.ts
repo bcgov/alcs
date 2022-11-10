@@ -10,11 +10,11 @@ import {
   IsString,
 } from 'class-validator';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
@@ -100,6 +100,7 @@ export class ApplicationReconsiderationDto {
   reviewDate: number;
   isReviewApproved: boolean | null;
   reconsideredDecisions: ApplicationDecisionDto[];
+  resultingDecision?: ApplicationDecisionDto;
 }
 
 export class ApplicationReconsiderationWithoutApplicationDto {
