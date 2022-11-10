@@ -9,6 +9,7 @@ export interface ReconsiderationTypeDto extends BaseCodeDto {
   backgroundColor: string;
   textColor: string;
 }
+
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
@@ -34,6 +35,7 @@ export interface ApplicationReconsiderationDto {
   reviewDate?: number;
   isReviewApproved?: boolean | null;
   reconsideredDecisions: ApplicationDecisionDto[];
+  resultingDecision: ApplicationDecisionDto | null;
 }
 
 export interface ApplicationReconsiderationDetailedDto extends ApplicationReconsiderationDto {}

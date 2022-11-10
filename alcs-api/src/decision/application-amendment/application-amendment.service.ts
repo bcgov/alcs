@@ -46,6 +46,7 @@ export class ApplicationAmendmentService {
       assignee: true,
     },
     amendsDecisions: true,
+    resultingDecision: true,
   };
 
   getByBoardCode(boardCode: string) {

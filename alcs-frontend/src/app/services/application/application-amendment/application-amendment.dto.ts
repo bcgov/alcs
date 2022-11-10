@@ -43,4 +43,5 @@ export interface ApplicationAmendmentDto {
   isReviewApproved: boolean | null;
   isTimeExtension: boolean | null;
   amendedDecisions: ApplicationDecisionDto[];
+  resultingDecision?: ApplicationDecisionDto;
 }

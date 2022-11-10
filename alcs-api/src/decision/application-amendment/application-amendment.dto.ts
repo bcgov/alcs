@@ -11,10 +11,10 @@ import {
 } from 'class-validator';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
+import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 
 export class ApplicationAmendmentCreateDto {
   @IsNotEmpty()
@@ -98,4 +98,5 @@ export class ApplicationAmendmentDto {
   isReviewApproved: boolean | null;
   isTimeExtension: boolean | null;
   amendedDecisions: ApplicationDecisionDto[];
+  resultingDecision: ApplicationDecisionDto | null;
 }

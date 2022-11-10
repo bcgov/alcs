@@ -48,6 +48,7 @@ describe('AmendmentService', () => {
       status: true,
       assignee: true,
     },
+    resultingDecision: true,
   };
 
   beforeEach(async () => {

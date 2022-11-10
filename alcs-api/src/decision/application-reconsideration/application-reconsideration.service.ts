@@ -52,6 +52,7 @@ export class ApplicationReconsiderationService {
       },
       type: true,
       reconsidersDecisions: true,
+      resultingDecision: true,
     };
 
   getByBoardCode(boardCode: string) {

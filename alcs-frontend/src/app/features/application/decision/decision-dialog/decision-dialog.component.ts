@@ -88,21 +88,30 @@ export class DecisionDialogComponent implements OnInit {
     this.amendmentService.$amendments
       .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
       .subscribe(([amendments, reconsiderations]) => {
-        const mappedAmendments = amendments.map((amendment, index) => ({
-          label: `Amendment Request #${amendments.length - index} - ${amendment.amendedDecisions
-            .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
-            .join(', ')}`,
-          uuid: amendment.uuid,
-          type: 'amendment',
-        }));
+        const mappedAmendments = amendments
+          .filter((amendment) => amendment.isReviewApproved !== false && amendment.resultingDecision === null)
+          .map((amendment, index) => ({
+            label: `Amendment Request #${amendments.length - index} - ${amendment.amendedDecisions
+              .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+              .join(', ')}`,
+            uuid: amendment.uuid,
+            type: 'amendment',
+          }));
 
-        const mappedRecons = reconsiderations.map((reconsideration, index) => ({
-          label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
-            .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
-            .join(', ')}`,
-          uuid: reconsideration.uuid,
-          type: 'reconsideration',
-        }));
+        const mappedRecons = reconsiderations
+          .filter(
+            (reconsideration) =>
+              reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null
+          )
+          .map((reconsideration, index) => ({
+            label: `Reconsideration Request #${
+              reconsiderations.length - index
+            } - ${reconsideration.reconsideredDecisions
+              .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+              .join(', ')}`,
+            uuid: reconsideration.uuid,
+            type: 'reconsideration',
+          }));
         this.postDecisions = [...mappedAmendments, ...mappedRecons];
       });
 

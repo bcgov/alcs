@@ -58,6 +58,7 @@ describe('ReconsiderationDialogComponent', () => {
         code: 'FAKE_BOARD',
       },
     } as CardDto,
+    resultingDecision: null,
   };
 
   beforeEach(async () => {

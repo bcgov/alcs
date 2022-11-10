@@ -2,9 +2,11 @@ import { AutoMap } from '@automapper/classes';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   Unique,
 } from 'typeorm';
 import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
@@ -108,10 +110,18 @@ export class ApplicationDecision extends Base {
   amendedBy: ApplicationAmendment[];
 
   @AutoMap()
-  @ManyToOne(() => ApplicationAmendment, { nullable: true })
+  @OneToOne(() => ApplicationAmendment, (amend) => amend.resultingDecision, {
+    nullable: true,
+  })
+  @JoinColumn()
   amends?: ApplicationAmendment;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationReconsideration, { nullable: true })
+  @OneToOne(
+    () => ApplicationReconsideration,
+    (amend) => amend.resultingDecision,
+    { nullable: true },
+  )
+  @JoinColumn()
   reconsiders?: ApplicationReconsideration;
 }
