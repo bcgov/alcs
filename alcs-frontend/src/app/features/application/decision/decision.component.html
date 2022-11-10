@@ -14,9 +14,28 @@
   <div class="loading-overlay" *ngIf="decision.loading">
     <mat-spinner></mat-spinner>
   </div>
-  <div class="decision">
-    <div *ngIf="decisions.length - 1 !== i && decision.reconsiders" class="corner-label recon">Recon</div>
-    <div *ngIf="decisions.length - 1 !== i && decision.amends" class="corner-label amendment">Amendment</div>
+  <div
+    class="decision"
+    [ngClass]="{
+      'has-post-decisions': decision.amendedBy?.length || decision.reconsideredBy?.length
+    }"
+  >
+    <div *ngIf="decision.amendedBy?.length || decision.reconsideredBy?.length" class="post-decisions body1-text">
+      <div>
+        <strong>Modified&nbsp;By:&nbsp;</strong>
+        <ng-container *ngFor="let amend of decision.amendedBy">
+          {{amend.linkedResolutions.join(', ')}}
+        </ng-container>
+        <span *ngIf="!decision.amendedBy?.length">N/A</span>
+      </div>
+      <div>
+        <strong>Reconsidered&nbsp;By:&nbsp;</strong>
+        <ng-container *ngFor="let recon of decision.reconsideredBy">
+          {{recon.linkedResolutions.join(', ')}}
+        </ng-container>
+        <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
+      </div>
+    </div>
     <input hidden type="file" #file (change)="attachFile(decision.uuid, $event)" placeholder="Upload file" />
     <div class="decision-menu">
       <button (click)="file.click()" matTooltip="Attach Document" mat-icon-button>
@@ -29,84 +48,86 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="body-large">
-      Decision #{{ decisions.length - i }} - #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
-    </div>
-    <div class="decision-content">
-      <div>
-        <div class="subheading2">Decision Date</div>
-        {{ decision.date | momentFormat }}
+    <div class="decision-padding">
+      <div class="body-large">
+        Decision #{{ decisions.length - i }} - Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
       </div>
-      <div>
-        <div class="subheading2">Decision Outcome</div>
-        {{ decision.outcome.label }} {{ decision.amends?.linkedResolutions?.join(', ') }}
-        {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
-      </div>
-      <div></div>
-      <div>
-        <div class="subheading2">Decision Maker</div>
-        {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
-      </div>
-      <div>
-        <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
-        {{ decision.ceoCriterion?.label }}
-        <ng-container *ngIf="decision.isTimeExtension !== null">
-          {{ decision.isTimeExtension ? '- Time extension' : '- Other' }}
-        </ng-container>
-      </div>
-      <div></div>
-      <div *ngIf="decision.chairReviewRequired">
-        <div class="subheading2">Chair Review Date</div>
-        <span *ngIf="!decision.chairReviewDate">
+      <div class="decision-content">
+        <div>
+          <div class="subheading2">Decision Date</div>
+          {{ decision.date | momentFormat }}
+        </div>
+        <div>
+          <div class="subheading2">Decision Outcome</div>
+          {{ decision.outcome.label }} {{ decision.amends?.linkedResolutions?.join(', ') }}
+          {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
+        </div>
+        <div></div>
+        <div>
+          <div class="subheading2">Decision Maker</div>
+          {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
+        </div>
+        <div>
+          <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
+          {{ decision.ceoCriterion?.label }}
+          <ng-container *ngIf="decision.isTimeExtension !== null">
+            {{ decision.isTimeExtension ? '- Time extension' : '- Other' }}
+          </ng-container>
+        </div>
+        <div></div>
+        <div *ngIf="decision.chairReviewRequired">
+          <div class="subheading2">Chair Review Date</div>
+          <span *ngIf="!decision.chairReviewDate">
           <app-inline-datepicker (save)="onSaveChairReviewDate(decision.uuid, $event)"></app-inline-datepicker>
         </span>
-        <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
-      </div>
-      <div *ngIf="decision.chairReviewRequired">
-        <div class="subheading2">Chair Review Outcome</div>
-        <span *ngIf="decision.chairReviewOutcome !== null">{{
-          decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
-          }}</span>
-        <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
-      </div>
-      <div *ngIf="decision.chairReviewRequired"></div>
-      <div>
-        <div class="subheading2">Audit Date</div>
-        <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
-        <span *ngIf="!decision.auditDate">
+          <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
+        </div>
+        <div *ngIf="decision.chairReviewRequired">
+          <div class="subheading2">Chair Review Outcome</div>
+          <span *ngIf="decision.chairReviewOutcome !== null">{{
+            decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
+            }}</span>
+          <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
+        </div>
+        <div *ngIf="decision.chairReviewRequired"></div>
+        <div>
+          <div class="subheading2">Audit Date</div>
+          <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+          <span *ngIf="!decision.auditDate">
           <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
         </span>
+        </div>
       </div>
-    </div>
-    <div class="body-large">Documents</div>
-    <div class="decision-documents">
-      <div class="subheading2">File Name</div>
-      <div class="subheading2">File Upload Date</div>
-      <div class="subheading2">File Actions</div>
-      <div *ngIf="!decision.documents.length" class="no-files">No Documents</div>
-      <ng-container *ngFor="let document of decision.documents">
-        <div>
-          <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
-        </div>
-        <div>{{ document.uploadedAt | momentFormat }}</div>
-        <div class="file-actions">
-          <button
-            matTooltip="Download File"
-            mat-icon-button
-            (click)="downloadFile(decision.uuid, document.uuid, document.fileName)"
-          >
-            <mat-icon>download</mat-icon>
-          </button>
-          <button
-            matTooltip="Delete File"
-            class="delete-file-icon"
-            mat-icon-button
-            (click)="deleteFile(decision.uuid, document.uuid, document.fileName)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </ng-container>
+      <div class="body-large">Documents</div>
+      <div class="decision-documents">
+        <div class="subheading2">File Name</div>
+        <div class="subheading2">File Upload Date</div>
+        <div class="subheading2">File Actions</div>
+        <div *ngIf="!decision.documents.length" class="no-files">No Documents</div>
+        <ng-container *ngFor="let document of decision.documents">
+          <div>
+            <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
+          </div>
+          <div>{{ document.uploadedAt | momentFormat }}</div>
+          <div class="file-actions">
+            <button
+              matTooltip="Download File"
+              mat-icon-button
+              (click)="downloadFile(decision.uuid, document.uuid, document.fileName)"
+            >
+              <mat-icon>download</mat-icon>
+            </button>
+            <button
+              matTooltip="Delete File"
+              class="delete-file-icon"
+              mat-icon-button
+              (click)="deleteFile(decision.uuid, document.uuid, document.fileName)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
     </div>
   </div>
 </section>

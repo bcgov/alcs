@@ -134,6 +134,8 @@ export class ApplicationDecisionDto {
 
   reconsiders?: LinkedResolutionDto;
   amends?: LinkedResolutionDto;
+  reconsideredBy?: LinkedResolutionDto[];
+  amendedBy?: LinkedResolutionDto[];
 }
 
 export class LinkedResolutionDto {

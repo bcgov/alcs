@@ -64,6 +64,46 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               : undefined,
           ),
         ),
+        forMember(
+          (a) => a.reconsideredBy,
+          mapFrom((dec) =>
+            (dec.reconsideredBy || [])
+              .filter((reconsideration) => reconsideration.resultingDecision)
+              .map((reconsideration) => ({
+                uuid: reconsideration.uuid,
+                linkedResolutions: [
+                  `#${reconsideration.resultingDecision.resolutionNumber}/${reconsideration.resultingDecision.resolutionYear}`,
+                ],
+              })),
+          ),
+        ),
+        forMember(
+          (a) => a.amendedBy,
+          mapFrom((dec) =>
+            (dec.amendedBy || [])
+              .filter((amendment) => amendment.resultingDecision)
+              .map((amendment) => ({
+                uuid: amendment.uuid,
+                linkedResolutions: [
+                  `#${amendment.resultingDecision.resolutionNumber}/${amendment.resultingDecision.resolutionYear}`,
+                ],
+              })),
+          ),
+        ),
+        forMember(
+          (a) => a.amends,
+          mapFrom((dec) =>
+            dec.amends
+              ? {
+                  uuid: dec.amends.uuid,
+                  linkedResolutions: dec.amends.amendsDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${dec.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
+        ),
       );
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
