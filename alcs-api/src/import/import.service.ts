@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as csv from 'csv-parser';
+import * as dayjs from 'dayjs';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
@@ -8,6 +11,9 @@ import { ApplicationPausedService } from '../application/application-paused/appl
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { BoardService } from '../board/board.service';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export type ApplicationRow = {
   fileNumber: string;
@@ -91,7 +97,7 @@ export class ImportService {
 
   importCsv() {
     this.logger.log('Import Setup Started');
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       const mapping = await this.loadMappingSheet();
 
       const filePath = path.resolve(__dirname, '..', 'Tracking_Sheet.csv');
@@ -121,7 +127,7 @@ export class ImportService {
   async parseRow(
     data: ApplicationRow,
     mapping: Map<string, { localGovernment: string; type: string }>,
-  ) {
+  ): Promise<void> {
     const mappedRow = this.mapRow(data);
 
     const existingApplication = await this.applicationService.get(
@@ -170,14 +176,14 @@ export class ImportService {
         });
 
         //Set Payment / ACK Dates
-        await this.applicationService.update(application, {
+        const updatedApp = await this.applicationService.update(application, {
           datePaid: mappedRow.feeReceived,
           dateAcknowledgedIncomplete: mappedRow.ackDeficient,
           dateReceivedAllItems: mappedRow.ackDeficientComplete,
           dateAcknowledgedComplete: mappedRow.ackComplete,
         });
 
-        await this.createMeetings(mappedRow, application);
+        await this.createMeetings(mappedRow, updatedApp);
 
         if (mappedRow.ackComplete) {
           if (
@@ -185,16 +191,10 @@ export class ImportService {
             mappedRow.decisionMaker === ''
           ) {
             const boardCode = REGION_BOARD_MAP[mappedRow.region];
-            await this.boardService.changeBoard(
-              application.cardUuid,
-              boardCode,
-            );
+            await this.boardService.changeBoard(updatedApp.cardUuid, boardCode);
           } else if (mappedRow.decisionMaker) {
             const boardCode = DECISION_MAKER_BOARD_MAP[mappedRow.decisionMaker];
-            await this.boardService.changeBoard(
-              application.cardUuid,
-              boardCode,
-            );
+            await this.boardService.changeBoard(updatedApp.cardUuid, boardCode);
           }
         }
       } catch (e) {
@@ -207,7 +207,10 @@ export class ImportService {
     return {
       fileNumber: data['App ID'],
       applicant: data['Name'],
-      submittedToAlc: new Date(data['Submitted to ALC']),
+      submittedToAlc: dayjs(data['Submitted to ALC'])
+        .tz('Canada/Pacific')
+        .startOf('day')
+        .toDate(),
       feeReceived: this.handleDate(data["Fee Rec'd by ALC"]),
       ackDeficient: this.handleDate(data['Deficient  Email Sent']),
       ackDeficientComplete: this.handleDate(data["Rec'd All Deficient Items"]),
@@ -246,7 +249,9 @@ export class ImportService {
   }
 
   private handleDate(date: string | undefined) {
-    return date ? new Date(date) : undefined;
+    return date
+      ? dayjs(date).tz('Canada/Pacific').startOf('day').toDate()
+      : undefined;
   }
 
   private async createMeeting(

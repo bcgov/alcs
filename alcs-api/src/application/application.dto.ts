@@ -113,62 +113,41 @@ export class ApplicationDto {
   @AutoMap()
   applicant: string;
 
-  @AutoMap()
-  assigneeUuid?: string;
-
-  @AutoMap()
   activeDays: number;
 
-  @AutoMap()
   pausedDays: number;
 
-  @AutoMap()
   paused: boolean;
 
-  @AutoMap()
-  highPriority: boolean;
-
-  @AutoMap()
-  type: ApplicationTypeDto;
-
-  board: string;
-
-  @AutoMap()
-  dateReceived: number;
-
-  @AutoMap()
+  dateReceived?: number;
   datePaid?: number;
 
-  @AutoMap()
   dateAcknowledgedIncomplete?: number;
 
-  @AutoMap()
   dateReceivedAllItems?: number;
 
-  @AutoMap()
   dateAcknowledgedComplete?: number;
 
-  @AutoMap()
   decisionDate?: number;
 
-  @AutoMap()
   notificationSentDate?: number;
 
-  @AutoMap()
-  summary?: string;
+  @AutoMap(() => ApplicationTypeDto)
+  type: ApplicationTypeDto;
 
   @AutoMap()
+  summary: string | null;
+
+  @AutoMap(() => ApplicationRegionDto)
   region: ApplicationRegionDto;
 
-  @AutoMap()
+  @AutoMap(() => ApplicationLocalGovernmentDto)
   localGovernment: ApplicationLocalGovernmentDto;
 
-  @AutoMap()
-  @Type(() => ApplicationDecisionMeetingDto)
+  @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
-  @AutoMap()
-  @Type(() => CardDto)
+  @AutoMap(() => CardDto)
   card: CardDto;
 }
 
