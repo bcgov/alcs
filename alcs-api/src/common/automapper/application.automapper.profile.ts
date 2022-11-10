@@ -3,7 +3,6 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
-
 import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
@@ -62,24 +61,54 @@ export class ApplicationProfile extends AutomapperProfile {
         Application,
         ApplicationDto,
         forMember(
-          (ad) => ad.localGovernment,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.localGovernment,
-              ApplicationLocalGovernment,
-              ApplicationLocalGovernmentDto,
-            ),
-          ),
+          (a) => a.dateReceived,
+          mapFrom((ad) => {
+            return ad.dateReceived ? ad.dateReceived.getTime() : undefined;
+          }),
         ),
         forMember(
-          (ad) => ad.decisionMeetings,
-          mapFrom((a) =>
-            this.mapper.mapArray(
-              a.decisionMeetings,
-              ApplicationDecisionMeeting,
-              ApplicationDecisionMeetingDto,
-            ),
-          ),
+          (a) => a.datePaid,
+          mapFrom((ad) => {
+            return ad.datePaid ? ad.datePaid.getTime() : undefined;
+          }),
+        ),
+        forMember(
+          (a) => a.dateAcknowledgedIncomplete,
+          mapFrom((ad) => {
+            return ad.dateAcknowledgedIncomplete
+              ? ad.dateAcknowledgedIncomplete.getTime()
+              : undefined;
+          }),
+        ),
+        forMember(
+          (a) => a.dateReceivedAllItems,
+          mapFrom((ad) => {
+            return ad.dateReceivedAllItems
+              ? ad.dateReceivedAllItems.getTime()
+              : undefined;
+          }),
+        ),
+        forMember(
+          (a) => a.dateAcknowledgedComplete,
+          mapFrom((ad) => {
+            return ad.dateAcknowledgedComplete
+              ? ad.dateAcknowledgedComplete.getTime()
+              : undefined;
+          }),
+        ),
+        forMember(
+          (a) => a.decisionDate,
+          mapFrom((ad) => {
+            return ad.decisionDate ? ad.decisionDate.getTime() : undefined;
+          }),
+        ),
+        forMember(
+          (a) => a.notificationSentDate,
+          mapFrom((ad) => {
+            return ad.notificationSentDate
+              ? ad.notificationSentDate.getTime()
+              : undefined;
+          }),
         ),
         forMember(
           (ad) => ad.card,

@@ -31,11 +31,10 @@ describe('ApplicationController', () => {
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
+    summary: 'summary',
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
     type: mockApplicationEntity.type,
-    assigneeUuid: mockApplicationEntity.card.assigneeUuid,
-    board: undefined,
     region: undefined,
     localGovernment: {
       uuid: 'fake',
@@ -45,7 +44,6 @@ describe('ApplicationController', () => {
     activeDays: 2,
     pausedDays: 0,
     paused: false,
-    highPriority: mockApplicationEntity.card.highPriority,
     decisionMeetings: [],
     dateReceived: Date.now(),
     card: {
@@ -125,6 +123,7 @@ describe('ApplicationController', () => {
 
     const res = await controller.create({
       ...mockApplicationDto,
+      dateReceived: mockApplicationDto.dateReceived,
       localGovernmentUuid: 'government-uuid',
       typeCode: 'fake-code',
     });

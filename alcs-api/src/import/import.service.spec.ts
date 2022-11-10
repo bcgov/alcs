@@ -1,5 +1,8 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as dayjs from 'dayjs';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as utc from 'dayjs/plugin/utc';
 import { Volume, fs } from 'memfs';
 import * as path from 'path';
 import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
@@ -14,6 +17,9 @@ import { BoardService } from '../board/board.service';
 import { Card } from '../card/card.entity';
 import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
 import { ImportService } from './import.service';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 jest.mock('fs', () => {
   const fs = jest.requireActual('fs');
@@ -114,7 +120,10 @@ describe('ImportService', () => {
     expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.create).toHaveBeenCalledWith({
       applicant: 'Imported',
-      dateReceived: new Date('2022-05-08'),
+      dateReceived: dayjs('2022-05-08')
+        .tz('Canada/Pacific')
+        .startOf('day')
+        .toDate(),
       fileNumber: '51231',
       localGovernmentUuid: 'government-uuid',
       regionCode: undefined,
