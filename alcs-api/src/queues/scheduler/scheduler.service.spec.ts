@@ -55,15 +55,16 @@ describe('SchedulerService', () => {
     expect(schedulerService).toBeDefined();
   });
 
-  it('should call add for scheduleApplicationExpiry', async () => {
-    await schedulerService.setup();
-    expect(mockAppExpiryQueue.empty).toBeCalledTimes(1);
-    expect(mockAppExpiryQueue.add).toBeCalledTimes(1);
-    expect(mockAppExpiryQueue.add).toBeCalledWith(
-      {},
-      { repeat: { cron: MONDAY_TO_FRIDAY_AT_2AM } },
-    );
-  });
+  //Job Disabled for now
+  // it('should call add for scheduleApplicationExpiry', async () => {
+  //   await schedulerService.setup();
+  //   expect(mockAppExpiryQueue.empty).toBeCalledTimes(1);
+  //   expect(mockAppExpiryQueue.add).toBeCalledTimes(1);
+  //   expect(mockAppExpiryQueue.add).toBeCalledWith(
+  //     {},
+  //     { repeat: { cron: MONDAY_TO_FRIDAY_AT_2AM } },
+  //   );
+  // });
 
   it('should call add for notification cleanup', async () => {
     await schedulerService.setup();

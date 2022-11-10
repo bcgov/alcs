@@ -19,7 +19,10 @@ export class SchedulerService {
   ) {}
 
   async setup() {
-    await this.scheduleApplicationExpiry();
+    //Job Disabled, clean queue but don't schedule it
+    await this.applicationExpiryQueue.empty();
+    // await this.scheduleApplicationExpiry();
+
     await this.scheduleCleanupNotifications();
   }
 
