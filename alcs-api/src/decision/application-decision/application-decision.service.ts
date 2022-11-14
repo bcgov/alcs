@@ -70,6 +70,12 @@ export class ApplicationDecisionService {
         reconsiders: {
           reconsidersDecisions: true,
         },
+        reconsideredBy: {
+          resultingDecision: true,
+        },
+        amendedBy: {
+          resultingDecision: true,
+        },
       },
     });
 

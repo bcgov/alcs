@@ -50,6 +50,8 @@ export interface ApplicationDecisionDto {
   isTimeExtension?: boolean | null;
   amends?: LinkedResolutionDto;
   reconsiders?: LinkedResolutionDto;
+  reconsideredBy?: LinkedResolutionDto[];
+  amendedBy?: LinkedResolutionDto[];
 }
 
 export interface LinkedResolutionDto {

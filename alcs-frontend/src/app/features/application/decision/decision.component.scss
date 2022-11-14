@@ -14,7 +14,6 @@ section {
 
 .decision {
   margin: 24px 0;
-  padding: 48px 32px 32px 32px;
   box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
 }
 
@@ -30,9 +29,7 @@ section {
   justify-content: center;
 }
 
-.decision:last-child {
-  padding: 32px;
-}
+
 
 .corner-label {
   font-size: 11px;
@@ -54,28 +51,43 @@ section {
   }
 }
 
+.post-decisions {
+  padding: 6px 32px;
+  background-color: $accent-color-light;
+  grid-template-columns: 1fr 1fr 100px;
+  display: grid;
+  min-height: 36px;
+  text-transform: uppercase;
+  border-radius: 4px 4px 0 0;
+  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
 .decision-menu {
   position: absolute;
   top: 0;
   right: 0;
-  height: 32px;
+  height: 36px;
   background: $accent-color;
   box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 0px 4px 0px 10px;
+  border-radius: 0 4px 0 10px;
 
   button {
     color: $white;
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
   }
 
   mat-icon {
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 21px;
+    line-height: 36px;
     width: 20px;
-    height: 32px;
+    height: 36px;
   }
+}
+
+.decision-padding {
+  padding: 18px 32px 32px 32px;
 }
 
 .decision-content {
