@@ -37,7 +37,7 @@ const routes: Routes = [
     loadChildren: () => import('./features/application/application.module').then((m) => m.ApplicationModule),
   },
   {
-    path: 'meeting',
+    path: 'schedule',
     canActivate: [HasRolesGuard],
     data: {
       roles: [ROLES.ADMIN, ROLES.LUP, ROLES.APP_SPECIALIST, ROLES.GIS],
