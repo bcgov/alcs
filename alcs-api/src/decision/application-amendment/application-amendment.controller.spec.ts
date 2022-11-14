@@ -91,7 +91,7 @@ describe('ApplicationAmendmentController', () => {
   it('should call service create method', async () => {
     const amendment = initApplicationAmendmentMockEntity();
     mockAmendmentService.create.mockResolvedValue(amendment);
-    mockBoardService.getOne.mockResolvedValue({} as Board);
+    mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
     await controller.create({} as ApplicationAmendmentCreateDto);
     expect(mockAmendmentService.create).toBeCalledTimes(1);
   });

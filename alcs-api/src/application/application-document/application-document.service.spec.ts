@@ -97,7 +97,7 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
 
     mockDocumentService.softRemove.mockResolvedValue();
-    mockRepository.delete.mockResolvedValue(undefined);
+    mockRepository.delete.mockResolvedValue({} as any);
 
     await service.delete(mockAppDocument);
 
@@ -130,7 +130,7 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
 
     mockDocumentService.softRemove.mockResolvedValue();
-    mockRepository.findOne.mockResolvedValue(undefined);
+    mockRepository.findOne.mockResolvedValue(null);
 
     await expect(service.get(mockAppDocument.uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(

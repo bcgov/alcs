@@ -82,7 +82,7 @@ export class ApplicationMeetingController {
         `Failed to find meeting with ID ${uuid}`,
       );
     }
-    await this.applicationPausedService.remove(appMeeting.meetingPause.uuid);
+    await this.applicationPausedService.remove(appMeeting.meetingPause!.uuid);
     if (appMeeting.reportPause) {
       await this.applicationPausedService.remove(appMeeting.reportPause.uuid);
     }

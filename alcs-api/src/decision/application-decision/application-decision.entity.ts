@@ -34,7 +34,7 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
-  auditDate: Date;
+  auditDate: Date | null;
 
   @AutoMap()
   @Column({ type: 'boolean' })
@@ -42,7 +42,7 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
-  chairReviewDate: Date;
+  chairReviewDate: Date | null;
 
   @ManyToOne(() => DecisionOutcomeCode, {
     nullable: false,
@@ -71,7 +71,7 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'text', nullable: true })
-  decisionMakerCode?: string;
+  decisionMakerCode: string | null;
 
   @AutoMap()
   @ManyToOne(() => CeoCriterionCode, { nullable: true })
@@ -79,15 +79,15 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'text', nullable: true })
-  ceoCriterionCode?: string;
+  ceoCriterionCode: string | null;
 
   @AutoMap()
-  @Column({ nullable: true })
-  isTimeExtension?: boolean;
+  @Column({ type: 'boolean', nullable: true })
+  isTimeExtension: boolean | null;
 
   @AutoMap()
-  @Column({ nullable: true })
-  chairReviewOutcome?: boolean;
+  @Column({ type: 'boolean', nullable: true })
+  chairReviewOutcome: boolean | null;
 
   @AutoMap()
   @Column({ type: 'uuid' })
@@ -114,7 +114,7 @@ export class ApplicationDecision extends Base {
     nullable: true,
   })
   @JoinColumn()
-  amends?: ApplicationAmendment;
+  amends?: ApplicationAmendment | null;
 
   @AutoMap()
   @OneToOne(
@@ -123,5 +123,5 @@ export class ApplicationDecision extends Base {
     { nullable: true },
   )
   @JoinColumn()
-  reconsiders?: ApplicationReconsideration;
+  reconsiders?: ApplicationReconsideration | null;
 }

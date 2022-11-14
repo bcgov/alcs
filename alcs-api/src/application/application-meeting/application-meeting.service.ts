@@ -40,53 +40,75 @@ export class ApplicationMeetingService {
     });
   }
 
-  async update(uuid: string, meeting: UpdateApplicationMeetingDto) {
-    const existingMeeting = await this.get(uuid);
+  async update(uuid: string, updateDto: UpdateApplicationMeetingDto) {
+    const existingMeeting: Partial<ApplicationMeeting> | null = await this.get(
+      uuid,
+    );
     if (!existingMeeting) {
       throw new ServiceNotFoundException(`Meeting not found ${uuid}`);
     }
 
+    if (!existingMeeting.meetingPause) {
+      throw new ServiceValidationException(
+        `Cannot update deleted meeting ${uuid}`,
+      );
+    }
+
     if (
-      meeting.meetingEndDate &&
-      meeting.meetingStartDate > meeting.meetingEndDate
+      updateDto.meetingEndDate &&
+      updateDto.meetingStartDate &&
+      updateDto.meetingStartDate > updateDto.meetingEndDate
     ) {
       throw new ServiceValidationException(
         'Start Date must be smaller than End Date',
       );
     }
 
-    existingMeeting.meetingPause.startDate = formatIncomingDate(
-      meeting.meetingStartDate,
-    );
+    if (updateDto.meetingStartDate) {
+      existingMeeting.meetingPause.startDate = new Date(
+        updateDto.meetingStartDate,
+      );
+    }
     existingMeeting.meetingPause.endDate = formatIncomingDate(
-      meeting.meetingEndDate,
+      updateDto.meetingEndDate,
     );
 
-    if (meeting.description) {
-      existingMeeting.description = meeting.description;
+    if (updateDto.description) {
+      existingMeeting.description = updateDto.description;
     }
 
     if (
-      meeting.reportStartDate !== undefined ||
-      meeting.reportEndDate !== undefined
+      updateDto.reportStartDate !== undefined ||
+      updateDto.reportEndDate !== undefined
     ) {
       if (existingMeeting.reportPause) {
-        existingMeeting.reportPause.startDate = formatIncomingDate(
-          meeting.reportStartDate,
-        );
+        if (updateDto.reportStartDate) {
+          existingMeeting.reportPause.startDate = new Date(
+            updateDto.reportStartDate,
+          );
+        }
         existingMeeting.reportPause.endDate = formatIncomingDate(
-          meeting.reportEndDate,
+          updateDto.reportEndDate,
         );
       } else {
+        if (!updateDto.reportStartDate) {
+          throw new ServiceValidationException(
+            'Cannot set reportEndDate without reportStartDate',
+          );
+        }
+
         existingMeeting.reportPause = new ApplicationPaused({
           applicationUuid: existingMeeting.applicationUuid,
-          startDate: formatIncomingDate(meeting.reportStartDate),
-          endDate: formatIncomingDate(meeting.reportEndDate),
+          startDate: new Date(updateDto.reportStartDate),
+          endDate: formatIncomingDate(updateDto.reportEndDate),
         });
       }
     }
 
-    if (meeting.reportStartDate === null && meeting.reportEndDate === null) {
+    if (
+      updateDto.reportStartDate === null &&
+      updateDto.reportEndDate === null
+    ) {
       existingMeeting.reportPause = null;
     }
 

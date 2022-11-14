@@ -45,7 +45,7 @@ export class ApplicationAmendmentController {
   @Post()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async create(@Body() createDto: ApplicationAmendmentCreateDto) {
-    const board = await this.boardService.getOne({
+    const board = await this.boardService.getOneOrFail({
       code: createDto.boardCode,
     });
     const amendment = await this.amendmentService.create(createDto, board);

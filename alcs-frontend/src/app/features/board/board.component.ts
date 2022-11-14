@@ -235,17 +235,17 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
     return {
-      status: application.card.status.code,
+      status: application.card!.status.code,
       title: `${application.fileNumber} (${application.applicant})`,
-      assignee: application.card.assignee,
+      assignee: application.card!.assignee,
       id: application.fileNumber,
       labels: [application.type],
       activeDays: application.activeDays,
       paused: application.paused,
-      highPriority: application.card.highPriority,
+      highPriority: application.card!.highPriority,
       decisionMeetings: application.decisionMeetings,
       cardType: CardType.APP,
-      cardUuid: application.card.uuid,
+      cardUuid: application.card!.uuid,
       dateReceived: application.dateReceived,
     };
   }

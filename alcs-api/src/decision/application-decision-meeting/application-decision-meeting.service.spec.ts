@@ -7,7 +7,7 @@ import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
-import { ApplicationService } from '../application.service';
+import { ApplicationService } from '../../application/application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 
@@ -51,7 +51,13 @@ describe('ApplicationDecisionMeetingService', () => {
       getRepositoryToken(ApplicationDecisionMeeting),
     );
     mockAppDecisionMeetingRepository.find.mockResolvedValue([mockMeeting]);
+    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(
+      mockMeeting,
+    );
     mockAppDecisionMeetingRepository.findOne.mockResolvedValue(mockMeeting);
+    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(
+      mockMeeting,
+    );
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
   });
 
@@ -117,7 +123,7 @@ describe('ApplicationDecisionMeetingService', () => {
   });
 
   it('should fail on update if meeting not found', async () => {
-    mockAppDecisionMeetingRepository.findOne.mockReturnValue(undefined);
+    mockAppDecisionMeetingRepository.findOne.mockResolvedValue(null);
     const meetingToUpdate = {
       uuid: 'non-existing uuid',
     } as ApplicationDecisionMeeting;

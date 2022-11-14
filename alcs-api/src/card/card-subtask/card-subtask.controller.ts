@@ -12,8 +12,6 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
-import { CardSubtaskService } from '../../card/card-subtask/card-subtask.service';
 import { ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
@@ -23,10 +21,12 @@ import {
 } from '../../common/exceptions/base.exception';
 import { CardService } from '../card.service';
 import {
-  CardSubtaskDto,
   CARD_SUBTASK_TYPE,
+  CardSubtaskDto,
   UpdateCardSubtaskDto,
 } from './card-subtask.dto';
+import { CardSubtask } from './card-subtask.entity';
+import { CardSubtaskService } from './card-subtask.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -77,6 +77,12 @@ export class CardSubtaskController {
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async list(@Param('uuid') uuid: string): Promise<CardSubtaskDto[]> {
     const card = await this.cardService.get(uuid);
+    if (!card) {
+      throw new ServiceNotFoundException(
+        `Failed to find card with uuid ${uuid}`,
+      );
+    }
+
     return this.mapper.mapArray(card.subtasks, CardSubtask, CardSubtaskDto);
   }
 

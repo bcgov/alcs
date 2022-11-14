@@ -86,11 +86,11 @@
             ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
           </span>
           <span>{{ board.title }}</span>
-          <span *ngIf="application.card.board.code === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+          <span *ngIf="application.card!.board.code === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
         </button>
       </mat-menu>
       <button
-        [matTooltip]="application.card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        [matTooltip]="application.card!.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
         mat-icon-button
@@ -98,8 +98,8 @@
         <div
           class="priority"
           [ngClass]="{
-            'filled-priority': application.card.highPriority,
-            'empty-priority': !application.card.highPriority
+            'filled-priority': application.card!.highPriority,
+            'empty-priority': !application.card!.highPriority
           }"
         ></div>
       </button>
@@ -146,9 +146,9 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks [cardUuid]="application.card.uuid"></app-subtasks>
+    <app-subtasks [cardUuid]="application.card!.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
-    <app-comments [cardUuid]="application.card.uuid" [fileNumber]="application.fileNumber"></app-comments>
+    <app-comments [cardUuid]="application.card!.uuid" [fileNumber]="application.fileNumber"></app-comments>
   </div>
 </mat-dialog-content>

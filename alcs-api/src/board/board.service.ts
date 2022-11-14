@@ -22,8 +22,8 @@ export class BoardService {
     private cardService: CardService,
   ) {}
 
-  async getOne(options: FindOptionsWhere<Board>) {
-    return this.boardRepository.findOne({
+  async getOneOrFail(options: FindOptionsWhere<Board>) {
+    return this.boardRepository.findOneOrFail({
       where: options,
       relations: this.DEFAULT_RELATIONS,
     });
@@ -44,7 +44,7 @@ export class BoardService {
   }
 
   getApplicationsByCode(code: string) {
-    return this.applicationService.getAll({
+    return this.applicationService.getMany({
       card: {
         board: { code },
       },
@@ -72,6 +72,10 @@ export class BoardService {
     }
 
     const initialStatus = board.statuses.find((status) => status.order === 0);
+    if (!initialStatus) {
+      throw new Error(`Failed to find initial status for board ${board.uuid}`);
+    }
+
     card.status = initialStatus.status;
     card.board = board;
     return this.cardService.update(card.uuid, {

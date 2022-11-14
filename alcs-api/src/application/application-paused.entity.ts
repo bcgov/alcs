@@ -21,7 +21,7 @@ export class ApplicationPaused extends Base {
     type: 'timestamptz',
     nullable: true,
   })
-  endDate?: Date;
+  endDate?: Date | null;
 
   @ManyToOne(() => Application, (application) => application.pauses, {
     cascade: true,

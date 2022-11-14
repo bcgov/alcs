@@ -20,7 +20,7 @@ export class CovenantController {
   @Post()
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async create(@Body() createCovenantDto: CreateCovenantDto) {
-    const board = await this.boardService.getOne({
+    const board = await this.boardService.getOneOrFail({
       code: createCovenantDto.boardCode,
     });
 

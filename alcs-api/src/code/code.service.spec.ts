@@ -132,11 +132,13 @@ describe('CodeService', () => {
     const mockType = {
       code: '1',
     };
-    mockTypeRepository.findOne.mockResolvedValue(mockType as ApplicationType);
+    mockTypeRepository.findOneOrFail.mockResolvedValue(
+      mockType as ApplicationType,
+    );
 
     const res = await service.fetchApplicationType('code');
 
-    expect(mockTypeRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockTypeRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockType);
   });
 
@@ -144,11 +146,13 @@ describe('CodeService', () => {
     const mockStatus = {
       code: '2',
     };
-    mockStatusRepository.findOne.mockResolvedValue(mockStatus as CardStatus);
+    mockStatusRepository.findOneOrFail.mockResolvedValue(
+      mockStatus as CardStatus,
+    );
 
     const res = await service.fetchCardStatus('code');
 
-    expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockStatus);
   });
 
@@ -156,13 +160,13 @@ describe('CodeService', () => {
     const mockRegion = {
       code: '1',
     };
-    mockRegionRepository.findOne.mockResolvedValue(
+    mockRegionRepository.findOneOrFail.mockResolvedValue(
       mockRegion as ApplicationRegion,
     );
 
     const res = await service.fetchRegion('code');
 
-    expect(mockRegionRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockRegionRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockRegion);
   });
 
@@ -170,13 +174,13 @@ describe('CodeService', () => {
     const mockMeetingType = {
       code: '1',
     };
-    mockMeetingRepository.findOne.mockResolvedValue(
+    mockMeetingRepository.findOneOrFail.mockResolvedValue(
       mockMeetingType as ApplicationMeetingType,
     );
 
     const res = await service.fetchMeetingType('code');
 
-    expect(mockMeetingRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockMeetingRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockMeetingType);
   });
 });

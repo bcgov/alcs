@@ -28,7 +28,7 @@ export class CommissionerController {
   async get(
     @Param('fileNumber') fileNumber,
   ): Promise<CommissionerApplicationDto> {
-    const application = await this.applicationService.get(fileNumber);
+    const application = await this.applicationService.getOrFail(fileNumber);
     const firstMap = await this.applicationService.mapToDtos([application]);
     const amendments = await this.amendmentService.getByApplication(
       application.fileNumber,

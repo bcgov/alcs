@@ -104,7 +104,7 @@ describe('HomeController', () => {
 
     controller = module.get<HomeController>(HomeController);
 
-    mockApplicationService.getAll.mockResolvedValue([]);
+    mockApplicationService.getMany.mockResolvedValue([]);
     mockApplicationService.mapToDtos.mockResolvedValue([]);
     mockApplicationReconsiderationService.getBy.mockResolvedValue([]);
     mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([]);
@@ -155,8 +155,8 @@ describe('HomeController', () => {
           assigneeUuid: userId,
         },
       };
-      expect(mockApplicationService.getAll).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.getAll.mock.calls[0][0]).toEqual(
+      expect(mockApplicationService.getMany).toHaveBeenCalledTimes(1);
+      expect(mockApplicationService.getMany.mock.calls[0][0]).toEqual(
         filterCondition,
       );
 

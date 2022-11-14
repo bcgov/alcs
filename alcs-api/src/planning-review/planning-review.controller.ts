@@ -20,9 +20,13 @@ export class PlanningReviewController {
   @Post()
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async create(@Body() createPlanningReviewDto: CreatePlanningReviewDto) {
-    const board = await this.boardService.getOne({
+    const board = await this.boardService.getOneOrFail({
       code: 'exec',
     });
+
+    if (!board) {
+      throw new Error('Failed to load executive board');
+    }
 
     const createdReview = await this.planningReviewService.create(
       createPlanningReviewDto,

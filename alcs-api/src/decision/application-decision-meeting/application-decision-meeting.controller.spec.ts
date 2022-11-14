@@ -3,17 +3,18 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
-import { CodeService } from '../../code/code.service';
+import { ApplicationDecisionProfile } from '../../common/automapper/application-decision.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
+  initApplicationReconsiderationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
-import { ApplicationDocumentService } from '../application-document/application-document.service';
-import { ApplicationService } from '../application.service';
+import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting.controller';
 import {
   ApplicationDecisionMeetingDto,
@@ -25,14 +26,15 @@ describe('ApplicationDecisionMeetingController', () => {
   let controller: ApplicationDecisionMeetingController;
   let mockMeetingService: DeepMocked<ApplicationDecisionMeetingService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
-  let mockApplicationCodeService: DeepMocked<CodeService>;
-  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
+
+  let mockApplication;
+  let mockMeeting;
 
   beforeEach(async () => {
-    mockMeetingService = createMock<ApplicationDecisionMeetingService>();
-    mockApplicationService = createMock<ApplicationService>();
-    mockApplicationCodeService = createMock<CodeService>();
-    mockAppDocumentService = createMock<ApplicationDocumentService>();
+    mockMeetingService = createMock();
+    mockApplicationService = createMock();
+    mockReconsiderationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -42,7 +44,7 @@ describe('ApplicationDecisionMeetingController', () => {
       ],
       controllers: [ApplicationDecisionMeetingController],
       providers: [
-        ApplicationProfile,
+        ApplicationDecisionProfile,
         UserProfile,
         {
           provide: ApplicationDecisionMeetingService,
@@ -53,12 +55,8 @@ describe('ApplicationDecisionMeetingController', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: CodeService,
-          useValue: mockApplicationCodeService,
-        },
-        {
-          provide: ApplicationDocumentService,
-          useValue: mockAppDocumentService,
+          provide: ApplicationReconsiderationService,
+          useValue: mockReconsiderationService,
         },
         {
           provide: ClsService,
@@ -71,6 +69,14 @@ describe('ApplicationDecisionMeetingController', () => {
     controller = module.get<ApplicationDecisionMeetingController>(
       ApplicationDecisionMeetingController,
     );
+
+    mockApplication = initApplicationMockEntity();
+    mockMeeting = initApplicationDecisionMeetingMock(mockApplication);
+    mockMeetingService.createOrUpdate.mockResolvedValue(mockMeeting);
+    mockMeetingService.getByAppFileNumber.mockResolvedValue([mockMeeting]);
+    mockMeetingService.get.mockResolvedValue(mockMeeting);
+    mockMeetingService.getUpcomingReconsiderationMeetings.mockResolvedValue([]);
+    mockMeetingService.getUpcomingApplicationMeetings.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -78,9 +84,6 @@ describe('ApplicationDecisionMeetingController', () => {
   });
 
   it('should get all for application', async () => {
-    const mockApplication = initApplicationMockEntity();
-    const mockMeeting = initApplicationDecisionMeetingMock(mockApplication);
-    mockMeetingService.getByAppFileNumber.mockResolvedValue([mockMeeting]);
     const result = await controller.getAllForApplication('fake-number');
 
     expect(mockMeetingService.getByAppFileNumber).toBeCalledTimes(1);
@@ -88,9 +91,6 @@ describe('ApplicationDecisionMeetingController', () => {
   });
 
   it('should get a specific meeting', async () => {
-    const mockApplication = initApplicationMockEntity();
-    const mockMeeting = initApplicationDecisionMeetingMock(mockApplication);
-    mockMeetingService.get.mockResolvedValue(mockMeeting);
     const result = await controller.get('fake-uuid');
 
     expect(mockMeetingService.get).toBeCalledTimes(1);
@@ -107,14 +107,11 @@ describe('ApplicationDecisionMeetingController', () => {
   });
 
   it('should create meeting', async () => {
-    const appMock = initApplicationMockEntity();
-    const mockMeeting = initApplicationDecisionMeetingMock(appMock);
-    mockApplicationService.getOrFail.mockResolvedValue(appMock);
-    mockMeetingService.createOrUpdate.mockResolvedValue(mockMeeting);
+    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
 
     const meetingToUpdate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      applicationFileNumber: appMock.fileNumber,
+      applicationFileNumber: mockApplication.fileNumber,
     } as CreateApplicationDecisionMeetingDto;
 
     await controller.create(meetingToUpdate);
@@ -122,14 +119,11 @@ describe('ApplicationDecisionMeetingController', () => {
     expect(mockMeetingService.createOrUpdate).toBeCalledTimes(1);
     expect(mockMeetingService.createOrUpdate).toBeCalledWith({
       date: new Date(meetingToUpdate.date),
-      applicationUuid: appMock.uuid,
+      applicationUuid: mockApplication.uuid,
     });
   });
 
   it('should update meeting', async () => {
-    const appMock = initApplicationMockEntity();
-    const mockMeeting = initApplicationDecisionMeetingMock(appMock);
-    mockMeetingService.createOrUpdate.mockResolvedValue(mockMeeting);
     const meetingToUpdate = {
       uuid: mockMeeting.uuid,
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -144,26 +138,48 @@ describe('ApplicationDecisionMeetingController', () => {
     });
   });
 
-  it('should load and map meetings', async () => {
-    const appMock = initApplicationMockEntity();
-    appMock.card.board = {
+  it('should load and map application meetings', async () => {
+    mockApplicationService.getMany.mockResolvedValue([mockApplication]);
+    mockReconsiderationService.getMany.mockResolvedValue([]);
+
+    mockApplication.card!.board = {
       code: 'CODE',
     } as Board;
-    const mockMeeting = initApplicationDecisionMeetingMock(appMock);
-    mockApplicationService.getAll.mockResolvedValue([appMock]);
-    mockMeetingService.getUpcomingMeetings.mockResolvedValue([
+    mockMeetingService.getUpcomingApplicationMeetings.mockResolvedValue([
       {
-        uuid: appMock.uuid,
+        uuid: mockApplication.uuid,
         next_meeting: mockMeeting.date.toISOString(),
       },
     ]);
-    mockAppDocumentService.listAll.mockResolvedValue([]);
 
     const res = await controller.getMeetings();
 
     expect(res.CODE).toBeDefined();
     expect(res.CODE.length).toEqual(1);
     expect(res.CODE[0].meetingDate).toEqual(mockMeeting.date.getTime());
-    expect(res.CODE[0].fileNumber).toEqual(appMock.fileNumber);
+    expect(res.CODE[0].fileNumber).toEqual(mockApplication.fileNumber);
+  });
+
+  it('should load and map reconsideration meetings', async () => {
+    mockApplicationService.getMany.mockResolvedValue([]);
+
+    const reconMock = initApplicationReconsiderationMockEntity(mockApplication);
+    reconMock.card!.board = {
+      code: 'CODE',
+    } as Board;
+    mockReconsiderationService.getMany.mockResolvedValue([reconMock]);
+    mockMeetingService.getUpcomingReconsiderationMeetings.mockResolvedValue([
+      {
+        uuid: reconMock.uuid,
+        next_meeting: mockMeeting.date.toISOString(),
+      },
+    ]);
+
+    const res = await controller.getMeetings();
+
+    expect(res.CODE).toBeDefined();
+    expect(res.CODE.length).toEqual(1);
+    expect(res.CODE[0].meetingDate).toEqual(mockMeeting.date.getTime());
+    expect(res.CODE[0].fileNumber).toEqual(mockApplication.fileNumber);
   });
 });

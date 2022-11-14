@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationAmendment } from '../decision/application-amendment/application-amendment.entity';
 import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
@@ -16,6 +17,7 @@ import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { CovenantService } from '../covenant/covenant.service';
+import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardDto } from './board.dto';
 import { Board } from './board.entity';
@@ -53,12 +55,12 @@ export class BoardController {
     const recons = await this.reconsiderationService.getByBoardCode(boardCode);
     const covenants = await this.covenantService.getByBoardCode(boardCode);
 
-    let planningReviews = [];
+    let planningReviews: PlanningReview[] = [];
     if (boardCode === 'exec') {
       planningReviews = await this.planningReviewService.getCards();
     }
 
-    let amendments = [];
+    let amendments: ApplicationAmendment[] = [];
     if (boardCode === 'ceo') {
       amendments = await this.amendmentService.getByBoardCode(boardCode);
     }
@@ -89,15 +91,9 @@ export class BoardController {
     @Body()
     card: CardCreateDto,
   ): Promise<any> {
-    const board = await this.boardService.getOne({
+    const board = await this.boardService.getOneOrFail({
       code: card.boardCode,
     });
-    if (!board) {
-      throw new ServiceValidationException(
-        `Board with code ${card.boardCode} not found`,
-      );
-    }
-
     return this.cardService.create(card.typeCode, board);
   }
 
@@ -105,7 +101,9 @@ export class BoardController {
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getCard(@Param('uuid') cardUuid: string) {
     const card = await this.cardService.get(cardUuid);
-
+    if (!card) {
+      throw new ServiceValidationException(`Card ${cardUuid} not found`);
+    }
     return this.cardService.mapToDetailedDto(card);
   }
 }

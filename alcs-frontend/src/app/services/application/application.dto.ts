@@ -34,7 +34,7 @@ export interface ApplicationDto {
   pausedDays: number;
   paused: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
-  card: CardDto;
+  card?: CardDto;
 }
 
 export interface UpdateApplicationDto {

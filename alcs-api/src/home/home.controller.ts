@@ -56,7 +56,7 @@ export class HomeController {
   }> {
     const userId = req.user.entity.uuid;
     if (userId) {
-      const applications = await this.applicationService.getAll({
+      const applications = await this.applicationService.getMany({
         card: { assigneeUuid: userId },
       });
       const reconsiderations = await this.reconsiderationService.getBy({
@@ -142,6 +142,10 @@ export class HomeController {
   private mapReconToDto(recons: ApplicationReconsideration[]) {
     const result: HomepageSubtaskDTO[] = [];
     for (const recon of recons) {
+      if (!recon.card) {
+        continue;
+      }
+
       for (const subtask of recon.card.subtasks) {
         result.push({
           type: subtask.type,
@@ -166,6 +170,10 @@ export class HomeController {
     const appPausedMap = await this.timeService.getPausedStatus(applications);
     const result: HomepageSubtaskDTO[] = [];
     for (const application of applications) {
+      if (!application.card) {
+        continue;
+      }
+
       application.decisionMeetings = [];
       for (const subtask of application.card?.subtasks) {
         result.push({
@@ -225,6 +233,9 @@ export class HomeController {
   private mapAmendmentsToDtos(amendments: ApplicationAmendment[]) {
     const result: HomepageSubtaskDTO[] = [];
     for (const amendment of amendments) {
+      if (!amendment.card) {
+        continue;
+      }
       for (const subtask of amendment.card.subtasks) {
         result.push({
           type: subtask.type,

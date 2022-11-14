@@ -49,7 +49,7 @@ describe('PlanningReviewService', () => {
     const mockCard = {} as Card;
     const fakeBoard = {} as Board;
 
-    mockRepository.findOne.mockResolvedValueOnce(undefined);
+    mockRepository.findOne.mockResolvedValueOnce(null);
     mockRepository.findOne.mockResolvedValueOnce({} as PlanningReview);
     mockRepository.save.mockResolvedValue({} as PlanningReview);
     mockCardService.create.mockResolvedValue(mockCard);
@@ -109,7 +109,7 @@ describe('PlanningReviewService', () => {
   });
 
   it('should throw an exception when getting by card fails', async () => {
-    mockRepository.findOne.mockResolvedValue(undefined);
+    mockRepository.findOne.mockResolvedValue(null);
     const cardUuid = 'fake-card-uuid';
     const promise = service.getByCardUuid(cardUuid);
 
@@ -135,6 +135,6 @@ describe('PlanningReviewService', () => {
     await service.getBy(mockFilter);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
-    expect(mockRepository.find.mock.calls[0][0].where).toEqual(mockFilter);
+    expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
   });
 });

@@ -56,7 +56,7 @@ describe('CommissionerController', () => {
 
     controller = module.get<CommissionerController>(CommissionerController);
 
-    mockApplicationService.get.mockResolvedValue(
+    mockApplicationService.getOrFail.mockResolvedValue(
       initApplicationMockEntity(fileNumber),
     );
     mockApplicationService.mapToDtos.mockResolvedValue([]);
@@ -71,12 +71,14 @@ describe('CommissionerController', () => {
   it('should call through to application service for fetch', async () => {
     const res = await controller.get('fake-file');
 
-    expect(mockApplicationService.get).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
     expect(mockAmendmentService.getByApplication).toHaveBeenCalledTimes(1);
     expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(
       1,
     );
-    expect(mockApplicationService.get.mock.calls[0][0]).toEqual(fileNumber);
+    expect(mockApplicationService.getOrFail.mock.calls[0][0]).toEqual(
+      fileNumber,
+    );
     expect(res.hasRecons).toBeFalsy();
     expect(res.hasAmendments).toBeFalsy();
   });

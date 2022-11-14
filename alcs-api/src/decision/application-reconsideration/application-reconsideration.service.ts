@@ -5,15 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
+  In,
   IsNull,
   Repository,
 } from 'typeorm';
-import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
@@ -128,11 +129,16 @@ export class ApplicationReconsiderationService {
     const reconsideration = await this.fetchAndValidateReconsideration(uuid);
 
     reconsideration.reviewDate = formatIncomingDate(updateDto.reviewDate);
-    reconsideration.submittedDate = formatIncomingDate(updateDto.submittedDate);
 
-    reconsideration.type = await this.getReconsiderationType(
-      updateDto.typeCode,
-    );
+    if (updateDto.submittedDate) {
+      reconsideration.submittedDate = new Date(updateDto.submittedDate);
+    }
+
+    if (updateDto.typeCode) {
+      reconsideration.type = await this.getReconsiderationType(
+        updateDto.typeCode,
+      );
+    }
 
     if (updateDto.reconsideredDecisionUuids) {
       reconsideration.reconsidersDecisions =
@@ -159,7 +165,7 @@ export class ApplicationReconsiderationService {
   }
 
   private async fetchAndValidateReconsideration(uuid: string) {
-    const recon = await this.reconsiderationRepository.findOneByOrFail({
+    const recon = await this.reconsiderationRepository.findOneBy({
       uuid,
     });
 
@@ -231,6 +237,15 @@ export class ApplicationReconsiderationService {
   ): Promise<ApplicationReconsiderationType> {
     return this.reconsiderationTypeRepository.findOneByOrFail({
       code,
+    });
+  }
+
+  getMany(reconUuids: string[]) {
+    return this.reconsiderationRepository.find({
+      where: {
+        uuid: In(reconUuids),
+      },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });
   }
 }

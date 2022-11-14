@@ -35,7 +35,11 @@ describe('ApplicationController', () => {
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
     type: mockApplicationEntity.type,
-    region: undefined,
+    region: {
+      code: 'region-code',
+      label: 'region-label',
+      description: 'region-description',
+    },
     localGovernment: {
       uuid: 'fake',
       name: 'Local Government',
@@ -123,7 +127,7 @@ describe('ApplicationController', () => {
 
     const res = await controller.create({
       ...mockApplicationDto,
-      dateReceived: mockApplicationDto.dateReceived,
+      dateReceived: mockApplicationDto.dateReceived!,
       localGovernmentUuid: 'government-uuid',
       typeCode: 'fake-code',
     });
@@ -297,7 +301,7 @@ describe('ApplicationController', () => {
     };
 
     const returnedApplication = mockApplicationEntity;
-    returnedApplication.card.assigneeUuid = mockUserUuid;
+    returnedApplication.card!.assigneeUuid = mockUserUuid;
 
     applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
     applicationService.update.mockResolvedValue(returnedApplication);
@@ -320,7 +324,7 @@ describe('ApplicationController', () => {
     };
 
     applicationService.getOrFail.mockResolvedValue({} as Application);
-    cardService.get.mockResolvedValue(undefined);
+    cardService.get.mockResolvedValue(null);
 
     await expect(
       controller.updateCard(cardUuid, mockUpdate, {
@@ -347,7 +351,7 @@ describe('ApplicationController', () => {
       ...mockApplicationEntity,
     } as Application);
     cardService.get.mockResolvedValue(mockApplicationEntity.card);
-    cardService.update.mockResolvedValue(mockApplicationEntity.card);
+    cardService.update.mockResolvedValue(mockApplicationEntity.card!);
 
     const updatedCard = {
       assigneeUuid: 'fake',
@@ -370,7 +374,7 @@ describe('ApplicationController', () => {
     ]);
 
     const result = await controller.updateCard(
-      mockApplicationEntity.card.uuid,
+      mockApplicationEntity.card!.uuid,
       mockUpdate,
       {
         user: { entity: { uuid: 'fake' } },
@@ -378,6 +382,6 @@ describe('ApplicationController', () => {
     );
 
     expect(cardService.update).toBeCalledTimes(1);
-    expect(result.card.status.code).toStrictEqual(updatedCard.status.code);
+    expect(result.card!.status.code).toStrictEqual(updatedCard.status.code);
   });
 });

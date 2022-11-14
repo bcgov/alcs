@@ -11,8 +11,8 @@ import {
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { ApplicationDecisionMeetingDto } from '../decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
-import { ApplicationDecisionMeetingDto } from './application-decision-meeting/application-decision-meeting.dto';
 
 export class CreateApplicationDto {
   @IsNotEmpty()
@@ -147,8 +147,9 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
-  @AutoMap(() => CardDto)
-  card: CardDto;
+  @AutoMap()
+  @Type(() => CardDto)
+  card?: CardDto;
 }
 
 export class ApplicationUpdateServiceDto {

@@ -61,7 +61,7 @@ export class CardService {
   }
 
   async create(typeCode: string, board: Board, persist = true) {
-    const type = await this.cardTypeRepository.findOneOrFail({
+    const type = await this.cardTypeRepository.findOne({
       where: {
         code: typeCode,
       },

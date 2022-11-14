@@ -3,15 +3,14 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { CovenantService } from '../covenant/covenant.service';
+import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
+import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { Board } from './board.entity';
@@ -144,7 +143,7 @@ describe('BoardController', () => {
   });
 
   it('should call service with correct type when creating card', async () => {
-    boardService.getOne.mockResolvedValue({} as Board);
+    boardService.getOneOrFail.mockResolvedValue({} as Board);
     cardService.create.mockResolvedValue({} as Card);
 
     const boardCode = 'fake-board';
@@ -154,20 +153,5 @@ describe('BoardController', () => {
     expect(cardService.create).toHaveBeenCalledTimes(1);
     expect(cardService.create.mock.calls[0][0]).toEqual(typeCode);
     expect(cardService.create.mock.calls[0][1]).toEqual({});
-  });
-
-  it('should fail call create card when board does not exist', async () => {
-    boardService.getOne.mockResolvedValue(undefined);
-    cardService.create.mockResolvedValue({} as Card);
-
-    const boardCode = 'fake-board';
-    const typeCode = 'fake-type';
-    await expect(
-      controller.createCard({ typeCode, boardCode }),
-    ).rejects.toMatchObject(
-      new ServiceValidationException(`Board with code ${boardCode} not found`),
-    );
-
-    expect(cardService.create).toHaveBeenCalledTimes(0);
   });
 });

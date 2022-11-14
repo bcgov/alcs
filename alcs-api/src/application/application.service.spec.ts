@@ -69,7 +69,7 @@ describe('ApplicationService', () => {
   });
 
   it('should getall applications', async () => {
-    expect(await applicationService.getAll({})).toStrictEqual([
+    expect(await applicationService.getMany({})).toStrictEqual([
       applicationMockEntity,
     ]);
   });
@@ -126,7 +126,7 @@ describe('ApplicationService', () => {
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
-  it('should call save when an Application is updated', async () => {
+  it('should call update when an Application is updated', async () => {
     const applicationMockEntity = initApplicationMockEntity();
     applicationRepositoryMock.findOne.mockResolvedValue(applicationMockEntity);
 
@@ -140,7 +140,7 @@ describe('ApplicationService', () => {
         payload,
       ),
     ).toStrictEqual(applicationMockEntity);
-    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
   });
 
   it('should get applications near expiry', async () => {
@@ -204,11 +204,11 @@ describe('ApplicationService', () => {
     });
 
     expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
-    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
   });
 
   it('should fail to update if application does not exist', async () => {
-    applicationRepositoryMock.findOne.mockResolvedValue(undefined);
+    applicationRepositoryMock.findOne.mockResolvedValue(null);
 
     const promise = applicationService.updateByUuid(
       applicationMockEntity.uuid,

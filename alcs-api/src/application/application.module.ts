@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
-import { DecisionOutcomeCode } from '../decision/application-decision/application-decision-outcome.entity';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
@@ -13,9 +12,6 @@ import { NotificationModule } from '../notification/notification.module';
 import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
-import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
-import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -35,8 +31,6 @@ import { ApplicationService } from './application.service';
       Application,
       ApplicationPaused,
       ApplicationMeeting,
-      ApplicationDecisionMeeting,
-      DecisionOutcomeCode,
       ApplicationDocument,
       ApplicationLocalGovernment,
       Board,
@@ -55,7 +49,7 @@ import { ApplicationService } from './application.service';
     },
     ApplicationProfile,
     ApplicationSubtaskProfile,
-    ApplicationDecisionMeetingService,
+
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationDocumentService,
@@ -63,7 +57,6 @@ import { ApplicationService } from './application.service';
   ],
   controllers: [
     ApplicationController,
-    ApplicationDecisionMeetingController,
     ApplicationMeetingController,
     ApplicationDocumentController,
     ApplicationLocalGovernmentController,

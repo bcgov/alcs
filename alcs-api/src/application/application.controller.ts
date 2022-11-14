@@ -17,7 +17,10 @@ import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CONFIG_TOKEN } from '../common/config/config.module';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import {
@@ -41,20 +44,18 @@ export class ApplicationController {
   @Get()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getAll(): Promise<ApplicationDto[]> {
-    const applications = await this.applicationService.getAll();
+    const applications = await this.applicationService.getMany();
     return this.applicationService.mapToDtos(applications);
   }
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
-    const application = await this.applicationService.get(fileNumber);
-    if (application) {
-      const mappedApplication = await this.applicationService.mapToDtos([
-        application,
-      ]);
-      return mappedApplication[0];
-    }
+    const application = await this.applicationService.getOrFail(fileNumber);
+    const mappedApplication = await this.applicationService.mapToDtos([
+      application,
+    ]);
+    return mappedApplication[0];
   }
 
   @Post()
@@ -118,6 +119,10 @@ export class ApplicationController {
         application,
       ]);
       return mappedApplication[0];
+    } else {
+      throw new ServiceNotFoundException(
+        `Failed to find application with card uuid ${cardUuid}`,
+      );
     }
   }
 
@@ -154,7 +159,7 @@ export class ApplicationController {
         receiverUuid: updatedCard.assigneeUuid,
         title: "You've been assigned",
         body: `${application.fileNumber} (${application.applicant})`,
-        link: `${frontEnd}/board/${application.card.board.code}?card=${application.card.uuid}&type=${application.card.type.code}`,
+        link: `${frontEnd}/board/${updatedCard.board.code}?card=${updatedCard.uuid}&type=${updatedCard.type.code}`,
         targetType: 'application',
       });
     }

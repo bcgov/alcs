@@ -4,7 +4,10 @@ import { FindOptionsRelations, Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
@@ -80,6 +83,12 @@ export class CommentService {
       where: { uuid },
     });
 
+    if (!comment) {
+      throw new ServiceNotFoundException(
+        `Failed to find comment with uuid ${uuid}`,
+      );
+    }
+
     await this.commentRepository.softRemove([comment]);
     await this.commentMentionService.removeMentions(uuid);
     return;
@@ -92,6 +101,12 @@ export class CommentService {
         ...this.DEFAULT_COMMENT_RELATIONS,
       },
     });
+
+    if (!comment) {
+      throw new ServiceNotFoundException(
+        `Failed to find comment with uuid ${uuid}`,
+      );
+    }
 
     if (body.trim() === '') {
       throw new ServiceValidationException('Comment body must be filled.');

@@ -14,14 +14,11 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
   @Input() selectedValue: number | undefined;
   @Input() min: Date | number | undefined;
 
+  @Output() save = new EventEmitter<number>();
   @ViewChild('datePicker') private datePicker!: MatDatepicker<any>;
 
-  minimum: Date | undefined;
-
-  @Output() save = new EventEmitter<number>();
-
   form!: FormGroup;
-
+  minimum: Date | undefined;
   isEditing = false;
   formattedDate = '';
 

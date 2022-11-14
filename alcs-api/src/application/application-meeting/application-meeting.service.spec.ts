@@ -137,7 +137,7 @@ describe('ApplicationMeetingService', () => {
   });
 
   it('should fail on update if meeting not found', async () => {
-    mockAppMeetingRepository.findOne.mockReturnValue(undefined);
+    mockAppMeetingRepository.findOne.mockResolvedValue(null);
 
     expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
     await expect(

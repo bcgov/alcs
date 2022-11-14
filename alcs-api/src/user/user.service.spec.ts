@@ -72,7 +72,7 @@ describe('UserService', () => {
 
   describe('createUser', () => {
     it('should save a user when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(undefined);
+      repositoryMock.findOne.mockResolvedValue(null);
 
       const user = await service.create(mockUser);
 
@@ -96,7 +96,7 @@ describe('UserService', () => {
     });
 
     it('should reject when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(undefined);
+      repositoryMock.findOne.mockResolvedValue(null);
 
       await expect(service.delete(mockUser.uuid)).rejects.toMatchObject(
         new Error(`User with provided uuid ${mockUser.uuid} was not found`),
@@ -116,7 +116,7 @@ describe('UserService', () => {
     });
 
     it('should fail when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(undefined);
+      repositoryMock.findOne.mockResolvedValue(null);
 
       await expect(service.update('fake-uuid', mockUser)).rejects.toMatchObject(
         new ServiceNotFoundException(`User not found fake-uuid`),

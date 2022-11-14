@@ -152,7 +152,7 @@ export class ApplicationDecisionController {
     }
 
     let reconsiders;
-    if (updateDto.reconsidersUuid) {
+    if (updateDto.amendsUuid) {
       reconsiders = await this.reconsiderationService.getByUuid(
         updateDto.amendsUuid,
       );

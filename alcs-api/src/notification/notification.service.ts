@@ -52,6 +52,13 @@ export class NotificationService {
     application: Application,
   ) {
     const frontEnd = this.config.get('FRONTEND_ROOT');
+
+    if (!application.card) {
+      throw new Error(
+        'Cannot set notifications for applications without cards',
+      );
+    }
+
     const notification = new Notification({
       body,
       title: `${application.fileNumber} (${application.applicant})`,

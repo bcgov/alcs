@@ -3,8 +3,6 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import {
@@ -35,20 +33,6 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
-      createMap(
-        mapper,
-        ApplicationDecisionMeeting,
-        ApplicationDecisionMeetingDto,
-      );
-      createMap(
-        mapper,
-        ApplicationDecisionMeetingDto,
-        ApplicationDecisionMeeting,
-        forMember(
-          (a) => a.date,
-          mapFrom((ad) => new Date(ad.date)),
-        ),
-      );
 
       createMap(
         mapper,
@@ -158,11 +142,11 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.meetingStartDate,
-          mapFrom((a) => a.meetingPause.startDate.valueOf()),
+          mapFrom((a) => a.meetingPause?.startDate.valueOf()),
         ),
         forMember(
           (ad) => ad.meetingEndDate,
-          mapFrom((a) => a.meetingPause.endDate?.valueOf()),
+          mapFrom((a) => a.meetingPause?.endDate?.valueOf()),
         ),
         forMember(
           (ad) => ad.reportStartDate,
@@ -202,7 +186,7 @@ export class ApplicationProfile extends AutomapperProfile {
     };
   }
 
-  private numberToDateSafe(date: number | null): Date | null {
+  private numberToDateSafe(date?: number | null): Date | null {
     return date ? new Date(date) : null;
   }
 }

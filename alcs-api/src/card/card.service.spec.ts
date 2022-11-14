@@ -80,7 +80,7 @@ describe('CardService', () => {
       boardUuid: mockCardEntity.boardUuid,
     };
 
-    cardRepositoryMock.findOne.mockReturnValue(undefined);
+    cardRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(
       service.update(mockCardEntity.uuid, payload),
@@ -99,7 +99,7 @@ describe('CardService', () => {
       statuses: [{ order: 0, status: { code: 'fake-status' } }],
     } as Board;
 
-    cardTypeRepositoryMock.findOneOrFail.mockResolvedValue({
+    cardTypeRepositoryMock.findOne.mockResolvedValue({
       code: 'fake-type',
     } as CardType);
 
@@ -116,7 +116,7 @@ describe('CardService', () => {
       statuses: [{ order: 0, status: { code: 'fake-status' } }],
     } as Board;
 
-    cardTypeRepositoryMock.findOneOrFail.mockReturnValue(undefined);
+    cardTypeRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(service.create(fakeType, board)).rejects.toMatchObject(
       new ServiceValidationException(

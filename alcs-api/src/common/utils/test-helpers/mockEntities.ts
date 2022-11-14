@@ -1,7 +1,7 @@
 import { ApplicationAmendment } from '../../../decision/application-amendment/application-amendment.entity';
 import { ApplicationReconsideration } from '../../../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationType } from '../../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeeting } from '../../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeeting } from '../../../decision/application-decision-meeting/application-decision-meeting.entity';
 import { DecisionOutcomeCode } from '../../../decision/application-decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../../decision/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../../application/application-meeting/application-meeting.entity';
@@ -191,10 +191,10 @@ const initMockUserDto = (assignee?: User): UserDto => {
   userDto.uuid = 'user-uuid';
 
   userDto.identityProvider = userEntity.identityProvider;
-  userDto.name = userEntity.name;
+  userDto.name = userEntity.name!;
   userDto.idirUserName = userEntity.idirUserName;
   userDto.initials =
-    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.givenName!.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
 
@@ -207,11 +207,11 @@ const initMockAssigneeDto = (assignee?: User): AssigneeDto => {
   assigneeDto.uuid = userEntity.uuid;
   assigneeDto.name = userEntity.name;
   assigneeDto.initials =
-    userEntity.givenName.charAt(0).toUpperCase() +
+    userEntity.givenName!.charAt(0).toUpperCase() +
     userEntity.familyName.charAt(0).toUpperCase();
   assigneeDto.mentionLabel =
-    userEntity.givenName.charAt(0).toUpperCase() +
-    userEntity.givenName.slice(1) +
+    userEntity.givenName!.charAt(0).toUpperCase() +
+    userEntity.givenName!.slice(1) +
     userEntity.familyName.charAt(0).toUpperCase() +
     userEntity.familyName.slice(1);
   assigneeDto.email = userEntity.email;
@@ -263,7 +263,9 @@ const initApplicationDecisionMeetingMock = (
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
   meeting.date = new Date(2022, 1, 1, 1, 1, 1, 1);
-  meeting.applicationUuid = application.uuid;
+  meeting.applicationUuid = application
+    ? application.uuid
+    : 'fake-application-uuid';
 
   return meeting;
 };
@@ -276,7 +278,7 @@ const initApplicationDecisionMock = (application?: Application) => {
     } as DecisionOutcomeCode,
     date: new Date(),
     uuid: 'fake-outcome-uuid',
-    applicationUuid: application.uuid,
+    applicationUuid: application ? application.uuid : 'fake-application-uuid',
     application,
     documents: [],
   });
@@ -289,7 +291,9 @@ const initApplicationMeetingMock = (
   const meeting = new ApplicationMeeting();
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
-  meeting.applicationUuid = application.uuid;
+  meeting.applicationUuid = application
+    ? application.uuid
+    : 'fake-application-uuid';
   if (meetingType) {
     meeting.type = meetingType;
   } else {

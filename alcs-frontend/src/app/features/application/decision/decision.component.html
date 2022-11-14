@@ -52,48 +52,45 @@
       <div class="body-large">
         Decision #{{ decisions.length - i }} - Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
       </div>
-      <div class="decision-content">
-        <div>
-          <div class="subheading2">Decision Date</div>
-          {{ decision.date | momentFormat }}
-        </div>
-        <div>
-          <div class="subheading2">Decision Outcome</div>
-          {{ decision.outcome.label }} {{ decision.amends?.linkedResolutions?.join(', ') }}
-          {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
-        </div>
-        <div></div>
-        <div>
-          <div class="subheading2">Decision Maker</div>
-          {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
-        </div>
-        <div>
-          <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
+      <div>
+        <div class="subheading2">Decision Outcome</div>
+        {{ decision.outcome.label }} {{ decision.amends?.linkedResolutions?.join(', ') }}
+        {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
+      </div>
+      <div></div>
+      <div>
+        <div class="subheading2">Decision Maker</div>
+        {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
+      </div>
+      <div>
+        <ng-container *ngIf="decision.ceoCriterion">
+          <div class="subheading2">CEO Criterion</div>
           {{ decision.ceoCriterion?.label }}
           <ng-container *ngIf="decision.isTimeExtension !== null">
             {{ decision.isTimeExtension ? '- Time extension' : '- Other' }}
           </ng-container>
-        </div>
-        <div></div>
-        <div *ngIf="decision.chairReviewRequired">
-          <div class="subheading2">Chair Review Date</div>
-          <span *ngIf="!decision.chairReviewDate">
+        </ng-container>
+      </div>
+      <div></div>
+      <div *ngIf="decision.chairReviewRequired">
+        <div class="subheading2">Chair Review Date</div>
+        <span *ngIf="!decision.chairReviewDate">
           <app-inline-datepicker (save)="onSaveChairReviewDate(decision.uuid, $event)"></app-inline-datepicker>
         </span>
-          <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
-        </div>
-        <div *ngIf="decision.chairReviewRequired">
-          <div class="subheading2">Chair Review Outcome</div>
-          <span *ngIf="decision.chairReviewOutcome !== null">{{
-            decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
-            }}</span>
-          <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
-        </div>
-        <div *ngIf="decision.chairReviewRequired"></div>
-        <div>
-          <div class="subheading2">Audit Date</div>
-          <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
-          <span *ngIf="!decision.auditDate">
+        <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
+      </div>
+      <div *ngIf="decision.chairReviewRequired">
+        <div class="subheading2">Chair Review Outcome</div>
+        <span *ngIf="decision.chairReviewOutcome !== null">{{
+          decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
+        }}</span>
+        <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
+      </div>
+      <div *ngIf="decision.chairReviewRequired"></div>
+      <div>
+        <div class="subheading2">Audit Date</div>
+        <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+        <span *ngIf="!decision.auditDate">
           <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
         </span>
         </div>
@@ -129,5 +126,4 @@
         </ng-container>
       </div>
     </div>
-  </div>
 </section>

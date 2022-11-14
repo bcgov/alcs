@@ -64,10 +64,10 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
 
   populateData(application: ApplicationDto) {
     this.application = application;
-    this.selectedAssignee = application.card.assignee;
+    this.selectedAssignee = application.card!.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = application.card.status.code;
-    this.selectedBoard = application.card.board.code;
+    this.selectedApplicationStatus = application.card!.status.code;
+    this.selectedBoard = application.card!.board.code;
     this.selectedRegion = application.region.code;
   }
 
@@ -80,7 +80,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
 
   onAssigneeSelected(assignee: AssigneeDto) {
     this.selectedAssignee = assignee;
-    this.application.card.assignee = assignee;
+    this.application.card!.assignee = assignee;
     this.updateCard({
       assigneeUuid: assignee?.uuid ?? null,
     });
@@ -96,7 +96,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
     try {
-      await this.boardService.changeBoard(this.application.card.uuid, board.code);
+      await this.boardService.changeBoard(this.application.card!.uuid, board.code);
       const loadedBoard = this.boards.find((board) => board.code === this.selectedBoard);
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
@@ -119,7 +119,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   }
 
   updateCard(updates: UpdateApplicationDto) {
-    this.applicationService.updateApplicationCard(this.data.card.uuid, updates).then(() => {
+    this.applicationService.updateApplicationCard(this.data.card!.uuid, updates).then(() => {
       this.isApplicationDirty = true;
       this.toastService.showSuccessToast('Application updated');
     });
@@ -127,19 +127,19 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.application.card.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
+      body: this.application.card!.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
     });
     answer.subscribe((answer) => {
       if (answer) {
         this.applicationService
-          .updateApplicationCard(this.application.card.uuid, {
-            highPriority: !this.application.card.highPriority,
+          .updateApplicationCard(this.application.card!.uuid, {
+            highPriority: !this.application.card!.highPriority,
           })
           .then(() => {
             this.isApplicationDirty = true;
-            this.application.card.highPriority = !this.application.card.highPriority;
+            this.application.card!.highPriority = !this.application.card!.highPriority;
             this.toastService.showSuccessToast(
-              this.application.card.highPriority ? 'Priority added' : 'Priority removed'
+              this.application.card!.highPriority ? 'Priority added' : 'Priority removed'
             );
           });
       }

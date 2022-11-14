@@ -139,7 +139,7 @@ export class AuthorizationService {
         familyName: idirToken.family_name,
         idirUserGuid: idirToken.idir_user_guid,
         idirUserName: idirToken.idir_username,
-        clientRoles: idirToken.client_roles,
+        clientRoles: idirToken.client_roles || [],
       };
     }
     if (user.identity_provider === 'bceidboth') {
@@ -152,9 +152,12 @@ export class AuthorizationService {
         preferredUsername: bceidToken.preferred_username,
         bceidGuid: bceidToken.bceid_user_guid,
         bceidUserName: bceidToken.bceid_username,
-        clientRoles: bceidToken.client_roles,
+        clientRoles: bceidToken.client_roles || [],
       };
     }
+    throw new Error(
+      `Received user who is neither idir or bceidboth ${user.identity_provider}`,
+    );
   }
 
   private async registerOrUpdateUser(payload: BaseToken) {

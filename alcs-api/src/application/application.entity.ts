@@ -9,13 +9,13 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
+import { ApplicationDecisionMeeting } from '../decision/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { Base } from '../common/entities/base.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
-import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
@@ -50,49 +50,49 @@ export class Application extends Base {
     type: 'timestamptz',
     nullable: true,
   })
-  dateReceived?: Date;
+  dateReceived?: Date | null;
 
   @AutoMap()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  datePaid?: Date;
+  datePaid?: Date | null;
 
   @AutoMap()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  dateAcknowledgedIncomplete?: Date;
+  dateAcknowledgedIncomplete?: Date | null;
 
   @AutoMap()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  dateReceivedAllItems?: Date;
+  dateReceivedAllItems?: Date | null;
 
   @AutoMap()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  dateAcknowledgedComplete?: Date;
+  dateAcknowledgedComplete?: Date | null;
 
   @AutoMap()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  decisionDate?: Date;
+  decisionDate?: Date | null;
 
   @AutoMap()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  notificationSentDate?: Date;
+  notificationSentDate?: Date | null;
 
   @ManyToOne(() => ApplicationType, {
     nullable: false,
@@ -142,7 +142,7 @@ export class Application extends Base {
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
-  card: Card;
+  card: Card | null;
 
   @AutoMap()
   @Column({

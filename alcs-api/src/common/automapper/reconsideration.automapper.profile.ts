@@ -1,6 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { CardDto } from '../../card/card.dto';
+import { Card } from '../../card/card.entity';
 import { ApplicationReconsideration } from '../../decision/application-reconsideration/application-reconsideration.entity';
 import {
   ApplicationForReconsiderationDto,
@@ -10,8 +12,8 @@ import {
   ReconsiderationTypeDto,
 } from '../../decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationType } from '../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../application/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
@@ -81,6 +83,10 @@ export class ReconsiderationProfile extends AutomapperProfile {
           mapFrom((rd) =>
             rd.reviewDate ? rd.reviewDate.getTime() : undefined,
           ),
+        ),
+        forMember(
+          (a) => a.card,
+          mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
         ),
         forMember(
           (a) => a.reconsideredDecisions,

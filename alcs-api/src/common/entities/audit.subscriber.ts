@@ -25,6 +25,10 @@ export class AuditSubscriber implements EntitySubscriberInterface {
   }
 
   async beforeInsert(event: UpdateEvent<any>) {
+    if (!event.entity) {
+      return;
+    }
+
     const userGuids = this.cls.get('userGuids');
     if (userGuids) {
       event.entity.auditCreatedBy = await this.fetchUserUuid(userGuids);
@@ -34,6 +38,10 @@ export class AuditSubscriber implements EntitySubscriberInterface {
   }
 
   async beforeUpdate(event: UpdateEvent<any>) {
+    if (!event.entity) {
+      return;
+    }
+
     const userGuids = this.cls.get('userGuids');
     if (userGuids) {
       event.entity.auditUpdatedBy = await this.fetchUserUuid(userGuids);

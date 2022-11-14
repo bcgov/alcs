@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationService } from '../../application/application.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { ApplicationService } from '../application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 
 @Injectable()
@@ -21,16 +21,28 @@ export class ApplicationDecisionMeetingService {
     });
   }
 
-  get(uuid) {
+  get(uuid: string) {
     return this.appDecisionMeetingRepository.findOne({
       where: { uuid },
     });
   }
 
+  async getOrFail(uuid: string) {
+    const meeting = await this.appDecisionMeetingRepository.findOne({
+      where: { uuid },
+    });
+    if (meeting) {
+      return meeting;
+    }
+    throw new ServiceNotFoundException(`Decision meeting not found ${uuid}`);
+  }
+
   async createOrUpdate(decisionMeeting: Partial<ApplicationDecisionMeeting>) {
     let existingMeeting;
     if (decisionMeeting.uuid) {
-      existingMeeting = await this.get(decisionMeeting.uuid);
+      existingMeeting = await this.appDecisionMeetingRepository.findOne({
+        where: { uuid: decisionMeeting.uuid },
+      });
       if (!existingMeeting) {
         throw new ServiceNotFoundException(
           `Decision meeting not found ${decisionMeeting.uuid}`,
@@ -47,17 +59,31 @@ export class ApplicationDecisionMeetingService {
   }
 
   async delete(uuid) {
-    const meeting = await this.get(uuid);
+    const meeting = await this.getOrFail(uuid);
     return this.appDecisionMeetingRepository.softRemove([meeting]);
   }
 
-  async getUpcomingMeetings(): Promise<
+  async getUpcomingReconsiderationMeetings(): Promise<
+    { uuid: string; next_meeting: string }[]
+  > {
+    return await this.appDecisionMeetingRepository
+      .createQueryBuilder('meeting')
+      .select('reconsideration.uuid, MAX(meeting.date) as next_meeting')
+      .innerJoin('meeting.application', 'application')
+      .innerJoin('application.reconsiderations', 'reconsideration')
+      .innerJoin('reconsideration.card', 'card')
+      .groupBy('reconsideration.uuid')
+      .getRawMany();
+  }
+
+  async getUpcomingApplicationMeetings(): Promise<
     { uuid: string; next_meeting: string }[]
   > {
     return await this.appDecisionMeetingRepository
       .createQueryBuilder('meeting')
       .select('application.uuid, MAX(meeting.date) as next_meeting')
-      .leftJoin('meeting.application', 'application')
+      .innerJoin('meeting.application', 'application')
+      .innerJoin('application.card', 'card')
       .groupBy('application.uuid')
       .getRawMany();
   }

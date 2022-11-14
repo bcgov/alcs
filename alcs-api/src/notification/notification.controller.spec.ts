@@ -78,7 +78,7 @@ describe('NotificationController', () => {
   });
 
   it('should call into service for markReadAll', async () => {
-    notificationService.markAllRead.mockResolvedValue(undefined);
+    notificationService.markAllRead.mockResolvedValue({} as any);
 
     await controller.markAllRead({
       user: {
@@ -96,7 +96,7 @@ describe('NotificationController', () => {
 
   it('should call into service for markRead', async () => {
     notificationService.get.mockResolvedValue({} as Notification);
-    notificationService.markRead.mockResolvedValue(undefined);
+    notificationService.markRead.mockResolvedValue({} as any);
 
     await controller.markRead(
       {
@@ -116,8 +116,8 @@ describe('NotificationController', () => {
   });
 
   it('should throw an exception when notification is not found', async () => {
-    notificationService.get.mockResolvedValue(undefined);
-    notificationService.markRead.mockResolvedValue(undefined);
+    notificationService.get.mockResolvedValue(null);
+    notificationService.markRead.mockResolvedValue({} as any);
 
     await expect(
       controller.markRead(

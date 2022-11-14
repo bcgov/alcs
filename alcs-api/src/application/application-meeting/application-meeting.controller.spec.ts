@@ -1,7 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
@@ -148,27 +147,5 @@ describe('ApplicationMeetingController', () => {
       reportStartDate: meetingToUpdate.reportStartDate,
       reportEndDate: meetingToUpdate.reportEndDate,
     });
-  });
-
-  it('should fail create meeting if meeting type does not exist', async () => {
-    const appMock = initApplicationMockEntity();
-    initApplicationMeetingMock(appMock);
-    mockApplicationService.getOrFail.mockResolvedValueOnce(appMock);
-    mockApplicationCodeService.fetchMeetingType.mockReturnValue(undefined);
-
-    await expect(
-      controller.create(
-        {
-          meetingTypeCode: 'BAD-CODE',
-          description: '',
-          meetingStartDate: Date.now(),
-        },
-        'file-number',
-      ),
-    ).rejects.toMatchObject(
-      new NotFoundException('Application Meeting Type not found BAD-CODE'),
-    );
-
-    expect(mockMeetingService.create).toBeCalledTimes(0);
   });
 });
