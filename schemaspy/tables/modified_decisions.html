@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>amended_decisions - postgres Database</title>
+        <title>modified_decisions - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>amended_decisions</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>modified_decisions</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -109,7 +109,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_amendment_uuid">application_amendment_uuid</span></td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_modification_uuid">application_modification_uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -122,7 +122,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="amended_decisions.application_amendment_uuid references application_amendment.uuid via FK_20ba0006777b542c6d02fd27175"><a href='application_amendment.html'>application_amendment</a><span class='relatedKey'>.uuid</span></td>
+                                                <td title="modified_decisions.application_modification_uuid references application_modification.uuid via FK_20ba0006777b542c6d02fd27175"><a href='application_modification.html'>application_modification</a><span class='relatedKey'>.uuid</span></td>
                                                 <td class="constraint detail">FK_20ba0006777b542c6d02fd27175<span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                         </table>
@@ -143,7 +143,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="amended_decisions.application_decision_uuid references application_decision.uuid via FK_af9d814b83e6425505742b574a0"><a href='application_decision.html'>application_decision</a><span class='relatedKey'>.uuid</span></td>
+                                                <td title="modified_decisions.application_decision_uuid references application_decision.uuid via FK_af9d814b83e6425505742b574a0"><a href='application_decision.html'>application_decision</a><span class='relatedKey'>.uuid</span></td>
                                                 <td class="constraint detail">FK_af9d814b83e6425505742b574a0<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
@@ -184,13 +184,13 @@
                                     <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_7810fdcf4990efc106a8a782ca3</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
-                                    <td>application_amendment_uuid + application_decision_uuid</td>
+                                    <td>application_modification_uuid + application_decision_uuid</td>
                                 </tr>
                                 <tr>
                                     <td title='Indexed'>IDX_20ba0006777b542c6d02fd2717</td>
                                     <td>Performance</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>application_amendment_uuid</td>
+                                    <td>application_modification_uuid</td>
                                 </tr>
                                 <tr>
                                     <td title='Indexed'>IDX_af9d814b83e6425505742b574a</td>
@@ -221,27 +221,27 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="amended_decisions.html" target="_top" title="amended_decisions" alt="" coords="608,5,1028,133">
-<area shape="rect" id="node2" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="5,125,279,301">
-<area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="323,60,564,412">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="327,60,568,412">
+<area shape="rect" id="node2" href="application_modification.html" target="_top" title="application_modification" alt="" coords="5,125,283,301">
+<area shape="rect" id="node3" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="612,5,1036,133">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/amended_decisions.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/modified_decisions.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="amended_decisions.html" target="_top" title="amended_decisions" alt="" coords="1009,25,1429,153">
-<area shape="rect" id="node2" href="application_amendment.html" target="_top" title="application_amendment" alt="" coords="392,5,665,93">
-<area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="724,228,965,316">
-<area shape="rect" id="node4" href="application.html" target="_top" title="application" alt="" coords="164,76,333,164">
-<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="5,76,120,164">
-<area shape="rect" id="node6" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="415,147,642,235">
-<area shape="rect" id="node7" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="405,252,653,340">
-<area shape="rect" id="node8" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="395,357,662,445">
-<area shape="rect" id="node9" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="377,463,680,551">
-<area shape="rect" id="node10" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1103,225,1336,313">
-<area shape="rect" id="node11" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1087,383,1351,471">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="164,179,333,267">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="5,179,120,267">
+<area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="724,219,965,307">
+<area shape="rect" id="node4" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="415,357,642,445">
+<area shape="rect" id="node5" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="405,111,653,199">
+<area shape="rect" id="node6" href="application_modification.html" target="_top" title="application_modification" alt="" coords="390,5,667,93">
+<area shape="rect" id="node7" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="395,252,662,340">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="377,463,680,551">
+<area shape="rect" id="node9" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1105,216,1338,304">
+<area shape="rect" id="node10" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1009,52,1433,180">
+<area shape="rect" id="node11" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1089,392,1353,480">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/amended_decisions.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/modified_decisions.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

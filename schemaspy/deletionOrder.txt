@@ -7,11 +7,11 @@ covenant
 card_subtask
 reconsidered_decisions
 notification
+modified_decisions
 decision_document
 comment_mention
 board_status
 application_document
-amended_decisions
 card_history
 application_decision_meeting
 comment
@@ -19,7 +19,7 @@ document
 application_paused
 application_decision
 application_reconsideration
-application_amendment
+application_modification
 application
 application_local_government
 card

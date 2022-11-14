@@ -13,7 +13,7 @@ decision_outcome_code
 card
 application_local_government
 application
-application_amendment
+application_modification
 application_reconsideration
 application_decision
 application_paused
@@ -21,11 +21,11 @@ document
 comment
 application_decision_meeting
 card_history
-amended_decisions
 application_document
 board_status
 comment_mention
 decision_document
+modified_decisions
 notification
 reconsidered_decisions
 card_subtask
