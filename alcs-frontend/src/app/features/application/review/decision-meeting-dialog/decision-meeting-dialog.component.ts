@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
@@ -51,7 +51,7 @@ export class DecisionMeetingDialogComponent {
 
         await this.decisionMeetingService.fetch(this.data.fileNumber);
         this.dialogRef.close();
-        this.toastService.showSuccessToast('Meeting created');
+        this.toastService.showSuccessToast('Discussion created');
       } finally {
         this.isLoading = false;
       }

@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from '../../../../../environments/environment';
 import { ApplicationDecisionMeetingDto } from '../../../../services/application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -62,13 +61,13 @@ export class DecisionMeetingComponent implements OnInit {
         },
       });
     } else {
-      this.toastService.showErrorToast('Failed to open meeting, please refresh the page');
+      this.toastService.showErrorToast('Failed to open discussion, please refresh the page');
     }
   }
 
   async onDelete(uuid: string) {
     const answer = this.confirmationDialogService.openDialog({
-      body: 'Are you sure you want to delete meeting?',
+      body: 'Are you sure you want to delete discussion?',
     });
     answer.subscribe((answer) => {
       if (answer) {
