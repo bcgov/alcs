@@ -9,15 +9,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CreateAmendmentDialogComponent } from './create-amendment-dialog.component';
+import { CreateModificationDialogComponent } from './create-modification-dialog.component';
 
 describe('CreateReconsiderationDialogComponent', () => {
-  let component: CreateAmendmentDialogComponent;
-  let fixture: ComponentFixture<CreateAmendmentDialogComponent>;
+  let component: CreateModificationDialogComponent;
+  let fixture: ComponentFixture<CreateModificationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateAmendmentDialogComponent],
+      declarations: [CreateModificationDialogComponent],
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
@@ -36,7 +36,7 @@ describe('CreateReconsiderationDialogComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateAmendmentDialogComponent);
+    fixture = TestBed.createComponent(CreateModificationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
-import { ApplicationAmendmentDto } from '../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationReconsiderationDetailedDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -10,7 +10,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
-import { EditAmendmentDialogComponent } from './edit-amendment-dialog/edit-amendment-dialog.component';
+import { EditModificationDialogComponent } from './edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 
 @Component({
@@ -22,14 +22,14 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   fileNumber: string = '';
   reconsiderations: ApplicationReconsiderationDetailedDto[] = [];
-  amendments: ApplicationAmendmentDto[] = [];
+  modifications: ApplicationModificationDto[] = [];
   reconCodes: BaseCodeDto[] = [];
 
   constructor(
     public dialog: MatDialog,
     private applicationDetailService: ApplicationDetailService,
     private applicationReconsiderationService: ApplicationReconsiderationService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
@@ -45,16 +45,16 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         combineLatestWith(
           this.applicationReconsiderationService.$reconsiderations,
           this.applicationReconsiderationService.$codes,
-          this.amendmentService.$amendments
+          this.modificationService.$modifications
         )
       )
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([application, reconsiderations, reconCodes, amendments]) => {
+      .subscribe(([application, reconsiderations, reconCodes, modifications]) => {
         if (application) {
           this.fileNumber = application.fileNumber;
           this.reconsiderations = reconsiderations ?? [];
           this.reconCodes = reconCodes;
-          this.amendments = amendments;
+          this.modifications = modifications;
         }
       });
   }
@@ -80,16 +80,16 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       });
   }
 
-  onEditAmendment(amendment: ApplicationAmendmentDto) {
+  onEditModification(modification: ApplicationModificationDto) {
     this.dialog
-      .open(EditAmendmentDialogComponent, {
+      .open(EditModificationDialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
         data: {
           fileNumber: this.fileNumber,
-          existingAmendment: amendment,
+          existingModification: modification,
         },
       })
       .afterClosed()
@@ -114,16 +114,15 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       });
   }
 
-  async deleteAmendment(uuid: string, index: number) {
+  async deleteModification(uuid: string, index: number) {
     this.confirmationDialogService
       .openDialog({
-        body: `Are you sure you want to delete Amendment Request #${index}?`,
+        body: `Are you sure you want to delete Modification Request #${index}?`,
       })
       .subscribe(async (answer) => {
         if (answer) {
-          await this.amendmentService.delete(uuid);
-          await this.amendmentService.fetchByApplication(this.fileNumber);
-          this.toastService.showSuccessToast('Amendment request deleted');
+          await this.modificationService.delete(uuid);
+          await this.modificationService.fetchByApplication(this.fileNumber);
         }
       });
   }
@@ -142,18 +141,18 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }
 
-  async onSaveAmendmentReviewDate(uuid: string, reviewDate: number) {
-    await this.amendmentService.update(uuid, {
+  async onSaveModificationReviewDate(uuid: string, reviewDate: number) {
+    await this.modificationService.update(uuid, {
       reviewDate: formatDateForApi(reviewDate),
     });
-    await this.amendmentService.fetchByApplication(this.fileNumber);
+    await this.modificationService.fetchByApplication(this.fileNumber);
   }
 
-  async onSaveAmendmentOutcome(uuid: string, isReviewApproved: boolean) {
-    await this.amendmentService.update(uuid, {
+  async onSaveModificationOutcome(uuid: string, isReviewApproved: boolean) {
+    await this.modificationService.update(uuid, {
       isReviewApproved,
     });
-    await this.amendmentService.fetchByApplication(this.fileNumber);
+    await this.modificationService.fetchByApplication(this.fileNumber);
   }
 
   getReviewOutcomeLabel(reviewOutcome: boolean) {
@@ -176,8 +175,8 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
     }
   }
 
-  goToAmendments() {
-    const el = document.getElementById('amendments');
+  goToModifications() {
+    const el = document.getElementById('modifications');
     if (el) {
       el.scrollIntoView();
     }

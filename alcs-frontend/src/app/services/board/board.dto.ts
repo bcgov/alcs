@@ -1,4 +1,4 @@
-import { ApplicationAmendmentDto } from '../application/application-amendment/application-amendment.dto';
+import { ApplicationModificationDto } from '../application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { CovenantDto } from '../covenant/covenant.dto';
@@ -21,6 +21,6 @@ export interface CardsDto {
   applications: ApplicationDto[];
   reconsiderations: ApplicationReconsiderationDto[];
   planningReviews: PlanningReviewDto[];
-  amendments: ApplicationAmendmentDto[];
+  modifications: ApplicationModificationDto[];
   covenants: CovenantDto[];
 }

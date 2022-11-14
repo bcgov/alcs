@@ -36,11 +36,11 @@ export class ApplicationReconsideration extends Base {
 
   @AutoMap()
   @Column({ type: 'boolean', nullable: true })
-  isReviewApproved?: boolean | null;
+  isReviewApproved: boolean | null;
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
-  reviewDate?: Date | null;
+  reviewDate: Date | null;
 
   @AutoMap()
   @ManyToOne(() => Application, { cascade: ['insert'] })

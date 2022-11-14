@@ -40,19 +40,19 @@ export class GisSubtasksComponent implements OnInit {
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
-    const amendments = nonOrderedSubtasks.filter((s) => s.card.type === CardType.AMEND);
+    const modifications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.MODI);
     const covenants = nonOrderedSubtasks.filter((s) => s.card.type === CardType.COV);
 
     const sortedSubtasks = [
       // high priority
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
-      ...amendments.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      ...modifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...reconsiderations.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...planningReviews.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...covenants.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       // none high priority
       ...applications.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
-      ...amendments.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      ...modifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...reconsiderations.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...planningReviews.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...covenants.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),

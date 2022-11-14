@@ -22,19 +22,19 @@
       >{{ reconLabel.label }}</span
       >
       <span
-        *ngIf="showAmendmentLabel"
+        *ngIf="showModificationLabel"
         class="application-type"
         [ngStyle]="{
-          backgroundColor: amendmentLabel.backgroundColor,
-          color: amendmentLabel.textColor,
-          borderColor: amendmentLabel.borderColor
+          backgroundColor: modificationLabel.backgroundColor,
+          color: modificationLabel.textColor,
+          borderColor: modificationLabel.borderColor
         }"
-      >{{ amendmentLabel.label }}
+        >{{ modificationLabel.label }}
       </span>
     </div>
     <div *ngIf="showCardMenu" class="center">
       <button
-        *ngIf="!_reconsiderations.length && !_amendments.length"
+        *ngIf="!_reconsiderations.length && !_modifications.length"
         class="menu-item center"
         mat-flat-button
         color="accent"
@@ -43,7 +43,7 @@
         Go to card
         <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
       </button>
-      <ng-container *ngIf="_reconsiderations.length || _amendments.length">
+      <ng-container *ngIf="_reconsiderations.length || _modifications.length">
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
         </button>
@@ -52,8 +52,8 @@
           <button *ngFor="let recon of _reconsiderations; let i = index" mat-menu-item (click)="onGoToSubCard(recon)">
             Reconsideration Request #{{ i + 1 }}
           </button>
-          <button *ngFor="let amendment of _amendments; let i = index" mat-menu-item (click)="onGoToSubCard(amendment)">
-            Amendment Request #{{ i + 1 }}
+          <button *ngFor="let modification of _modifications; let i = index" mat-menu-item (click)="onGoToSubCard(modification)">
+            Modification Request #{{ i + 1 }}
           </button>
         </mat-menu>
       </ng-container>

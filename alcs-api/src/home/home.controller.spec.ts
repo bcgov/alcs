@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationService } from '../application/application.service';
@@ -16,7 +16,7 @@ import { CardProfile } from '../common/automapper/card.automapper.profile';
 import { CovenantProfile } from '../common/automapper/covenant.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
-  initApplicationAmendmentMockEntity,
+  initApplicationModificationMockEntity,
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
   initCardMockEntity,
@@ -33,7 +33,7 @@ describe('HomeController', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationSubtaskService: DeepMocked<CardSubtaskService>;
   let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
-  let mockApplicationAmendmentService: DeepMocked<ApplicationAmendmentService>;
+  let mockApplicationModificationService: DeepMocked<ApplicationModificationService>;
   let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
   let mockCovenantService: DeepMocked<CovenantService>;
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
@@ -46,7 +46,8 @@ describe('HomeController', () => {
     mockPlanningReviewService = createMock<PlanningReviewService>();
     mockApplicationTimeTrackingService =
       createMock<ApplicationTimeTrackingService>();
-    mockApplicationAmendmentService = createMock<ApplicationAmendmentService>();
+    mockApplicationModificationService =
+      createMock<ApplicationModificationService>();
     mockCovenantService = createMock<CovenantService>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -78,8 +79,8 @@ describe('HomeController', () => {
           useValue: mockApplicationReconsiderationService,
         },
         {
-          provide: ApplicationAmendmentService,
-          useValue: mockApplicationAmendmentService,
+          provide: ApplicationModificationService,
+          useValue: mockApplicationModificationService,
         },
         {
           provide: ApplicationTimeTrackingService,
@@ -108,8 +109,8 @@ describe('HomeController', () => {
     mockApplicationService.mapToDtos.mockResolvedValue([]);
     mockApplicationReconsiderationService.getBy.mockResolvedValue([]);
     mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([]);
-    mockApplicationAmendmentService.getBy.mockResolvedValue([]);
-    mockApplicationAmendmentService.mapToDtos.mockResolvedValue([]);
+    mockApplicationModificationService.getBy.mockResolvedValue([]);
+    mockApplicationModificationService.mapToDtos.mockResolvedValue([]);
     mockPlanningReviewService.getBy.mockResolvedValue([]);
     mockPlanningReviewService.mapToDtos.mockResolvedValue([]);
     mockCovenantService.getBy.mockResolvedValue([]);
@@ -128,7 +129,7 @@ describe('HomeController', () => {
     mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
-    mockApplicationAmendmentService.getWithIncompleteSubtaskByType.mockResolvedValue(
+    mockApplicationModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
     mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
@@ -257,10 +258,10 @@ describe('HomeController', () => {
       expect(res[0].paused).toBeFalsy();
     });
 
-    it('should call Amendment Service and map it', async () => {
-      const mockAmendment = initApplicationAmendmentMockEntity();
-      mockApplicationAmendmentService.getWithIncompleteSubtaskByType.mockResolvedValue(
-        [mockAmendment],
+    it('should call Modification Service and map it', async () => {
+      const mockModification = initApplicationModificationMockEntity();
+      mockApplicationModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [mockModification],
       );
 
       const res = await controller.getIncompleteSubtasksByType(
@@ -272,8 +273,8 @@ describe('HomeController', () => {
         mockPlanningReviewService.getWithIncompleteSubtaskByType,
       ).toHaveBeenCalledTimes(1);
 
-      expect(res[0].title).toContain(mockAmendment.application.fileNumber);
-      expect(res[0].title).toContain(mockAmendment.application.applicant);
+      expect(res[0].title).toContain(mockModification.application.fileNumber);
+      expect(res[0].title).toContain(mockModification.application.applicant);
       expect(res[0].activeDays).toBeUndefined();
       expect(res[0].paused).toBeFalsy();
     });

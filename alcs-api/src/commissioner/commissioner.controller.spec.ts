@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
@@ -16,14 +16,14 @@ describe('CommissionerController', () => {
   let controller: CommissionerController;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
-  let mockAmendmentService: DeepMocked<ApplicationAmendmentService>;
+  let mockModificationService: DeepMocked<ApplicationModificationService>;
 
   const fileNumber = 'fake-file';
 
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockReconsiderationService = createMock();
-    mockAmendmentService = createMock();
+    mockModificationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -38,8 +38,8 @@ describe('CommissionerController', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: ApplicationAmendmentService,
-          useValue: mockAmendmentService,
+          provide: ApplicationModificationService,
+          useValue: mockModificationService,
         },
         {
           provide: ApplicationReconsiderationService,
@@ -60,7 +60,7 @@ describe('CommissionerController', () => {
       initApplicationMockEntity(fileNumber),
     );
     mockApplicationService.mapToDtos.mockResolvedValue([]);
-    mockAmendmentService.getByApplication.mockResolvedValue([]);
+    mockModificationService.getByApplication.mockResolvedValue([]);
     mockReconsiderationService.getByApplication.mockResolvedValue([]);
   });
 
@@ -72,7 +72,7 @@ describe('CommissionerController', () => {
     const res = await controller.get('fake-file');
 
     expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
-    expect(mockAmendmentService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(mockModificationService.getByApplication).toHaveBeenCalledTimes(1);
     expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(
       1,
     );
@@ -80,11 +80,11 @@ describe('CommissionerController', () => {
       fileNumber,
     );
     expect(res.hasRecons).toBeFalsy();
-    expect(res.hasAmendments).toBeFalsy();
+    expect(res.hasModifications).toBeFalsy();
   });
 
-  it('should set recon and amendment flags if they exist', async () => {
-    mockAmendmentService.getByApplication.mockResolvedValue([
+  it('should set recon and modification flags if they exist', async () => {
+    mockModificationService.getByApplication.mockResolvedValue([
       {
         isReviewApproved: true,
       } as any,
@@ -93,16 +93,16 @@ describe('CommissionerController', () => {
 
     const res = await controller.get(fileNumber);
 
-    expect(mockAmendmentService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(mockModificationService.getByApplication).toHaveBeenCalledTimes(1);
     expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(
       1,
     );
     expect(res.hasRecons).toBeTruthy();
-    expect(res.hasAmendments).toBeTruthy();
+    expect(res.hasModifications).toBeTruthy();
   });
 
-  it('should set amendment flag to false if it was not approved', async () => {
-    mockAmendmentService.getByApplication.mockResolvedValue([
+  it('should set modification flag to false if it was not approved', async () => {
+    mockModificationService.getByApplication.mockResolvedValue([
       {
         isReviewApproved: false,
       } as any,
@@ -111,8 +111,8 @@ describe('CommissionerController', () => {
 
     const res = await controller.get(fileNumber);
 
-    expect(mockAmendmentService.getByApplication).toHaveBeenCalledTimes(1);
-    expect(res.hasAmendments).toBeFalsy();
+    expect(mockModificationService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(res.hasModifications).toBeFalsy();
   });
 
   it('should map to the dto correctly', async () => {

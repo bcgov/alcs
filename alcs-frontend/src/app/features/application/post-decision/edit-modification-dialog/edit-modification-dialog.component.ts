@@ -2,20 +2,20 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
-  ApplicationAmendmentDto,
-  ApplicationAmendmentUpdateDto,
-} from '../../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+  ApplicationModificationDto,
+  ApplicationModificationUpdateDto,
+} from '../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
 @Component({
   selector: 'app-edit-reconsideration-dialog',
-  templateUrl: './edit-amendment-dialog.component.html',
-  styleUrls: ['./edit-amendment-dialog.component.scss'],
+  templateUrl: './edit-modification-dialog.component.html',
+  styleUrls: ['./edit-modification-dialog.component.scss'],
 })
-export class EditAmendmentDialogComponent implements OnInit {
+export class EditModificationDialogComponent implements OnInit {
   decisions: { uuid: string; resolution: string }[] = [];
 
   isLoading = false;
@@ -28,26 +28,26 @@ export class EditAmendmentDialogComponent implements OnInit {
     isReviewApproved: this.isReviewApprovedControl,
     isTimeExtension: this.isTimeExtensionControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
-    amendedDecisions: new FormControl<string[]>([], [Validators.required]),
+    modifiesDecisions: new FormControl<string[]>([], [Validators.required]),
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileNumber: string;
-      existingAmendment: ApplicationAmendmentDto;
+      existingModification: ApplicationModificationDto;
     },
-    private dialogRef: MatDialogRef<EditAmendmentDialogComponent>,
-    private amendmentService: ApplicationAmendmentService,
+    private dialogRef: MatDialogRef<EditModificationDialogComponent>,
+    private modificationService: ApplicationModificationService,
     private decisionService: ApplicationDecisionService,
     private toastService: ToastService
   ) {
     this.form.patchValue({
-      submittedDate: new Date(data.existingAmendment.submittedDate),
-      isReviewApproved: JSON.stringify(data.existingAmendment.isReviewApproved),
-      isTimeExtension: data.existingAmendment.isTimeExtension ? 'true' : 'false',
-      reviewDate: data.existingAmendment.reviewDate ? new Date(data.existingAmendment.reviewDate) : null,
-      amendedDecisions: data.existingAmendment.amendedDecisions.map((dec) => dec.uuid),
+      submittedDate: new Date(data.existingModification.submittedDate),
+      isReviewApproved: JSON.stringify(data.existingModification.isReviewApproved),
+      isTimeExtension: data.existingModification.isTimeExtension ? 'true' : 'false',
+      reviewDate: data.existingModification.reviewDate ? new Date(data.existingModification.reviewDate) : null,
+      modifiesDecisions: data.existingModification.modifiesDecisions.map((dec) => dec.uuid),
     });
   }
 
@@ -58,18 +58,18 @@ export class EditAmendmentDialogComponent implements OnInit {
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, isTimeExtension, isReviewApproved, reviewDate, amendedDecisions } = this.form.getRawValue();
-    const updateDto: ApplicationAmendmentUpdateDto = {
+    const { submittedDate, isTimeExtension, isReviewApproved, reviewDate, modifiesDecisions } = this.form.getRawValue();
+    const updateDto: ApplicationModificationUpdateDto = {
       submittedDate: formatDateForApi(submittedDate!),
       isReviewApproved: isReviewApproved != undefined ? JSON.parse(isReviewApproved) : null,
       isTimeExtension: isTimeExtension === 'true',
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
-      amendedDecisionUuids: amendedDecisions!,
+      modifiesDecisionUuids: modifiesDecisions!,
     };
 
     try {
-      await this.amendmentService.update(this.data.existingAmendment.uuid, updateDto);
-      this.toastService.showSuccessToast('Amendment updated');
+      await this.modificationService.update(this.data.existingModification.uuid, updateDto);
+      this.toastService.showSuccessToast('Modification updated');
     } finally {
       this.isLoading = false;
     }

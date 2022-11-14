@@ -16,7 +16,7 @@ import { ApplicationTypeDto } from '../../code/application-code/application-type
 import { ApplicationDecisionMeetingDto } from '../application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 
-export class ApplicationAmendmentCreateDto {
+export class ApplicationModificationCreateDto {
   @IsNotEmpty()
   @IsString()
   applicationFileNumber: string;
@@ -49,10 +49,10 @@ export class ApplicationAmendmentCreateDto {
 
   @IsArray({})
   @ArrayNotEmpty()
-  amendedDecisionUuids: string[];
+  modifiedDecisionUuids: string[];
 }
 
-export class ApplicationAmendmentUpdateDto {
+export class ApplicationModificationUpdateDto {
   @AutoMap()
   @IsNumber()
   @IsOptional()
@@ -76,10 +76,10 @@ export class ApplicationAmendmentUpdateDto {
   @IsOptional()
   @IsArray({})
   @ArrayNotEmpty()
-  amendedDecisionUuids?: string[];
+  modifiedDecisionUuids?: string[];
 }
 
-export class ApplicationForAmendmentDto {
+export class ApplicationForModificationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
   statusCode: string;
@@ -89,14 +89,14 @@ export class ApplicationForAmendmentDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
-export class ApplicationAmendmentDto {
+export class ApplicationModificationDto {
   uuid: string;
-  application: ApplicationForAmendmentDto;
+  application: ApplicationForModificationDto;
   card: CardDto;
   submittedDate: number;
   reviewDate: number;
   isReviewApproved: boolean | null;
   isTimeExtension: boolean | null;
-  amendedDecisions: ApplicationDecisionDto[];
+  modifiesDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
 }

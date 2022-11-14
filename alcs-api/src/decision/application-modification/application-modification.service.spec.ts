@@ -11,31 +11,31 @@ import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
-import { AmendmentProfile } from '../../common/automapper/amendment.automapper.profile';
+import { ModificationProfile } from '../../common/automapper/modification.automapper.profile';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import {
-  initApplicationAmendmentMockEntity,
+  initApplicationModificationMockEntity,
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import {
-  ApplicationAmendmentCreateDto,
-  ApplicationAmendmentUpdateDto,
-} from './application-amendment.dto';
-import { ApplicationAmendment } from './application-amendment.entity';
-import { ApplicationAmendmentService } from './application-amendment.service';
+  ApplicationModificationCreateDto,
+  ApplicationModificationUpdateDto,
+} from './application-modification.dto';
+import { ApplicationModification } from './application-modification.entity';
+import { ApplicationModificationService } from './application-modification.service';
 
-describe('AmendmentService', () => {
-  let amendmentRepoMock: DeepMocked<Repository<ApplicationAmendment>>;
-  let service: ApplicationAmendmentService;
+describe('ApplicationModificationService', () => {
+  let modificationRepoMock: DeepMocked<Repository<ApplicationModification>>;
+  let service: ApplicationModificationService;
   let applicationServiceMock: DeepMocked<ApplicationService>;
   let cardServiceMock: DeepMocked<CardService>;
   let decisionServiceMock: DeepMocked<ApplicationDecisionService>;
 
-  let mockAmendment;
-  let mockAmendmentCreateDto;
+  let mockModification;
+  let mockModificationCreateDto;
 
-  const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationAmendment> = {
-    amendsDecisions: true,
+  const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationModification> = {
+    modifiesDecisions: true,
     application: {
       type: true,
       region: true,
@@ -54,7 +54,7 @@ describe('AmendmentService', () => {
   beforeEach(async () => {
     applicationServiceMock = createMock();
     cardServiceMock = createMock();
-    amendmentRepoMock = createMock();
+    modificationRepoMock = createMock();
     decisionServiceMock = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -64,7 +64,7 @@ describe('AmendmentService', () => {
         }),
       ],
       providers: [
-        ApplicationAmendmentService,
+        ApplicationModificationService,
         {
           provide: ApplicationService,
           useValue: applicationServiceMock,
@@ -78,22 +78,22 @@ describe('AmendmentService', () => {
           useValue: decisionServiceMock,
         },
         {
-          provide: getRepositoryToken(ApplicationAmendment),
-          useValue: amendmentRepoMock,
+          provide: getRepositoryToken(ApplicationModification),
+          useValue: modificationRepoMock,
         },
-        AmendmentProfile,
+        ModificationProfile,
       ],
     }).compile();
-    service = module.get<ApplicationAmendmentService>(
-      ApplicationAmendmentService,
+    service = module.get<ApplicationModificationService>(
+      ApplicationModificationService,
     );
 
-    mockAmendment = initApplicationAmendmentMockEntity();
-    amendmentRepoMock.findOneOrFail.mockResolvedValue(mockAmendment);
-    amendmentRepoMock.findOneBy.mockResolvedValue(mockAmendment);
-    amendmentRepoMock.find.mockResolvedValue([mockAmendment]);
+    mockModification = initApplicationModificationMockEntity();
+    modificationRepoMock.findOneOrFail.mockResolvedValue(mockModification);
+    modificationRepoMock.findOneBy.mockResolvedValue(mockModification);
+    modificationRepoMock.find.mockResolvedValue([mockModification]);
 
-    mockAmendmentCreateDto = {
+    mockModificationCreateDto = {
       applicationFileNumber: 'fake-app-number',
       applicationTypeCode: 'fake',
       regionCode: 'fake-region',
@@ -102,20 +102,22 @@ describe('AmendmentService', () => {
       submittedDate: 11111111111,
       boardCode: 'fake-board',
       isTimeExtension: false,
-    } as ApplicationAmendmentCreateDto;
+    } as ApplicationModificationCreateDto;
 
-    mockAmendment = initApplicationAmendmentMockEntity();
-    amendmentRepoMock.findOneOrFail.mockResolvedValue(mockAmendment);
-    amendmentRepoMock.findOneBy.mockResolvedValue(mockAmendment);
-    amendmentRepoMock.find.mockResolvedValue([mockAmendment]);
-    amendmentRepoMock.save.mockResolvedValue({} as any);
+    mockModification = initApplicationModificationMockEntity();
+    modificationRepoMock.findOneOrFail.mockResolvedValue(mockModification);
+    modificationRepoMock.findOneBy.mockResolvedValue(mockModification);
+    modificationRepoMock.find.mockResolvedValue([mockModification]);
+    modificationRepoMock.save.mockResolvedValue({} as any);
 
     cardServiceMock.create.mockResolvedValue(new Card());
 
     decisionServiceMock.getMany.mockResolvedValue([]);
 
     applicationServiceMock.get.mockResolvedValue(
-      initApplicationMockEntity(mockAmendmentCreateDto.applicationFileNumber),
+      initApplicationMockEntity(
+        mockModificationCreateDto.applicationFileNumber,
+      ),
     );
   });
 
@@ -132,16 +134,16 @@ describe('AmendmentService', () => {
 
     await service.getByBoardCode(fakeBoardCode);
 
-    expect(amendmentRepoMock.find).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.find).toBeCalledWith(findOptions);
   });
 
-  it('should successfully create application and amendment card if app does not exist', async () => {
+  it('should successfully create application and modification card if app does not exist', async () => {
     const mockApplicationCreateDto = {
-      fileNumber: mockAmendmentCreateDto.applicationFileNumber,
-      typeCode: mockAmendmentCreateDto.applicationTypeCode,
-      regionCode: mockAmendmentCreateDto.regionCode,
-      localGovernmentUuid: mockAmendmentCreateDto.localGovernmentUuid,
-      applicant: mockAmendmentCreateDto.applicant,
+      fileNumber: mockModificationCreateDto.applicationFileNumber,
+      typeCode: mockModificationCreateDto.applicationTypeCode,
+      regionCode: mockModificationCreateDto.regionCode,
+      localGovernmentUuid: mockModificationCreateDto.localGovernmentUuid,
+      applicant: mockModificationCreateDto.applicant,
     } as CreateApplicationDto;
 
     applicationServiceMock.get.mockResolvedValue(null);
@@ -149,25 +151,25 @@ describe('AmendmentService', () => {
       mockApplicationCreateDto as any,
     );
 
-    await service.create(mockAmendmentCreateDto, {} as Board);
+    await service.create(mockModificationCreateDto, {} as Board);
 
-    expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith('AMEND', {} as Board, false);
+    expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.create).toBeCalledWith('MODI', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledWith(
       mockApplicationCreateDto,
       false,
     );
   });
 
-  it('should successfully create amendment and link to existing application', async () => {
-    await service.create(mockAmendmentCreateDto, {} as Board);
+  it('should successfully create modification and link to existing application', async () => {
+    await service.create(mockModificationCreateDto, {} as Board);
 
-    expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith('AMEND', {} as Board, false);
+    expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.create).toBeCalledWith('MODI', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledTimes(0);
   });
 
-  it('should successfully create amendment and link to decisions', async () => {
+  it('should successfully create modification and link to decisions', async () => {
     const decisionUuid = 'decision-uuid';
 
     const mockDecision = {
@@ -179,74 +181,74 @@ describe('AmendmentService', () => {
 
     await service.create(
       {
-        ...mockAmendmentCreateDto,
-        amendedDecisionUuids: [decisionUuid],
+        ...mockModificationCreateDto,
+        modifiedDecisionUuids: [decisionUuid],
       },
       {} as Board,
     );
 
-    expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith('AMEND', {} as Board, false);
+    expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.create).toBeCalledWith('MODI', {} as Board, false);
     expect(applicationServiceMock.create).toBeCalledTimes(0);
     expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
     expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
-    expect(amendmentRepoMock.save.mock.calls[0][0].amendsDecisions).toEqual([
-      mockDecision,
-    ]);
+    expect(
+      modificationRepoMock.save.mock.calls[0][0].modifiesDecisions,
+    ).toEqual([mockDecision]);
   });
 
-  it('should successfully update amendment', async () => {
+  it('should successfully update modification', async () => {
     const uuid = 'fake';
 
     await service.update(uuid, {
       isReviewApproved: true,
-    } as ApplicationAmendmentUpdateDto);
+    } as ApplicationModificationUpdateDto);
 
-    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
+    expect(modificationRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
-    expect(amendmentRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(amendmentRepoMock.save).toHaveBeenCalledWith(mockAmendment);
+    expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
+    expect(modificationRepoMock.save).toHaveBeenCalledWith(mockModification);
   });
 
-  it('should throw an exception when updating an amendment if it does not exist', async () => {
+  it('should throw an exception when updating an modification if it does not exist', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.findOneBy.mockResolvedValue(null);
+    modificationRepoMock.findOneBy.mockResolvedValue(null);
 
     await expect(
-      service.update(uuid, {} as ApplicationAmendmentUpdateDto),
+      service.update(uuid, {} as ApplicationModificationUpdateDto),
     ).rejects.toMatchObject(
-      new ServiceNotFoundException(`Amendment with uuid ${uuid} not found`),
+      new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
+    expect(modificationRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
-    expect(amendmentRepoMock.save).toHaveBeenCalledTimes(0);
+    expect(modificationRepoMock.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call softRemove on delete', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.softRemove.mockResolvedValue({} as any);
+    modificationRepoMock.softRemove.mockResolvedValue({} as any);
 
     await service.delete(uuid);
 
-    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
+    expect(modificationRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
-    expect(amendmentRepoMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
   });
 
-  it('should fail on delete if amendment does not exist', async () => {
+  it('should fail on delete if modification does not exist', async () => {
     const uuid = 'fake';
-    amendmentRepoMock.findOneBy.mockResolvedValue(null);
+    modificationRepoMock.findOneBy.mockResolvedValue(null);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
-      new ServiceNotFoundException(`Amendment with uuid ${uuid} not found`),
+      new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(amendmentRepoMock.findOneBy).toBeCalledWith({
+    expect(modificationRepoMock.findOneBy).toBeCalledWith({
       uuid,
     });
-    expect(amendmentRepoMock.softRemove).toHaveBeenCalledTimes(0);
+    expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(0);
   });
 
   it('should have correct filter condition in getByCardUuid', async () => {
@@ -258,7 +260,7 @@ describe('AmendmentService', () => {
 
     await service.getByCardUuid(cardUuid);
 
-    expect(amendmentRepoMock.findOneOrFail).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.findOneOrFail).toBeCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getByUuid', async () => {
@@ -270,7 +272,7 @@ describe('AmendmentService', () => {
 
     await service.getByUuid(uuid);
 
-    expect(amendmentRepoMock.findOneOrFail).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.findOneOrFail).toBeCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getSubtasks', async () => {
@@ -302,6 +304,6 @@ describe('AmendmentService', () => {
     };
     await service.getWithIncompleteSubtaskByType(subtaskType);
 
-    expect(amendmentRepoMock.find).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.find).toBeCalledWith(findOptions);
   });
 });

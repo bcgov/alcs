@@ -21,6 +21,8 @@ import { ApplicationRegionDto } from '../../code/application-code/application-re
 import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
+import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -99,6 +101,16 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((a) => {
             return this.mapper.map(a.card, Card, CardDto);
           }),
+        ),
+        forMember(
+          (ad) => ad.decisionMeetings,
+          mapFrom((a) =>
+            this.mapper.mapArray(
+              a.decisionMeetings,
+              ApplicationDecisionMeeting,
+              ApplicationDecisionMeetingDto,
+            ),
+          ),
         ),
       );
 

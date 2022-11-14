@@ -18,7 +18,7 @@ import { ApplicationService } from '../../application/application.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ApplicationAmendmentService } from '../application-amendment/application-amendment.service';
+import { ApplicationModificationService } from '../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
@@ -41,7 +41,7 @@ export class ApplicationDecisionController {
   constructor(
     private appDecisionService: ApplicationDecisionService,
     private applicationService: ApplicationService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -100,9 +100,9 @@ export class ApplicationDecisionController {
   async create(
     @Body() createDto: CreateApplicationDecisionDto,
   ): Promise<ApplicationDecisionDto> {
-    if (createDto.amendsUuid && createDto.reconsidersUuid) {
+    if (createDto.modifiesUuid && createDto.reconsidersUuid) {
       throw new BadRequestException(
-        'Cannot create a Decision linked to both an amendment and a reconsideration',
+        'Cannot create a Decision linked to both a modification and a reconsideration',
       );
     }
 
@@ -110,8 +110,8 @@ export class ApplicationDecisionController {
       createDto.applicationFileNumber,
     );
 
-    const amends = createDto.amendsUuid
-      ? await this.amendmentService.getByUuid(createDto.amendsUuid)
+    const modification = createDto.modifiesUuid
+      ? await this.modificationService.getByUuid(createDto.modifiesUuid)
       : undefined;
 
     const reconsiders = createDto.reconsidersUuid
@@ -121,7 +121,7 @@ export class ApplicationDecisionController {
     const newDecision = await this.appDecisionService.create(
       createDto,
       application,
-      amends,
+      modification,
       reconsiders,
     );
 
@@ -138,23 +138,25 @@ export class ApplicationDecisionController {
     @Param('uuid') uuid: string,
     @Body() updateDto: UpdateApplicationDecisionDto,
   ): Promise<ApplicationDecisionDto> {
-    if (updateDto.amendsUuid && updateDto.reconsidersUuid) {
+    if (updateDto.modifiesUuid && updateDto.reconsidersUuid) {
       throw new BadRequestException(
-        'Cannot create a Decision linked to both an amendment and a reconsideration',
+        'Cannot create a Decision linked to both a modification and a reconsideration',
       );
     }
 
-    let amends;
-    if (updateDto.amendsUuid) {
-      amends = await this.amendmentService.getByUuid(updateDto.amendsUuid);
-    } else if (updateDto.amendsUuid === null) {
-      amends = null;
+    let modifies;
+    if (updateDto.modifiesUuid) {
+      modifies = await this.modificationService.getByUuid(
+        updateDto.modifiesUuid,
+      );
+    } else if (updateDto.modifiesUuid === null) {
+      modifies = null;
     }
 
     let reconsiders;
-    if (updateDto.amendsUuid) {
+    if (updateDto.modifiesUuid) {
       reconsiders = await this.reconsiderationService.getByUuid(
-        updateDto.amendsUuid,
+        updateDto.modifiesUuid,
       );
     } else if (updateDto.reconsidersUuid === null) {
       reconsiders = null;
@@ -163,7 +165,7 @@ export class ApplicationDecisionController {
     const updatedMeeting = await this.appDecisionService.update(
       uuid,
       updateDto,
-      amends,
+      modifies,
       reconsiders,
     );
     return this.mapper.mapAsync(

@@ -9,7 +9,7 @@ import {
   OneToOne,
   Unique,
 } from 'typeorm';
-import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../../application/application.entity';
@@ -104,22 +104,24 @@ export class ApplicationDecision extends Base {
   reconsideredBy: ApplicationReconsideration[];
 
   @ManyToMany(
-    () => ApplicationAmendment,
-    (amendment) => amendment.amendsDecisions,
+    () => ApplicationModification,
+    (modification) => modification.modifiesDecisions,
   )
-  amendedBy: ApplicationAmendment[];
+  modifiedBy: ApplicationModification[];
 
   @AutoMap()
-  @OneToOne(() => ApplicationAmendment, (amend) => amend.resultingDecision, {
-    nullable: true,
-  })
+  @OneToOne(
+    () => ApplicationModification,
+    (modification) => modification.resultingDecision,
+    { nullable: true },
+  )
   @JoinColumn()
-  amends?: ApplicationAmendment | null;
+  modifies?: ApplicationModification | null;
 
   @AutoMap()
   @OneToOne(
     () => ApplicationReconsideration,
-    (amend) => amend.resultingDecision,
+    (reconsideration) => reconsideration.resultingDecision,
     { nullable: true },
   )
   @JoinColumn()

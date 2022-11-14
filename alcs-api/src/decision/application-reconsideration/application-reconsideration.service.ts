@@ -13,7 +13,6 @@ import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {
   ApplicationReconsiderationCreateDto,
@@ -128,7 +127,11 @@ export class ApplicationReconsiderationService {
   async update(uuid: string, updateDto: ApplicationReconsiderationUpdateDto) {
     const reconsideration = await this.fetchAndValidateReconsideration(uuid);
 
-    reconsideration.reviewDate = formatIncomingDate(updateDto.reviewDate);
+    if (updateDto.reviewDate !== undefined) {
+      reconsideration.reviewDate = updateDto.reviewDate
+        ? new Date(updateDto.reviewDate)
+        : null;
+    }
 
     if (updateDto.submittedDate) {
       reconsideration.submittedDate = new Date(updateDto.submittedDate);
@@ -140,18 +143,20 @@ export class ApplicationReconsiderationService {
       );
     }
 
-    if (updateDto.reconsideredDecisionUuids) {
-      reconsideration.reconsidersDecisions =
-        await this.applicationDecisionService.getMany(
-          updateDto.reconsideredDecisionUuids,
-        );
+    if (updateDto.isReviewApproved !== undefined) {
+      reconsideration.isReviewApproved = updateDto.isReviewApproved;
     }
 
     if (reconsideration.type.code === '33.1') {
       reconsideration.isReviewApproved = null;
       reconsideration.reviewDate = null;
-    } else {
-      reconsideration.isReviewApproved = updateDto.isReviewApproved;
+    }
+
+    if (updateDto.reconsideredDecisionUuids) {
+      reconsideration.reconsidersDecisions =
+        await this.applicationDecisionService.getMany(
+          updateDto.reconsideredDecisionUuids,
+        );
     }
 
     const recon = await this.reconsiderationRepository.save(reconsideration);
@@ -165,8 +170,11 @@ export class ApplicationReconsiderationService {
   }
 
   private async fetchAndValidateReconsideration(uuid: string) {
-    const recon = await this.reconsiderationRepository.findOneBy({
-      uuid,
+    const recon = await this.reconsiderationRepository.findOne({
+      where: { uuid },
+      relations: {
+        type: true,
+      },
     });
 
     if (!recon) {

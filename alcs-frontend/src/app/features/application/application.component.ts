@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationAmendmentDto } from '../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
@@ -65,12 +65,12 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   fileNumber?: string;
   application: ApplicationDto | undefined;
   reconsiderations: ApplicationReconsiderationDto[] = [];
-  amendments: ApplicationAmendmentDto[] = [];
+  modifications: ApplicationModificationDto[] = [];
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private route: ActivatedRoute
   ) {}
 
@@ -85,7 +85,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
       if (application) {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
-        this.amendmentService.fetchByApplication(application.fileNumber);
+        this.modificationService.fetchByApplication(application.fileNumber);
       }
     });
 
@@ -93,8 +93,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
       this.reconsiderations = [...recons].reverse(); //Reverse since we go low to high versus normally high to low
     });
 
-    this.amendmentService.$amendments.pipe(takeUntil(this.destroy)).subscribe((amendments) => {
-      this.amendments = [...amendments].reverse(); //Reverse since we go low to high versus normally high to low
+    this.modificationService.$modifications.pipe(takeUntil(this.destroy)).subscribe((modifications) => {
+      this.modifications = [...modifications].reverse(); //Reverse since we go low to high versus normally high to low
     });
   }
 

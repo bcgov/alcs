@@ -2,8 +2,8 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { ApplicationAmendmentDto } from '../../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionDto } from '../../../../services/application/application-decision/application-decision.dto';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
@@ -15,20 +15,20 @@ import { UserService } from '../../../../services/user/user.service';
 import { CardLabel } from '../../../../shared/card/card.component';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-export const AMENDMENT_TYPE_LABEL: CardLabel = {
-  label: 'Amendment',
-  shortLabel: 'AMEND',
+export const MODIFICATION_TYPE_LABEL: CardLabel = {
+  label: 'Modification',
+  shortLabel: 'MODI',
   backgroundColor: '#fff',
   borderColor: '#45F4F4',
   textColor: '#000',
 };
 
 @Component({
-  selector: 'app-amendment-detail-dialog',
-  templateUrl: './amendment-dialog.component.html',
-  styleUrls: ['./amendment-dialog.component.scss'],
+  selector: 'app-modification-detail-dialog',
+  templateUrl: './modification-dialog.component.html',
+  styleUrls: ['./modification-dialog.component.scss'],
 })
-export class AmendmentDialogComponent implements OnInit, OnDestroy {
+export class ModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $users: Observable<AssigneeDto[]> | undefined;
   selectedAssignee?: AssigneeDto;
@@ -37,22 +37,22 @@ export class AmendmentDialogComponent implements OnInit, OnDestroy {
   selectedBoard?: string;
   selectedRegion?: string;
   title?: string;
-  amendmentType = AMENDMENT_TYPE_LABEL;
+  modificationType = MODIFICATION_TYPE_LABEL;
 
-  amendment: ApplicationAmendmentDto = this.data;
+  modification: ApplicationModificationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
 
   isDirty = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ApplicationAmendmentDto,
-    private dialogRef: MatDialogRef<AmendmentDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ApplicationModificationDto,
+    private dialogRef: MatDialogRef<ModificationDialogComponent>,
     private userService: UserService,
     private cardService: CardService,
     private boardService: BoardService,
     private toastService: ToastService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
 
@@ -74,16 +74,16 @@ export class AmendmentDialogComponent implements OnInit, OnDestroy {
       this.dialogRef.close(this.isDirty);
     });
 
-    this.title = this.amendment.application.fileNumber;
+    this.title = this.modification.application.fileNumber;
   }
 
-  populateData(amendment: ApplicationAmendmentDto) {
-    this.amendment = amendment;
-    this.selectedAssignee = amendment.card.assignee;
+  populateData(modification: ApplicationModificationDto) {
+    this.modification = modification;
+    this.selectedAssignee = modification.card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.name;
-    this.selectedApplicationStatus = amendment.card.status.code;
-    this.selectedBoard = amendment.card.board.code;
-    this.selectedRegion = amendment.application.region.code;
+    this.selectedApplicationStatus = modification.card.status.code;
+    this.selectedBoard = modification.card.board.code;
+    this.selectedRegion = modification.application.region.code;
   }
 
   filterAssigneeList(term: string, item: AssigneeDto) {
@@ -95,7 +95,7 @@ export class AmendmentDialogComponent implements OnInit, OnDestroy {
 
   onAssigneeSelected(assignee: AssigneeDto) {
     this.selectedAssignee = assignee;
-    this.amendment.card.assignee = assignee;
+    this.modification.card.assignee = assignee;
     this.updateCard({
       assigneeUuid: assignee?.uuid ?? null,
     });
@@ -112,7 +112,7 @@ export class AmendmentDialogComponent implements OnInit, OnDestroy {
     this.cardService
       .updateCard({
         ...changes,
-        uuid: this.amendment.card.uuid,
+        uuid: this.modification.card.uuid,
       })
       .then(() => {
         this.isDirty = true;
@@ -122,19 +122,19 @@ export class AmendmentDialogComponent implements OnInit, OnDestroy {
 
   onTogglePriority() {
     const answer = this.confirmationDialogService.openDialog({
-      body: this.amendment.card.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
+      body: this.modification.card.highPriority ? 'Remove priority from this card?' : 'Add priority to this card?',
     });
     answer.subscribe((answer) => {
       if (answer) {
         this.cardService
           .updateCard({
-            uuid: this.amendment.card.uuid,
-            highPriority: !this.amendment.card.highPriority,
-            assigneeUuid: this.amendment.card.assignee?.uuid,
+            uuid: this.modification.card.uuid,
+            highPriority: !this.modification.card.highPriority,
+            assigneeUuid: this.modification.card.assignee?.uuid,
           })
           .then(() => {
             this.isDirty = true;
-            this.amendment.card.highPriority = !this.amendment.card.highPriority;
+            this.modification.card.highPriority = !this.modification.card.highPriority;
           });
       }
     });

@@ -15,24 +15,24 @@ import { CardService } from '../../card/card.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import {
-  ApplicationAmendmentCreateDto,
-  ApplicationAmendmentDto,
-  ApplicationAmendmentUpdateDto,
-} from './application-amendment.dto';
-import { ApplicationAmendment } from './application-amendment.entity';
+  ApplicationModificationCreateDto,
+  ApplicationModificationDto,
+  ApplicationModificationUpdateDto,
+} from './application-modification.dto';
+import { ApplicationModification } from './application-modification.entity';
 
 @Injectable()
-export class ApplicationAmendmentService {
+export class ApplicationModificationService {
   constructor(
-    @InjectRepository(ApplicationAmendment)
-    private amendmentRepository: Repository<ApplicationAmendment>,
+    @InjectRepository(ApplicationModification)
+    private modificationRepository: Repository<ApplicationModification>,
     @InjectMapper() private mapper: Mapper,
     private applicationService: ApplicationService,
     private applicationDecisionService: ApplicationDecisionService,
     private cardService: CardService,
   ) {}
 
-  private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationAmendment> = {
+  private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationModification> = {
     application: {
       type: true,
       region: true,
@@ -45,7 +45,7 @@ export class ApplicationAmendmentService {
       status: true,
       assignee: true,
     },
-    amendsDecisions: true,
+    modifiesDecisions: true,
     resultingDecision: true,
   };
 
@@ -57,41 +57,44 @@ export class ApplicationAmendmentService {
     return this.getBy({ application: { fileNumber: applicationFileNumber } });
   }
 
-  getBy(findOptions: FindOptionsWhere<ApplicationAmendment>) {
-    return this.amendmentRepository.find({
+  getBy(findOptions: FindOptionsWhere<ApplicationModification>) {
+    return this.modificationRepository.find({
       where: findOptions,
       relations: this.DEFAULT_RELATIONS,
     });
   }
 
   mapToDtos(
-    amendments: ApplicationAmendment[],
-  ): Promise<ApplicationAmendmentDto[]> {
+    modifications: ApplicationModification[],
+  ): Promise<ApplicationModificationDto[]> {
     return this.mapper.mapArrayAsync(
-      amendments,
-      ApplicationAmendment,
-      ApplicationAmendmentDto,
+      modifications,
+      ApplicationModification,
+      ApplicationModificationDto,
     );
   }
 
-  async create(createDto: ApplicationAmendmentCreateDto, board: Board) {
-    const amendment = new ApplicationAmendment({
+  async create(createDto: ApplicationModificationCreateDto, board: Board) {
+    const modification = new ApplicationModification({
       submittedDate: new Date(createDto.submittedDate),
       isTimeExtension: createDto.isTimeExtension,
     });
 
-    amendment.card = await this.cardService.create('AMEND', board, false);
-    amendment.application = await this.getOrCreateApplication(createDto);
-    amendment.amendsDecisions = await this.applicationDecisionService.getMany(
-      createDto.amendedDecisionUuids,
-    );
+    modification.card = await this.cardService.create('MODI', board, false);
+    modification.application = await this.getOrCreateApplication(createDto);
+    modification.modifiesDecisions =
+      await this.applicationDecisionService.getMany(
+        createDto.modifiedDecisionUuids,
+      );
 
-    const savedAmendment = await this.amendmentRepository.save(amendment);
-    return this.getByUuid(savedAmendment.uuid);
+    const mockModifications = await this.modificationRepository.save(
+      modification,
+    );
+    return this.getByUuid(mockModifications.uuid);
   }
 
   private async getOrCreateApplication(
-    createDto: ApplicationAmendmentCreateDto,
+    createDto: ApplicationModificationCreateDto,
   ) {
     const existingApplication = await this.applicationService.get(
       createDto.applicationFileNumber,
@@ -113,47 +116,52 @@ export class ApplicationAmendmentService {
     }
   }
 
-  async update(uuid: string, updateDto: ApplicationAmendmentUpdateDto) {
-    const existingAmendment: Partial<ApplicationAmendment> =
-      await this.getByUuidOrFail(uuid);
-
-    existingAmendment.reviewDate = formatIncomingDate(updateDto.reviewDate);
+  async update(uuid: string, updateDto: ApplicationModificationUpdateDto) {
+    const modification = await this.getByUuidOrFail(uuid);
 
     if (updateDto.submittedDate) {
-      existingAmendment.submittedDate = new Date(updateDto.submittedDate);
+      modification.submittedDate = new Date(updateDto.submittedDate);
     }
-    existingAmendment.isReviewApproved = updateDto.isReviewApproved;
-    existingAmendment.isTimeExtension = updateDto.isTimeExtension;
+    if (updateDto.reviewDate !== undefined) {
+      modification.reviewDate = updateDto.reviewDate
+        ? new Date(updateDto.reviewDate)
+        : null;
+    }
+    if (updateDto.isReviewApproved !== undefined) {
+      modification.isReviewApproved = updateDto.isReviewApproved;
+    }
+    if (updateDto.isTimeExtension !== undefined) {
+      modification.isTimeExtension = updateDto.isTimeExtension;
+    }
 
-    if (updateDto.amendedDecisionUuids) {
-      existingAmendment.amendsDecisions =
+    if (updateDto.modifiedDecisionUuids) {
+      modification.modifiesDecisions =
         await this.applicationDecisionService.getMany(
-          updateDto.amendedDecisionUuids,
+          updateDto.modifiedDecisionUuids,
         );
     }
 
-    const amendment = await this.amendmentRepository.save(existingAmendment);
-
-    return this.getByUuid(amendment.uuid);
+    await this.modificationRepository.save(modification);
+    return this.getByUuid(uuid);
   }
 
   async delete(uuid: string) {
-    const amendment = await this.getByUuidOrFail(uuid);
-    return this.amendmentRepository.softRemove([amendment]);
+    const modification = await this.getByUuidOrFail(uuid);
+    return this.modificationRepository.softRemove([modification]);
   }
 
   private async getByUuidOrFail(uuid: string) {
-    const amendment = await this.amendmentRepository.findOneBy({
+    const modification = await this.modificationRepository.findOneBy({
       uuid,
     });
 
-    if (!amendment) {
+    if (!modification) {
       throw new ServiceNotFoundException(
-        `Amendment with uuid ${uuid} not found`,
+        `Modification with uuid ${uuid} not found`,
       );
     }
 
-    return amendment;
+    return modification;
   }
 
   getByCardUuid(cardUuid: string) {
@@ -164,15 +172,15 @@ export class ApplicationAmendmentService {
     return this.getOneByOrFail({ uuid });
   }
 
-  getOneByOrFail(findOptions: FindOptionsWhere<ApplicationAmendment>) {
-    return this.amendmentRepository.findOneOrFail({
+  getOneByOrFail(findOptions: FindOptionsWhere<ApplicationModification>) {
+    return this.modificationRepository.findOneOrFail({
       where: findOptions,
       relations: this.DEFAULT_RELATIONS,
     });
   }
 
   getWithIncompleteSubtaskByType(subtaskType: string) {
-    return this.amendmentRepository.find({
+    return this.modificationRepository.find({
       where: {
         card: {
           subtasks: {

@@ -89,6 +89,10 @@ export class ReconsiderationProfile extends AutomapperProfile {
           mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
         ),
         forMember(
+          (a) => a.isReviewApproved,
+          mapFrom((rd) => rd.isReviewApproved),
+        ),
+        forMember(
           (a) => a.reconsideredDecisions,
           mapFrom((rd) =>
             this.mapper.mapArray(

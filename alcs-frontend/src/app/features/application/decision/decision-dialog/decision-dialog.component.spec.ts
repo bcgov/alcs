@@ -5,8 +5,8 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationAmendmentDto } from '../../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -19,10 +19,11 @@ describe('DecisionDialogComponent', () => {
   let fixture: ComponentFixture<DecisionDialogComponent>;
 
   beforeEach(async () => {
-    const mockAmendmentService = jasmine.createSpyObj<ApplicationAmendmentService>('ApplicationAmendmentService', [
-      'fetchByApplication',
-    ]);
-    mockAmendmentService.$amendments = new BehaviorSubject<ApplicationAmendmentDto[]>([]);
+    const mockModificationService = jasmine.createSpyObj<ApplicationModificationService>(
+      'ApplicationModificationService',
+      ['fetchByApplication']
+    );
+    mockModificationService.$modifications = new BehaviorSubject<ApplicationModificationDto[]>([]);
 
     const mockReconService = jasmine.createSpyObj<ApplicationReconsiderationService>(
       'ApplicationReconsiderationService',
@@ -38,8 +39,8 @@ describe('DecisionDialogComponent', () => {
           useValue: {},
         },
         {
-          provide: ApplicationAmendmentService,
-          useValue: mockAmendmentService,
+          provide: ApplicationModificationService,
+          useValue: mockModificationService,
         },
         {
           provide: ApplicationReconsiderationService,

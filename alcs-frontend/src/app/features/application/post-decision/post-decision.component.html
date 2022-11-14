@@ -2,13 +2,13 @@
 
 <div>
   <span class="subheading2">Jump to Section:&nbsp;</span>
-  <a (click)="goToRecons()">Reconsideration Requests</a> | <a (click)="goToAmendments()">Amendments Requests</a>
+  <a (click)="goToRecons()">Reconsideration Requests</a> | <a (click)="goToModifications()">Modification Requests</a>
 </div>
 
 <h5 id="recons" class="post-decision-header">
   Reconsideration Requests
   <mat-icon class="icon" matTooltip="Create new Reconsideration Request from application tracking boards"
-    >info_outline
+  >info_outline
   </mat-icon>
 </h5>
 
@@ -60,7 +60,7 @@
           </span>
           <span *ngIf="isReviewOutcomeSet(reconsideration.isReviewApproved)">{{
             getReviewOutcomeLabel(reconsideration.isReviewApproved!)
-          }}</span>
+            }}</span>
         </ng-container>
       </div>
       <div></div>
@@ -74,7 +74,7 @@
         <ng-container *ngIf="!!reconsideration.resultingDecision">
           <div class="subheading2">Resulting Resolution</div>
           #{{ reconsideration.resultingDecision?.resolutionNumber }}/{{
-            reconsideration.resultingDecision?.resolutionYear
+          reconsideration.resultingDecision?.resolutionYear
           }}
         </ng-container>
       </div>
@@ -82,71 +82,71 @@
   </div>
 </section>
 
-<h5 id="amendments" class="post-decision-header">
-  Amendment Requests
-  <mat-icon class="icon" matTooltip="Create new Amendment Requests from application tracking boards"
-    >info_outline
+<h5 id="modifications" class="post-decision-header">
+  Modification Requests
+  <mat-icon class="icon" matTooltip="Create new Modification Requests from CEO tracking board"
+  >info_outline
   </mat-icon>
 </h5>
 
-<section class="no-decisions" *ngIf="!amendments.length">
-  <div>No Amendements</div>
+<section class="no-decisions" *ngIf="!modifications.length">
+  <div>No Requests</div>
 </section>
 
 <section>
-  <div class="post-decision" *ngFor="let amendment of amendments; let i = index">
-    <div class="decision-menu amendment">
-      <button (click)="onEditAmendment(amendment)" matTooltip="Edit Request" mat-icon-button>
+  <div class="post-decision" *ngFor="let modification of modifications; let i = index">
+    <div class="decision-menu modification">
+      <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button>
       <button
-        (click)="deleteAmendment(amendment.uuid, amendments.length - i)"
+        (click)="deleteModification(modification.uuid, modifications.length - i)"
         matTooltip="Delete Request"
         mat-icon-button
       >
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <div class="body-large">Amendment Request #{{ amendments.length - i }}</div>
+    <div class="body-large">Modification Request #{{ modifications.length - i }}</div>
     <div class="decision-content">
       <div>
         <div class="subheading2">Request Submission Date</div>
-        {{ amendment.submittedDate | momentFormat }}
+        {{ modification.submittedDate | momentFormat }}
       </div>
       <div>
         <div class="subheading2">Condition to be Modified</div>
-        {{ amendment.isTimeExtension ? 'Time Extension' : 'Other' }}
+        {{ modification.isTimeExtension ? 'Time Extension' : 'Other' }}
       </div>
       <div></div>
       <div>
         <div class="subheading2">Review Date</div>
-        <span *ngIf="amendment.reviewDate">{{ amendment.reviewDate | momentFormat }}</span>
-        <span *ngIf="!amendment.reviewDate">
-          <app-inline-datepicker (save)="onSaveAmendmentReviewDate(amendment.uuid, $event)"></app-inline-datepicker>
+        <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
+        <span *ngIf="!modification.reviewDate">
+          <app-inline-datepicker (save)="onSaveModificationReviewDate(modification.uuid, $event)"></app-inline-datepicker>
         </span>
       </div>
       <div>
         <div class="subheading2">Review Outcome</div>
-        <span *ngIf="!isReviewOutcomeSet(amendment.isReviewApproved)">
+        <span *ngIf="!isReviewOutcomeSet(modification.isReviewApproved)">
           <app-inline-review-outcome
-            (save)="onSaveAmendmentOutcome(amendment.uuid, $event)"
+            (save)="onSaveModificationOutcome(modification.uuid, $event)"
           ></app-inline-review-outcome>
         </span>
-        <span *ngIf="isReviewOutcomeSet(amendment.isReviewApproved)">{{
-          getReviewOutcomeLabel(amendment.isReviewApproved!)
-        }}</span>
+        <span *ngIf="isReviewOutcomeSet(modification.isReviewApproved)">{{
+          getReviewOutcomeLabel(modification.isReviewApproved!)
+          }}</span>
       </div>
       <div></div>
       <div>
-        <div class="subheading2">Resolutions to be Amended</div>
-        <ng-container *ngFor="let decision of amendment.amendedDecisions">
+        <div class="subheading2">Resolutions to be Modified</div>
+        <ng-container *ngFor="let decision of modification.modifiesDecisions">
           #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
         </ng-container>
       </div>
       <div>
-        <ng-container *ngIf="!!amendment.resultingDecision">
+        <ng-container *ngIf="!!modification.resultingDecision">
           <div class="subheading2">Resulting Resolution</div>
-          #{{ amendment.resultingDecision?.resolutionNumber }}/{{ amendment.resultingDecision?.resolutionYear }}
+          #{{ modification.resultingDecision?.resolutionNumber }}/{{ modification.resultingDecision?.resolutionYear }}
         </ng-container>
       </div>
     </div>

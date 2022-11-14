@@ -18,7 +18,7 @@ export interface UpdateApplicationDecisionDto {
   decisionMakerCode?: string | null;
   ceoCriterionCode?: string | null;
   isTimeExtension?: boolean | null;
-  amendsUuid?: string | null;
+  modifiesUuid?: string | null;
   reconsidersUuid?: string | null;
 }
 
@@ -29,7 +29,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   resolutionYear: number;
   chairReviewRequired: boolean;
   applicationFileNumber: string;
-  amendsUuid: string | null;
+  modifiesUuid: string | null;
   reconsidersUuid: string | null;
 }
 
@@ -48,10 +48,10 @@ export interface ApplicationDecisionDto {
   applicationFileNumber: string;
   documents: DecisionDocumentDto[];
   isTimeExtension?: boolean | null;
-  amends?: LinkedResolutionDto;
+  modifies?: LinkedResolutionDto;
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
-  amendedBy?: LinkedResolutionDto[];
+  modifiedBy?: LinkedResolutionDto[];
 }
 
 export interface LinkedResolutionDto {

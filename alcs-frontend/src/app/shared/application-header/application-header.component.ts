@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { AMENDMENT_TYPE_LABEL } from '../../features/board/dialogs/amendment/amendment-dialog.component';
+import { MODIFICATION_TYPE_LABEL } from '../../features/board/dialogs/modification/modification-dialog.component';
 import { RECON_TYPE_LABEL } from '../../features/board/dialogs/reconsiderations/reconsideration-dialog.component';
-import { ApplicationAmendmentDto } from '../../services/application/application-amendment/application-amendment.dto';
+import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
@@ -26,8 +26,8 @@ export class ApplicationHeaderComponent {
       if ('hasRecons' in application) {
         this.showReconLabel = application.hasRecons;
       }
-      if ('hasAmendments' in application) {
-        this.showAmendmentLabel = application.hasAmendments;
+      if ('hasModifications' in application) {
+        this.showModificationLabel = application.hasModifications;
       }
     }
   }
@@ -38,18 +38,18 @@ export class ApplicationHeaderComponent {
     this._reconsiderations = reconsiderations;
   }
 
-  _amendments: ApplicationAmendmentDto[] = [];
-  @Input() set amendments(amendments: ApplicationAmendmentDto[]) {
-    this.showAmendmentLabel = amendments.reduce((showLabel, amendment) => {
-      return amendment.isReviewApproved === null || amendment.isReviewApproved;
+  _modifications: ApplicationModificationDto[] = [];
+  @Input() set modifications(modifications: ApplicationModificationDto[]) {
+    this.showModificationLabel = modifications.reduce((showLabel, modification) => {
+      return modification.isReviewApproved === null || modification.isReviewApproved;
     }, false);
-    this._amendments = amendments;
+    this._modifications = modifications;
   }
 
   reconLabel = RECON_TYPE_LABEL;
-  amendmentLabel = AMENDMENT_TYPE_LABEL;
+  modificationLabel = MODIFICATION_TYPE_LABEL;
   showCardMenu = false;
-  showAmendmentLabel = false;
+  showModificationLabel = false;
   showReconLabel = false;
 
   constructor(private router: Router) {}
@@ -63,7 +63,7 @@ export class ApplicationHeaderComponent {
     }
   }
 
-  async onGoToSubCard(subcard: ApplicationReconsiderationDto | ApplicationAmendmentDto) {
+  async onGoToSubCard(subcard: ApplicationReconsiderationDto | ApplicationModificationDto) {
     const boardCode = subcard.card.board.code;
     const cardTypeCode = subcard.card.type;
     await this.router.navigateByUrl(`/board/${boardCode}?card=${subcard.card.uuid}&type=${cardTypeCode}`);

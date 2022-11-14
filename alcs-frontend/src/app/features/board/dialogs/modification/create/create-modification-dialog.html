@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-  <h2 class="card-title">Create Amendment</h2>
+  <h2 class="card-title">Create Modification</h2>
 </div>
 <form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
@@ -131,8 +131,8 @@
         </ng-select>
       </div>
       <mat-form-field appearance="outline">
-        <mat-label>Decisions to be Amended</mat-label>
-        <mat-select [formControl]="amendsDecisions" multiple>
+        <mat-label>Decisions to be Modified</mat-label>
+        <mat-select [formControl]="modifiesDecisions" multiple>
           <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
         </mat-select>
       </mat-form-field>

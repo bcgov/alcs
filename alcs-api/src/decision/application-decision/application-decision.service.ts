@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Repository } from 'typeorm';
 import { Application } from '../../application/application.entity';
 import { ApplicationService } from '../../application/application.service';
 import {
@@ -11,7 +11,7 @@ import {
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
-import { ApplicationAmendment } from '../application-amendment/application-amendment.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
@@ -43,49 +43,41 @@ export class ApplicationDecisionService {
   async getByAppFileNumber(number: string) {
     const application = await this.applicationService.getOrFail(number);
 
-    const records = await this.appDecisionRepository.find({
+    const decisions = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
       },
       order: {
         date: 'DESC',
-        documents: {
-          document: {
-            uploadedAt: 'DESC',
-          },
-        },
       },
       relations: {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
-        documents: {
-          document: {
-            uploadedBy: true,
-          },
-        },
-        amends: {
-          amendsDecisions: true,
-        },
-        reconsiders: {
-          reconsidersDecisions: true,
-        },
         reconsideredBy: {
           resultingDecision: true,
         },
-        amendedBy: {
+        modifiedBy: {
           resultingDecision: true,
         },
       },
     });
 
-    //Filter out documents where the document was deleted
-    return records.map((record) => {
-      record.documents = record.documents.filter(
-        (document) => !!document.document,
-      );
-      return record;
-    });
+    //Query Documents separately as when added to the above joins caused performance issues
+    for (const decision of decisions) {
+      decision.documents = await this.decisionDocumentRepository.find({
+        where: {
+          decisionUuid: decision.uuid,
+          document: {
+            auditDeletedDateAt: IsNull(),
+          },
+        },
+        relations: {
+          document: true,
+        },
+      });
+    }
+    return decisions;
   }
 
   async get(uuid) {
@@ -118,7 +110,7 @@ export class ApplicationDecisionService {
   async update(
     uuid: string,
     updateDto: UpdateApplicationDecisionDto,
-    amends: ApplicationAmendment | undefined | null,
+    modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
     const existingDecision: Partial<ApplicationDecision> = await this.getOrFail(
@@ -135,7 +127,7 @@ export class ApplicationDecisionService {
       updateDto.chairReviewDate,
     );
     existingDecision.chairReviewOutcome = updateDto.chairReviewOutcome;
-    existingDecision.amends = amends;
+    existingDecision.modifies = modifies;
     existingDecision.reconsiders = reconsiders;
 
     if (updateDto.outcomeCode) {
@@ -146,7 +138,7 @@ export class ApplicationDecisionService {
 
     if (updateDto.chairReviewRequired !== undefined) {
       existingDecision.chairReviewRequired = updateDto.chairReviewRequired;
-      if (updateDto.chairReviewRequired === false) {
+      if (!updateDto.chairReviewRequired) {
         existingDecision.chairReviewDate = null;
         existingDecision.chairReviewOutcome = null;
       }
@@ -227,7 +219,7 @@ export class ApplicationDecisionService {
   async create(
     createDto: CreateApplicationDecisionDto,
     application: Application,
-    amends: ApplicationAmendment | undefined | null,
+    modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
     const decision = new ApplicationDecision({
@@ -247,7 +239,7 @@ export class ApplicationDecisionService {
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
       application,
-      amends,
+      modifies,
       reconsiders,
     });
 
@@ -288,6 +280,12 @@ export class ApplicationDecisionService {
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
+
+    //Clear potential links
+    applicationDecision.reconsiders = null;
+    applicationDecision.modifies = null;
+    await this.appDecisionRepository.save(applicationDecision);
+
     await this.appDecisionRepository.softRemove([applicationDecision]);
 
     const existingDecisions = await this.getByAppFileNumber(
@@ -379,10 +377,10 @@ export class ApplicationDecisionService {
     };
   }
 
-  getMany(amendedDecisionUuids: string[]) {
+  getMany(modifiesDecisionUuids: string[]) {
     return this.appDecisionRepository.find({
       where: {
-        uuid: In(amendedDecisionUuids),
+        uuid: In(modifiesDecisionUuids),
       },
     });
   }

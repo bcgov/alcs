@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { ApplicationAmendmentCreateDto } from '../../../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationCreateDto } from '../../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationDecisionService } from '../../../../../services/application/application-decision/application-decision.service';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
@@ -15,10 +15,10 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-create',
-  templateUrl: './create-amendment-dialog.html',
-  styleUrls: ['./create-amendment-dialog.component.scss'],
+  templateUrl: './create-modification-dialog.html',
+  styleUrls: ['./create-modification-dialog.component.scss'],
 })
-export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
+export class CreateModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
@@ -37,7 +37,7 @@ export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
   isTimeExtensionControl = new FormControl<string>('true', [Validators.required]);
-  amendsDecisions = new FormControl<string[]>([], [Validators.required]);
+  modifiesDecisions = new FormControl<string[]>([], [Validators.required]);
 
   createForm = new FormGroup({
     applicationType: this.applicationTypeControl,
@@ -47,14 +47,14 @@ export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
     localGovernment: this.localGovernmentControl,
     submittedDate: this.submittedDateControl,
     isTimeExtension: this.isTimeExtensionControl,
-    amendedDecisions: this.amendsDecisions,
+    modifiesDecisions: this.modifiesDecisions,
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<CreateAmendmentDialogComponent>,
+    private dialogRef: MatDialogRef<CreateModificationDialogComponent>,
     private applicationService: ApplicationService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private decisionService: ApplicationDecisionService,
     private toastService: ToastService
@@ -74,7 +74,7 @@ export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
       this.localGovernments = res;
     });
 
-    this.amendsDecisions.disable();
+    this.modifiesDecisions.disable();
     this.initApplicationFileNumberAutocomplete();
   }
 
@@ -127,26 +127,26 @@ export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
     try {
       this.isLoading = true;
       const formValues = this.createForm.getRawValue();
-      const amendment: ApplicationAmendmentCreateDto = {
+      const modificationCreateDto: ApplicationModificationCreateDto = {
         // application details
         applicationTypeCode: formValues.applicationType!,
         applicationFileNumber: formValues.fileNumber!.fileNumber?.trim() ?? formValues.fileNumber!.trim(),
         applicant: formValues.applicant!,
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
-        // amendment details
+        // modification details
         submittedDate: formValues.submittedDate!.getTime(),
         boardCode: this.currentBoardCode,
         isTimeExtension: formValues.isTimeExtension === 'true',
-        amendedDecisionUuids: formValues.amendedDecisions!,
+        modifiesDecisionUuids: formValues.modifiesDecisions!,
       };
 
-      if (!amendment.boardCode) {
+      if (!modificationCreateDto.boardCode) {
         this.toastService.showErrorToast('Board is required, please reload the page and try again');
         return;
       }
 
-      await this.amendmentService.create(amendment);
+      await this.modificationService.create(modificationCreateDto);
       this.dialogRef.close(true);
       this.toastService.showSuccessToast('Reconsideration card created');
     } finally {
@@ -160,14 +160,14 @@ export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
     this.regionControl.reset();
     this.applicationTypeControl.reset();
     this.submittedDateControl.reset();
-    this.amendsDecisions.reset();
+    this.modifiesDecisions.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();
     this.regionControl.enable();
     this.applicationTypeControl.enable();
     this.localGovernmentControl.enable();
-    this.amendsDecisions.disable();
+    this.modifiesDecisions.disable();
 
     // clear warnings
     this.isDecisionDateEmpty = false;
@@ -186,7 +186,7 @@ export class CreateAmendmentDialogComponent implements OnInit, OnDestroy {
         uuid: decision.uuid,
         resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
       }));
-      this.amendsDecisions.enable();
+      this.modifiesDecisions.enable();
     }
   }
 

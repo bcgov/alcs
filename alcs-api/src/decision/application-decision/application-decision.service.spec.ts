@@ -103,6 +103,8 @@ describe('ApplicationDecisionService', () => {
     mockDecisionRepository.findOne.mockResolvedValue(mockDecision);
     mockDecisionRepository.save.mockResolvedValue(mockDecision);
 
+    mockDecisionDocumentRepository.find.mockResolvedValue([]);
+
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockApplicationService.update.mockResolvedValue({} as any);
     mockApplicationService.updateByUuid.mockResolvedValue({} as any);
@@ -133,12 +135,21 @@ describe('ApplicationDecisionService', () => {
       expect(result).toStrictEqual(mockDecision);
     });
 
-    it('should delete meeting with uuid and update application', async () => {
+    it('should delete decision with uuid and update application', async () => {
       mockDecisionRepository.softRemove.mockResolvedValue({} as any);
+      mockDecisionRepository.findOne.mockResolvedValue({
+        ...mockDecision,
+        reconsiders: 'reconsider-uuid',
+        modifies: 'modified-uuid',
+      });
       mockDecisionRepository.find.mockResolvedValue([]);
 
       await service.delete(mockDecision.uuid);
 
+      expect(mockDecisionRepository.save.mock.calls[0][0].modifies).toBeNull();
+      expect(
+        mockDecisionRepository.save.mock.calls[0][0].reconsiders,
+      ).toBeNull();
       expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledWith(
@@ -360,7 +371,7 @@ describe('ApplicationDecisionService', () => {
       expect(mockDocumentService.create).not.toHaveBeenCalled();
     });
 
-    it('should call the repository to delete', async () => {
+    it('should call the repository to delete documents', async () => {
       mockDocumentService.softRemove.mockResolvedValue({} as any);
 
       await service.deleteDocument('fake-uuid');

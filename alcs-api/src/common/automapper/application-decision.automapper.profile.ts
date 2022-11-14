@@ -53,12 +53,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (a) => a.amends,
+          (a) => a.modifies,
           mapFrom((dec) =>
-            dec.amends
+            dec.modifies
               ? {
-                  uuid: dec.amends.uuid,
-                  linkedResolutions: dec.amends.amendsDecisions.map(
+                  uuid: dec.modifies.uuid,
+                  linkedResolutions: dec.modifies.modifiesDecisions.map(
                     (decision) =>
                       `#${decision.resolutionNumber}/${dec.resolutionYear}`,
                   ),
@@ -82,32 +82,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (a) => a.amendedBy,
+          (a) => a.modifiedBy,
           mapFrom((dec) =>
-            (dec.amendedBy || [])
-              .filter((amendment) => amendment.resultingDecision)
-              .map((amendment) => ({
-                uuid: amendment.uuid,
+            (dec.modifiedBy || [])
+              .filter((modification) => modification.resultingDecision)
+              .map((modification) => ({
+                uuid: modification.uuid,
                 linkedResolutions: [
-                  `#${amendment.resultingDecision!.resolutionNumber}/${
-                    amendment.resultingDecision!.resolutionYear
+                  `#${modification.resultingDecision!.resolutionNumber}/${
+                    modification.resultingDecision!.resolutionYear
                   }`,
                 ],
               })),
-          ),
-        ),
-        forMember(
-          (a) => a.amends,
-          mapFrom((dec) =>
-            dec.amends
-              ? {
-                  uuid: dec.amends.uuid,
-                  linkedResolutions: dec.amends.amendsDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${dec.resolutionYear}`,
-                  ),
-                }
-              : undefined,
           ),
         ),
       );

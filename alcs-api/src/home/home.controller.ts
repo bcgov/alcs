@@ -3,9 +3,9 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationAmendmentDto } from '../decision/application-amendment/application-amendment.dto';
-import { ApplicationAmendment } from '../decision/application-amendment/application-amendment.entity';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
@@ -41,7 +41,7 @@ export class HomeController {
     private timeService: ApplicationTimeTrackingService,
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
   ) {}
 
@@ -51,7 +51,7 @@ export class HomeController {
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
-    amendments: ApplicationAmendmentDto[];
+    modifications: ApplicationModificationDto[];
     covenants: CovenantDto[];
   }> {
     const userId = req.user.entity.uuid;
@@ -67,7 +67,7 @@ export class HomeController {
         card: { assigneeUuid: userId },
       });
 
-      const amendments = await this.amendmentService.getBy({
+      const modifications = await this.modificationService.getBy({
         card: { assigneeUuid: userId },
       });
 
@@ -83,7 +83,7 @@ export class HomeController {
         planningReviews: await this.planningReviewService.mapToDtos(
           planningReviews,
         ),
-        amendments: await this.amendmentService.mapToDtos(amendments),
+        modifications: await this.modificationService.mapToDtos(modifications),
         covenants: await this.covenantService.mapToDtos(covenants),
       };
     } else {
@@ -91,7 +91,7 @@ export class HomeController {
         applications: [],
         reconsiderations: [],
         planningReviews: [],
-        amendments: [],
+        modifications: [],
         covenants: [],
       };
     }
@@ -122,9 +122,13 @@ export class HomeController {
       planningReviewsWithSubtasks,
     );
 
-    const amendmentsWithSubtasks =
-      await this.amendmentService.getWithIncompleteSubtaskByType(subtaskType);
-    const amendmentSubtasks = this.mapAmendmentsToDtos(amendmentsWithSubtasks);
+    const modificationsWithSubtasks =
+      await this.modificationService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
+    const modificationSubtasks = this.mapModificationsToDtos(
+      modificationsWithSubtasks,
+    );
 
     const covenantWithSubtasks =
       await this.covenantService.getWithIncompleteSubtaskByType(subtaskType);
@@ -133,7 +137,7 @@ export class HomeController {
     return [
       ...applicationSubtasks,
       ...reconSubtasks,
-      ...amendmentSubtasks,
+      ...modificationSubtasks,
       ...planningReviewSubtasks,
       ...covenantReviewSubtasks,
     ];
@@ -230,22 +234,22 @@ export class HomeController {
     return result;
   }
 
-  private mapAmendmentsToDtos(amendments: ApplicationAmendment[]) {
+  private mapModificationsToDtos(modifications: ApplicationModification[]) {
     const result: HomepageSubtaskDTO[] = [];
-    for (const amendment of amendments) {
-      if (!amendment.card) {
+    for (const modification of modifications) {
+      if (!modification.card) {
         continue;
       }
-      for (const subtask of amendment.card.subtasks) {
+      for (const subtask of modification.card.subtasks) {
         result.push({
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
           uuid: subtask.uuid,
-          card: this.mapper.map(amendment.card, Card, CardDto),
+          card: this.mapper.map(modification.card, Card, CardDto),
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
-          title: `${amendment.application.fileNumber} (${amendment.application.applicant})`,
+          title: `${modification.application.fileNumber} (${modification.application.applicant})`,
         });
       }
     }

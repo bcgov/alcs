@@ -69,7 +69,7 @@ export class ApplicationReconsiderationUpdateDto {
 
   @IsNumber()
   @IsOptional()
-  reviewDate?: number;
+  reviewDate?: number | null;
 
   @IsBoolean()
   @IsOptional()
