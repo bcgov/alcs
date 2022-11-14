@@ -1,5 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 
+export enum BOARD_CODES {
+  CEO = 'ceo',
+  SOIL = 'soil',
+  EXECUTIVE_COMMITTEE = 'exec',
+}
+
 export class BoardDto {
   @AutoMap()
   code: string;

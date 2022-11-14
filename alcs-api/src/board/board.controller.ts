@@ -19,7 +19,7 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
-import { BoardDto } from './board.dto';
+import { BOARD_CODES, BoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -61,7 +61,7 @@ export class BoardController {
     }
 
     let modifications: ApplicationModification[] = [];
-    if (boardCode === 'ceo') {
+    if (boardCode === BOARD_CODES.CEO) {
       modifications = await this.modificationService.getByBoardCode(boardCode);
     }
 

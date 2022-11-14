@@ -10,6 +10,7 @@ import { ApplicationMeetingService } from '../application/application-meeting/ap
 import { ApplicationPausedService } from '../application/application-paused/application-paused.service';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { BOARD_CODES } from '../board/board.dto';
 import { BoardService } from '../board/board.service';
 
 dayjs.extend(utc);
@@ -55,9 +56,9 @@ const REGION_CODE_MAP = {
 };
 
 const DECISION_MAKER_BOARD_MAP = {
-  'Soil/Fill Panel': 'soil',
-  'CEO Delegated': 'ceo',
-  Executive: 'exec',
+  'Soil/Fill Panel': BOARD_CODES.SOIL,
+  'CEO Delegated': BOARD_CODES.CEO,
+  Executive: BOARD_CODES.EXECUTIVE_COMMITTEE,
 };
 
 const REGION_BOARD_MAP = {

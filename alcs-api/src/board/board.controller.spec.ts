@@ -13,6 +13,7 @@ import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
+import { BOARD_CODES } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -122,7 +123,7 @@ describe('BoardController', () => {
   });
 
   it('should call through to modification service for ceo board', async () => {
-    const boardCode = 'ceo';
+    const boardCode = BOARD_CODES.CEO;
 
     await controller.getCards(boardCode);
 

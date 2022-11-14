@@ -18,10 +18,15 @@ import { ApplicationDecisionService } from '../../../../services/application/app
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
+export enum PostDecisionType {
+  Modification = 'modification',
+  Reconsideration = 'reconsideration',
+}
+
 type MappedPostDecision = {
   label: string;
   uuid: string;
-  type: string;
+  type: PostDecisionType;
 };
 
 @Component({
@@ -95,7 +100,7 @@ export class DecisionDialogComponent implements OnInit {
               .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
               .join(', ')}`,
             uuid: modification.uuid,
-            type: 'modification',
+            type: PostDecisionType.Modification,
           }));
 
         const mappedRecons = reconsiderations
@@ -110,7 +115,7 @@ export class DecisionDialogComponent implements OnInit {
               .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
               .join(', ')}`,
             uuid: reconsideration.uuid,
-            type: 'reconsideration',
+            type: PostDecisionType.Reconsideration,
           }));
         this.postDecisions = [...mappedModifications, ...mappedRecons];
       });
@@ -133,12 +138,12 @@ export class DecisionDialogComponent implements OnInit {
       });
       if (data.existingDecision.reconsiders) {
         this.onSelectPostDecision({
-          type: 'reconsideration',
+          type: PostDecisionType.Reconsideration,
         });
       }
       if (data.existingDecision.modifies) {
         this.onSelectPostDecision({
-          type: 'modification',
+          type: PostDecisionType.Modification,
         });
       }
       if (data.existingDecision.isTimeExtension !== null) {
@@ -185,7 +190,8 @@ export class DecisionDialogComponent implements OnInit {
     } = this.form.getRawValue();
 
     const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
-    const isPostDecisionReconsideration = selectedDecision && selectedDecision.type === 'reconsideration';
+    const isPostDecisionReconsideration =
+      selectedDecision && selectedDecision.type === PostDecisionType.Reconsideration;
 
     const data: CreateApplicationDecisionDto = {
       date: date!.getTime(),
@@ -245,8 +251,8 @@ export class DecisionDialogComponent implements OnInit {
     }
   }
 
-  onSelectPostDecision(postDecision: { type: string }) {
-    if (postDecision.type === 'modification') {
+  onSelectPostDecision(postDecision: { type: PostDecisionType }) {
+    if (postDecision.type === PostDecisionType.Modification) {
       this.form.controls.ceoCriterion.disable();
       this.form.controls.outcome.disable();
       this.form.controls.decisionMaker.disable();
