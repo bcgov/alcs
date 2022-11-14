@@ -4,7 +4,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { combineLatestWith } from 'rxjs';
-import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import {
   ApplicationDecisionDto,
   DecisionOutcomeCodeDto,
@@ -18,10 +18,15 @@ import { ApplicationDecisionService } from '../../../../services/application/app
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
+export enum PostDecisionType {
+  Modification = 'modification',
+  Reconsideration = 'reconsideration',
+}
+
 type MappedPostDecision = {
   label: string;
   uuid: string;
-  type: string;
+  type: PostDecisionType;
 };
 
 @Component({
@@ -70,7 +75,7 @@ export class DecisionDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<DecisionDialogComponent>,
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private amendmentService: ApplicationAmendmentService
+    private modificationService: ApplicationModificationService
   ) {
     this.ceoCriterion = this.data.ceoCriterion;
     if (data.minDate) {
@@ -85,17 +90,17 @@ export class DecisionDialogComponent implements OnInit {
 
     this.outcomes = data.outcomes.filter((outcome) => outcome.isFirstDecision === data.isFirstDecision);
 
-    this.amendmentService.$amendments
+    this.modificationService.$modifications
       .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
-      .subscribe(([amendments, reconsiderations]) => {
-        const mappedAmendments = amendments
-          .filter((amendment) => amendment.isReviewApproved !== false && amendment.resultingDecision === null)
-          .map((amendment, index) => ({
-            label: `Amendment Request #${amendments.length - index} - ${amendment.amendedDecisions
+      .subscribe(([modifications, reconsiderations]) => {
+        const mappedModifications = modifications
+          .filter((modification) => modification.isReviewApproved !== false && modification.resultingDecision === null)
+          .map((modification, index) => ({
+            label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
               .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
               .join(', ')}`,
-            uuid: amendment.uuid,
-            type: 'amendment',
+            uuid: modification.uuid,
+            type: PostDecisionType.Modification,
           }));
 
         const mappedRecons = reconsiderations
@@ -110,9 +115,9 @@ export class DecisionDialogComponent implements OnInit {
               .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
               .join(', ')}`,
             uuid: reconsideration.uuid,
-            type: 'reconsideration',
+            type: PostDecisionType.Reconsideration,
           }));
-        this.postDecisions = [...mappedAmendments, ...mappedRecons];
+        this.postDecisions = [...mappedModifications, ...mappedRecons];
       });
 
     if (data.existingDecision) {
@@ -129,16 +134,16 @@ export class DecisionDialogComponent implements OnInit {
           ? new Date(data.existingDecision.chairReviewDate)
           : undefined,
         auditDate: data.existingDecision.auditDate ? new Date(data.existingDecision.auditDate) : undefined,
-        postDecision: data.existingDecision.amends?.uuid || data.existingDecision.reconsiders?.uuid,
+        postDecision: data.existingDecision.modifies?.uuid || data.existingDecision.reconsiders?.uuid,
       });
       if (data.existingDecision.reconsiders) {
         this.onSelectPostDecision({
-          type: 'reconsideration',
+          type: PostDecisionType.Reconsideration,
         });
       }
-      if (data.existingDecision.amends) {
+      if (data.existingDecision.modifies) {
         this.onSelectPostDecision({
-          type: 'amendment',
+          type: PostDecisionType.Modification,
         });
       }
       if (data.existingDecision.isTimeExtension !== null) {
@@ -185,7 +190,8 @@ export class DecisionDialogComponent implements OnInit {
     } = this.form.getRawValue();
 
     const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
-    const isPostDecisionReconsideration = selectedDecision && selectedDecision.type === 'reconsideration';
+    const isPostDecisionReconsideration =
+      selectedDecision && selectedDecision.type === PostDecisionType.Reconsideration;
 
     const data: CreateApplicationDecisionDto = {
       date: date!.getTime(),
@@ -199,7 +205,7 @@ export class DecisionDialogComponent implements OnInit {
       ceoCriterionCode: ceoCriterion,
       isTimeExtension: null,
       applicationFileNumber: this.data.fileNumber,
-      amendsUuid: isPostDecisionReconsideration ? null : postDecision!,
+      modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION && isTimeExtension !== null) {
@@ -245,8 +251,8 @@ export class DecisionDialogComponent implements OnInit {
     }
   }
 
-  onSelectPostDecision(postDecision: { type: string }) {
-    if (postDecision.type === 'amendment') {
+  onSelectPostDecision(postDecision: { type: PostDecisionType }) {
+    if (postDecision.type === PostDecisionType.Modification) {
       this.form.controls.ceoCriterion.disable();
       this.form.controls.outcome.disable();
       this.form.controls.decisionMaker.disable();

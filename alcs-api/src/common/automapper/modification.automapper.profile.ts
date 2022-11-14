@@ -2,10 +2,10 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import {
-  ApplicationAmendmentDto,
-  ApplicationForAmendmentDto,
-} from '../../decision/application-amendment/application-amendment.dto';
-import { ApplicationAmendment } from '../../decision/application-amendment/application-amendment.entity';
+  ApplicationModificationDto,
+  ApplicationForModificationDto,
+} from '../../decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../../decision/application-modification/application-modification.entity';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
@@ -15,7 +15,7 @@ import { ApplicationDecision } from '../../decision/application-decision/applica
 import { Application } from '../../application/application.entity';
 
 @Injectable()
-export class AmendmentProfile extends AutomapperProfile {
+export class ModificationProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
@@ -25,7 +25,7 @@ export class AmendmentProfile extends AutomapperProfile {
       createMap(
         mapper,
         Application,
-        ApplicationForAmendmentDto,
+        ApplicationForModificationDto,
         forMember(
           (a) => a.localGovernment,
           mapFrom((a) =>
@@ -50,15 +50,15 @@ export class AmendmentProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationAmendment,
-        ApplicationAmendmentDto,
+        ApplicationModification,
+        ApplicationModificationDto,
         forMember(
           (a) => a.application,
           mapFrom((rd) =>
             this.mapper.map(
               rd.application,
               Application,
-              ApplicationForAmendmentDto,
+              ApplicationForModificationDto,
             ),
           ),
         ),
@@ -73,10 +73,14 @@ export class AmendmentProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (a) => a.amendedDecisions,
+          (a) => a.isReviewApproved,
+          mapFrom((rd) => rd.isReviewApproved),
+        ),
+        forMember(
+          (a) => a.modifiesDecisions,
           mapFrom((rd) =>
             this.mapper.mapArray(
-              rd.amendsDecisions,
+              rd.modifiesDecisions,
               ApplicationDecision,
               ApplicationDecisionDto,
             ),

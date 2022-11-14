@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatestWith, tap } from 'rxjs';
-import { ApplicationAmendmentDto } from '../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -34,7 +34,7 @@ export class OverviewComponent implements OnInit {
     private meetingService: ApplicationMeetingService,
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private amendmentService: ApplicationAmendmentService
+    private modificationService: ApplicationModificationService
   ) {}
 
   ngOnInit(): void {
@@ -54,14 +54,14 @@ export class OverviewComponent implements OnInit {
           this.meetingService.$meetings,
           this.$decisions,
           this.reconsiderationService.$reconsiderations,
-          this.amendmentService.$amendments
+          this.modificationService.$modifications
         )
       )
-      .subscribe(([application, meetings, decisions, reconsiderations, amendments]) => {
+      .subscribe(([application, meetings, decisions, reconsiderations, modifications]) => {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
-          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations, amendments);
+          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations, modifications);
         }
       });
   }
@@ -71,7 +71,7 @@ export class OverviewComponent implements OnInit {
     meetings: ApplicationMeetingDto[],
     decisions: ApplicationDecisionDto[],
     reconsiderations: ApplicationReconsiderationDto[],
-    amendments: ApplicationAmendmentDto[]
+    modifications: ApplicationModificationDto[]
   ): TimelineEvent[] {
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateReceived) {
@@ -168,8 +168,8 @@ export class OverviewComponent implements OnInit {
     const mappedReconsiderations = this.mapReconsiderationsToEvents(reconsiderations);
     mappedEvents.push(...mappedReconsiderations);
 
-    const mappedAmendments = this.mapAmendmentsToEvents(amendments);
-    mappedEvents.push(...mappedAmendments);
+    const mappedModifications = this.mapModificationsToEvents(modifications);
+    mappedEvents.push(...mappedModifications);
 
     mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
@@ -207,22 +207,22 @@ export class OverviewComponent implements OnInit {
     return events;
   }
 
-  private mapAmendmentsToEvents(amendments: ApplicationAmendmentDto[]) {
+  private mapModificationsToEvents(modifications: ApplicationModificationDto[]) {
     const events: TimelineEvent[] = [];
-    for (const [index, amendment] of amendments.sort((a, b) => b.submittedDate - a.submittedDate).entries()) {
+    for (const [index, modification] of modifications.sort((a, b) => b.submittedDate - a.submittedDate).entries()) {
       events.push({
-        name: `Amendment Requested #${amendments.length - index} - ${
-          amendment.isTimeExtension ? 'Time Extension' : 'Other'
+        name: `Modification Requested #${modifications.length - index} - ${
+          modification.isTimeExtension ? 'Time Extension' : 'Other'
         }`,
-        startDate: new Date(amendment.submittedDate),
+        startDate: new Date(modification.submittedDate),
         isFulfilled: true,
       });
-      if (amendment.reviewDate) {
+      if (modification.reviewDate) {
         events.push({
-          name: `Amendment Request Reviewed #${amendments.length - index} ${
-            amendment.isReviewApproved ? 'Proceed' : 'Refused'
+          name: `Modification Request Reviewed #${modifications.length - index} ${
+            modification.isReviewApproved ? 'Proceed' : 'Refused'
           }`,
-          startDate: new Date(amendment.reviewDate),
+          startDate: new Date(modification.reviewDate),
           isFulfilled: true,
         });
       }

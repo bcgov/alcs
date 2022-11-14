@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationAmendmentDto } from '../../../services/application/application-amendment/application-amendment.dto';
+import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -9,7 +9,7 @@ import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import { CardLabel } from '../../../shared/card/card.component';
-import { AMENDMENT_TYPE_LABEL } from '../../board/dialogs/amendment/amendment-dialog.component';
+import { MODIFICATION_TYPE_LABEL } from '../../board/dialogs/modification/modification-dialog.component';
 import { COVENANT_TYPE_LABEL } from '../../board/dialogs/covenant/covenant-dialog.component';
 import { PLANNING_TYPE_LABEL } from '../../board/dialogs/planning-review/planning-review-dialog.component';
 import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
@@ -46,7 +46,7 @@ export class AssignedComponent implements OnInit {
   }
 
   async loadApplications() {
-    const { applications, reconsiderations, planningReviews, amendments, covenants } =
+    const { applications, reconsiderations, planningReviews, modifications, covenants } =
       await this.homeService.fetchAssignedToMe();
 
     const sorted = [];
@@ -56,9 +56,9 @@ export class AssignedComponent implements OnInit {
         .filter((a) => a.card!.highPriority)
         .map((a) => this.mapApplication(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
-      ...amendments
+      ...modifications
         .filter((a) => a.card.highPriority)
-        .map((a) => this.mapAmendment(a))
+        .map((a) => this.mapModification(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
       ...reconsiderations
         .filter((r) => r.card.highPriority)
@@ -78,9 +78,9 @@ export class AssignedComponent implements OnInit {
         .filter((a) => !a.card!.highPriority)
         .map((a) => this.mapApplication(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
-      ...amendments
+      ...modifications
         .filter((r) => !r.card.highPriority)
-        .map((r) => this.mapAmendment(r))
+        .map((r) => this.mapModification(r))
         .sort((a, b) => a.date! - b.date!),
       ...reconsiderations
         .filter((r) => !r.card.highPriority)
@@ -144,14 +144,14 @@ export class AssignedComponent implements OnInit {
     } as AssignedToMeFile;
   }
 
-  private mapAmendment(r: ApplicationAmendmentDto): AssignedToMeFile {
+  private mapModification(r: ApplicationModificationDto): AssignedToMeFile {
     return {
       title: `${r.application.fileNumber} (${r.application.applicant})`,
       type: r.card.type,
       date: r.submittedDate,
       card: r.card,
       highPriority: r.card.highPriority,
-      labels: [r.application.type, AMENDMENT_TYPE_LABEL],
+      labels: [r.application.type, MODIFICATION_TYPE_LABEL],
     };
   }
 

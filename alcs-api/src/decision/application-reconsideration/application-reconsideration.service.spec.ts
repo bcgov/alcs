@@ -125,7 +125,7 @@ describe('ReconsiderationService', () => {
     reconsiderationRepositoryMock.findOneOrFail.mockResolvedValue(
       mockReconsideration,
     );
-    reconsiderationRepositoryMock.findOneBy.mockResolvedValue(
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(
       mockReconsideration,
     );
     reconsiderationRepositoryMock.find.mockResolvedValue([mockReconsideration]);
@@ -233,9 +233,7 @@ describe('ReconsiderationService', () => {
       isReviewApproved: true,
     } as ApplicationReconsiderationUpdateDto);
 
-    expect(reconsiderationRepositoryMock.findOneBy).toBeCalledWith({
-      uuid,
-    });
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledWith(
       mockReconsideration,
@@ -244,7 +242,7 @@ describe('ReconsiderationService', () => {
 
   it('should fail update reconsideration if it does not exist', async () => {
     const uuid = 'fake';
-    reconsiderationRepositoryMock.findOneBy.mockResolvedValue(null);
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(
       service.update(uuid, {} as ApplicationReconsiderationUpdateDto),
@@ -253,9 +251,7 @@ describe('ReconsiderationService', () => {
         `Reconsideration with uuid ${uuid} not found`,
       ),
     );
-    expect(reconsiderationRepositoryMock.findOneBy).toBeCalledWith({
-      uuid,
-    });
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
@@ -272,9 +268,7 @@ describe('ReconsiderationService', () => {
       typeCode: code,
     });
 
-    expect(reconsiderationRepositoryMock.findOneBy).toBeCalledWith({
-      uuid,
-    });
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledWith({
       ...mockReconsideration,
       reviewDate: null,
@@ -288,24 +282,21 @@ describe('ReconsiderationService', () => {
 
     await service.delete(uuid);
 
-    expect(reconsiderationRepositoryMock.findOneBy).toBeCalledWith({
-      uuid,
-    });
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on delete if reconsideration does not exist', async () => {
     const uuid = 'fake';
-    reconsiderationRepositoryMock.findOneBy.mockResolvedValue(null);
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(
         `Reconsideration with uuid ${uuid} not found`,
       ),
     );
-    expect(reconsiderationRepositoryMock.findOneBy).toBeCalledWith({
-      uuid,
-    });
+
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.softRemove).toHaveBeenCalledTimes(0);
   });
 

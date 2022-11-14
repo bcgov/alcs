@@ -15,17 +15,17 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import {
-  ApplicationAmendmentCreateDto,
-  ApplicationAmendmentUpdateDto,
-} from './application-amendment.dto';
-import { ApplicationAmendmentService } from './application-amendment.service';
+  ApplicationModificationCreateDto,
+  ApplicationModificationUpdateDto,
+} from './application-modification.dto';
+import { ApplicationModificationService } from './application-modification.service';
 
-@Controller('application-amendment')
+@Controller('application-modification')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
-export class ApplicationAmendmentController {
+export class ApplicationModificationController {
   constructor(
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private boardService: BoardService,
   ) {}
 
@@ -33,46 +33,50 @@ export class ApplicationAmendmentController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async update(
     @Param('uuid') uuid: string,
-    @Body() updateDto: ApplicationAmendmentUpdateDto,
+    @Body() updateDto: ApplicationModificationUpdateDto,
   ) {
-    const updatedAmendment = await this.amendmentService.update(
+    const updatedModification = await this.modificationService.update(
       uuid,
       updateDto,
     );
-    return this.amendmentService.mapToDtos([updatedAmendment]);
+    return this.modificationService.mapToDtos([updatedModification]);
   }
 
   @Post()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async create(@Body() createDto: ApplicationAmendmentCreateDto) {
+  async create(@Body() createDto: ApplicationModificationCreateDto) {
     const board = await this.boardService.getOneOrFail({
       code: createDto.boardCode,
     });
-    const amendment = await this.amendmentService.create(createDto, board);
-
-    return this.amendmentService.mapToDtos([amendment]);
+    const modification = await this.modificationService.create(
+      createDto,
+      board,
+    );
+    return this.modificationService.mapToDtos([modification]);
   }
 
   @Delete('/:uuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async delete(@Param('uuid') uuid: string) {
-    await this.amendmentService.delete(uuid);
+    await this.modificationService.delete(uuid);
     return {};
   }
 
   @Get('/card/:uuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByCard(@Param('uuid') cardUuid: string) {
-    const amendment = await this.amendmentService.getByCardUuid(cardUuid);
-    const mapped = await this.amendmentService.mapToDtos([amendment]);
+    const modification = await this.modificationService.getByCardUuid(cardUuid);
+    const mapped = await this.modificationService.mapToDtos([modification]);
     return mapped[0];
   }
 
   @Get('/board/:boardCode')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByBoard(@Param('code') boardCode: string) {
-    const amendments = await this.amendmentService.getByBoardCode(boardCode);
-    return this.amendmentService.mapToDtos(amendments);
+    const modification = await this.modificationService.getByBoardCode(
+      boardCode,
+    );
+    return this.modificationService.mapToDtos(modification);
   }
 
   @Get('/application/:applicationFileNumber')
@@ -80,9 +84,9 @@ export class ApplicationAmendmentController {
   async getByApplication(
     @Param('applicationFileNumber') applicationFileNumber: string,
   ) {
-    const amendment = await this.amendmentService.getByApplication(
+    const modification = await this.modificationService.getByApplication(
       applicationFileNumber,
     );
-    return this.amendmentService.mapToDtos(amendment);
+    return this.modificationService.mapToDtos(modification);
   }
 }

@@ -7,14 +7,14 @@
       </h2>
     </div>
     <div>
-      <ng-container *ngIf="boardHasPlanningReviews || boardHasAmendments || boardHasCovenant">
+      <ng-container *ngIf="boardHasPlanningReviews || boardHasModifications || boardHasCovenant">
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
           <button mat-menu-item (click)="onReconsiderationCreate()">Reconsideration</button>
           <button *ngIf="boardHasPlanningReviews" mat-menu-item (click)="onCreatePlanningReview()">
             Planning Review
           </button>
-          <button *ngIf="boardHasAmendments" mat-menu-item (click)="onCreateAmendment()">Amendment</button>
+          <button *ngIf="boardHasModifications" mat-menu-item (click)="onCreateModification()">Modification</button>
           <button *ngIf="boardHasCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
         </mat-menu>
       </ng-container>

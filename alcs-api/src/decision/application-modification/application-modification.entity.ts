@@ -15,8 +15,8 @@ import { Card } from '../../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
 
 @Entity()
-export class ApplicationAmendment extends Base {
-  constructor(data?: Partial<ApplicationAmendment>) {
+export class ApplicationModification extends Base {
+  constructor(data?: Partial<ApplicationModification>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -57,12 +57,12 @@ export class ApplicationAmendment extends Base {
   @Column({ type: 'uuid' })
   cardUuid: string;
 
-  @ManyToMany(() => ApplicationDecision, (decision) => decision.amendedBy)
+  @ManyToMany(() => ApplicationDecision, (decision) => decision.modifiedBy)
   @JoinTable({
-    name: 'amended_decisions',
+    name: 'modified_decisions',
   })
-  amendsDecisions: ApplicationDecision[];
+  modifiesDecisions: ApplicationDecision[];
 
-  @OneToOne(() => ApplicationDecision, (dec) => dec.amends)
+  @OneToOne(() => ApplicationDecision, (dec) => dec.modifies)
   resultingDecision?: ApplicationDecision;
 }

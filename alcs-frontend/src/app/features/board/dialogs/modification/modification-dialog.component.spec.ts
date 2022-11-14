@@ -7,8 +7,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationAmendmentDto } from '../../../../services/application/application-amendment/application-amendment.dto';
-import { ApplicationAmendmentService } from '../../../../services/application/application-amendment/application-amendment.service';
+import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import {
   ApplicationRegionDto,
   ApplicationTypeDto,
@@ -30,17 +30,17 @@ import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { AmendmentDialogComponent } from './amendment-dialog.component';
+import { ModificationDialogComponent } from './modification-dialog.component';
 
-describe('AmendmentDialogComponent', () => {
-  let component: AmendmentDialogComponent;
-  let fixture: ComponentFixture<AmendmentDialogComponent>;
+describe('ModificationDialogComponent', () => {
+  let component: ModificationDialogComponent;
+  let fixture: ComponentFixture<ModificationDialogComponent>;
   let mockUserService: jasmine.SpyObj<UserService>;
   let mockBoardService: jasmine.SpyObj<BoardService>;
 
-  const mockAmendmentDto: ApplicationAmendmentDto = {
+  const mockModificationDto: ApplicationModificationDto = {
     uuid: '',
-    amendedDecisions: [],
+    modifiesDecisions: [],
     isReviewApproved: false,
     isTimeExtension: true,
     reviewDate: 111111,
@@ -77,7 +77,7 @@ describe('AmendmentDialogComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [AmendmentDialogComponent],
+      declarations: [ModificationDialogComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
@@ -96,7 +96,7 @@ describe('AmendmentDialogComponent', () => {
           useValue: {},
         },
         {
-          provide: ApplicationAmendmentService,
+          provide: ApplicationModificationService,
           useValue: {},
         },
         {
@@ -116,9 +116,9 @@ describe('AmendmentDialogComponent', () => {
       imports: [MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, RouterTestingModule, SharedModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AmendmentDialogComponent);
+    fixture = TestBed.createComponent(ModificationDialogComponent);
     component = fixture.componentInstance;
-    component.data = mockAmendmentDto;
+    component.data = mockModificationDto;
     fixture.detectChanges();
   });
 

@@ -35,7 +35,7 @@ export enum CardType {
   APP = 'APP',
   RECON = 'RECON',
   PLAN = 'PLAN',
-  AMEND = 'AMEND',
+  MODI = 'MODI',
   COV = 'COV',
 }
 

@@ -3,8 +3,8 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationAmendment } from '../decision/application-amendment/application-amendment.entity';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
+import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
@@ -19,7 +19,7 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
-import { BoardDto } from './board.dto';
+import { BOARD_CODES, BoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -33,7 +33,7 @@ export class BoardController {
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
@@ -60,9 +60,9 @@ export class BoardController {
       planningReviews = await this.planningReviewService.getCards();
     }
 
-    let amendments: ApplicationAmendment[] = [];
-    if (boardCode === 'ceo') {
-      amendments = await this.amendmentService.getByBoardCode(boardCode);
+    let modifications: ApplicationModification[] = [];
+    if (boardCode === BOARD_CODES.CEO) {
+      modifications = await this.modificationService.getByBoardCode(boardCode);
     }
 
     return {
@@ -71,7 +71,7 @@ export class BoardController {
       planningReviews: await this.planningReviewService.mapToDtos(
         planningReviews,
       ),
-      amendments: await this.amendmentService.mapToDtos(amendments),
+      modifications: await this.modificationService.mapToDtos(modifications),
       covenants: await this.covenantService.mapToDtos(covenants),
     };
   }

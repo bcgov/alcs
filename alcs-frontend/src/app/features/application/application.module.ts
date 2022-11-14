@@ -17,7 +17,7 @@ import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
-import { EditAmendmentDialogComponent } from './post-decision/edit-amendment-dialog/edit-amendment-dialog.component';
+import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
@@ -60,7 +60,7 @@ const routes: Routes = [
     PostDecisionComponent,
     InlineReviewOutcomeComponent,
     EditReconsiderationDialogComponent,
-    EditAmendmentDialogComponent,
+    EditModificationDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MtxDatetimepickerModule, MtxNativeDatetimeModule],
 })

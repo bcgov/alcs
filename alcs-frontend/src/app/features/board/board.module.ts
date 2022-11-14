@@ -12,8 +12,8 @@ import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pip
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
-import { AmendmentDialogComponent } from './dialogs/amendment/amendment-dialog.component';
-import { CreateAmendmentDialogComponent } from './dialogs/amendment/create/create-amendment-dialog.component';
+import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
+import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
@@ -47,8 +47,8 @@ const routes: Routes = [
     ReconsiderationDialogComponent,
     CreatePlanningReviewDialogComponent,
     PlanningReviewDialogComponent,
-    CreateAmendmentDialogComponent,
-    AmendmentDialogComponent,
+    CreateModificationDialogComponent,
+    ModificationDialogComponent,
     CovenantDialogComponent,
     CreateCovenantDialogComponent,
   ],

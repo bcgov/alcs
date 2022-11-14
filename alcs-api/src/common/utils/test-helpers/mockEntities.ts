@@ -1,4 +1,4 @@
-import { ApplicationAmendment } from '../../../decision/application-amendment/application-amendment.entity';
+import { ApplicationModification } from '../../../decision/application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationType } from '../../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationDecisionMeeting } from '../../../decision/application-decision-meeting/application-decision-meeting.entity';
@@ -137,12 +137,12 @@ const initApplicationReconsiderationMockEntity = (
   return reconsideration;
 };
 
-const initApplicationAmendmentMockEntity = (
+const initApplicationModificationMockEntity = (
   application?: Application,
   card?: Card,
-): ApplicationAmendment => {
+): ApplicationModification => {
   const app = application ?? initApplicationMockEntity();
-  const reconsideration = new ApplicationAmendment({
+  const reconsideration = new ApplicationModification({
     application: app,
     applicationUuid: app.uuid,
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
@@ -327,5 +327,5 @@ export {
   initCardTypeMockEntity,
   initApplicationDecisionMock,
   initApplicationReconsiderationMockEntity,
-  initApplicationAmendmentMockEntity,
+  initApplicationModificationMockEntity,
 };

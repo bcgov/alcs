@@ -3,7 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
@@ -18,7 +18,7 @@ import { CommissionerApplicationDto } from './commissioner.dto';
 export class CommissionerController {
   constructor(
     private applicationService: ApplicationService,
-    private amendmentService: ApplicationAmendmentService,
+    private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -30,7 +30,7 @@ export class CommissionerController {
   ): Promise<CommissionerApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
     const firstMap = await this.applicationService.mapToDtos([application]);
-    const amendments = await this.amendmentService.getByApplication(
+    const modifications = await this.modificationService.getByApplication(
       application.fileNumber,
     );
     const recons = await this.reconsiderationService.getByApplication(
@@ -41,10 +41,11 @@ export class CommissionerController {
       ApplicationDto,
       CommissionerApplicationDto,
     );
-    const hasApprovedOrPendingAmendment = amendments.reduce(
-      (showLabel, amendment) => {
+    const hasApprovedOrPendingModification = modifications.reduce(
+      (showLabel, modification) => {
         return (
-          amendment.isReviewApproved === null || amendment.isReviewApproved
+          modification.isReviewApproved === null ||
+          modification.isReviewApproved
         );
       },
       false,
@@ -52,7 +53,7 @@ export class CommissionerController {
     const mappedRecords = finalMap[0];
     return {
       ...mappedRecords,
-      hasAmendments: hasApprovedOrPendingAmendment,
+      hasModifications: hasApprovedOrPendingModification,
       hasRecons: recons.length > 0,
     };
   }

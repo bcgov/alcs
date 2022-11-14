@@ -4,7 +4,7 @@ import { ApplicationDecisionDto } from '../application-decision/application-deci
 import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application.dto';
 
-export interface ApplicationAmendmentCreateDto {
+export interface ApplicationModificationCreateDto {
   applicationFileNumber: string;
   applicationTypeCode: string;
   applicant: string;
@@ -13,18 +13,18 @@ export interface ApplicationAmendmentCreateDto {
   submittedDate: number;
   boardCode: string;
   isTimeExtension: boolean;
-  amendedDecisionUuids: string[];
+  modifiesDecisionUuids: string[];
 }
 
-export interface ApplicationAmendmentUpdateDto {
+export interface ApplicationModificationUpdateDto {
   submittedDate?: number;
   reviewDate?: number | null;
   isReviewApproved?: boolean | null;
   isTimeExtension?: boolean | null;
-  amendedDecisionUuids?: string[];
+  modifiesDecisionUuids?: string[];
 }
 
-export interface ApplicationForAmendmentDto {
+export interface ApplicationForModificationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
   statusCode: string;
@@ -34,14 +34,14 @@ export interface ApplicationForAmendmentDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
-export interface ApplicationAmendmentDto {
+export interface ApplicationModificationDto {
   uuid: string;
-  application: ApplicationForAmendmentDto;
+  application: ApplicationForModificationDto;
   card: CardDto;
   submittedDate: number;
   reviewDate: number;
   isReviewApproved: boolean | null;
   isTimeExtension: boolean | null;
-  amendedDecisions: ApplicationDecisionDto[];
+  modifiesDecisions: ApplicationDecisionDto[];
   resultingDecision?: ApplicationDecisionDto;
 }

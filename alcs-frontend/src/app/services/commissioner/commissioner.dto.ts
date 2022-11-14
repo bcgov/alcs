@@ -11,5 +11,5 @@ export interface CommissionerApplicationDto {
   region: ApplicationRegionDto;
   localGovernment: ApplicationLocalGovernmentDto;
   hasRecons: boolean;
-  hasAmendments: boolean;
+  hasModifications: boolean;
 }

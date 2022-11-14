@@ -49,7 +49,7 @@ export class UpdateApplicationDecisionDto {
 
   @IsUUID()
   @IsOptional()
-  amendsUuid?: string | null;
+  modifiesUuid?: string | null;
 
   @IsUUID()
   @IsOptional()
@@ -77,7 +77,7 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
 
   @IsUUID()
   @IsOptional()
-  amendsUuid?: string;
+  modifiesUuid?: string;
 
   @IsUUID()
   @IsOptional()
@@ -133,9 +133,9 @@ export class ApplicationDecisionDto {
   isTimeExtension?: boolean | null;
 
   reconsiders?: LinkedResolutionDto;
-  amends?: LinkedResolutionDto;
+  modifies?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
-  amendedBy?: LinkedResolutionDto[];
+  modifiedBy?: LinkedResolutionDto[];
 }
 
 export class LinkedResolutionDto {

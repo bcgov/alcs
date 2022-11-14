@@ -3,16 +3,17 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
 import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
 import { CovenantService } from '../covenant/covenant.service';
-import { ApplicationAmendmentService } from '../decision/application-amendment/application-amendment.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
+import { BOARD_CODES } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -22,7 +23,7 @@ describe('BoardController', () => {
   let boardService: DeepMocked<BoardService>;
   let appService: DeepMocked<ApplicationService>;
   let appReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
-  let amendmentService: DeepMocked<ApplicationAmendmentService>;
+  let modificationService: DeepMocked<ApplicationModificationService>;
   let cardService: DeepMocked<CardService>;
   let planningReviewService: DeepMocked<PlanningReviewService>;
   let covenantService: DeepMocked<CovenantService>;
@@ -31,7 +32,7 @@ describe('BoardController', () => {
     boardService = createMock<BoardService>();
     appService = createMock<ApplicationService>();
     appReconsiderationService = createMock<ApplicationReconsiderationService>();
-    amendmentService = createMock<ApplicationAmendmentService>();
+    modificationService = createMock<ApplicationModificationService>();
     planningReviewService = createMock<PlanningReviewService>();
     cardService = createMock<CardService>();
     covenantService = createMock<CovenantService>();
@@ -42,8 +43,8 @@ describe('BoardController', () => {
     appReconsiderationService.mapToDtos.mockResolvedValue([]);
     planningReviewService.getCards.mockResolvedValue([]);
     planningReviewService.mapToDtos.mockResolvedValue([]);
-    amendmentService.getByBoardCode.mockResolvedValue([]);
-    amendmentService.mapToDtos.mockResolvedValue([]);
+    modificationService.getByBoardCode.mockResolvedValue([]);
+    modificationService.mapToDtos.mockResolvedValue([]);
     covenantService.getByBoardCode.mockResolvedValue([]);
     covenantService.mapToDtos.mockResolvedValue([]);
 
@@ -61,8 +62,8 @@ describe('BoardController', () => {
           useValue: appReconsiderationService,
         },
         {
-          provide: ApplicationAmendmentService,
-          useValue: amendmentService,
+          provide: ApplicationModificationService,
+          useValue: modificationService,
         },
         { provide: CardService, useValue: cardService },
         {
@@ -106,8 +107,8 @@ describe('BoardController', () => {
     );
     expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
-    expect(amendmentService.getByBoardCode).toHaveBeenCalledTimes(0);
-    expect(amendmentService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(modificationService.getByBoardCode).toHaveBeenCalledTimes(0);
+    expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(planningReviewService.getCards).toHaveBeenCalledTimes(0);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
@@ -121,13 +122,13 @@ describe('BoardController', () => {
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through to amendment service for ceo board', async () => {
-    const boardCode = 'ceo';
+  it('should call through to modification service for ceo board', async () => {
+    const boardCode = BOARD_CODES.CEO;
 
     await controller.getCards(boardCode);
 
-    expect(amendmentService.getByBoardCode).toHaveBeenCalledTimes(1);
-    expect(amendmentService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(modificationService.getByBoardCode).toHaveBeenCalledTimes(1);
+    expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service when changing boards', async () => {
