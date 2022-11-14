@@ -12,6 +12,8 @@ import { ApplicationDetailService } from '../../../services/application/applicat
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
+import { MODIFICATION_TYPE_LABEL } from '../../board/dialogs/modification/modification-dialog.component';
+import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & { loading: boolean };
@@ -30,6 +32,9 @@ export class DecisionComponent implements OnInit, OnDestroy {
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
   isPaused = true;
+
+  reconLabel = RECON_TYPE_LABEL;
+  modificationLabel = MODIFICATION_TYPE_LABEL;
 
   constructor(
     public dialog: MatDialog,

@@ -94,7 +94,11 @@ export class DecisionDialogComponent implements OnInit {
       .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
       .subscribe(([modifications, reconsiderations]) => {
         const mappedModifications = modifications
-          .filter((modification) => modification.isReviewApproved !== false && modification.resultingDecision === null)
+          .filter(
+            (modification) =>
+              (data.existingDecision && data.existingDecision.modifies?.uuid === modification.uuid) ||
+              (modification.isReviewApproved !== false && modification.resultingDecision === null)
+          )
           .map((modification, index) => ({
             label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
               .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
@@ -106,7 +110,8 @@ export class DecisionDialogComponent implements OnInit {
         const mappedRecons = reconsiderations
           .filter(
             (reconsideration) =>
-              reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null
+              (data.existingDecision && data.existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
+              (reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null)
           )
           .map((reconsideration, index) => ({
             label: `Reconsideration Request #${

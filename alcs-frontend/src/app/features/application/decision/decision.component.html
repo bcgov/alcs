@@ -50,7 +50,30 @@
     </div>
     <div class="decision-padding">
       <div class="body-large">
-        Decision #{{ decisions.length - i }} - Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+        Decision #{{ decisions.length - i }} -
+        <ng-container *ngIf="!!decision.reconsiders">
+      <span
+        class="decision-type"
+        [ngStyle]="{
+          backgroundColor: reconLabel.backgroundColor,
+          color: reconLabel.textColor,
+          borderColor: reconLabel.borderColor
+        }"
+      >{{ reconLabel.shortLabel }}</span>
+          -
+        </ng-container>
+        <ng-container *ngIf="!!decision.modifies">
+      <span
+        class="decision-type"
+        [ngStyle]="{
+          backgroundColor: modificationLabel.backgroundColor,
+          color: modificationLabel.textColor,
+          borderColor: modificationLabel.borderColor
+        }"
+      >{{ modificationLabel.shortLabel }}</span>
+          -
+        </ng-container>
+        Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
       </div>
       <div class="decision-content">
         <div>

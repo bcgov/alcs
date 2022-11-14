@@ -60,6 +60,12 @@ export class ApplicationDecisionService {
         modifiedBy: {
           resultingDecision: true,
         },
+        modifies: {
+          modifiesDecisions: true,
+        },
+        reconsiders: {
+          reconsidersDecisions: true,
+        },
       },
     });
 
