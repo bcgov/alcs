@@ -106,9 +106,9 @@
         <div>
           <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
           {{ decision.ceoCriterion?.label }}
-          <ng-container *ngIf="decision.isTimeExtension || decision.isOther"> -</ng-container>
+          <ng-container *ngIf="decision.isTimeExtension || decision.isOther">&#32;-&#32;</ng-container>
           <ng-container *ngIf="decision.isTimeExtension">Time extension</ng-container>
-          <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,</ng-container>
+          <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,&#32;</ng-container>
           <ng-container *ngIf="decision.isOther">Other</ng-container>
         </div>
         <div></div>
