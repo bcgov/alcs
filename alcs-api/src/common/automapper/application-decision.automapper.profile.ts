@@ -96,6 +96,44 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               })),
           ),
         ),
+        forMember(
+          (ad) => ad.decisionMaker,
+          mapFrom((a) =>
+            this.mapper.map(
+              a.decisionMaker,
+              DecisionMakerCode,
+              DecisionMakerCodeDto,
+            ),
+          ),
+        ),
+        forMember(
+          (ad) => ad.ceoCriterion,
+          mapFrom((a) =>
+            this.mapper.map(
+              a.ceoCriterion,
+              CeoCriterionCode,
+              CeoCriterionCodeDto,
+            ),
+          ),
+        ),
+        forMember(
+          (ad) => ad.isOther,
+          mapFrom((a) => a.isOther),
+        ),
+        forMember(
+          (ad) => ad.isTimeExtension,
+          mapFrom((a) => a.isTimeExtension),
+        ),
+        forMember(
+          (ad) => ad.auditDate,
+          mapFrom((a) => (a.auditDate ? a.auditDate.getTime() : null)),
+        ),
+        forMember(
+          (ad) => ad.chairReviewDate,
+          mapFrom((a) =>
+            a.chairReviewDate ? a.chairReviewDate.getTime() : null,
+          ),
+        ),
       );
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);

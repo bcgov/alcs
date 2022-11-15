@@ -87,6 +87,10 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'boolean', nullable: true })
+  isOther: boolean | null;
+
+  @AutoMap()
+  @Column({ type: 'boolean', nullable: true })
   chairReviewOutcome: boolean | null;
 
   @AutoMap()

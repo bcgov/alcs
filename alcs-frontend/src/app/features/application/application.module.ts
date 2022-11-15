@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
 import { MTX_DATETIME_FORMATS, MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
@@ -62,6 +63,12 @@ const routes: Routes = [
     EditReconsiderationDialogComponent,
     EditModificationDialogComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MtxDatetimepickerModule, MtxNativeDatetimeModule],
+  imports: [
+    SharedModule.forRoot(),
+    RouterModule.forChild(routes),
+    MtxDatetimepickerModule,
+    MtxNativeDatetimeModule,
+    MatCheckboxModule,
+  ],
 })
 export class ApplicationModule {}

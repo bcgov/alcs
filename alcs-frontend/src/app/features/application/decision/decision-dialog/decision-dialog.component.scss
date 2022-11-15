@@ -57,3 +57,10 @@ label {
     top: 0;
   }
 }
+
+.criterion-checkbox {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  padding: 6px;
+}

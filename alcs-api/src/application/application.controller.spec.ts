@@ -384,4 +384,37 @@ describe('ApplicationController', () => {
     expect(cardService.update).toBeCalledTimes(1);
     expect(result.card!.status.code).toStrictEqual(updatedCard.status.code);
   });
+
+  it('should call through for loading a card', async () => {
+    applicationService.getByCard.mockResolvedValue({
+      ...mockApplicationEntity,
+    } as Application);
+
+    await controller.getByCardUuid(mockApplicationEntity.card!.uuid);
+
+    expect(applicationService.getByCard).toBeCalledTimes(1);
+    expect(applicationService.mapToDtos).toBeCalledTimes(1);
+  });
+
+  it('should call through for searching applications', async () => {
+    applicationService.searchApplicationsByFileNumber.mockResolvedValue([
+      mockApplicationEntity,
+    ]);
+
+    const res = await controller.searchApplications('1231');
+
+    expect(res.length).toEqual(1);
+    expect(applicationService.searchApplicationsByFileNumber).toBeCalledTimes(
+      1,
+    );
+    expect(applicationService.mapToDtos).toBeCalledTimes(1);
+  });
+
+  it('should call through for get', async () => {
+    applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
+    await controller.get(mockApplicationEntity.uuid);
+
+    expect(applicationService.getOrFail).toBeCalledTimes(1);
+    expect(applicationService.mapToDtos).toBeCalledTimes(1);
+  });
 });
