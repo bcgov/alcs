@@ -170,7 +170,7 @@ export class ImportService {
         const application = await this.applicationService.create({
           fileNumber: mappedRow.fileNumber,
           applicant: mappedRow.applicant || 'Imported',
-          dateReceived: mappedRow.submittedToAlc,
+          dateSubmittedToAlc: mappedRow.submittedToAlc,
           localGovernmentUuid: localGovernment.uuid,
           regionCode: REGION_CODE_MAP[mappedRow.region] || undefined,
           typeCode: mappedType,

@@ -11,7 +11,7 @@ import { ToastService } from '../../../services/toast/toast.service';
   styleUrls: ['./intake.component.scss'],
 })
 export class IntakeComponent implements OnInit {
-  dateReceived?: string;
+  dateSubmittedToAlc?: string;
   application?: ApplicationDto;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
@@ -19,7 +19,7 @@ export class IntakeComponent implements OnInit {
   ngOnInit(): void {
     this.applicationDetailService.$application.subscribe((application) => {
       if (application) {
-        this.dateReceived = moment(application.dateReceived).format(environment.dateFormat);
+        this.dateSubmittedToAlc = moment(application.dateSubmittedToAlc).format(environment.dateFormat);
         this.application = application;
       }
     });

@@ -120,7 +120,7 @@ describe('ImportService', () => {
     expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.create).toHaveBeenCalledWith({
       applicant: 'Imported',
-      dateReceived: dayjs('2022-05-08')
+      dateSubmittedToAlc: dayjs('2022-05-08')
         .tz('Canada/Pacific')
         .startOf('day')
         .toDate(),

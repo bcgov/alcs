@@ -49,7 +49,7 @@ describe('ApplicationController', () => {
     pausedDays: 0,
     paused: false,
     decisionMeetings: [],
-    dateReceived: Date.now(),
+    dateSubmittedToAlc: Date.now(),
     card: {
       assignee: initMockAssigneeDto(),
       status: {} as CardStatusDto,
@@ -127,7 +127,7 @@ describe('ApplicationController', () => {
 
     const res = await controller.create({
       ...mockApplicationDto,
-      dateReceived: mockApplicationDto.dateReceived!,
+      dateSubmittedToAlc: mockApplicationDto.dateSubmittedToAlc!,
       localGovernmentUuid: 'government-uuid',
       typeCode: 'fake-code',
     });

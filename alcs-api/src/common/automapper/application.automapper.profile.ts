@@ -47,9 +47,11 @@ export class ApplicationProfile extends AutomapperProfile {
         Application,
         ApplicationDto,
         forMember(
-          (a) => a.dateReceived,
+          (a) => a.dateSubmittedToAlc,
           mapFrom((ad) => {
-            return ad.dateReceived ? ad.dateReceived.getTime() : undefined;
+            return ad.dateSubmittedToAlc
+              ? ad.dateSubmittedToAlc.getTime()
+              : undefined;
           }),
         ),
         forMember(

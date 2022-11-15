@@ -29,7 +29,7 @@ export class CreateApplicationDto {
 
   @IsNotEmpty()
   @IsNumber()
-  dateReceived: number;
+  dateSubmittedToAlc: number;
 
   @IsString()
   @IsOptional()
@@ -43,7 +43,7 @@ export class CreateApplicationDto {
 export class UpdateApplicationDto {
   @IsOptional()
   @IsNumber()
-  dateReceived?: number;
+  dateSubmittedToAlc?: number;
 
   @AutoMap()
   @IsOptional()
@@ -119,7 +119,7 @@ export class ApplicationDto {
 
   paused: boolean;
 
-  dateReceived?: number;
+  dateSubmittedToAlc?: number;
   datePaid?: number;
 
   dateAcknowledgedIncomplete?: number;
@@ -153,7 +153,7 @@ export class ApplicationDto {
 }
 
 export class ApplicationUpdateServiceDto {
-  dateReceived?: Date | null | undefined;
+  dateSubmittedToAlc?: Date | null | undefined;
   applicant?: string;
   typeCode?: string;
   regionCode?: string;
@@ -170,7 +170,7 @@ export class CreateApplicationServiceDto {
   fileNumber: string;
   applicant: string;
   typeCode: string;
-  dateReceived?: Date | null | undefined;
+  dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
   localGovernmentUuid: string;
 }

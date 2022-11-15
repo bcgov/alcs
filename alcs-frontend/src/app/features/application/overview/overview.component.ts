@@ -74,10 +74,10 @@ export class OverviewComponent implements OnInit {
     modifications: ApplicationModificationDto[]
   ): TimelineEvent[] {
     const mappedEvents: TimelineEvent[] = [];
-    if (application.dateReceived) {
+    if (application.dateSubmittedToAlc) {
       mappedEvents.push({
         name: 'Submitted to ALC',
-        startDate: new Date(application.dateReceived),
+        startDate: new Date(application.dateSubmittedToAlc),
         isFulfilled: true,
       });
     }

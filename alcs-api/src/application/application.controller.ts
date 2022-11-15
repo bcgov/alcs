@@ -65,7 +65,7 @@ export class ApplicationController {
   ): Promise<ApplicationDto> {
     const app = await this.applicationService.create({
       ...application,
-      dateReceived: formatIncomingDate(application.dateReceived),
+      dateSubmittedToAlc: formatIncomingDate(application.dateSubmittedToAlc),
     });
     const mappedApps = await this.applicationService.mapToDtos([app]);
     return mappedApps[0];
@@ -81,7 +81,7 @@ export class ApplicationController {
     const updatedApplication = await this.applicationService.update(
       application,
       {
-        dateReceived: formatIncomingDate(updates.dateReceived),
+        dateSubmittedToAlc: formatIncomingDate(updates.dateSubmittedToAlc),
         applicant: updates.applicant,
         typeCode: updates.typeCode,
         regionCode: updates.regionCode,
