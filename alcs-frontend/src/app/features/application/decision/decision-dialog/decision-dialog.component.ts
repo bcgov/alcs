@@ -4,6 +4,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { combineLatestWith } from 'rxjs';
+import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import {
   ApplicationDecisionDto,
@@ -15,6 +16,7 @@ import {
   CeoCriterion,
 } from '../../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
+import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
@@ -57,7 +59,7 @@ export class DecisionDialogComponent implements OnInit {
     chairReviewDate: new FormControl<Date | null>(null),
     chairReviewOutcome: new FormControl<string | null>(null),
     auditDate: new FormControl<Date | null>(null),
-    isTimeExtension: new FormControl<string | null>(null),
+    criterionModification: new FormControl<string[]>([]),
   });
 
   constructor(
@@ -70,7 +72,6 @@ export class DecisionDialogComponent implements OnInit {
       ceoCriterion: CeoCriterionDto[];
       existingDecision?: ApplicationDecisionDto;
       minDate?: Date;
-      isTimeExtension?: boolean;
     },
     private dialogRef: MatDialogRef<DecisionDialogComponent>,
     private decisionService: ApplicationDecisionService,
@@ -93,74 +94,11 @@ export class DecisionDialogComponent implements OnInit {
     this.modificationService.$modifications
       .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
       .subscribe(([modifications, reconsiderations]) => {
-        const mappedModifications = modifications
-          .filter(
-            (modification) =>
-              (data.existingDecision && data.existingDecision.modifies?.uuid === modification.uuid) ||
-              (modification.isReviewApproved !== false && modification.resultingDecision === null)
-          )
-          .map((modification, index) => ({
-            label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
-              .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
-              .join(', ')}`,
-            uuid: modification.uuid,
-            type: PostDecisionType.Modification,
-          }));
-
-        const mappedRecons = reconsiderations
-          .filter(
-            (reconsideration) =>
-              (data.existingDecision && data.existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-              (reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null)
-          )
-          .map((reconsideration, index) => ({
-            label: `Reconsideration Request #${
-              reconsiderations.length - index
-            } - ${reconsideration.reconsideredDecisions
-              .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
-              .join(', ')}`,
-            uuid: reconsideration.uuid,
-            type: PostDecisionType.Reconsideration,
-          }));
-        this.postDecisions = [...mappedModifications, ...mappedRecons];
+        this.mapPostDecisionsToControls(modifications, reconsiderations, data.existingDecision);
       });
 
     if (data.existingDecision) {
-      this.isEdit = true;
-      this.form.patchValue({
-        outcome: data.existingDecision.outcome.code,
-        decisionMaker: data.existingDecision.decisionMaker?.code,
-        ceoCriterion: data.existingDecision.ceoCriterion?.code,
-        date: new Date(data.existingDecision.date),
-        resolutionYear: data.existingDecision.resolutionYear,
-        resolutionNumber: data.existingDecision.resolutionNumber,
-        chairReviewRequired: data.existingDecision.chairReviewRequired ? 'true' : 'false',
-        chairReviewDate: data.existingDecision.chairReviewDate
-          ? new Date(data.existingDecision.chairReviewDate)
-          : undefined,
-        auditDate: data.existingDecision.auditDate ? new Date(data.existingDecision.auditDate) : undefined,
-        postDecision: data.existingDecision.modifies?.uuid || data.existingDecision.reconsiders?.uuid,
-      });
-      if (data.existingDecision.reconsiders) {
-        this.onSelectPostDecision({
-          type: PostDecisionType.Reconsideration,
-        });
-      }
-      if (data.existingDecision.modifies) {
-        this.onSelectPostDecision({
-          type: PostDecisionType.Modification,
-        });
-      }
-      if (data.existingDecision.isTimeExtension !== null) {
-        this.form.patchValue({
-          isTimeExtension: data.existingDecision.isTimeExtension ? 'true' : 'false',
-        });
-      }
-      if (data.existingDecision.chairReviewOutcome !== null) {
-        this.form.patchValue({
-          chairReviewOutcome: data.existingDecision.chairReviewOutcome ? 'true' : 'false',
-        });
-      }
+      this.patchFormWithExistingData(data.existingDecision);
     }
   }
 
@@ -186,7 +124,7 @@ export class DecisionDialogComponent implements OnInit {
       resolutionNumber,
       resolutionYear,
       ceoCriterion,
-      isTimeExtension,
+      criterionModification,
       chairReviewRequired,
       auditDate,
       chairReviewDate,
@@ -208,13 +146,16 @@ export class DecisionDialogComponent implements OnInit {
       outcomeCode: outcome!,
       decisionMakerCode: decisionMaker,
       ceoCriterionCode: ceoCriterion,
-      isTimeExtension: null,
       applicationFileNumber: this.data.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
     };
-    if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION && isTimeExtension !== null) {
-      data.isTimeExtension = isTimeExtension === 'true';
+    if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
+      data.isTimeExtension = criterionModification?.includes('isTimeExtension');
+      data.isOther = criterionModification?.includes('isOther');
+    } else {
+      data.isTimeExtension = null;
+      data.isOther = null;
     }
     if (chairReviewOutcome !== null) {
       data.chairReviewOutcome = chairReviewOutcome === 'true';
@@ -241,10 +182,23 @@ export class DecisionDialogComponent implements OnInit {
     } else {
       this.form.patchValue({
         ceoCriterion: null,
+        criterionModification: [],
       });
       this.form.controls['ceoCriterion'].clearValidators();
     }
     this.form.controls['ceoCriterion'].updateValueAndValidity();
+  }
+
+  onSelectCeoCriterion(ceoCriterion: CeoCriterionDto) {
+    if (ceoCriterion.code === 'MODI') {
+      this.form.controls['criterionModification'].setValidators([Validators.required]);
+    } else {
+      this.form.patchValue({
+        criterionModification: [],
+      });
+      this.form.controls['criterionModification'].clearValidators();
+    }
+    this.form.controls['criterionModification'].updateValueAndValidity();
   }
 
   onSelectChairReviewRequired($event: MatButtonToggleChange) {
@@ -276,6 +230,83 @@ export class DecisionDialogComponent implements OnInit {
       this.ceoCriterion = this.data.ceoCriterion.filter(
         (ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION
       );
+    }
+  }
+
+  private mapPostDecisionsToControls(
+    modifications: ApplicationModificationDto[],
+    reconsiderations: ApplicationReconsiderationDto[],
+    existingDecision?: ApplicationDecisionDto
+  ) {
+    const mappedModifications = modifications
+      .filter(
+        (modification) =>
+          (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
+          (modification.isReviewApproved !== false && modification.resultingDecision === null)
+      )
+      .map((modification, index) => ({
+        label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
+          .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+          .join(', ')}`,
+        uuid: modification.uuid,
+        type: PostDecisionType.Modification,
+      }));
+
+    const mappedRecons = reconsiderations
+      .filter(
+        (reconsideration) =>
+          (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
+          (reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null)
+      )
+      .map((reconsideration, index) => ({
+        label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
+          .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+          .join(', ')}`,
+        uuid: reconsideration.uuid,
+        type: PostDecisionType.Reconsideration,
+      }));
+    this.postDecisions = [...mappedModifications, ...mappedRecons];
+  }
+
+  private patchFormWithExistingData(existingDecision: ApplicationDecisionDto) {
+    this.isEdit = true;
+    this.form.patchValue({
+      outcome: existingDecision.outcome.code,
+      decisionMaker: existingDecision.decisionMaker?.code,
+      ceoCriterion: existingDecision.ceoCriterion?.code,
+      date: new Date(existingDecision.date),
+      resolutionYear: existingDecision.resolutionYear,
+      resolutionNumber: existingDecision.resolutionNumber,
+      chairReviewRequired: existingDecision.chairReviewRequired ? 'true' : 'false',
+      chairReviewDate: existingDecision.chairReviewDate ? new Date(existingDecision.chairReviewDate) : undefined,
+      auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
+      postDecision: existingDecision.modifies?.uuid || existingDecision.reconsiders?.uuid,
+    });
+    if (existingDecision.reconsiders) {
+      this.onSelectPostDecision({
+        type: PostDecisionType.Reconsideration,
+      });
+    }
+    if (existingDecision.modifies) {
+      this.onSelectPostDecision({
+        type: PostDecisionType.Modification,
+      });
+    }
+    const selectedCriterion = [];
+    if (existingDecision.isTimeExtension) {
+      selectedCriterion.push('isTimeExtension');
+    }
+    if (existingDecision.isOther) {
+      selectedCriterion.push('isOther');
+    }
+    this.form.patchValue({
+      criterionModification: selectedCriterion,
+    });
+
+    if (existingDecision.chairReviewOutcome !== null) {
+      this.form.patchValue({
+        chairReviewOutcome: existingDecision.chairReviewOutcome ? 'true' : 'false',
+      });
     }
   }
 }

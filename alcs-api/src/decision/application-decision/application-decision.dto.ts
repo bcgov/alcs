@@ -45,6 +45,10 @@ export class UpdateApplicationDecisionDto {
 
   @IsBoolean()
   @IsOptional()
+  isOther?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
   chairReviewOutcome?: boolean | null;
 
   @IsUUID()
@@ -131,6 +135,9 @@ export class ApplicationDecisionDto {
 
   @AutoMap()
   isTimeExtension?: boolean | null;
+
+  @AutoMap()
+  isOther?: boolean | null;
 
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;

@@ -41,13 +41,6 @@ export class ApplicationController {
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
-  @Get()
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async getAll(): Promise<ApplicationDto[]> {
-    const applications = await this.applicationService.getMany();
-    return this.applicationService.mapToDtos(applications);
-  }
-
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {

@@ -128,6 +128,7 @@ export class ApplicationDecisionService {
     existingDecision.decisionMakerCode = updateDto.decisionMakerCode;
     existingDecision.ceoCriterionCode = updateDto.ceoCriterionCode;
     existingDecision.isTimeExtension = updateDto.isTimeExtension;
+    existingDecision.isOther = updateDto.isOther;
     existingDecision.auditDate = formatIncomingDate(updateDto.auditDate);
     existingDecision.chairReviewDate = formatIncomingDate(
       updateDto.chairReviewDate,
@@ -244,6 +245,7 @@ export class ApplicationDecisionService {
       ceoCriterionCode: createDto.ceoCriterionCode,
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
+      isOther: createDto.isOther,
       application,
       modifies,
       reconsiders,
