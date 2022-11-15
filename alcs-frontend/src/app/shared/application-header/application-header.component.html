@@ -29,7 +29,7 @@
           color: modificationLabel.textColor,
           borderColor: modificationLabel.borderColor
         }"
-        >{{ modificationLabel.label }}
+      >{{ modificationLabel.label }}
       </span>
     </div>
     <div *ngIf="showCardMenu" class="center">
@@ -52,7 +52,11 @@
           <button *ngFor="let recon of _reconsiderations; let i = index" mat-menu-item (click)="onGoToSubCard(recon)">
             Reconsideration Request #{{ i + 1 }}
           </button>
-          <button *ngFor="let modification of _modifications; let i = index" mat-menu-item (click)="onGoToSubCard(modification)">
+          <button
+            *ngFor="let modification of _modifications; let i = index"
+            mat-menu-item
+            (click)="onGoToSubCard(modification)"
+          >
             Modification Request #{{ i + 1 }}
           </button>
         </mat-menu>
@@ -64,32 +68,10 @@
       <div class="subheading2">Local Government:</div>
       <div class="body1-text">{{ _application.localGovernment.name }}</div>
     </div>
-    <div *ngIf="!_reconsiderations.length">
+    <div *ngIf="!_application.hasOwnProperty('decisionDate')">
       <div class="subheading2">Business Days:</div>
-      <div class="body1-text left time-tracking">
-        <div *ngIf="!_application.paused"><span class="dot"></span>Active</div>
-        <div *ngIf="_application.paused"><span class="dot paused"></span>Paused</div>
-        <div
-          matTooltip="Active Days"
-          class="card-active-days"
-          [ngClass]="{
-            'inactive-timer': _application.paused
-          }"
-        >
-          <mat-icon class="icon">calendar_month</mat-icon>
-          {{ _application.activeDays }}
-        </div>
-        <div
-          matTooltip="Paused Days"
-          class="card-paused-days"
-          [ngClass]="{
-            'inactive-timer': !_application.paused
-          }"
-        >
-          <mat-icon class="icon">pause</mat-icon>
-          {{ _application.pausedDays }}
-        </div>
-      </div>
+      <app-application-time-tracker [application]="_application">
+      </app-application-time-tracker>
     </div>
   </div>
 </div>

@@ -9,6 +9,7 @@ import {
 } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
@@ -35,6 +36,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
 
   reconLabel = RECON_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
+  application: ApplicationDto | undefined;
 
   constructor(
     public dialog: MatDialog,
@@ -51,6 +53,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
         this.decisionDate = application.decisionDate;
         this.isPaused = application.paused;
         this.loadDecisions(application.fileNumber);
+        this.application = application;
       }
     });
   }

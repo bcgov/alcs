@@ -1,0 +1,36 @@
+@import '../../../styles/colors';
+
+.subheading2 {
+  margin-bottom: 6px !important;
+}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  margin-right: 8px;
+  background-color: $primary-color;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid #efefef;
+  box-shadow: 0 0 4px 2px rgba($primary-color, 0.3);
+}
+
+.dot.paused {
+  background-color: $error-color;
+  box-shadow: 0 0 4px 2px rgba($error-color, 0.3);
+}
+
+.time-tracking {
+  div {
+    margin-right: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    margin-right: 4px;
+    height: 18px;
+    width: 18px;
+    font-size: 18px;
+  }
+}

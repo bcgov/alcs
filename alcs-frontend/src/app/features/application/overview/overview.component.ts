@@ -125,7 +125,9 @@ export class OverviewComponent implements OnInit {
       }
 
       mappedEvents.push({
-        name: `Decision #${decisions.length - index} Made`,
+        name: `Decision #${decisions.length - index} Made${
+          decisions.length - 1 === index ? ` - Active Days: ${application.activeDays}` : ''
+        }`,
         startDate: new Date(decision.date),
         isFulfilled: true,
       });

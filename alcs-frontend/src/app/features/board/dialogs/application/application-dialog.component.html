@@ -51,30 +51,7 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <div class="body1-text left time-tracking">
-        <div *ngIf="!application.paused"><span class="dot"></span>Active</div>
-        <div *ngIf="application.paused"><span class="dot paused"></span>Paused</div>
-        <div
-          matTooltip="Active Days"
-          class="card-active-days"
-          [ngClass]="{
-            'inactive-timer': application.paused
-          }"
-        >
-          <mat-icon class="icon">calendar_month</mat-icon>
-          {{ application.activeDays }}
-        </div>
-        <div
-          matTooltip="Paused Days"
-          class="card-paused-days"
-          [ngClass]="{
-            'inactive-timer': !application.paused
-          }"
-        >
-          <mat-icon class="icon">pause</mat-icon>
-          {{ application.pausedDays }}
-        </div>
-      </div>
+      <app-application-time-tracker [application]="application"></app-application-time-tracker>
     </div>
     <div style="margin-right: -16px" class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
@@ -83,10 +60,11 @@
       <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
         <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
           <span class="favourite-board-icon-container"
-            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+          ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
           </span>
           <span>{{ board.title }}</span>
-          <span *ngIf="application.card!.board.code === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+          <span *ngIf="application.card!.board.code === board.code"><mat-icon
+            class="selected-board-icon">check</mat-icon></span>
         </button>
       </mat-menu>
       <button
