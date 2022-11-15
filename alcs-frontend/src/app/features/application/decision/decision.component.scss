@@ -29,26 +29,13 @@ section {
   justify-content: center;
 }
 
-
-
-.corner-label {
+.decision-type {
+  border-radius: 10px;
+  padding: 2px 12px;
   font-size: 11px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 32px;
-  padding: 6px 12px;
-  color: $white;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 4px 0 10px;
-
-  &.recon {
-    background: $accent-color;
-  }
-
-  &.modification {
-    background: $secondary-color-dark;
-  }
+  letter-spacing: 0.01em;
+  font-weight: 700;
+  border: 3px solid;
 }
 
 .post-decisions {
