@@ -190,7 +190,7 @@ export class DecisionDialogComponent implements OnInit {
   }
 
   onSelectCeoCriterion(ceoCriterion: CeoCriterionDto) {
-    if (ceoCriterion.code === 'MODI') {
+    if (ceoCriterion.code === CeoCriterion.MODIFICATION) {
       this.form.controls['criterionModification'].setValidators([Validators.required]);
     } else {
       this.form.patchValue({
