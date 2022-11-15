@@ -68,7 +68,7 @@ export class CreateApplicationDialogComponent implements OnInit, OnDestroy {
         applicant: formValues.applicant!,
         fileNumber: formValues.fileNumber!.trim(),
         regionCode: formValues.region || undefined,
-        dateReceived: formatDateForApi(formValues.receivedDate!),
+        dateSubmittedToAlc: formatDateForApi(formValues.receivedDate!),
         localGovernmentUuid: formValues.localGovernment!,
       });
       this.dialogRef.close(true);

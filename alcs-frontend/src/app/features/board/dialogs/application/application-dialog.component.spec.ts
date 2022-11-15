@@ -56,7 +56,7 @@ describe('ApplicationDialogComponent', () => {
     pausedDays: 5,
     paused: true,
     decisionMeetings: [],
-    dateReceived: Date.now(),
+    dateSubmittedToAlc: Date.now(),
     card: {
       assignee: mockAssignee,
       highPriority: false,

@@ -94,7 +94,7 @@ describe('ApplicationService', () => {
       localGovernmentUuid: 'government-uuid',
       typeCode: 'type',
       regionCode: 'region',
-      dateReceived: new Date(),
+      dateSubmittedToAlc: new Date(),
     };
 
     expect(await applicationService.create(payload)).toStrictEqual(
@@ -113,7 +113,7 @@ describe('ApplicationService', () => {
       localGovernmentUuid: 'government-uuid',
       typeCode: 'type',
       regionCode: 'region',
-      dateReceived: new Date(),
+      dateSubmittedToAlc: new Date(),
     };
 
     const promise = applicationService.create(createDto);

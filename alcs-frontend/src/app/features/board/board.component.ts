@@ -249,7 +249,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       decisionMeetings: application.decisionMeetings,
       cardType: CardType.APP,
       cardUuid: application.card!.uuid,
-      dateReceived: application.dateReceived,
+      dateReceived: application.dateSubmittedToAlc,
     };
   }
 

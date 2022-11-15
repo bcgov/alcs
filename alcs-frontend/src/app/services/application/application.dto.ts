@@ -7,7 +7,7 @@ export interface CreateApplicationDto {
   fileNumber: string;
   applicant: string;
   typeCode: string;
-  dateReceived: number;
+  dateSubmittedToAlc: number;
   regionCode?: string;
   localGovernmentUuid?: string;
 }
@@ -21,7 +21,7 @@ export interface ApplicationDto {
   applicant: string;
   summary?: string;
   type: ApplicationTypeDto;
-  dateReceived: number;
+  dateSubmittedToAlc: number;
   datePaid?: number;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
@@ -38,7 +38,7 @@ export interface ApplicationDto {
 }
 
 export interface UpdateApplicationDto {
-  dateReceived?: number;
+  dateSubmittedToAlc?: number;
   applicant?: string;
   statusCode?: string;
   regionCode?: string;

@@ -91,7 +91,7 @@ export class ApplicationService {
     const newApplication = new Application({
       fileNumber: application.fileNumber,
       applicant: application.applicant,
-      dateReceived: application.dateReceived || undefined,
+      dateSubmittedToAlc: application.dateSubmittedToAlc || undefined,
       localGovernmentUuid: application.localGovernmentUuid,
       typeCode: application.typeCode,
       region,
