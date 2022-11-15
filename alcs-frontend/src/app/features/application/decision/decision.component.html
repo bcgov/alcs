@@ -51,29 +51,42 @@
     <div class="decision-padding">
       <div class="body-large">
         Decision #{{ decisions.length - i }} -
+        <ng-container *ngIf="i === decisions.length - 1 && application">
+          <span class="days" matTooltip="Active Days">
+            <mat-icon class="icon">calendar_month</mat-icon>
+            {{ application.activeDays }}
+          </span>
+          <span class="days" matTooltip="Paused Days">
+            <mat-icon class="icon">pause</mat-icon>
+            {{ application.pausedDays }}
+          </span>
+          -
+        </ng-container>
         <ng-container *ngIf="!!decision.reconsiders">
-      <span
-        class="decision-type"
-        [ngStyle]="{
-          backgroundColor: reconLabel.backgroundColor,
-          color: reconLabel.textColor,
-          borderColor: reconLabel.borderColor
-        }"
-      >{{ reconLabel.shortLabel }}</span>
+          <span
+            class="decision-type"
+            [ngStyle]="{
+              backgroundColor: reconLabel.backgroundColor,
+              color: reconLabel.textColor,
+              borderColor: reconLabel.borderColor
+            }"
+          >{{ reconLabel.shortLabel }}</span
+          >
           -
         </ng-container>
         <ng-container *ngIf="!!decision.modifies">
-      <span
-        class="decision-type"
-        [ngStyle]="{
-          backgroundColor: modificationLabel.backgroundColor,
-          color: modificationLabel.textColor,
-          borderColor: modificationLabel.borderColor
-        }"
-      >{{ modificationLabel.shortLabel }}</span>
+          <span
+            class="decision-type"
+            [ngStyle]="{
+              backgroundColor: modificationLabel.backgroundColor,
+              color: modificationLabel.textColor,
+              borderColor: modificationLabel.borderColor
+            }"
+          >{{ modificationLabel.shortLabel }}</span
+          >
           -
         </ng-container>
-        Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+        <span>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
       </div>
       <div class="decision-content">
         <div>
@@ -93,9 +106,9 @@
         <div>
           <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
           {{ decision.ceoCriterion?.label }}
-          <ng-container *ngIf="decision.isTimeExtension || decision.isOther"> - </ng-container>
+          <ng-container *ngIf="decision.isTimeExtension || decision.isOther"> -</ng-container>
           <ng-container *ngIf="decision.isTimeExtension">Time extension</ng-container>
-          <ng-container *ngIf="decision.isTimeExtension && decision.isOther">, </ng-container>
+          <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,</ng-container>
           <ng-container *ngIf="decision.isOther">Other</ng-container>
         </div>
         <div></div>
@@ -110,7 +123,7 @@
           <div class="subheading2">Chair Review Outcome</div>
           <span *ngIf="decision.chairReviewOutcome !== null">{{
             decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
-          }}</span>
+            }}</span>
           <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
         </div>
         <div *ngIf="decision.chairReviewRequired"></div>

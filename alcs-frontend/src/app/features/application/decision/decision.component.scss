@@ -38,6 +38,18 @@ section {
   border: 3px solid;
 }
 
+.days {
+  display: inline-block;
+  margin-right: 6px;
+
+  .mat-icon {
+    font-size: 19px !important;
+    line-height: 21px !important;
+    width: 19px;
+    vertical-align: middle;
+  }
+}
+
 .post-decisions {
   padding: 6px 32px;
   background-color: $accent-color-light;
