@@ -229,6 +229,8 @@ export class ApplicationDecisionService {
     modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
+    await this.validateResolutionNumber(createDto);
+
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
@@ -265,6 +267,24 @@ export class ApplicationDecisionService {
     const savedDecision = await this.appDecisionRepository.save(decision);
 
     return this.get(savedDecision.uuid);
+  }
+
+  private async validateResolutionNumber(
+    createDto: CreateApplicationDecisionDto,
+  ) {
+    const existingDecision = await this.appDecisionRepository.findOne({
+      where: {
+        resolutionNumber: createDto.resolutionNumber,
+        resolutionYear: createDto.resolutionYear,
+      },
+      withDeleted: true,
+    });
+
+    if (existingDecision) {
+      throw new ServiceValidationException(
+        `Resolution number #${createDto.resolutionNumber}/${createDto.resolutionYear} is already in use`,
+      );
+    }
   }
 
   async delete(uuid) {
