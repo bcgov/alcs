@@ -63,7 +63,11 @@ export class ApplicationDecisionService {
       await firstValueFrom(this.http.patch<ApplicationDecisionDto>(`${this.url}/${uuid}`, data));
       this.toastService.showSuccessToast('Decision updated');
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update decision');
+      if (e instanceof HttpErrorResponse && e.status === 400 && e.error?.message) {
+        this.toastService.showErrorToast(e.error.message);
+      } else {
+        this.toastService.showErrorToast('Failed to update decision');
+      }
     }
   }
 

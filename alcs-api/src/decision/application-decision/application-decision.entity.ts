@@ -9,10 +9,10 @@ import {
   OneToOne,
   Unique,
 } from 'typeorm';
+import { Application } from '../../application/application.entity';
+import { Base } from '../../common/entities/base.entity';
 import { ApplicationModification } from '../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
-import { Base } from '../../common/entities/base.entity';
-import { Application } from '../../application/application.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './decision-document.entity';
