@@ -49,7 +49,7 @@ export class ApplicationModificationCreateDto {
 
   @IsArray({})
   @ArrayNotEmpty()
-  modifiedDecisionUuids: string[];
+  modifiesDecisionUuids: string[];
 }
 
 export class ApplicationModificationUpdateDto {
@@ -76,7 +76,7 @@ export class ApplicationModificationUpdateDto {
   @IsOptional()
   @IsArray({})
   @ArrayNotEmpty()
-  modifiedDecisionUuids?: string[];
+  modifiesDecisionUuids?: string[];
 }
 
 export class ApplicationForModificationDto {

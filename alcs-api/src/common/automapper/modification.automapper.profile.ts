@@ -1,6 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { CardDto } from '../../card/card.dto';
+import { Card } from '../../card/card.entity';
 import {
   ApplicationModificationDto,
   ApplicationForModificationDto,
@@ -95,6 +97,10 @@ export class ModificationProfile extends AutomapperProfile {
               ApplicationDecisionDto,
             ),
           ),
+        ),
+        forMember(
+          (a) => a.card,
+          mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
         ),
       );
     };

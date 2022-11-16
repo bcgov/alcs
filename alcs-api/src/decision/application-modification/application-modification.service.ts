@@ -84,7 +84,7 @@ export class ApplicationModificationService {
     modification.application = await this.getOrCreateApplication(createDto);
     modification.modifiesDecisions =
       await this.applicationDecisionService.getMany(
-        createDto.modifiedDecisionUuids,
+        createDto.modifiesDecisionUuids,
       );
 
     const mockModifications = await this.modificationRepository.save(
@@ -134,10 +134,10 @@ export class ApplicationModificationService {
       modification.isTimeExtension = updateDto.isTimeExtension;
     }
 
-    if (updateDto.modifiedDecisionUuids) {
+    if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =
         await this.applicationDecisionService.getMany(
-          updateDto.modifiedDecisionUuids,
+          updateDto.modifiesDecisionUuids,
         );
     }
 

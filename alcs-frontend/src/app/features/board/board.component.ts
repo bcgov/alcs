@@ -269,19 +269,19 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
-  private mapModificationToCard(recon: ApplicationModificationDto): CardData {
+  private mapModificationToCard(modification: ApplicationModificationDto): CardData {
     return {
-      status: recon.card.status.code,
-      title: `${recon.application.fileNumber} (${recon.application.applicant})`,
-      assignee: recon.card.assignee,
-      id: recon.card.uuid,
-      labels: [recon.application.type, MODIFICATION_TYPE_LABEL],
+      status: modification.card.status.code,
+      title: `${modification.application.fileNumber} (${modification.application.applicant})`,
+      assignee: modification.card.assignee,
+      id: modification.card.uuid,
+      labels: [modification.application.type, MODIFICATION_TYPE_LABEL],
       cardType: CardType.MODI,
       paused: false,
-      highPriority: recon.card.highPriority,
-      cardUuid: recon.card.uuid,
-      decisionMeetings: recon.application.decisionMeetings,
-      dateReceived: recon.submittedDate,
+      highPriority: modification.card.highPriority,
+      cardUuid: modification.card.uuid,
+      decisionMeetings: modification.application.decisionMeetings,
+      dateReceived: modification.submittedDate,
     };
   }
 
