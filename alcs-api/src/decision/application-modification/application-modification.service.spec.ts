@@ -182,7 +182,7 @@ describe('ApplicationModificationService', () => {
     await service.create(
       {
         ...mockModificationCreateDto,
-        modifiedDecisionUuids: [decisionUuid],
+        modifiesDecisionUuids: [decisionUuid],
       },
       {} as Board,
     );
