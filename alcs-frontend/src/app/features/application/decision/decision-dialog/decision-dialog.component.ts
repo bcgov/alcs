@@ -172,10 +172,10 @@ export class DecisionDialogComponent implements OnInit {
           applicationFileNumber: this.data.fileNumber,
         });
       }
+      this.dialogRef.close(true);
     } finally {
       this.isLoading = false;
     }
-    this.dialogRef.close(true);
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {

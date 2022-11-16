@@ -68,6 +68,7 @@ export class ApplicationDecisionService {
       } else {
         this.toastService.showErrorToast('Failed to update decision');
       }
+      throw e;
     }
   }
 
@@ -81,6 +82,7 @@ export class ApplicationDecisionService {
       } else {
         this.toastService.showErrorToast(`Failed to create decision`);
       }
+      throw e;
     }
   }
 
