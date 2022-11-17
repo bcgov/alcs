@@ -23,6 +23,7 @@ export type ApplicationRow = {
   feeReceived: Date | undefined;
   ackDeficient: Date | undefined;
   ackDeficientComplete: Date | undefined;
+  ackAllComplete: Date | undefined;
   ackComplete: Date | undefined;
   requestSent1: Date | undefined;
   requestRec1: Date | undefined;
@@ -130,7 +131,6 @@ export class ImportService {
     mapping: Map<string, { localGovernment: string; type: string }>,
   ): Promise<void> {
     const mappedRow = this.mapRow(data);
-
     const existingApplication = await this.applicationService.get(
       mappedRow.fileNumber,
     );
@@ -180,7 +180,7 @@ export class ImportService {
         const updatedApp = await this.applicationService.update(application, {
           datePaid: mappedRow.feeReceived,
           dateAcknowledgedIncomplete: mappedRow.ackDeficient,
-          dateReceivedAllItems: mappedRow.ackDeficientComplete,
+          dateReceivedAllItems: mappedRow.ackAllComplete,
           dateAcknowledgedComplete: mappedRow.ackComplete,
         });
 
@@ -215,6 +215,7 @@ export class ImportService {
       feeReceived: this.handleDate(data["Fee Rec'd by ALC"]),
       ackDeficient: this.handleDate(data['Deficient  Email Sent']),
       ackDeficientComplete: this.handleDate(data["Rec'd All Deficient Items"]),
+      ackAllComplete: this.handleDate(data["Rec'd All Items"]),
       ackComplete: this.handleDate(data['Ack by ALC']),
       requestSent1: this.handleDate(data['Request Sent (Paused)']),
       requestRec1: this.handleDate(data['Request Received  (Active)']),
@@ -318,7 +319,9 @@ export class ImportService {
         .pipe(csv())
         .on('data', (data) => {
           i++;
-          const appId = data['App ID'];
+          // const appId = data['App ID'];
+          // this is the fix to get the 'App ID' from csv, for some reason specifying 'App ID' did not work even though it is the same in Object.keys(data)[0]
+          const appId = data[Object.keys(data)[0]];
           const type = data['Type'];
           const localGovernment = data['Local Gov'];
           mapping.set(appId, {
