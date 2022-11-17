@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -6,10 +6,10 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 import { ToastService } from '../../toast/toast.service';
 import {
   ApplicationDecisionDto,
-  DecisionOutcomeCodeDto,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
   DecisionMakerDto,
+  DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 
@@ -63,7 +63,12 @@ export class ApplicationDecisionService {
       await firstValueFrom(this.http.patch<ApplicationDecisionDto>(`${this.url}/${uuid}`, data));
       this.toastService.showSuccessToast('Decision updated');
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update decision');
+      if (e instanceof HttpErrorResponse && e.status === 400 && e.error?.message) {
+        this.toastService.showErrorToast(e.error.message);
+      } else {
+        this.toastService.showErrorToast('Failed to update decision');
+      }
+      throw e;
     }
   }
 
@@ -72,7 +77,12 @@ export class ApplicationDecisionService {
       await firstValueFrom(this.http.post<ApplicationDecisionDto>(`${this.url}`, decision));
       this.toastService.showSuccessToast('Decision created');
     } catch (e) {
-      this.toastService.showErrorToast(`Failed to create decision`);
+      if (e instanceof HttpErrorResponse && e.status === 400 && e.error?.message) {
+        this.toastService.showErrorToast(e.error.message);
+      } else {
+        this.toastService.showErrorToast(`Failed to create decision`);
+      }
+      throw e;
     }
   }
 

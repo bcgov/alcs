@@ -6,8 +6,8 @@ import { ApplicationDecisionMeeting } from '../../decision/application-decision-
 import { DecisionOutcomeCode } from '../../decision/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
-  DecisionOutcomeCodeDto,
   DecisionDocumentDto,
+  DecisionOutcomeCodeDto,
 } from '../../decision/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
 import { CeoCriterionCodeDto } from '../../decision/application-decision/ceo-criterion/ceo-criterion.dto';
@@ -133,6 +133,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((a) =>
             a.chairReviewDate ? a.chairReviewDate.getTime() : null,
           ),
+        ),
+        forMember(
+          (ad) => ad.chairReviewOutcome,
+          mapFrom((a) => a.chairReviewOutcome),
         ),
       );
 

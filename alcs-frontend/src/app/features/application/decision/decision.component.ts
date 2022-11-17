@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import {
   ApplicationDecisionDto,
-  DecisionOutcomeCodeDto,
   CeoCriterionDto,
   DecisionMakerDto,
+  DecisionOutcomeCodeDto,
 } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';

@@ -123,7 +123,17 @@ export class ApplicationDecisionService {
       uuid,
     );
 
-    this.validateDecisionChanges(updateDto);
+    await this.validateDecisionChanges(updateDto);
+
+    if (
+      existingDecision.resolutionNumber !== updateDto.resolutionNumber ||
+      existingDecision.resolutionYear !== updateDto.resolutionYear
+    ) {
+      await this.validateResolutionNumber(
+        updateDto.resolutionNumber,
+        updateDto.resolutionYear,
+      );
+    }
 
     existingDecision.decisionMakerCode = updateDto.decisionMakerCode;
     existingDecision.ceoCriterionCode = updateDto.ceoCriterionCode;
@@ -136,6 +146,8 @@ export class ApplicationDecisionService {
     existingDecision.chairReviewOutcome = updateDto.chairReviewOutcome;
     existingDecision.modifies = modifies;
     existingDecision.reconsiders = reconsiders;
+    existingDecision.resolutionNumber = updateDto.resolutionNumber;
+    existingDecision.resolutionYear = updateDto.resolutionYear;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -202,7 +214,9 @@ export class ApplicationDecisionService {
     return existingDecision;
   }
 
-  private validateDecisionChanges(updateData: UpdateApplicationDecisionDto) {
+  private async validateDecisionChanges(
+    updateData: UpdateApplicationDecisionDto,
+  ) {
     if (
       updateData.ceoCriterionCode &&
       updateData.decisionMakerCode !== 'CEOP'
@@ -251,7 +265,12 @@ export class ApplicationDecisionService {
       reconsiders,
     });
 
-    this.validateDecisionChanges(createDto);
+    await this.validateDecisionChanges(createDto);
+
+    await this.validateResolutionNumber(
+      createDto.resolutionNumber,
+      createDto.resolutionYear,
+    );
 
     const existingDecisions = await this.getByAppFileNumber(
       application.fileNumber,
@@ -265,6 +284,22 @@ export class ApplicationDecisionService {
     const savedDecision = await this.appDecisionRepository.save(decision);
 
     return this.get(savedDecision.uuid);
+  }
+
+  private async validateResolutionNumber(number, year) {
+    const existingDecision = await this.appDecisionRepository.findOne({
+      where: {
+        resolutionNumber: number,
+        resolutionYear: year,
+      },
+      withDeleted: true,
+    });
+
+    if (existingDecision) {
+      throw new ServiceValidationException(
+        `Resolution number #${number}/${year} is already in use`,
+      );
+    }
   }
 
   async delete(uuid) {

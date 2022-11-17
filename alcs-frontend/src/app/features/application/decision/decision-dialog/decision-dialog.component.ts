@@ -1,21 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { combineLatestWith } from 'rxjs';
-import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
-import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import {
   ApplicationDecisionDto,
-  DecisionOutcomeCodeDto,
+  CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
-  DecisionMakerDto,
   DecisionMaker,
-  CeoCriterion,
+  DecisionMakerDto,
+  DecisionOutcomeCodeDto,
 } from '../../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
+import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
@@ -110,9 +110,11 @@ export class DecisionDialogComponent implements OnInit {
       year.add(1, 'year');
     }
     this.resolutionYears.reverse();
-    this.form.patchValue({
-      resolutionYear: currentYear,
-    });
+    if (!this.isEdit) {
+      this.form.patchValue({
+        resolutionYear: currentYear,
+      });
+    }
   }
 
   async onSubmit() {
@@ -170,10 +172,10 @@ export class DecisionDialogComponent implements OnInit {
           applicationFileNumber: this.data.fileNumber,
         });
       }
+      this.dialogRef.close(true);
     } finally {
       this.isLoading = false;
     }
-    this.dialogRef.close(true);
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {

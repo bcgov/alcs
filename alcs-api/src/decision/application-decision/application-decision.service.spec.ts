@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationService } from '../../application/application.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -13,7 +14,6 @@ import {
   initApplicationMockEntity,
 } from '../../common/utils/test-helpers/mockEntities';
 import { DocumentService } from '../../document/document.service';
-import { ApplicationService } from '../../application/application.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
@@ -162,16 +162,17 @@ describe('ApplicationDecisionService', () => {
 
     it('should create a decision and update the application if this was the first decision', async () => {
       mockDecisionRepository.find.mockResolvedValue([]);
+      mockDecisionRepository.findOne.mockResolvedValueOnce(null);
 
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
-      const meetingToCreate = {
+      const decisionToCreate = {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
         outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
       await service.create(
-        meetingToCreate,
+        decisionToCreate,
         mockApplication,
         undefined,
         undefined,
@@ -187,16 +188,44 @@ describe('ApplicationDecisionService', () => {
       );
     });
 
-    it('should create a decision and NOT update the application if this was the second decision', async () => {
+    it('should fail create a decision and update application if the resolution number is already in use', async () => {
+      mockDecisionRepository.findOne.mockResolvedValue(
+        {} as ApplicationDecision,
+      );
+
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
-      const meetingToCreate = {
+      const decisionToCreate = {
+        resolutionNumber: 1,
+        resolutionYear: 1,
+        date: decisionDate.getTime(),
+        applicationFileNumber: 'file-number',
+        outcomeCode: 'Outcome',
+      } as CreateApplicationDecisionDto;
+
+      await expect(
+        service.create(decisionToCreate, mockApplication, undefined, undefined),
+      ).rejects.toMatchObject(
+        new ServiceValidationException(
+          `Resolution number #${decisionToCreate.resolutionNumber}/${decisionToCreate.resolutionYear} is already in use`,
+        ),
+      );
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
+    });
+
+    it('should create a decision and NOT update the application if this was the second decision', async () => {
+      mockDecisionRepository.findOne.mockResolvedValueOnce(null);
+
+      const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
+      const decisionToCreate = {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
         outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
       await service.create(
-        meetingToCreate,
+        decisionToCreate,
         mockApplication,
         undefined,
         undefined,

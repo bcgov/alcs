@@ -12,6 +12,12 @@ import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
+  resolutionNumber?: number;
+
+  @IsNumber()
+  resolutionYear?: number;
+
+  @IsNumber()
   @IsOptional()
   date?: number;
 
