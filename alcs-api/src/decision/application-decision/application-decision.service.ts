@@ -54,9 +54,6 @@ export class ApplicationDecisionService {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
-        reconsideredBy: {
-          resultingDecision: true,
-        },
         modifiedBy: {
           resultingDecision: true,
         },
@@ -68,6 +65,24 @@ export class ApplicationDecisionService {
         },
       },
     });
+
+    // do not place reconsideredBy into query above
+    const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: application.uuid,
+      },
+      relations: {
+        reconsideredBy: {
+          resultingDecision: true,
+        },
+      },
+    });
+
+    for (const decision of decisions) {
+      decision.reconsideredBy =
+        decisionsWithReconsideredBy.find((r) => r.uuid === decision.uuid)
+          ?.reconsideredBy || [];
+    }
 
     //Query Documents separately as when added to the above joins caused performance issues
     for (const decision of decisions) {
