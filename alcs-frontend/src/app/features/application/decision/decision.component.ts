@@ -60,14 +60,16 @@ export class DecisionComponent implements OnInit, OnDestroy {
 
   async loadDecisions(fileNumber: string) {
     const codes = await this.decisionService.fetchCodes();
+    this.outcomes = codes.outcomes;
+    this.decisionMakers = codes.decisionMakers;
+    this.ceoCriterion = codes.ceoCriterion;
+
     const loadedDecision = await this.decisionService.fetchByApplication(fileNumber);
+    // TODO: observable, since this may take a while to load?
     this.decisions = loadedDecision.map((decision) => ({
       ...decision,
       loading: false,
     }));
-    this.outcomes = codes.outcomes;
-    this.decisionMakers = codes.decisionMakers;
-    this.ceoCriterion = codes.ceoCriterion;
   }
 
   onCreate() {
