@@ -54,9 +54,6 @@ export class ApplicationDecisionService {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
-        modifiedBy: {
-          resultingDecision: true,
-        },
         modifies: {
           modifiesDecisions: true,
         },
@@ -66,7 +63,25 @@ export class ApplicationDecisionService {
       },
     });
 
-    // do not place reconsideredBy into query above
+    // do not place modifiedBy into query above, it will kill performance
+    const decisionsWithModifiedBy = await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: application.uuid,
+      },
+      relations: {
+        modifiedBy: {
+          resultingDecision: true,
+        },
+      },
+    });
+
+    for (const decision of decisions) {
+      decision.modifiedBy =
+        decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)
+          ?.modifiedBy || [];
+    }
+
+    // do not place reconsideredBy into query above, it will kill performance
     const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
