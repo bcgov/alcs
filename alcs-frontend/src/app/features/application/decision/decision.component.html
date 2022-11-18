@@ -24,14 +24,14 @@
       <div>
         <strong>Modified&nbsp;By:&nbsp;</strong>
         <ng-container *ngFor="let modification of decision.modifiedBy">
-          {{ modification.linkedResolutions.join(', ') }}
+          {{ decision.modifiedByResolutions.join(', ') }}
         </ng-container>
         <span *ngIf="!decision.modifiedBy?.length">N/A</span>
       </div>
       <div>
         <strong>Reconsidered&nbsp;By:&nbsp;</strong>
-        <ng-container *ngFor="let recon of decision.reconsideredBy">
-          {{ recon.linkedResolutions.join(', ') }}
+        <ng-container>
+          {{ decision.reconsideredByResolutions.join(', ') }}
         </ng-container>
         <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
       </div>
@@ -70,7 +70,7 @@
               color: reconLabel.textColor,
               borderColor: reconLabel.borderColor
             }"
-          >{{ reconLabel.shortLabel }}</span
+            >{{ reconLabel.shortLabel }}</span
           >
           -
         </ng-container>
@@ -82,7 +82,7 @@
               color: modificationLabel.textColor,
               borderColor: modificationLabel.borderColor
             }"
-          >{{ modificationLabel.shortLabel }}</span
+            >{{ modificationLabel.shortLabel }}</span
           >
           -
         </ng-container>
@@ -123,7 +123,7 @@
           <div class="subheading2">Chair Review Outcome</div>
           <span *ngIf="decision.chairReviewOutcome !== null">{{
             decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
-            }}</span>
+          }}</span>
           <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
         </div>
         <div *ngIf="decision.chairReviewRequired"></div>
