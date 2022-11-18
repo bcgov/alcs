@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatestWith, tap } from 'rxjs';
-import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
-import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
+import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
@@ -100,7 +100,7 @@ export class OverviewComponent implements OnInit {
 
     if (application.decisionMeetings.length) {
       const events: TimelineEvent[] = application.decisionMeetings.map((meeting, index) => ({
-        name: application.decisionMeetings.length === 1 ? `Scheduled Discussion` : `Scheduled Discussion #${index + 1}`,
+        name: `Review Discussion #${index + 1}`,
         startDate: new Date(meeting.date),
         isFulfilled: true,
       }));

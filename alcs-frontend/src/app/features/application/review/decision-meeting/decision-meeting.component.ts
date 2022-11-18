@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingDto } from '../../../../services/application/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
+import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionMeetingDialogComponent } from '../decision-meeting-dialog/decision-meeting-dialog.component';
@@ -27,6 +28,7 @@ export class DecisionMeetingComponent implements OnInit {
     public dialog: MatDialog,
     private decisionMeetingService: ApplicationDecisionMeetingService,
     private confirmationDialogService: ConfirmationDialogService,
+    private applicationDetailService: ApplicationDetailService,
     private toastService: ToastService
   ) {}
 
@@ -73,6 +75,7 @@ export class DecisionMeetingComponent implements OnInit {
       if (answer) {
         this.decisionMeetingService.delete(uuid).then(() => {
           this.decisionMeetingService.fetch(this._fileNumber);
+          this.applicationDetailService.loadApplication(this._fileNumber);
         });
       }
     });
