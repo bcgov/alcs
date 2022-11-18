@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
-import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationReconsiderationDetailedDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -13,6 +13,13 @@ import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { EditModificationDialogComponent } from './edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 
+type LoadingReconsiderations = ApplicationReconsiderationDetailedDto & {
+  reconsidersDecisionsNumbers: string[];
+};
+
+type LoadingModifications = ApplicationModificationDto & {
+  modifiesDecisionsNumbers: string[];
+};
 @Component({
   selector: 'app-post-decision',
   templateUrl: './post-decision.component.html',
@@ -21,8 +28,8 @@ import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialo
 export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   fileNumber: string = '';
-  reconsiderations: ApplicationReconsiderationDetailedDto[] = [];
-  modifications: ApplicationModificationDto[] = [];
+  reconsiderations: LoadingReconsiderations[] = [];
+  modifications: LoadingModifications[] = [];
   reconCodes: BaseCodeDto[] = [];
 
   constructor(
@@ -52,9 +59,21 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       .subscribe(([application, reconsiderations, reconCodes, modifications]) => {
         if (application) {
           this.fileNumber = application.fileNumber;
-          this.reconsiderations = reconsiderations ?? [];
+          this.reconsiderations =
+            reconsiderations?.map((r) => ({
+              ...r,
+              reconsidersDecisionsNumbers: r.reconsideredDecisions.flatMap(
+                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
+              ),
+            })) ?? [];
           this.reconCodes = reconCodes;
-          this.modifications = modifications;
+          this.modifications =
+            modifications?.map((m) => ({
+              ...m,
+              modifiesDecisionsNumbers: m.modifiesDecisions.flatMap(
+                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
+              ),
+            })) ?? [];
         }
       });
   }
