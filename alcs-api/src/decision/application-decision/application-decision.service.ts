@@ -75,12 +75,6 @@ export class ApplicationDecisionService {
       },
     });
 
-    for (const decision of decisions) {
-      decision.modifiedBy =
-        decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)
-          ?.modifiedBy || [];
-    }
-
     // do not place reconsideredBy into query above, it will kill performance
     const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
       where: {
@@ -97,6 +91,10 @@ export class ApplicationDecisionService {
       decision.reconsideredBy =
         decisionsWithReconsideredBy.find((r) => r.uuid === decision.uuid)
           ?.reconsideredBy || [];
+
+      decision.modifiedBy =
+        decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)
+          ?.modifiedBy || [];
     }
 
     //Query Documents separately as when added to the above joins caused performance issues
