@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { initApplicationMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';

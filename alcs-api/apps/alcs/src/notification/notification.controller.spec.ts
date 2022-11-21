@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { NotificationProfile } from '../common/automapper/notification.automapper.profile';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { Notification } from './notification.entity';

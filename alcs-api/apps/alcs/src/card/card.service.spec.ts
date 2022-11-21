@@ -9,7 +9,7 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import {
   initBoardMockEntity,
   initCardMockEntity,
-} from '../common/utils/test-helpers/mockEntities';
+} from '../../test/mocks/mockEntities';
 import { CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';

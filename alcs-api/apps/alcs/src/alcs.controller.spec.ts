@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { AlcsController } from './alcs.controller';
 import { AlcsService } from './alcs.service';
-import { mockKeyCloakProviders } from './common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../test/mocks/mockTypes';
 import {
   HealthCheckDbDto,
   HealthCheckDto,

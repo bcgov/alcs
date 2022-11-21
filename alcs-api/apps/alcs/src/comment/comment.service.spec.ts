@@ -10,7 +10,7 @@ import { ServiceValidationException } from '../common/exceptions/base.exception'
 import {
   initCardMockEntity,
   initCommentMock,
-} from '../common/utils/test-helpers/mockEntities';
+} from '../../test/mocks/mockEntities';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';

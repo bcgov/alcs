@@ -4,7 +4,7 @@ import {
   KEYCLOAK_LOGGER,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
-import { UserService } from '../../../user/user.service';
+import { UserService } from '../../src/user/user.service';
 import { mockAppLoggerService } from './mockLogger';
 
 export type MockType<T> = {

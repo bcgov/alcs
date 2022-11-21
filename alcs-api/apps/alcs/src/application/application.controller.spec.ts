@@ -14,8 +14,8 @@ import { ConfigModule } from '../common/config/config.module';
 import {
   initApplicationMockEntity,
   initMockAssigneeDto,
-} from '../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+} from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';

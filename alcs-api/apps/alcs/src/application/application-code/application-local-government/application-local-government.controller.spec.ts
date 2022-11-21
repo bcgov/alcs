@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { mockKeyCloakProviders } from '../../../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationLocalGovernmentController } from './application-local-government.controller';
 import { ApplicationLocalGovernment } from './application-local-government.entity';
 import { ApplicationLocalGovernmentService } from './application-local-government.service';

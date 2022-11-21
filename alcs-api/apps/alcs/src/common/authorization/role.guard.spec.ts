@@ -12,7 +12,7 @@ import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycl
 import { ClsService } from 'nestjs-cls';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
-import { mockAppLoggerService } from '../utils/test-helpers/mockLogger';
+import { mockAppLoggerService } from '../../../test/mocks/mockLogger';
 import { RolesGuard } from './roles-guard.service';
 import { AUTH_ROLE } from './roles';
 

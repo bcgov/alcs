@@ -4,7 +4,7 @@ import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { CodeController } from './code.controller';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { CodeService } from './code.service';
 
 describe('CodeController', () => {

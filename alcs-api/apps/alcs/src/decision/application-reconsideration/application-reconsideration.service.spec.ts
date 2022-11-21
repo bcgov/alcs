@@ -17,7 +17,7 @@ import { ServiceNotFoundException } from '../../common/exceptions/base.exception
 import {
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
+} from '../../../test/mocks/mockEntities';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,

@@ -6,8 +6,8 @@ import { ClsService } from 'nestjs-cls';
 import { Board } from '../../board/board.entity';
 import { BoardService } from '../../board/board.service';
 import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
-import { initApplicationModificationMockEntity } from '../../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+import { initApplicationModificationMockEntity } from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationModificationController } from './application-modification.controller';
 import {
   ApplicationModificationCreateDto,

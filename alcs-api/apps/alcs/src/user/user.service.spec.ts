@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
-import { initUserMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { initUserMockEntity } from '../../test/mocks/mockEntities';
 import { EmailService } from '../providers/email/email.service';
 import { User } from './user.entity';
 import { UserService } from './user.service';

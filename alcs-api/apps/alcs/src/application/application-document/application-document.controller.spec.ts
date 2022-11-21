@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationDocumentController } from './application-document.controller';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';

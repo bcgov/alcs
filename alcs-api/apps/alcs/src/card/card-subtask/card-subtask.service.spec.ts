@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Application } from '../../application/application.entity';
 import { ApplicationService } from '../../application/application.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { initCardMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { initCardMockEntity } from '../../../test/mocks/mockEntities';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
 import { CardSubtask } from './card-subtask.entity';
 import { CardSubtaskService } from './card-subtask.service';

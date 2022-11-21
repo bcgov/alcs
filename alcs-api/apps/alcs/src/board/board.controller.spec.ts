@@ -9,7 +9,7 @@ import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../common/automapper/board.automapper.profile';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';

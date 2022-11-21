@@ -20,8 +20,8 @@ import {
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
   initCardMockEntity,
-} from '../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+} from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';

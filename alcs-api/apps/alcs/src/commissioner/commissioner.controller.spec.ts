@@ -8,8 +8,8 @@ import { ApplicationReconsiderationService } from '../decision/application-recon
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { CommissionerProfile } from '../common/automapper/commissioner.automapper.profile';
-import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { CommissionerController } from './commissioner.controller';
 
 describe('CommissionerController', () => {

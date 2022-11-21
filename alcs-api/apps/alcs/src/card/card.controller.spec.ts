@@ -1,8 +1,8 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { initCardMockEntity } from '../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { initCardMockEntity } from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { CardController } from './card.controller';
 import { CardUpdateDto } from './card.dto';
 import { Card } from './card.entity';

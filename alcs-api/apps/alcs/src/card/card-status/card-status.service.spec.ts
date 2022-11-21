@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { initCardStatusMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { initCardStatusMockEntity } from '../../../test/mocks/mockEntities';
 import { CardStatusDto } from './card-status.dto';
 import { CardStatus } from './card-status.entity';
 import { CardStatusService } from './card-status.service';

@@ -9,7 +9,7 @@ import {
 import {
   initApplicationMeetingMock,
   initApplicationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
+} from '../../../test/mocks/mockEntities';
 import { ApplicationService } from '../application.service';
 import { UpdateApplicationMeetingDto } from './application-meeting.dto';
 import { ApplicationMeeting } from './application-meeting.entity';

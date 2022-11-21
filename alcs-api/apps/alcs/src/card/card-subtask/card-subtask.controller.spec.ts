@@ -8,7 +8,7 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../common/exceptions/base.exception';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Card } from '../card.entity';
 import { CardService } from '../card.service';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';

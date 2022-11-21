@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { CodeService } from '../code/code.service';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
-import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,

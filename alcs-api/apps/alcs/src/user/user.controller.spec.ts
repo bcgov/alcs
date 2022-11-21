@@ -7,8 +7,8 @@ import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
   initMockUserDto,
   initUserMockEntity,
-} from '../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+} from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { UserController } from './user.controller';
 import { UserDto } from './user.dto';
 import { User } from './user.entity';

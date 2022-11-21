@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { PlanningReviewController } from './planning-review.controller';
 import { PlanningReview } from './planning-review.entity';
 import { PlanningReviewService } from './planning-review.service';

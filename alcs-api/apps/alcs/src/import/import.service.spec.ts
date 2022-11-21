@@ -15,7 +15,7 @@ import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { BoardService } from '../board/board.service';
 import { Card } from '../card/card.entity';
-import { initApplicationMockEntity } from '../common/utils/test-helpers/mockEntities';
+import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
 import { ImportService } from './import.service';
 
 dayjs.extend(utc);

@@ -12,8 +12,8 @@ import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+} from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationModification } from '../application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../application-modification/application-modification.service';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';

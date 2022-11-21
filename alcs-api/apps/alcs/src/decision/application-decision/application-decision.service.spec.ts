@@ -12,7 +12,7 @@ import {
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
+} from '../../../test/mocks/mockEntities';
 import { DocumentService } from '../../document/document.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {

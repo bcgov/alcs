@@ -9,8 +9,8 @@ import { ApplicationProfile } from '../../common/automapper/application.automapp
 import {
   initApplicationMeetingMock,
   initApplicationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+} from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { ApplicationService } from '../application.service';

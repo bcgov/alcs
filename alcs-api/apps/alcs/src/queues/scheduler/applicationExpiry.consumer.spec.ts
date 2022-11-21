@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { ApplicationService } from '../../application/application.service';
 import { ConfigModule } from '../../common/config/config.module';
-import { initApplicationMockEntity } from '../../common/utils/test-helpers/mockEntities';
+import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { EmailService } from '../../providers/email/email.service';
 import { ApplicationExpiryConsumer } from './applicationExpiry.consumer';
 

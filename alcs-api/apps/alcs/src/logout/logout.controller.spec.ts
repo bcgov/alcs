@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { ClsService } from 'nestjs-cls';
 import { CONFIG_TOKEN } from '../common/config/config.module';
-import { mockKeyCloakProviders } from '../common/utils/test-helpers/mockTypes';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { LogoutController } from './logout.controller';
 
 describe('LogoutController', () => {

@@ -12,8 +12,8 @@ import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
-import { mockKeyCloakProviders } from '../../common/utils/test-helpers/mockTypes';
+} from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting.controller';
 import {

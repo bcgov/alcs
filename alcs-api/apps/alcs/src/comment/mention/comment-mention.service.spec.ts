@@ -6,7 +6,7 @@ import { ConfigModule } from '../../common/config/config.module';
 import {
   initCommentMentionMock,
   initCommentMock,
-} from '../../common/utils/test-helpers/mockEntities';
+} from '../../../test/mocks/mockEntities';
 import { Comment } from '../comment.entity';
 import { CommentMention } from './comment-mention.entity';
 import { CommentMentionService } from './comment-mention.service';

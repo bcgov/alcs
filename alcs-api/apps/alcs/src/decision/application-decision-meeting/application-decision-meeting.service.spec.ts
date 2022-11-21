@@ -6,7 +6,7 @@ import { ServiceNotFoundException } from '../../common/exceptions/base.exception
 import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
-} from '../../common/utils/test-helpers/mockEntities';
+} from '../../../test/mocks/mockEntities';
 import { ApplicationService } from '../../application/application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
