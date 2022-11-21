@@ -19,8 +19,13 @@
         </div>
       </div>
       <div class="col">
-        <button *ngIf="hasRoles && !isCommissioner" class="menu-item" [class.open]="menuTrigger.menuOpen"
-                #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="navigationMenu">
+        <button
+          *ngIf="hasRoles && !isCommissioner"
+          class="menu-item"
+          [class.open]="menuTrigger.menuOpen"
+          #menuTrigger="matMenuTrigger"
+          [matMenuTriggerFor]="navigationMenu"
+        >
           Boards <span class="board-menu-arrow">▾</span>
         </button>
         <mat-menu #navigationMenu="matMenu">

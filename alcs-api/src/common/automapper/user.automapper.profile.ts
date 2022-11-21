@@ -47,6 +47,14 @@ export class UserProfile extends AutomapperProfile {
           (ud) => ud.settings,
           mapFrom((u) => u.settings),
         ),
+        forMember(
+          (ud) => ud.idirUserName,
+          mapFrom((u) => u.idirUserName),
+        ),
+        forMember(
+          (ud) => ud.bceidUserName,
+          mapFrom((u) => u.bceidUserName),
+        ),
       );
 
       createMap(
