@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
+import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 
 import { DecisionMeetingDialogComponent } from './decision-meeting-dialog.component';
@@ -18,6 +19,10 @@ describe('DecisionMeetingDialogComponent', () => {
       providers: [
         {
           provide: ApplicationDecisionMeetingService,
+          useValue: {},
+        },
+        {
+          provide: ApplicationDetailService,
           useValue: {},
         },
         { provide: MAT_DIALOG_DATA, useValue: {} },
