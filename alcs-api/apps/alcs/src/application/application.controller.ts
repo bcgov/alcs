@@ -146,7 +146,7 @@ export class ApplicationController {
       updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
       updatedCard.assigneeUuid !== req.user.entity.uuid
     ) {
-      const frontEnd = this.config.get('FRONTEND_ROOT');
+      const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
       this.notificationService.createNotificationForApplication({
         actor: req.user.entity,
         receiverUuid: updatedCard.assigneeUuid,

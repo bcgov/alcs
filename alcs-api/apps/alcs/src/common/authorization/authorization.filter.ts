@@ -26,7 +26,7 @@ export class AuthorizationFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     const sessionId = v4();
-    const baseUrl = this.config.get<string>('BASE_URL');
+    const baseUrl = this.config.get<string>('ALCS.BASE_URL');
     const loginUrl = this.singleTenant.loginUrl(
       sessionId,
       `${baseUrl}/authorize`,

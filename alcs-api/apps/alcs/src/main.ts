@@ -60,9 +60,9 @@ const registerGlobalFilters = (app: NestFastifyApplication) => {
 const registerCors = (app: NestFastifyApplication) => {
   app.enableCors({
     origin: [
-      config.get<string>('BASE_URL'),
+      config.get<string>('ALCS.BASE_URL'),
       config.get<string>('KEYCLOAK.AUTH_SERVER'),
-      config.get<string>('FRONTEND_ROOT'),
+      config.get<string>('ALCS.FRONTEND_ROOT'),
     ],
   });
 };

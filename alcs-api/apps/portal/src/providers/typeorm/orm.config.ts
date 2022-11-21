@@ -12,6 +12,7 @@ export const getTypeOrmModuleOptions = (
   username: config.get<string>('DATABASE.USER'),
   password: config.get<string>('DATABASE.PASSWORD'),
   database: config.get<string>('DATABASE.NAME'),
+  schema: config.get<string>('PORTAL.DATABASE_SCHEMA'),
   entities: [join(__dirname, '**', '*.entity.{ts,js}')],
   synchronize: false,
   autoLoadEntities: true,

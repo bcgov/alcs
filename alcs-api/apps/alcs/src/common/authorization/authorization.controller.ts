@@ -21,7 +21,7 @@ export class AuthorizationController {
         authCode,
       );
 
-      const frontEndUrl = this.config.get('FRONTEND_ROOT');
+      const frontEndUrl = this.config.get('ALCS.FRONTEND_ROOT');
 
       res.status(302);
       res.redirect(

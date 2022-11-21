@@ -51,7 +51,7 @@ export class NotificationService {
     body: string,
     application: Application,
   ) {
-    const frontEnd = this.config.get('FRONTEND_ROOT');
+    const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
 
     if (!application.card) {
       throw new Error(

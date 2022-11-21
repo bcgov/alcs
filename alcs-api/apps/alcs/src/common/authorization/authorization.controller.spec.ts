@@ -53,7 +53,7 @@ describe('AuthorizationController', () => {
     const res = createMock<FastifyReply>();
     await controller.handleAuth('code', res);
 
-    const frontEndUrl = config.get('FRONTEND_ROOT');
+    const frontEndUrl = config.get('ALCS.FRONTEND_ROOT');
 
     expect(res.status).toHaveBeenCalledWith(302);
     expect(res.redirect).toHaveBeenCalledWith(
