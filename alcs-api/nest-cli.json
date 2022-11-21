@@ -1,12 +1,42 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/alcs/src",
   "compilerOptions": {
-    "plugins": ["@nestjs/swagger", "@automapper/classes/transformer-plugin"],
+    "plugins": [
+      "@nestjs/swagger",
+      "@automapper/classes/transformer-plugin"
+    ],
     "assets": [
       "common/envs/*",
-      { "include": "../config/*.json", "outDir": "./dist/config" }
-    ]
+      {
+        "include": "../config/*.json",
+        "outDir": "./dist/config"
+      }
+    ],
+    "webpack": true,
+    "tsConfigPath": "apps/alcs/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/alcs",
+  "projects": {
+    "alcs": {
+      "type": "application",
+      "root": "apps/alcs",
+      "entryFile": "main",
+      "sourceRoot": "apps/alcs/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/alcs/tsconfig.app.json"
+      }
+    },
+    "portal": {
+      "type": "application",
+      "root": "apps/portal",
+      "entryFile": "main",
+      "sourceRoot": "apps/portal/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/portal/tsconfig.app.json"
+      }
+    }
   }
 }

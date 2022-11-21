@@ -7,8 +7,8 @@ import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AlcsController } from './alcs.controller';
+import { AlcsService } from './alcs.service';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
@@ -76,9 +76,9 @@ import { DecisionModule } from './decision/decision.module';
     ImportModule,
     DecisionModule,
   ],
-  controllers: [AppController, LogoutController],
+  controllers: [AlcsController, LogoutController],
   providers: [
-    AppService,
+    AlcsService,
     UserService,
     AuditSubscriber,
     {
@@ -91,4 +91,4 @@ import { DecisionModule } from './decision/decision.module';
     },
   ],
 })
-export class AppModule {}
+export class AlcsModule {}

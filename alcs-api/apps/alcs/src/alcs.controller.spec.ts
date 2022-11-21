@@ -1,8 +1,8 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AlcsController } from './alcs.controller';
+import { AlcsService } from './alcs.service';
 import { mockKeyCloakProviders } from './common/utils/test-helpers/mockTypes';
 import {
   HealthCheckDbDto,
@@ -10,17 +10,17 @@ import {
 } from './healthcheck/healthcheck.dto';
 
 describe('AppController', () => {
-  let appController: AppController;
-  let mockAppService: DeepMocked<AppService>;
+  let appController: AlcsController;
+  let mockAppService: DeepMocked<AlcsService>;
 
   beforeEach(async () => {
-    mockAppService = createMock<AppService>();
+    mockAppService = createMock<AlcsService>();
 
     const appModule: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
+      controllers: [AlcsController],
       providers: [
         {
-          provide: AppService,
+          provide: AlcsService,
           useValue: mockAppService,
         },
         {
@@ -31,11 +31,11 @@ describe('AppController', () => {
       ],
     }).compile();
 
-    appController = appModule.get<AppController>(AppController);
+    appController = appModule.get<AlcsController>(AlcsController);
   });
 
   describe('root', () => {
-    it('AppController should call through to AppService', async () => {
+    it('AlcsController should call through to AlcsService', async () => {
       const dbDto: HealthCheckDbDto = {
         read: true,
         write: false,

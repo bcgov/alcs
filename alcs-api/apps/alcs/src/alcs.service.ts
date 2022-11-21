@@ -5,8 +5,8 @@ import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 
 @Injectable()
-export class AppService {
-  private logger: Logger = new Logger(AppService.name);
+export class AlcsService {
+  private logger: Logger = new Logger(AlcsService.name);
 
   constructor(
     @InjectRepository(HealthCheck)

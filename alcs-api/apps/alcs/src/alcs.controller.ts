@@ -2,12 +2,12 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Public, RoleGuard } from 'nest-keycloak-connect';
-import { AppService } from './app.service';
+import { AlcsService } from './alcs.service';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 
 @Controller()
-export class AppController {
-  constructor(private appService: AppService) {}
+export class AlcsController {
+  constructor(private appService: AlcsService) {}
 
   @Get()
   @Public()

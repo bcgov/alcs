@@ -10,7 +10,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import fastify from 'fastify';
 import { Logger } from 'nestjs-pino';
-import { AppModule } from './app.module';
+import { AlcsModule } from './alcs.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import { generateModuleGraph } from './tools/graph';
 
@@ -105,7 +105,7 @@ async function bootstrap() {
 
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
+    AlcsModule,
     new FastifyAdapter(fastifyInstance),
     {
       bufferLogs: true,
@@ -120,10 +120,10 @@ async function bootstrap() {
   }
 
   // config variables
-  const port: number = config.get<number>('PORT');
+  const port: number = config.get<number>('ALCS.PORT');
 
-  if (config.get<string>('API_PREFIX')) {
-    app.setGlobalPrefix(config.get<string>('API_PREFIX'), {
+  if (config.get<string>('ALCS.API_PREFIX')) {
+    app.setGlobalPrefix(config.get<string>('ALCS.API_PREFIX'), {
       exclude: [''],
     });
   }
@@ -137,7 +137,7 @@ async function bootstrap() {
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
-    console.log('[WEB]', config.get<string>('BASE_URL'));
+    console.log('[WEB]', config.get<string>('ALCS.BASE_URL'));
   });
 }
 

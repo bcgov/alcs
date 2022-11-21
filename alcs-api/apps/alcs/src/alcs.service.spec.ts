@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppService } from './app.service';
+import { AlcsService } from './alcs.service';
 import {
   HealthCheckDbDto,
   HealthCheckDto,
@@ -10,7 +10,7 @@ import {
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 
 describe('AppService', () => {
-  let service: AppService;
+  let service: AlcsService;
   let repositoryMock: DeepMocked<Repository<HealthCheck>>;
 
   beforeEach(async () => {
@@ -18,7 +18,7 @@ describe('AppService', () => {
 
     const appServiceModule: TestingModule = await Test.createTestingModule({
       providers: [
-        AppService,
+        AlcsService,
         {
           provide: getRepositoryToken(HealthCheck),
           useValue: repositoryMock,
@@ -26,14 +26,14 @@ describe('AppService', () => {
       ],
     }).compile();
 
-    service = appServiceModule.get<AppService>(AppService);
+    service = appServiceModule.get<AlcsService>(AlcsService);
   });
 
-  it('AppService should be defined', () => {
+  it('AlcsService should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('AppService should return HealthCheckDto', async () => {
+  it('AlcsService should return HealthCheckDto', async () => {
     const dbDto: HealthCheckDbDto = {
       read: true,
       write: true,
@@ -45,7 +45,7 @@ describe('AppService', () => {
     expect(await service.getHealthStatus()).toStrictEqual(result);
   });
 
-  it('AppService should return HealthCheckDto and suppress exception', async () => {
+  it('AlcsService should return HealthCheckDto and suppress exception', async () => {
     const dbDto: HealthCheckDbDto = {
       read: false,
       write: false,

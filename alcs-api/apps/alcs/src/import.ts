@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
-import { AppModule } from './app.module';
+import { AlcsModule } from './alcs.module';
 import { ImportService } from './import/import.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, {
+  const app = await NestFactory.create<NestFastifyApplication>(AlcsModule, {
     bufferLogs: false,
   });
   app.useLogger(app.get(Logger));

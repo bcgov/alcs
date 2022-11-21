@@ -1,24 +1,42 @@
 {
-  "PORT": 8080,
   "BASE_URL": "http://localhost:8080",
   "ENV": "production",
-  "API_PREFIX": "",
-  "DATABASE_HOST": "db",
-  "DATABASE_PORT": 5432,
-  "DATABASE_NAME": "postgres",
-  "DATABASE_USER": "postgres",
-  "DATABASE_PASSWORD": "postgres",
-  "DATABASE_MIGRATION_TABLE": "migrations",
   "LOG_LEVEL": "warn",
-  "FRONTEND_ROOT": "http://localhost:4200",
+  "ALCS": {
+    "PORT": 8080,
+    "API_PREFIX": "",
+    "FRONTEND_ROOT": "http://localhost:4200",
+    "KEYCLOAK": {
+      "CLIENT_ID": "",
+      "SECRET": ""
+    }
+  },
+  "PORTAL": {
+    "PORT": 8081,
+    "API_PREFIX": "",
+    "FRONTEND_ROOT": "",
+    "KEYCLOAK": {
+      "CLIENT_ID": "",
+      "SECRET": ""
+    },
+    "DATABASE_SCHEMA": "portal"
+  },
+  "DATABASE": {
+    "HOST": "db",
+    "PORT": 5432,
+    "NAME": "postgres",
+    "USER": "postgres",
+    "PASSWORD": "postgres",
+    "MIGRATION_TABLE": "migrations"
+  },
   "KEYCLOAK": {
     "AUTH_SERVER": "dev.loginproxy.gov.bc.ca",
     "AUTH_SERVER_URL": "https://dev.loginproxy.gov.bc.ca/auth",
     "AUTH_TOKEN_URL": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
-    "SCOPES": ["openid"],
-    "REALM": "standard",
-    "CLIENT_ID": "",
-    "SECRET": ""
+    "SCOPES": [
+      "openid"
+    ],
+    "REALM": "standard"
   },
   "CHES": {
     "MODE": "production",
@@ -39,6 +57,8 @@
     "URL": "redis://:redis@redis:6379"
   },
   "EMAIL": {
-    "DEFAULT_ADMINS": [""]
+    "DEFAULT_ADMINS": [
+      ""
+    ]
   }
 }
