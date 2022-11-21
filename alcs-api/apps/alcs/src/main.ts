@@ -67,15 +67,15 @@ const registerCors = (app: NestFastifyApplication) => {
   });
 };
 
-function registerPipes(app: NestFastifyApplication) {
+const registerPipes = (app: NestFastifyApplication) => {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
     }),
   );
-}
+};
 
-async function registerMultiPart(app: NestFastifyApplication) {
+const registerMultiPart = async (app: NestFastifyApplication) => {
   await app.register(fastifyMultipart, {
     limits: {
       fieldNameSize: 100, // Max field name size in bytes
@@ -86,7 +86,7 @@ async function registerMultiPart(app: NestFastifyApplication) {
       headerPairs: 2000, // Max number of header key=>value pairs
     },
   });
-}
+};
 
 async function bootstrap() {
   //TODO: Security workaround for fastify, fixed in fastify 4.8.1+

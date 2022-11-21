@@ -9,8 +9,8 @@ import {
   HealthCheckDto,
 } from './healthcheck/healthcheck.dto';
 
-describe('AppController', () => {
-  let appController: AlcsController;
+describe('AlcsController', () => {
+  let alcsController: AlcsController;
   let mockAppService: DeepMocked<AlcsService>;
 
   beforeEach(async () => {
@@ -31,7 +31,7 @@ describe('AppController', () => {
       ],
     }).compile();
 
-    appController = appModule.get<AlcsController>(AlcsController);
+    alcsController = appModule.get<AlcsController>(AlcsController);
   });
 
   describe('root', () => {
@@ -42,7 +42,7 @@ describe('AppController', () => {
       };
       const result: HealthCheckDto = { alive: true, db: dbDto };
       mockAppService.getHealthStatus.mockResolvedValue(result);
-      expect(await appController.getHealthStatus()).toBe(result);
+      expect(await alcsController.getHealthStatus()).toBe(result);
     });
   });
 });
