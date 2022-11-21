@@ -23,16 +23,12 @@
     <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body1-text">
       <div>
         <strong>Modified&nbsp;By:&nbsp;</strong>
-        <ng-container *ngFor="let modification of decision.modifiedBy">
-          {{ decision.modifiedByResolutions.join(', ') }}
-        </ng-container>
+        {{ decision.modifiedByResolutions.join(', ') }}
         <span *ngIf="!decision.modifiedBy?.length">N/A</span>
       </div>
       <div>
         <strong>Reconsidered&nbsp;By:&nbsp;</strong>
-        <ng-container>
-          {{ decision.reconsideredByResolutions.join(', ') }}
-        </ng-container>
+        {{ decision.reconsideredByResolutions.join(', ') }}
         <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
       </div>
     </div>
