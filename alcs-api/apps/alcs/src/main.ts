@@ -10,6 +10,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import fastify from 'fastify';
 import { Logger } from 'nestjs-pino';
+import { install } from 'source-map-support';
 import { AlcsModule } from './alcs.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import { generateModuleGraph } from './tools/graph';
@@ -141,4 +142,5 @@ async function bootstrap() {
   });
 }
 
+install();
 bootstrap();

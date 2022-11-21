@@ -8,6 +8,7 @@ import {
 import * as config from 'config';
 import fastify from 'fastify';
 import { Logger } from 'nestjs-pino';
+import { install } from 'source-map-support';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import { PortalModule } from './portal.module';
 
@@ -95,4 +96,5 @@ async function bootstrap() {
   });
 }
 
+install();
 bootstrap();
