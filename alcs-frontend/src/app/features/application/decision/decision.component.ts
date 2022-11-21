@@ -17,7 +17,11 @@ import { MODIFICATION_TYPE_LABEL } from '../../board/dialogs/modification/modifi
 import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
-type LoadingDecision = ApplicationDecisionDto & { loading: boolean };
+type LoadingDecision = ApplicationDecisionDto & {
+  reconsideredByResolutions: string[];
+  modifiedByResolutions: string[];
+  loading: boolean;
+};
 
 @Component({
   selector: 'app-decision',
@@ -68,6 +72,8 @@ export class DecisionComponent implements OnInit, OnDestroy {
     // TODO: observable, since this may take a while to load?
     this.decisions = loadedDecision.map((decision) => ({
       ...decision,
+      reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
+      modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
       loading: false,
     }));
   }

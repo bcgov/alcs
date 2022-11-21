@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionMeetingComponent } from './decision-meeting.component';
@@ -16,6 +17,10 @@ describe('DecisionMeetingComponent', () => {
       providers: [
         {
           provide: MatDialogRef,
+          useValue: {},
+        },
+        {
+          provide: ApplicationDetailService,
           useValue: {},
         },
         {

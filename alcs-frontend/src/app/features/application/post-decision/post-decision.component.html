@@ -8,7 +8,7 @@
 <h5 id="recons" class="post-decision-header">
   Reconsideration Requests
   <mat-icon class="icon" matTooltip="Create new Reconsideration Request from application tracking boards"
-  >info_outline
+    >info_outline
   </mat-icon>
 </h5>
 
@@ -60,21 +60,20 @@
           </span>
           <span *ngIf="isReviewOutcomeSet(reconsideration.isReviewApproved)">{{
             getReviewOutcomeLabel(reconsideration.isReviewApproved!)
-            }}</span>
+          }}</span>
         </ng-container>
       </div>
       <div></div>
+      <div *ngIf="reconsideration.type.code === '33.1'"></div>
       <div>
         <div class="subheading2">Resolutions to be Reconsidered</div>
-        <ng-container *ngFor="let decision of reconsideration.reconsideredDecisions">
-          #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
-        </ng-container>
+        <ng-container> {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }} </ng-container>
       </div>
       <div>
         <ng-container *ngIf="!!reconsideration.resultingDecision">
           <div class="subheading2">Resulting Resolution</div>
           #{{ reconsideration.resultingDecision?.resolutionNumber }}/{{
-          reconsideration.resultingDecision?.resolutionYear
+            reconsideration.resultingDecision?.resolutionYear
           }}
         </ng-container>
       </div>
@@ -84,9 +83,7 @@
 
 <h5 id="modifications" class="post-decision-header">
   Modification Requests
-  <mat-icon class="icon" matTooltip="Create new Modification Requests from CEO tracking board"
-  >info_outline
-  </mat-icon>
+  <mat-icon class="icon" matTooltip="Create new Modification Requests from CEO tracking board">info_outline </mat-icon>
 </h5>
 
 <section class="no-decisions" *ngIf="!modifications.length">
@@ -122,7 +119,9 @@
         <div class="subheading2">Review Date</div>
         <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
         <span *ngIf="!modification.reviewDate">
-          <app-inline-datepicker (save)="onSaveModificationReviewDate(modification.uuid, $event)"></app-inline-datepicker>
+          <app-inline-datepicker
+            (save)="onSaveModificationReviewDate(modification.uuid, $event)"
+          ></app-inline-datepicker>
         </span>
       </div>
       <div>
@@ -134,14 +133,12 @@
         </span>
         <span *ngIf="isReviewOutcomeSet(modification.isReviewApproved)">{{
           getReviewOutcomeLabel(modification.isReviewApproved!)
-          }}</span>
+        }}</span>
       </div>
       <div></div>
       <div>
         <div class="subheading2">Resolutions to be Modified</div>
-        <ng-container *ngFor="let decision of modification.modifiesDecisions">
-          #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
-        </ng-container>
+        <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
       </div>
       <div>
         <ng-container *ngIf="!!modification.resultingDecision">
