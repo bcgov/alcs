@@ -13,7 +13,7 @@ This project contains the frontend and backend for the ALCS used for tracking va
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/alcs/issues).
 
 ## Links
-- [API Readme](./alcs-api/README.md)
+- [API Readme](services/README.md)
 - [Frontend Readme](./alcs-frontend/README.md)
 - [Architecture](./docs/architecture.md)
 - [SchemaSpy](https://bcgov.github.io/alcs/schemaspy/)

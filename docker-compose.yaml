@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: alcs_api
     build:
-      context: alcs-api
+      context: services
       dockerfile: Dockerfile
     ports:
       - 8080:8080
@@ -70,7 +70,7 @@ services:
     container_name: alcs_migration
     restart: on-failure
     build:
-      context: alcs-api
+      context: services
       dockerfile: Dockerfile.migrate
     depends_on:
       db:
