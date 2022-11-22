@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import * as moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
-import { ROLES_ALLOWED_APPLICATIONS } from '../../app-routing.module';
 import { BOARD_TYPE_CODES } from '../../features/board/board.component';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
-import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
+import { ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
-import { UpcomingMeetingDto, UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
+import { UpcomingMeetingBoardMapDto, UpcomingMeetingDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
@@ -118,7 +118,9 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     upcomingMeetings: MeetingWithApplications[]
   ) {
     applications.forEach((app) => {
-      if (app.meetingDate < Date.now()) {
+      const yesterday = moment.utc().startOf('day').add(-1, 'day');
+
+      if (yesterday.isAfter(app.meetingDate)) {
         this.mapApplicationsIntoMeetings(pastMeetings, app);
       } else {
         this.mapApplicationsIntoMeetings(upcomingMeetings, app);
