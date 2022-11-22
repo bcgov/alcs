@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
-import { AlcsModule } from './alcs.module';
-import { ImportService } from './import/import.service';
+import { AlcsModule } from '../alcs.module';
+import { ImportService } from '../import/import.service';
 
-async function bootstrap() {
+export async function importApplications() {
   const app = await NestFactory.create<NestFastifyApplication>(AlcsModule, {
     bufferLogs: false,
   });
@@ -16,5 +16,3 @@ async function bootstrap() {
   await importService.importCsv();
   process.exit(0);
 }
-
-bootstrap();

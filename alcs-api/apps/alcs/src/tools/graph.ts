@@ -28,7 +28,8 @@ export async function generateModuleGraph(app: NestFastifyApplication) {
         ),
     )
     .map(({ from, to }) => `${from.module.name}-->${to.module.name}`);
-  console.log(`graph TD\n\t${mermaidEdges.join('\n\t')}`);
+  console.log(`Graph TD\n\t${mermaidEdges.join('\n\t')}`);
 
   // 2. Copy and paste the log content in "https://mermaid.live/"
+  process.exit(0);
 }

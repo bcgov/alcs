@@ -14,6 +14,7 @@ import { install } from 'source-map-support';
 import { AlcsModule } from './alcs.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import { generateModuleGraph } from './tools/graph';
+import { importApplications } from './tools/import';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -114,10 +115,12 @@ async function bootstrap() {
   );
   app.useLogger(app.get(Logger));
 
-  const isGraph = process.argv[2];
-  if (isGraph === 'graph-only') {
+  const extraArg = process.argv[2];
+  if (extraArg === 'graph') {
     await generateModuleGraph(app);
-    process.exit(0);
+  }
+  if (extraArg == 'import') {
+    await importApplications();
   }
 
   // config variables
