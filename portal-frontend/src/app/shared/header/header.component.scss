@@ -1,0 +1,18 @@
+@import "../../../styles/colors";
+
+header {
+  display: flex;
+  align-content: center;
+  margin: 18px 80px;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+  }
+}
+
+.title {
+  color: $primary-color;
+  align-items: center;
+  margin-left: 16px;
+}

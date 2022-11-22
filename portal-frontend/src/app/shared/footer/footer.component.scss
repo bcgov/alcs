@@ -1,0 +1,21 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/typography.scss';
+
+footer {
+  @extend .body-text;
+  padding: 16px 80px;
+  display: flex;
+  background-color: $accent-color;
+  color: $white;
+
+  a {
+    color: #fff;
+  }
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  margin-left: 32px;
+}
