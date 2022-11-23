@@ -1,3 +1,5 @@
+@import '../../../styles/colors.scss';
+
 .container {
   display: flex;
   max-width: 100vw;
@@ -13,10 +15,10 @@
 .column-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
   z-index: 1000;
   text-align: center;
   font-size: 18px;
+  font-weight: 700;
   padding: 4px 8px;
   height: 64px;
 }
@@ -37,8 +39,10 @@
 }
 
 .card-container {
-  border: 1px solid #999;
+  background-color: $grey-light;
+  border-radius: 4px;
+  color: $black;
   height: 100%;
-  padding: 11px;
+  padding: 12px;
   min-height: 400px;
 }

@@ -4,12 +4,16 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: auto;
 }
 
 .board-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 24px 80px 12px 76px;
+  position: sticky;
+  left: 0;
 }
 
 .board-content {
@@ -18,12 +22,8 @@
 }
 
 .board-title:hover app-favorite-button {
-    ::ng-deep .favorite-btn {
+  ::ng-deep .favorite-btn {
     visibility: visible;
-    color: $pending-star ;
+    color: $pending-star;
   }
-}
-
-.board-title app-favorite-button ::ng-deep .favorite-btn mat-icon {
-  margin-right: 2px;
 }
