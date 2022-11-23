@@ -19,8 +19,7 @@
     "KEYCLOAK": {
       "CLIENT_ID": "",
       "SECRET": ""
-    },
-    "DATABASE_SCHEMA": "portal"
+    }
   },
   "DATABASE": {
     "HOST": "db",
@@ -34,9 +33,7 @@
     "AUTH_SERVER": "dev.loginproxy.gov.bc.ca",
     "AUTH_SERVER_URL": "https://dev.loginproxy.gov.bc.ca/auth",
     "AUTH_TOKEN_URL": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
-    "SCOPES": [
-      "openid"
-    ],
+    "SCOPES": ["openid"],
     "REALM": "standard"
   },
   "CHES": {
@@ -58,8 +55,6 @@
     "URL": "redis://:redis@redis:6379"
   },
   "EMAIL": {
-    "DEFAULT_ADMINS": [
-      ""
-    ]
+    "DEFAULT_ADMINS": [""]
   }
 }

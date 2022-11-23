@@ -1,7 +1,8 @@
-import { DataSource } from 'typeorm';
 import * as config from 'config';
 import { join } from 'path';
+import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+// import { ALCS_DATABASE_SCHEMA } from './orm.config';
 
 // this is a typeorm cli specific configuration
 export const connectionSource = new DataSource({
@@ -12,10 +13,12 @@ export const connectionSource = new DataSource({
   username: config.get<string>('DATABASE.USER'),
   password: config.get<string>('DATABASE.PASSWORD'),
   database: config.get<string>('DATABASE.NAME'),
+  // TODO: before the first deployment schema must be set to 'public' once first deployment completes it needs to change to line bellow
+  // schema: ALCS_DATABASE_SCHEMA
   schema: 'public',
   synchronize: false,
   name: 'default',
-  entities: ['src/**/*.entity.{ts,js}'], // note, this must point to entities folder in src, so cli can discover entities for migration generation
+  entities: ['apps/alcs/src/**/*.entity.{ts,js}'], // note, this must point to entities folder in src, so cli can discover entities for migration generation
   migrations: [join(__dirname, '**', 'migrations/*{.ts,.js}')],
   namingStrategy: new SnakeNamingStrategy(),
   uuidExtension: 'pgcrypto',

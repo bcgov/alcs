@@ -3,21 +3,26 @@ import { IConfig } from 'config';
 import { join } from 'path';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+export const ALCS_DATABASE_SCHEMA = 'alcs';
+
 export const getTypeOrmModuleOptions = (
   config: IConfig,
-): TypeOrmModuleOptions => ({
-  type: 'postgres',
-  host: config.get<string>('DATABASE.HOST'),
-  port: config.get<number>('DATABASE.PORT'),
-  username: config.get<string>('DATABASE.USER'),
-  password: config.get<string>('DATABASE.PASSWORD'),
-  database: config.get<string>('DATABASE.NAME'),
-  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-  synchronize: false,
-  autoLoadEntities: true,
-  namingStrategy: new SnakeNamingStrategy(),
-  uuidExtension: 'pgcrypto',
-});
+): TypeOrmModuleOptions => {
+  return {
+    type: 'postgres',
+    host: config.get<string>('DATABASE.HOST'),
+    port: config.get<number>('DATABASE.PORT'),
+    username: config.get<string>('DATABASE.USER'),
+    password: config.get<string>('DATABASE.PASSWORD'),
+    database: config.get<string>('DATABASE.NAME'),
+    schema: ALCS_DATABASE_SCHEMA,
+    entities: [join(__dirname, '**', '*.{ts,js}')],
+    synchronize: false,
+    autoLoadEntities: true,
+    namingStrategy: new SnakeNamingStrategy(),
+    uuidExtension: 'pgcrypto',
+  };
+};
 
 export const getOrmConfig = (config: IConfig) => ({
   ...getTypeOrmModuleOptions(config),
