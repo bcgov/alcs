@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { RoleGuard } from 'nest-keycloak-connect';
 import { PortalService } from './portal.service';
 
 @Controller()
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
 
-  @Get()
-  getHello(): string {
-    return this.portalService.getHello();
+  @Get('/token')
+  @UseGuards(RoleGuard)
+  checkTokenValid() {
+    return 'Token Valid';
   }
 }

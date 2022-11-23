@@ -8,6 +8,6 @@
     </div>
   </div>
   <div>
-    <button>Log Out</button>
+    <button *ngIf='showLogout' (click)='onLogout()' mat-button color='primary'>Log Out</button>
   </div>
 </header>

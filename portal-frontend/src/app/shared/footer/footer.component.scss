@@ -15,7 +15,10 @@ footer {
 
 .links {
   display: flex;
-  justify-content: space-between;
   flex-grow: 1;
-  margin-left: 32px;
+  margin-left: 64px;
+
+  a {
+    margin-right: 24px !important;
+  }
 }
