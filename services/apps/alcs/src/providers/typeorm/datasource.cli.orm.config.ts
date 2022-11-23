@@ -2,6 +2,7 @@ import * as config from 'config';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+// import { ALCS_DATABASE_SCHEMA } from './orm.config';
 
 // this is a typeorm cli specific configuration
 export const connectionSource = new DataSource({
@@ -13,7 +14,7 @@ export const connectionSource = new DataSource({
   password: config.get<string>('DATABASE.PASSWORD'),
   database: config.get<string>('DATABASE.NAME'),
   // TODO: before the first deployment schema must be set to 'public' once first deployment completes it needs to change to line bellow
-  // schema: config.get<string>('ALCS.DATABASE_SCHEMA'),
+  // schema: ALCS_DATABASE_SCHEMA
   schema: 'public',
   synchronize: false,
   name: 'default',
