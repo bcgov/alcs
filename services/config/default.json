@@ -10,8 +10,7 @@
       "CLIENT_ID": "",
       "SECRET": ""
     },
-    "DATABASE_SCHEMA": "alcs",
-    "MIGRATION": "in_progress"
+    "DATABASE_SCHEMA": "alcs"
   },
   "PORTAL": {
     "BASE_URL": "http://localhost:8081",
