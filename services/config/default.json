@@ -19,8 +19,7 @@
     "KEYCLOAK": {
       "CLIENT_ID": "",
       "SECRET": ""
-    },
-    "DATABASE_SCHEMA": "portal"
+    }
   },
   "DATABASE": {
     "HOST": "db",

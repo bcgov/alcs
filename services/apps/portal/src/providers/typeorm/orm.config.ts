@@ -3,6 +3,8 @@ import { IConfig } from 'config';
 import { join } from 'path';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+export const PORTAL_DATABASE_SCHEMA = 'portal';
+
 export const getTypeOrmModuleOptions = (
   config: IConfig,
 ): TypeOrmModuleOptions => ({
@@ -12,7 +14,7 @@ export const getTypeOrmModuleOptions = (
   username: config.get<string>('DATABASE.USER'),
   password: config.get<string>('DATABASE.PASSWORD'),
   database: config.get<string>('DATABASE.NAME'),
-  schema: config.get<string>('PORTAL.DATABASE_SCHEMA'),
+  schema: PORTAL_DATABASE_SCHEMA,
   entities: [join(__dirname, '**', '*.entity.{ts,js}')],
   synchronize: false,
   autoLoadEntities: true,

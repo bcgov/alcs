@@ -8,7 +8,6 @@ export const ALCS_DATABASE_SCHEMA = 'alcs';
 export const getTypeOrmModuleOptions = (
   config: IConfig,
 ): TypeOrmModuleOptions => {
-  console.log(join(__dirname, '**', '*.entity.{ts,js}'));
   return {
     type: 'postgres',
     host: config.get<string>('DATABASE.HOST'),
@@ -16,7 +15,7 @@ export const getTypeOrmModuleOptions = (
     username: config.get<string>('DATABASE.USER'),
     password: config.get<string>('DATABASE.PASSWORD'),
     database: config.get<string>('DATABASE.NAME'),
-    schema: 'alcs',
+    schema: ALCS_DATABASE_SCHEMA,
     entities: [join(__dirname, '**', '*.{ts,js}')],
     synchronize: false,
     autoLoadEntities: true,
