@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
 import * as config from 'config';
 import { join } from 'path';
+import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 // this is a typeorm cli specific configuration
@@ -15,7 +15,7 @@ export const connectionSource = new DataSource({
   schema: config.get<string>('PORTAL.DATABASE_SCHEMA'),
   synchronize: true,
   name: 'default',
-  entities: ['src/**/*.entity.{ts,js}'], // note, this must point to entities folder in src, so cli can discover entities for migration generation
+  entities: ['apps/portal/src/**/*.entity.{ts,js}'], // note, this must point to entities folder in src, so cli can discover entities for migration generation
   migrations: [join(__dirname, '**', 'migrations/*{.ts,.js}')],
   namingStrategy: new SnakeNamingStrategy(),
   uuidExtension: 'pgcrypto',

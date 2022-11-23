@@ -58,7 +58,7 @@ export class ApplicationDecision extends Base {
   application: Application;
 
   @AutoMap()
-  @Column({ type: 'smallint' })
+  @Column({ type: 'bigint' })
   resolutionNumber: number;
 
   @AutoMap()

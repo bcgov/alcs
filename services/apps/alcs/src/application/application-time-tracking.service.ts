@@ -27,7 +27,7 @@ export class ApplicationTimeTrackingService {
       `
         SELECT application_uuid,
                count(uuid)
-        FROM application_paused
+        FROM alcs.application_paused
         WHERE start_date < NOW()
           AND COALESCE(end_date, NOW()) >= NOW()
           AND application_uuid = ANY($1)
@@ -51,7 +51,7 @@ export class ApplicationTimeTrackingService {
   async getTimes(applicationUuids: string[]) {
     const activeCounts = (await this.applicationPausedRepository.query(
       `
-        SELECT * from calculate_active_days($1)`,
+        SELECT * from alcs.calculate_active_days($1)`,
       [`{${applicationUuids.join(', ')}}`],
     )) as {
       application_uuid: string;
