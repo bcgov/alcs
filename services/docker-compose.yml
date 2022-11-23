@@ -29,12 +29,10 @@ services:
       - DATABASE=postgres
       - USER=postgres
       - PASSWORD=postgres
-    depends_on:
-      - db
     command:
       - cp /mnt/** /test
     volumes:
-      - ./test/pgtap:/test
+      - ./apps/alcs/test/pgtap:/test
     networks: 
       - alcs
 

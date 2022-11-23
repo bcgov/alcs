@@ -1,19 +1,23 @@
 
 BEGIN;
 -- prepare pgtap
-SELECT * from plan(11);
+SELECT * from plan(12);
 
-SELECT has_table('card_status');
-SELECT has_table('card');
-SELECT has_table('card_type');
-SELECT has_table('board');
-SELECT has_table('application_type');
-SELECT has_table('card_history');
-SELECT has_table('application_paused');
-SELECT has_table('application');
-SELECT has_table('user');
-SELECT has_table('holiday_entity');
-SELECT has_table('health_check');
+-- SET SCHEMA 'alcs';
+
+SELECT has_schema('alcs');
+
+SELECT has_table('alcs'::name, 'card_status'::name);
+SELECT has_table('alcs'::name,'card'::name);
+SELECT has_table('alcs'::name,'card_type'::name);
+SELECT has_table('alcs'::name,'board'::name);
+SELECT has_table('alcs'::name,'application_type'::name);
+SELECT has_table('alcs'::name,'card_history'::name);
+SELECT has_table('alcs'::name,'application_paused'::name);
+SELECT has_table('alcs'::name,'application'::name);
+SELECT has_table('alcs'::name,'user'::name);
+SELECT has_table('alcs'::name,'holiday_entity'::name);
+SELECT has_table('alcs'::name,'health_check'::name);
 
 SELECT * FROM finish();
 
