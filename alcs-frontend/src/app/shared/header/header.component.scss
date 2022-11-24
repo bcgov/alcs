@@ -16,15 +16,6 @@
   padding: 0;
 }
 
-.menu-items-container {
-  width: 100%;
-
-  .menu-item:hover {
-    background: rgb(244, 238, 238);
-    border-radius: 8px;
-  }
-}
-
 .menu-item {
   border: none;
   background: inherit;
@@ -116,7 +107,7 @@ div.board-item {
   display: flex;
   align-items: center;
   border: none;
-  background-color: $primary-color;
+  background-color: transparent;
   cursor: pointer;
   color: $white;
 
@@ -140,6 +131,7 @@ div.board-item {
   display: inline-block;
   transform: rotate(0deg);
   transition: transform 0.15s linear;
+  margin-left: 8px;
 }
 
 .menu-item.open {
