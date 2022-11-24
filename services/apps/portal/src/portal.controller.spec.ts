@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { mockKeyCloakProviders } from '../../alcs/test/mocks/mockTypes';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';
 
@@ -8,15 +9,13 @@ describe('PortalController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [PortalController],
-      providers: [PortalService],
+      providers: [PortalService, ...mockKeyCloakProviders],
     }).compile();
 
     portalController = app.get<PortalController>(PortalController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(portalController.getHello()).toBe('Hello World!');
-    });
+  it('should return "Token Valid"', () => {
+    expect(portalController.checkTokenValid()).toBe('Token Valid');
   });
 });

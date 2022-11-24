@@ -1,0 +1,66 @@
+@import '@bcgov/bc-sans/css/BCSans.css';
+@import './colors';
+
+$font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+
+@mixin typography-style($size, $weight) {
+  font-family: $font-family !important;
+  font-size: $size !important;
+  font-weight: $weight !important;
+  margin: 0 !important;
+}
+
+* {
+  font-family: $font-family !important;
+}
+
+.material-icons {
+  font-family: Material Icons Outlined !important;
+}
+
+//TODO: Change these to use relative sizes are part of WCAG
+h1 {
+  @include typography-style(38px, 700);
+}
+
+h2 {
+  @include typography-style(32px, 700);
+}
+
+h3 {
+  @include typography-style(28px, 700);
+}
+
+h4 {
+  @include typography-style(24px, 700);
+}
+
+h5 {
+  @include typography-style(20px, 700);
+}
+
+h6 {
+  @include typography-style(18px, 700);
+}
+
+a,
+p,
+.body-text {
+  @include typography-style(16px, 400);
+  line-height: 24px;
+}
+
+.nav-text {
+  @include typography-style(18px, 400);
+}
+
+.button-text {
+  @include typography-style(14px, 400);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button {
+  @extend .button-text;
+  padding: 8px 16px;
+}

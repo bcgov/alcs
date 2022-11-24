@@ -2,6 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { FastifyReply } from 'fastify';
+import { Keycloak } from 'keycloak-connect';
+import { KEYCLOAK_INSTANCE } from 'nest-keycloak-connect';
 import { CONFIG_TOKEN } from '../config/config.module';
 import { AuthorizationController } from './authorization.controller';
 import { AuthorizationService } from './authorization.service';
@@ -9,6 +11,7 @@ import { AuthorizationService } from './authorization.service';
 describe('AuthorizationController', () => {
   let controller: AuthorizationController;
   let mockService: DeepMocked<AuthorizationService>;
+  let mockKeycloak: DeepMocked<Keycloak>;
 
   const fakeToken = 'fake-token';
   const fakeRefreshToken = 'fake-refresh';
@@ -24,7 +27,9 @@ describe('AuthorizationController', () => {
   };
 
   beforeEach(async () => {
-    mockService = createMock<AuthorizationService>();
+    mockService = createMock();
+    mockKeycloak = createMock();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthorizationController],
       providers: [
@@ -35,6 +40,10 @@ describe('AuthorizationController', () => {
         {
           provide: CONFIG_TOKEN,
           useValue: config,
+        },
+        {
+          provide: KEYCLOAK_INSTANCE,
+          useValue: mockKeycloak,
         },
       ],
     }).compile();
