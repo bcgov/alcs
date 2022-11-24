@@ -27,13 +27,10 @@ export class RolesGuard implements CanActivate {
   constructor(
     @Inject(KEYCLOAK_INSTANCE)
     private singleTenant: Keycloak,
-
     @Inject(KEYCLOAK_CONNECT_OPTIONS)
     private keycloakOpts: KeycloakConnectConfig,
-
     @Inject(KEYCLOAK_LOGGER)
     private logger: Logger,
-
     private multiTenant: KeycloakMultiTenantService,
     private reflector: Reflector,
     private cls: ClsService,
@@ -62,6 +59,11 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const token = request.user as BaseToken;
+
+    if (token.aud !== this.keycloakOpts.resource) {
+      return false;
+    }
+
     const userRoles = request.user.client_roles
       ? (request.user.client_roles as AUTH_ROLE[])
       : [];
