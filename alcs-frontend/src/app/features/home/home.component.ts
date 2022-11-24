@@ -12,11 +12,17 @@ export class HomeComponent implements OnInit {
   hasCommissioner = false;
   hasOtherRole = false;
   hasApplicationSpecialist = false;
+  name = '';
 
   constructor(private authService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser()!;
+
+    this.name =
+      this.currentUser.given_name && this.currentUser.family_name
+        ? `${this.currentUser.given_name} ${this.currentUser.family_name}`
+        : this.currentUser.name;
 
     this.authService.$currentUser.subscribe((currentUser) => {
       if (currentUser) {

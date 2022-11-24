@@ -9,6 +9,8 @@ const JWT_TOKEN_KEY = 'jwt_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
 export interface ICurrentUser {
+  given_name: string;
+  family_name: string;
   name: string;
   email: string;
   client_roles?: ROLES[];
