@@ -26,8 +26,8 @@
 }
 
 .nav {
-  min-width: 250px;
-  width: 250px;
+  min-width: 240px;
+  width: 240px;
   border-right: 1px solid;
   border-left: 1px solid;
   height: 100%;
@@ -50,5 +50,15 @@
   div:hover {
     color: #000;
     background-color: $primary-color-light;
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+
+  .mat-icon {
+    padding-right: 32px;
   }
 }
