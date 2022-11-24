@@ -18,6 +18,7 @@ $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
   font-family: Material Icons Outlined !important;
 }
 
+//TODO: Change these to use relative sizes are part of WCAG
 h1 {
   @include typography-style(38px, 700);
 }
