@@ -29,6 +29,7 @@ export type BaseToken = {
   email: string;
   email_verified: boolean;
   client_roles?: string[];
+  aud: string;
 };
 
 export type IdirToken = BaseToken & {

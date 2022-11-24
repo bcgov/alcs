@@ -15,6 +15,7 @@ import {
 } from 'nest-keycloak-connect';
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
+import { BaseToken } from '../../../../alcs/src/common/authorization/authorization.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -40,7 +41,14 @@ export class RolesGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext) {
-    return await this.keyCloakGuard.canActivate(context);
-    //TODO: Load user and set on request?
+    const canActivate = await this.keyCloakGuard.canActivate(context);
+    if (!canActivate) {
+      return false;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const token = request.user as BaseToken;
+
+    return token.aud === this.keycloakOpts.resource;
   }
 }
