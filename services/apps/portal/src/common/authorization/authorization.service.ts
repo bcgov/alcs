@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { JWK, JWS } from 'node-jose';
 import { firstValueFrom } from 'rxjs';
+import { UserService } from '../../user/user.service';
 import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
 export type TokenResponse = {
@@ -39,6 +40,7 @@ export class AuthorizationService {
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private httpService: HttpService,
+    private userService: UserService,
   ) {
     this.initKeys();
   }
@@ -125,33 +127,21 @@ export class AuthorizationService {
       };
     }
     throw new Error(
-      `Received user who is neither idir or bceidboth ${user.identity_provider}`,
+      `Received user who is not bceidboth ${user.identity_provider}`,
     );
   }
 
   private async registerOrUpdateUser(payload: BCeIDBasicToken) {
-    // const bceidGuid = payload['bceid_user_guid'];
-    // const existingUser = await this.userService.getByGuid({
-    //   idirUserGuid,
-    //   bceidGuid,
-    // });
-    // if (existingUser) {
-    //   await this.userService.update(
-    //     existingUser.uuid,
-    //     this.mapUserFromTokenToCreateDto(payload),
-    //   );
-    // } else {
-    //   this.logger.debug(payload);
-    //   const user = await this.userService.create(
-    //     this.mapUserFromTokenToCreateDto(payload),
-    //   );
-    //
-    //   if (user.clientRoles.length === 0) {
-    //     await this.userService.sendNewUserRequestEmail(
-    //       user.email,
-    //       user.bceidGuid ?? user.displayName,
-    //     );
-    //   }
-    // }
+    const bceidGuid = payload['bceid_user_guid'];
+    const existingUser = await this.userService.getByGuid(bceidGuid);
+    if (existingUser) {
+      await this.userService.update(
+        existingUser.uuid,
+        this.mapUserFromTokenToCreateDto(payload),
+      );
+    } else {
+      this.logger.debug(payload);
+      await this.userService.create(this.mapUserFromTokenToCreateDto(payload));
+    }
   }
 }
