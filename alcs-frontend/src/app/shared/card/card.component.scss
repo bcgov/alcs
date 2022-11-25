@@ -74,13 +74,23 @@
 }
 
 .decision-date-info {
+  background-color: $secondary-color;
+  border-radius: 4px 4px 0 0;
   text-align: center;
   position: relative;
-  background-color: #efefef;
-  border: 1px solid $grey;
   font-size: 16px;
   width: 280px;
   padding: 8px 0px;
+}
+
+.decision-date-info.paused {
+  background-color: $secondary-color-light;
+  border: 1px solid $grey-dark;
+  opacity: 0.8;
+}
+
+.card.paused.decision-date {
+  border-top: none;
 }
 
 .read-card {

@@ -1,4 +1,4 @@
-<div *ngIf="cardData.latestDecisionDate" class="decision-date-info">
+<div *ngIf="cardData.latestDecisionDate" class="decision-date-info" [ngClass]="{ paused: cardData.paused }">
   {{ cardData.latestDecisionDate | momentFormat }}
 </div>
 <mat-card
