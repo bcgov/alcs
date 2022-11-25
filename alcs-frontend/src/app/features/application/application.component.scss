@@ -17,7 +17,7 @@
 .content {
   display: flex;
   flex-grow: 1;
-  padding: 0 80px;
+  padding-right: 80px;
 }
 
 .child-content {
@@ -26,30 +26,40 @@
 }
 
 .nav {
+  background-color: $bg-color;
+  border-right: 1px solid $primary-color-dark;
   min-width: 240px;
   width: 240px;
-  border-right: 1px solid;
-  border-left: 1px solid;
   height: 100%;
 }
 
 .nav-link {
   cursor: pointer;
-  border-bottom: 1px solid;
 
   div {
     padding: 12px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: $bg-color;
   }
 
   div.active {
     font-weight: bold;
-    color: #fff;
     background-color: $primary-color-dark;
+    border-color: $primary-color-dark;
+    color: $white;
+
+    &:hover {
+      background-color: $primary-color-dark;
+      border-color: $primary-color-dark;
+      color: $white;
+    }
   }
 
   div:hover {
-    color: #000;
-    background-color: $primary-color-light;
+    background-color: $secondary-color-light;
+    border-color: $secondary-color-dark;
+    color: $dark-contrast-text;
   }
 }
 
