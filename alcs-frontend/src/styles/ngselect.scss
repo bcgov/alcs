@@ -38,3 +38,21 @@ ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
 .ng-select .ng-select-container .ng-value-container .ng-placeholder {
   color: rgba(0, 0, 0, 0.6) !important;
 }
+
+.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
+.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after {
+  border-color: $primary-color;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+  background-color: $grey-light !important;
+  color: $primary-color;
+
+  &:hover {
+    background-color: $grey-light !important;
+  }
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover {
+  background: $secondary-color-light !important;
+}
