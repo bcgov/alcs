@@ -1,12 +1,14 @@
+@import '../../../styles/colors.scss';
+
 .comment {
   width: 100%;
   margin: 0 0 8px;
 
   .body {
     margin-bottom: 8px;
-    padding: 6px 16px;
-    border-radius: 6px;
-    background-color: #efefef;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background-color: $grey-light;
     min-height: 28px;
     display: flex;
     justify-content: center;
@@ -33,9 +35,9 @@
   margin-top: 8px;
 
   button {
-    font-size: 0.6rem !important;
+    font-size: 12px !important;
     text-decoration: underline;
-    color: #666;
+    color: $grey-dark;
     min-width: unset;
     padding: 0 8px;
     line-height: 14px;
@@ -44,7 +46,7 @@
   .edited {
     display: flex;
     align-items: center;
-    font-size: 0.8em;
-    color: #666;
+    color: $grey-dark;
+    font-size: 12px;
   }
 }

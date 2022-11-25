@@ -11,7 +11,7 @@
 .card.paused {
   opacity: 0.8;
   background-color: #c3c3c3;
-  border: 1px solid $grey-dark;
+  border: 2px solid $grey-dark;
 }
 
 .card-content {
@@ -85,7 +85,7 @@
 
 .decision-date-info.paused {
   background-color: $secondary-color-light;
-  border: 1px solid $grey-dark;
+  border: 2px solid $grey-dark;
   opacity: 0.8;
 }
 

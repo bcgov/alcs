@@ -56,3 +56,7 @@ ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover {
   background: $secondary-color-light !important;
 }
+
+.ng-select.ng-select-focused .ng-select-container:after {
+  border-color: $primary-color;
+}
