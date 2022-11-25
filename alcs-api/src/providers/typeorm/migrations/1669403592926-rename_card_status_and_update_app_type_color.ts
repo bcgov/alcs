@@ -7,7 +7,7 @@ export class renameCardStatusAndUpdateAppTypeColor1669403592926
     await queryRunner.query(
       ` 
       UPDATE "card_status"
-      SET "label" = 'App Prelim Done / To Be Assigned to LUP'
+      SET "label" = 'App&nbsp;Prelim&nbsp;Done / To&nbsp;Be&nbsp;Assigned&nbsp;to&nbsp;LUP'
       WHERE "code"='PREL';
       `,
     );
