@@ -3,7 +3,7 @@
 .search-bar {
   background-color: $primary-color-dark;
   font-size: 16px;
-  color: #fff;
+  color: $white;
   border-radius: 4px;
 
   .mat-icon {
@@ -12,7 +12,7 @@
 }
 
 input {
-  color: #fff;
+  color: $white;
 }
 
 .mat-input-element {
@@ -27,7 +27,7 @@ input {
   border-radius: 4px;
 }
 
-:host ::ng-deep .mat-form-field-wrapper{
+:host ::ng-deep .mat-form-field-wrapper {
   margin: 0 !important;
   padding: 0;
 }
@@ -36,7 +36,7 @@ input {
   border-top: none;
 }
 
-:host ::ng-deep  .mat-form-field-appearance-outline .mat-form-field-flex {
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
   margin-top: 0;
 }
 

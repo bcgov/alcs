@@ -1,6 +1,6 @@
 <div *ngIf="comment" class="comment">
   <div class="body">
-    <div class="made-by badge">{{ comment.author }}</div>
+    <div class="made-by label-text">{{ comment.author }}</div>
     <div *ngIf="isEditing">
       <app-mention-textarea
         [comment]="comment"
@@ -9,7 +9,7 @@
         labelText="Edit comment"
       ></app-mention-textarea>
     </div>
-    <div *ngIf="!isEditing" class="content body-small" [innerHtml]="highlightMentions(comment.body)"></div>
+    <div *ngIf="!isEditing" class="content body2-text" [innerHtml]="highlightMentions(comment.body)"></div>
     <div class="footer" *ngIf="!isEditing">
       <div class="edited">
         {{ commentDate }}
