@@ -1,4 +1,4 @@
-<div *ngIf="cardData.latestDecisionDate" class="decision-date-info">
+<div *ngIf="cardData.latestDecisionDate" class="decision-date-info" [ngClass]="{ paused: cardData.paused }">
   {{ cardData.latestDecisionDate | momentFormat }}
 </div>
 <mat-card
@@ -16,6 +16,7 @@
         <span
           *ngFor="let type of cardData.labels"
           class="type"
+          matTooltip="{{ type.label }}"
           [ngStyle]="{
             backgroundColor: type.backgroundColor,
             color: type.textColor,
@@ -28,7 +29,11 @@
     </div>
     <div class="lower-card">
       <div>
-        <div *ngIf="cardData.cardType === 'APP'" class="active-days center">
+        <div
+          *ngIf="cardData.cardType === 'APP'"
+          class="active-days center"
+          matTooltip="Active days: {{ cardData.activeDays }} "
+        >
           <mat-icon title="Active Days">calendar_month</mat-icon>
           <span class="center">{{ cardData.activeDays }}</span>
         </div>

@@ -19,36 +19,43 @@ export const childRoutes = [
   {
     path: '',
     menuTitle: 'Overview',
+    icon: 'summarize',
     component: OverviewComponent,
   },
   {
     path: 'intake',
     menuTitle: 'ALC Intake',
+    icon: 'content_paste',
     component: IntakeComponent,
   },
   {
     path: 'info-request',
     menuTitle: 'Info Request',
+    icon: 'perm_device_information',
     component: InfoRequestsComponent,
   },
   {
     path: 'site-visit-meeting',
-    menuTitle: 'Site Visit / Applicant Meeting',
+    menuTitle: 'Site Visit /\nApplicant Meeting',
+    icon: 'engineering',
     component: ApplicationMeetingComponent,
   },
   {
     path: 'review',
     menuTitle: 'Review',
+    icon: 'rate_review',
     component: ReviewComponent,
   },
   {
     path: 'decision',
     menuTitle: 'Decision',
+    icon: 'gavel',
     component: DecisionComponent,
   },
   {
     path: 'post-decision',
     menuTitle: 'Post-Decision',
+    icon: 'edit_note',
     component: PostDecisionComponent,
   },
 ];

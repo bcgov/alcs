@@ -19,3 +19,9 @@ button.favorite-btn.gold {
     color: $grey-dark;
   }
 }
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
