@@ -16,3 +16,10 @@ header {
   align-items: center;
   margin-left: 16px;
 }
+
+.controls {
+  button:not(:last-child) {
+    margin-right: 2em !important;
+    height: 43px;
+  }
+}

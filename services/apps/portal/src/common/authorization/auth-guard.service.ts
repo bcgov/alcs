@@ -17,6 +17,7 @@ import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
 import { BaseToken } from '../../../../alcs/src/common/authorization/authorization.service';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -32,6 +33,7 @@ export class AuthGuard implements CanActivate {
     private multiTenant: KeycloakMultiTenantService,
     private reflector: Reflector,
     private clsService: ClsService,
+    private userService: UserService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
@@ -53,6 +55,8 @@ export class AuthGuard implements CanActivate {
 
     const bceidGuid = token['bceid_user_guid'];
     this.clsService.set('userGuid', bceidGuid);
+    const req = context.switchToHttp().getRequest();
+    req.user.entity = await this.userService.getByGuid(bceidGuid);
 
     return token.aud === this.keycloakOpts.resource;
   }

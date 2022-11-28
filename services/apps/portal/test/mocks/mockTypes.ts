@@ -4,6 +4,7 @@ import {
   KEYCLOAK_LOGGER,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
+import { ClsService } from 'nestjs-cls';
 import { UserService } from '../../src/user/user.service';
 import { mockAppLoggerService } from './mockLogger';
 
@@ -26,6 +27,10 @@ export const mockKeyCloakProviders = [
   KeycloakMultiTenantService,
   {
     provide: UserService,
+    useValue: {},
+  },
+  {
+    provide: ClsService,
     useValue: {},
   },
 ];

@@ -1,13 +1,14 @@
 <header>
   <div>
     <div>
-      <img src='assets/logo.png' alt='ALC Portal' />
+      <img src="assets/logo.png" alt="ALC Portal" />
     </div>
-    <div class='title'>
+    <div class="title">
       <h5>Application Portal</h5>
     </div>
   </div>
-  <div>
-    <button *ngIf='showLogout' (click)='onLogout()' mat-button color='primary'>Log Out</button>
+  <div class='controls'>
+    <button *ngIf="isAuthenticated" routerLink='/home' mat-flat-button color="accent">Portal Inbox</button>
+    <button *ngIf="isAuthenticated" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
   </div>
 </header>

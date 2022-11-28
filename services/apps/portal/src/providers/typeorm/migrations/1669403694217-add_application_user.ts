@@ -11,7 +11,7 @@ export class addApplicationUser1669403694217 implements MigrationInterface {
       `CREATE UNIQUE INDEX "IDX_298a928993eee3de03067af610" ON "portal"."user" ("bceid_guid") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "portal"."application_document" ("uuid" uuid NOT NULL DEFAULT gen_random_uuid(), "type" character varying NOT NULL, "application_uuid" character varying NOT NULL, "alcs_document_uuid" character varying NOT NULL, "application_file_number" character varying NOT NULL, "uploaded_by_uuid" uuid NOT NULL, CONSTRAINT "PK_87ec4d3edd458858cf7370ddfd3" PRIMARY KEY ("uuid"))`,
+      `CREATE TABLE "portal"."application_document" ("uuid" uuid NOT NULL DEFAULT gen_random_uuid(), "type" character varying NOT NULL, "alcs_document_uuid" character varying NOT NULL, "application_file_number" character varying NOT NULL, "uploaded_by_uuid" uuid NOT NULL, CONSTRAINT "PK_87ec4d3edd458858cf7370ddfd3" PRIMARY KEY ("uuid"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "portal"."application" ("file_number" character varying NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "applicant" character varying NOT NULL, "local_government_uuid" uuid NOT NULL, CONSTRAINT "PK_39c4f5ceb0f5a7a4c819d46a0d5" PRIMARY KEY ("file_number"))`,

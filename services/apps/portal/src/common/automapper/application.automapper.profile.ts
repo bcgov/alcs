@@ -21,11 +21,15 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.documents,
           mapFrom((ad) => {
-            return this.mapper.mapArray(
-              ad.documents,
-              ApplicationDocument,
-              ApplicationDocumentDto,
-            );
+            if (ad.documents) {
+              return this.mapper.mapArray(
+                ad.documents,
+                ApplicationDocument,
+                ApplicationDocumentDto,
+              );
+            } else {
+              return [];
+            }
           }),
         ),
       );

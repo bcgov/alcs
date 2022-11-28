@@ -9,14 +9,14 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
-  showLogout = false;
+  isAuthenticated = false;
 
   constructor(private authenticationService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.authenticationService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((user) => {
       if (user) {
-        this.showLogout = true;
+        this.isAuthenticated = true;
       }
     });
   }

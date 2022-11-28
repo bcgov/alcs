@@ -35,6 +35,7 @@ export class ApplicationDocumentService {
       type: documentType,
       application,
       alcsDocumentUuid: documentUuid,
+      uploadedBy: user,
     });
 
     return this.applicationDocumentRepository.save(appDocument);

@@ -1,0 +1,47 @@
+<mat-stepper linear='true' #stepper>
+  <mat-step label='Application' [stepControl]='firstForm'>
+    <div class='header'>
+      <h6>Application ID: 66112 | Trans, Util & Rec</h6>
+    </div>
+    <form [formGroup]='firstForm'>
+      <div class='form-row'>
+        <div>
+          <h6>Applicant Last Name</h6>
+          <mat-form-field class='full-width-input' appearance='outline'>
+            <input matInput placeholder='Type last name' formControlName='applicantName' required>
+          </mat-form-field>
+        </div>
+        <div>
+          <h6>Local/First Nation Government</h6>
+          <mat-form-field class='full-width-input' appearance='outline'>
+            <input type='text'
+                   aria-label='Text'
+                   matInput
+                   required
+                   formControlName='localGovernment'
+                   placeholder='Type and select from dropdown'
+                   [matAutocomplete]='auto'>
+            <mat-autocomplete #auto='matAutocomplete'>
+              <mat-option *ngFor='let option of filteredLocalGovernments | async' [value]='option.name'>
+                {{option.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+      <div>
+        <h6>Document Uploads</h6>
+        <div class='documents'>
+          <app-file-drag-drop (files)='filesDropped($event)'></app-file-drag-drop>
+        </div>
+      </div>
+      <div class='step-buttons'>
+        <button mat-stroked-button (click)='onSaveAndExit()'>Save and exit</button>
+        <button mat-flat-button color='primary' matStepperNext>Next Step</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step label='Review & Submit'>
+
+  </mat-step>
+</mat-stepper>

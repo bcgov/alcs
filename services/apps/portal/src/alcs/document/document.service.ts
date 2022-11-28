@@ -9,7 +9,7 @@ export class DocumentService {
   constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {}
 
   async create(filePath: string, file: MultipartFile, user: User) {
-    //TODO: Call out to ALCS
+    const data = await file.toBuffer();
     return v4();
   }
 

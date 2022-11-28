@@ -26,13 +26,10 @@ export class ApplicationDocument extends BaseEntity {
   uuid: string;
 
   @Column()
-  type: string; //FIXME: Automapper hates the DOCUMENT_TYPE type
+  type: string;
 
   @ManyToOne(() => Application, { nullable: false })
   application: Application;
-
-  @Column()
-  applicationUuid: string;
 
   @Column()
   alcsDocumentUuid: string;

@@ -17,7 +17,9 @@ import { LogoutController } from './logout/logout.controller';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
+import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -26,9 +28,13 @@ import { UserModule } from './user/user.module';
       strategyInitializer: classes(),
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeormConfigService }),
+    TypeOrmModule.forFeature([User]),
     UserModule,
     AuthorizationModule,
-    ClsModule,
+    ClsModule.register({
+      global: true,
+      middleware: { mount: true },
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         level: config.get('LOG_LEVEL'),
@@ -54,6 +60,7 @@ import { UserModule } from './user/user.module';
   providers: [
     PortalService,
     AuditSubscriber,
+    UserService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
