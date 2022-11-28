@@ -249,6 +249,26 @@ _piped_input() {
   ! _interactive_input
 }
 
+# _confirm()
+#
+# Usage:
+#   _confirm <message>
+#
+# Exit / Error Status:
+#   0 (success, true)  If the prompt is confirmed.
+#   1 (error,  false)  If the prompt is not confirmed.
+_confirm() {
+  read -r -p "${1:-Are you sure? [y/N]} " response
+  case "$response" in
+        [yY][eE][sS]|[yY]) 
+            true
+            ;;
+        *)
+            false
+            ;;
+  esac
+}
+
 ###############################################################################
 # describe
 ###############################################################################
@@ -657,6 +677,54 @@ docker() {
     eval "docker-compose $_filestring down"
   else 
     describe --get "docker"
+  fi
+}
+
+# --------------------------------------------------------------------- database
+
+describe "db" <<HEREDOC
+Usage:
+  ${_ME} db [<action>] 
+
+HEREDOC
+db() {
+  local _arguments=()
+  local _action=
+
+  for __arg in "${@:-}"
+  do
+    case ${__arg} in
+      -*)
+        _exit_1 printf "Unexpected option: %s\\n" "${__arg}"
+        ;;
+      *)
+        if _blank "${_action}"
+        then
+          _action="${__arg}"
+        else
+          _arguments+=("${__arg}")
+        fi
+        ;;
+    esac
+  done
+
+  if [[ "${_action}" == "restore" ]]
+  then
+    _confirm "Are you sure you want to restore the database? [y/N]"
+    oc delete job alcs-db-restore --ignore-not-found=true
+    oc scale deployments/alcs-api --replicas=0
+    oc wait --for=jsonpath='{.spec.replicas}'=0 deployments/alcs-api --timeout=5m
+    oc scale statefulset/alcs-patroni --replicas=0
+    oc wait --for=jsonpath='{.status.availableReplicas}'=0 statefulset/alcs-patroni --timeout=5m
+    oc scale statefulset/alcs-patroni --replicas=2
+    oc rollout status statefulset/alcs-patroni --watch --timeout=5m
+    oc create job alcs-db-restore --from=cronjob/alcs-db-backup --dry-run=client -o yaml | \
+      yq '.spec.template.spec.containers[0].command[2] = "/backup.sh -r alcs-patroni:5432/app -a $DATABASE_PASSWORD"' | oc apply -f -
+    oc wait --for=condition=Complete job alcs-db-restore
+    oc scale deployments/alcs-api --replicas=2
+    oc wait --for condition=Available=True  deployments/alcs-api --timeout=5m
+  else 
+    describe --get "db"
   fi
 }
 
