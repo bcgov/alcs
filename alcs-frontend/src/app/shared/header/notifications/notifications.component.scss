@@ -21,7 +21,7 @@
 }
 
 .notifications-header {
-  padding: 0 8px;
+  padding: 8px 16px 0;
 }
 
 .notifications-header-menu {
@@ -29,13 +29,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9px !important;
+  font-size: 12px !important;
+  margin: 8px 0;
 }
 
 .unread-button.mat-flat-button {
   padding: 0;
   margin: 0;
-  font-size: 9px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
   text-decoration: underline;
   line-height: 16px;
@@ -43,7 +44,7 @@
 }
 
 .notification {
-  padding: 8px;
+  padding: 8px 16px;
   width: 280px;
   border-left: 4px solid transparent;
   border-bottom: 1px solid #959595;
@@ -63,14 +64,14 @@
   }
 
   .body {
-    line-height: 24px;
+    line-height: 20px;
     font-size: 12px;
     margin: 4px 0;
     font-weight: normal !important;
   }
 
   .date {
-    font-size: 9px;
+    font-size: 10px;
     color: #999999;
     line-height: 12px;
   }
@@ -86,7 +87,7 @@
 
 .no-notifications {
   width: 280px;
-  padding: 8px;
+  padding: 8px 16px;
   color: #999999;
   font-style: italic;
 }

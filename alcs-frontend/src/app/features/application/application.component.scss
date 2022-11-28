@@ -17,38 +17,53 @@
 .content {
   display: flex;
   flex-grow: 1;
-  padding: 0 80px;
+  padding-right: 80px;
 }
 
 .child-content {
-  margin: 24px 0 0 24px;
+  margin: 24px 0 0 48px;
   flex-grow: 1;
 }
 
 .nav {
-  min-width: 250px;
-  width: 250px;
-  border-right: 1px solid;
-  border-left: 1px solid;
+  background-color: $bg-color;
+  min-width: 240px;
+  width: 240px;
   height: 100%;
 }
 
 .nav-link {
   cursor: pointer;
-  border-bottom: 1px solid;
 
   div {
-    padding: 12px;
+    padding: 12px 24px;
   }
 
   div.active {
     font-weight: bold;
-    color: #fff;
     background-color: $primary-color-dark;
+    color: $white;
+
+    &:hover {
+      background-color: $primary-color-dark;
+      border: none;
+      color: $white;
+    }
   }
 
   div:hover {
-    color: #000;
-    background-color: $primary-color-light;
+    background-color: $secondary-color-light;
+    border-right: 4px solid $secondary-color-dark;
+    color: $dark-contrast-text;
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+
+  .mat-icon {
+    padding-right: 32px;
   }
 }

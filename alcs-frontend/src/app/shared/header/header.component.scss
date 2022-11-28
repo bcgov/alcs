@@ -4,32 +4,26 @@
   padding: 8px 80px;
   border-bottom: 1px solid;
   background-color: $primary-color;
-  color: #fff;
+  color: $white;
 }
 
 .mat-toolbar {
   background-color: $primary-color;
 }
 
-.mat-toolbar-row, .mat-toolbar-single-row {
+.mat-toolbar-row,
+.mat-toolbar-single-row {
   padding: 0;
-}
-
-.menu-items-container {
-  width: 100%;
-
-  .menu-item:hover {
-    background: rgb(244, 238, 238);
-    border-radius: 8px;
-  }
 }
 
 .menu-item {
   border: none;
   background: inherit;
   cursor: pointer;
-  color: #fff;
+  color: $white;
   font-size: 20px !important;
+  display: flex;
+  align-items: center;
 }
 
 button.mat-menu-item {
@@ -76,7 +70,7 @@ div.board-item {
 }
 
 .board-item:hover {
-  background-color: #f8f3f3;
+  background-color: $secondary-color-light;
 
   ::ng-deep .favorite-btn {
     visibility: visible;
@@ -94,13 +88,13 @@ div.board-item {
 
   button {
     text-align: left;
-    background-color: #fff;
+    background-color: $white;
     border: none;
     cursor: pointer;
   }
 
   button:hover {
-    background-color: #f8f3f3;
+    background-color: $secondary-color-light;
   }
 }
 
@@ -113,9 +107,9 @@ div.board-item {
   display: flex;
   align-items: center;
   border: none;
-  background-color: $primary-color;
+  background-color: transparent;
   cursor: pointer;
-  color: #fff;
+  color: $white;
 
   .avatar-menu-arrow {
     font-size: 18px;
@@ -137,6 +131,7 @@ div.board-item {
   display: inline-block;
   transform: rotate(0deg);
   transition: transform 0.15s linear;
+  margin-left: 8px;
 }
 
 .menu-item.open {
