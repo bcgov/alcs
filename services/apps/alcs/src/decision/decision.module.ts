@@ -17,12 +17,14 @@ import { ApplicationDecisionService } from './application-decision/application-d
 import { CeoCriterionCode } from './application-decision/ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './application-decision/decision-document.entity';
 import { DecisionMakerCode } from './application-decision/decision-maker/decision-maker.entity';
+import { ApplicationDecisionChairReviewOutcomeType } from './application-decision/decision-outcome-type/application-decision-outcome-type.entity';
 import { ApplicationModificationController } from './application-modification/application-modification.controller';
 import { ApplicationModification } from './application-modification/application-modification.entity';
 import { ApplicationModificationService } from './application-modification/application-modification.service';
 import { ApplicationReconsiderationController } from './application-reconsideration/application-reconsideration.controller';
 import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from './application-reconsideration/application-reconsideration.service';
+import { ApplicationReconsiderationOutcomeType } from './application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from './application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 
 @Module({
@@ -37,6 +39,8 @@ import { ApplicationReconsiderationType } from './application-reconsideration/re
       ApplicationReconsideration,
       ApplicationReconsiderationType,
       ApplicationDecisionMeeting,
+      ApplicationDecisionChairReviewOutcomeType,
+      ApplicationReconsiderationOutcomeType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,

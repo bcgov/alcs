@@ -14,7 +14,7 @@ export interface UpdateApplicationDecisionDto {
   chairReviewRequired?: boolean;
   auditDate?: number | null;
   chairReviewDate?: number | null;
-  chairReviewOutcome?: boolean | null;
+  chairReviewOutcomeCode?: string | null;
   decisionMakerCode?: string | null;
   ceoCriterionCode?: string | null;
   isTimeExtension?: boolean | null;
@@ -45,7 +45,7 @@ export interface ApplicationDecisionDto {
   decisionMaker?: DecisionMakerDto;
   ceoCriterion?: CeoCriterionDto;
   chairReviewRequired: boolean;
-  chairReviewOutcome?: boolean | null;
+  chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
   applicationFileNumber: string;
   documents: DecisionDocumentDto[];
   isTimeExtension?: boolean | null;
@@ -78,3 +78,5 @@ export interface CeoCriterionDto extends BaseCodeDto {
 export interface DecisionOutcomeCodeDto extends BaseCodeDto {
   isFirstDecision: boolean;
 }
+
+export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}

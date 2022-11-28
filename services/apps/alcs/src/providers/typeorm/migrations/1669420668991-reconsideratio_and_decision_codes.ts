@@ -30,7 +30,7 @@ export class reconsideratioAndDecisionCodes1669420668991
       `ALTER TABLE "alcs"."application_decision" ADD "chair_review_outcome_code" text`,
     );
     await queryRunner.query(
-      `ALTER TABLE "alcs"."application_reconsideration" ADD "review_outcome_code" text NOT NULL DEFAULT 'PEN'`,
+      `ALTER TABLE "alcs"."application_reconsideration" ADD "review_outcome_code" text`,
     );
 
     await queryRunner.query(`
@@ -39,6 +39,7 @@ export class reconsideratioAndDecisionCodes1669420668991
                                          WHEN "is_review_approved" is TRUE THEN 'PRC'
                                          ELSE 'REF'
                                     END;
+        WHERE type_code = '33';
     `);
 
     await queryRunner.query(`

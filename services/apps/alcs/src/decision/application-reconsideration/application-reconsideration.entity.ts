@@ -36,8 +36,12 @@ export class ApplicationReconsideration extends Base {
   type: ApplicationReconsiderationType;
 
   @AutoMap()
+  @Column({ nullable: true, type: 'text' })
+  reviewOutcomeCode: string | null;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
-    nullable: false,
+    nullable: true,
   })
   reviewOutcome: ApplicationReconsiderationOutcomeType;
 

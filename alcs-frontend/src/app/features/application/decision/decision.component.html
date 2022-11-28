@@ -117,9 +117,7 @@
         </div>
         <div *ngIf="decision.chairReviewRequired">
           <div class="subheading2">Chair Review Outcome</div>
-          <span *ngIf="decision.chairReviewOutcome !== null">{{
-            decision.chairReviewOutcome ? 'Reconsider' : 'Stay'
-          }}</span>
+          <span *ngIf="decision.chairReviewOutcome !== null">{{ decision.chairReviewOutcome?.label }}</span>
           <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
         </div>
         <div *ngIf="decision.chairReviewRequired"></div>

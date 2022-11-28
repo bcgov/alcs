@@ -140,7 +140,7 @@ export class DecisionDialogComponent implements OnInit {
 
     const data: CreateApplicationDecisionDto = {
       date: date!.getTime(),
-      resolutionNumber: resolutionNumber!,
+      resolutionNumber: Number(resolutionNumber!),
       resolutionYear: resolutionYear!,
       chairReviewRequired: chairReviewRequired === 'true',
       auditDate: auditDate ? formatDateForApi(auditDate) : auditDate,
@@ -148,6 +148,7 @@ export class DecisionDialogComponent implements OnInit {
       outcomeCode: outcome!,
       decisionMakerCode: decisionMaker,
       ceoCriterionCode: ceoCriterion,
+      chairReviewOutcomeCode: chairReviewOutcome,
       applicationFileNumber: this.data.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
@@ -158,9 +159,6 @@ export class DecisionDialogComponent implements OnInit {
     } else {
       data.isTimeExtension = null;
       data.isOther = null;
-    }
-    if (chairReviewOutcome !== null) {
-      data.chairReviewOutcome = chairReviewOutcome === 'true';
     }
 
     try {
@@ -307,7 +305,7 @@ export class DecisionDialogComponent implements OnInit {
 
     if (existingDecision.chairReviewOutcome !== null) {
       this.form.patchValue({
-        chairReviewOutcome: existingDecision.chairReviewOutcome ? 'true' : 'false',
+        chairReviewOutcome: existingDecision.chairReviewOutcome?.code,
       });
     }
   }

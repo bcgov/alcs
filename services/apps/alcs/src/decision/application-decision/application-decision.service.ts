@@ -60,6 +60,7 @@ export class ApplicationDecisionService {
         reconsiders: {
           reconsidersDecisions: true,
         },
+        chairReviewOutcome: true,
       },
     });
 
@@ -153,10 +154,11 @@ export class ApplicationDecisionService {
 
     await this.validateDecisionChanges(updateDto);
 
+    // resolution number is int64 in postgres, which means it is a string in JS
     if (
       updateDto.resolutionNumber &&
       updateDto.resolutionYear &&
-      (existingDecision.resolutionNumber !== updateDto.resolutionNumber ||
+      (existingDecision.resolutionNumber != updateDto.resolutionNumber ||
         existingDecision.resolutionYear !== updateDto.resolutionYear)
     ) {
       await this.validateResolutionNumber(
@@ -173,7 +175,7 @@ export class ApplicationDecisionService {
     existingDecision.chairReviewDate = formatIncomingDate(
       updateDto.chairReviewDate,
     );
-    existingDecision.chairReviewOutcome = updateDto.chairReviewOutcome;
+    existingDecision.chairReviewOutcomeCode = updateDto.chairReviewOutcomeCode;
     existingDecision.modifies = modifies;
     existingDecision.reconsiders = reconsiders;
     existingDecision.resolutionNumber = updateDto.resolutionNumber;
@@ -189,7 +191,7 @@ export class ApplicationDecisionService {
       existingDecision.chairReviewRequired = updateDto.chairReviewRequired;
       if (!updateDto.chairReviewRequired) {
         existingDecision.chairReviewDate = null;
-        existingDecision.chairReviewOutcome = null;
+        existingDecision.chairReviewOutcomeCode = null;
       }
     }
 
@@ -285,7 +287,7 @@ export class ApplicationDecisionService {
       chairReviewDate: createDto.chairReviewDate
         ? new Date(createDto.chairReviewDate)
         : undefined,
-      chairReviewOutcome: createDto.chairReviewOutcome,
+      chairReviewOutcomeCode: createDto.chairReviewOutcomeCode,
       ceoCriterionCode: createDto.ceoCriterionCode,
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,

@@ -1,9 +1,13 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { Application } from '../../application/application.entity';
 import { CardDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
-import { ApplicationReconsideration } from '../../decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
 import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
@@ -11,12 +15,8 @@ import {
   ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
 } from '../../decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsideration } from '../../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationType } from '../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
-import { Application } from '../../application/application.entity';
 
 @Injectable()
 export class ReconsiderationProfile extends AutomapperProfile {
@@ -87,10 +87,6 @@ export class ReconsiderationProfile extends AutomapperProfile {
         forMember(
           (a) => a.card,
           mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
-        ),
-        forMember(
-          (a) => a.isReviewApproved,
-          mapFrom((rd) => rd.isReviewApproved),
         ),
         forMember(
           (a) => a.reconsideredDecisions,

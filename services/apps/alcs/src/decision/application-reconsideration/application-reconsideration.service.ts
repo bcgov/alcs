@@ -23,6 +23,11 @@ import {
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
+export const enum RECONSIDERATION_TYPE {
+  T_33 = '33',
+  T_33_1 = '33.1',
+}
+
 @Injectable()
 export class ApplicationReconsiderationService {
   constructor(
@@ -143,12 +148,15 @@ export class ApplicationReconsiderationService {
       );
     }
 
-    if (updateDto.isReviewApproved !== undefined) {
-      reconsideration.isReviewApproved = updateDto.isReviewApproved;
-    }
+    reconsideration.reviewOutcomeCode === updateDto.reviewOutcomeCode;
 
-    if (reconsideration.type.code === '33.1') {
-      reconsideration.isReviewApproved = null;
+    // TODO remove this after testing
+    // if (updateDto.reviewOutcomeCode !== undefined) {
+    //   reconsideration.reviewOutcomeCode === updateDto.reviewOutcomeCode;
+    // }
+
+    if (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1) {
+      reconsideration.reviewOutcomeCode = null;
       reconsideration.reviewDate = null;
     }
 

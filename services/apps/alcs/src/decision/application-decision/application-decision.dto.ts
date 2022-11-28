@@ -55,9 +55,13 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   isOther?: boolean | null;
 
-  @IsBoolean()
+  // @IsBoolean()
+  // @IsOptional()
+  // chairReviewOutcome?: boolean | null;
+
+  @IsString()
   @IsOptional()
-  chairReviewOutcome?: boolean | null;
+  chairReviewOutcomeCode?: string | null;
 
   @IsUUID()
   @IsOptional()
@@ -101,6 +105,8 @@ export class DecisionOutcomeCodeDto extends BaseCodeDto {
   isFirstDecision: boolean;
 }
 
+export class ChairReviewOutcomeCodeDto extends BaseCodeDto {}
+
 export class ApplicationDecisionDto {
   @AutoMap()
   uuid: string;
@@ -130,7 +136,7 @@ export class ApplicationDecisionDto {
   chairReviewDate?: number | null;
 
   @AutoMap()
-  chairReviewOutcome?: boolean | null;
+  chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
 
   @AutoMap()
   documents: DecisionDocumentDto[];
