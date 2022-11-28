@@ -1,5 +1,5 @@
 <div class="comments">
-  <div class="subheading2 header">Comments ({{comments.length}})</div>
+  <div class="subheading2 header">Comments ({{ comments.length }})</div>
   <mat-form-field *ngIf="!isEditing" class="placeholder-input" appearance="outline" (click)="onEdit()">
     <input matInput placeholder="Add a comment..." />
   </mat-form-field>

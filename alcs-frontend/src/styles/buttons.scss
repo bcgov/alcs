@@ -1,6 +1,7 @@
 @import './colors';
 
-.mat-flat-button, .mat-stroked-button {
+.mat-flat-button,
+.mat-stroked-button {
   font-weight: 700 !important;
 }
 
@@ -8,6 +9,7 @@
   .mat-button-wrapper {
     color: #fff;
     text-transform: uppercase;
+    transition: all 0.1s ease-in-out;
   }
 
   &:not(.mat-button-disabled):hover {
@@ -31,6 +33,7 @@
   .mat-button-wrapper {
     text-transform: uppercase;
     color: #fff;
+    transition: all 0.1s ease-in-out;
   }
 
   &:not(.mat-button-disabled):hover {
@@ -76,7 +79,6 @@
     }
   }
 }
-
 
 .mat-stroked-button.mat-accent {
   &:not(.mat-button-disabled) {
