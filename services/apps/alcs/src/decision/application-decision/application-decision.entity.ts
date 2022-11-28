@@ -17,6 +17,7 @@ import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './decision-document.entity';
 import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
+import { ApplicationDecisionChairReviewOutcomeType } from './decision-outcome-type/application-decision-outcome-type.entity';
 
 @Entity()
 @Unique('resolution', ['resolutionNumber', 'resolutionYear'])
@@ -90,8 +91,14 @@ export class ApplicationDecision extends Base {
   isOther: boolean | null;
 
   @AutoMap()
-  @Column({ type: 'boolean', nullable: true })
-  chairReviewOutcome: boolean | null;
+  @Column({ nullable: true, type: 'text' })
+  chairReviewOutcomeCode: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => ApplicationDecisionChairReviewOutcomeType, {
+    nullable: true,
+  })
+  chairReviewOutcome: ApplicationDecisionChairReviewOutcomeType;
 
   @AutoMap()
   @Column({ type: 'uuid' })
