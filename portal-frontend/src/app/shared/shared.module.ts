@@ -13,12 +13,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DATE_FORMATS } from './utils/date-format';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -33,16 +32,15 @@ import { DATE_FORMATS } from './utils/date-format';
     MatMenuModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
-  ]
+    MatTooltipModule,
+    BrowserAnimationsModule,
+  ],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
-      providers: [
-        { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS }
-      ]
+      providers: [{ provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS }],
     };
   }
 }

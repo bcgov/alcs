@@ -14,7 +14,7 @@ export const connectionSource = new DataSource({
   password: config.get<string>('DATABASE.PASSWORD'),
   database: config.get<string>('DATABASE.NAME'),
   schema: PORTAL_DATABASE_SCHEMA,
-  synchronize: true,
+  synchronize: false,
   name: 'default',
   entities: ['apps/portal/src/**/*.entity.{ts,js}'], // note, this must point to entities folder in src, so cli can discover entities for migration generation
   migrations: [join(__dirname, '**', 'migrations/*{.ts,.js}')],

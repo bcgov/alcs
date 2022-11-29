@@ -1,0 +1,12 @@
+<input type='file' class='file-input' (change)='fileSelected($event)' #fileUpload>
+<div *ngIf='!files.length' class='file-drag-drop' dragDropFile (files)='filesDropped($event)'>
+  <div class='content'>
+    <div class='icon'>
+      <mat-icon inline='true'>cloud_upload</mat-icon>
+    </div>
+    <button (click)='fileUpload.click()' mat-flat-button color='accent'>
+      Choose files to Upload
+    </button>
+    <div class='drag-text'>or drag and drop them here</div>
+  </div>
+</div>

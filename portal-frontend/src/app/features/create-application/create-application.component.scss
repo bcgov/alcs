@@ -1,0 +1,24 @@
+.header {
+  margin: 2em 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 3em;
+}
+
+.full-width-input {
+  margin-top: 0.5em;
+  width: 100%;
+}
+
+.documents {
+  margin-top: 0.5em;
+}
+
+.step-buttons {
+  margin-top: 3em;
+  display: flex;
+  justify-content: space-between;
+}

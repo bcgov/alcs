@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockKeyCloakProviders } from '../../alcs/test/mocks/mockTypes';
+import { mockKeyCloakProviders } from '../test/mocks/mockTypes';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';
 
