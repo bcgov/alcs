@@ -43,7 +43,7 @@ export class ApplicationReconsideration extends Base {
   @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
     nullable: true,
   })
-  reviewOutcome: ApplicationReconsiderationOutcomeType;
+  reviewOutcome: ApplicationReconsiderationOutcomeType | null;
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })

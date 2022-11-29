@@ -3,13 +3,13 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { CommissionerProfile } from '../common/automapper/commissioner.automapper.profile';
-import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { CommissionerController } from './commissioner.controller';
 
 describe('CommissionerController', () => {
@@ -86,7 +86,7 @@ describe('CommissionerController', () => {
   it('should set recon and modification flags if they exist', async () => {
     mockModificationService.getByApplication.mockResolvedValue([
       {
-        isReviewApproved: true,
+        reviewOutcome: { code: 'PRC' },
       } as any,
     ]);
     mockReconsiderationService.getByApplication.mockResolvedValue([{} as any]);
@@ -101,10 +101,12 @@ describe('CommissionerController', () => {
     expect(res.hasModifications).toBeTruthy();
   });
 
-  it('should set modification flag to false if it was not approved', async () => {
+  it('should set modification flag to REF if it was not approved', async () => {
     mockModificationService.getByApplication.mockResolvedValue([
       {
-        isReviewApproved: false,
+        reviewOutcome: {
+          code: 'REF',
+        },
       } as any,
     ]);
     mockReconsiderationService.getByApplication.mockResolvedValue([{} as any]);

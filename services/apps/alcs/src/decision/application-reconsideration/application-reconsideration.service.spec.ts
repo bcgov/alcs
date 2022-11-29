@@ -4,8 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
-import { ApplicationDecision } from '../application-decision/application-decision.entity';
-import { ApplicationDecisionService } from '../application-decision/application-decision.service';
+import {
+  initApplicationMockEntity,
+  initApplicationReconsiderationMockEntity,
+} from '../../../test/mocks/mockEntities';
 import { CreateApplicationServiceDto } from '../../application/application.dto';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
@@ -14,10 +16,8 @@ import { CardService } from '../../card/card.service';
 import { CodeService } from '../../code/code.service';
 import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import {
-  initApplicationMockEntity,
-  initApplicationReconsiderationMockEntity,
-} from '../../../test/mocks/mockEntities';
+import { ApplicationDecision } from '../application-decision/application-decision.entity';
+import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
@@ -59,6 +59,7 @@ describe('ReconsiderationService', () => {
       },
       type: true,
       resultingDecision: true,
+      reviewOutcome: true,
     };
 
   beforeEach(async () => {
@@ -272,7 +273,7 @@ describe('ReconsiderationService', () => {
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledWith({
       ...mockReconsideration,
       reviewDate: null,
-      isReviewApproved: null,
+      reviewOutcomeCode: null,
     } as ApplicationReconsideration);
   });
 
