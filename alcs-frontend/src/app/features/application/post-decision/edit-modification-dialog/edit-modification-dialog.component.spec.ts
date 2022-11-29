@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
+import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { EditModificationDialogComponent } from './edit-modification-dialog.component';
@@ -28,7 +28,9 @@ describe('EditModificationDialogComponent', () => {
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: { existingModification: { submittedDate: 121231, modifiesDecisions: [] } },
+          useValue: {
+            existingModification: { submittedDate: 121231, modifiesDecisions: [], reviewOutcome: { code: 'mock' } },
+          },
         },
         { provide: MatDialogRef, useValue: {} },
       ],
