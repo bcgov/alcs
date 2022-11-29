@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import {
   ApplicationReconsiderationDetailedDto,
+  RECONSIDERATION_TYPE,
   UpdateApplicationReconsiderationDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -48,7 +49,10 @@ export class EditReconsiderationDialogComponent implements OnInit {
     this.form.patchValue({
       submittedDate: new Date(data.existingDecision.submittedDate),
       type: data.existingDecision.type.code,
-      reviewOutcomeCode: data.existingDecision.reviewOutcome?.code,
+      reviewOutcomeCode:
+        data.existingDecision.type.code === RECONSIDERATION_TYPE.T_33
+          ? data.existingDecision.reviewOutcome?.code || 'PEN'
+          : null,
       reviewDate: data.existingDecision.reviewDate ? new Date(data.existingDecision.reviewDate) : null,
       reconsidersDecisions: data.existingDecision.reconsideredDecisions.map((dec) => dec.uuid),
     });
@@ -86,6 +90,18 @@ export class EditReconsiderationDialogComponent implements OnInit {
         uuid: decision.uuid,
         resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
       }));
+    }
+  }
+
+  async onTypeReconsiderationChange(reconsiderationType: string) {
+    if (reconsiderationType === RECONSIDERATION_TYPE.T_33_1) {
+      this.form.patchValue({
+        reviewOutcomeCode: null,
+      });
+    } else {
+      this.form.patchValue({
+        reviewOutcomeCode: 'PEN',
+      });
     }
   }
 }

@@ -5,6 +5,10 @@ import { ApplicationDecisionDto } from '../application-decision/application-deci
 import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application.dto';
 
+export const enum RECONSIDERATION_TYPE {
+  T_33 = '33',
+  T_33_1 = '33.1',
+}
 export interface ReconsiderationTypeDto extends BaseCodeDto {
   backgroundColor: string;
   textColor: string;
