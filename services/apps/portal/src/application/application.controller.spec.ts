@@ -46,12 +46,14 @@ describe('ApplicationController', () => {
 
     controller = module.get<ApplicationController>(ApplicationController);
 
-    mockAppService.create.mockResolvedValue(
+    mockAppService.update.mockResolvedValue(
       new Application({
         applicant: applicant,
         localGovernmentUuid: localGovernment,
       }),
     );
+
+    mockAppService.create.mockResolvedValue('2');
 
     mockDocumentService.attachDocument.mockResolvedValue(
       new ApplicationDocument(),
@@ -62,19 +64,22 @@ describe('ApplicationController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call out to service for creation and map the resulting entity', async () => {
-    const app = await controller.create({
-      isMultipart: () => true,
-      file: () => ({
-        fields: {
-          localGovernment,
-          applicant,
+  it('should call out to service for update and map the resulting entity', async () => {
+    const app = await controller.update(
+      {
+        isMultipart: () => true,
+        file: () => ({
+          fields: {
+            localGovernment,
+            applicant,
+          },
+        }),
+        user: {
+          entity: new User(),
         },
-      }),
-      user: {
-        entity: new User(),
       },
-    });
+      'file-id',
+    );
 
     expect(app).toBeDefined();
     expect(app!.applicant).toEqual(applicant);

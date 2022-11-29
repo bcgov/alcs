@@ -4,15 +4,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ApplicationService } from '../../services/application/application.service';
 import { CodeService } from '../../services/code/code.service';
 
-import { CreateApplicationComponent } from './create-application.component';
+import { EditApplicationComponent } from './edit-application.component';
 
 describe('CreateApplicationComponent', () => {
-  let component: CreateApplicationComponent;
-  let fixture: ComponentFixture<CreateApplicationComponent>;
+  let component: EditApplicationComponent;
+  let fixture: ComponentFixture<EditApplicationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateApplicationComponent],
+      declarations: [EditApplicationComponent],
       providers: [
         {
           provide: ApplicationService,
@@ -26,7 +26,7 @@ describe('CreateApplicationComponent', () => {
       imports: [RouterTestingModule, MatAutocompleteModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateApplicationComponent);
+    fixture = TestBed.createComponent(EditApplicationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

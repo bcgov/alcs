@@ -3,7 +3,7 @@
 header {
   display: flex;
   align-content: center;
-  margin: 18px 80px;
+  margin: 1.8rem 8rem;
   justify-content: space-between;
 
   div {
@@ -14,12 +14,12 @@ header {
 .title {
   color: $primary-color;
   align-items: center;
-  margin-left: 16px;
+  margin-left: 1.6rem;
 }
 
 .controls {
   button:not(:last-child) {
-    margin-right: 2em !important;
-    height: 43px;
+    margin-right: 3.2rem !important;
+    height: 4.3rem;
   }
 }

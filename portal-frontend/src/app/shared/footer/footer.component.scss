@@ -3,7 +3,7 @@
 
 footer {
   @extend .body-text;
-  padding: 16px 80px;
+  padding: 1.6rem 8rem;
   display: flex;
   background-color: $accent-color;
   color: $white;
@@ -16,9 +16,9 @@ footer {
 .links {
   display: flex;
   flex-grow: 1;
-  margin-left: 64px;
+  margin-left: 6.4rem;
 
   a {
-    margin-right: 24px !important;
+    margin-right: 2.4rem !important;
   }
 }

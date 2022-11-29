@@ -1,6 +1,8 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,8 +16,9 @@ import { DragDropDirective } from './shared/file-drag-drop/drag-drop.directive';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
-import { CreateApplicationComponent } from './features/create-application/create-application.component';
+import { EditApplicationComponent } from './features/edit-application/edit-application.component';
 import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.component';
+import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 
 @NgModule({
   declarations: [
@@ -25,11 +28,21 @@ import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.co
     LoginComponent,
     HomeComponent,
     AuthorizationComponent,
-    CreateApplicationComponent,
+    EditApplicationComponent,
     FileDragDropComponent,
     DragDropDirective,
+    ApplicationListComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, SharedModule, MatStepperModule, MatAutocompleteModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    SharedModule,
+    MatStepperModule,
+    MatAutocompleteModule,
+    MatSortModule,
+    MatPaginatorModule,
+    SharedModule,
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     {
