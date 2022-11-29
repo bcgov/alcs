@@ -66,8 +66,8 @@ export class reconsiderationAndDecisionCodes1669420668991
     await queryRunner.query(`
     UPDATE "alcs"."application_decision"
     SET "chair_review_outcome_code" = CASE WHEN "chair_review_outcome" is NULL THEN NULL
-                                           WHEN "chair_review_outcome" is TRUE THEN 'STAY'
-                                           ELSE 'REC'
+                                           WHEN "chair_review_outcome" is TRUE THEN 'REC'
+                                           ELSE 'STAY'
                                       END;
     `);
 
