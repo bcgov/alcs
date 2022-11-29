@@ -28,10 +28,6 @@ export class ApplicationModification extends Base {
   @Column({ type: 'timestamptz' })
   submittedDate: Date;
 
-  // @AutoMap()
-  // @Column({ type: 'boolean', nullable: true })
-  // isReviewApproved: boolean | null;
-
   @AutoMap()
   @Column({ type: 'text', default: 'PEN' })
   reviewOutcomeCode: string;

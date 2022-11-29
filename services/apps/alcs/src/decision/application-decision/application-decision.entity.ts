@@ -59,7 +59,7 @@ export class ApplicationDecision extends Base {
   application: Application;
 
   @AutoMap()
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int4' })
   resolutionNumber: number;
 
   @AutoMap()

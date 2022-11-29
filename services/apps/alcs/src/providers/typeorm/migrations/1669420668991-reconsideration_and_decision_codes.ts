@@ -86,10 +86,6 @@ export class reconsiderationAndDecisionCodes1669420668991
         ALTER TABLE "alcs"."application_reconsideration" DROP COLUMN is_review_approved;
         ALTER TABLE "alcs"."application_modification" DROP COLUMN is_review_approved;
     `);
-
-    // await queryRunner.query(`
-    //     ALTER TABLE "alcs"."application_reconsideration" ALTER COLUMN review_outcome_code DROP DEFAULT;
-    // `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -140,7 +140,7 @@ export class DecisionDialogComponent implements OnInit {
 
     const data: CreateApplicationDecisionDto = {
       date: date!.getTime(),
-      resolutionNumber: Number(resolutionNumber!),
+      resolutionNumber: resolutionNumber!,
       resolutionYear: resolutionYear!,
       chairReviewRequired: chairReviewRequired === 'true',
       auditDate: auditDate ? formatDateForApi(auditDate) : auditDate,

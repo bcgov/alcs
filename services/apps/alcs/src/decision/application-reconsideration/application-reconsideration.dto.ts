@@ -72,10 +72,6 @@ export class ApplicationReconsiderationUpdateDto {
   @IsOptional()
   reviewDate?: number | null;
 
-  // @IsBoolean()
-  // @IsOptional()
-  // isReviewApproved?: boolean | null;
-
   @IsString()
   @IsOptional()
   reviewOutcomeCode?: string;

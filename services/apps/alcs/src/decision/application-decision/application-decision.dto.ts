@@ -55,10 +55,6 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   isOther?: boolean | null;
 
-  // @IsBoolean()
-  // @IsOptional()
-  // chairReviewOutcome?: boolean | null;
-
   @IsString()
   @IsOptional()
   chairReviewOutcomeCode?: string | null;
@@ -121,7 +117,7 @@ export class ApplicationDecisionDto {
   outcome: DecisionOutcomeCodeDto;
 
   @AutoMap()
-  resolutionNumber: number;
+  resolutionNumber: string;
 
   @AutoMap()
   resolutionYear: number;
