@@ -160,7 +160,7 @@ export class ApplicationDecisionService {
     if (
       updateDto.resolutionNumber &&
       updateDto.resolutionYear &&
-      (existingDecision.resolutionNumber != updateDto.resolutionNumber ||
+      (existingDecision.resolutionNumber !== updateDto.resolutionNumber ||
         existingDecision.resolutionYear !== updateDto.resolutionYear)
     ) {
       await this.validateResolutionNumber(
