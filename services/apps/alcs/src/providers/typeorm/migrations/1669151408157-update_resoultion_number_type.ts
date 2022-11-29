@@ -32,7 +32,7 @@ export class updateResoultionNumberType1669151408157
     );
     await queryRunner.query(
       `
-      ALTER TABLE "application_decision" ALTER COLUMN "resolution_number" TYPE bigint;
+      ALTER TABLE "application_decision" ALTER COLUMN "resolution_number" TYPE in4;
       `,
     );
     await queryRunner.query(
