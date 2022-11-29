@@ -17,6 +17,8 @@ import { ApplicationDecisionDto } from '../application-decision/application-deci
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
+export class ApplicationReconsiderationOutcomeCodeDto extends BaseCodeDto {}
+
 export class ApplicationReconsiderationCreateDto {
   @IsString()
   applicationTypeCode: string;
@@ -101,7 +103,7 @@ export class ApplicationReconsiderationDto {
   type: ReconsiderationTypeDto;
   submittedDate: number;
   reviewDate: number;
-  reviewOutComeCode: string | null;
+  reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision?: ApplicationDecisionDto;
 }
@@ -113,5 +115,5 @@ export class ApplicationReconsiderationWithoutApplicationDto {
   type: ReconsiderationTypeDto;
   submittedDate: number;
   reviewDate: number;
-  isReviewApproved: boolean | null;
+  reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
 }

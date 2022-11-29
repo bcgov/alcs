@@ -21,6 +21,7 @@ import { ApplicationDecisionChairReviewOutcomeType } from './application-decisio
 import { ApplicationModificationController } from './application-modification/application-modification.controller';
 import { ApplicationModification } from './application-modification/application-modification.entity';
 import { ApplicationModificationService } from './application-modification/application-modification.service';
+import { ApplicationModificationOutcomeType } from './application-modification/modification-outcome-type/application-modification-outcome-type.entity';
 import { ApplicationReconsiderationController } from './application-reconsideration/application-reconsideration.controller';
 import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from './application-reconsideration/application-reconsideration.service';
@@ -41,6 +42,7 @@ import { ApplicationReconsiderationType } from './application-reconsideration/re
       ApplicationDecisionMeeting,
       ApplicationDecisionChairReviewOutcomeType,
       ApplicationReconsiderationOutcomeType,
+      ApplicationModificationOutcomeType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,

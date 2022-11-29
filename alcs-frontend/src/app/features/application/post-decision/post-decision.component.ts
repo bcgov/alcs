@@ -153,9 +153,9 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }
 
-  async onSaveReconsiderationReviewOutcome(reconsiderationUuid: string, isReviewApproved: boolean) {
+  async onSaveReconsiderationReviewOutcome(reconsiderationUuid: string, reviewOutcomeCode: string) {
     await this.applicationReconsiderationService.update(reconsiderationUuid, {
-      isReviewApproved,
+      reviewOutcomeCode,
     });
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }
@@ -167,19 +167,11 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
     await this.modificationService.fetchByApplication(this.fileNumber);
   }
 
-  async onSaveModificationOutcome(uuid: string, isReviewApproved: boolean) {
+  async onSaveModificationOutcome(uuid: string, reviewOutcomeCode: string) {
     await this.modificationService.update(uuid, {
-      isReviewApproved,
+      reviewOutcomeCode,
     });
     await this.modificationService.fetchByApplication(this.fileNumber);
-  }
-
-  getReviewOutcomeLabel(reviewOutcome: boolean) {
-    return reviewOutcome ? 'Proceed' : 'Refused';
-  }
-
-  isReviewOutcomeSet(reviewOutcome?: boolean | null) {
-    return typeof reviewOutcome === 'boolean';
   }
 
   ngOnDestroy(): void {

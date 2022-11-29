@@ -37,7 +37,7 @@ export class ApplicationReconsideration extends Base {
 
   @AutoMap()
   @Column({ nullable: true, type: 'text' })
-  reviewOutcomeCode: string | null;
+  reviewOutcomeCode?: string | null;
 
   @AutoMap()
   @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
@@ -66,10 +66,6 @@ export class ApplicationReconsideration extends Base {
   @AutoMap()
   @Column({ type: 'uuid' })
   cardUuid: string;
-
-  @AutoMap()
-  @Column()
-  reconsidersDecisionsCode: string;
 
   @ManyToMany(() => ApplicationDecision, (decision) => decision.reconsideredBy)
   @JoinTable({

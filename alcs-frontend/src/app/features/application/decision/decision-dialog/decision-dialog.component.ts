@@ -242,7 +242,7 @@ export class DecisionDialogComponent implements OnInit {
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.isReviewApproved !== false && modification.resultingDecision === null)
+          (modification.reviewOutcome.code !== 'REF' && modification.resultingDecision === null)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -256,7 +256,7 @@ export class DecisionDialogComponent implements OnInit {
       .filter(
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-          (reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null)
+          (reconsideration.reviewOutcome?.code !== 'REF' && reconsideration.resultingDecision === null)
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions

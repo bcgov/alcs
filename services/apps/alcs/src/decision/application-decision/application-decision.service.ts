@@ -72,6 +72,7 @@ export class ApplicationDecisionService {
       relations: {
         modifiedBy: {
           resultingDecision: true,
+          reviewOutcome: true,
         },
       },
     });
@@ -84,6 +85,7 @@ export class ApplicationDecisionService {
       relations: {
         reconsideredBy: {
           resultingDecision: true,
+          reviewOutcome: true,
         },
       },
     });

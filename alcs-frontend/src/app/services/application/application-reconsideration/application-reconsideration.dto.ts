@@ -10,6 +10,8 @@ export interface ReconsiderationTypeDto extends BaseCodeDto {
   textColor: string;
 }
 
+export interface ReconsiderationReviewOutcomeTypeDto extends BaseCodeDto {}
+
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
@@ -33,7 +35,7 @@ export interface ApplicationReconsiderationDto {
   submittedDate: number;
   board: BoardSmallDto;
   reviewDate?: number;
-  isReviewApproved?: boolean | null;
+  reviewOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
 }
@@ -56,6 +58,6 @@ export interface UpdateApplicationReconsiderationDto {
   submittedDate?: number;
   typeCode?: string | undefined;
   reviewDate?: number | null;
-  isReviewApproved?: boolean | null;
+  reviewOutcomeCode?: string | null;
   reconsideredDecisionUuids?: string[];
 }

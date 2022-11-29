@@ -12,10 +12,12 @@ import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
+  ApplicationReconsiderationOutcomeCodeDto,
   ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
 } from '../../decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsideration } from '../../decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationOutcomeType } from '../../decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 
 @Injectable()
@@ -108,6 +110,22 @@ export class ReconsiderationProfile extends AutomapperProfile {
             ),
           ),
         ),
+        forMember(
+          (a) => a.reviewOutcome,
+          mapFrom((rd) =>
+            this.mapper.map(
+              rd.reviewOutcome,
+              ApplicationReconsiderationOutcomeType,
+              ApplicationReconsiderationOutcomeCodeDto,
+            ),
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationReconsiderationOutcomeType,
+        ApplicationReconsiderationOutcomeCodeDto,
       );
 
       createMap(
