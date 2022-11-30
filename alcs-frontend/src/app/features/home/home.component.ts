@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   hasCommissioner = false;
   hasOtherRole = false;
   hasApplicationSpecialist = false;
-  name = '';
   userProfile: UserDto | undefined;
 
   constructor(private authService: AuthenticationService, private userService: UserService) {}
