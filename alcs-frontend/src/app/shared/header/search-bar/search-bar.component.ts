@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -19,14 +20,16 @@ export class SearchBarComponent {
   ) {}
 
   async onSearch() {
-    const app = await this.applicationService.fetchApplication(this.searchText);
-    if (app) {
+    try {
+      const app = await this.applicationService.fetchApplication(this.searchText);
       await this.router.navigate(['application', app.fileNumber]);
       this.searchText = '';
-    } else {
-      this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
-      const inputElem = <HTMLInputElement>this.input.nativeElement;
-      inputElem.select();
+    } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 404) {
+        this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
+        const inputElem = <HTMLInputElement>this.input.nativeElement;
+        inputElem.select();
+      }
     }
   }
 }
