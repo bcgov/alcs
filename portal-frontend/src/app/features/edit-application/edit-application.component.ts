@@ -86,7 +86,7 @@ export class EditApplicationComponent implements OnInit {
 
       await this.applicationService.updatePending(this.fileId, {
         applicant: this.applicantName.getRawValue(),
-        localGovernmentUuid: localGovernment ? localGovernment.uuid : undefined,
+        localGovernmentUuid: localGovernment?.uuid,
       });
     }
     await this.router.navigateByUrl('/home');

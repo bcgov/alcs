@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationDocument } from './application-document/application-document.entity';
@@ -64,7 +65,9 @@ export class ApplicationController {
     );
 
     if (!existingApplication) {
-      throw new Error('Failed to find application with given File ID and User');
+      throw new ServiceNotFoundException(
+        'Failed to find application with given File ID and User',
+      );
     }
 
     const application = await this.applicationService.update(fileId, {
@@ -84,7 +87,9 @@ export class ApplicationController {
     );
 
     if (!existingApplication) {
-      throw new Error('Failed to find application with given File ID and User');
+      throw new ServiceNotFoundException(
+        'Failed to find application with given File ID and User',
+      );
     }
 
     if (!req.isMultipart()) {
