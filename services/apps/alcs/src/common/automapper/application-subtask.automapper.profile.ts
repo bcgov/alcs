@@ -23,9 +23,7 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
         CardSubtaskDto,
         forMember(
           (a) => a.completedAt,
-          mapFrom((ad) =>
-            ad.completedAt ? ad.completedAt.getTime() : undefined,
-          ),
+          mapFrom((ad) => ad.completedAt?.getTime()),
         ),
         forMember(
           (a) => a.createdAt,
@@ -47,9 +45,7 @@ export class ApplicationSubtaskProfile extends AutomapperProfile {
         HomepageSubtaskDTO,
         forMember(
           (a) => a.completedAt,
-          mapFrom((ad) =>
-            ad.completedAt ? ad.completedAt.getTime() : undefined,
-          ),
+          mapFrom((ad) => ad.completedAt?.getTime()),
         ),
         forMember(
           (a) => a.createdAt,

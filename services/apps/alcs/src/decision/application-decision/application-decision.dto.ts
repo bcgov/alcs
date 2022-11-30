@@ -143,10 +143,10 @@ export class ApplicationDecisionDto {
   @AutoMap()
   ceoCriterion?: CeoCriterionCodeDto | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   isTimeExtension?: boolean | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   isOther?: boolean | null;
 
   reconsiders?: LinkedResolutionDto;

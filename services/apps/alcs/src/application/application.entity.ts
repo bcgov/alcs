@@ -41,7 +41,7 @@ export class Application extends Base {
   @Column()
   applicant: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   summary: string | null;
 

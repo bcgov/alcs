@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
