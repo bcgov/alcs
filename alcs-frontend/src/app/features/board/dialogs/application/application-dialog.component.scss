@@ -1,9 +1,7 @@
 @import '../../../../../styles/colors';
 
 .close {
-  color: $grey;
-  margin-top: -12px;
-  margin-right: -12px;
+  margin: -16px 0 8px;
   display: flex;
   justify-content: right;
 }
