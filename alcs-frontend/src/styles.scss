@@ -164,6 +164,8 @@ body {
 
 .mat-dialog-override {
   mat-dialog-container {
+    padding: 32px;
+
     > :first-child {
       display: flex;
       flex-direction: column;

@@ -28,6 +28,7 @@
 
 .search-button {
   flex-shrink: 0;
+  font-weight: 700 !important;
 }
 
 .search-input {
@@ -38,7 +39,7 @@
 
 .main-panel-header {
   box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
-  border: 1px solid #ffffff;
+  border: 1px solid $white;
   border-radius: 5px;
 
   &:hover {
@@ -126,7 +127,7 @@ mat-panel-description {
 
     .meeting-header-previous.mat-expansion-panel-header:hover {
       border: 2px solid $secondary-color-dark;
-      background-color: #fff;
+      background-color: $white;
 
       mat-panel-title {
         color: $secondary-color-dark;
@@ -142,8 +143,12 @@ mat-panel-description {
       }
 
       mat-panel-title {
-        color: #fff;
+        color: $white;
       }
+    }
+
+    .application-panel:hover {
+      border-color: $secondary-color;
     }
   }
 
@@ -152,7 +157,7 @@ mat-panel-description {
 
     .meeting-header-next.mat-expansion-panel-header:hover {
       border: 2px solid $primary-color;
-      background-color: #fff;
+      background-color: $white;
 
       mat-panel-title {
         color: $primary-color;
@@ -168,8 +173,12 @@ mat-panel-description {
       }
 
       mat-panel-title {
-        color: #fff;
+        color: $white;
       }
+    }
+
+    .application-panel:hover {
+      border-color: $primary-color;
     }
   }
 
@@ -178,7 +187,7 @@ mat-panel-description {
 
     .meeting-header-upcoming.mat-expansion-panel-header:hover {
       border: 2px solid $accent-color;
-      background-color: #fff;
+      background-color: $white;
 
       mat-panel-title {
         color: $accent-color;
@@ -186,7 +195,7 @@ mat-panel-description {
     }
 
     .meeting-header-upcoming.mat-expansion-panel-header.mat-expanded {
-      background-color: $accent-color;
+      background-color: $accent-color-dark;
 
       &:hover {
         background-color: $accent-color;
@@ -194,8 +203,12 @@ mat-panel-description {
       }
 
       mat-panel-title {
-        color: #fff;
+        color: $white;
       }
+    }
+
+    .application-panel:hover {
+      border-color: $accent-color;
     }
   }
 }
@@ -204,7 +217,7 @@ mat-panel-description {
   margin-top: 16px;
 
   & > mat-expansion-panel-header {
-    background: #ffffff;
+    background: $white;
     box-shadow: 0px 4px 8px 1px rgba(0, 36, 71, 0.15);
   }
 
@@ -231,12 +244,18 @@ mat-panel-description {
 
 .application-panel {
   margin-bottom: 16px;
-  padding: 16px;
-  background-color: #fff;
+  padding: 8px 16px;
+  background-color: $white;
   border-radius: 4px;
   width: 100%;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  border: solid 2px transparent;
+
+  &:last-of-type {
+    margin-bottom: unset;
+  }
 
   &.application-highlighted {
     border: 5px solid rgba($primary-color, 0.5);

@@ -53,18 +53,19 @@
     <div class="left">
       <app-application-time-tracker [application]="application"></app-application-time-tracker>
     </div>
-    <div style="margin-right: -16px" class="right">
+    <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
         <mat-icon>move_down</mat-icon>
       </button>
       <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
         <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
           <span class="favourite-board-icon-container"
-          ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
           </span>
           <span>{{ board.title }}</span>
-          <span *ngIf="application.card!.board.code === board.code"><mat-icon
-            class="selected-board-icon">check</mat-icon></span>
+          <span *ngIf="application.card!.board.code === board.code"
+            ><mat-icon class="selected-board-icon">check</mat-icon></span
+          >
         </button>
       </mat-menu>
       <button
