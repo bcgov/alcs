@@ -37,7 +37,8 @@
         }"
       >
         <div class="main-panel-date center" *ngIf="boardMeeting.nextMeeting?.meetingDate">
-          <mat-icon>event</mat-icon> {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}
+          <mat-icon>event</mat-icon>
+          {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}
         </div>
         <span class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</span>
       </mat-panel-description>
@@ -117,14 +118,20 @@
 </div>
 
 <ng-template #applicationPanel let-application>
-  <mat-card (click)="openApplication(application.fileNumber)" class="application-panel">
+  <mat-card
+    (click)="openApplication(application.fileNumber)"
+    class="application-card"
+    [ngClass]="{
+      'application-highlighted': application.isHighlighted
+    }"
+  >
     <div class="split">
       <div
         class="ellipsis"
-        [id]="'title_' + application.fileNumber"
+        [id]="application.fileNumber"
         matTooltipClass="no-wrap-tooltip"
         [matTooltip]="application.fileNumber + ' (' + application.applicant + ')'"
-        [matTooltipDisabled]="!isEllipsisActive('title_' + application.fileNumber)"
+        [matTooltipDisabled]="!isEllipsisActive(application.fileNumber)"
       >
         {{ application.fileNumber }} ({{ application.applicant }})
       </div>

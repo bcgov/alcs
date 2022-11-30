@@ -12,7 +12,7 @@ import { UserService } from '../../services/user/user.service';
 
 type MeetingWithApplications = {
   meetingDate: number;
-  applications: (UpcomingMeetingDto & { isExpanded: boolean; isHighlighted: boolean })[];
+  applications: (UpcomingMeetingDto & { isHighlighted: boolean })[];
   isExpanded: boolean;
 };
 
@@ -133,7 +133,6 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     if (meeting) {
       meeting.applications.push({
         ...app,
-        isExpanded: false,
         isHighlighted: false,
       });
     } else {
@@ -142,7 +141,6 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
         applications: [
           {
             ...app,
-            isExpanded: false,
             isHighlighted: false,
           },
         ],
@@ -191,12 +189,10 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   private findAndExpand(meeting: MeetingWithApplications, board: BoardWithDecisionMeetings) {
     meeting.isExpanded = false;
     meeting.applications = meeting.applications.map((application) => {
-      application.isExpanded = false;
       application.isHighlighted = false;
       if (application.fileNumber === this.searchText) {
         meeting.isExpanded = true;
         board.isExpanded = true;
-        application.isExpanded = true;
         application.isHighlighted = true;
         this.scrollToApplication(application.fileNumber);
       }

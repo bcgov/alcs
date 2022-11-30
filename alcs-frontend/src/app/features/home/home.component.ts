@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 import { UserDto } from '../../services/user/user.dto';
@@ -18,9 +19,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   hasApplicationSpecialist = false;
   userProfile: UserDto | undefined;
 
-  constructor(private authService: AuthenticationService, private userService: UserService) {}
+  constructor(
+    private authService: AuthenticationService,
+    private userService: UserService,
+    private titleService: Title
+  ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle(`${environment.siteName} | Home`);
     this.currentUser = this.authService.getCurrentUser()!;
     this.userService.$userProfile.pipe(takeUntil(this.destroy)).subscribe((user) => {
       this.userProfile = user;
