@@ -55,6 +55,15 @@ export class UserProfile extends AutomapperProfile {
           (ud) => ud.bceidUserName,
           mapFrom((u) => u.bceidUserName),
         ),
+        forMember(
+          (ud) => ud.prettyName,
+          mapFrom((u) => {
+            if (u.givenName && u.familyName) {
+              return `${u.givenName} ${u.familyName}`;
+            }
+            return u.name;
+          }),
+        ),
       );
 
       createMap(

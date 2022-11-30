@@ -1,6 +1,6 @@
 <div class="layout">
   <div class="welcome-title">
-    <h1>Welcome {{ currentUser.name }} to ALCS</h1>
+    <h1>Welcome {{ userProfile?.prettyName }} to ALCS</h1>
   </div>
   <div *ngIf="hasOtherRole">
     <app-assigned></app-assigned>
