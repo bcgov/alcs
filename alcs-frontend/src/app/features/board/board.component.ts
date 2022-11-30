@@ -1,8 +1,10 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
@@ -76,7 +78,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
-    private covenantService: CovenantService
+    private covenantService: CovenantService,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
@@ -187,6 +190,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private setupBoard(board: BoardWithFavourite) {
+    this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
+
     this.loadCards(board.code);
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;

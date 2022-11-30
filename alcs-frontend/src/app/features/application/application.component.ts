@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, TitleStrategy } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
@@ -78,7 +80,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     private applicationDetailService: ApplicationDetailService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -90,6 +93,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
     this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       if (application) {
+        this.titleService.setTitle(`${environment.siteName} | ${application.fileNumber} (${application.applicant})`);
+
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);

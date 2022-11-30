@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { CommissionerService } from '../../services/commissioner/commissioner.service';
 
@@ -15,13 +17,20 @@ export class CommissionerComponent implements OnInit, OnDestroy {
   application: CommissionerApplicationDto | undefined;
   fileNumber: string | undefined;
 
-  constructor(private commissionerService: CommissionerService, private route: ActivatedRoute) {}
+  constructor(
+    private commissionerService: CommissionerService,
+    private route: ActivatedRoute,
+    private titleService: Title
+  ) {}
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy)).subscribe(async (routeParams) => {
       const { fileNumber } = routeParams;
       this.fileNumber = fileNumber;
       this.application = await this.commissionerService.fetchApplication(fileNumber);
+      this.titleService.setTitle(
+        `${environment.siteName} | ${this.application.fileNumber} (${this.application.applicant})`
+      );
     });
   }
 
