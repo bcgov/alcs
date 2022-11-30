@@ -47,7 +47,7 @@
       </div>
       <div class="center"></div>
       <div class="dates">
-        <span class="body-small">{{ subtask.createdAt | momentFormat }}</span>
+        <span class="body-small" matTooltip="Created Date">{{ subtask.createdAt | momentFormat }}</span>
         <div *ngIf="subtask.completedAt" class="body-xsmall subtext">
           Completed {{ subtask.completedAt | momentFormat }}
         </div>
