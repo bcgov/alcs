@@ -16,6 +16,15 @@ body {
   scroll-behavior: smooth;
   overflow: hidden;
   margin: 0;
+
+}
+
+html {
+  font-size: 62.5% //Set here to 10px, so that 1rem = 10px
+}
+
+body {
+  font-size: 1.6rem;
 }
 
 * {

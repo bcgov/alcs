@@ -1,0 +1,26 @@
+@import "../../../../styles/colors";
+
+table {
+  width: 100%;
+}
+
+.label {
+  display: inline-block;
+  padding: 0.4rem 2rem;
+  border-radius: 1.6rem;
+}
+
+.in-progress {
+  background-color: $accent-color-light;
+  color: $accent-color-dark;
+}
+
+.submitted {
+  background-color: $primary-color-light;
+  color: $primary-color-dark;
+}
+
+.cancelled {
+  background-color: $secondary-color-light;
+  color: $secondary-color-dark;
+}

@@ -1,13 +1,21 @@
 <div>
-  <div class='header-row'>
-    <h3>ALCS Portal</h3>
+  <div class="header-row">
+    <h3>Application Inbox</h3>
     <div>
-      <a routerLink='/create'>
-        <button color='accent' mat-flat-button>
-          Create Application
-        </button>
-      </a>
+      <button (click)="onCreateApplication()" color="accent" mat-flat-button>Create Application</button>
     </div>
   </div>
-  <p>Welcome to the ALCS Portal {{ name }}</p>
+  <div>
+    <div class="warning-banner">
+      <div class="icon">
+        <mat-icon>info</mat-icon>
+      </div>
+      Create an Application if you are proposing to exclude, include, subdivide, conduct a non-farm use activity,
+      conduct a non-adhering residential use, conduct a transportation/utility/recreational trail use, or conduct a soil
+      or fill use. Non-adhering residential use applications have a fee of $750. All other applications have a fee of
+      $1,500 fee, except for inclusion of land (no fee). Application fees are split equally between the local government
+      and the ALC.
+    </div>
+    <app-application-list></app-application-list>
+  </div>
 </div>

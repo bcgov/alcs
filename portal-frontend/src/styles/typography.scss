@@ -20,47 +20,47 @@ $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
 
 //TODO: Change these to use relative sizes are part of WCAG
 h1 {
-  @include typography-style(38px, 700);
+  @include typography-style(3.8rem, 700);
 }
 
 h2 {
-  @include typography-style(32px, 700);
+  @include typography-style(3.2rem, 700);
 }
 
 h3 {
-  @include typography-style(28px, 700);
+  @include typography-style(2.8rem, 700);
 }
 
 h4 {
-  @include typography-style(24px, 700);
+  @include typography-style(2.4rem, 700);
 }
 
 h5 {
-  @include typography-style(20px, 700);
+  @include typography-style(2rem, 700);
 }
 
 h6 {
-  @include typography-style(18px, 700);
+  @include typography-style(1.8rem, 700);
 }
 
 a,
 p,
 .body-text {
-  @include typography-style(16px, 400);
-  line-height: 24px;
+  @include typography-style(1.6rem, 400);
+  line-height: 2.4rem;
 }
 
 .nav-text {
-  @include typography-style(18px, 400);
+  @include typography-style(1.8rem, 400);
 }
 
 .button-text {
-  @include typography-style(14px, 400);
+  @include typography-style(1.4rem, 400);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.01rem;
 }
 
 button {
   @extend .button-text;
-  padding: 8px 16px;
+  padding: 0.8rem 1.6rem;
 }

@@ -3,6 +3,8 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
+import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
+import { ApplicationStatus } from '../../application/application-status/application-status.entity';
 import { ApplicationDto } from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
 
@@ -45,6 +47,8 @@ export class ApplicationProfile extends AutomapperProfile {
           }),
         ),
       );
+
+      createMap(mapper, ApplicationStatus, ApplicationStatusDto);
     };
   }
 }
