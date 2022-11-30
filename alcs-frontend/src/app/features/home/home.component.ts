@@ -1,28 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
+import { UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
   currentUser!: ICurrentUser;
   hasGIS = false;
   hasCommissioner = false;
   hasOtherRole = false;
   hasApplicationSpecialist = false;
   name = '';
+  userProfile: UserDto | undefined;
 
-  constructor(private authService: AuthenticationService) {}
+  constructor(private authService: AuthenticationService, private userService: UserService) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser()!;
-
-    this.name =
-      this.currentUser.given_name && this.currentUser.family_name
-        ? `${this.currentUser.given_name} ${this.currentUser.family_name}`
-        : this.currentUser.name;
+    this.userService.$userProfile.pipe(takeUntil(this.destroy)).subscribe((user) => {
+      this.userProfile = user;
+    });
 
     this.authService.$currentUser.subscribe((currentUser) => {
       if (currentUser) {
@@ -39,5 +42,10 @@ export class HomeComponent implements OnInit {
           !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.APP_SPECIALIST);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 }
