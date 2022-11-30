@@ -53,13 +53,13 @@
       <div>
         <ng-container *ngIf="reconsideration.type.code === '33'">
           <div class="subheading2">Review Outcome</div>
-          <span *ngIf="!isReviewOutcomeSet(reconsideration.isReviewApproved)">
+          <span *ngIf="!reconsideration.reviewOutcome || reconsideration.reviewOutcome?.code === 'PEN'">
             <app-inline-review-outcome
               (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
             ></app-inline-review-outcome>
           </span>
-          <span *ngIf="isReviewOutcomeSet(reconsideration.isReviewApproved)">{{
-            getReviewOutcomeLabel(reconsideration.isReviewApproved!)
+          <span *ngIf="reconsideration.reviewOutcome && reconsideration.reviewOutcome?.code !== 'PEN'">{{
+            reconsideration.reviewOutcome.label
           }}</span>
         </ng-container>
       </div>
@@ -126,14 +126,12 @@
       </div>
       <div>
         <div class="subheading2">Review Outcome</div>
-        <span *ngIf="!isReviewOutcomeSet(modification.isReviewApproved)">
+        <span *ngIf="modification.reviewOutcome.code === 'PEN'">
           <app-inline-review-outcome
             (save)="onSaveModificationOutcome(modification.uuid, $event)"
           ></app-inline-review-outcome>
         </span>
-        <span *ngIf="isReviewOutcomeSet(modification.isReviewApproved)">{{
-          getReviewOutcomeLabel(modification.isReviewApproved!)
-        }}</span>
+        <span *ngIf="modification.reviewOutcome.code !== 'PEN'">{{ modification.reviewOutcome?.label }}</span>
       </div>
       <div></div>
       <div>

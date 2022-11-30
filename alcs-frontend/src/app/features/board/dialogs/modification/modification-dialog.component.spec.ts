@@ -1,31 +1,20 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
-import {
-  ApplicationRegionDto,
-  ApplicationTypeDto,
-  CardStatusDto,
-} from '../../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
-import {
-  ApplicationReconsiderationDto,
-  ReconsiderationTypeDto,
-} from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { BoardDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
@@ -41,7 +30,7 @@ describe('ModificationDialogComponent', () => {
   const mockModificationDto: ApplicationModificationDto = {
     uuid: '',
     modifiesDecisions: [],
-    isReviewApproved: false,
+    reviewOutcome: { label: 'mock', code: 'MOCK', description: 'mock' },
     isTimeExtension: true,
     reviewDate: 111111,
     submittedDate: 111111,

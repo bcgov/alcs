@@ -9,10 +9,11 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { ApplicationDecision } from '../application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 import { Card } from '../../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
+import { ApplicationDecision } from '../application-decision/application-decision.entity';
+import { ApplicationModificationOutcomeType } from './modification-outcome-type/application-modification-outcome-type.entity';
 
 @Entity()
 export class ApplicationModification extends Base {
@@ -28,8 +29,14 @@ export class ApplicationModification extends Base {
   submittedDate: Date;
 
   @AutoMap()
-  @Column({ type: 'boolean', nullable: true })
-  isReviewApproved: boolean | null;
+  @Column({ type: 'text', default: 'PEN' })
+  reviewOutcomeCode: string;
+
+  @AutoMap()
+  @ManyToOne(() => ApplicationModificationOutcomeType, {
+    nullable: false,
+  })
+  reviewOutcome: ApplicationModificationOutcomeType;
 
   @AutoMap()
   @Column()

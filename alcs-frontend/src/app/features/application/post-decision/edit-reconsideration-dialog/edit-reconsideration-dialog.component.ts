@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import {
   ApplicationReconsiderationDetailedDto,
+  RECONSIDERATION_TYPE,
   UpdateApplicationReconsiderationDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -21,12 +22,12 @@ export class EditReconsiderationDialogComponent implements OnInit {
   codes: BaseCodeDto[] = [];
 
   typeControl = new FormControl<string | undefined>(undefined, [Validators.required]);
-  isReviewApprovedControl = new FormControl<string | null>(null);
+  reviewOutcomeCodeControl = new FormControl<string | null>(null);
 
   form = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
     type: this.typeControl,
-    isReviewApproved: this.isReviewApprovedControl,
+    reviewOutcomeCode: this.reviewOutcomeCodeControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
     reconsidersDecisions: new FormControl<string[]>([], [Validators.required]),
   });
@@ -48,7 +49,10 @@ export class EditReconsiderationDialogComponent implements OnInit {
     this.form.patchValue({
       submittedDate: new Date(data.existingDecision.submittedDate),
       type: data.existingDecision.type.code,
-      isReviewApproved: JSON.stringify(data.existingDecision.isReviewApproved),
+      reviewOutcomeCode:
+        data.existingDecision.type.code === RECONSIDERATION_TYPE.T_33
+          ? data.existingDecision.reviewOutcome?.code || 'PEN'
+          : null,
       reviewDate: data.existingDecision.reviewDate ? new Date(data.existingDecision.reviewDate) : null,
       reconsidersDecisions: data.existingDecision.reconsideredDecisions.map((dec) => dec.uuid),
     });
@@ -61,10 +65,10 @@ export class EditReconsiderationDialogComponent implements OnInit {
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, type, isReviewApproved, reviewDate, reconsidersDecisions } = this.form.getRawValue();
+    const { submittedDate, type, reviewOutcomeCode, reviewDate, reconsidersDecisions } = this.form.getRawValue();
     const data: UpdateApplicationReconsiderationDto = {
       submittedDate: formatDateForApi(submittedDate!),
-      isReviewApproved: isReviewApproved != undefined && isReviewApproved != null ? JSON.parse(isReviewApproved) : null,
+      reviewOutcomeCode: reviewOutcomeCode,
       typeCode: type!,
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
       reconsideredDecisionUuids: reconsidersDecisions || [],
@@ -86,6 +90,18 @@ export class EditReconsiderationDialogComponent implements OnInit {
         uuid: decision.uuid,
         resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
       }));
+    }
+  }
+
+  async onTypeReconsiderationChange(reconsiderationType: string) {
+    if (reconsiderationType === RECONSIDERATION_TYPE.T_33_1) {
+      this.form.patchValue({
+        reviewOutcomeCode: null,
+      });
+    } else {
+      this.form.patchValue({
+        reviewOutcomeCode: 'PEN',
+      });
     }
   }
 }

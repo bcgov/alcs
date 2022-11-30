@@ -1,9 +1,3 @@
-import { ApplicationModification } from '../../src/decision/application-modification/application-modification.entity';
-import { ApplicationReconsideration } from '../../src/decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationType } from '../../src/decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeeting } from '../../src/decision/application-decision-meeting/application-decision-meeting.entity';
-import { DecisionOutcomeCode } from '../../src/decision/application-decision/application-decision-outcome.entity';
-import { ApplicationDecision } from '../../src/decision/application-decision/application-decision.entity';
 import { ApplicationMeeting } from '../../src/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../src/application/application-paused.entity';
 import { Application } from '../../src/application/application.entity';
@@ -18,6 +12,14 @@ import { ApplicationRegion } from '../../src/code/application-code/application-r
 import { ApplicationType } from '../../src/code/application-code/application-type/application-type.entity';
 import { Comment } from '../../src/comment/comment.entity';
 import { CommentMention } from '../../src/comment/mention/comment-mention.entity';
+import { ApplicationDecisionMeeting } from '../../src/decision/application-decision-meeting/application-decision-meeting.entity';
+import { DecisionOutcomeCode } from '../../src/decision/application-decision/application-decision-outcome.entity';
+import { ApplicationDecision } from '../../src/decision/application-decision/application-decision.entity';
+import { ApplicationModification } from '../../src/decision/application-modification/application-modification.entity';
+import { ApplicationModificationOutcomeType } from '../../src/decision/application-modification/modification-outcome-type/application-modification-outcome-type.entity';
+import { ApplicationReconsideration } from '../../src/decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationOutcomeType } from '../../src/decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
+import { ApplicationReconsiderationType } from '../../src/decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
 
@@ -133,7 +135,11 @@ const initApplicationReconsiderationMockEntity = (
   reconsiderationType.description = '33';
   reconsideration.type = reconsiderationType;
 
-  reconsideration.isReviewApproved = true;
+  reconsideration.reviewOutcome = {
+    label: 'mock',
+    code: 'mock',
+    description: 'mock',
+  } as ApplicationReconsiderationOutcomeType;
   return reconsideration;
 };
 
@@ -149,7 +155,11 @@ const initApplicationModificationMockEntity = (
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
     reviewDate: new Date(1, 1, 1, 1, 1, 1, 1),
     submittedDate: new Date(1, 1, 1, 1, 1, 1, 1),
-    isReviewApproved: true,
+    reviewOutcome: {
+      label: 'mock',
+      code: 'mock',
+      description: 'mock',
+    } as ApplicationModificationOutcomeType,
   });
 
   const cardEntity = card ?? initCardMockEntity('222');

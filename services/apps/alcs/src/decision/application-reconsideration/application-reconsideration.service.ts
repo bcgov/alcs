@@ -23,6 +23,11 @@ import {
 import { ApplicationReconsideration } from './application-reconsideration.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
+export const enum RECONSIDERATION_TYPE {
+  T_33 = '33',
+  T_33_1 = '33.1',
+}
+
 @Injectable()
 export class ApplicationReconsiderationService {
   constructor(
@@ -53,6 +58,7 @@ export class ApplicationReconsiderationService {
       type: true,
       reconsidersDecisions: true,
       resultingDecision: true,
+      reviewOutcome: true,
     };
 
   getByBoardCode(boardCode: string) {
@@ -96,6 +102,10 @@ export class ApplicationReconsiderationService {
       await this.applicationDecisionService.getMany(
         createDto.reconsideredDecisionUuids,
       );
+
+    if (createDto.reconTypeCode === RECONSIDERATION_TYPE.T_33) {
+      reconsideration.reviewOutcomeCode = 'PEN';
+    }
 
     const recon = await this.reconsiderationRepository.save(reconsideration);
     return this.getByUuid(recon.uuid);
@@ -143,12 +153,17 @@ export class ApplicationReconsiderationService {
       );
     }
 
-    if (updateDto.isReviewApproved !== undefined) {
-      reconsideration.isReviewApproved = updateDto.isReviewApproved;
+    reconsideration.reviewOutcomeCode = updateDto.reviewOutcomeCode;
+
+    if (
+      reconsideration.type.code === RECONSIDERATION_TYPE.T_33 &&
+      updateDto.reviewOutcomeCode === null
+    ) {
+      reconsideration.reviewOutcomeCode = 'PEN';
     }
 
-    if (reconsideration.type.code === '33.1') {
-      reconsideration.isReviewApproved = null;
+    if (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1) {
+      reconsideration.reviewOutcomeCode = null;
       reconsideration.reviewDate = null;
     }
 

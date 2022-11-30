@@ -41,7 +41,7 @@ export class ApplicationHeaderComponent {
   _modifications: ApplicationModificationDto[] = [];
   @Input() set modifications(modifications: ApplicationModificationDto[]) {
     this.showModificationLabel = modifications.reduce((showLabel, modification) => {
-      return modification.isReviewApproved === null || modification.isReviewApproved;
+      return modification.reviewOutcome === null || modification.reviewOutcome.code !== 'REF';
     }, false);
     this._modifications = modifications;
   }

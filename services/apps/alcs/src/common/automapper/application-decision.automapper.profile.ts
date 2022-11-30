@@ -6,6 +6,7 @@ import { ApplicationDecisionMeeting } from '../../decision/application-decision-
 import { DecisionOutcomeCode } from '../../decision/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
+  ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
   DecisionOutcomeCodeDto,
 } from '../../decision/application-decision/application-decision.dto';
@@ -15,6 +16,7 @@ import { CeoCriterionCode } from '../../decision/application-decision/ceo-criter
 import { DecisionDocument } from '../../decision/application-decision/decision-document.entity';
 import { DecisionMakerCodeDto } from '../../decision/application-decision/decision-maker/decision-maker.dto';
 import { DecisionMakerCode } from '../../decision/application-decision/decision-maker/decision-maker.entity';
+import { ApplicationDecisionChairReviewOutcomeType } from '../../decision/application-decision/decision-outcome-type/application-decision-outcome-type.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -117,6 +119,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
+          (ad) => ad.chairReviewOutcome,
+          mapFrom((a) =>
+            this.mapper.map(
+              a.chairReviewOutcome,
+              ApplicationDecisionChairReviewOutcomeType,
+              ChairReviewOutcomeCodeDto,
+            ),
+          ),
+        ),
+        forMember(
           (ad) => ad.isOther,
           mapFrom((a) => a.isOther),
         ),
@@ -134,15 +146,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             a.chairReviewDate ? a.chairReviewDate.getTime() : null,
           ),
         ),
-        forMember(
-          (ad) => ad.chairReviewOutcome,
-          mapFrom((a) => a.chairReviewOutcome),
-        ),
       );
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
+      createMap(
+        mapper,
+        ApplicationDecisionChairReviewOutcomeType,
+        ChairReviewOutcomeCodeDto,
+      );
 
       createMap(
         mapper,

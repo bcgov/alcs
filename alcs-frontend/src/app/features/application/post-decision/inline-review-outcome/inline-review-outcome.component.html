@@ -1,8 +1,8 @@
 <div>
   <span *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!isReviewOutcomeSet(pendingReviewOutcome)"> Select outcome </a>
-    <span *ngIf="isReviewOutcomeSet(pendingReviewOutcome)">
-      {{ getReviewOutcomeLabel(pendingReviewOutcome!) }}
+    <a (click)="toggleEdit()" class="add-date" *ngIf="!pendingReviewOutcome"> Select outcome </a>
+    <span *ngIf="!pendingReviewOutcome || pendingReviewOutcome === 'PEN'">
+      {{ pendingReviewOutcome }}
     </span>
   </span>
   <div
@@ -13,8 +13,8 @@
   >
     <form [formGroup]="form">
       <mat-button-toggle-group id="reviewOutcome" formControlName="reviewOutcome" name="reviewOutcome">
-        <mat-button-toggle value="true">Proceed</mat-button-toggle>
-        <mat-button-toggle value="false">Refuse</mat-button-toggle>
+        <mat-button-toggle value="PRC">Proceed</mat-button-toggle>
+        <mat-button-toggle value="REF">Refuse</mat-button-toggle>
       </mat-button-toggle-group>
     </form>
     <div class="button-container">

@@ -7,13 +7,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./inline-review-outcome.component.scss'],
 })
 export class InlineReviewOutcomeComponent implements OnInit {
-  @Input() selectedValue?: boolean | null;
+  @Input() selectedValue?: string | null;
 
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<string>();
 
   form!: FormGroup;
   isEditing = false;
-  pendingReviewOutcome?: boolean | null;
+  pendingReviewOutcome?: string | null;
 
   constructor(private fb: FormBuilder) {
     this.pendingReviewOutcome = this.selectedValue;
@@ -27,23 +27,14 @@ export class InlineReviewOutcomeComponent implements OnInit {
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
-    this.selectedValue = true;
+    this.selectedValue = 'PRC';
     this.form = this.fb.group({
-      reviewOutcome: this.selectedValue.toString(),
+      reviewOutcome: this.selectedValue,
     });
   }
 
   onSave() {
-    const selectedValue = this.form.get('reviewOutcome')!.value;
-    this.save.emit(JSON.parse(selectedValue));
+    this.save.emit(this.form.get('reviewOutcome')!.value);
     this.isEditing = false;
-  }
-
-  getReviewOutcomeLabel(reviewOutcome: boolean) {
-    return reviewOutcome ? 'Proceed' : 'Refused';
-  }
-
-  isReviewOutcomeSet(reviewOutcome?: boolean | null) {
-    return typeof reviewOutcome === 'boolean';
   }
 }

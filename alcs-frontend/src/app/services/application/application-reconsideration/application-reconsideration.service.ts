@@ -80,6 +80,7 @@ export class ApplicationReconsiderationService {
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to create reconsideration');
+      throw err;
     }
     return;
   }

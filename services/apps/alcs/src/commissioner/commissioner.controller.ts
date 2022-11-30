@@ -3,13 +3,13 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
-import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { AUTH_ROLE } from '../common/authorization/roles';
+import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { CommissionerApplicationDto } from './commissioner.dto';
 
 @Controller('commissioner')
@@ -43,10 +43,7 @@ export class CommissionerController {
     );
     const hasApprovedOrPendingModification = modifications.reduce(
       (showLabel, modification) => {
-        return (
-          modification.isReviewApproved === null ||
-          modification.isReviewApproved
-        );
+        return modification.reviewOutcome.code !== 'REF';
       },
       false,
     );

@@ -4,8 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
-import { ApplicationDecision } from '../application-decision/application-decision.entity';
-import { ApplicationDecisionService } from '../application-decision/application-decision.service';
+import {
+  initApplicationMockEntity,
+  initApplicationModificationMockEntity,
+} from '../../../test/mocks/mockEntities';
 import { CreateApplicationDto } from '../../application/application.dto';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
@@ -13,10 +15,8 @@ import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { ModificationProfile } from '../../common/automapper/modification.automapper.profile';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import {
-  initApplicationModificationMockEntity,
-  initApplicationMockEntity,
-} from '../../../test/mocks/mockEntities';
+import { ApplicationDecision } from '../application-decision/application-decision.entity';
+import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationUpdateDto,
@@ -49,6 +49,7 @@ describe('ApplicationModificationService', () => {
       assignee: true,
     },
     resultingDecision: true,
+    reviewOutcome: true,
   };
 
   beforeEach(async () => {

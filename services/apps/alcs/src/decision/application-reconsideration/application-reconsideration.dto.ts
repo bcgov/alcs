@@ -2,7 +2,6 @@ import { AutoMap } from '@automapper/classes';
 import {
   ArrayNotEmpty,
   IsArray,
-  IsBoolean,
   IsDefined,
   IsNotEmpty,
   IsNumber,
@@ -17,6 +16,8 @@ import { ApplicationDecisionMeetingDto } from '../application-decision-meeting/a
 import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
+
+export class ApplicationReconsiderationOutcomeCodeDto extends BaseCodeDto {}
 
 export class ApplicationReconsiderationCreateDto {
   @IsString()
@@ -71,9 +72,9 @@ export class ApplicationReconsiderationUpdateDto {
   @IsOptional()
   reviewDate?: number | null;
 
-  @IsBoolean()
+  @IsString()
   @IsOptional()
-  isReviewApproved?: boolean | null;
+  reviewOutcomeCode?: string;
 
   @IsOptional()
   @IsArray()
@@ -98,7 +99,7 @@ export class ApplicationReconsiderationDto {
   type: ReconsiderationTypeDto;
   submittedDate: number;
   reviewDate: number;
-  isReviewApproved: boolean | null;
+  reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision?: ApplicationDecisionDto;
 }
@@ -110,5 +111,5 @@ export class ApplicationReconsiderationWithoutApplicationDto {
   type: ReconsiderationTypeDto;
   submittedDate: number;
   reviewDate: number;
-  isReviewApproved: boolean | null;
+  reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
 }

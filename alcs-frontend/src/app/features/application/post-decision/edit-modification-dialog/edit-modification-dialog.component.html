@@ -21,7 +21,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Decisions to be Modified</mat-label>
         <mat-select formControlName="modifiesDecisions" multiple>
-          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
+          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -35,10 +35,10 @@
 
       <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label">Review Outcome <span>*</span></mat-label>
-        <mat-button-toggle-group id="isReviewApproved" formControlName="isReviewApproved" name="reviewOutcome">
-          <mat-button-toggle value="null">Pending</mat-button-toggle>
-          <mat-button-toggle value="true">Proceed</mat-button-toggle>
-          <mat-button-toggle value="false">Refuse</mat-button-toggle>
+        <mat-button-toggle-group id="reviewOutcomeCode" formControlName="reviewOutcomeCode" name="reviewOutcomeCode">
+          <mat-button-toggle value="PEN">Pending</mat-button-toggle>
+          <mat-button-toggle value="PRC">Proceed</mat-button-toggle>
+          <mat-button-toggle value="REF">Refuse</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
     </div>

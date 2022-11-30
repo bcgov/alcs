@@ -21,28 +21,37 @@
       <mat-form-field appearance="outline">
         <mat-label>Decisions to be Reconsidered</mat-label>
         <mat-select formControlName="reconsidersDecisions" multiple>
-          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
+          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label">Reconsideration Type *</mat-label>
-        <mat-button-toggle-group id="reviewOutcome" formControlName="type" name="reviewOutcome">
+        <mat-button-toggle-group
+          id="reviewOutcome"
+          formControlName="type"
+          name="reviewOutcome"
+          (change)="onTypeReconsiderationChange($event.value)"
+        >
           <mat-button-toggle *ngFor="let type of codes" value="{{ type.code }}">{{ type.label }}</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
 
       <div *ngIf="typeControl.value === '33'" class="full-grid-line toggle-group">
         <mat-label class="toggle-label">Review Outcome <span>*</span></mat-label>
-        <mat-button-toggle-group id="isReviewApproved" formControlName="isReviewApproved" name="reviewOutcome">
-          <mat-button-toggle value="null">Pending</mat-button-toggle>
-          <mat-button-toggle value="true">Proceed</mat-button-toggle>
-          <mat-button-toggle value="false">Refuse</mat-button-toggle>
+        <mat-button-toggle-group id="reviewOutcomeCode" formControlName="reviewOutcomeCode" name="reviewOutcomeCode">
+          <mat-button-toggle value="PEN">Pending</mat-button-toggle>
+          <mat-button-toggle value="PRC">Proceed</mat-button-toggle>
+          <mat-button-toggle value="REF">Refuse</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
 
       <mat-form-field
-        *ngIf="typeControl.value === '33' && isReviewApprovedControl.value !== 'null'"
+        *ngIf="
+          typeControl.value === '33' &&
+          reviewOutcomeCodeControl.value !== 'PEN' &&
+          reviewOutcomeCodeControl.value !== null
+        "
         appearance="outline"
         class="date-picker full-grid-line"
       >
