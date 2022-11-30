@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
   Param,
@@ -10,9 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
+import { ApplicationDocumentDto } from './application-document/application-document.dto';
+import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
-import { ApplicationDto } from './application.dto';
+import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -49,16 +53,43 @@ export class ApplicationController {
   }
 
   @Post('/:fileId')
-  async update(@Req() req, @Param('fileId') fileId: string) {
+  async update(
+    @Param('fileId') fileId: string,
+    @Body() updateDto: UpdateApplicationDto,
+    @Req() req,
+  ) {
     //Verify User has Access
     const existingApplication = this.applicationService.getByFileId(
       fileId,
       req.user.entity,
     );
 
-    //TODO: How do we get the fields if there is no file?
     if (!existingApplication) {
-      throw new Error('Failed to find application with given File ID and User');
+      throw new ServiceNotFoundException(
+        'Failed to find application with given File ID and User',
+      );
+    }
+
+    const application = await this.applicationService.update(fileId, {
+      applicant: updateDto.applicant,
+      localGovernmentUuid: updateDto.localGovernmentUuid,
+    });
+
+    return this.mapper.map(application, Application, ApplicationDto);
+  }
+
+  @Post('/:fileId/document')
+  async attachDocument(@Req() req, @Param('fileId') fileId: string) {
+    //Verify User has Access
+    const existingApplication = this.applicationService.getByFileId(
+      fileId,
+      req.user.entity,
+    );
+
+    if (!existingApplication) {
+      throw new ServiceNotFoundException(
+        'Failed to find application with given File ID and User',
+      );
     }
 
     if (!req.isMultipart()) {
@@ -67,23 +98,18 @@ export class ApplicationController {
 
     const data = await req.file();
     if (data) {
-      const applicantField = data.fields.applicant;
-      const localGovernmentField = data.fields.localGovernment;
-
-      const application = await this.applicationService.update(fileId, {
-        applicant: applicantField.value,
-        localGovernmentUuid: localGovernmentField.value,
-        documents: [],
-      });
-
-      await this.documentService.attachDocument(
-        application.fileNumber,
+      const document = await this.documentService.attachDocument(
+        fileId,
         data,
         req.user.entity,
         'certificateOfTitle',
       );
 
-      return this.mapper.map(application, Application, ApplicationDto);
+      return this.mapper.map(
+        document,
+        ApplicationDocument,
+        ApplicationDocumentDto,
+      );
     }
   }
 }

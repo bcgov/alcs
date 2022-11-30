@@ -12,7 +12,6 @@ export interface ApplicationDto {
 }
 
 export interface UpdateApplicationDto {
-  applicant: string;
-  localGovernmentUuid: string;
-  documents: File[];
+  applicant?: string;
+  localGovernmentUuid?: string;
 }

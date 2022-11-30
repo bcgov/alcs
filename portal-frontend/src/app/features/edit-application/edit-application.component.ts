@@ -13,8 +13,8 @@ import { FileHandle } from '../../shared/file-drag-drop/drag-drop.directive';
   styleUrls: ['./edit-application.component.scss'],
 })
 export class EditApplicationComponent implements OnInit {
-  applicantName = new FormControl<string | any>('', [Validators.required]);
-  localGovernment = new FormControl<string | any>('', [Validators.required]);
+  applicantName = new FormControl<string | any>('');
+  localGovernment = new FormControl<string | any>('');
   fileId = '';
 
   localGovernments: LocalGovernmentDto[] = [];
@@ -25,8 +25,6 @@ export class EditApplicationComponent implements OnInit {
     localGovernment: this.localGovernment,
   });
 
-  files: FileHandle[] = [];
-
   constructor(
     private applicationService: ApplicationService,
     private codeService: CodeService,
@@ -35,7 +33,8 @@ export class EditApplicationComponent implements OnInit {
   ) {}
 
   filesDropped(files: FileHandle[]): void {
-    this.files = files;
+    const mappedFiles = files.map((file) => file.file);
+    this.applicationService.attachFile(this.fileId, mappedFiles);
   }
 
   ngOnInit(): void {
@@ -71,26 +70,38 @@ export class EditApplicationComponent implements OnInit {
   }
 
   async onSaveAndExit() {
-    const localGovernmentName = this.localGovernment.getRawValue();
-    const localGovernmentUuid = this.localGovernments.find((lg) => lg.name == localGovernmentName);
+    if (this.firstForm.dirty) {
+      let localGovernment;
+      const localGovernmentName = this.localGovernment.getRawValue();
+      if (localGovernmentName) {
+        localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
 
-    if (!localGovernmentUuid) {
-      this.localGovernment.setErrors({
-        invalid: true,
+        if (!localGovernment) {
+          this.localGovernment.setErrors({
+            invalid: true,
+          });
+          return;
+        }
+      }
+
+      await this.applicationService.updatePending(this.fileId, {
+        applicant: this.applicantName.getRawValue(),
+        localGovernmentUuid: localGovernment?.uuid,
       });
-      return;
     }
-
-    await this.applicationService.updatePending(this.fileId, {
-      applicant: this.applicantName.getRawValue(),
-      localGovernmentUuid: localGovernmentUuid!.uuid,
-      documents: this.files.map((file) => file.file),
-    });
     await this.router.navigateByUrl('/home');
   }
 
   async onSubmit() {
-    //RUN FORM VALIDATION
+    this.applicantName.setValidators([Validators.required]);
+    this.applicantName.updateValueAndValidity();
+
+    this.localGovernment.setValidators([Validators.required]);
+    this.localGovernment.updateValueAndValidity();
+
+    if (this.firstForm.valid) {
+      alert('App Submitted');
+    }
   }
 
   private async loadExistingApplication(fileId: string) {
