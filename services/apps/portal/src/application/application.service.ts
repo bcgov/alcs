@@ -57,8 +57,8 @@ export class ApplicationService {
   async update(fileNumber: string, updateDto: UpdateApplicationDto) {
     const application = await this.getOrFail(fileNumber);
 
-    application.applicant = updateDto.applicant;
-    application.localGovernmentUuid = updateDto.localGovernmentUuid;
+    application.applicant = updateDto.applicant || null;
+    application.localGovernmentUuid = updateDto.localGovernmentUuid || null;
 
     return this.applicationRepository.save(application);
   }
@@ -69,6 +69,9 @@ export class ApplicationService {
         createdBy: {
           uuid: user.uuid,
         },
+      },
+      order: {
+        updatedAt: 'DESC',
       },
     });
   }

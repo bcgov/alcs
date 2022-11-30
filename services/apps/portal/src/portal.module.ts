@@ -13,6 +13,7 @@ import { AuthorizationFilter } from './common/authorization/authorization.filter
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { ConfigModule } from './common/config/config.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
+import { RedisModule } from './common/redis/redis.module';
 import { LogoutController } from './logout/logout.controller';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';
@@ -31,6 +32,7 @@ import { UserService } from './user/user.service';
     TypeOrmModule.forFeature([User]),
     UserModule,
     AuthorizationModule,
+    RedisModule,
     ClsModule.register({
       global: true,
       middleware: { mount: true },

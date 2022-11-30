@@ -37,20 +37,21 @@ export class Application extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
+    type: 'varchar',
     comment: 'The Applicants name on the application',
     nullable: true,
   })
-  applicant: string;
+  applicant: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     type: 'uuid',
     comment: 'UUID from ALCS System of the Local Government',
     nullable: true,
   })
-  localGovernmentUuid: string;
+  localGovernmentUuid: string | null;
 
   @AutoMap()
   @ManyToOne(() => User)

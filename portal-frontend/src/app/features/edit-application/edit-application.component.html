@@ -8,7 +8,7 @@
         <div>
           <h6>Applicant Last Name</h6>
           <mat-form-field class="full-width-input" appearance="outline">
-            <input matInput placeholder="Type last name" formControlName="applicantName" required />
+            <input matInput placeholder="Type last name" formControlName="applicantName" />
           </mat-form-field>
         </div>
         <div>
@@ -18,7 +18,6 @@
               type="text"
               aria-label="Text"
               matInput
-              required
               formControlName="localGovernment"
               placeholder="Type and select from dropdown"
               [matAutocomplete]="auto"
@@ -43,5 +42,5 @@
       </div>
     </form>
   </mat-step>
-  <mat-step label="Review & Submit"> </mat-step>
+  <mat-step label="Review & Submit"></mat-step>
 </mat-stepper>

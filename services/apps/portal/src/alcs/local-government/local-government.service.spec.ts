@@ -1,18 +1,36 @@
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as config from 'config';
-import { CONFIG_TOKEN } from '../../common/config/config.module';
+import { RedisService } from '../../common/redis/redis.service';
 import { LocalGovernmentService } from './local-government.service';
 
 describe('LocalGovernmentService', () => {
   let service: LocalGovernmentService;
+  let mockRedisService: DeepMocked<RedisService>;
+  let mockRedis;
+
+  const mockLocalGovernments = [
+    {
+      name: 'fake-lg',
+      uuid: 'fake-uuid',
+    },
+  ];
 
   beforeEach(async () => {
+    mockRedisService = createMock();
+    mockRedis = createMock<{
+      set: () => any;
+      get: () => any;
+    }>();
+    mockRedis.set.mockResolvedValue(null);
+    mockRedis.get.mockResolvedValue(JSON.stringify(mockLocalGovernments));
+    mockRedisService.getClient.mockReturnValue(mockRedis as any);
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LocalGovernmentService,
         {
-          provide: CONFIG_TOKEN,
-          useValue: config,
+          provide: RedisService,
+          useValue: mockRedisService,
         },
       ],
     }).compile();
@@ -24,7 +42,11 @@ describe('LocalGovernmentService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should call out to ALCS to get Local Governments', async () => {
-    //TODO
+  it('should load local governments from Redis', async () => {
+    const localGovernments = await service.get();
+
+    expect(localGovernments.length).toEqual(1);
+    expect(localGovernments).toEqual(mockLocalGovernments);
+    expect(mockRedis.get).toHaveBeenCalledTimes(1);
   });
 });

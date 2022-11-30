@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
@@ -26,7 +27,11 @@ export class ApplicationDto {
 }
 
 export class UpdateApplicationDto {
-  applicant: string;
-  localGovernmentUuid: string;
-  documents: any[];
+  @IsString()
+  @IsOptional()
+  applicant?: string;
+
+  @IsUUID()
+  @IsOptional()
+  localGovernmentUuid?: string;
 }

@@ -2,6 +2,7 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { doc } from 'prettier';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
@@ -16,7 +17,7 @@ describe('ApplicationController', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
 
-  const localGovernment = 'local-government';
+  const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
 
   beforeEach(async () => {
@@ -49,14 +50,18 @@ describe('ApplicationController', () => {
     mockAppService.update.mockResolvedValue(
       new Application({
         applicant: applicant,
-        localGovernmentUuid: localGovernment,
+        localGovernmentUuid,
       }),
     );
 
     mockAppService.create.mockResolvedValue('2');
 
     mockDocumentService.attachDocument.mockResolvedValue(
-      new ApplicationDocument(),
+      new ApplicationDocument({
+        uploadedBy: new User({
+          name: 'Bruce Wayne',
+        }),
+      }),
     );
   });
 
@@ -64,25 +69,46 @@ describe('ApplicationController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call out to service for update and map the resulting entity', async () => {
-    const app = await controller.update(
+  it('should call out to service when attaching a document', async () => {
+    const document = await controller.attachDocument(
       {
         isMultipart: () => true,
         file: () => ({
           fields: {
-            localGovernment,
+            localGovernment: localGovernmentUuid,
             applicant,
           },
         }),
         user: {
-          entity: new User(),
+          entity: new User({
+            name: 'Bruce Wayne',
+          }),
         },
       },
       'file-id',
     );
 
+    expect(document).toBeDefined();
+    expect(document!.uploadedBy).toEqual('Bruce Wayne');
+    expect(mockDocumentService.attachDocument).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service for update and map the resulting entity', async () => {
+    const app = await controller.update(
+      'file-id',
+      {
+        localGovernmentUuid,
+        applicant,
+      },
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
+
     expect(app).toBeDefined();
     expect(app!.applicant).toEqual(applicant);
-    expect(app!.localGovernmentUuid).toEqual(localGovernment);
+    expect(app!.localGovernmentUuid).toEqual(localGovernmentUuid);
   });
 });
