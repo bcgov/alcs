@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
@@ -12,10 +13,10 @@ import { SubtasksComponent } from './subtasks.component';
 describe('SubtasksComponent', () => {
   let component: SubtasksComponent;
   let fixture: ComponentFixture<SubtasksComponent>;
-  let mockUserService: jasmine.SpyObj<UserService>;
+  let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService = createMock();
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({

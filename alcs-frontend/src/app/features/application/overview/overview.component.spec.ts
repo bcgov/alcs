@@ -1,4 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
@@ -12,11 +14,10 @@ import { OverviewComponent } from './overview.component';
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
   let fixture: ComponentFixture<OverviewComponent>;
+  let mockAppDetailService: DeepMocked<ApplicationDetailService>;
 
   beforeEach(async () => {
-    const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
-      'loadApplication',
-    ]);
+    mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -39,10 +40,13 @@ describe('OverviewComponent', () => {
         },
         {
           provide: ApplicationMeetingService,
-          useValue: jasmine.createSpyObj<ApplicationMeetingService>('ApplicationMeetingService', ['fetch']),
+          useValue: {
+            fetch: jest.fn(),
+          },
         },
       ],
       declarations: [OverviewComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewComponent);

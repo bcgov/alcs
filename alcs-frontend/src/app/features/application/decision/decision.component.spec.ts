@@ -1,6 +1,8 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -13,11 +15,10 @@ import { DecisionComponent } from './decision.component';
 describe('DecisionComponent', () => {
   let component: DecisionComponent;
   let fixture: ComponentFixture<DecisionComponent>;
+  let mockAppDetailService: DeepMocked<ApplicationDetailService>;
 
   beforeEach(async () => {
-    const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
-      'loadApplication',
-    ]);
+    mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -49,6 +50,7 @@ describe('DecisionComponent', () => {
           useValue: {},
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DecisionComponent);

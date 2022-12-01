@@ -2,27 +2,25 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { AuthenticationService, ICurrentUser, ROLES } from './authentication.service';
 import { HasRolesGuard } from './hasRoles.guard';
 
 describe('HasRolesGuard', () => {
   let guard: HasRolesGuard;
-  let mockAuthService: jasmine.SpyObj<AuthenticationService>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockAuthService: DeepMocked<AuthenticationService>;
+  let mockRouter: DeepMocked<Router>;
 
   beforeEach(() => {
-    mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', [
-      'getToken',
-      'getCurrentUser',
-    ]);
+    mockAuthService = createMock();
 
-    mockAuthService.getToken.and.resolveTo('valid-token');
-    mockAuthService.getCurrentUser.and.resolveTo({
+    mockAuthService.getToken.mockResolvedValue('valid-token');
+    mockAuthService.getCurrentUser.mockReturnValue({
       client_roles: [ROLES.LUP],
     } as any);
 
-    mockRouter = jasmine.createSpyObj<Router>('Router', ['navigateByUrl', 'parseUrl']);
-    mockRouter.parseUrl.and.callFake((route) => {
+    mockRouter = createMock();
+    mockRouter.parseUrl.mockImplementation((route) => {
       const urlTree = new UrlTree();
       urlTree.fragment = route;
       return urlTree;
@@ -57,7 +55,7 @@ describe('HasRolesGuard', () => {
       } as any,
       {} as RouterStateSnapshot
     );
-    expect(canActivate).toBeTrue();
+    expect(canActivate).toBeTruthy();
   });
 
   it('should go to home when route has no roles configured', async () => {
@@ -72,14 +70,14 @@ describe('HasRolesGuard', () => {
   });
 
   it('should redirect to login when there is no token', async () => {
-    mockAuthService.getToken.and.resolveTo(undefined);
+    mockAuthService.getToken.mockResolvedValue(undefined);
     const urlTree = await guard.canActivate({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
     expect(typeof urlTree).toEqual('object');
     expect((urlTree as UrlTree).fragment).toEqual('/login');
   });
 
   it('should redirect to provision when user has no roles', async () => {
-    mockAuthService.getCurrentUser.and.returnValue({} as ICurrentUser);
+    mockAuthService.getCurrentUser.mockReturnValue({} as ICurrentUser);
     const urlTree = await guard.canActivate({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
     expect(typeof urlTree).toEqual('object');
     expect((urlTree as UrlTree).fragment).toEqual('/provision');

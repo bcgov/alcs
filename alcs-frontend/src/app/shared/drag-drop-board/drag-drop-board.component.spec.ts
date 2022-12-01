@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastService } from '../../services/toast/toast.service';
 import { AssigneeDto, UserDto } from '../../services/user/user.dto';
@@ -38,6 +39,7 @@ describe('DragDropBoardComponent', () => {
     await TestBed.configureTestingModule({
       providers: [{ provide: ToastService, useValue: {} }],
       declarations: [DragDropBoardComponent, StatusFilterPipe],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DragDropBoardComponent);

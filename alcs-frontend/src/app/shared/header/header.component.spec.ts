@@ -1,4 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -15,6 +16,7 @@ describe('HeaderComponent', () => {
       providers: [],
       declarations: [HeaderComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, MatMenuModule, MatSnackBarModule],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);

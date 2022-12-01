@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SharedModule } from '../shared.module';
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 
 describe('ConfirmationDialogComponent', () => {
@@ -8,6 +9,7 @@ describe('ConfirmationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [SharedModule],
       declarations: [ConfirmationDialogComponent],
       providers: [
         {

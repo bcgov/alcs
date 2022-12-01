@@ -1,7 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
@@ -12,11 +14,10 @@ import { PostDecisionComponent } from './post-decision.component';
 describe('PostDecisionComponent', () => {
   let component: PostDecisionComponent;
   let fixture: ComponentFixture<PostDecisionComponent>;
+  let mockAppDetailService: DeepMocked<ApplicationDetailService>;
 
   beforeEach(async () => {
-    const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
-      'loadApplication',
-    ]);
+    mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -40,6 +41,7 @@ describe('PostDecisionComponent', () => {
           useValue: {},
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostDecisionComponent);

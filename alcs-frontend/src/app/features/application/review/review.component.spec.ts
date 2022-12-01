@@ -1,18 +1,21 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { AppModule } from '../../../app.module';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
+import { SharedModule } from '../../../shared/shared.module';
 
 import { ReviewComponent } from './review.component';
 
 describe('ReviewComponent', () => {
   let component: ReviewComponent;
   let fixture: ComponentFixture<ReviewComponent>;
+  let mockAppDetailService: DeepMocked<ApplicationDetailService>;
 
   beforeEach(async () => {
-    const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
-      'loadApplication',
-    ]);
+    mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -23,6 +26,7 @@ describe('ReviewComponent', () => {
         },
       ],
       declarations: [ReviewComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReviewComponent);

@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepicker } from '@matheo/datepicker';
-import * as moment from 'moment';
+import moment from 'moment';
 import { environment } from '../../../environments/environment';
 import { formatDateForApi } from '../utils/api-date-formatter';
 

@@ -1,6 +1,6 @@
 import { DateAdapter } from '@angular/material/core';
 import { NativeDatetimeAdapter } from '@ng-matero/extensions/core';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export class ExtensionsDatepickerFormatter extends NativeDatetimeAdapter {
   constructor(matDateLocale: string, _delegate: DateAdapter<Date>) {

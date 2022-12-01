@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 import { UserDto } from '../../services/user/user.dto';
@@ -11,17 +12,17 @@ import { HomeComponent } from './home.component';
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let mockAuthService: jasmine.SpyObj<AuthenticationService>;
-  let mockUserService: jasmine.SpyObj<UserService>;
+  let mockAuthService: DeepMocked<AuthenticationService>;
+  let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', ['getCurrentUser']);
+    mockAuthService = createMock();
     mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService = createMock();
     mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>({ prettyName: 'agent' } as UserDto);
 
-    mockAuthService.getCurrentUser.and.returnValue({
+    mockAuthService.getCurrentUser.mockReturnValue({
       name: 'agent',
       email: 'secret',
     });

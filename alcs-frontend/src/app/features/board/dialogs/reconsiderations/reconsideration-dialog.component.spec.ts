@@ -1,10 +1,12 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
@@ -20,15 +22,14 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SharedModule } from '../../../../shared/shared.module';
 
 import { ReconsiderationDialogComponent } from './reconsideration-dialog.component';
 
 describe('ReconsiderationDialogComponent', () => {
   let component: ReconsiderationDialogComponent;
   let fixture: ComponentFixture<ReconsiderationDialogComponent>;
-  let mockUserService: jasmine.SpyObj<UserService>;
-  let mockBoardService: jasmine.SpyObj<BoardService>;
+  let mockUserService: DeepMocked<UserService>;
+  let mockBoardService: DeepMocked<BoardService>;
 
   const mockReconDto: ApplicationReconsiderationDto = {
     uuid: '',
@@ -62,13 +63,16 @@ describe('ReconsiderationDialogComponent', () => {
   };
 
   beforeEach(async () => {
-    const mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close', 'afterClosed', 'backdropClick', 'subscribe']);
-    mockDialogRef.backdropClick = () => new EventEmitter();
-
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    const mockDialogRef = {
+      close: jest.fn(),
+      afterClosed: jest.fn(),
+      backdropClick: () => new EventEmitter(),
+      subscribe: jest.fn(),
+    };
+    mockUserService = createMock();
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
-    mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
+    mockBoardService = createMock();
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
@@ -108,7 +112,8 @@ describe('ReconsiderationDialogComponent', () => {
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],
-      imports: [MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, RouterTestingModule, SharedModule],
+      imports: [MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, RouterTestingModule, NgSelectModule],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReconsiderationDialogComponent);
