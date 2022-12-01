@@ -7,4 +7,5 @@ exclude_patterns:
   - "**/tests/"
   - "**/vendor/"
   - "**/migrations/"
+  - "**/*.spec.ts"
   - "**/*.d.ts"
