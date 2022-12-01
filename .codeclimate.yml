@@ -1,0 +1,10 @@
+version: "2"
+exclude_patterns:
+  - "bin/"
+  - "**/node_modules/"
+  - "**/spec/"
+  - "**/test/"
+  - "**/tests/"
+  - "**/vendor/"
+  - "**/migrations/"
+  - "**/*.d.ts"
