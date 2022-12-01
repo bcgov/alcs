@@ -78,9 +78,7 @@ export class ModificationProfile extends AutomapperProfile {
         ),
         forMember(
           (a) => a.reviewDate,
-          mapFrom((rd) =>
-            rd.reviewDate ? rd.reviewDate.getTime() : undefined,
-          ),
+          mapFrom((rd) => rd.reviewDate?.getTime()),
         ),
         forMember(
           (a) => a.reviewOutcome,

@@ -129,22 +129,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.isOther,
-          mapFrom((a) => a.isOther),
-        ),
-        forMember(
-          (ad) => ad.isTimeExtension,
-          mapFrom((a) => a.isTimeExtension),
-        ),
-        forMember(
           (ad) => ad.auditDate,
-          mapFrom((a) => (a.auditDate ? a.auditDate.getTime() : null)),
+          mapFrom((a) => a.auditDate?.getTime()),
         ),
         forMember(
           (ad) => ad.chairReviewDate,
-          mapFrom((a) =>
-            a.chairReviewDate ? a.chairReviewDate.getTime() : null,
-          ),
+          mapFrom((a) => a.chairReviewDate?.getTime()),
         ),
       );
 
@@ -178,27 +168,19 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         DecisionDocumentDto,
         forMember(
           (a) => a.mimeType,
-          mapFrom((ad) => {
-            return ad.document.mimeType;
-          }),
+          mapFrom((ad) => ad.document.mimeType),
         ),
         forMember(
           (a) => a.fileName,
-          mapFrom((ad) => {
-            return ad.document.fileName;
-          }),
+          mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
           (a) => a.uploadedBy,
-          mapFrom((ad) => {
-            return ad.document.uploadedBy.name;
-          }),
+          mapFrom((ad) => ad.document.uploadedBy.name),
         ),
         forMember(
           (a) => a.uploadedAt,
-          mapFrom((ad) => {
-            return ad.document.uploadedAt.getTime();
-          }),
+          mapFrom((ad) => ad.document.uploadedAt.getTime()),
         ),
       );
     };

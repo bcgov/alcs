@@ -82,11 +82,11 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'text', nullable: true })
   ceoCriterionCode: string | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   isTimeExtension: boolean | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   isOther: boolean | null;
 
