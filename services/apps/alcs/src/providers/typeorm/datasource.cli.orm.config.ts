@@ -2,7 +2,6 @@ import * as config from 'config';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { ALCS_DATABASE_SCHEMA } from './orm.config';
 
 // this is a typeorm cli specific configuration
 export const connectionSource = new DataSource({

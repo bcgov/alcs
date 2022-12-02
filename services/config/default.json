@@ -10,7 +10,7 @@
       "CLIENT_ID": "",
       "SECRET": ""
     },
-    "DATABASE_SCHEMA": "alcs"
+    "DATABASE_SCHEMA": "public"
   },
   "PORTAL": {
     "BASE_URL": "http://localhost:8081",
