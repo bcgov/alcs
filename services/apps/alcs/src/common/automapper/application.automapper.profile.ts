@@ -48,55 +48,31 @@ export class ApplicationProfile extends AutomapperProfile {
         ApplicationDto,
         forMember(
           (a) => a.dateSubmittedToAlc,
-          mapFrom((ad) => {
-            return ad.dateSubmittedToAlc
-              ? ad.dateSubmittedToAlc.getTime()
-              : undefined;
-          }),
+          mapFrom((ad) => ad.dateSubmittedToAlc?.getTime()),
         ),
         forMember(
           (a) => a.datePaid,
-          mapFrom((ad) => {
-            return ad.datePaid ? ad.datePaid.getTime() : undefined;
-          }),
+          mapFrom((ad) => ad.datePaid?.getTime()),
         ),
         forMember(
           (a) => a.dateAcknowledgedIncomplete,
-          mapFrom((ad) => {
-            return ad.dateAcknowledgedIncomplete
-              ? ad.dateAcknowledgedIncomplete.getTime()
-              : undefined;
-          }),
+          mapFrom((ad) => ad.dateAcknowledgedIncomplete?.getTime()),
         ),
         forMember(
           (a) => a.dateReceivedAllItems,
-          mapFrom((ad) => {
-            return ad.dateReceivedAllItems
-              ? ad.dateReceivedAllItems.getTime()
-              : undefined;
-          }),
+          mapFrom((ad) => ad.dateReceivedAllItems?.getTime()),
         ),
         forMember(
           (a) => a.dateAcknowledgedComplete,
-          mapFrom((ad) => {
-            return ad.dateAcknowledgedComplete
-              ? ad.dateAcknowledgedComplete.getTime()
-              : undefined;
-          }),
+          mapFrom((ad) => ad.dateAcknowledgedComplete?.getTime()),
         ),
         forMember(
           (a) => a.decisionDate,
-          mapFrom((ad) => {
-            return ad.decisionDate ? ad.decisionDate.getTime() : undefined;
-          }),
+          mapFrom((ad) => ad.decisionDate?.getTime()),
         ),
         forMember(
           (a) => a.notificationSentDate,
-          mapFrom((ad) => {
-            return ad.notificationSentDate
-              ? ad.notificationSentDate.getTime()
-              : undefined;
-          }),
+          mapFrom((ad) => ad.notificationSentDate?.getTime()),
         ),
         forMember(
           (ad) => ad.card,
@@ -122,27 +98,19 @@ export class ApplicationProfile extends AutomapperProfile {
         ApplicationDocumentDto,
         forMember(
           (a) => a.mimeType,
-          mapFrom((ad) => {
-            return ad.document.mimeType;
-          }),
+          mapFrom((ad) => ad.document.mimeType),
         ),
         forMember(
           (a) => a.fileName,
-          mapFrom((ad) => {
-            return ad.document.fileName;
-          }),
+          mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
           (a) => a.uploadedBy,
-          mapFrom((ad) => {
-            return ad.document.uploadedBy.name;
-          }),
+          mapFrom((ad) => ad.document.uploadedBy.name),
         ),
         forMember(
           (a) => a.uploadedAt,
-          mapFrom((ad) => {
-            return ad.document.uploadedAt.getTime();
-          }),
+          mapFrom((ad) => ad.document.uploadedAt.getTime()),
         ),
       );
 
@@ -156,19 +124,19 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.meetingStartDate,
-          mapFrom((a) => a.meetingPause?.startDate.valueOf()),
+          mapFrom((a) => a.meetingPause?.startDate.getTime()),
         ),
         forMember(
           (ad) => ad.meetingEndDate,
-          mapFrom((a) => a.meetingPause?.endDate?.valueOf()),
+          mapFrom((a) => a.meetingPause?.endDate?.getTime()),
         ),
         forMember(
           (ad) => ad.reportStartDate,
-          mapFrom((a) => a.reportPause?.startDate?.valueOf()),
+          mapFrom((a) => a.reportPause?.startDate?.getTime()),
         ),
         forMember(
           (ad) => ad.reportEndDate,
-          mapFrom((a) => a.reportPause?.endDate?.valueOf()),
+          mapFrom((a) => a.reportPause?.endDate?.getTime()),
         ),
         forMember(
           (ad) => ad.meetingType,

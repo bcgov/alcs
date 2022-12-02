@@ -13,8 +13,11 @@ import { ApplicationLocalGovernmentDto } from '../../application/application-cod
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationDecisionMeetingDto } from '../application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
+
+export class ApplicationModificationOutcomeCodeDto extends BaseCodeDto {}
 
 export class ApplicationModificationCreateDto {
   @IsNotEmpty()
@@ -64,9 +67,9 @@ export class ApplicationModificationUpdateDto {
   reviewDate?: number;
 
   @AutoMap()
-  @IsBoolean()
+  @IsString()
   @IsOptional()
-  isReviewApproved?: boolean | null;
+  reviewOutcomeCode?: string;
 
   @AutoMap()
   @IsBoolean()
@@ -95,7 +98,7 @@ export class ApplicationModificationDto {
   card: CardDto;
   submittedDate: number;
   reviewDate: number;
-  isReviewApproved: boolean | null;
+  reviewOutcome: ApplicationModificationOutcomeCodeDto | null;
   isTimeExtension: boolean | null;
   modifiesDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;

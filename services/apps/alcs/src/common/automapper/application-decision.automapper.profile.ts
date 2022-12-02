@@ -6,6 +6,7 @@ import { ApplicationDecisionMeeting } from '../../decision/application-decision-
 import { DecisionOutcomeCode } from '../../decision/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
+  ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
   DecisionOutcomeCodeDto,
 } from '../../decision/application-decision/application-decision.dto';
@@ -15,6 +16,7 @@ import { CeoCriterionCode } from '../../decision/application-decision/ceo-criter
 import { DecisionDocument } from '../../decision/application-decision/decision-document.entity';
 import { DecisionMakerCodeDto } from '../../decision/application-decision/decision-maker/decision-maker.dto';
 import { DecisionMakerCode } from '../../decision/application-decision/decision-maker/decision-maker.entity';
+import { ApplicationDecisionChairReviewOutcomeType } from '../../decision/application-decision/decision-outcome-type/application-decision-outcome-type.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -117,32 +119,33 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.isOther,
-          mapFrom((a) => a.isOther),
-        ),
-        forMember(
-          (ad) => ad.isTimeExtension,
-          mapFrom((a) => a.isTimeExtension),
-        ),
-        forMember(
-          (ad) => ad.auditDate,
-          mapFrom((a) => (a.auditDate ? a.auditDate.getTime() : null)),
-        ),
-        forMember(
-          (ad) => ad.chairReviewDate,
+          (ad) => ad.chairReviewOutcome,
           mapFrom((a) =>
-            a.chairReviewDate ? a.chairReviewDate.getTime() : null,
+            this.mapper.map(
+              a.chairReviewOutcome,
+              ApplicationDecisionChairReviewOutcomeType,
+              ChairReviewOutcomeCodeDto,
+            ),
           ),
         ),
         forMember(
-          (ad) => ad.chairReviewOutcome,
-          mapFrom((a) => a.chairReviewOutcome),
+          (ad) => ad.auditDate,
+          mapFrom((a) => a.auditDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.chairReviewDate,
+          mapFrom((a) => a.chairReviewDate?.getTime()),
         ),
       );
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
+      createMap(
+        mapper,
+        ApplicationDecisionChairReviewOutcomeType,
+        ChairReviewOutcomeCodeDto,
+      );
 
       createMap(
         mapper,
@@ -165,27 +168,19 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         DecisionDocumentDto,
         forMember(
           (a) => a.mimeType,
-          mapFrom((ad) => {
-            return ad.document.mimeType;
-          }),
+          mapFrom((ad) => ad.document.mimeType),
         ),
         forMember(
           (a) => a.fileName,
-          mapFrom((ad) => {
-            return ad.document.fileName;
-          }),
+          mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
           (a) => a.uploadedBy,
-          mapFrom((ad) => {
-            return ad.document.uploadedBy.name;
-          }),
+          mapFrom((ad) => ad.document.uploadedBy.name),
         ),
         forMember(
           (a) => a.uploadedAt,
-          mapFrom((ad) => {
-            return ad.document.uploadedAt.getTime();
-          }),
+          mapFrom((ad) => ad.document.uploadedAt.getTime()),
         ),
       );
     };

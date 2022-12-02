@@ -10,6 +10,7 @@ export interface UserDto extends UpdateUserDto {
   clientRoles: string[];
   idirUserName: string;
   bceidUserName: string;
+  prettyName: string;
 }
 
 export interface UserSettingsDto {

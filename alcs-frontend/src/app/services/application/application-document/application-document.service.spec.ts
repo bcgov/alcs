@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDocumentService } from './application-document.service';
 
-describe('ApplicationDecisionMeetingService', () => {
+describe('ApplicationDocumentService', () => {
   let service: ApplicationDocumentService;
 
   beforeEach(() => {

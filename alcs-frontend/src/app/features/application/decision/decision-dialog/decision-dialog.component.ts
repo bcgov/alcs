@@ -148,6 +148,7 @@ export class DecisionDialogComponent implements OnInit {
       outcomeCode: outcome!,
       decisionMakerCode: decisionMaker,
       ceoCriterionCode: ceoCriterion,
+      chairReviewOutcomeCode: chairReviewOutcome,
       applicationFileNumber: this.data.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
@@ -158,9 +159,6 @@ export class DecisionDialogComponent implements OnInit {
     } else {
       data.isTimeExtension = null;
       data.isOther = null;
-    }
-    if (chairReviewOutcome !== null) {
-      data.chairReviewOutcome = chairReviewOutcome === 'true';
     }
 
     try {
@@ -244,7 +242,7 @@ export class DecisionDialogComponent implements OnInit {
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.isReviewApproved !== false && modification.resultingDecision === null)
+          (modification.reviewOutcome.code !== 'REF' && modification.resultingDecision === null)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -258,7 +256,7 @@ export class DecisionDialogComponent implements OnInit {
       .filter(
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-          (reconsideration.isReviewApproved !== false && reconsideration.resultingDecision === null)
+          (reconsideration.reviewOutcome?.code !== 'REF' && reconsideration.resultingDecision === null)
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
@@ -307,7 +305,7 @@ export class DecisionDialogComponent implements OnInit {
 
     if (existingDecision.chairReviewOutcome !== null) {
       this.form.patchValue({
-        chairReviewOutcome: existingDecision.chairReviewOutcome ? 'true' : 'false',
+        chairReviewOutcome: existingDecision.chairReviewOutcome?.code,
       });
     }
   }

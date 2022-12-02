@@ -8,12 +8,11 @@ import {
   IsNull,
   Repository,
 } from 'typeorm';
-import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationDto,
@@ -47,6 +46,7 @@ export class ApplicationModificationService {
     },
     modifiesDecisions: true,
     resultingDecision: true,
+    reviewOutcome: true,
   };
 
   getByBoardCode(boardCode: string) {
@@ -127,9 +127,11 @@ export class ApplicationModificationService {
         ? new Date(updateDto.reviewDate)
         : null;
     }
-    if (updateDto.isReviewApproved !== undefined) {
-      modification.isReviewApproved = updateDto.isReviewApproved;
+
+    if (updateDto.reviewOutcomeCode) {
+      modification.reviewOutcomeCode = updateDto.reviewOutcomeCode;
     }
+
     if (updateDto.isTimeExtension !== undefined) {
       modification.isTimeExtension = updateDto.isTimeExtension;
     }

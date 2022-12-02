@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import {
   ApplicationModificationDto,
   ApplicationModificationUpdateDto,
 } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
@@ -20,12 +20,12 @@ export class EditModificationDialogComponent implements OnInit {
 
   isLoading = false;
 
-  isReviewApprovedControl = new FormControl<string | null>(null);
+  reviewOutcomeCodeControl = new FormControl<string | undefined>(undefined);
   isTimeExtensionControl = new FormControl<string>('true', [Validators.required]);
 
   form = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    isReviewApproved: this.isReviewApprovedControl,
+    reviewOutcomeCode: this.reviewOutcomeCodeControl,
     isTimeExtension: this.isTimeExtensionControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
     modifiesDecisions: new FormControl<string[]>([], [Validators.required]),
@@ -44,7 +44,7 @@ export class EditModificationDialogComponent implements OnInit {
   ) {
     this.form.patchValue({
       submittedDate: new Date(data.existingModification.submittedDate),
-      isReviewApproved: JSON.stringify(data.existingModification.isReviewApproved),
+      reviewOutcomeCode: data.existingModification.reviewOutcome.code,
       isTimeExtension: data.existingModification.isTimeExtension ? 'true' : 'false',
       reviewDate: data.existingModification.reviewDate ? new Date(data.existingModification.reviewDate) : null,
       modifiesDecisions: data.existingModification.modifiesDecisions.map((dec) => dec.uuid),
@@ -58,10 +58,11 @@ export class EditModificationDialogComponent implements OnInit {
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, isTimeExtension, isReviewApproved, reviewDate, modifiesDecisions } = this.form.getRawValue();
+    const { submittedDate, isTimeExtension, reviewOutcomeCode, reviewDate, modifiesDecisions } =
+      this.form.getRawValue();
     const updateDto: ApplicationModificationUpdateDto = {
       submittedDate: formatDateForApi(submittedDate!),
-      isReviewApproved: isReviewApproved != undefined ? JSON.parse(isReviewApproved) : null,
+      reviewOutcomeCode: reviewOutcomeCode || undefined,
       isTimeExtension: isTimeExtension === 'true',
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
       modifiesDecisionUuids: modifiesDecisions!,

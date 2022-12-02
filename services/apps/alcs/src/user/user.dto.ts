@@ -35,6 +35,9 @@ export class UserDto extends UpdateUserDto {
 
   @AutoMap()
   bceidUserName?: string | null;
+
+  @AutoMap()
+  prettyName?: string | null;
 }
 
 export class CreateUserDto {

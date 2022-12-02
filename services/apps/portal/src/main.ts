@@ -1,4 +1,5 @@
 import fastifyHelmet from '@fastify/helmet';
+import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -53,6 +54,19 @@ const registerPipes = (app: NestFastifyApplication) => {
   );
 };
 
+const registerMultiPart = async (app: NestFastifyApplication) => {
+  await app.register(fastifyMultipart, {
+    limits: {
+      fieldNameSize: 100, // Max field name size in bytes
+      fieldSize: 100, // Max field value size in bytes
+      fields: 10, // Max number of non-file fields
+      fileSize: config.get<number>('STORAGE.MAX_FILE_SIZE'), // For multipart forms, the max file size in bytes
+      files: 1, // Max number of file fields
+      headerPairs: 2000, // Max number of header key=>value pairs
+    },
+  });
+};
+
 async function bootstrap() {
   //TODO: Security workaround for fastify, fixed in fastify 4.8.1+
   const fastifyInstance = fastify();
@@ -89,6 +103,7 @@ async function bootstrap() {
   await registerHelmet(app);
   registerGlobalFilters(app);
   registerPipes(app);
+  await registerMultiPart(app);
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {

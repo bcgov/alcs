@@ -1,20 +1,22 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { CardDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
-import {
-  ApplicationModificationDto,
-  ApplicationForModificationDto,
-} from '../../decision/application-modification/application-modification.dto';
-import { ApplicationModification } from '../../decision/application-modification/application-modification.entity';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
+import { Application } from '../../application/application.entity';
+import { CardDto } from '../../card/card.dto';
+import { Card } from '../../card/card.entity';
 import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
-import { Application } from '../../application/application.entity';
+import {
+  ApplicationForModificationDto,
+  ApplicationModificationDto,
+  ApplicationModificationOutcomeCodeDto,
+} from '../../decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../../decision/application-modification/application-modification.entity';
+import { ApplicationModificationOutcomeType } from '../../decision/application-modification/modification-outcome-type/application-modification-outcome-type.entity';
 
 @Injectable()
 export class ModificationProfile extends AutomapperProfile {
@@ -24,6 +26,12 @@ export class ModificationProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
+      createMap(
+        mapper,
+        ApplicationModificationOutcomeType,
+        ApplicationModificationOutcomeCodeDto,
+      );
+
       createMap(
         mapper,
         Application,
@@ -70,13 +78,17 @@ export class ModificationProfile extends AutomapperProfile {
         ),
         forMember(
           (a) => a.reviewDate,
-          mapFrom((rd) =>
-            rd.reviewDate ? rd.reviewDate.getTime() : undefined,
-          ),
+          mapFrom((rd) => rd.reviewDate?.getTime()),
         ),
         forMember(
-          (a) => a.isReviewApproved,
-          mapFrom((rd) => rd.isReviewApproved),
+          (a) => a.reviewOutcome,
+          mapFrom((rd) =>
+            this.mapper.map(
+              rd.reviewOutcome,
+              ApplicationModificationOutcomeType,
+              ApplicationModificationOutcomeCodeDto,
+            ),
+          ),
         ),
         forMember(
           (a) => a.modifiesDecisions,

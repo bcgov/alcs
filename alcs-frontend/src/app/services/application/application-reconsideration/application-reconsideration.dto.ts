@@ -5,10 +5,16 @@ import { ApplicationDecisionDto } from '../application-decision/application-deci
 import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application.dto';
 
+export const enum RECONSIDERATION_TYPE {
+  T_33 = '33',
+  T_33_1 = '33.1',
+}
 export interface ReconsiderationTypeDto extends BaseCodeDto {
   backgroundColor: string;
   textColor: string;
 }
+
+export interface ReconsiderationReviewOutcomeTypeDto extends BaseCodeDto {}
 
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;
@@ -33,7 +39,7 @@ export interface ApplicationReconsiderationDto {
   submittedDate: number;
   board: BoardSmallDto;
   reviewDate?: number;
-  isReviewApproved?: boolean | null;
+  reviewOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
 }
@@ -56,6 +62,6 @@ export interface UpdateApplicationReconsiderationDto {
   submittedDate?: number;
   typeCode?: string | undefined;
   reviewDate?: number | null;
-  isReviewApproved?: boolean | null;
+  reviewOutcomeCode?: string | null;
   reconsideredDecisionUuids?: string[];
 }

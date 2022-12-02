@@ -1,3 +1,4 @@
+import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../application-code.dto';
 import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
@@ -19,7 +20,7 @@ export interface ApplicationModificationCreateDto {
 export interface ApplicationModificationUpdateDto {
   submittedDate?: number;
   reviewDate?: number | null;
-  isReviewApproved?: boolean | null;
+  reviewOutcomeCode?: string;
   isTimeExtension?: boolean | null;
   modifiesDecisionUuids?: string[];
 }
@@ -40,8 +41,10 @@ export interface ApplicationModificationDto {
   card: CardDto;
   submittedDate: number;
   reviewDate: number;
-  isReviewApproved: boolean | null;
+  reviewOutcome: ModificationReviewOutcomeTypeDto;
   isTimeExtension: boolean | null;
   modifiesDecisions: ApplicationDecisionDto[];
   resultingDecision?: ApplicationDecisionDto;
 }
+
+export interface ModificationReviewOutcomeTypeDto extends BaseCodeDto {}

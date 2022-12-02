@@ -9,10 +9,11 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { ApplicationDecision } from '../application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 import { Card } from '../../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
+import { ApplicationDecision } from '../application-decision/application-decision.entity';
+import { ApplicationReconsiderationOutcomeType } from './reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 @Entity()
@@ -35,8 +36,14 @@ export class ApplicationReconsideration extends Base {
   type: ApplicationReconsiderationType;
 
   @AutoMap()
-  @Column({ type: 'boolean', nullable: true })
-  isReviewApproved: boolean | null;
+  @Column({ nullable: true, type: 'text' })
+  reviewOutcomeCode?: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
+    nullable: true,
+  })
+  reviewOutcome: ApplicationReconsiderationOutcomeType | null;
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })

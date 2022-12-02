@@ -198,7 +198,7 @@ export class OverviewComponent implements OnInit {
         if (reconsideration.reviewDate) {
           events.push({
             name: `Reconsideration Request Reviewed #${reconsiderations.length - index} ${
-              reconsideration.isReviewApproved ? 'Proceed' : 'Refused'
+              reconsideration.reviewOutcome?.label
             }`,
             startDate: new Date(reconsideration.reviewDate),
             isFulfilled: true,
@@ -221,9 +221,7 @@ export class OverviewComponent implements OnInit {
       });
       if (modification.reviewDate) {
         events.push({
-          name: `Modification Request Reviewed #${modifications.length - index} ${
-            modification.isReviewApproved ? 'Proceed' : 'Refused'
-          }`,
+          name: `Modification Request Reviewed #${modifications.length - index} ${modification.reviewOutcome?.label}`,
           startDate: new Date(modification.reviewDate),
           isFulfilled: true,
         });

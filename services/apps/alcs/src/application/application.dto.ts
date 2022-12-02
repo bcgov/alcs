@@ -135,7 +135,7 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationTypeDto)
   type: ApplicationTypeDto;
 
-  @AutoMap()
+  @AutoMap(() => String)
   summary: string | null;
 
   @AutoMap(() => ApplicationRegionDto)

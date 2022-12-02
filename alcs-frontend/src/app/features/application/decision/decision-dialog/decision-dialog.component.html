@@ -144,8 +144,8 @@
       <div *ngIf="form.get('chairReviewRequired')!.value === 'true'">
         <mat-label class="toggle-label">Chair Review Outcome</mat-label>
         <mat-button-toggle-group id="chairReviewOutcome" formControlName="chairReviewOutcome" name="chairReviewOutcome">
-          <mat-button-toggle value="true">Reconsider</mat-button-toggle>
-          <mat-button-toggle value="false">Stay</mat-button-toggle>
+          <mat-button-toggle value="REC">Reconsider</mat-button-toggle>
+          <mat-button-toggle value="STAY">Stay</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
     </div>

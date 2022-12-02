@@ -55,9 +55,9 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   isOther?: boolean | null;
 
-  @IsBoolean()
+  @IsString()
   @IsOptional()
-  chairReviewOutcome?: boolean | null;
+  chairReviewOutcomeCode?: string | null;
 
   @IsUUID()
   @IsOptional()
@@ -101,6 +101,8 @@ export class DecisionOutcomeCodeDto extends BaseCodeDto {
   isFirstDecision: boolean;
 }
 
+export class ChairReviewOutcomeCodeDto extends BaseCodeDto {}
+
 export class ApplicationDecisionDto {
   @AutoMap()
   uuid: string;
@@ -115,7 +117,7 @@ export class ApplicationDecisionDto {
   outcome: DecisionOutcomeCodeDto;
 
   @AutoMap()
-  resolutionNumber: number;
+  resolutionNumber: string;
 
   @AutoMap()
   resolutionYear: number;
@@ -130,7 +132,7 @@ export class ApplicationDecisionDto {
   chairReviewDate?: number | null;
 
   @AutoMap()
-  chairReviewOutcome?: boolean | null;
+  chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
 
   @AutoMap()
   documents: DecisionDocumentDto[];
@@ -141,10 +143,10 @@ export class ApplicationDecisionDto {
   @AutoMap()
   ceoCriterion?: CeoCriterionCodeDto | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   isTimeExtension?: boolean | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   isOther?: boolean | null;
 
   reconsiders?: LinkedResolutionDto;
