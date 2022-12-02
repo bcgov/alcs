@@ -19,6 +19,9 @@ ARG environment=production
 
 ENV NODE_ENV ${environment}
 
+ARG nest_app=alcs
+ENV NEST_APP=${nest_app}
+
 COPY . .
 
 CMD [ "./migrate.sh" ]
