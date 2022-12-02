@@ -1,0 +1,129 @@
+@use '@angular/material' as mat;
+
+@import "typography";
+@import "colors";
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$mat-custom-primary: (
+  50: #f3f6eb,
+  100: #e0e7cd,
+  200: #ccd8ab,
+  300: #b7c889,
+  400: #a7bc70,
+  500: $primary-color,
+  600: #90a94f,
+  700: #85a046,
+  800: #7b973c,
+  900: #6a872c,
+  A100: #eeffcc,
+  A200: #ddff99,
+  A400: #cbff66,
+  A700: #c3ff4d,
+  contrast: (
+    50: $dark-contrast-text,
+    100: $dark-contrast-text,
+    200: $dark-contrast-text,
+    300: $dark-contrast-text,
+    400: $dark-contrast-text,
+    500: $dark-contrast-text,
+    600: $dark-contrast-text,
+    700: $dark-contrast-text,
+    800: $dark-contrast-text,
+    900: $dark-contrast-text,
+    A100: $dark-contrast-text,
+    A200: $dark-contrast-text,
+    A400: $dark-contrast-text,
+    A700: $dark-contrast-text,
+  ),
+);
+
+$mat-custom-accent: (
+  50: #e2ebf3,
+  100: #b6cee1,
+  200: #85adce,
+  300: #548cba,
+  400: #2f73ab,
+  500: $accent-color,
+  600: #095294,
+  700: #07488a,
+  800: #053f80,
+  900: #032e6e,
+  A100: #9dbdff,
+  A200: #6a9bff,
+  A400: #3778ff,
+  A700: #1e67ff,
+  contrast: (
+    50: $dark-contrast-text,
+    100: $dark-contrast-text,
+    200: $dark-contrast-text,
+    300: $dark-contrast-text,
+    400: $light-contrast-text,
+    500: $light-contrast-text,
+    600: $light-contrast-text,
+    700: $light-contrast-text,
+    800: $light-contrast-text,
+    900: $light-contrast-text,
+    A100: $dark-contrast-text,
+    A200: $dark-contrast-text,
+    A400: $dark-contrast-text,
+    A700: $light-contrast-text,
+  ),
+);
+
+$mat-custom-warn: (
+  50: #fae5e6,
+  100: #f3bfc1,
+  200: #ec9497,
+  300: #e4696d,
+  400: #de494e,
+  500: $error-color,
+  600: #d4242a,
+  700: #ce1f23,
+  800: #c8191d,
+  900: #bf0f12,
+  A100: #ffecec,
+  A200: #ffb9ba,
+  A400: #ff8688,
+  A700: #ff6d6e,
+  contrast: (
+    50: $dark-contrast-text,
+    100: $dark-contrast-text,
+    200: $dark-contrast-text,
+    300: $dark-contrast-text,
+    400: $dark-contrast-text,
+    500: $light-contrast-text,
+    600: $light-contrast-text,
+    700: $light-contrast-text,
+    800: $light-contrast-text,
+    900: $light-contrast-text,
+    A100: $dark-contrast-text,
+    A200: $dark-contrast-text,
+    A400: $dark-contrast-text,
+    A700: $dark-contrast-text,
+  ),
+);
+
+$alcs-primary: mat.define-palette($mat-custom-primary);
+$alcs-accent: mat.define-palette($mat-custom-accent);
+
+// The warn palette is optional (defaults to red).
+$alcs-warn: mat.define-palette($mat-custom-warn);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$alcs-theme: mat.define-light-theme(
+    (
+      color: (
+        primary: $alcs-primary,
+        accent: $alcs-accent,
+        warn: $alcs-warn,
+      ),
+    )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($alcs-theme);

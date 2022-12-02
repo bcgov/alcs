@@ -1,0 +1,20 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.site-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    flex-grow: 0;
+  }
+
+  div.main-content {
+    flex-grow: 1;
+    overflow: auto;
+    margin: 32px 80px;
+  }
+}

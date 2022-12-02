@@ -1,0 +1,24 @@
+{
+  "PORT": 8080,
+  "BASE_URL": "localhost:8080",
+  "DATABASE": {
+    "HOST": "localhost",
+    "PORT": 5432,
+    "NAME": "postgres",
+    "USER": "postgres",
+    "PASSWORD": "postgres"
+  },
+  "VERBOSE": "false",
+  "KEYCLOAK": {
+    "SCOPES": [
+      "openid"
+    ]
+  },
+  "CHES": {
+    "MODE": "production",
+    "FROM": "fake.email@wdawdajhlwdj",
+    "TOKEN_URL": "https://token-url",
+    "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
+    "PASSWORD": "fake-password"
+  }
+}
