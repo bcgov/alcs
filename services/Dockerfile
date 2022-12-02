@@ -52,8 +52,11 @@ RUN chmod og+rwx /opt/app-root/ /var/run
 ARG environment=production
 ENV NODE_ENV ${environment}
 
+ARG nest_app=alcs
+ENV NEST_APP=${nest_app}
+
 COPY --from=build /opt/app-root/node_modules ./node_modules
-COPY --from=build /opt/app-root/dist ./dist
+COPY --from=build /opt/app-root/dist/apps/${nest_app} ./dist
 COPY ./config/ /opt/app-root/config/
 
 CMD [ "node", "dist/main.js" ]
