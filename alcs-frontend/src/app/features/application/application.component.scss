@@ -37,23 +37,24 @@
 
   div {
     padding: 12px 24px;
+    border: 2px solid transparent;
   }
 
   div.active {
     font-weight: bold;
     background-color: $primary-color-dark;
     color: $white;
+    border-color: $primary-color-dark;
 
     &:hover {
+      cursor: default;
       background-color: $primary-color-dark;
-      border: none;
       color: $white;
     }
   }
 
   div:hover {
-    background-color: $secondary-color-light;
-    border-right: 4px solid $secondary-color-dark;
+    border-color: $primary-color-dark;
     color: $dark-contrast-text;
   }
 }

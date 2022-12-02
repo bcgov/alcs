@@ -33,13 +33,13 @@ export const childRoutes = [
   {
     path: 'info-request',
     menuTitle: 'Info Request',
-    icon: 'perm_device_information',
+    icon: 'contact_mail',
     component: InfoRequestsComponent,
   },
   {
     path: 'site-visit-meeting',
     menuTitle: 'Site Visit /\nApplicant Meeting',
-    icon: 'engineering',
+    icon: 'diversity_3',
     component: ApplicationMeetingComponent,
   },
   {
