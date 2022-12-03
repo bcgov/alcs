@@ -43,3 +43,12 @@ input {
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
   top: 0;
 }
+
+:host ::ng-deep .mat-form-field-appearance-outline.mat-focused:hover .mat-form-field-outline,
+:host ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+  color: $primary-color-light;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline:hover .mat-form-field-outline {
+  color: rgba($primary-color-light, 0.7);
+}
