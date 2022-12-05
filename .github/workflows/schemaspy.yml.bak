@@ -28,7 +28,7 @@ jobs:
       - name: Setup Database
         run: |
           npm install
-          npm run typeorm migration:run
+          npm run alcs:migration:run
         working-directory: services
       - name: Create Output Folder
         run: |
