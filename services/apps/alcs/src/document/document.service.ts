@@ -17,7 +17,8 @@ import { Document } from './document.entity';
 export class DocumentService {
   private dataStore: S3Client;
   private logger = new Logger(DocumentService.name);
-  private bucket = <string>this.config.get('STORAGE.BUCKET');
+  private bucket = this.config.get<string>('STORAGE.BUCKET');
+  private documentTimeout = this.config.get<number>('ALCS.DOCUMENT_TIMEOUT');
 
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
@@ -71,7 +72,7 @@ export class DocumentService {
     });
 
     return getSignedUrl(this.dataStore, command, {
-      expiresIn: 60,
+      expiresIn: this.documentTimeout,
     });
   }
 
@@ -84,7 +85,7 @@ export class DocumentService {
       }; filename="${document.fileName}"`,
     });
     return getSignedUrl(this.dataStore, command, {
-      expiresIn: 60,
+      expiresIn: this.documentTimeout,
     });
   }
 }
