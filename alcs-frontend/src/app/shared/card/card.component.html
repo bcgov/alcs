@@ -1,6 +1,3 @@
-<div *ngIf="cardData.latestDecisionDate" class="decision-date-info" [ngClass]="{ paused: cardData.paused }">
-  {{ cardData.latestDecisionDate | momentFormat }}
-</div>
 <mat-card
   class="card body1-text"
   [ngClass]="{ paused: cardData.paused, 'decision-date': cardData.latestDecisionDate }"
@@ -8,6 +5,9 @@
   [cdkDragData]="cardData"
   (click)="onClick(cardData.id, cardData.cardType)"
 >
+  <div *ngIf="cardData.latestDecisionDate" class="decision-date-info" [ngClass]="{ paused: cardData.paused }">
+    {{ cardData.latestDecisionDate | momentFormat }}
+  </div>
   <div class="card-content">
     <div class="upper-card">
       {{ cardData.title }}
