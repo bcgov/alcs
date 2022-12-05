@@ -205,7 +205,10 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const el = document.getElementById(fileNumber);
       if (el) {
-        el.scrollIntoView();
+        el.scrollIntoView({
+          block: 'center',
+          inline: 'center',
+        });
       }
     }, 300);
   }

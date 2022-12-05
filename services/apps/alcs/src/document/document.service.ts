@@ -1,5 +1,4 @@
 import {
-  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -61,6 +60,19 @@ export class DocumentService {
 
   async softRemove(document: Document) {
     await this.documentRepository.softRemove(document);
+  }
+
+  getUploadUrl(filePath: string) {
+    const fileKey = `${filePath}/${v4()}`;
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: fileKey,
+      ACL: 'bucket-owner-full-control',
+    });
+
+    return getSignedUrl(this.dataStore, command, {
+      expiresIn: 60,
+    });
   }
 
   getDownloadUrl(document: Document, openInline = false) {
