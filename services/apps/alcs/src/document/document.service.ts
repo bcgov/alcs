@@ -1,5 +1,4 @@
 import {
-  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -18,7 +17,8 @@ import { Document } from './document.entity';
 export class DocumentService {
   private dataStore: S3Client;
   private logger = new Logger(DocumentService.name);
-  private bucket = <string>this.config.get('STORAGE.BUCKET');
+  private bucket = this.config.get<string>('STORAGE.BUCKET');
+  private documentTimeout = this.config.get<number>('ALCS.DOCUMENT_TIMEOUT');
 
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
@@ -63,6 +63,19 @@ export class DocumentService {
     await this.documentRepository.softRemove(document);
   }
 
+  getUploadUrl(filePath: string) {
+    const fileKey = `${filePath}/${v4()}`;
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: fileKey,
+      ACL: 'bucket-owner-full-control',
+    });
+
+    return getSignedUrl(this.dataStore, command, {
+      expiresIn: this.documentTimeout,
+    });
+  }
+
   getDownloadUrl(document: Document, openInline = false) {
     const command = new GetObjectCommand({
       Bucket: this.config.get('STORAGE.BUCKET'),
@@ -72,7 +85,7 @@ export class DocumentService {
       }; filename="${document.fileName}"`,
     });
     return getSignedUrl(this.dataStore, command, {
-      expiresIn: 60,
+      expiresIn: this.documentTimeout,
     });
   }
 }

@@ -10,7 +10,8 @@
       "CLIENT_ID": "",
       "SECRET": ""
     },
-    "DATABASE_SCHEMA": "public"
+    "DATABASE_SCHEMA": "public",
+    "DOCUMENT_TIMEOUT": 60
   },
   "PORTAL": {
     "BASE_URL": "http://localhost:8081",
