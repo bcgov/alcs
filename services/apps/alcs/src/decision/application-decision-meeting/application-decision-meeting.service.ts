@@ -72,6 +72,7 @@ export class ApplicationDecisionMeetingService {
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.reconsiderations', 'reconsideration')
       .innerJoin('reconsideration.card', 'card')
+      .where("card.status_code != 'RELE'")
       .groupBy('reconsideration.uuid')
       .getRawMany();
   }
@@ -84,6 +85,7 @@ export class ApplicationDecisionMeetingService {
       .select('application.uuid, MAX(meeting.date) as next_meeting')
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.card', 'card')
+      .where("card.status_code != 'RELE'")
       .groupBy('application.uuid')
       .getRawMany();
   }
