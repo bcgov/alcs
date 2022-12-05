@@ -12,12 +12,18 @@
 }
 
 .column-header {
-  z-index: 1000;
-  text-align: center;
+  align-items: center;
+  background: rgba($grey-light, 0.9);
+  display: flex;
   font-size: 17px;
   font-weight: 700;
-  padding: 4px;
   height: 64px;
+  justify-content: center;
+  margin: 0 -2px 8px;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  z-index: 1000;
 }
 
 .column {

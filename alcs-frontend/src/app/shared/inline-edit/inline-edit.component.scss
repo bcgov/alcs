@@ -3,7 +3,7 @@
 .editable {
   display: inline-block;
   cursor: pointer;
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  border: 2px solid $primary-color-dark;
   padding: 8px;
   border-radius: 2px;
   font-size: 16px;
@@ -19,7 +19,7 @@
   justify-content: space-between;
   border-radius: 2px;
   font-size: 16px;
-  border: 2px solid rgba(0,0,0,0);
+  border: 2px solid transparent;
   margin-left: -8px;
   margin-right: -8px;
   min-height: 28px;
@@ -31,10 +31,11 @@
 
 .content:hover {
   border: 2px solid $grey;
+  border-radius: 4px;
   cursor: pointer;
 
   .edit-button {
-    color: #fff;
+    color: $white;
     background-color: $grey;
   }
 
@@ -64,7 +65,7 @@
 }
 
 .editable:hover {
-  border: 2px solid $accent-color;
+  border: 2px solid $primary-color;
 }
 
 .save {
