@@ -5,6 +5,10 @@
   border-bottom: 1px solid;
   background-color: $primary-color;
   color: $white;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 .mat-toolbar {
