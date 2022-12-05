@@ -38,11 +38,15 @@
 }
 
 .main-panel-header {
-  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
-  border: 1px solid $white;
+  border: 2px solid $white;
   border-radius: 5px;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  transition: all 100ms ease-in-out;
 
   &:hover {
+    border-color: $primary-color;
+    background-color: unset !important;
+
     ::ng-deep .favorite-btn {
       visibility: visible;
       color: $grey;
