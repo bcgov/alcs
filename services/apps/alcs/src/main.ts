@@ -2,6 +2,7 @@ import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -13,6 +14,7 @@ import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
 import { AlcsModule } from './alcs.module';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
+import { grpcOptions } from './providers/grpc/grpc.options.config';
 import { generateModuleGraph } from './tools/graph';
 import { importApplications } from './tools/import';
 
@@ -138,6 +140,10 @@ async function bootstrap() {
   registerGlobalFilters(app);
   await registerMultiPart(app);
   registerPipes(app);
+
+  // microservices
+  app.connectMicroservice<MicroserviceOptions>(grpcOptions);
+  await app.startAllMicroservices();
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
