@@ -32,15 +32,17 @@ jobs:
         
     - name: Import Images
       run: |
-        oc import-image alcs-api:latest -n ${{secrets.LICENSE_PLATE}}-tools
-        oc tag alcs-api:latest alcs-api:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
-        oc import-image alcs-frontend:latest -n ${{secrets.LICENSE_PLATE}}-tools
-        oc tag alcs-frontend:latest alcs-frontend:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
-        oc import-image alcs-migrate:latest -n ${{secrets.LICENSE_PLATE}}-tools
-        oc tag alcs-migrate:latest alcs-migrate:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
-
-      # oc import-image alcs-portal-api:latest -n ${{secrets.LICENSE_PLATE}}-tools
-      # oc tag alcs-portal-api:latest alcs-portal-api:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools
+        import() { \
+          echo "Importing $1" ; \
+          oc import-image $1:latest -n ${{secrets.LICENSE_PLATE}}-tools ; \
+          oc tag $1:latest $1:${{ github.run_number }} -n ${{secrets.LICENSE_PLATE}}-tools ; }
+        
+        import alcs-api
+        import alcs-frontend
+        import alcs-migrate
+        import alcs-portal-api
+        import alcs-portal-frontend
+        import alcs-portal-migrate
 
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
@@ -50,9 +52,11 @@ jobs:
         event-type: deploy-${{ inputs.environment }}
         client-payload: |
           {
-            "apiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.API_IMAGE_NAME }}:${{ github.run_number }}",
-            "migrateImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.MIGRATE_IMAGE_NAME }}:${{ github.run_number }}",
-            "frontendImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.FE_IMAGE_NAME }}:${{ github.run_number }}",
-            "portalApiImage": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/${{ env.PORTAL_API_IMAGE_NAME }}:${{ github.run_number }}",
+            "alcs-api": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:${{ github.run_number }}",
+            "alcs-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-frontend:${{ github.run_number }}",
+            "alcs-migrate": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-migrate:${{ github.run_number }}",
+            "alcs-portal-api": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-api:${{ github.run_number }}",
+            "alcs-portal-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-frontend:${{ github.run_number }}",
+            "alcs-portal-migrate": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-migrate:${{ github.run_number }}",
             "commitMessage": "${{ github.sha }}"
           }

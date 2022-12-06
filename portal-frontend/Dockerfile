@@ -1,0 +1,45 @@
+###### Install dependencies only when needed ######
+FROM node:16.15-alpine AS build
+
+# Make /app as working directory
+WORKDIR /app
+
+# Copy package.json file
+COPY package.json .
+
+# Install dependencies 
+# TODO: Replace with ci when fixed - https://github.com/ng-select/ng-select/issues/2111
+RUN npm install --legacy-peer-deps
+
+# Copy the source code to the /app directory
+COPY . .
+
+# Build the application
+RUN npm run build --  --output-path=dist --output-hashing=all
+
+
+######  Use Nginx alpine image  ###### 
+FROM nginx:stable-alpine
+
+### OpenShift fixes ####
+# https://torstenwalter.de/openshift/nginx/2017/08/04/nginx-on-openshift.html
+# support running as arbitrary user which belogs to the root group
+RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
+
+# use a non 80 port
+EXPOSE 8081
+
+# Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy nginx config file
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# Copy dist folder fro build stage to nginx public folder
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Dynamically update environment values
+RUN chmod -R go+rwx /usr/share/nginx/html/assets
+
+# When the container starts, replace the settings.json with values from environment variables
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
