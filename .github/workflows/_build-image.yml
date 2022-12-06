@@ -34,8 +34,8 @@ jobs:
         run: |
           DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/${{ inputs.image-name }}
           TAGS="${DOCKER_IMAGE}:${{ github.run_number }},${DOCKER_IMAGE}:latest"
-          echo "tags=${TAGS}" > $GITHUB_OUTPUT
-          echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > $GITHUB_OUTPUT
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1
