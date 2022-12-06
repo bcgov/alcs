@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SharedModule } from '../../../../shared/shared.module';
 
 import { InlineReviewOutcomeComponent } from './inline-review-outcome.component';
 
@@ -10,7 +11,7 @@ describe('InlineReviewOutcomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, MatButtonToggleModule],
+      imports: [SharedModule, FormsModule, ReactiveFormsModule, MatButtonToggleModule],
       declarations: [InlineReviewOutcomeComponent],
       providers: [],
     }).compileComponents();

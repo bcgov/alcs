@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment from 'moment';
-import { environment } from '../../../environments/environment';
+import moment from 'moment';
 
 @Pipe({ name: 'startOfDay' })
 export class StartOfDayPipe implements PipeTransform {

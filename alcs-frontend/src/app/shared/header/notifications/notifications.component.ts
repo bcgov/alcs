@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { environment } from '../../../../environments/environment';
 import { NotificationService } from '../../../services/notification/notification.service';
 

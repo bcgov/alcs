@@ -1,9 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
+import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { BoardService } from '../../../../services/board/board.service';
@@ -16,6 +17,7 @@ import { ApplicationDialogComponent } from './application-dialog.component';
 describe('ApplicationDialogComponent', () => {
   let component: ApplicationDialogComponent;
   let fixture: ComponentFixture<ApplicationDialogComponent>;
+  let mockBoardService: DeepMocked<BoardService>;
 
   const mockAssignee: AssigneeDto = {
     uuid: '11111-11111-11111',
@@ -70,15 +72,14 @@ describe('ApplicationDialogComponent', () => {
   };
 
   beforeEach(async () => {
-    const mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close', 'afterClosed', 'backdropClick', 'subscribe']);
-    mockDialogRef.backdropClick = () => new EventEmitter();
+    const mockDialogRef = {
+      close: jest.fn(),
+      afterClosed: jest.fn(),
+      backdropClick: () => new EventEmitter(),
+      subscribe: jest.fn(),
+    };
 
-    const mockBoardService = jasmine.createSpyObj('BoardService', [
-      'close',
-      'afterClosed',
-      'backdropClick',
-      'subscribe',
-    ]);
+    mockBoardService = createMock();
     mockBoardService.$boards = new EventEmitter();
 
     await TestBed.configureTestingModule({
@@ -96,7 +97,7 @@ describe('ApplicationDialogComponent', () => {
         },
         { provide: ConfirmationDialogService, useValue: {} },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationDialogComponent);

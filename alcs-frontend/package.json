@@ -7,9 +7,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test:ci": "ng test --no-watch --browsers=ChromeHeadless",
-    "test:cov": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
+    "test": "ng test --watchAll",
+    "test:ci": "ng test",
+    "test:cov": "ng test --collect-coverage",
     "format": "npx prettier --write .",
     "lint": "ng lint"
   },
@@ -40,6 +40,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-builders/jest": "^14.1.0",
     "@angular-devkit/build-angular": "^14.0.5",
     "@angular-eslint/builder": "14.1.2",
     "@angular-eslint/eslint-plugin": "14.1.2",
@@ -48,16 +49,12 @@
     "@angular-eslint/template-parser": "14.1.2",
     "@angular/cli": "~14.0.5",
     "@angular/compiler-cli": "^14.0.0",
-    "@types/jasmine": "~4.0.0",
+    "@golevelup/ts-jest": "^0.3.4",
+    "@types/jest": "^29.2.3",
     "@typescript-eslint/eslint-plugin": "5.37.0",
     "@typescript-eslint/parser": "5.37.0",
     "eslint": "^8.23.1",
-    "jasmine-core": "~4.1.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0",
+    "jest": "^29.3.1",
     "prettier": "^2.7.1",
     "typescript": "~4.7.2"
   }

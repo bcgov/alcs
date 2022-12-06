@@ -1,4 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
@@ -13,12 +15,14 @@ import { MeetingOverviewComponent } from './meeting-overview.component';
 describe('MeetingOverviewComponent', () => {
   let component: MeetingOverviewComponent;
   let fixture: ComponentFixture<MeetingOverviewComponent>;
+  let mockBoardService: DeepMocked<BoardService>;
+  let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
-    const mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
+    mockBoardService = createMock();
     mockBoardService.$boards = new BehaviorSubject([]);
 
-    const mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService = createMock();
     mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -45,6 +49,7 @@ describe('MeetingOverviewComponent', () => {
         },
       ],
       declarations: [MeetingOverviewComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MeetingOverviewComponent);

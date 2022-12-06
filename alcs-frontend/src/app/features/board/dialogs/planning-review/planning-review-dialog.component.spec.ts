@@ -1,10 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { BehaviorSubject } from 'rxjs';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
@@ -20,8 +22,8 @@ import { PlanningReviewDialogComponent } from './planning-review-dialog.componen
 describe('PlanningReviewDialogComponent', () => {
   let component: PlanningReviewDialogComponent;
   let fixture: ComponentFixture<PlanningReviewDialogComponent>;
-  let mockUserService: jasmine.SpyObj<UserService>;
-  let mockBoardService: jasmine.SpyObj<BoardService>;
+  let mockUserService: DeepMocked<UserService>;
+  let mockBoardService: DeepMocked<BoardService>;
 
   const mockReconDto: PlanningReviewDto = {
     type: 'fake-type',
@@ -47,13 +49,17 @@ describe('PlanningReviewDialogComponent', () => {
   };
 
   beforeEach(async () => {
-    const mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close', 'afterClosed', 'backdropClick', 'subscribe']);
-    mockDialogRef.backdropClick = () => new EventEmitter();
+    const mockDialogRef = {
+      close: jest.fn(),
+      afterClosed: jest.fn(),
+      backdropClick: () => new EventEmitter(),
+      subscribe: jest.fn(),
+    };
 
-    mockUserService = jasmine.createSpyObj<UserService>('UserService', ['fetchAssignableUsers']);
+    mockUserService = createMock();
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
-    mockBoardService = jasmine.createSpyObj<BoardService>('BoardService', ['fetchCards']);
+    mockBoardService = createMock();
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
@@ -90,7 +96,15 @@ describe('PlanningReviewDialogComponent', () => {
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: ConfirmationDialogService, useValue: {} },
       ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, SharedModule],
+      imports: [
+        HttpClientTestingModule,
+        MatDialogModule,
+        MatSnackBarModule,
+        FormsModule,
+        MatMenuModule,
+        NgSelectModule,
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PlanningReviewDialogComponent);

@@ -1,6 +1,7 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
@@ -15,23 +16,18 @@ import { ApplicationComponent } from './application.component';
 describe('ApplicationComponent', () => {
   let component: ApplicationComponent;
   let fixture: ComponentFixture<ApplicationComponent>;
+  let mockAppDetailService: DeepMocked<ApplicationDetailService>;
+  let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
+  let mockModificationService: DeepMocked<ApplicationModificationService>;
 
   beforeEach(async () => {
-    const mockAppDetailService = jasmine.createSpyObj<ApplicationDetailService>('ApplicationDetailService', [
-      'loadApplication',
-    ]);
+    mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
-    const mockReconsiderationService = jasmine.createSpyObj<ApplicationReconsiderationService>(
-      'ApplicationReconsiderationService',
-      ['fetchByApplication']
-    );
+    mockReconsiderationService = createMock();
     mockReconsiderationService.$reconsiderations = new BehaviorSubject<ApplicationReconsiderationDto[]>([]);
 
-    const mockModificationService = jasmine.createSpyObj<ApplicationModificationService>(
-      'ApplicationAmendmentService',
-      ['fetchByApplication']
-    );
+    mockModificationService = createMock();
     mockModificationService.$modifications = new BehaviorSubject<ApplicationModificationDto[]>([]);
 
     await TestBed.configureTestingModule({
@@ -64,6 +60,7 @@ describe('ApplicationComponent', () => {
         },
       ],
       declarations: [ApplicationComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationComponent);

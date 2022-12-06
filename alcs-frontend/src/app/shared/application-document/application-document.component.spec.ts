@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
@@ -21,6 +22,7 @@ describe('ApplicationDocumentComponent', () => {
         },
       ],
       declarations: [ApplicationDocumentComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationDocumentComponent);

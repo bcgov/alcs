@@ -1,6 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { NativeDateAdapter } from '@matheo/datepicker/core';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export class MatheoDatepickerFormatter extends NativeDateAdapter {
   constructor(matDateLocale: string, platform: Platform) {

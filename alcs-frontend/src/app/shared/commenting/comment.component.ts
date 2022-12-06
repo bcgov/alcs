@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { environment } from '../../../environments/environment';
 import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 
