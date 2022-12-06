@@ -5,11 +5,10 @@ FROM node:16.15-alpine AS build
 WORKDIR /app
 
 # Copy package.json file
-COPY package.json .
+COPY package.json package-lock.json ./
 
 # Install dependencies 
-# TODO: Replace with ci when fixed - https://github.com/ng-select/ng-select/issues/2111
-RUN npm install --legacy-peer-deps
+RUN npm ci
 
 # Copy the source code to the /app directory
 COPY . .
