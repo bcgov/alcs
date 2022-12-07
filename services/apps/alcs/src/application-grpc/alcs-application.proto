@@ -1,0 +1,38 @@
+syntax="proto3";
+
+package alcs_application;
+
+service GrpcApplicationService {
+  // this is a placehlder, since it is not possible to add empty service in proto
+  rpc get (ApplicationByNumberGrpc) returns (ApplicationGrpc);
+}
+
+message ApplicationByNumberGrpc {
+  string fileNumber = 1;
+}
+
+message ApplicationGrpc {
+    string fileNumber = 1;
+
+    string applicant = 2;
+
+    int32 activeDays = 3;
+
+    int32 pausedDays = 4;
+
+    bool paused = 5;
+
+    int32 dateSubmittedToAlc= 6;
+
+    optional CardGrpc card = 7;
+}
+
+message CardGrpc {
+  string type = 1;
+
+  string uuid = 2;
+
+  optional bool highPriority = 3;
+
+  string createdAt = 4;
+}
