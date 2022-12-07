@@ -9,6 +9,7 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AlcsController } from './alcs.controller';
 import { AlcsService } from './alcs.service';
+import { ApplicationGrpcModule } from './application-grpc/application-grpc.module';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
@@ -19,6 +20,7 @@ import { ConfigModule } from './common/config/config.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { CovenantModule } from './covenant/covenant.module';
+import { DecisionModule } from './decision/decision.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
@@ -29,7 +31,6 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
-import { DecisionModule } from './decision/decision.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { DecisionModule } from './decision/decision.module';
       middleware: { mount: true },
     }),
     ApplicationModule,
+    ApplicationGrpcModule,
     CommentModule,
     ConfigModule,
     AuthorizationModule,

@@ -4,6 +4,7 @@ import * as config from 'config';
 import * as fs from 'fs';
 import { addReflectionToGrpcConfig } from 'nestjs-grpc-reflection';
 import { join } from 'path';
+import { grpcPackagesNames } from './grpc.packages';
 
 const key = fs.readFileSync(
   join(config.get('GRPC.CERT_FOLDER'), config.get('GRPC.KEY')),
@@ -20,7 +21,7 @@ const root = fs.readFileSync(
 export const grpcOptions: GrpcOptions = addReflectionToGrpcConfig({
   transport: Transport.GRPC,
   options: {
-    package: 'alcs_application',
+    package: grpcPackagesNames,
     url: config.get('GRPC.URL'),
     credentials: ServerCredentials.createSsl(
       root,
