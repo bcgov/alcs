@@ -20,6 +20,7 @@ USER node
 ###################
 
 FROM node:16.15-alpine As build
+ARG NEST_APP=alcs
 
 WORKDIR /opt/app-root/
 
@@ -29,7 +30,7 @@ COPY --chown=node:node --from=development /opt/app-root/node_modules ./node_modu
 
 COPY --chown=node:node . .
 
-RUN npm run build
+RUN npm run build ${NEST_APP}
 
 RUN npm ci --only=production && npm cache clean --force
 
@@ -40,6 +41,7 @@ USER node
 ###################
 
 FROM node:16.15-alpine As production
+ARG NEST_APP=alcs
 
 # Init 
 RUN apk add --no-cache tini
@@ -52,11 +54,8 @@ RUN chmod og+rwx /opt/app-root/ /var/run
 ARG environment=production
 ENV NODE_ENV ${environment}
 
-ARG nest_app=alcs
-ENV NEST_APP=${nest_app}
-
 COPY --from=build /opt/app-root/node_modules ./node_modules
-COPY --from=build /opt/app-root/dist/apps/${nest_app} ./dist
+COPY --from=build /opt/app-root/dist/apps/${NEST_APP} ./dist
 COPY ./config/ /opt/app-root/config/
 
 CMD [ "node", "dist/main.js" ]
