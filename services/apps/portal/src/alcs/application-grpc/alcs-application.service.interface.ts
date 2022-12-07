@@ -1,8 +1,11 @@
-// this is just a placeholder, eslint will be addressed in follow up MRs
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface GrpcApplicationServiceClient {}
+import { Observable } from 'rxjs';
+import {
+  ApplicationCreateGrpc,
+  ApplicationGrpc,
+} from './alcs-application.message.interface';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface GrpcApplicationServiceController {}
+export interface AlcsApplicationServiceClient {
+  create(request: ApplicationCreateGrpc): Observable<ApplicationGrpc>;
+}
 
 export const GRPC_APPLICATION_SERVICE_NAME = 'GrpcApplicationService';

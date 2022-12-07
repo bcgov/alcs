@@ -1,24 +1,37 @@
+import { IsString } from 'class-validator';
+
 export const protobufPackage = 'alcs_application';
 
 export interface ApplicationByNumberGrpc {
   fileNumber: string;
 }
 
-export interface ApplicationGrpc {
+export class ApplicationGrpc {
   fileNumber: string;
   applicant: string;
-  activeDays: number;
-  pausedDays: number;
-  paused: boolean;
-  dateSubmittedToAlc: number;
-  card?: CardGrpc | undefined;
+  dateSubmittedToAlc: string;
+  regionCode: string;
+  localGovernmentUuid: string;
 }
 
-export interface CardGrpc {
-  type: string;
-  uuid: string;
-  highPriority?: boolean | undefined;
-  createdAt: string;
+export class ApplicationCreateGrpc {
+  @IsString()
+  fileNumber: string;
+
+  @IsString()
+  applicant: string;
+
+  @IsString()
+  typeCode: string;
+
+  @IsString()
+  dateSubmittedToAlc: string;
+
+  @IsString()
+  regionCode: string;
+
+  @IsString()
+  localGovernmentUuid: string;
 }
 
 export const ALCS_APPLICATION_PACKAGE_NAME = 'alcs_application';

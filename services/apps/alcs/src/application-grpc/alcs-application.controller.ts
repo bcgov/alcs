@@ -1,32 +1,32 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Logger } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
+import { CreateApplicationServiceDto } from '../application/application.dto';
+import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import {
-  ApplicationByNumberGrpc,
+  ApplicationCreateGrpc,
   ApplicationGrpc,
-  CardGrpc,
 } from './alcs-application.message.interface';
 
 @Controller('application-grpc')
 export class ApplicationGrpcController {
   private logger = new Logger(ApplicationGrpcController.name);
 
-  constructor(private applicationService: ApplicationService) {}
+  constructor(
+    private applicationService: ApplicationService,
+    @InjectMapper() private mapper: Mapper,
+  ) {}
 
-  @GrpcMethod('GrpcApplicationService', 'get')
-  async grpcGet(data: ApplicationByNumberGrpc): Promise<ApplicationGrpc> {
-    const application = await this.applicationService.getOrFail(
-      data.fileNumber,
-    );
+  @GrpcMethod('AlcsApplicationService', 'create')
+  async create(data: ApplicationCreateGrpc): Promise<ApplicationGrpc> {
+    console.log('GRPC submitted');
+    const application = await this.applicationService.create({
+      ...data,
+      dateSubmittedToAlc: new Date(Number(data.dateSubmittedToAlc)),
+    } as CreateApplicationServiceDto);
 
-    return {
-      fileNumber: application.fileNumber,
-      applicant: application.applicant,
-      activeDays: 0,
-      pausedDays: 0,
-      paused: false,
-      dateSubmittedToAlc: Date.now(),
-      card: {} as CardGrpc,
-    } as ApplicationGrpc;
+    return this.mapper.map(application, Application, ApplicationGrpc);
   }
 }
