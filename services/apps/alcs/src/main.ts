@@ -91,24 +91,10 @@ const registerMultiPart = async (app: NestFastifyApplication) => {
 };
 
 async function bootstrap() {
-  //TODO: Security workaround for fastify, fixed in fastify 4.8.1+
-  const fastifyInstance = fastify();
-  // @ts-ignore
-  const badNames = Object.getOwnPropertyNames({}.__proto__);
-  fastifyInstance.addHook('onRequest', async (req, reply) => {
-    for (const badName of badNames) {
-      const contentType = req.headers['content-type'];
-      if (contentType && contentType.includes(badName)) {
-        reply.code(415);
-        throw new Error('Content type not supported');
-      }
-    }
-  });
-
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
     AlcsModule,
-    new FastifyAdapter(fastifyInstance),
+    new FastifyAdapter(),
     {
       bufferLogs: true,
     },
