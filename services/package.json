@@ -65,7 +65,6 @@
     "config": "^3.3.7",
     "csv-parser": "^3.0.0",
     "dayjs": "^1.11.4",
-    "fs": "^0.0.1-security",
     "keycloak-connect": "^18.0.2",
     "nest-keycloak-connect": "^1.9.0",
     "nestjs-cls": "^2.2.0",
