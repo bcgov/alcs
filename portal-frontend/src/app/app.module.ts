@@ -2,6 +2,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,6 +20,7 @@ import { SharedModule } from './shared/shared.module';
 import { EditApplicationComponent } from './features/edit-application/edit-application.component';
 import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
+import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { ApplicationListComponent } from './features/home/application-list/appli
     FileDragDropComponent,
     DragDropDirective,
     ApplicationListComponent,
+    CreateApplicationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { ApplicationListComponent } from './features/home/application-list/appli
     MatSortModule,
     MatPaginatorModule,
     SharedModule,
+    MatRadioModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },

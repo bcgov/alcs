@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { doc } from 'prettier';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -56,6 +57,8 @@ describe('ApplicationController', () => {
 
     mockAppService.create.mockResolvedValue('2');
 
+    mockAppService.mapToDTOs.mockResolvedValue([]);
+
     mockDocumentService.attachDocument.mockResolvedValue(
       new ApplicationDocument({
         uploadedBy: new User({
@@ -93,8 +96,10 @@ describe('ApplicationController', () => {
     expect(mockDocumentService.attachDocument).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service for update and map the resulting entity', async () => {
-    const app = await controller.update(
+  it('should call out to service for update and map', async () => {
+    mockAppService.getByFileId.mockResolvedValue(new Application());
+
+    await controller.update(
       'file-id',
       {
         localGovernmentUuid,
@@ -107,8 +112,30 @@ describe('ApplicationController', () => {
       },
     );
 
-    expect(app).toBeDefined();
-    expect(app!.applicant).toEqual(applicant);
-    expect(app!.localGovernmentUuid).toEqual(localGovernmentUuid);
+    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
+    expect(mockAppService.mapToDTOs).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an exception if app doest not exist', async () => {
+    mockAppService.getByFileId.mockResolvedValue(null);
+
+    const promise = controller.update(
+      'file-id',
+      {
+        localGovernmentUuid,
+        applicant,
+      },
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
+    await expect(promise).rejects.toMatchObject(
+      new ServiceNotFoundException(
+        'Failed to find application with given File ID and User',
+      ),
+    );
+    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
   });
 });

@@ -61,6 +61,11 @@ export class Application extends BaseEntity {
   @ManyToOne(() => ApplicationStatus, { nullable: false, eager: true })
   status: ApplicationStatus;
 
+  @Column({
+    comment: 'Application Type Code from ALCS System',
+  })
+  typeCode: string;
+
   @AutoMap()
   @OneToMany(
     () => ApplicationDocument,

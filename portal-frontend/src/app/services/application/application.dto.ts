@@ -6,6 +6,7 @@ export interface ApplicationDto {
   fileNumber: string;
   createdAt: Date;
   applicant: string;
+  type: string;
   localGovernmentUuid: string;
   documents: any[];
   status: ApplicationStatusDto[];

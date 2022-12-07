@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { LocalGovernmentDto } from './code.dto';
+import { ApplicationTypeDto, LocalGovernmentDto } from './code.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,7 @@ export class CodeService {
     return firstValueFrom(
       this.httpClient.get<{
         localGovernments: LocalGovernmentDto[];
+        applicationTypes: ApplicationTypeDto[];
       }>(`${this.baseUrl}`)
     );
   }

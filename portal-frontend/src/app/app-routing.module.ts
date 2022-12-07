@@ -23,12 +23,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    title: 'Create Application',
-    path: 'create',
-    component: EditApplicationComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     title: 'Edit Application',
     path: 'application/:fileId',
     component: EditApplicationComponent,

@@ -3,11 +3,14 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { RedisClientType } from 'redis';
 import { Repository } from 'typeorm';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
 import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
+import { RedisService } from '../common/redis/redis.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -22,14 +25,20 @@ import { ApplicationService } from './application.service';
 describe('ApplicationService', () => {
   let applicationService: ApplicationService;
   let applicationRepositoryMock: DeepMocked<Repository<Application>>;
+  let applicationTypeRepositoryMock: DeepMocked<Repository<ApplicationType>>;
   let applicationMockEntity;
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockRedisService: DeepMocked<RedisService>;
 
   beforeEach(async () => {
-    mockApplicationTimeService = createMock<ApplicationTimeTrackingService>();
-    mockCodeService = createMock<CodeService>();
-    applicationRepositoryMock = createMock<Repository<Application>>();
+    mockApplicationTimeService = createMock();
+    mockCodeService = createMock();
+    applicationRepositoryMock = createMock();
+    applicationTypeRepositoryMock = createMock();
+    mockRedisService = createMock();
+    const mockRedisClient: DeepMocked<RedisClientType> = createMock();
+
     applicationMockEntity = initApplicationMockEntity();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -49,14 +58,26 @@ describe('ApplicationService', () => {
           useValue: mockCodeService,
         },
         {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
+        {
           provide: getRepositoryToken(Application),
           useValue: applicationRepositoryMock,
+        },
+        {
+          provide: getRepositoryToken(ApplicationType),
+          useValue: applicationTypeRepositoryMock,
         },
       ],
     }).compile();
 
     applicationRepositoryMock = module.get(getRepositoryToken(Application));
     applicationService = module.get<ApplicationService>(ApplicationService);
+
+    mockRedisService.getClient.mockReturnValue(mockRedisClient);
+
+    applicationTypeRepositoryMock.find.mockResolvedValue([]);
 
     applicationRepositoryMock.find.mockResolvedValue([applicationMockEntity]);
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);

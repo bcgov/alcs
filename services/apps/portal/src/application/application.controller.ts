@@ -16,8 +16,7 @@ import { User } from '../user/user.entity';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
-import { ApplicationDto, UpdateApplicationDto } from './application.dto';
-import { Application } from './application.entity';
+import { CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
 @Controller('application')
@@ -33,20 +32,29 @@ export class ApplicationController {
   async getApplications(@Req() req) {
     const user = req.user.entity as User;
     const applications = await this.applicationService.getByUser(user);
-    return this.mapper.mapArray(applications, Application, ApplicationDto);
+    return this.applicationService.mapToDTOs(applications);
   }
 
   @Get('/:fileId')
   async getApplication(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
     const application = await this.applicationService.getByFileId(fileId, user);
-    return this.mapper.map(application, Application, ApplicationDto);
+
+    if (!application) {
+      throw new ServiceNotFoundException(
+        `Failed to load application with File ID ${fileId}`,
+      );
+    }
+
+    const mappedApps = await this.applicationService.mapToDTOs([application]);
+    return mappedApps[0];
   }
 
   @Post()
-  async create(@Req() req) {
+  async create(@Req() req, @Body() body: CreateApplicationDto) {
+    const { type } = body;
     const user = req.user.entity as User;
-    const newFileNumber = await this.applicationService.create(user);
+    const newFileNumber = await this.applicationService.create(type, user);
     return {
       fileId: newFileNumber,
     };
@@ -59,7 +67,7 @@ export class ApplicationController {
     @Req() req,
   ) {
     //Verify User has Access
-    const existingApplication = this.applicationService.getByFileId(
+    const existingApplication = await this.applicationService.getByFileId(
       fileId,
       req.user.entity,
     );
@@ -75,7 +83,8 @@ export class ApplicationController {
       localGovernmentUuid: updateDto.localGovernmentUuid,
     });
 
-    return this.mapper.map(application, Application, ApplicationDto);
+    const mappedApps = await this.applicationService.mapToDTOs([application]);
+    return mappedApps[0];
   }
 
   @Post('/:fileId/document')
@@ -105,7 +114,7 @@ export class ApplicationController {
         'certificateOfTitle',
       );
 
-      return this.mapper.map(
+      return this.mapper.mapAsync(
         document,
         ApplicationDocument,
         ApplicationDocumentDto,

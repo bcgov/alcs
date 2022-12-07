@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RedisClientType } from 'redis';
 import {
   Between,
   FindOptionsOrder,
@@ -12,11 +13,13 @@ import {
   Repository,
 } from 'typeorm';
 import { Card } from '../card/card.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../common/exceptions/base.exception';
+import { RedisService } from '../common/redis/redis.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -65,10 +68,15 @@ export class ApplicationService {
   constructor(
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
+    @InjectRepository(ApplicationType)
+    private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
+    private redisService: RedisService,
     @InjectMapper() private applicationMapper: Mapper,
-  ) {}
+  ) {
+    this.loadApplicationTypesToRedis();
+  }
 
   async create(
     application: CreateApplicationServiceDto,
@@ -268,6 +276,24 @@ export class ApplicationService {
       {
         fileNumber: 'ASC',
       },
+    );
+  }
+
+  private async loadApplicationTypesToRedis() {
+    const localGovernments = await this.applicationTypeRepository.find({
+      select: {
+        code: true,
+        portalLabel: true,
+        htmlDescription: true,
+        label: true,
+      },
+    });
+
+    const jsonBlob = JSON.stringify(localGovernments);
+    const redis = this.redisService.getClient() as RedisClientType;
+    await redis.set('applicationTypes', jsonBlob);
+    this.logger.debug(
+      `Loaded ${localGovernments.length} application types into Redis`,
     );
   }
 }

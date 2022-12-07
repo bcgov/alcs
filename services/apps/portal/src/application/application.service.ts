@@ -1,10 +1,13 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { BaseServiceException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { UpdateApplicationDto } from './application.dto';
+import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 
 @Injectable()
@@ -14,6 +17,8 @@ export class ApplicationService {
     private applicationRepository: Repository<Application>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
+    private applicationTypeService: ApplicationTypeService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getOrFail(fileNumber: string) {
@@ -28,7 +33,7 @@ export class ApplicationService {
     return application;
   }
 
-  async create(createdBy: User) {
+  async create(type: string, createdBy: User) {
     //TODO: Get File Number from ALCS
     const fileNumber = Math.floor(Math.random() * 5000).toString(10);
 
@@ -47,6 +52,7 @@ export class ApplicationService {
     const application = new Application({
       fileNumber,
       status: initialStatus,
+      typeCode: type,
       createdBy,
     });
     await this.applicationRepository.save(application);
@@ -85,5 +91,13 @@ export class ApplicationService {
         },
       },
     });
+  }
+
+  async mapToDTOs(apps: Application[]) {
+    const types = await this.applicationTypeService.list();
+    return apps.map((app) => ({
+      ...this.mapper.map(app, Application, ApplicationDto),
+      type: types.find((type) => type.code === app.typeCode)!.label,
+    }));
   }
 }
