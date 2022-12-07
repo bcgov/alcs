@@ -3,7 +3,8 @@ syntax="proto3";
 package alcs_application;
 
 service GrpcApplicationService {
-  // rpc get (ApplicationByNumberGrpc) returns (ApplicationGrpc);
+  // this is a placehlder, since it is not possible to add empty service in proto
+  rpc get (ApplicationByNumberGrpc) returns (ApplicationGrpc);
 }
 
 message ApplicationByNumberGrpc {
