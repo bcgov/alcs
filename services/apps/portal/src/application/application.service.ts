@@ -1,33 +1,25 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Client, ClientGrpc } from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AlcsApplicationServiceClient } from '../alcs/application-grpc/alcs-application.service.interface';
+import { AlcsApplicationService } from '../alcs/application-grpc/alcs-appliation.service';
 import { BaseServiceException } from '../common/exceptions/base.exception';
-import { grpcClientOptions } from '../providers/grpc/grpc-client.options';
 import { User } from '../user/user.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { UpdateApplicationDto } from './application.dto';
+import {
+  ApplicationSubmitToAlcsDto,
+  UpdateApplicationDto,
+} from './application.dto';
 import { Application } from './application.entity';
 
 @Injectable()
-export class ApplicationService implements OnModuleInit {
+export class ApplicationService {
   constructor(
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
+    private alcsApplicationService: AlcsApplicationService,
   ) {}
-
-  @Client(grpcClientOptions) private readonly client: ClientGrpc;
-  private alcsApplicationService: AlcsApplicationServiceClient;
-
-  onModuleInit() {
-    this.alcsApplicationService =
-      this.client.getService<AlcsApplicationServiceClient>(
-        'AlcsApplicationService',
-      );
-  }
 
   async getOrFail(fileNumber: string) {
     const application = await this.applicationRepository.findOne({
@@ -64,16 +56,6 @@ export class ApplicationService implements OnModuleInit {
     });
     await this.applicationRepository.save(application);
 
-    // TODO: call alcsGrpc here{
-    await this.alcsApplicationService.create({
-      fileNumber: application.fileNumber,
-      applicant: application.applicant || 'grpc',
-      typeCode: 'APP',
-      dateSubmittedToAlc: Date.now().toString(),
-      regionCode: '',
-      localGovernmentUuid: '',
-    });
-
     return fileNumber;
   }
 
@@ -84,6 +66,18 @@ export class ApplicationService implements OnModuleInit {
     application.localGovernmentUuid = updateDto.localGovernmentUuid || null;
 
     return this.applicationRepository.save(application);
+  }
+
+  async submitToAlcs(fileNumber: string, data: ApplicationSubmitToAlcsDto) {
+    const application = await this.update(fileNumber, data);
+    return this.alcsApplicationService.create({
+      fileNumber: fileNumber,
+      applicant: application.applicant!,
+      localGovernmentUuid: application.localGovernmentUuid!,
+      regionCode: 'NORR',
+      typeCode: 'NARU',
+      dateSubmittedToAlc: Date.now().toString(),
+    });
   }
 
   getByUser(user: User) {

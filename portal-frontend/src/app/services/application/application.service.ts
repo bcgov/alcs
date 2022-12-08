@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -60,6 +60,15 @@ export class ApplicationService {
     } catch (e) {
       this.toastService.showErrorToast('Failed to load Application, please try again later');
       return undefined;
+    }
+  }
+
+  async submitToAlcs(fileId: string, updateDto: UpdateApplicationDto) {
+    try {
+      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
+      this.toastService.showSuccessToast('Application Submitted');
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to submit Application, please try again');
     }
   }
 }

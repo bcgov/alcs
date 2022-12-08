@@ -35,3 +35,14 @@ export class UpdateApplicationDto {
   @IsOptional()
   localGovernmentUuid?: string;
 }
+
+export class ApplicationSubmitToAlcsDto {
+  @IsString()
+  applicant: string;
+
+  // @IsString()
+  // typeCode: string;
+
+  @IsString()
+  localGovernmentUuid: string;
+}

@@ -71,18 +71,7 @@ export class EditApplicationComponent implements OnInit {
 
   async onSaveAndExit() {
     if (this.firstForm.dirty) {
-      let localGovernment;
-      const localGovernmentName = this.localGovernment.getRawValue();
-      if (localGovernmentName) {
-        localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-
-        if (!localGovernment) {
-          this.localGovernment.setErrors({
-            invalid: true,
-          });
-          return;
-        }
-      }
+      const localGovernment = this.validateAndGetLocalGovernment();
 
       await this.applicationService.updatePending(this.fileId, {
         applicant: this.applicantName.getRawValue(),
@@ -100,7 +89,12 @@ export class EditApplicationComponent implements OnInit {
     this.localGovernment.updateValueAndValidity();
 
     if (this.firstForm.valid) {
-      alert('App Submitted');
+      const localGovernment = this.validateAndGetLocalGovernment();
+
+      this.applicationService.submitToAlcs(this.fileId, {
+        applicant: this.applicantName.getRawValue(),
+        localGovernmentUuid: localGovernment?.uuid,
+      });
     }
   }
 
@@ -113,5 +107,22 @@ export class EditApplicationComponent implements OnInit {
         this.localGovernment.patchValue(lg.name);
       }
     }
+  }
+
+  private validateAndGetLocalGovernment() {
+    let localGovernment;
+    const localGovernmentName = this.localGovernment.getRawValue();
+    if (localGovernmentName) {
+      localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
+
+      if (!localGovernment) {
+        this.localGovernment.setErrors({
+          invalid: true,
+        });
+        return;
+      }
+    }
+
+    return localGovernment;
   }
 }

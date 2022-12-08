@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
+import { AlcsApplicationService } from './alcs-appliation.service';
 
 @Module({
-  imports: [],
+  providers: [AlcsApplicationService],
+  exports: [AlcsApplicationService],
 })
 export class ApplicationGrpcModule {}

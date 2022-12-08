@@ -5,7 +5,7 @@ import { ApplicationGrpc } from '../../../application-grpc/alcs-application.mess
 import { Application } from '../../../application/application.entity';
 
 @Injectable()
-export class ApplicationDecisionProfile extends AutomapperProfile {
+export class AlcsApplicationProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
@@ -18,7 +18,15 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationGrpc,
         forMember(
           (a) => a.dateSubmittedToAlc,
-          mapFrom((ad) => ad.dateSubmittedToAlc?.toString()),
+          mapFrom((ad) => ad.dateSubmittedToAlc?.getTime().toString()),
+        ),
+        forMember(
+          (a) => a.regionCode,
+          mapFrom((ad) => ad.region?.code),
+        ),
+        forMember(
+          (a) => a.typeCode,
+          mapFrom((ad) => ad.type.code),
         ),
       );
     };

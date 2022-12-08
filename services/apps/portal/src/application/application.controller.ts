@@ -16,7 +16,11 @@ import { User } from '../user/user.entity';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
-import { ApplicationDto, UpdateApplicationDto } from './application.dto';
+import {
+  ApplicationDto,
+  ApplicationSubmitToAlcsDto,
+  UpdateApplicationDto,
+} from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -111,5 +115,25 @@ export class ApplicationController {
         ApplicationDocumentDto,
       );
     }
+  }
+
+  @Post('/alcs/submit/:fileId')
+  async submitToAlcs(
+    @Param('fileId') fileId: string,
+    @Body() data: ApplicationSubmitToAlcsDto,
+    @Req() req,
+  ) {
+    const existingApplication = this.applicationService.getByFileId(
+      fileId,
+      req.user.entity,
+    );
+
+    if (!existingApplication) {
+      throw new ServiceNotFoundException(
+        'Failed to find application with given File ID and User',
+      );
+    }
+
+    return await this.applicationService.submitToAlcs(fileId, data);
   }
 }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlcsModule } from '../alcs/alcs.module';
+import { ApplicationGrpcModule } from '../alcs/application-grpc/application-grpc.module';
 import { AuthorizationModule } from '../common/authorization/authorization.module';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { ApplicationDocument } from './application-document/application-document.entity';
@@ -19,6 +20,7 @@ import { ApplicationService } from './application.service';
     ]),
     AlcsModule,
     AuthorizationModule,
+    ApplicationGrpcModule,
   ],
   providers: [
     ApplicationService,

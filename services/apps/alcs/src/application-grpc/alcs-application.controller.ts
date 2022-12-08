@@ -21,7 +21,7 @@ export class ApplicationGrpcController {
 
   @GrpcMethod('AlcsApplicationService', 'create')
   async create(data: ApplicationCreateGrpc): Promise<ApplicationGrpc> {
-    console.log('GRPC submitted');
+    this.logger.debug('ALCS-> GRPC -> AlcsApplicationService -> create');
     const application = await this.applicationService.create({
       ...data,
       dateSubmittedToAlc: new Date(Number(data.dateSubmittedToAlc)),

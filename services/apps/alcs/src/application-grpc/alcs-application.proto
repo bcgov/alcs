@@ -20,6 +20,8 @@ message ApplicationGrpc {
   string regionCode = 4;
 
   string localGovernmentUuid = 5;
+
+  string typeCode = 6;
 }
 
 message ApplicationCreateGrpc {
