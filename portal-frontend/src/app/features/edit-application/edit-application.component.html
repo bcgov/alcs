@@ -1,7 +1,7 @@
 <mat-stepper linear="true" #stepper>
   <mat-step label="Application" [stepControl]="firstForm">
     <div class="header">
-      <h6>Application ID: {{ fileId }} | Trans, Util & Rec</h6>
+      <h6>Application ID: {{ fileId }} | {{ applicationType }}</h6>
     </div>
     <form [formGroup]="firstForm">
       <div class="form-row">

@@ -1,7 +1,11 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { Application } from './application.entity';
@@ -9,15 +13,24 @@ import { ApplicationService } from './application.service';
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
+  let mockAppTypeService: DeepMocked<ApplicationTypeService>;
   let mockRepository: DeepMocked<Repository<Application>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
 
   beforeEach(async () => {
     mockRepository = createMock();
     mockStatusRepository = createMock();
+    mockAppTypeService = createMock();
+
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ApplicationService,
+        ApplicationProfile,
         {
           provide: getRepositoryToken(Application),
           useValue: mockRepository,
@@ -25,6 +38,10 @@ describe('ApplicationService', () => {
         {
           provide: getRepositoryToken(ApplicationStatus),
           useValue: mockStatusRepository,
+        },
+        {
+          provide: ApplicationTypeService,
+          useValue: mockAppTypeService,
         },
       ],
     }).compile();
@@ -58,7 +75,7 @@ describe('ApplicationService', () => {
     mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
     mockRepository.save.mockResolvedValue(new Application());
 
-    const fileNumber = await service.create(new User());
+    const fileNumber = await service.create('type', new User());
 
     expect(fileNumber).toBeTruthy();
     expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
@@ -82,5 +99,30 @@ describe('ApplicationService', () => {
     const res = await service.getByFileId('', new User());
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
+  });
+
+  it('should use application type service for mapping DTOs', async () => {
+    const applicant = 'Bruce Wayne';
+    const typeCode = 'fake-code';
+
+    mockAppTypeService.list.mockResolvedValue([
+      {
+        code: typeCode,
+        portalLabel: 'portalLabel',
+        htmlDescription: 'htmlDescription',
+        label: 'label',
+      },
+    ]);
+
+    const application = new Application({
+      applicant,
+      typeCode: typeCode,
+    });
+    mockRepository.findOne.mockResolvedValue(application);
+
+    const res = await service.mapToDTOs([application]);
+    expect(mockAppTypeService.list).toHaveBeenCalledTimes(1);
+    expect(res[0].type).toEqual('label');
+    expect(res[0].applicant).toEqual(applicant);
   });
 });

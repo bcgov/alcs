@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApplicationService } from '../../services/application/application.service';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { CreateApplicationDialogComponent } from '../create-application-dialog/create-application-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -11,11 +11,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 export class HomeComponent implements OnInit {
   public name = '';
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private applicationService: ApplicationService,
-    private router: Router
-  ) {}
+  constructor(private authenticationService: AuthenticationService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     const user = this.authenticationService.currentUser;
@@ -25,9 +21,6 @@ export class HomeComponent implements OnInit {
   }
 
   async onCreateApplication() {
-    const res = await this.applicationService.create();
-    if (res) {
-      await this.router.navigateByUrl(`/application/${res.fileId}`);
-    }
+    this.dialog.open(CreateApplicationDialogComponent);
   }
 }

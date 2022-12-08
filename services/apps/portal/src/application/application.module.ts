@@ -6,6 +6,7 @@ import { ApplicationProfile } from '../common/automapper/application.automapper.
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';

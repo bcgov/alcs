@@ -1,6 +1,14 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import {
+  afterMap,
+  createMap,
+  forMember,
+  ignore,
+  mapFrom,
+  Mapper,
+} from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationTypeService } from '../../alcs/application-type/application-type.service';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';

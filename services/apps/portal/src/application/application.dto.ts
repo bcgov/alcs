@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
@@ -24,6 +24,14 @@ export class ApplicationDto {
 
   @AutoMap()
   status: ApplicationStatusDto;
+
+  type: string;
+}
+
+export class CreateApplicationDto {
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 }
 
 export class UpdateApplicationDto {

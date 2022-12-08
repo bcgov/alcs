@@ -5,8 +5,8 @@ $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
 
 @mixin typography-style($size, $weight) {
   font-family: $font-family !important;
-  font-size: $size !important;
-  font-weight: $weight !important;
+  font-size: $size;
+  font-weight: $weight;
   margin: 0 !important;
 }
 
