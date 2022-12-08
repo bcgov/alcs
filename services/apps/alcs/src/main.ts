@@ -11,9 +11,10 @@ import * as config from 'config';
 import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
 import { AlcsModule } from './alcs.module';
+import { applyDefaultDocumentTags } from './commands/tag';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
-import { generateModuleGraph } from './tools/graph';
-import { importApplications } from './tools/import';
+import { generateModuleGraph } from './commands/graph';
+import { importApplications } from './commands/import';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -106,6 +107,9 @@ async function bootstrap() {
   }
   if (extraArg == 'import') {
     await importApplications();
+  }
+  if (extraArg == 'tagDocuments') {
+    await applyDefaultDocumentTags();
   }
 
   // config variables
