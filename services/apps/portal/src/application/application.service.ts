@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-appliation.service';
+import { ApplicationGrpc } from '../alcs/application-grpc/alcs-application.message.interface';
 import { BaseServiceException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -13,6 +15,8 @@ import { Application } from './application.entity';
 
 @Injectable()
 export class ApplicationService {
+  private logger: Logger = new Logger(ApplicationService.name);
+
   constructor(
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
@@ -70,14 +74,33 @@ export class ApplicationService {
 
   async submitToAlcs(fileNumber: string, data: ApplicationSubmitToAlcsDto) {
     const application = await this.update(fileNumber, data);
-    return this.alcsApplicationService.create({
-      fileNumber: fileNumber,
-      applicant: application.applicant!,
-      localGovernmentUuid: application.localGovernmentUuid!,
-      regionCode: 'NORR',
-      typeCode: 'NARU',
-      dateSubmittedToAlc: Date.now().toString(),
-    });
+    let submittedApp: ApplicationGrpc | null = null;
+
+    try {
+      submittedApp = await lastValueFrom(
+        this.alcsApplicationService.create({
+          fileNumber: fileNumber,
+          applicant: application.applicant!,
+          localGovernmentUuid: application.localGovernmentUuid!,
+          typeCode: 'NARU',
+          dateSubmittedToAlc: Date.now().toString(),
+        }),
+      );
+    } catch (ex) {
+      this.logger.error(
+        `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
+      );
+
+      //TODO set failed status here?
+
+      throw new BaseServiceException(
+        `Failed to submit application: ${fileNumber}`,
+      );
+    }
+
+    //TODO set submitted status here
+
+    return submittedApp;
   }
 
   getByUser(user: User) {

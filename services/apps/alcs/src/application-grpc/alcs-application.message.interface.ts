@@ -10,14 +10,19 @@ export interface ApplicationByNumberGrpc {
 export class ApplicationGrpc {
   @AutoMap()
   fileNumber: string;
+
   @AutoMap()
   applicant: string;
+
   @AutoMap()
   dateSubmittedToAlc: string;
+
   @AutoMap()
   regionCode: string;
+
   @AutoMap()
   localGovernmentUuid: string;
+
   @AutoMap()
   typeCode: string;
 }
@@ -34,9 +39,6 @@ export class ApplicationCreateGrpc {
 
   @IsString()
   dateSubmittedToAlc: string;
-
-  @IsString()
-  regionCode: string;
 
   @IsString()
   localGovernmentUuid: string;

@@ -36,9 +36,6 @@ export class ApplicationCreateGrpc {
   dateSubmittedToAlc: string;
 
   @IsString()
-  regionCode: string;
-
-  @IsString()
   localGovernmentUuid: string;
 }
 

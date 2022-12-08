@@ -51,4 +51,15 @@ export class ApplicationLocalGovernmentService {
       },
     });
   }
+
+  async getByUuid(uuid: string) {
+    return this.repository.findOne({
+      where: {
+        uuid,
+      },
+      relations: {
+        preferredRegion: true,
+      },
+    });
+  }
 }

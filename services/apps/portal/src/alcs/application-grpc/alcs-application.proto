@@ -16,7 +16,7 @@ message ApplicationGrpc {
   string applicant = 2;
 
   int32 dateSubmittedToAlc = 3;
-
+  
   string regionCode = 4;
 
   string localGovernmentUuid = 5;
@@ -33,7 +33,5 @@ message ApplicationCreateGrpc {
 
   string dateSubmittedToAlc = 4;
 
-  string regionCode = 5;
-
-  string localGovernmentUuid = 6;
+  string localGovernmentUuid = 5;
 }
