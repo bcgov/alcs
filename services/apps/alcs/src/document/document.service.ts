@@ -1,6 +1,7 @@
 import {
   GetObjectCommand,
   PutObjectCommand,
+  PutObjectTaggingCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -12,6 +13,9 @@ import { v4 } from 'uuid';
 import { CONFIG_TOKEN, IConfig } from '../common/config/config.module';
 import { User } from '../user/user.entity';
 import { Document } from './document.entity';
+
+const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
+const DEFAULT_S3_TAGS = 'ORCS-Classification=85100-20';
 
 @Injectable()
 export class DocumentService {
@@ -43,6 +47,7 @@ export class DocumentService {
       Key: fileKey,
       Body: await file.toBuffer(),
       ACL: 'bucket-owner-full-control',
+      Tagging: DEFAULT_S3_TAGS,
       ContentType: file.mimetype,
       ContentLength: file.file.bytesRead,
     });
@@ -53,6 +58,7 @@ export class DocumentService {
         mimeType: file.mimetype,
         uploadedBy: user,
         fileName: file.filename,
+        tags: DEFAULT_DB_TAGS,
       }),
     );
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -69,6 +75,7 @@ export class DocumentService {
       Bucket: this.bucket,
       Key: fileKey,
       ACL: 'bucket-owner-full-control',
+      Tagging: DEFAULT_S3_TAGS,
     });
 
     return getSignedUrl(this.dataStore, command, {
@@ -87,5 +94,31 @@ export class DocumentService {
     return getSignedUrl(this.dataStore, command, {
       expiresIn: this.documentTimeout,
     });
+  }
+
+  //One time function used to apply default tags to existing documents
+  async applyDefaultTags() {
+    const documents = await this.documentRepository.find();
+    console.warn(
+      `Applying default document tags to ${documents.length} Documents`,
+    );
+    for (const document of documents) {
+      document.tags = DEFAULT_DB_TAGS;
+      const command = new PutObjectTaggingCommand({
+        Bucket: this.config.get('STORAGE.BUCKET'),
+        Key: document.fileKey,
+        Tagging: {
+          TagSet: [
+            {
+              Key: 'ORCS-Classification',
+              Value: '85100-20',
+            },
+          ],
+        },
+      });
+      await this.dataStore.send(command);
+      await this.documentRepository.save(document);
+    }
+    console.warn(`${documents.length} Documents tagged successfully`);
   }
 }
