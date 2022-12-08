@@ -67,7 +67,7 @@ export class EditApplicationComponent implements OnInit {
 
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
-    this.localGovernments = codes.localGovernments;
+    this.localGovernments = codes.localGovernments.sort((a, b) => (a.name > b.name ? 1 : -1));
   }
 
   async onSaveAndExit() {
