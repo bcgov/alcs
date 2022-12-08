@@ -18,17 +18,8 @@
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell class="labels" *matCellDef="let element">
-        <span
-          *ngFor="let type of element.labels"
-          class="type"
-          [ngStyle]="{
-            backgroundColor: type.backgroundColor,
-            color: type.textColor,
-            borderColor: type.borderColor ? type.borderColor : type.backgroundColor
-          }"
-        >
-          <span class="center">{{ type.shortLabel }}</span>
-        </span>
+        <app-application-type-pill *ngFor="let type of element.labels" [type]="type" [useShortLabel]="true">
+        </app-application-type-pill>
       </td>
     </ng-container>
 

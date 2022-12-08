@@ -17,7 +17,7 @@ import { CardType } from '../../../shared/card/card.component';
 export class GisSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
   public gisUsers: AssigneeDto[] = [];
-  displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
+  displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
 
   constructor(
     private homeService: HomeService,

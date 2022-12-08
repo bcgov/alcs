@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
@@ -11,17 +11,8 @@ import { CovenantService } from '../../../../services/covenant/covenant.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
+import { COVENANT_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
-export const COVENANT_TYPE_LABEL = {
-  label: 'Covenant',
-  code: 'COV',
-  shortLabel: 'COV',
-  backgroundColor: '#fff',
-  borderColor: '#228820',
-  description: 'Covenant',
-  textColor: '#000',
-};
 
 @Component({
   selector: 'app-covenant-dialog',

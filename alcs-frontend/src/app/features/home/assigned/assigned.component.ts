@@ -8,11 +8,13 @@ import { CardDto } from '../../../services/card/card.dto';
 import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
-import { CardLabel } from '../../../shared/card/card.component';
-import { MODIFICATION_TYPE_LABEL } from '../../board/dialogs/modification/modification-dialog.component';
-import { COVENANT_TYPE_LABEL } from '../../board/dialogs/covenant/covenant-dialog.component';
-import { PLANNING_TYPE_LABEL } from '../../board/dialogs/planning-review/planning-review-dialog.component';
-import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
+import { ApplicationPill } from '../../../shared/application-type-pill/application-type-pill.component';
+import {
+  COVENANT_TYPE_LABEL,
+  MODIFICATION_TYPE_LABEL,
+  PLANNING_TYPE_LABEL,
+  RECON_TYPE_LABEL,
+} from '../../../shared/application-type-pill/application-type-pill.constants';
 
 interface AssignedToMeFile {
   title: string;
@@ -22,7 +24,7 @@ interface AssignedToMeFile {
   paused?: boolean;
   card: CardDto;
   highPriority?: boolean;
-  labels: CardLabel[];
+  labels: ApplicationPill[];
 }
 
 @Component({

@@ -12,16 +12,8 @@ import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
-import { CardLabel } from '../../../../shared/card/card.component';
+import { RECON_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
-export const RECON_TYPE_LABEL: CardLabel = {
-  label: 'Reconsideration',
-  shortLabel: 'RECON',
-  backgroundColor: '#fff',
-  borderColor: '#454545',
-  textColor: '#000',
-};
 
 @Component({
   selector: 'app-recon-detail-dialog',

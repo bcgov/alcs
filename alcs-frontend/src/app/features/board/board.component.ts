@@ -18,27 +18,24 @@ import { CovenantService } from '../../services/covenant/covenant.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
+import {
+  COVENANT_TYPE_LABEL,
+  MODIFICATION_TYPE_LABEL,
+  PLANNING_TYPE_LABEL,
+  RECON_TYPE_LABEL,
+} from '../../shared/application-type-pill/application-type-pill.constants';
 import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import {
-  ModificationDialogComponent,
-  MODIFICATION_TYPE_LABEL,
-} from './dialogs/modification/modification-dialog.component';
+import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
 import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
-import { CovenantDialogComponent, COVENANT_TYPE_LABEL } from './dialogs/covenant/covenant-dialog.component';
+import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
-import {
-  PlanningReviewDialogComponent,
-  PLANNING_TYPE_LABEL,
-} from './dialogs/planning-review/planning-review-dialog.component';
+import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
-import {
-  ReconsiderationDialogComponent,
-  RECON_TYPE_LABEL,
-} from './dialogs/reconsiderations/reconsideration-dialog.component';
+import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
 
 export const BOARD_TYPE_CODES = {
   VETT: 'vett',

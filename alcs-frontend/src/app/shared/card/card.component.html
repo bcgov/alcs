@@ -12,19 +12,12 @@
     <div class="upper-card">
       {{ cardData.title }}
       <span class="high-priority" *ngIf="cardData.highPriority">!</span>
-      <div>
-        <span
+      <div class="labels">
+        <app-application-type-pill
           *ngFor="let type of cardData.labels"
-          class="type"
-          matTooltip="{{ type.label }}"
-          [ngStyle]="{
-            backgroundColor: type.backgroundColor,
-            color: type.textColor,
-            borderColor: type.borderColor ? type.borderColor : type.backgroundColor
-          }"
-        >
-          <span class="center">{{ type.shortLabel }}</span>
-        </span>
+          [type]="type"
+          [useShortLabel]="true"
+        ></app-application-type-pill>
       </div>
     </div>
     <div class="lower-card">

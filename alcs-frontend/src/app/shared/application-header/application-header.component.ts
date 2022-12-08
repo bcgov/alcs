@@ -1,12 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { MODIFICATION_TYPE_LABEL } from '../../features/board/dialogs/modification/modification-dialog.component';
-import { RECON_TYPE_LABEL } from '../../features/board/dialogs/reconsiderations/reconsideration-dialog.component';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
+import { MODIFICATION_TYPE_LABEL, RECON_TYPE_LABEL } from '../application-type-pill/application-type-pill.constants';
 
 @Component({
   selector: 'app-application-header[application]',
