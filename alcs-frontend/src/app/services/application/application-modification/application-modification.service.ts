@@ -34,18 +34,6 @@ export class ApplicationModificationService {
     return [];
   }
 
-  async fetchByBoard(boardCode: string) {
-    try {
-      this.$modifications.next(
-        await firstValueFrom(this.http.get<ApplicationModificationDto[]>(`${this.url}/board/${boardCode}`))
-      );
-    } catch (err) {
-      console.error(err);
-      this.toastService.showErrorToast('Failed to fetch modifications');
-    }
-    return [];
-  }
-
   async fetchByCardUuid(cardUuid: string) {
     try {
       return await firstValueFrom(this.http.get<ApplicationModificationDto>(`${this.url}/card/${cardUuid}`));
@@ -58,16 +46,17 @@ export class ApplicationModificationService {
 
   async update(uuid: string, updateDto: ApplicationModificationUpdateDto) {
     try {
-      await firstValueFrom(this.http.patch<ApplicationModificationDto>(`${this.url}/${uuid}`, updateDto));
+      return await firstValueFrom(this.http.patch<ApplicationModificationDto>(`${this.url}/${uuid}`, updateDto));
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to update modification');
     }
+    return;
   }
 
   async create(createDto: ApplicationModificationCreateDto) {
     try {
-      await firstValueFrom(
+      return await firstValueFrom(
         this.http.post<ApplicationModificationDto>(this.url, {
           ...createDto,
           submittedDate: formatDateForApi(createDto.submittedDate),
