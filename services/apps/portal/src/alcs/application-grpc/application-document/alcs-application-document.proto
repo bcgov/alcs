@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package alcs_application_document;
+
+service AlcsApplicationDocumentService {
+    rpc attachExternalDocument(ApplicationAttachDocumentGrpcRequest) returns (ApplicationAttachDocumentGrpcResponse);
+}
+  
+message ApplicationAttachDocumentGrpcRequest {
+    string type = 1;
+
+    string applicationFileNumber = 2;
+
+    optional string uploadedByUuid = 3;
+
+    string mimeType = 4;
+
+    string fileName = 5;
+
+    string fileKey = 6;
+
+    string source = 7;
+}
+
+message ApplicationAttachDocumentGrpcResponse {}

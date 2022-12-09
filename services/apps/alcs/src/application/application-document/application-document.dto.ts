@@ -19,3 +19,26 @@ export class ApplicationDocumentDto {
   @AutoMap()
   uploadedAt: number;
 }
+
+export class ApplicationDocumentExternalAttachDto {
+  @AutoMap()
+  type: string;
+
+  @AutoMap()
+  applicationFileNumber: string;
+
+  @AutoMap()
+  uploadedByUuid?: string;
+
+  @AutoMap()
+  mimeType: string;
+
+  @AutoMap()
+  fileName: string;
+
+  @AutoMap()
+  fileKey: string;
+
+  @AutoMap()
+  source: 'ALCS' | 'Local_Government' | 'Applicant';
+}

@@ -34,7 +34,7 @@ export class EditApplicationComponent implements OnInit {
 
   filesDropped(files: FileHandle[]): void {
     const mappedFiles = files.map((file) => file.file);
-    this.applicationService.attachFile(this.fileId, mappedFiles);
+    this.applicationService.attachExternalFile(this.fileId, { documents: mappedFiles });
   }
 
   ngOnInit(): void {

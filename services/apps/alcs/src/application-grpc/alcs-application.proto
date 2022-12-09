@@ -6,10 +6,6 @@ service AlcsApplicationService {
   rpc create(ApplicationCreateGrpc) returns (ApplicationGrpc);
 }
 
-message ApplicationByNumberGrpc {
-  string fileNumber = 1;
-}
-
 message ApplicationGrpc {
   string fileNumber = 1;
 

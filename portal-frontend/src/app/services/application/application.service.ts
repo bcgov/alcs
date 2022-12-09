@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 
@@ -10,8 +11,16 @@ import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 })
 export class ApplicationService {
   private serviceUrl = `${environment.apiUrl}/application`;
+  private httpClientNoAuth: HttpClient | null = null;
 
-  constructor(private httpClient: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private toastService: ToastService,
+    private documentService: DocumentService,
+    handler: HttpBackend
+  ) {
+    this.httpClientNoAuth = new HttpClient(handler);
+  }
 
   async create() {
     try {
@@ -42,6 +51,53 @@ export class ApplicationService {
       this.toastService.showSuccessToast('Document uploaded');
     } catch (e) {
       this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+    }
+  }
+
+  async attachExternalFile(fileId: string, data: any) {
+    if (data.documents.length > 0) {
+      const file: File = data.documents[0];
+
+      // if (file.size > environment.maxFileSize) {
+      //   const niceSize = environment.maxFileSize / 1048576;
+      //   this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
+      //   return;
+      // }
+
+      try {
+        // get presigned url
+        const { fileKey, uploadUrl } = await this.documentService.getUploadUrl(fileId);
+
+        const fileBuffer = await file.arrayBuffer();
+
+        // upload to dell ecs
+        await firstValueFrom(
+          this.httpClientNoAuth!.put(uploadUrl, fileBuffer, {
+            headers: { 'Content-Type': file.type },
+          })
+        );
+
+        // send metadata to portal -> alcs
+        const payload = {
+          type: 'certificateOfTitle',
+          applicationFileNumber: fileId,
+          mimeType: file.type,
+          fileName: file.name,
+          fileKey: fileKey,
+          source: 'Applicant',
+        };
+
+        await firstValueFrom(
+          this.httpClient.post(
+            `${environment.apiUrl}/application-document/attachExternal/application/${fileId}`,
+            payload
+          )
+        );
+        this.toastService.showSuccessToast('Document uploaded');
+      } catch (e) {
+        console.error(e);
+        this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+      }
     }
   }
 

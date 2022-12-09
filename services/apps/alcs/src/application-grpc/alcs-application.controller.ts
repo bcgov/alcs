@@ -10,6 +10,7 @@ import {
   ApplicationCreateGrpc,
   ApplicationGrpc,
 } from './alcs-application.message.interface';
+import { GRPC_APPLICATION_SERVICE_NAME } from './alcs-application.service.interface';
 
 @Controller('application-grpc')
 export class ApplicationGrpcController {
@@ -21,16 +22,13 @@ export class ApplicationGrpcController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @GrpcMethod('AlcsApplicationService', 'create')
+  @GrpcMethod(GRPC_APPLICATION_SERVICE_NAME, 'create')
   async create(data: ApplicationCreateGrpc): Promise<ApplicationGrpc> {
     this.logger.debug('ALCS-> GRPC -> AlcsApplicationService -> create');
-    console.log(data, data.localGovernmentUuid);
 
     const localGovernment = await this.localGovernmentService.getByUuid(
       data.localGovernmentUuid,
     );
-
-    console.log(localGovernment);
 
     const application = await this.applicationService.create({
       ...data,
@@ -38,6 +36,6 @@ export class ApplicationGrpcController {
       dateSubmittedToAlc: new Date(Number(data.dateSubmittedToAlc)),
     } as CreateApplicationServiceDto);
 
-    return this.mapper.map(application, Application, ApplicationGrpc);
+    return this.mapper.mapAsync(application, Application, ApplicationGrpc);
   }
 }

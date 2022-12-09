@@ -2,12 +2,8 @@ syntax = "proto3";
 
 package alcs_application;
 
-service GrpcApplicationService {
+service AlcsApplicationService {
   rpc create(ApplicationCreateGrpc) returns (ApplicationGrpc);
-}
-
-message ApplicationByNumberGrpc {
-  string fileNumber = 1;
 }
 
 message ApplicationGrpc {
@@ -16,7 +12,7 @@ message ApplicationGrpc {
   string applicant = 2;
 
   int32 dateSubmittedToAlc = 3;
-  
+
   string regionCode = 4;
 
   string localGovernmentUuid = 5;

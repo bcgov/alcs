@@ -69,6 +69,7 @@ import { ApplicationService } from './application.service';
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationLocalGovernmentService,
+    ApplicationDocumentService,
   ],
 })
 export class ApplicationModule {}

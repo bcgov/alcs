@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
@@ -12,6 +13,11 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { AlcsApplicationDocumentService } from '../../alcs/application-grpc/application-document/alcs-application-document.service';
+import {
+  ApplicationAttachDocumentGrpcRequest,
+  ApplicationAttachDocumentGrpcResponse,
+} from '../../alcs/application-grpc/application-document/alcs-application.message.interface';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
 import { ApplicationDocumentDto } from './application-document.dto';
 import {
@@ -27,6 +33,7 @@ import { ApplicationDocumentService } from './application-document.service';
 export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
+    private alcsApplicationDocumentService: AlcsApplicationDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -109,5 +116,15 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
     await this.applicationDocumentService.delete(document);
     return {};
+  }
+
+  @Post('/attachExternal/application/:fileNumber')
+  async attachExternalDocument(
+    @Param('fileNumber') fileNumber: string,
+    @Body() data: ApplicationAttachDocumentGrpcRequest,
+  ): Promise<ApplicationAttachDocumentGrpcResponse> {
+    return this.alcsApplicationDocumentService.attachExternalDocument({
+      ...data,
+    });
   }
 }

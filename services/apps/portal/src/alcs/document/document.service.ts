@@ -1,12 +1,12 @@
 import { MultipartFile } from '@fastify/multipart';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
-import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 import { User } from '../../user/user.entity';
+import { AlcsDocumentService } from '../document-grpc/alcs-document.service';
 
 @Injectable()
 export class DocumentService {
-  constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {}
+  constructor(private alcsDocumentService: AlcsDocumentService) {}
 
   async create(filePath: string, file: MultipartFile, user: User) {
     const data = await file.toBuffer();
@@ -20,5 +20,9 @@ export class DocumentService {
   async getDownloadUrl(uuid: string, openInline = false) {
     //TODO: Call out to ALCS
     return '';
+  }
+
+  getUploadUrl(filePath: string) {
+    return this.alcsDocumentService.getUploadUrl({ filePath });
   }
 }

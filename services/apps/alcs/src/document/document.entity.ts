@@ -21,14 +21,17 @@ export class Document extends Base {
   mimeType: string;
 
   @ManyToOne(() => User, (user) => user.documents, {
-    nullable: false,
+    nullable: true,
     eager: true,
   })
-  uploadedBy: User;
+  uploadedBy?: User | null;
 
-  @Column()
-  uploadedByUuid: string;
+  @Column({ nullable: true })
+  uploadedByUuid?: string | null;
 
   @CreateDateColumn({ type: 'timestamptz' })
   uploadedAt: Date;
+
+  @Column()
+  source: string;
 }

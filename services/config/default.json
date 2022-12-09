@@ -64,7 +64,6 @@
     "CERT_FOLDER": "",
     "ROOT_CERT": "CertAuth.crt",
     "CERT": "localhost.crt",
-    "KEY": "localhost.key",
-    "PROTO": ""
+    "KEY": "localhost.key"
   }
 }

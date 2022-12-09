@@ -4,8 +4,8 @@ import {
   ApplicationGrpc,
 } from './alcs-application.message.interface';
 
-export interface AlcsApplicationServiceClient {
+export interface AlcsApplicationService {
   create(request: ApplicationCreateGrpc): Observable<ApplicationGrpc>;
 }
 
-export const GRPC_APPLICATION_SERVICE_NAME = 'GrpcApplicationService';
+export const GRPC_APPLICATION_SERVICE_NAME = 'AlcsApplicationService';
