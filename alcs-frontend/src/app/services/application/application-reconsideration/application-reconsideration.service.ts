@@ -54,7 +54,7 @@ export class ApplicationReconsiderationService {
       console.error(err);
       this.toastService.showErrorToast('Failed to update reconsideration');
     }
-    return undefined;
+    return;
   }
 
   async create(reconsideration: CreateApplicationReconsiderationDto) {

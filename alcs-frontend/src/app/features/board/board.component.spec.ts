@@ -216,7 +216,6 @@ describe('BoardComponent', () => {
       },
     ]);
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(component.cards.length).toEqual(1);
@@ -242,7 +241,6 @@ describe('BoardComponent', () => {
       },
     ]);
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(component.cards.length).toEqual(1);
@@ -290,7 +288,6 @@ describe('BoardComponent', () => {
       },
     ]);
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(component.cards.length).toEqual(3);
@@ -309,7 +306,6 @@ describe('BoardComponent', () => {
       ])
     );
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(applicationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
@@ -326,7 +322,6 @@ describe('BoardComponent', () => {
       ])
     );
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(reconsiderationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
@@ -343,7 +338,6 @@ describe('BoardComponent', () => {
       ])
     );
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(planningReviewService.fetchByCardUuid).toHaveBeenCalledTimes(1);
@@ -360,7 +354,6 @@ describe('BoardComponent', () => {
       ])
     );
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(covenantService.fetchByCardUuid).toHaveBeenCalledTimes(1);
@@ -377,7 +370,6 @@ describe('BoardComponent', () => {
       ])
     );
 
-    fixture.detectChanges();
     await sleep(1);
 
     expect(covenantService.fetchByCardUuid).toHaveBeenCalledTimes(1);
