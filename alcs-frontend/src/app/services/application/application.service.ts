@@ -90,6 +90,6 @@ export class ApplicationService {
   }
 
   async fetchByCardUuid(uuid: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/card/${uuid}`));
+    return firstValueFrom(this.http.get<ApplicationDto>(`${this.baseUrl}/card/${uuid}`));
   }
 }

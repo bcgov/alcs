@@ -70,15 +70,6 @@ export class ApplicationModificationController {
     return mapped[0];
   }
 
-  @Get('/board/:boardCode')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async getByBoard(@Param('code') boardCode: string) {
-    const modification = await this.modificationService.getByBoardCode(
-      boardCode,
-    );
-    return this.modificationService.mapToDtos(modification);
-  }
-
   @Get('/application/:applicationFileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByApplication(

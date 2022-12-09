@@ -1,11 +1,11 @@
-import { UserDto } from '../user/user.dto';
+import { AssigneeDto } from '../user/user.dto';
 
 export type UpcomingMeetingDto = {
   meetingDate: number;
   fileNumber: string;
   applicant: string;
   boardCode: string;
-  assignee: UserDto;
+  assignee: AssigneeDto;
 };
 
 export type UpcomingMeetingBoardMapDto = Record<string, UpcomingMeetingDto[]>;

@@ -107,14 +107,6 @@ describe('ApplicationReconsiderationController', () => {
     );
   });
 
-  it('should call service getByBoardCode method', async () => {
-    const fakeCode = 'fake';
-    mockReconsiderationService.getByBoardCode.mockResolvedValue([]);
-    await controller.getByBoard(fakeCode);
-    expect(mockReconsiderationService.getByBoardCode).toBeCalledTimes(1);
-    expect(mockReconsiderationService.getByBoardCode).toBeCalledWith(fakeCode);
-  });
-
   it('should call service getCodes method', async () => {
     mockReconsiderationService.getCodes.mockResolvedValue([]);
     await controller.getCodes();
