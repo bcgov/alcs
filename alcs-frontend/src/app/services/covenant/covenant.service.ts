@@ -15,7 +15,7 @@ export class CovenantService {
 
   async create(covenant: CreateCovenantDto) {
     try {
-      return await firstValueFrom(this.http.post<CreateCovenantDto>(`${this.url}`, covenant));
+      return await firstValueFrom(this.http.post<CovenantDto>(`${this.url}`, covenant));
     } catch (e) {
       console.error(e);
       if (e instanceof HttpErrorResponse && e.status === 400) {
@@ -25,7 +25,6 @@ export class CovenantService {
       }
       throw e;
     }
-    return;
   }
 
   async fetchByCardUuid(id: string) {

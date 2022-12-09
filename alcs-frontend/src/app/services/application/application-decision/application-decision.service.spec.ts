@@ -173,6 +173,7 @@ describe('ApplicationMeetingService', () => {
   it('should show a toast warning when uploading a file thats too large', async () => {
     const file = createMock<File>();
     Object.defineProperty(file, 'size', { value: environment.maxFileSize + 1 });
+
     await service.uploadFile('', file);
 
     expect(toastService.showWarningToast).toHaveBeenCalledTimes(1);

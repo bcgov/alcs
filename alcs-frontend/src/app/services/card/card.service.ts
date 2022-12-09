@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ApplicationMasterCodesDto } from '../application/application-code.dto';
 import { ReconsiderationTypeDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ToastService } from '../toast/toast.service';
-import { CardCreateDto, CardFlatDto, CardUpdateDto } from './card.dto';
+import { CardFlatDto, CardUpdateDto } from './card.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -20,16 +20,6 @@ export class CardService {
     const codes = await firstValueFrom(this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/code`));
     this.cardReconTypes = codes.reconsiderationType;
     this.$cardReconTypes.next(this.cardReconTypes);
-  }
-
-  async createCard(card: CardCreateDto) {
-    try {
-      return await firstValueFrom(this.http.post<CardCreateDto>(`${environment.apiUrl}/board/card`, card));
-    } catch (e) {
-      console.warn(e);
-      this.toastService.showErrorToast('Failed to create card');
-    }
-    return;
   }
 
   async updateCard(card: CardUpdateDto) {

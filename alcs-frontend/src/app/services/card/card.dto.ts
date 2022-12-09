@@ -1,14 +1,6 @@
-import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { CardStatusDto } from '../application/application-code.dto';
 import { BoardDto } from '../board/board.dto';
-import { AssigneeDto, UserDto } from '../user/user.dto';
-
-export interface CardTypeDto extends BaseCodeDto {}
-
-export interface CardCreateDto {
-  boardCode: string;
-  typeCode: string;
-}
+import { AssigneeDto } from '../user/user.dto';
 
 export interface CardUpdateDto {
   uuid: string;
