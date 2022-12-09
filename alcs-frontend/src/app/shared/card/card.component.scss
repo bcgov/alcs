@@ -10,12 +10,12 @@ $date-ht: 48px;
   width: 280px;
   font-size: 16px;
   border: 2px solid transparent;
-  transition: all 100ms ease-in-out;
   display: flex;
   flex-direction: column;
 
   &:hover {
     border-color: $primary-color;
+    transition: all 100ms ease-in-out;
 
     > .decision-date-info {
       border-color: $primary-color;
