@@ -1,13 +1,17 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
-import { AlcsApplicationService } from '../alcs/application-grpc/alcs-appliation.service';
 import { ApplicationGrpc } from '../alcs/application-grpc/alcs-application.message.interface';
+import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
+import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { BaseServiceException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import {
+  ApplicationDto,
   ApplicationSubmitToAlcsDto,
   UpdateApplicationDto,
 } from './application.dto';
@@ -23,6 +27,8 @@ export class ApplicationService {
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
     private alcsApplicationService: AlcsApplicationService,
+    private applicationTypeService: ApplicationTypeService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getOrFail(fileNumber: string) {
@@ -37,7 +43,7 @@ export class ApplicationService {
     return application;
   }
 
-  async create(createdBy: User) {
+  async create(type: string, createdBy: User) {
     //TODO: Get File Number from ALCS
     const fileNumber = Math.floor(Math.random() * 5000).toString(10);
 
@@ -56,6 +62,7 @@ export class ApplicationService {
     const application = new Application({
       fileNumber,
       status: initialStatus,
+      typeCode: type,
       createdBy,
     });
     await this.applicationRepository.save(application);
@@ -82,7 +89,7 @@ export class ApplicationService {
           fileNumber: fileNumber,
           applicant: application.applicant!,
           localGovernmentUuid: application.localGovernmentUuid!,
-          typeCode: 'NARU',
+          typeCode: 'NARU', // TODO get the actual application type once available
           dateSubmittedToAlc: Date.now().toString(),
         }),
       );
@@ -125,5 +132,13 @@ export class ApplicationService {
         },
       },
     });
+  }
+
+  async mapToDTOs(apps: Application[]) {
+    const types = await this.applicationTypeService.list();
+    return apps.map((app) => ({
+      ...this.mapper.map(app, Application, ApplicationDto),
+      type: types.find((type) => type.code === app.typeCode)!.label,
+    }));
   }
 }

@@ -15,4 +15,12 @@ export class ApplicationType extends BaseCodeEntity {
   @AutoMap()
   @Column()
   textColor: string;
+
+  @AutoMap()
+  @Column({ type: 'text', default: '' })
+  htmlDescription: string;
+
+  @AutoMap()
+  @Column({ type: 'text', default: '' })
+  portalLabel: string;
 }

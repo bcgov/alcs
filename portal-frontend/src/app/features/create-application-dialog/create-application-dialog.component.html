@@ -1,0 +1,15 @@
+<div>
+  <label id='radio-label'><h4>Select Application Type</h4></label>
+  <mat-radio-group class='app-type-radio-group' aria-labelledby='radio-label' [(ngModel)]='applicationType' required>
+    <mat-radio-button *ngFor='let appType of applicationTypes' [value]='appType.code'>
+      {{ appType.portalLabel }}
+      <div *ngIf='applicationType === appType.code' class='app-type-description'>
+        <span [innerHTML]='appType.htmlDescription'></span>
+      </div>
+    </mat-radio-button>
+  </mat-radio-group>
+  <div class='create-dialog-buttons'>
+    <button mat-stroked-button color='primary' (click)='onCancel()'>Cancel</button>
+    <button mat-flat-button color='primary' (click)='onSubmit()' [disabled]='!applicationType'>Create</button>
+  </div>
+</div>

@@ -22,9 +22,13 @@ export class ApplicationService {
     this.httpClientNoAuth = new HttpClient(handler);
   }
 
-  async create() {
+  async create(type: string) {
     try {
-      return firstValueFrom(this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}`, {}));
+      return firstValueFrom(
+        this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}`, {
+          type,
+        })
+      );
     } catch (e) {
       this.toastService.showErrorToast('Failed to create Application, please try again later');
     }

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeModule } from '../code/code.module';
 import { ApplicationSubtaskProfile } from '../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
@@ -29,6 +30,7 @@ import { ApplicationService } from './application.service';
   imports: [
     TypeOrmModule.forFeature([
       Application,
+      ApplicationType,
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDocument,
@@ -49,7 +51,6 @@ import { ApplicationService } from './application.service';
     },
     ApplicationProfile,
     ApplicationSubtaskProfile,
-
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationDocumentService,

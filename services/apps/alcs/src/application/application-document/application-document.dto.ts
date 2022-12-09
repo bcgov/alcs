@@ -41,4 +41,6 @@ export class ApplicationDocumentExternalAttachDto {
 
   @AutoMap()
   source: 'ALCS' | 'Local_Government' | 'Applicant';
+
+  tags: string[];
 }

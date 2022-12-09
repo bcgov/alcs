@@ -16,6 +16,7 @@ export class EditApplicationComponent implements OnInit {
   applicantName = new FormControl<string | any>('');
   localGovernment = new FormControl<string | any>('');
   fileId = '';
+  applicationType = '';
 
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
@@ -66,7 +67,7 @@ export class EditApplicationComponent implements OnInit {
 
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
-    this.localGovernments = codes.localGovernments;
+    this.localGovernments = codes.localGovernments.sort((a, b) => (a.name > b.name ? 1 : -1));
   }
 
   async onSaveAndExit() {
@@ -102,6 +103,7 @@ export class EditApplicationComponent implements OnInit {
     const application = await this.applicationService.getByFileId(fileId);
     if (application) {
       this.applicantName.patchValue(application.applicant);
+      this.applicationType = application.type;
       const lg = this.localGovernments.find((lg) => lg.uuid === application.localGovernmentUuid);
       if (lg) {
         this.localGovernment.patchValue(lg.name);

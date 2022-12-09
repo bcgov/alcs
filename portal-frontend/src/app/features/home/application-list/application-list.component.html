@@ -14,18 +14,18 @@
     </ng-container>
 
     <ng-container matColumnDef='dateCreated'>
-      <th mat-header-cell *matHeaderCellDef>Application ID</th>
+      <th mat-header-cell *matHeaderCellDef>Date Created</th>
       <td mat-cell *matCellDef='let row'>{{ row.createdAt | date }}</td>
     </ng-container>
 
     <ng-container matColumnDef='applicant'>
       <th mat-header-cell *matHeaderCellDef>Applicant Name</th>
-      <td mat-cell *matCellDef='let row'>{{ row.applicant }}</td>
+      <td mat-cell *matCellDef='let row'>{{ row.applicant || '(Unknown)' }}</td>
     </ng-container>
 
     <ng-container matColumnDef='applicationType'>
       <th mat-header-cell *matHeaderCellDef>Application Type</th>
-      <td mat-cell *matCellDef='let row'>Trans, Util & Rec</td>
+      <td mat-cell *matCellDef='let row'>{{ row.type }}</td>
     </ng-container>
 
     <ng-container matColumnDef='status'>

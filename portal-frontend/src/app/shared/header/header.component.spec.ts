@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 
@@ -7,10 +8,10 @@ import { HeaderComponent } from './header.component';
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let mockAuthService;
+  let mockAuthService: DeepMocked<AuthenticationService>;
 
   beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj<AuthenticationService>('AuthenticationService', ['getToken']);
+    mockAuthService = createMock();
     mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({

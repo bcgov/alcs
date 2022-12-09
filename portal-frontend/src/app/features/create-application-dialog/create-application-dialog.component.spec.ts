@@ -1,20 +1,19 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { RouterTestingModule } from '@angular/router/testing';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationService } from '../../services/application/application.service';
 import { CodeService } from '../../services/code/code.service';
 
-import { EditApplicationComponent } from './edit-application.component';
+import { CreateApplicationDialogComponent } from './create-application-dialog.component';
 
-describe('CreateApplicationComponent', () => {
-  let component: EditApplicationComponent;
-  let fixture: ComponentFixture<EditApplicationComponent>;
+describe('CreateApplicationDialogComponent', () => {
+  let component: CreateApplicationDialogComponent;
+  let fixture: ComponentFixture<CreateApplicationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditApplicationComponent],
+      imports: [MatDialogModule],
       providers: [
+        { provide: MatDialogRef, useValue: {} },
         {
           provide: ApplicationService,
           useValue: {},
@@ -24,11 +23,10 @@ describe('CreateApplicationComponent', () => {
           useValue: {},
         },
       ],
-      imports: [RouterTestingModule, MatAutocompleteModule],
-      schemas: [NO_ERRORS_SCHEMA],
+      declarations: [CreateApplicationDialogComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EditApplicationComponent);
+    fixture = TestBed.createComponent(CreateApplicationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

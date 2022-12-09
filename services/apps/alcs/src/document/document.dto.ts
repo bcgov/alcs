@@ -7,4 +7,5 @@ export class CreateDocumentDto {
   fileName: string;
   uploadedBy?: User | null;
   source: 'Applicant' | 'Local_Government' | 'ALCS';
+  tags: string[];
 }

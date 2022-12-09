@@ -29,6 +29,9 @@ export class Document extends Base {
   @Column({ nullable: true })
   uploadedByUuid?: string | null;
 
+  @Column({ type: 'text', array: true, default: '{}' })
+  tags: string[];
+
   @CreateDateColumn({ type: 'timestamptz' })
   uploadedAt: Date;
 

@@ -57,6 +57,9 @@ services:
       - postgres:/var/lib/postgres
       - ./docker/postgres-schemas.sql:/docker-entrypoint-initdb.d/postgres-schemas.sql
 
+
+
+
   ###################### Redis ######################
   redis:
     image: "redis:alpine"
@@ -94,6 +97,63 @@ services:
     ports:
       - "80:80"
       - "9001:9001"
+
+
+  ################ Portal ############################
+  portal-api:
+    restart: always
+    container_name: alcs_portal_api
+    build:
+      context: services
+      dockerfile: Dockerfile
+      args: 
+      - NEST_APP=portal
+    ports:
+      - 8082:8081
+    depends_on:
+      - db
+      - redis
+      - migrate
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:8080/" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ##################### Frontend ####################
+  portal-frontend:
+    container_name: alcs_portal_frontend
+    restart: always
+    build:
+      context: portal-frontend
+    ports:
+      - 8083:8081
+    depends_on:
+      - api
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:8081/" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      - API_URL=http://localhost:8082
+
+
+  ################ Portal Migrations ##############
+  portal-migrate:
+    container_name: alcs_portal_migration
+    restart: on-failure
+    build:
+      context: services
+      dockerfile: Dockerfile.migrate
+      args:
+        - NEST_APP=portal
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
 
 volumes:
   postgres:

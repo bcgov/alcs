@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AlcsApplicationService } from './alcs-appliation.service';
+import { AlcsApplicationService } from './alcs-application.service';
 import { AlcsApplicationDocumentService } from './application-document/alcs-application-document.service';
 
 @Module({

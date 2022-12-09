@@ -138,6 +138,7 @@ export class ApplicationDocumentService {
       fileName: data.fileName,
       source: data.source,
       uploadedBy: await this.getUploadedBy(data.uploadedByUuid),
+      tags: data.tags,
     });
     appDocument.document = document;
 
