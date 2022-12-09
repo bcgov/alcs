@@ -26,10 +26,10 @@ checks:
       threshold: 4
   identical-code:
     config:
-      threshold: 60
+      threshold: 120
   similar-code:
     config:
-      threshold: 50
+      threshold: 100
 exclude_patterns:
   - "bin/"
   - "**/node_modules/"
