@@ -6,7 +6,7 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDocumentDto } from './application-document.dto';
 
-export type DOCUMENT_TYPE = 'decisionDocument' | 'reviewDocument';
+export type DOCUMENT_TYPE = 'decisionDocument' | 'reviewDocument' | 'certificateOfTitle';
 
 @Injectable({
   providedIn: 'root',

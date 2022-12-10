@@ -1,0 +1,15 @@
+<div class="applicant-info">
+  <h3>Applicant Info</h3>
+  <div>
+    <div class="subheading1">Applicant</div>
+    <div>{{ applicant }}</div>
+  </div>
+
+  <section>
+    <app-document
+      [fileNumber]="fileNumber"
+      documentType="certificateOfTitle"
+      title="Applicant Documents"
+    ></app-document>
+  </section>
+</div>

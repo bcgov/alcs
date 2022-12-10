@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
@@ -35,6 +35,7 @@ export class ApplicationDocumentComponent {
   ) {}
 
   async loadDocuments() {
+    console.log(this.documentType);
     this.documents = await this.applicationDocumentService.list(this._fileNumber, this.documentType);
   }
 

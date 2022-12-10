@@ -25,6 +25,7 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,7 @@ const routes: Routes = [
     InlineReviewOutcomeComponent,
     EditReconsiderationDialogComponent,
     EditModificationDialogComponent,
+    ApplicantInfoComponent,
   ],
   imports: [
     SharedModule.forRoot(),
