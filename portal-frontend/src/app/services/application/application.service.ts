@@ -92,10 +92,7 @@ export class ApplicationService {
         };
 
         await firstValueFrom(
-          this.httpClient.post(
-            `${environment.apiUrl}/application-document/attachExternal/application/${fileId}`,
-            payload
-          )
+          this.httpClient.post(`${environment.apiUrl}/application-document/attachExternal/application`, payload)
         );
         this.toastService.showSuccessToast('Document uploaded');
       } catch (e) {

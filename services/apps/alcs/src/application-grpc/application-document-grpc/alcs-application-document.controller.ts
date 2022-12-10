@@ -17,8 +17,6 @@ export class AlcsApplicationDocumentControllerGrpc {
   ): Promise<ApplicationAttachDocumentGrpcResponse> {
     return this.applicationService.attachExternalDocument({
       ...data,
-      // TODO map real tags here
-      tags: [],
     });
   }
 }

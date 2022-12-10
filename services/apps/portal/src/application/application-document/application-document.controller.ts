@@ -118,9 +118,8 @@ export class ApplicationDocumentController {
     return {};
   }
 
-  @Post('/attachExternal/application/:fileNumber')
+  @Post('/attachExternal/application')
   async attachExternalDocument(
-    @Param('fileNumber') fileNumber: string,
     @Body() data: ApplicationAttachDocumentGrpcRequest,
   ): Promise<ApplicationAttachDocumentGrpcResponse> {
     return this.alcsApplicationDocumentService.attachExternalDocument({

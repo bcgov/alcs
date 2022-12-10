@@ -3,7 +3,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import { DocumentService } from '../../document/document.service';
+import {
+  DEFAULT_DB_TAGS,
+  DocumentService,
+} from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { ApplicationService } from '../application.service';
@@ -138,7 +141,7 @@ export class ApplicationDocumentService {
       fileName: data.fileName,
       source: data.source,
       uploadedBy: await this.getUploadedBy(data.uploadedByUuid),
-      tags: data.tags,
+      tags: DEFAULT_DB_TAGS,
     });
     appDocument.document = document;
 
