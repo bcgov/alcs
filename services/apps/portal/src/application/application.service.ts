@@ -89,7 +89,7 @@ export class ApplicationService {
           fileNumber: fileNumber,
           applicant: application.applicant!,
           localGovernmentUuid: application.localGovernmentUuid!,
-          typeCode: 'NARU', // TODO get the actual application type once available
+          typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),
         }),
       );

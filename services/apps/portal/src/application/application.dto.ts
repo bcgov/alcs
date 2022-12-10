@@ -48,9 +48,6 @@ export class ApplicationSubmitToAlcsDto {
   @IsString()
   applicant: string;
 
-  // @IsString()
-  // typeCode: string;
-
   @IsString()
   localGovernmentUuid: string;
 }
