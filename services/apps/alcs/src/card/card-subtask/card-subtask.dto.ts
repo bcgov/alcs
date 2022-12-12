@@ -50,7 +50,12 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
   card: CardDto;
   title: string;
   appType?: ApplicationTypeDto;
-  parentType: string;
+  parentType:
+    | 'application'
+    | 'reconsideration'
+    | 'covenant'
+    | 'modification'
+    | 'planning-review';
   activeDays?: number;
   paused: boolean;
 }
