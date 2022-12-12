@@ -1,8 +1,8 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 
 @Injectable()

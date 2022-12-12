@@ -1,14 +1,14 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../../common/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { Card } from '../card.entity';
 import { CardService } from '../card.service';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';

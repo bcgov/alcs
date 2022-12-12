@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, HttpException, Logger } from '@nestjs/common';
+import { mockAppLoggerService } from '../../../../apps/portal/test/mocks/mockLogger';
 import { HttpExceptionFilter } from './exception.filter';
-import { mockAppLoggerService } from '../../../test/mocks/mockLogger';
 import {
   mockArgumentsHost,
   mockGetRequest,
@@ -9,7 +9,7 @@ import {
   mockHttpArgumentsHost,
   mockSend,
   mockStatus,
-} from '../../../test/mocks/mockHttp';
+} from '../../../../apps/portal/test/mocks/mockHttp';
 import { BaseErrorResponseModel } from './base.exception';
 
 describe('HttpExceptionFilter', () => {

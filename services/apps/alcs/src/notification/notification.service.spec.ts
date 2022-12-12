@@ -1,9 +1,9 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository, UpdateResult } from 'typeorm';
-import { CONFIG_TOKEN } from '../common/config/config.module';
 import { Notification } from './notification.entity';
 import { NotificationService } from './notification.service';
 

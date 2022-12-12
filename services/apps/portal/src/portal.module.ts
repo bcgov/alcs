@@ -1,3 +1,5 @@
+import { ConfigModule } from '@app/common/config/config.module';
+import { RedisModule } from '@app/common/redis/redis.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
@@ -11,9 +13,7 @@ import { AlcsModule } from './alcs/alcs.module';
 import { ApplicationModule } from './application/application.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
-import { ConfigModule } from './common/config/config.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
-import { RedisModule } from './common/redis/redis.module';
 import { LogoutController } from './logout/logout.controller';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';

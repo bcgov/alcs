@@ -1,18 +1,18 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationService } from '../../application/application.service';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../../common/exceptions/base.exception';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../../test/mocks/mockEntities';
+import { ApplicationService } from '../../application/application.service';
 import { DocumentService } from '../../document/document.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {

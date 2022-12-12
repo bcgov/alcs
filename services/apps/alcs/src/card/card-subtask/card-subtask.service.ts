@@ -1,8 +1,8 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { Card } from '../card.entity';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
 import { UpdateCardSubtaskDto } from './card-subtask.dto';
 import { CardSubtask } from './card-subtask.entity';

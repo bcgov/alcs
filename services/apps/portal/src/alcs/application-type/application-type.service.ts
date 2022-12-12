@@ -1,5 +1,5 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { RedisService } from '../../common/redis/redis.service';
 
 export type PortalApplicationType = {
   code: string;

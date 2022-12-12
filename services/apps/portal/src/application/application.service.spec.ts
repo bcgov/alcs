@@ -1,3 +1,4 @@
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -9,7 +10,6 @@ import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-applicati
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
-import { BaseServiceException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';

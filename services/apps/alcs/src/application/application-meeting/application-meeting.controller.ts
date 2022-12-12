@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -16,10 +17,9 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { CodeService } from '../../code/code.service';
-import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { Application } from '../application.entity';

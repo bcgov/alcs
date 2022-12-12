@@ -1,10 +1,10 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import {
   BullModuleOptions,
   SharedBullConfigurationFactory,
 } from '@nestjs/bull';
 import { Inject, Injectable } from '@nestjs/common';
 import { IConfig } from 'config';
-import { CONFIG_TOKEN } from '../common/config/config.module';
 
 @Injectable()
 export class BullConfigService implements SharedBullConfigurationFactory {

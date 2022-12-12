@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -5,7 +6,6 @@ import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 

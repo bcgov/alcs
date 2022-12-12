@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -6,7 +7,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { mockClient } from 'aws-sdk-client-mock';
 import * as config from 'config';
 import { Repository } from 'typeorm';
-import { CONFIG_TOKEN } from '../common/config/config.module';
 import { User } from '../user/user.entity';
 import { CreateDocumentDto } from './document.dto';
 import { Document } from './document.entity';

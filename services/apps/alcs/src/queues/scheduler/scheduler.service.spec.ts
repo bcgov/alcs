@@ -1,10 +1,9 @@
+import { ConfigModule } from '@app/common/config/config.module';
 import { BullModule, getQueueToken } from '@nestjs/bull';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule } from '../../common/config/config.module';
 import { BullConfigService } from '../bullConfig.service';
 import {
   EVERYDAY_MIDNIGHT,
-  MONDAY_TO_FRIDAY_AT_2AM,
   QUEUES,
   SchedulerService,
 } from './scheduler.service';

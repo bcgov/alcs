@@ -1,7 +1,7 @@
+import { ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteResult } from 'typeorm';
-import { ConfigModule } from '../../common/config/config.module';
 import { NotificationService } from '../../notification/notification.service';
 import { CleanUpNotificationsConsumer } from './cleanUpNotifications.consumer';
 

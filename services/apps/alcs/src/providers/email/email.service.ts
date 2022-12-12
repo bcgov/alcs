@@ -1,7 +1,7 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 
 @Injectable()
 export class EmailService {

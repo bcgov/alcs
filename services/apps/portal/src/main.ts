@@ -1,3 +1,4 @@
+import { HttpExceptionFilter } from '@app/common/exceptions/exception.filter';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
@@ -7,10 +8,8 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import * as config from 'config';
-import fastify from 'fastify';
 import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
-import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import { PortalModule } from './portal.module';
 
 const registerHelmet = async (app: NestFastifyApplication) => {

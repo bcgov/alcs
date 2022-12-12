@@ -1,15 +1,15 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Board } from '../board/board.entity';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import {
   initBoardMockEntity,
   initCardMockEntity,
 } from '../../test/mocks/mockEntities';
+import { Board } from '../board/board.entity';
 import { CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';

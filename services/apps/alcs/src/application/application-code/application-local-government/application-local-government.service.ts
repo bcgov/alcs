@@ -1,8 +1,8 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RedisClientType } from 'redis';
 import { Repository } from 'typeorm';
-import { RedisService } from '../../../common/redis/redis.service';
 import { ApplicationLocalGovernment } from './application-local-government.entity';
 
 @Injectable()

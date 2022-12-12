@@ -1,16 +1,16 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
-import { Card } from '../card/card.entity';
-import { CardService } from '../card/card.service';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import {
   initCardMockEntity,
   initCommentMock,
 } from '../../test/mocks/mockEntities';
+import { Application } from '../application/application.entity';
+import { ApplicationService } from '../application/application.service';
+import { Card } from '../card/card.entity';
+import { CardService } from '../card/card.service';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';

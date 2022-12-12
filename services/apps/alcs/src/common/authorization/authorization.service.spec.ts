@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -6,7 +7,6 @@ import { JWK, JWS } from 'node-jose';
 import { of } from 'rxjs';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
-import { CONFIG_TOKEN } from '../config/config.module';
 import { AuthorizationService } from './authorization.service';
 
 describe('AuthorizationService', () => {

@@ -1,3 +1,4 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
@@ -18,8 +19,7 @@ import { CodeService } from '../code/code.service';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
-} from '../common/exceptions/base.exception';
-import { RedisService } from '../common/redis/redis.service';
+} from '@app/common/exceptions/base.exception';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,

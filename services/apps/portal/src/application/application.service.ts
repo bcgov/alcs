@@ -1,3 +1,4 @@
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
@@ -7,7 +8,6 @@ import { Repository } from 'typeorm';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
-import { BaseServiceException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import {

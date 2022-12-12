@@ -1,6 +1,6 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisService } from '../../common/redis/redis.service';
 import {
   ApplicationTypeService,
   PortalApplicationType,

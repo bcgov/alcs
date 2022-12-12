@@ -1,3 +1,5 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -5,10 +7,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository } from 'typeorm';
-import { UserProfile } from '../common/automapper/user.automapper.profile';
-import { CONFIG_TOKEN } from '../common/config/config.module';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { initUserMockEntity } from '../../test/mocks/mockEntities';
+import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { EmailService } from '../providers/email/email.service';
 import { User } from './user.entity';
 import { UserService } from './user.service';

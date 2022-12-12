@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import {
   Body,
   Controller,
@@ -16,11 +17,10 @@ import { CardService } from '../card/card.service';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../common/authorization/roles';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { CONFIG_TOKEN } from '../common/config/config.module';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
-} from '../common/exceptions/base.exception';
+} from '@app/common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../utils/incoming-date.formatter';
 import {

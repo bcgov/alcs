@@ -1,3 +1,7 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -11,10 +15,6 @@ import {
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../common/exceptions/base.exception';
 import { CovenantDto, CreateCovenantDto } from './covenant.dto';
 import { Covenant } from './covenant.entity';
 

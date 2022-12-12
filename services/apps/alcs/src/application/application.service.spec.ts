@@ -1,3 +1,5 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { RedisService } from '@app/common/redis/redis.service';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -5,12 +7,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RedisClientType } from 'redis';
 import { Repository } from 'typeorm';
+import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
-import { initApplicationMockEntity } from '../../test/mocks/mockEntities';
-import { RedisService } from '../common/redis/redis.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,

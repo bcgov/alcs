@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';

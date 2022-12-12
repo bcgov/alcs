@@ -1,13 +1,13 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../common/exceptions/base.exception';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';

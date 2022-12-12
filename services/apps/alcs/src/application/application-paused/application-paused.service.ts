@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
-} from '../../common/exceptions/base.exception';
+} from '@app/common/exceptions/base.exception';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ApplicationPaused } from '../application-paused.entity';
 
 @Injectable()

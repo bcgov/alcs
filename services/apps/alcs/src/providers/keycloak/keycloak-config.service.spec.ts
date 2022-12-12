@@ -1,6 +1,6 @@
+import { ConfigModule } from '@app/common/config/config.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
-import { ConfigModule } from '../../common/config/config.module';
 import { KeycloakConfigService } from './keycloak-config.service';
 import * as config from 'config';
 

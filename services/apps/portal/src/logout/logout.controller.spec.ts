@@ -1,8 +1,8 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../alcs/test/mocks/mockTypes';
-import { CONFIG_TOKEN } from '../common/config/config.module';
 import { LogoutController } from './logout.controller';
 
 describe('LogoutController', () => {

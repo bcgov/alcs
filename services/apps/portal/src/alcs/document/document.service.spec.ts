@@ -1,8 +1,8 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { of } from 'rxjs';
-import { CONFIG_TOKEN } from '../../common/config/config.module';
 import { DocumentUploadResponseGrpc } from '../document-grpc/alcs-document.message.interface';
 import { AlcsDocumentService } from '../document-grpc/alcs-document.service';
 import { DocumentService } from './document.service';

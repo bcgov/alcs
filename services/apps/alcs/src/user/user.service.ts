@@ -1,11 +1,11 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
 import { Repository } from 'typeorm';
-import { CONFIG_TOKEN } from '../common/config/config.module';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { EmailService } from '../providers/email/email.service';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -17,8 +17,6 @@ export type UserGuids = {
 
 @Injectable()
 export class UserService {
-  private logger: Logger = new Logger(UserService.name);
-
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,

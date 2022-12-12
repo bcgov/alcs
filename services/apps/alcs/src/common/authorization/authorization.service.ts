@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { HttpService } from '@nestjs/axios';
 import {
   Inject,
@@ -9,7 +10,6 @@ import { JWK, JWS } from 'node-jose';
 import { firstValueFrom } from 'rxjs';
 import { CreateUserDto } from '../../user/user.dto';
 import { UserService } from '../../user/user.service';
-import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
 export type TokenResponse = {
   access_token: string;
