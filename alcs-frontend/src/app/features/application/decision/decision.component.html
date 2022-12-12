@@ -59,28 +59,12 @@
           -
         </ng-container>
         <ng-container *ngIf="!!decision.reconsiders">
-          <span
-            class="decision-type"
-            [ngStyle]="{
-              backgroundColor: reconLabel.backgroundColor,
-              color: reconLabel.textColor,
-              borderColor: reconLabel.borderColor
-            }"
-            >{{ reconLabel.shortLabel }}</span
-          >
-          -
+          <app-application-type-pill style="margin-left: -12px" [type]="reconLabel"></app-application-type-pill>
+          &nbsp;-
         </ng-container>
         <ng-container *ngIf="!!decision.modifies">
-          <span
-            class="decision-type"
-            [ngStyle]="{
-              backgroundColor: modificationLabel.backgroundColor,
-              color: modificationLabel.textColor,
-              borderColor: modificationLabel.borderColor
-            }"
-            >{{ modificationLabel.shortLabel }}</span
-          >
-          -
+          <app-application-type-pill style="margin-left: -12px" [type]="modificationLabel"></app-application-type-pill>
+          &nbsp;-
         </ng-container>
         <span>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
       </div>

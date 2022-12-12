@@ -11,10 +11,12 @@ import { ApplicationDecisionService } from '../../../services/application/applic
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
+import {
+  MODIFICATION_TYPE_LABEL,
+  RECON_TYPE_LABEL,
+} from '../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
-import { MODIFICATION_TYPE_LABEL } from '../../board/dialogs/modification/modification-dialog.component';
-import { RECON_TYPE_LABEL } from '../../board/dialogs/reconsiderations/reconsideration-dialog.component';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & {

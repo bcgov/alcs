@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApplicationDecisionMeetingDto } from '../../services/application/application.dto';
 import { AssigneeDto } from '../../services/user/user.dto';
+import { ApplicationPill } from '../application-type-pill/application-type-pill.component';
 
 export interface CardData {
   id: string;
   title: string;
-  labels: CardLabel[];
+  labels: ApplicationPill[];
   status: string;
   assignee?: AssigneeDto;
   activeDays?: number;
@@ -16,14 +17,6 @@ export interface CardData {
   cardUuid: string;
   cardType: CardType;
   dateReceived: number;
-}
-
-export interface CardLabel {
-  shortLabel: string;
-  label: string;
-  backgroundColor: string;
-  borderColor?: string;
-  textColor: string;
 }
 
 export interface CardSelectedEvent {

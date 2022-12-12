@@ -1,3 +1,4 @@
+import { ApplicationTypeDto } from '../../application/application-code.dto';
 import { AssigneeDto } from '../../user/user.dto';
 import { CardDto } from '../card.dto';
 
@@ -26,6 +27,8 @@ export interface HomepageSubtaskDto extends CardSubtaskDto {
   title: string;
   activeDays?: number;
   paused: boolean;
+  appType?: ApplicationTypeDto;
+  parentType: 'application' | 'reconsideration' | 'covenant' | 'modification' | 'planning-review';
 }
 
 export enum CARD_SUBTASK_TYPE {

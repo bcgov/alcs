@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { ApplicationModificationDto } from '../decision/application-modification/application-modification.dto';
 import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
@@ -160,6 +161,8 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${recon.application.fileNumber} (${recon.application.applicant})`,
+          appType: recon.application.type,
+          parentType: 'reconsideration',
         });
       }
     }
@@ -190,6 +193,8 @@ export class HomeController {
           activeDays: applicationTimes.get(application.uuid)?.activeDays || 0,
           paused: appPausedMap.get(application.uuid) || false,
           title: `${application.fileNumber} (${application.applicant})`,
+          appType: application.type,
+          parentType: 'application',
         });
       }
     }
@@ -209,6 +214,7 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${planningReview.fileNumber} (${planningReview.type})`,
+          parentType: 'planning-review',
         });
       }
     }
@@ -228,6 +234,7 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${covenant.fileNumber} (${covenant.applicant})`,
+          parentType: 'covenant',
         });
       }
     }
@@ -250,6 +257,8 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${modification.application.fileNumber} (${modification.application.applicant})`,
+          appType: modification.application.type,
+          parentType: 'modification',
         });
       }
     }

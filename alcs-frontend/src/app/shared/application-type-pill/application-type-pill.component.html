@@ -1,0 +1,13 @@
+<span
+  class="application-pill"
+  [ngClass]="{
+  'short-label': useShortLabel
+  }"
+  [ngStyle]="{
+    backgroundColor: type.backgroundColor,
+    color: type.textColor,
+    borderColor: type.borderColor || type.backgroundColor
+  }"
+>
+  {{ useShortLabel ? type.shortLabel : type.label }}
+</span>

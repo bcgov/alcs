@@ -19,7 +19,6 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
 import { ModificationDialogComponent } from './modification-dialog.component';
 
 describe('ModificationDialogComponent', () => {

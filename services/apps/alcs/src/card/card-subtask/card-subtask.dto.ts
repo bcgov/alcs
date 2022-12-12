@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsUUID } from 'class-validator';
+import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { AssigneeDto } from '../../user/user.dto';
 import { CardDto } from '../card.dto';
 
@@ -48,6 +49,13 @@ export class CardSubtaskDto {
 export class HomepageSubtaskDTO extends CardSubtaskDto {
   card: CardDto;
   title: string;
+  appType?: ApplicationTypeDto;
+  parentType:
+    | 'application'
+    | 'reconsideration'
+    | 'covenant'
+    | 'modification'
+    | 'planning-review';
   activeDays?: number;
   paused: boolean;
 }

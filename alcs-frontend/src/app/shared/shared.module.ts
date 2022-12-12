@@ -31,6 +31,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationHeaderComponent } from './application-header/application-header.component';
 import { ApplicationTimeTrackerComponent } from './application-time-tracker/application-time-tracker.component';
+import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { InlineEditComponent } from './inline-edit/inline-edit.component';
@@ -52,6 +53,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     ApplicationHeaderComponent,
     ApplicationDocumentComponent,
     ApplicationTimeTrackerComponent,
+    ApplicationTypePillComponent,
   ],
   imports: [
     CommonModule,
@@ -103,6 +105,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     AvatarCircleComponent,
     MatSelectModule,
     ApplicationTimeTrackerComponent,
+    ApplicationTypePillComponent,
   ],
 })
 export class SharedModule {
