@@ -7,6 +7,12 @@ import { CardSubtaskService } from '../../../services/card/card-subtask/card-sub
 import { HomeService } from '../../../services/home/home.service';
 import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
+import {
+  COVENANT_TYPE_LABEL,
+  MODIFICATION_TYPE_LABEL,
+  PLANNING_TYPE_LABEL,
+  RECON_TYPE_LABEL,
+} from '../../../shared/application-type-pill/application-type-pill.constants';
 import { CardType } from '../../../shared/card/card.component';
 
 @Component({
@@ -18,6 +24,11 @@ export class GisSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
   public gisUsers: AssigneeDto[] = [];
   displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
+
+  MODIFICATION_LABEL = MODIFICATION_TYPE_LABEL;
+  RECONSIDERATION_LABEL = RECON_TYPE_LABEL;
+  COVENANT_LABEL = COVENANT_TYPE_LABEL;
+  PLANNING_REVIEW_LABEL = PLANNING_TYPE_LABEL;
 
   constructor(
     private homeService: HomeService,
