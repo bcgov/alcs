@@ -15,5 +15,7 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 ## Links
 - [API Readme](services/README.md)
 - [Frontend Readme](./alcs-frontend/README.md)
+- [Services Readme](./services/README.md)
 - [Architecture](./docs/architecture.md)
 - [SchemaSpy](https://bcgov.github.io/alcs/schemaspy/)
+- [One time Jobs](./docs/jobs.md)

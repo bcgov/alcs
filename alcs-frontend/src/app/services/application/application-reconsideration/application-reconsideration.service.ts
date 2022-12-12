@@ -33,19 +33,6 @@ export class ApplicationReconsiderationService {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch reconsiderations');
     }
-    return [];
-  }
-
-  async fetchByBoard(boardCode: string) {
-    try {
-      this.$reconsiderations.next(
-        await firstValueFrom(this.http.get<ApplicationReconsiderationDto[]>(`${this.url}/board/${boardCode}`))
-      );
-    } catch (err) {
-      console.error(err);
-      this.toastService.showErrorToast('Failed to fetch reconsiderations');
-    }
-    return [];
   }
 
   async fetchByCardUuid(cardUuid: string) {
@@ -60,18 +47,19 @@ export class ApplicationReconsiderationService {
 
   async update(reconsiderationUuid: string, reconsideration: UpdateApplicationReconsiderationDto) {
     try {
-      await firstValueFrom(
+      return await firstValueFrom(
         this.http.patch<ApplicationReconsiderationDto>(`${this.url}/${reconsiderationUuid}`, reconsideration)
       );
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to update reconsideration');
     }
+    return;
   }
 
   async create(reconsideration: CreateApplicationReconsiderationDto) {
     try {
-      await firstValueFrom(
+      return await firstValueFrom(
         this.http.post<ApplicationReconsiderationDto>(this.url, {
           ...reconsideration,
           submittedDate: formatDateForApi(reconsideration.submittedDate),
@@ -80,9 +68,8 @@ export class ApplicationReconsiderationService {
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to create reconsideration');
-      throw err;
     }
-    return;
+    return undefined;
   }
 
   async delete(uuid: string) {

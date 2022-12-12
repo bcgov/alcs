@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  test-frontend:
+  test-alcs-frontend:
     defaults:
       run:
         working-directory: alcs-frontend
@@ -12,7 +12,7 @@ jobs:
       matrix:
         platform: [ubuntu-latest]
         node: ["16"]
-    name: Coverage Report Frontend - ${{ matrix.node }}/${{ matrix.platform }}
+    name: Coverage Report ALCS Frontend - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@master
@@ -25,8 +25,33 @@ jobs:
       - if: matrix.node == '16'
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-frontend
+          name: coverage-alcs-frontend
           path: ${{ github.workspace }}/alcs-frontend/coverage
+          retention-days: 1
+          if-no-files-found: error
+  test-portal-frontend:
+    defaults:
+      run:
+        working-directory: portal-frontend
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest ]
+        node: [ "16" ]
+    name: Coverage Report Portal Frontend - ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm run build
+      - run: npm run test:cov
+      - if: matrix.node == '16'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-portal-frontend
+          path: ${{ github.workspace }}/portal-frontend/coverage
           retention-days: 1
           if-no-files-found: error
   test-api:
@@ -55,7 +80,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
   coverage:
-    needs: [test-frontend, test-api]
+    needs: [test-alcs-frontend, test-portal-frontend, test-api]
     name: Publish Coverage Reports
     runs-on: ubuntu-latest
     steps:

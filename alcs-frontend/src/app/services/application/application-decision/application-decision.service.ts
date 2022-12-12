@@ -60,8 +60,9 @@ export class ApplicationDecisionService {
 
   async update(uuid: string, data: UpdateApplicationDecisionDto) {
     try {
-      await firstValueFrom(this.http.patch<ApplicationDecisionDto>(`${this.url}/${uuid}`, data));
+      const res = await firstValueFrom(this.http.patch<ApplicationDecisionDto>(`${this.url}/${uuid}`, data));
       this.toastService.showSuccessToast('Decision updated');
+      return res;
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 400 && e.error?.message) {
         this.toastService.showErrorToast(e.error.message);
@@ -74,8 +75,9 @@ export class ApplicationDecisionService {
 
   async create(decision: CreateApplicationDecisionDto) {
     try {
-      await firstValueFrom(this.http.post<ApplicationDecisionDto>(`${this.url}`, decision));
+      const res = await firstValueFrom(this.http.post<ApplicationDecisionDto>(`${this.url}`, decision));
       this.toastService.showSuccessToast('Decision created');
+      return res;
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 400 && e.error?.message) {
         this.toastService.showErrorToast(e.error.message);

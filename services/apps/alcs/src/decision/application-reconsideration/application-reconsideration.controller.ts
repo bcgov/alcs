@@ -73,13 +73,6 @@ export class ApplicationReconsiderationController {
     return mapped[0];
   }
 
-  @Get('/board/:boardCode')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async getByBoard(@Param('code') boardCode: string) {
-    const recon = await this.reconsiderationService.getByBoardCode(boardCode);
-    return this.reconsiderationService.mapToDtos(recon);
-  }
-
   @Get('/application/:applicationFileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByApplication(

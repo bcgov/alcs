@@ -32,7 +32,7 @@ export class ApplicationDecisionMeetingService {
       await firstValueFrom(
         this.http.patch<ApplicationDecisionMeetingDto>(this.url, {
           ...decisionMeeting,
-          date: decisionMeeting.date.valueOf(),
+          date: formatDateForApi(decisionMeeting.date),
         })
       );
       await this.fetch(decisionMeeting.applicationFileNumber);
@@ -56,12 +56,7 @@ export class ApplicationDecisionMeetingService {
   }
 
   fetchOne(uuid: string) {
-    try {
-      return firstValueFrom(this.http.get<ApplicationDecisionMeetingDto>(`${this.url}/meeting/${uuid}`));
-    } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch scheduled discussion');
-    }
-    return;
+    return firstValueFrom(this.http.get<ApplicationDecisionMeetingDto>(`${this.url}/meeting/${uuid}`));
   }
 
   async delete(uuid: string) {

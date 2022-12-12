@@ -103,12 +103,4 @@ describe('ApplicationModificationController', () => {
     expect(mockModificationService.getByApplication).toBeCalledTimes(1);
     expect(mockModificationService.getByApplication).toBeCalledWith(fakeNumber);
   });
-
-  it('should call service getByBoardCode method', async () => {
-    const fakeCode = 'fake';
-    mockModificationService.getByBoardCode.mockResolvedValue([]);
-    await controller.getByBoard(fakeCode);
-    expect(mockModificationService.getByBoardCode).toBeCalledTimes(1);
-    expect(mockModificationService.getByBoardCode).toBeCalledWith(fakeCode);
-  });
 });

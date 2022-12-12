@@ -67,13 +67,8 @@ export class ApplicationMeetingService {
     }
   }
 
-  fetchOne(uuid: string) {
-    try {
-      return firstValueFrom(this.http.get<ApplicationMeetingDto>(`${this.url}/meeting/${uuid}`));
-    } catch (err) {
-      this.toastService.showErrorToast('Failed to fetch meetings');
-    }
-    return;
+  async fetchOne(uuid: string) {
+    return firstValueFrom(this.http.get<ApplicationMeetingDto>(`${this.url}/meeting/${uuid}`));
   }
 
   async delete(uuid: string) {
