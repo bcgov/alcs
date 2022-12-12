@@ -27,6 +27,25 @@ export class ApplicationService {
   private regions: ApplicationRegionDto[] = [];
   private isInitialized = false;
 
+  async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
+    await this.setup();
+    return firstValueFrom(this.http.get<ApplicationDto>(`${this.baseUrl}/${fileNumber}`));
+  }
+
+  async createApplication(application: CreateApplicationDto) {
+    await this.setup();
+    try {
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}`, application));
+    } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 400) {
+        this.toastService.showErrorToast(`Application with File ID ${application.fileNumber} already exists`);
+      } else {
+        this.toastService.showErrorToast('Failed to create Application');
+      }
+      throw e;
+    }
+  }
+
   async updateApplication(fileNumber: string, application: UpdateApplicationDto) {
     await this.setup();
     try {
@@ -47,23 +66,12 @@ export class ApplicationService {
     return;
   }
 
-  async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
-    await this.setup();
-    return firstValueFrom(this.http.get<ApplicationDto>(`${this.baseUrl}/${fileNumber}`));
+  searchApplicationsByNumber(fileNumber: string) {
+    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/search/${fileNumber}`));
   }
 
-  async createApplication(application: CreateApplicationDto) {
-    await this.setup();
-    try {
-      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}`, application));
-    } catch (e) {
-      if (e instanceof HttpErrorResponse && e.status === 400) {
-        this.toastService.showErrorToast(`Application with File ID ${application.fileNumber} already exists`);
-      } else {
-        this.toastService.showErrorToast('Failed to create Application');
-      }
-      throw e;
-    }
+  async fetchByCardUuid(uuid: string) {
+    return firstValueFrom(this.http.get<ApplicationDto>(`${this.baseUrl}/card/${uuid}`));
   }
 
   async setup() {
@@ -83,13 +91,5 @@ export class ApplicationService {
 
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
-  }
-
-  searchApplicationsByNumber(fileNumber: string) {
-    return firstValueFrom(this.http.get<ApplicationDto[]>(`${this.baseUrl}/search/${fileNumber}`));
-  }
-
-  async fetchByCardUuid(uuid: string) {
-    return firstValueFrom(this.http.get<ApplicationDto>(`${this.baseUrl}/card/${uuid}`));
   }
 }

@@ -38,7 +38,7 @@ export class ApplicationDocumentService {
   }
 
   async delete(documentId: string) {
-    return firstValueFrom(this.http.delete<ApplicationDocumentDto[]>(`${this.url}/${documentId}`));
+    return firstValueFrom(this.http.delete<ApplicationDocumentDto>(`${this.url}/${documentId}`));
   }
 
   async download(uuid: string, fileName: string, isInline = true) {
