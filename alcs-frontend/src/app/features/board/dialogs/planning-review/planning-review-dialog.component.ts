@@ -46,7 +46,7 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.planningReview = this.data;
     this.selectedAssignee = this.data.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = this.data.card.status.code;
     this.selectedBoard = this.data.card.board.code;
     this.selectedRegion = this.data.region.code;
@@ -71,7 +71,8 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

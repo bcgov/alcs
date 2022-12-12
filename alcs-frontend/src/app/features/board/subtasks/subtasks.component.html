@@ -34,7 +34,7 @@
           <app-avatar-circle
             *ngIf="subtask.assignee"
             [initials]="subtask.assignee.initials || ''"
-            [name]="subtask.assignee.name"
+            [name]="subtask.assignee.prettyName"
           ></app-avatar-circle>
           <app-avatar-circle class="unassigned-circle" *ngIf="!subtask.assignee" initials="-"></app-avatar-circle>
         </div>

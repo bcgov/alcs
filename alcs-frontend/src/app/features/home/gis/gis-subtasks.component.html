@@ -47,13 +47,13 @@
           [items]="gisUsers"
           bindLabel="name"
           bindValue="name"
-          [ngModel]="element.assignee?.name"
+          [ngModel]="element.assignee?.prettyName"
           [searchFn]="filterAssigneeList"
           (change)="onAssigneeSelected($event, element.uuid)"
         >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             <div class="assignee-card-body">
-              <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+              <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
               <p class="assignee-card-email" [ngOptionHighlight]="search">
                 {{ item.email }}
               </p>

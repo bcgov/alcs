@@ -71,7 +71,7 @@ export class ModificationDialogComponent implements OnInit, OnDestroy {
   populateData(modification: ApplicationModificationDto) {
     this.modification = modification;
     this.selectedAssignee = modification.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = modification.card.status.code;
     this.selectedBoard = modification.card.board.code;
     this.selectedRegion = modification.application.region.code;
@@ -80,7 +80,8 @@ export class ModificationDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

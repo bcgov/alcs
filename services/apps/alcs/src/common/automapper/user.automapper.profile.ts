@@ -104,6 +104,15 @@ export class UserProfile extends AutomapperProfile {
             }
           }),
         ),
+        forMember(
+          (ud) => ud.prettyName,
+          mapFrom((u) => {
+            if (u.givenName && u.familyName) {
+              return `${u.givenName} ${u.familyName}`;
+            }
+            return u.name || '';
+          }),
+        ),
       );
     };
   }

@@ -69,7 +69,7 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
   populateData(covenant: CovenantDto) {
     this.covenant = covenant;
     this.selectedAssignee = covenant.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = covenant.card.status.code;
     this.selectedBoard = covenant.card.board.code;
     this.selectedRegion = covenant.region.code;
@@ -80,7 +80,8 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 
