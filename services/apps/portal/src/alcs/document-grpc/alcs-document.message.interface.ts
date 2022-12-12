@@ -10,4 +10,20 @@ export interface DocumentUploadResponseGrpc {
   fileKey: string;
 }
 
+export class CreateDocumentGrpcRequest {
+  uploadedByUuid?: string;
+
+  mimeType: string;
+
+  fileName: string;
+
+  fileKey: string;
+
+  source: 'ALCS' | 'Local_Government' | 'Applicant';
+}
+
+export class CreateDocumentGrpcResponse {
+  alcsDocumentUuid: string;
+}
+
 export const ALCS_DOCUMENT_PROTOBUF_PACKAGE_NAME = 'alcs_document';

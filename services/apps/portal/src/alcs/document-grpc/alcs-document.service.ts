@@ -3,6 +3,8 @@ import { Client, ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { grpcClientOptions } from '../../providers/grpc/grpc-client.options';
 import {
+  CreateDocumentGrpcRequest,
+  CreateDocumentGrpcResponse,
   DocumentUploadRequestGrpc,
   DocumentUploadResponseGrpc,
 } from './alcs-document.message.interface';
@@ -29,5 +31,11 @@ export class AlcsDocumentService
     request: DocumentUploadRequestGrpc,
   ): Observable<DocumentUploadResponseGrpc> {
     return this.alcsDocumentService.getUploadUrl(request);
+  }
+
+  createExternalDocument(
+    request: CreateDocumentGrpcRequest,
+  ): Observable<CreateDocumentGrpcResponse> {
+    return this.alcsDocumentService.createExternalDocument(request);
   }
 }

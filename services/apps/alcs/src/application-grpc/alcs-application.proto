@@ -3,10 +3,10 @@ syntax = "proto3";
 package alcs_application;
 
 service AlcsApplicationService {
-  rpc create(ApplicationCreateGrpc) returns (ApplicationGrpc);
+  rpc create(ApplicationCreateGrpcRequest) returns (ApplicationGrpcResponse);
 }
 
-message ApplicationGrpc {
+message ApplicationGrpcResponse {
   string fileNumber = 1;
 
   string applicant = 2;
@@ -20,7 +20,7 @@ message ApplicationGrpc {
   string typeCode = 6;
 }
 
-message ApplicationCreateGrpc {
+message ApplicationCreateGrpcRequest {
   string fileNumber = 1;
 
   string applicant = 2;
@@ -30,4 +30,11 @@ message ApplicationCreateGrpc {
   string dateSubmittedToAlc = 4;
 
   string localGovernmentUuid = 5;
+
+  repeated ApplicationDocumentGrpcRequest documents = 6;
+}
+
+message ApplicationDocumentGrpcRequest {
+  string type = 1;
+  string documentUuid = 2;
 }

@@ -20,18 +20,7 @@ export class ApplicationDocumentDto {
   uploadedAt: number;
 }
 
-export class ApplicationDocumentExternalAttachDto {
+export class ApplicationDocumentCreateDto {
   type: string;
-
-  applicationFileNumber: string;
-
-  uploadedByUuid?: string;
-
-  mimeType: string;
-
-  fileName: string;
-
-  fileKey: string;
-
-  source: 'ALCS' | 'Local_Government' | 'Applicant';
+  documentUuid: string;
 }

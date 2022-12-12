@@ -1,4 +1,4 @@
-import { HttpBackend, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -11,16 +11,12 @@ import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 })
 export class ApplicationService {
   private serviceUrl = `${environment.apiUrl}/application`;
-  private httpClientNoAuth: HttpClient | null = null;
 
   constructor(
     private httpClient: HttpClient,
     private toastService: ToastService,
-    private documentService: DocumentService,
-    handler: HttpBackend
-  ) {
-    this.httpClientNoAuth = new HttpClient(handler);
-  }
+    private documentService: DocumentService
+  ) {}
 
   async create(type: string) {
     try {
@@ -58,41 +54,30 @@ export class ApplicationService {
     }
   }
 
-  async attachExternalFile(fileId: string, data: any) {
-    if (data.documents.length > 0) {
-      const file: File = data.documents[0];
+  async attachExternalFile(fileId: string, data: File[]) {
+    if (data.length > 0) {
+      const file: File = data[0];
+      const documentType = 'certificateOfTitle';
 
-      // if (file.size > environment.maxFileSize) {
-      //   const niceSize = environment.maxFileSize / 1048576;
-      //   this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
-      //   return;
-      // }
+      if (file.size > environment.maxFileSize) {
+        const niceSize = environment.maxFileSize / 1048576;
+        this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
+        return;
+      }
 
       try {
-        // get presigned url
-        const { fileKey, uploadUrl } = await this.documentService.getUploadUrl(fileId);
+        const fileKey = await this.documentService.uploadFileToStorage(fileId, file, documentType);
 
-        const fileBuffer = await file.arrayBuffer();
-
-        // upload to dell ecs
+        // create document metadata record in PORTAL.
+        // Document record will be created in ALCS, however the link between application and document will be in PORTAL till application submitted to ALCS
         await firstValueFrom(
-          this.httpClientNoAuth!.put(uploadUrl, fileBuffer, {
-            headers: { 'Content-Type': file.type },
+          this.httpClient.post(`${environment.apiUrl}/application-document/application/${fileId}/attachExternal`, {
+            documentType: documentType,
+            mimeType: file.type,
+            fileName: file.name,
+            fileKey: fileKey,
+            source: 'Applicant',
           })
-        );
-
-        // send metadata to portal -> alcs
-        const payload = {
-          type: 'certificateOfTitle',
-          applicationFileNumber: fileId,
-          mimeType: file.type,
-          fileName: file.name,
-          fileKey: fileKey,
-          source: 'Applicant',
-        };
-
-        await firstValueFrom(
-          this.httpClient.post(`${environment.apiUrl}/application-document/attachExternal/application`, payload)
         );
         this.toastService.showSuccessToast('Document uploaded');
       } catch (e) {

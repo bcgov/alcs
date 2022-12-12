@@ -1,11 +1,8 @@
 import { AutoMap } from '@automapper/classes';
-import { IsString } from 'class-validator';
-
-export const protobufPackage = 'alcs_application';
 
 export const ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME = 'alcs_application';
 
-export class ApplicationGrpc {
+export class ApplicationGrpcResponse {
   @AutoMap()
   fileNumber: string;
 
@@ -25,19 +22,21 @@ export class ApplicationGrpc {
   typeCode: string;
 }
 
-export class ApplicationCreateGrpc {
-  @IsString()
+export class ApplicationCreateGrpcRequest {
   fileNumber: string;
 
-  @IsString()
   applicant: string;
 
-  @IsString()
   typeCode: string;
 
-  @IsString()
   dateSubmittedToAlc: string;
 
-  @IsString()
   localGovernmentUuid: string;
+
+  documents: ApplicationDocumentGrpc[];
+}
+
+export class ApplicationDocumentGrpc {
+  type: string;
+  documentUuid: string;
 }

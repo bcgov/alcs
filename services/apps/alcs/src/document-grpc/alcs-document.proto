@@ -4,6 +4,8 @@ package alcs_document;
 
 service AlcsDocumentService {
   rpc getUploadUrl(DocumentUploadRequestGrpc) returns (DocumentUploadResponseGrpc);
+
+  rpc createExternalDocument(CreateDocumentGrpcRequest) returns (CreateDocumentGrpcResponse);
 }
 
 message DocumentUploadRequestGrpc {
@@ -15,3 +17,18 @@ message DocumentUploadResponseGrpc {
   string fileKey = 2;
 }
 
+message CreateDocumentGrpcRequest {
+  optional string uploadedByUuid = 1;
+
+  string mimeType = 2;
+
+  string fileName = 3;
+
+  string fileKey = 4;
+
+  string source = 5;
+}
+
+message CreateDocumentGrpcResponse {
+  string alcsDocumentUuid = 1;
+}

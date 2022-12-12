@@ -3,9 +3,10 @@ import { Client, ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { grpcClientOptions } from '../../providers/grpc/grpc-client.options';
 import {
-  ApplicationCreateGrpc,
-  ApplicationGrpc,
+  ApplicationCreateGrpcRequest,
+  ApplicationGrpcResponse,
 } from './alcs-application.message.interface';
+
 import { AlcsApplicationServiceClient } from './alcs-application.service.interface';
 
 @Injectable()
@@ -22,7 +23,9 @@ export class AlcsApplicationService
       );
   }
 
-  create(request: ApplicationCreateGrpc): Observable<ApplicationGrpc> {
+  create(
+    request: ApplicationCreateGrpcRequest,
+  ): Observable<ApplicationGrpcResponse> {
     return this.alcsApplicationService.create(request);
   }
 }

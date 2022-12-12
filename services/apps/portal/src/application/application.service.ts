@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
-import { ApplicationGrpc } from '../alcs/application-grpc/alcs-application.message.interface';
+import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { BaseServiceException } from '../common/exceptions/base.exception';
@@ -80,8 +80,13 @@ export class ApplicationService {
   }
 
   async submitToAlcs(fileNumber: string, data: ApplicationSubmitToAlcsDto) {
-    const application = await this.update(fileNumber, data);
-    let submittedApp: ApplicationGrpc | null = null;
+    await this.update(fileNumber, data);
+    const application = await this.applicationRepository.findOneOrFail({
+      where: { fileNumber },
+      relations: { documents: true },
+    });
+
+    let submittedApp: ApplicationGrpcResponse | null = null;
 
     try {
       submittedApp = await lastValueFrom(
@@ -91,6 +96,10 @@ export class ApplicationService {
           localGovernmentUuid: application.localGovernmentUuid!,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),
+          documents: application?.documents.map((d) => ({
+            type: d.type,
+            documentUuid: d.alcsDocumentUuid,
+          })),
         }),
       );
     } catch (ex) {

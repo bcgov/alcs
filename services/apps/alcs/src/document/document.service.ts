@@ -53,13 +53,12 @@ export class DocumentService {
       ContentLength: file.file.bytesRead,
     });
     await this.dataStore.send(command);
-    const document = await this.creteRecordInDb({
-      fileKey,
+    const document = await this.createDocumentRecord({
+      fileKey: fileKey,
       mimeType: file.mimetype,
       uploadedBy: user,
       fileName: file.filename,
       source: 'ALCS',
-      tags: DEFAULT_DB_TAGS,
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -126,11 +125,15 @@ export class DocumentService {
     console.warn(`${documents.length} Documents tagged successfully`);
   }
 
-  // TODO remove this once typeorm issue resolved
-  async creteRecordInDb(document: CreateDocumentDto) {
-    return await this.documentRepository.save(
+  async createDocumentRecord(data: CreateDocumentDto) {
+    return this.documentRepository.save(
       new Document({
-        ...document,
+        mimeType: data.mimeType,
+        fileKey: data.fileKey,
+        fileName: data.fileName,
+        source: data.source,
+        uploadedBy: data.uploadedBy,
+        tags: DEFAULT_DB_TAGS,
       }),
     );
   }

@@ -2,15 +2,11 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
-import {
-  DEFAULT_DB_TAGS,
-  DocumentService,
-} from '../../document/document.service';
+import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { ApplicationService } from '../application.service';
-import { ApplicationDocumentExternalAttachDto } from './application-document.dto';
+import { ApplicationDocumentCreateDto } from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -107,44 +103,24 @@ export class ApplicationDocumentService {
     return this.documentService.getDownloadUrl(document.document);
   }
 
-  private async getUploadedBy(uploadedByUuid?: string | null) {
-    let user: User | null = null;
+  async attachExternalDocuments(
+    fileNumber: string,
+    data: ApplicationDocumentCreateDto[],
+  ) {
+    const application = await this.applicationService.getOrFail(fileNumber);
 
-    if (uploadedByUuid) {
-      user = await this.userService.getByUuid(uploadedByUuid);
+    const documentsToSave: ApplicationDocument[] = [];
 
-      if (!user) {
-        throw new ServiceNotFoundException(
-          `User not found with uuid ${uploadedByUuid}`,
-        );
-      }
+    for (const doc of data) {
+      documentsToSave.push(
+        new ApplicationDocument({
+          type: doc.type,
+          applicationUuid: application.uuid,
+          documentUuid: doc.documentUuid,
+        }),
+      );
     }
 
-    return user;
-  }
-
-  async attachExternalDocument(data: ApplicationDocumentExternalAttachDto) {
-    const application = await this.applicationService.getOrFail(
-      data.applicationFileNumber,
-    );
-
-    const appDocument = new ApplicationDocument({
-      type: data.type,
-      applicationUuid: application.uuid,
-    });
-    appDocument.application = application;
-
-    // TODO: create this one with application entity
-    const document = await this.documentService.creteRecordInDb({
-      mimeType: data.mimeType,
-      fileKey: data.fileKey,
-      fileName: data.fileName,
-      source: data.source,
-      uploadedBy: await this.getUploadedBy(data.uploadedByUuid),
-      tags: DEFAULT_DB_TAGS,
-    });
-    appDocument.document = document;
-
-    return this.applicationDocumentRepository.save(appDocument);
+    return this.applicationDocumentRepository.save(documentsToSave);
   }
 }

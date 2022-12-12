@@ -1,7 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationGrpc } from '../../../application-grpc/alcs-application.message.interface';
+import { ApplicationGrpcResponse } from '../../../application-grpc/alcs-application.message.interface';
 import { Application } from '../../../application/application.entity';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class AlcsApplicationProfile extends AutomapperProfile {
       createMap(
         mapper,
         Application,
-        ApplicationGrpc,
+        ApplicationGrpcResponse,
         forMember(
           (a) => a.dateSubmittedToAlc,
           mapFrom((ad) => ad.dateSubmittedToAlc?.getTime().toString()),

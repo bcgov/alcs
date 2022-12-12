@@ -10,6 +10,11 @@ import { LocalGovernmentService } from './local-government/local-government.serv
   imports: [ApplicationGrpcModule, AlcsDocumentModule],
   providers: [DocumentService, LocalGovernmentService, ApplicationTypeService],
   controllers: [CodeController],
-  exports: [DocumentService, LocalGovernmentService, ApplicationTypeService],
+  exports: [
+    DocumentService,
+    LocalGovernmentService,
+    ApplicationTypeService,
+    AlcsDocumentModule,
+  ],
 })
 export class AlcsModule {}

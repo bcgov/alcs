@@ -13,13 +13,13 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { AlcsApplicationDocumentService } from '../../alcs/application-grpc/application-document/alcs-application-document.service';
-import {
-  ApplicationAttachDocumentGrpcRequest,
-  ApplicationAttachDocumentGrpcResponse,
-} from '../../alcs/application-grpc/application-document/alcs-application.message.interface';
+import { firstValueFrom } from 'rxjs';
+import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
-import { ApplicationDocumentDto } from './application-document.dto';
+import {
+  ApplicationDocumentDto,
+  AttachExternalDocumentDto,
+} from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -33,7 +33,7 @@ import { ApplicationDocumentService } from './application-document.service';
 export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
-    private alcsApplicationDocumentService: AlcsApplicationDocumentService,
+    private alcsDocumentService: AlcsDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -118,12 +118,29 @@ export class ApplicationDocumentController {
     return {};
   }
 
-  @Post('/attachExternal/application')
+  @Post('/application/:uuid/attachExternal')
   async attachExternalDocument(
-    @Body() data: ApplicationAttachDocumentGrpcRequest,
-  ): Promise<ApplicationAttachDocumentGrpcResponse> {
-    return this.alcsApplicationDocumentService.attachExternalDocument({
-      ...data,
-    });
+    @Param('uuid') fileNumber: string,
+    @Body() data: AttachExternalDocumentDto,
+    @Req() req,
+  ): Promise<ApplicationDocumentDto> {
+    const alcsDocument = await firstValueFrom(
+      this.alcsDocumentService.createExternalDocument({
+        ...data,
+      }),
+    );
+
+    const savedDocument = await this.applicationDocumentService.createRecord(
+      fileNumber,
+      alcsDocument.alcsDocumentUuid,
+      data.documentType as DOCUMENT_TYPE,
+      req.user.entity,
+    );
+
+    return this.mapper.map(
+      savedDocument,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
   }
 }
