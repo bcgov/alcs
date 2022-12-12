@@ -124,6 +124,7 @@ export class AuthenticationService {
         const targetUrl = window.location.href;
         localStorage.setItem('targetUrl', targetUrl);
         window.location.href = e.error;
+        return;
       }
       throw e;
     }
