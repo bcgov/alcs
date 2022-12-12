@@ -73,4 +73,6 @@ export class AssigneeDto {
 
   @AutoMap()
   clientRoles: string[];
+
+  prettyName: string;
 }

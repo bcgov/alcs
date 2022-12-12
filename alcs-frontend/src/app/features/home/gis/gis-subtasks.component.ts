@@ -63,7 +63,8 @@ export class GisSubtasksComponent implements OnInit {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

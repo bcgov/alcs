@@ -65,7 +65,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   populateData(application: ApplicationDto) {
     this.application = application;
     this.selectedAssignee = application.card!.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = application.card!.status.code;
     this.selectedBoard = application.card!.board.code;
     this.selectedRegion = application.region.code;
@@ -74,7 +74,8 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 
