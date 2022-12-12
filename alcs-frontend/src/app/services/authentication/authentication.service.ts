@@ -118,12 +118,14 @@ export class AuthenticationService {
       );
       return true;
     } catch (e) {
+      console.error(e);
       if (e instanceof HttpErrorResponse && e.status === 401) {
         //Take user to login
         //TODO: Can we use something other than e.error?
         const targetUrl = window.location.href;
         localStorage.setItem('targetUrl', targetUrl);
         window.location.href = e.error;
+        return;
       }
       throw e;
     }
