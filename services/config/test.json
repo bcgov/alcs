@@ -21,7 +21,7 @@
   },
   "GRPC": {
     "URL": "localhost:50057",
-    "CERT_FOLDER": "/opt/app-root/local-certificates",
+    "CERT_FOLDER": "./local-certificates",
     "ROOT_CERT": "CertAuth.crt",
     "CERT": "localhost.crt",
     "KEY": "localhost.key"
