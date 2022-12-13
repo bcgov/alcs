@@ -57,6 +57,6 @@ ENV NODE_ENV ${environment}
 COPY --from=build /opt/app-root/node_modules ./node_modules
 COPY --from=build /opt/app-root/dist/apps/${NEST_APP} ./dist
 COPY ./config/ /opt/app-root/config/
-COPY ./local-certificates ./opt/app-root/local-certificates
+COPY ./local-certificates /opt/app-root/local-certificates
 
 CMD [ "node", "dist/main.js" ]
