@@ -10,9 +10,7 @@
   },
   "VERBOSE": "false",
   "KEYCLOAK": {
-    "SCOPES": [
-      "openid"
-    ]
+    "SCOPES": ["openid"]
   },
   "CHES": {
     "MODE": "production",
@@ -20,5 +18,11 @@
     "TOKEN_URL": "https://token-url",
     "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
     "PASSWORD": "fake-password"
+  },
+  "GRPC": {
+    "CERT_FOLDER": "/Users/mekhti/Documents/Bit3/sources/alcs/services/certificates",
+    "ROOT_CERT": "CertAuth.crt",
+    "CERT": "localhost.crt",
+    "KEY": "localhost.key"
   }
 }

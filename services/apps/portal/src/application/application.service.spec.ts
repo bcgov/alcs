@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
@@ -42,6 +43,10 @@ describe('ApplicationService', () => {
         {
           provide: ApplicationTypeService,
           useValue: mockAppTypeService,
+        },
+        {
+          provide: AlcsApplicationService,
+          useValue: createMock<AlcsApplicationService>(),
         },
       ],
     }).compile();

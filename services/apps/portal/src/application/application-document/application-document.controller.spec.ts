@@ -5,6 +5,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
 import { ApplicationDocumentController } from './application-document.controller';
@@ -38,6 +39,10 @@ describe('ApplicationDocumentController', () => {
         {
           provide: ClsService,
           useValue: {},
+        },
+        {
+          provide: AlcsDocumentService,
+          useValue: createMock<AlcsDocumentService>(),
         },
         ...mockKeyCloakProviders,
       ],

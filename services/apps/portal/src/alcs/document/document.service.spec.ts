@@ -1,6 +1,8 @@
+import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { CONFIG_TOKEN } from '../../common/config/config.module';
+import { AlcsDocumentService } from '../document-grpc/alcs-document.service';
 import { DocumentService } from './document.service';
 
 describe('DocumentService', () => {
@@ -13,6 +15,10 @@ describe('DocumentService', () => {
         {
           provide: CONFIG_TOKEN,
           useValue: config,
+        },
+        {
+          provide: AlcsDocumentService,
+          useValue: createMock<AlcsDocumentService>(),
         },
       ],
     }).compile();
