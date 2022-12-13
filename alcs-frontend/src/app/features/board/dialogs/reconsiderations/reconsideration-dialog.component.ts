@@ -12,16 +12,8 @@ import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
-import { CardLabel } from '../../../../shared/card/card.component';
+import { RECON_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
-export const RECON_TYPE_LABEL: CardLabel = {
-  label: 'Reconsideration',
-  shortLabel: 'RECON',
-  backgroundColor: '#fff',
-  borderColor: '#454545',
-  textColor: '#000',
-};
 
 @Component({
   selector: 'app-recon-detail-dialog',
@@ -81,7 +73,7 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   populateData(recon: ApplicationReconsiderationDto) {
     this.recon = recon;
     this.selectedAssignee = recon.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = recon.card.status.code;
     this.selectedBoard = recon.card.board.code;
     this.selectedRegion = recon.application.region.code;
@@ -90,7 +82,8 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

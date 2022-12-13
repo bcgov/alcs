@@ -10,17 +10,8 @@ import { PlanningReviewDto } from '../../../../services/planning-review/planning
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
+import { PLANNING_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
-export const PLANNING_TYPE_LABEL = {
-  label: 'Planning Review',
-  code: 'PLAN',
-  shortLabel: 'PLAN',
-  backgroundColor: '#fff',
-  borderColor: '#b2ff59',
-  description: 'Planning Review',
-  textColor: '#000',
-};
 
 @Component({
   selector: 'app-detail-dialog',
@@ -55,7 +46,7 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.planningReview = this.data;
     this.selectedAssignee = this.data.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = this.data.card.status.code;
     this.selectedBoard = this.data.card.board.code;
     this.selectedRegion = this.data.region.code;
@@ -80,7 +71,8 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

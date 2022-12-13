@@ -4,24 +4,15 @@ import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
-import { ApplicationDecisionDto } from '../../../../services/application/application-decision/application-decision.dto';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardUpdateDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
-import { CardLabel } from '../../../../shared/card/card.component';
+import { MODIFICATION_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
-export const MODIFICATION_TYPE_LABEL: CardLabel = {
-  label: 'Modification',
-  shortLabel: 'MODI',
-  backgroundColor: '#fff',
-  borderColor: '#45F4F4',
-  textColor: '#000',
-};
 
 @Component({
   selector: 'app-modification-detail-dialog',
@@ -80,7 +71,7 @@ export class ModificationDialogComponent implements OnInit, OnDestroy {
   populateData(modification: ApplicationModificationDto) {
     this.modification = modification;
     this.selectedAssignee = modification.card.assignee;
-    this.selectedAssigneeName = this.selectedAssignee?.name;
+    this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = modification.card.status.code;
     this.selectedBoard = modification.card.board.code;
     this.selectedRegion = modification.application.region.code;
@@ -89,7 +80,8 @@ export class ModificationDialogComponent implements OnInit, OnDestroy {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

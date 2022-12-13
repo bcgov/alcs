@@ -24,4 +24,5 @@ export interface AssigneeDto {
   email: string;
   mentionLabel: string;
   clientRoles: string[];
+  prettyName: string;
 }

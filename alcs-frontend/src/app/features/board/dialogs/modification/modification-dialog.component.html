@@ -6,31 +6,13 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <h3 class="card-title">
+      <h3 class="card-title center">
         {{ modification.application.fileNumber }} ({{ modification.application.applicant }})
-        <span
-          class="center application-type"
-          [ngStyle]="{
-            backgroundColor: modification.application.type.backgroundColor,
-            color: modification.application.type.textColor,
-            borderColor: modification.application.type.backgroundColor
-          }"
-        >
-          {{ modification.application.type.label }}
-        </span>
-        <span
-          class="center application-type"
-          [ngStyle]="{
-            backgroundColor: modificationType.backgroundColor,
-            color: modificationType.textColor,
-            borderColor: modificationType.borderColor
-          }"
-        >
-          {{ modificationType.label }}
-        </span>
+        <app-application-type-pill [type]="modification.application.type"></app-application-type-pill>
+        <app-application-type-pill [type]="modificationType"></app-application-type-pill>
       </h3>
     </div>
-    <div>
+    <div class="center">
       <button
         color="accent"
         mat-flat-button
@@ -99,7 +81,7 @@
     >
       <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
         <div class="assignee-card-body">
-          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
           <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
         </div>
       </ng-template>

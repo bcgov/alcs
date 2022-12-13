@@ -26,6 +26,7 @@ describe('ApplicationDialogComponent', () => {
     clientRoles: [],
     email: 'email',
     mentionLabel: 'mention-label',
+    prettyName: 'pretty-name',
   };
 
   const mockApplicationRegion: ApplicationRegionDto = {

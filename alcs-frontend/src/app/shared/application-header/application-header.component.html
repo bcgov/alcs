@@ -2,35 +2,9 @@
   <div *ngIf="_application" class="heading">
     <div class="center">
       <h5>{{ _application?.fileNumber }} ({{ _application?.applicant }})</h5>
-      <span
-        class="application-type"
-        [ngStyle]="{
-          backgroundColor: _application.type.backgroundColor,
-          color: _application.type.textColor,
-          borderColor: _application.type.backgroundColor
-        }"
-      >{{ _application.type.label }}</span
-      >
-      <span
-        *ngIf="showReconLabel"
-        class="application-type"
-        [ngStyle]="{
-          backgroundColor: reconLabel.backgroundColor,
-          color: reconLabel.textColor,
-          borderColor: reconLabel.borderColor
-        }"
-      >{{ reconLabel.label }}</span
-      >
-      <span
-        *ngIf="showModificationLabel"
-        class="application-type"
-        [ngStyle]="{
-          backgroundColor: modificationLabel.backgroundColor,
-          color: modificationLabel.textColor,
-          borderColor: modificationLabel.borderColor
-        }"
-      >{{ modificationLabel.label }}
-      </span>
+      <app-application-type-pill [type]="_application.type"></app-application-type-pill>
+      <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
+      <app-application-type-pill *ngIf="showModificationLabel" [type]="modificationLabel"></app-application-type-pill>
     </div>
     <div *ngIf="showCardMenu" class="center">
       <button

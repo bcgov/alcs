@@ -8,18 +8,10 @@
     <div class="left">
       <h3 class="card-title">
         {{ application.fileNumber }} ({{ application.applicant }})
-        <span
-          class="center application-type"
-          [ngStyle]="{
-            backgroundColor: application.type.backgroundColor,
-            color: application.type.textColor
-          }"
-        >
-          {{ application.type.label }}
-        </span>
+        <app-application-type-pill [type]="application.type"></app-application-type-pill>
       </h3>
     </div>
-    <div>
+    <div class="center">
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
       <mat-menu xPosition="before" #moreActions="matMenu">
         <button
@@ -118,7 +110,7 @@
     >
       <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
         <div class="assignee-card-body">
-          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
           <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
         </div>
       </ng-template>

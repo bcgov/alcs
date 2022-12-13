@@ -6,7 +6,14 @@ import { CardSubtaskService } from '../../../services/card/card-subtask/card-sub
 import { HomeService } from '../../../services/home/home.service';
 import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
+import {
+  COVENANT_TYPE_LABEL,
+  MODIFICATION_TYPE_LABEL,
+  PLANNING_TYPE_LABEL,
+  RECON_TYPE_LABEL,
+} from '../../../shared/application-type-pill/application-type-pill.constants';
 import { CardType } from '../../../shared/card/card.component';
+
 @Component({
   selector: 'app-audit-subtasks',
   templateUrl: './audit-subtasks.component.html',
@@ -15,7 +22,12 @@ import { CardType } from '../../../shared/card/card.component';
 export class AuditSubtasksComponent implements OnInit {
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
   public users: AssigneeDto[] = [];
-  displayedColumns = ['highPriority', 'title', 'activeDays', 'stage', 'assignee', 'action'];
+  displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
+
+  MODIFICATION_LABEL = MODIFICATION_TYPE_LABEL;
+  RECONSIDERATION_LABEL = RECON_TYPE_LABEL;
+  COVENANT_LABEL = COVENANT_TYPE_LABEL;
+  PLANNING_REVIEW_LABEL = PLANNING_TYPE_LABEL;
 
   constructor(
     private homeService: HomeService,
@@ -61,7 +73,8 @@ export class AuditSubtasksComponent implements OnInit {
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 || item.name.toLocaleLowerCase().indexOf(termLower) > -1
+      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
+      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
     );
   }
 

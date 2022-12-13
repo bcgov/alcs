@@ -6,18 +6,9 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <h3 class="card-title">
+      <h3 class="card-title center">
         {{ covenant.fileNumber }} ({{ covenant.applicant }})
-        <span
-          class="center application-type"
-          [ngStyle]="{
-            backgroundColor: covenantType.backgroundColor,
-            color: covenantType.textColor,
-            borderColor: covenantType.borderColor
-          }"
-        >
-          {{ covenantType.label }}
-        </span>
+        <app-application-type-pill [type]="covenantType"></app-application-type-pill>
       </h3>
     </div>
   </div>
@@ -91,7 +82,7 @@
     >
       <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
         <div class="assignee-card-body">
-          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.name }}</p>
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
           <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
         </div>
       </ng-template>

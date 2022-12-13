@@ -6,6 +6,7 @@ The main ALCS service has been programmed with several useful jobs. Jobs can be 
 
 Using the template below these jobs can be executed inside openshift. Once logged into OpenShift go to the Jobs tab and Click new Job. Paste the below yml and update the following pieces:
 * Replace the JOB_NAME with the jobs name
+* Replace NAMESPACE with the project where you want to run the job
 * Replace VERSION_HERE with the version of the image to use
 * Replace COMMAND_HERE with the command to execute such as tagDocuments
 
@@ -15,16 +16,16 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: JOB_NAME
-  namespace: a5cf88-dev
+  namespace: NAMESPACE
 spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 1
   selector: {}
   template:
     metadata:
       name: JOB_NAME
     spec:
-      parallelism: 1
-      completions: 1
-      backoffLimit: 1
       volumes:
         - name: config-volume
           configMap:

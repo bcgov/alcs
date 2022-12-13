@@ -12,10 +12,6 @@ describe('AuthenticationService', () => {
   let mockRouter: DeepMocked<Router>;
 
   beforeEach(() => {
-    jest.mock('jwt-decode', () => (token: string) => ({
-      cats: 'meow',
-    }));
-
     httpClient = createMock();
     mockRouter = createMock();
 
@@ -36,11 +32,5 @@ describe('AuthenticationService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  it('should populate its values when tokens are set', async () => {
-    await service.setTokens('token', 'refreshToken');
-    const user = await firstValueFrom(service.$currentUser);
-    expect(user).toBeDefined();
   });
 });
