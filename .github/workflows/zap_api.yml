@@ -1,0 +1,19 @@
+name: OWASP Zap API Scan
+on:
+  push:
+    branches:
+      - zap
+#on:
+#  schedule:
+#    - cron: "0 0 * * MON"
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: OWASP Zap API Scan
+    steps:
+      - name: ZAP API Scan
+        uses: zaproxy/action-api-scan@v0.1.1
+        with:
+          target: 'https://alcs-dev-api.apps.silver.devops.gov.bc.ca'
+          issue_title: OWASP Zap API Results

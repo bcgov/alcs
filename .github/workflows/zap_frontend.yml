@@ -1,0 +1,19 @@
+name: OWASP Zap Frontend Scan
+on:
+  push:
+    branches:
+      - zap
+#on:
+#  schedule:
+#    - cron: "0 0 * * MON"
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: OWASP Zap Frontend Scan
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          target: 'https://alcs-dev.apps.silver.devops.gov.bc.ca'
+          issue_title: OWASP Zap Frontend Scan Results
