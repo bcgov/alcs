@@ -1,2 +1,0 @@
-freeze_time_param_type
-freeze_time_params
