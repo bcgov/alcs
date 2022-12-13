@@ -20,7 +20,8 @@
     "PASSWORD": "fake-password"
   },
   "GRPC": {
-    "CERT_FOLDER": "/Users/mekhti/Documents/Bit3/sources/alcs/services/certificates",
+    "URL": "localhost:50057",
+    "CERT_FOLDER": "/opt/app-root/local-certificates",
     "ROOT_CERT": "CertAuth.crt",
     "CERT": "localhost.crt",
     "KEY": "localhost.key"
