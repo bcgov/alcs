@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><database name="postgres" schema="override" type="PostgreSQL - 15.1 (Debian 15.1-1.pgdg110+1)">
+   <tables>
+      <table name="freeze_time_param_type" remarks="" schema="override" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="param_type" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="param" foreignKey="freeze_time_params_param_fkey" implied="false" onDeleteCascade="false" schema="override" table="freeze_time_params"/>
+         </column>
+         <primaryKey column="param_type" sequenceNumberInPK="1"/>
+         <index name="freeze_time_param_type_pkey" unique="true">
+            <column ascending="true" name="param_type"/>
+         </index>
+      </table>
+      <table name="freeze_time_params" remarks="" schema="override" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="param" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="param_type" foreignKey="freeze_time_params_param_fkey" implied="false" onDeleteCascade="false" schema="override" table="freeze_time_param_type"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="value" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <primaryKey column="param" sequenceNumberInPK="1"/>
+         <index name="freeze_time_params_pkey" unique="true">
+            <column ascending="true" name="param"/>
+         </index>
+      </table>
+   </tables>
+</database>
