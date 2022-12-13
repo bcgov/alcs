@@ -77,10 +77,61 @@
                 </section>
                 <!-- Main content -->
                 <section class="content">
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <h4><i class="icon fa fa-ban"></i> Missed Relationships!</h4>
-                        <p>No relationships were detected in the schema.</p>
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-code-fork"></i>
+                            <h3 class="box-title">Diagrams</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="nav-tabs-custom">
+                                <!-- Tabs within a box -->
+                                <h5>By default only columns that are primary keys, foreign keys or indexes are shown.</h5>
+                                <ul class="nav nav-tabs pull-left ui-sortable-handle">
+                                    <li class="active"><a href="#compactDegreeImg-chart" data-toggle="tab" aria-expanded="true">Compact</a></li>
+                                    <li class=""><a href="#largeDegreeImg-chart" data-toggle="tab" aria-expanded="true">Large</a></li>
+                                    <li class=""><a href="#compactimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Compact Implied</a></li>
+                                    <li class=""><a href="#largeimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Large Implied</a></li>
+                                </ul>
+                                <div class="tab-content no-padding">
+                                    <div class="chart tab-pane active" id="compactDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="compactRelationshipsDiagram" name="compactRelationshipsDiagram">
+<area shape="rect" id="node1" href="tables/application_status.html" target="_top" title="application_status" alt="" coords="5,24,231,171">
+<area shape="rect" id="node2" href="tables/application.html" target="_top" title="application" alt="" coords="275,5,508,211">
+<area shape="rect" id="node4" href="tables/user.html" target="_top" title="user" alt="" coords="6,188,230,335">
+<area shape="rect" id="node3" href="tables/application_document.html" target="_top" title="application_document" alt="" coords="552,53,809,229">
+</map>
+                                        <a name='diagram'><img id="compactDegreeImg" src="diagrams/summary/relationships.real.compact.png" usemap="#compactRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="largeDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="largeRelationshipsDiagram" name="largeRelationshipsDiagram">
+<area shape="rect" id="node1" href="tables/application_status.html" target="_top" title="application_status" alt="" coords="5,5,231,304">
+<area shape="rect" id="node2" href="tables/application.html" target="_top" title="application" alt="" coords="275,192,508,491">
+<area shape="rect" id="node4" href="tables/user.html" target="_top" title="user" alt="" coords="6,321,230,796">
+<area shape="rect" id="node3" href="tables/application_document.html" target="_top" title="application_document" alt="" coords="552,228,809,439">
+</map>
+                                        <a name='diagram'><img id="largeDegreeImg" src="diagrams/summary/relationships.real.large.png" usemap="#largeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="compactimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="compactImpliedRelationshipsDiagram" name="compactImpliedRelationshipsDiagram">
+<area shape="rect" id="node1" href="tables/application_status.html" target="_top" title="application_status" alt="" coords="5,32,231,179">
+<area shape="rect" id="node2" href="tables/application.html" target="_top" title="application" alt="" coords="275,5,508,211">
+<area shape="rect" id="node4" href="tables/user.html" target="_top" title="user" alt="" coords="6,196,230,343">
+<area shape="rect" id="node3" href="tables/application_document.html" target="_top" title="application_document" alt="" coords="552,56,809,232">
+</map>
+                                        <a name='diagram'><img id="compactimpliedDegreeImg" src="diagrams/summary/relationships.implied.compact.png" usemap="#compactImpliedRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="largeimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="largeImpliedRelationshipsDiagram" name="largeImpliedRelationshipsDiagram">
+<area shape="rect" id="node1" href="tables/application_status.html" target="_top" title="application_status" alt="" coords="5,5,231,304">
+<area shape="rect" id="node2" href="tables/application.html" target="_top" title="application" alt="" coords="275,75,508,373">
+<area shape="rect" id="node4" href="tables/user.html" target="_top" title="user" alt="" coords="6,321,230,796">
+<area shape="rect" id="node3" href="tables/application_document.html" target="_top" title="application_document" alt="" coords="552,129,809,340">
+</map>
+                                        <a name='diagram'><img id="largeimpliedDegreeImg" src="diagrams/summary/relationships.implied.large.png" usemap="#largeImpliedRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.box-body -->
                     </div>
                 </section>
             </div>
