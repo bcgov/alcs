@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class seedMigrationV21670975460507 implements MigrationInterface {
+export class seedMigrationV21570975460507 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     //Holiday Entity
     await queryRunner.query(
