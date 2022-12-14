@@ -1,14 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, TitleStrategy } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
-import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -23,6 +24,12 @@ export const childRoutes = [
     menuTitle: 'Overview',
     icon: 'summarize',
     component: OverviewComponent,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'Applicant Info',
+    icon: 'baby_changing_station',
+    component: ApplicantInfoComponent,
   },
   {
     path: 'intake',

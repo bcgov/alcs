@@ -10,9 +10,7 @@
   },
   "VERBOSE": "false",
   "KEYCLOAK": {
-    "SCOPES": [
-      "openid"
-    ]
+    "SCOPES": ["openid"]
   },
   "CHES": {
     "MODE": "production",
@@ -20,5 +18,12 @@
     "TOKEN_URL": "https://token-url",
     "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
     "PASSWORD": "fake-password"
+  },
+  "GRPC": {
+    "URL": "localhost:50057",
+    "CERT_FOLDER": "./local-certificates",
+    "ROOT_CERT": "CertAuth.crt",
+    "CERT": "localhost.crt",
+    "KEY": "localhost.key"
   }
 }

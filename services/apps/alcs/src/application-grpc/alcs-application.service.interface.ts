@@ -1,17 +1,13 @@
 import { Observable } from 'rxjs';
 import {
-  ApplicationByNumberGrpc,
-  ApplicationGrpc,
+  ApplicationCreateGrpcRequest,
+  ApplicationGrpcResponse,
 } from './alcs-application.message.interface';
 
-export interface GrpcApplicationServiceClient {
-  get(request: ApplicationByNumberGrpc): Observable<ApplicationGrpc>;
+export interface AlcsApplicationService {
+  create(
+    request: ApplicationCreateGrpcRequest,
+  ): Observable<ApplicationGrpcResponse>;
 }
 
-export interface GrpcApplicationServiceController {
-  get(
-    request: ApplicationByNumberGrpc,
-  ): Promise<ApplicationGrpc> | Observable<ApplicationGrpc> | ApplicationGrpc;
-}
-
-export const GRPC_APPLICATION_SERVICE_NAME = 'GrpcApplicationService';
+export const GRPC_APPLICATION_SERVICE_NAME = 'AlcsApplicationService';

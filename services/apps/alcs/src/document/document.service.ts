@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { CONFIG_TOKEN, IConfig } from '../common/config/config.module';
 import { User } from '../user/user.entity';
+import { CreateDocumentDto } from './document.dto';
 import { Document } from './document.entity';
 
 const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
@@ -52,15 +53,14 @@ export class DocumentService {
       ContentLength: file.file.bytesRead,
     });
     await this.dataStore.send(command);
-    const document = await this.documentRepository.save(
-      new Document({
-        fileKey,
-        mimeType: file.mimetype,
-        uploadedBy: user,
-        fileName: file.filename,
-        tags: DEFAULT_DB_TAGS,
-      }),
-    );
+    const document = await this.createDocumentRecord({
+      fileKey: fileKey,
+      mimeType: file.mimetype,
+      uploadedBy: user,
+      fileName: file.filename,
+      source: 'ALCS',
+    });
+
     this.logger.debug(`File Uploaded to ${fileKey}`);
     return document;
   }
@@ -69,7 +69,7 @@ export class DocumentService {
     await this.documentRepository.softRemove(document);
   }
 
-  getUploadUrl(filePath: string) {
+  async getUploadUrl(filePath: string) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -78,9 +78,12 @@ export class DocumentService {
       Tagging: DEFAULT_S3_TAGS,
     });
 
-    return getSignedUrl(this.dataStore, command, {
-      expiresIn: this.documentTimeout,
-    });
+    return {
+      uploadUrl: await getSignedUrl(this.dataStore, command, {
+        expiresIn: this.documentTimeout,
+      }),
+      fileKey: fileKey,
+    };
   }
 
   getDownloadUrl(document: Document, openInline = false) {
@@ -120,5 +123,18 @@ export class DocumentService {
       await this.documentRepository.save(document);
     }
     console.warn(`${documents.length} Documents tagged successfully`);
+  }
+
+  async createDocumentRecord(data: CreateDocumentDto) {
+    return this.documentRepository.save(
+      new Document({
+        mimeType: data.mimeType,
+        fileKey: data.fileKey,
+        fileName: data.fileName,
+        source: data.source,
+        uploadedBy: data.uploadedBy,
+        tags: DEFAULT_DB_TAGS,
+      }),
+    );
   }
 }

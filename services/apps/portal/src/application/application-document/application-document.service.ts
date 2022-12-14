@@ -88,4 +88,22 @@ export class ApplicationDocumentService {
   async getDownloadUrl(document: ApplicationDocument) {
     return this.documentService.getDownloadUrl(document.alcsDocumentUuid);
   }
+
+  async createRecord(
+    fileNumber: string,
+    alcsDocumentUuid: string,
+    documentType: DOCUMENT_TYPE,
+    user: User,
+  ) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+
+    return this.applicationDocumentRepository.save(
+      new ApplicationDocument({
+        type: documentType,
+        application,
+        alcsDocumentUuid: alcsDocumentUuid,
+        uploadedBy: user,
+      }),
+    );
+  }
 }

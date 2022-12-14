@@ -4,16 +4,20 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
 import { ApplicationDocumentController } from './application-document.controller';
+import { AttachExternalDocumentDto } from './application-document.dto';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
   let appDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   const mockDocument = new ApplicationDocument({
     uploadedBy: new User(),
@@ -21,6 +25,7 @@ describe('ApplicationDocumentController', () => {
 
   beforeEach(async () => {
     appDocumentService = createMock<ApplicationDocumentService>();
+    mockAlcsDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -38,6 +43,10 @@ describe('ApplicationDocumentController', () => {
         {
           provide: ClsService,
           useValue: {},
+        },
+        {
+          provide: AlcsDocumentService,
+          useValue: mockAlcsDocumentService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -146,5 +155,41 @@ describe('ApplicationDocumentController', () => {
     const res = await controller.open('fake-uuid');
 
     expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call out to service to attach external document', async () => {
+    const user = { user: { entity: 'Bruce' } };
+    const fakeUuid = 'fakeUuid';
+    const docObj = { alcsDocumentUuid: 'fake-uuid' };
+    const docDto = {
+      mimeType: 'mimeType',
+      fileName: 'fileName',
+      fileKey: 'fileKey',
+      source: 'Applicant',
+      documentType: 'certificateOfTitle',
+    };
+
+    mockAlcsDocumentService.createExternalDocument.mockReturnValue(of(docObj));
+    appDocumentService.createRecord.mockResolvedValue({
+      type: 'fakeType',
+      uuid: fakeUuid,
+      uploadedBy: {
+        name: user.user.entity,
+      },
+    } as ApplicationDocument);
+
+    const res = await controller.attachExternalDocument(
+      'fake-number',
+      docDto as AttachExternalDocumentDto,
+      user,
+    );
+
+    expect(mockAlcsDocumentService.createExternalDocument).toBeCalledTimes(1);
+    expect(appDocumentService.createRecord).toBeCalledTimes(1);
+    expect(mockAlcsDocumentService.createExternalDocument).toBeCalledWith(
+      docDto,
+    );
+    expect(res.uploadedBy).toEqual(user.user.entity);
+    expect(res.uuid).toEqual(fakeUuid);
   });
 });

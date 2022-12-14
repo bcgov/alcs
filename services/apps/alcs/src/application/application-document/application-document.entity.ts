@@ -11,8 +11,15 @@ import {
 import { Document } from '../../document/document.entity';
 import { Application } from '../application.entity';
 
-export const DOCUMENT_TYPES = ['decisionDocument', 'reviewDocument'] as const;
-export type DOCUMENT_TYPE = 'decisionDocument' | 'reviewDocument';
+export const DOCUMENT_TYPES = [
+  'decisionDocument',
+  'reviewDocument',
+  'certificateOfTitle',
+] as const;
+export type DOCUMENT_TYPE =
+  | 'decisionDocument'
+  | 'reviewDocument'
+  | 'certificateOfTitle';
 
 @Entity()
 export class ApplicationDocument extends BaseEntity {
@@ -35,6 +42,9 @@ export class ApplicationDocument extends BaseEntity {
 
   @Column()
   applicationUuid: string;
+
+  @Column({ nullable: true })
+  documentUuid?: string | null;
 
   @OneToOne(() => Document)
   @JoinColumn()

@@ -2,10 +2,10 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application.service';
+import { ApplicationDocumentCreateDto } from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -99,5 +99,23 @@ export class ApplicationDocumentService {
 
   async getDownloadUrl(document: ApplicationDocument) {
     return this.documentService.getDownloadUrl(document.document);
+  }
+
+  async attachExternalDocuments(
+    fileNumber: string,
+    data: ApplicationDocumentCreateDto[],
+  ) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+
+    return this.applicationDocumentRepository.save(
+      data.map(
+        (doc) =>
+          new ApplicationDocument({
+            type: doc.type,
+            applicationUuid: application.uuid,
+            documentUuid: doc.documentUuid,
+          }),
+      ),
+    );
   }
 }

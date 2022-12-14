@@ -3,11 +3,12 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
+import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
+import { UserService } from '../../user/user.service';
 import { ApplicationService } from '../application.service';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
@@ -44,6 +45,10 @@ describe('ApplicationDocumentService', () => {
         {
           provide: getRepositoryToken(ApplicationDocument),
           useValue: mockRepository,
+        },
+        {
+          provide: UserService,
+          useValue: createMock<UserService>(),
         },
       ],
     }).compile();

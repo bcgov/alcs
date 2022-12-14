@@ -1,24 +1,42 @@
-export const protobufPackage = 'alcs_application';
+import { AutoMap } from '@automapper/classes';
 
-export interface ApplicationByNumberGrpc {
-  fileNumber: string;
-}
+export const ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME = 'alcs_application';
 
-export interface ApplicationGrpc {
+export class ApplicationGrpcResponse {
+  @AutoMap()
   fileNumber: string;
+
+  @AutoMap()
   applicant: string;
-  activeDays: number;
-  pausedDays: number;
-  paused: boolean;
-  dateSubmittedToAlc: number;
-  card?: CardGrpc | undefined;
+
+  @AutoMap()
+  dateSubmittedToAlc: string;
+
+  @AutoMap()
+  regionCode: string;
+
+  @AutoMap()
+  localGovernmentUuid: string;
+
+  @AutoMap()
+  typeCode: string;
 }
 
-export interface CardGrpc {
+export class ApplicationCreateGrpcRequest {
+  fileNumber: string;
+
+  applicant: string;
+
+  typeCode: string;
+
+  dateSubmittedToAlc: string;
+
+  localGovernmentUuid: string;
+
+  documents: ApplicationDocumentGrpc[];
+}
+
+export class ApplicationDocumentGrpc {
   type: string;
-  uuid: string;
-  highPriority?: boolean | undefined;
-  createdAt: string;
+  documentUuid: string;
 }
-
-export const ALCS_APPLICATION_PACKAGE_NAME = 'alcs_application';

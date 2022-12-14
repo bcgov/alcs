@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
@@ -12,8 +13,13 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { firstValueFrom } from 'rxjs';
+import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
-import { ApplicationDocumentDto } from './application-document.dto';
+import {
+  ApplicationDocumentDto,
+  AttachExternalDocumentDto,
+} from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -27,6 +33,7 @@ import { ApplicationDocumentService } from './application-document.service';
 export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
+    private alcsDocumentService: AlcsDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -109,5 +116,31 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
     await this.applicationDocumentService.delete(document);
     return {};
+  }
+
+  @Post('/application/:uuid/attachExternal')
+  async attachExternalDocument(
+    @Param('uuid') fileNumber: string,
+    @Body() data: AttachExternalDocumentDto,
+    @Req() req,
+  ): Promise<ApplicationDocumentDto> {
+    const alcsDocument = await firstValueFrom(
+      this.alcsDocumentService.createExternalDocument({
+        ...data,
+      }),
+    );
+
+    const savedDocument = await this.applicationDocumentService.createRecord(
+      fileNumber,
+      alcsDocument.alcsDocumentUuid,
+      data.documentType as DOCUMENT_TYPE,
+      req.user.entity,
+    );
+
+    return this.mapper.map(
+      savedDocument,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
   }
 }

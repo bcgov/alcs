@@ -1,37 +1,40 @@
-syntax="proto3";
+syntax = "proto3";
 
 package alcs_application;
 
-service GrpcApplicationService {
-  // rpc get (ApplicationByNumberGrpc) returns (ApplicationGrpc);
+service AlcsApplicationService {
+  rpc create(ApplicationCreateGrpcRequest) returns (ApplicationGrpcResponse);
 }
 
-message ApplicationByNumberGrpc {
+message ApplicationGrpcResponse {
   string fileNumber = 1;
+
+  string applicant = 2;
+
+  int32 dateSubmittedToAlc = 3;
+
+  string regionCode = 4;
+
+  string localGovernmentUuid = 5;
+
+  string typeCode = 6;
 }
 
-message ApplicationGrpc {
-    string fileNumber = 1;
+message ApplicationCreateGrpcRequest {
+  string fileNumber = 1;
 
-    string applicant = 2;
+  string applicant = 2;
 
-    int32 activeDays = 3;
+  string typeCode = 3;
 
-    int32 pausedDays = 4;
+  string dateSubmittedToAlc = 4;
 
-    bool paused = 5;
+  string localGovernmentUuid = 5;
 
-    int32 dateSubmittedToAlc= 6;
-
-    optional CardGrpc card = 7;
+  repeated ApplicationDocumentGrpcRequest documents = 6;
 }
 
-message CardGrpc {
+message ApplicationDocumentGrpcRequest {
   string type = 1;
-
-  string uuid = 2;
-
-  optional bool highPriority = 3;
-
-  string createdAt = 4;
+  string documentUuid = 2;
 }

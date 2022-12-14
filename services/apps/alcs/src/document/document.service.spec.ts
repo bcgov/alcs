@@ -8,6 +8,7 @@ import * as config from 'config';
 import { Repository } from 'typeorm';
 import { CONFIG_TOKEN } from '../common/config/config.module';
 import { User } from '../user/user.entity';
+import { CreateDocumentDto } from './document.dto';
 import { Document } from './document.entity';
 import { DocumentService } from './document.service';
 
@@ -72,5 +73,19 @@ describe('DocumentService', () => {
     } as Document);
 
     expect(mockRepository.softRemove).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call repository save on create Document', async () => {
+    const mockDoc = {
+      mimeType: 'mimeType',
+      fileKey: 'fileKey',
+      fileName: 'fileName',
+      uploadedBy: null,
+      source: 'Applicant',
+    };
+    mockRepository.save.mockResolvedValue(mockDoc as Document);
+    const res = await service.createDocumentRecord({} as CreateDocumentDto);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(res).toEqual(mockDoc);
   });
 });

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package alcs_document;
+
+service AlcsDocumentService {
+  rpc getUploadUrl(DocumentUploadRequestGrpc) returns (DocumentUploadResponseGrpc);
+
+  rpc createExternalDocument(CreateDocumentRequestGrpc) returns (CreateDocumentResponseGrpc);
+}
+
+message DocumentUploadRequestGrpc {
+  string filePath = 1;
+}
+
+message DocumentUploadResponseGrpc {
+  string uploadUrl = 1;
+  string fileKey = 2;
+}
+
+message CreateDocumentRequestGrpc {
+  optional string uploadedByUuid = 1;
+
+  string mimeType = 2;
+
+  string fileName = 3;
+
+  string fileKey = 4;
+
+  string source = 5;
+}
+
+message CreateDocumentResponseGrpc {
+  string alcsDocumentUuid = 1;
+}

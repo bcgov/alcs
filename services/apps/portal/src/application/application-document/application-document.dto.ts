@@ -1,4 +1,6 @@
 import { AutoMap } from '@automapper/classes';
+import { IsString } from 'class-validator';
+import { DOCUMENT_TYPE } from './application-document.entity';
 
 export class ApplicationDocumentDto {
   @AutoMap()
@@ -18,4 +20,21 @@ export class ApplicationDocumentDto {
 
   @AutoMap()
   uploadedAt: number;
+}
+
+export class AttachExternalDocumentDto {
+  @IsString()
+  mimeType: string;
+
+  @IsString()
+  fileName: string;
+
+  @IsString()
+  fileKey: string;
+
+  @IsString()
+  source: 'ALCS' | 'Local_Government' | 'Applicant';
+
+  @IsString()
+  documentType: DOCUMENT_TYPE;
 }

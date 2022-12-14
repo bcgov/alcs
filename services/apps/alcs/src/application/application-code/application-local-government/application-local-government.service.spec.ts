@@ -72,4 +72,21 @@ describe('ApplicationLocalGovernmentService', () => {
 
     expect(mockRepository.find).toHaveBeenCalledTimes(2);
   });
+
+  it('should call repository on getByUuId', async () => {
+    const uuid = 'fake';
+    mockRepository.findOne.mockResolvedValue({} as ApplicationLocalGovernment);
+
+    await service.getByUuid(uuid);
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOne).toHaveBeenCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        preferredRegion: true,
+      },
+    });
+  });
 });

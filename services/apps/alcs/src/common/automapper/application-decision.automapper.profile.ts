@@ -176,7 +176,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (a) => a.uploadedBy,
-          mapFrom((ad) => ad.document.uploadedBy.name),
+          mapFrom((ad) => ad.document.uploadedBy?.name),
         ),
         forMember(
           (a) => a.uploadedAt,

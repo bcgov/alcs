@@ -19,3 +19,8 @@ export class ApplicationDocumentDto {
   @AutoMap()
   uploadedAt: number;
 }
+
+export class ApplicationDocumentCreateDto {
+  type: string;
+  documentUuid: string;
+}

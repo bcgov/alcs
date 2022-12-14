@@ -21,6 +21,7 @@ import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { RedisModule } from './common/redis/redis.module';
 import { CovenantModule } from './covenant/covenant.module';
 import { DecisionModule } from './decision/decision.module';
+import { DocumentGrpcModule } from './document-grpc/document-grpc.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
@@ -46,6 +47,7 @@ import { UserService } from './user/user.service';
     }),
     ApplicationModule,
     ApplicationGrpcModule,
+    DocumentGrpcModule,
     CommentModule,
     ConfigModule,
     AuthorizationModule,
