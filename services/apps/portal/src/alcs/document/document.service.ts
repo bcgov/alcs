@@ -1,7 +1,9 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { User } from '../../user/user.entity';
+import { DocumentUploadResponseGrpc } from '../document-grpc/alcs-document.message.interface';
 import { AlcsDocumentService } from '../document-grpc/alcs-document.service';
 
 @Injectable()
@@ -22,7 +24,7 @@ export class DocumentService {
     return '';
   }
 
-  getUploadUrl(filePath: string) {
+  getUploadUrl(filePath: string): Observable<DocumentUploadResponseGrpc> {
     return this.alcsDocumentService.getUploadUrl({ filePath });
   }
 }

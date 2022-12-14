@@ -9,5 +9,6 @@ import { ApplicationGrpcController } from './alcs-application.controller';
   imports: [GrpcReflectionModule.register(grpcOptions), ApplicationModule],
   providers: [AlcsApplicationProfile],
   controllers: [ApplicationGrpcController],
+  exports: [AlcsApplicationProfile],
 })
 export class ApplicationGrpcModule {}

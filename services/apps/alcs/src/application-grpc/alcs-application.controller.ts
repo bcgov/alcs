@@ -41,7 +41,7 @@ export class ApplicationGrpcController {
       dateSubmittedToAlc: new Date(Number(data.dateSubmittedToAlc)),
     } as CreateApplicationServiceDto);
 
-    this.applicationDocumentService.attachExternalDocuments(
+    await this.applicationDocumentService.attachExternalDocuments(
       application.fileNumber,
       data.documents as ApplicationDocumentCreateDto[],
     );

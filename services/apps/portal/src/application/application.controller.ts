@@ -139,7 +139,7 @@ export class ApplicationController {
 
     if (!existingApplication) {
       throw new ServiceNotFoundException(
-        'Failed to find application with given File ID and User',
+        `Failed to find application with given File ID ${fileId} and User`,
       );
     }
 
