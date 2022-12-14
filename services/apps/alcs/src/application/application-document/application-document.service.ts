@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
-import { UserService } from '../../user/user.service';
 import { ApplicationService } from '../application.service';
 import { ApplicationDocumentCreateDto } from './application-document.dto';
 import {
@@ -23,7 +22,6 @@ export class ApplicationDocumentService {
     private applicationService: ApplicationService,
     @InjectRepository(ApplicationDocument)
     private applicationDocumentRepository: Repository<ApplicationDocument>,
-    private userService: UserService,
   ) {}
 
   async attachDocument(
@@ -109,18 +107,15 @@ export class ApplicationDocumentService {
   ) {
     const application = await this.applicationService.getOrFail(fileNumber);
 
-    const documentsToSave: ApplicationDocument[] = [];
-
-    for (const doc of data) {
-      documentsToSave.push(
-        new ApplicationDocument({
-          type: doc.type,
-          applicationUuid: application.uuid,
-          documentUuid: doc.documentUuid,
-        }),
-      );
-    }
-
-    return this.applicationDocumentRepository.save(documentsToSave);
+    return this.applicationDocumentRepository.save(
+      data.map(
+        (doc) =>
+          new ApplicationDocument({
+            type: doc.type,
+            applicationUuid: application.uuid,
+            documentUuid: doc.documentUuid,
+          }),
+      ),
+    );
   }
 }

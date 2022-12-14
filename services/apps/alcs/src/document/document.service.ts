@@ -15,7 +15,7 @@ import { User } from '../user/user.entity';
 import { CreateDocumentDto } from './document.dto';
 import { Document } from './document.entity';
 
-export const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
+const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
 const DEFAULT_S3_TAGS = 'ORCS-Classification=85100-20';
 
 @Injectable()

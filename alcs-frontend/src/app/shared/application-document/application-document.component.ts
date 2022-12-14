@@ -35,7 +35,6 @@ export class ApplicationDocumentComponent {
   ) {}
 
   async loadDocuments() {
-    console.log(this.documentType);
     this.documents = await this.applicationDocumentService.list(this._fileNumber, this.documentType);
   }
 
