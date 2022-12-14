@@ -43,8 +43,8 @@ export class ApplicationDocument extends BaseEntity {
   @Column()
   applicationUuid: string;
 
-  @Column()
-  documentUuid: string;
+  @Column({ nullable: true })
+  documentUuid?: string | null;
 
   @OneToOne(() => Document)
   @JoinColumn()
