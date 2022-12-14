@@ -10,7 +10,6 @@
       "CLIENT_ID": "",
       "SECRET": ""
     },
-    "DATABASE_SCHEMA": "public",
     "DOCUMENT_TIMEOUT": 60
   },
   "PORTAL": {

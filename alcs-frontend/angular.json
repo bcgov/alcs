@@ -40,6 +40,11 @@
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              },
               "sourceMap": true,
               "budgets": [
                 {
@@ -93,9 +98,13 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "polyfills": ["src/polyfills.ts"],
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": ["scss"],
+            "inlineStyleLanguage": [
+              "scss"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
