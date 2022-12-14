@@ -443,8 +443,16 @@ export class ApplicationDecisionService {
   async fetchCodes() {
     const values = await Promise.all([
       this.decisionOutcomeRepository.find(),
-      this.decisionMakerRepository.find(),
-      this.ceoCriterionRepository.find(),
+      this.decisionMakerRepository.find({
+        order: {
+          label: 'ASC',
+        },
+      }),
+      this.ceoCriterionRepository.find({
+        order: {
+          number: 'ASC',
+        },
+      }),
     ]);
 
     return {

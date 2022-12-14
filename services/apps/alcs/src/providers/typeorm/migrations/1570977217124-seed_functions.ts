@@ -1,33 +1,70 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class updateSchemaInFunctions1669163239822
-  implements MigrationInterface
-{
+export class seedFunctions1570977217124 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-    CREATE OR REPLACE FUNCTION alcs.calculate_active_days(p_ids uuid[])
-    RETURNS TABLE(application_uuid uuid, active_days integer, paused_days integer)
-    LANGUAGE sql
-    AS $function$
-            SELECT
-                uuid,
-                CASE WHEN "date_acknowledged_complete" IS NOT NULL THEN
-                    active_days_no_holiday - active_holidays - COALESCE(paused_weekdays, 0) + COALESCE(paused_holidays, 0)
-                ELSE
-                    0
-                END AS active_days,
-                CASE WHEN "date_acknowledged_complete" IS NOT NULL THEN
-                    COALESCE(paused_weekdays, 0) - COALESCE(paused_holidays, 0)
-                ELSE
-                    0
-                END AS paused_days
-            FROM
-                alcs.application
-            LEFT JOIN alcs.calculate_total_active_days (p_ids) ON calculate_total_active_days.application_uuid = application.uuid
-            LEFT JOIN alcs.calculate_paused_time (p_ids) ON calculate_paused_time.application_uuid = application.uuid
-            WHERE uuid = ANY(p_ids)
-        $function$
-    ;`);
+      CREATE OR REPLACE FUNCTION alcs.get_holiday_count(start_date timestamp with time zone, end_date timestamp with time zone)
+      RETURNS integer
+      LANGUAGE plpgsql
+      AS $function$
+          DECLARE
+              holiday_count integer;
+          BEGIN
+              SELECT
+                  COUNT(UUID) INTO holiday_count
+              FROM
+                  alcs.holiday_entity
+              WHERE
+                  holiday_entity. "day" BETWEEN start_date::DATE
+                  AND end_date::DATE;
+              RETURN holiday_count;
+          END;
+          $function$
+      ;
+    `);
+
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION alcs.get_weekday_count (start_date TIMESTAMPTZ, end_date TIMESTAMPTZ)
+          RETURNS int
+          LANGUAGE plpgsql
+          AS $$
+      DECLARE
+          weekday_count integer;
+      BEGIN
+          SELECT
+              CASE WHEN end_date >= start_date THEN
+                  SUM(
+                      CASE WHEN extract(dow FROM s)
+                      IN(0, 6) THEN
+                          0
+                      ELSE
+                          1
+                      END) INTO weekday_count
+              ELSE
+                  0
+              END
+          FROM
+              generate_series(start_date::DATE, end_date::DATE, '1 day'::interval) s;
+          RETURN weekday_count;
+      END
+      $$;
+    `);
+
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION alcs.calculate_business_days (start_date TIMESTAMPTZ, end_date TIMESTAMPTZ)
+        RETURNS TABLE (
+          business_days int)
+        AS $$
+        SELECT
+          CASE WHEN start_date is null OR end_date is null THEN NULL
+          ELSE
+          alcs.get_weekday_count (start_date,
+            end_date) - alcs.get_holiday_count (start_date,
+            end_date)
+          END AS business_days
+      $$
+      LANGUAGE SQL;
+    `);
 
     await queryRunner.query(`    
     CREATE OR REPLACE FUNCTION alcs.calculate_total_active_days(p_ids uuid[])
@@ -106,48 +143,32 @@ export class updateSchemaInFunctions1669163239822
     `);
 
     await queryRunner.query(`
-    CREATE OR REPLACE FUNCTION alcs.calculate_total_active_days(p_ids uuid[])
-    RETURNS TABLE(application_uuid uuid, active_days_no_holiday integer, active_holidays integer)
+    CREATE OR REPLACE FUNCTION alcs.calculate_active_days(p_ids uuid[])
+    RETURNS TABLE(application_uuid uuid, active_days integer, paused_days integer)
     LANGUAGE sql
     AS $function$
             SELECT
                 uuid,
-                alcs.get_weekday_count (date_acknowledged_complete::TIMESTAMPTZ + interval '1' day,
-                    COALESCE(decision_date, override.now()::TIMESTAMPTZ)) AS active_days_no_holiday,
-                alcs.get_holiday_count (date_acknowledged_complete::TIMESTAMPTZ + interval '1' day,
-                    COALESCE(decision_date, override.now()::TIMESTAMPTZ)) AS active_holidays
+                CASE WHEN "date_acknowledged_complete" IS NOT NULL THEN
+                    active_days_no_holiday - active_holidays - COALESCE(paused_weekdays, 0) + COALESCE(paused_holidays, 0)
+                ELSE
+                    0
+                END AS active_days,
+                CASE WHEN "date_acknowledged_complete" IS NOT NULL THEN
+                    COALESCE(paused_weekdays, 0) - COALESCE(paused_holidays, 0)
+                ELSE
+                    0
+                END AS paused_days
             FROM
-            alcs.application
-            WHERE
-                uuid = ANY (p_ids);
+                alcs.application
+            LEFT JOIN alcs.calculate_total_active_days (p_ids) ON calculate_total_active_days.application_uuid = application.uuid
+            LEFT JOIN alcs.calculate_paused_time (p_ids) ON calculate_paused_time.application_uuid = application.uuid
+            WHERE uuid = ANY(p_ids)
         $function$
-    ;
-   `);
-
-    await queryRunner.query(`
-    CREATE OR REPLACE FUNCTION alcs.get_holiday_count(start_date timestamp with time zone, end_date timestamp with time zone)
-    RETURNS integer
-    LANGUAGE plpgsql
-    AS $function$
-        DECLARE
-            holiday_count integer;
-        BEGIN
-            SELECT
-                COUNT(UUID) INTO holiday_count
-            FROM
-                alcs.holiday_entity
-            WHERE
-                holiday_entity. "day" BETWEEN start_date::DATE
-                AND end_date::DATE;
-            RETURN holiday_count;
-        END;
-        $function$
-;
-
-    `);
+    ;`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // nope
+    //Not supported
   }
 }
