@@ -10,7 +10,7 @@ export interface DocumentUploadResponseGrpc {
   fileKey: string;
 }
 
-export class CreateDocumentGrpcRequest {
+export class CreateDocumentRequestGrpc {
   uploadedByUuid?: string;
 
   mimeType: string;
@@ -22,7 +22,7 @@ export class CreateDocumentGrpcRequest {
   source: 'ALCS' | 'Local_Government' | 'Applicant';
 }
 
-export class CreateDocumentGrpcResponse {
+export class CreateDocumentResponseGrpc {
   alcsDocumentUuid: string;
 }
 

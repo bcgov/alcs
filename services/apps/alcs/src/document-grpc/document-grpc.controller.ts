@@ -4,8 +4,8 @@ import { DocumentService } from '../document/document.service';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import {
-  CreateDocumentGrpcRequest,
-  CreateDocumentGrpcResponse,
+  CreateDocumentRequestGrpc,
+  CreateDocumentResponseGrpc,
   DocumentUploadRequestGrpc,
   DocumentUploadResponseGrpc,
 } from './alcs-document.message.interface';
@@ -47,8 +47,8 @@ export class DocumentGrpcController {
 
   @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'createExternalDocument')
   async attachExternalDocument(
-    data: CreateDocumentGrpcRequest,
-  ): Promise<CreateDocumentGrpcResponse> {
+    data: CreateDocumentRequestGrpc,
+  ): Promise<CreateDocumentResponseGrpc> {
     this.logger.debug(
       'ALCS-> GRPC -> AlcsDocumentService -> createExternalDocument',
     );

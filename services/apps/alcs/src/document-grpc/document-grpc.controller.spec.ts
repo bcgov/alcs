@@ -1,7 +1,7 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateDocumentGrpcRequest } from '../document-grpc/alcs-document.message.interface';
+import { CreateDocumentRequestGrpc } from '../document-grpc/alcs-document.message.interface';
 import { Document } from '../document/document.entity';
 import { DocumentService } from '../document/document.service';
 import { User } from '../user/user.entity';
@@ -57,7 +57,7 @@ describe('DocumentGrpcController', () => {
 
     const res = await controller.attachExternalDocument({
       uploadedByUuid: 'mockUser',
-    } as CreateDocumentGrpcRequest);
+    } as CreateDocumentRequestGrpc);
 
     expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
     expect(mockUserService.getByUuid).toBeCalledTimes(1);
@@ -77,7 +77,7 @@ describe('DocumentGrpcController', () => {
     await expect(
       controller.attachExternalDocument({
         uploadedByUuid: 'mockUser',
-      } as CreateDocumentGrpcRequest),
+      } as CreateDocumentRequestGrpc),
     ).rejects.toMatchObject(
       new BadRequestException(`User not found with uuid mockUser`),
     );
@@ -97,7 +97,7 @@ describe('DocumentGrpcController', () => {
     mockUserService.getByUuid.mockResolvedValue(null);
 
     const res = await controller.attachExternalDocument(
-      {} as CreateDocumentGrpcRequest,
+      {} as CreateDocumentRequestGrpc,
     );
 
     expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
