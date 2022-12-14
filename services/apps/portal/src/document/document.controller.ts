@@ -1,9 +1,6 @@
-import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { DocumentService } from '../alcs/document/document.service';
-import {
-  DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
-} from '../application/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 
 @Controller('document')
 export class DocumentController {
@@ -12,15 +9,9 @@ export class DocumentController {
   @Get('/getUploadUrl/:fileId/:documentType')
   getUploadUrl(
     @Param('fileId') fileId: string,
+    // this will ensure that the document type is of correct type. Nest will automatically handle validation
     @Param('documentType') documentType: DOCUMENT_TYPE,
   ) {
-    if (!DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
     return this.documentService.getUploadUrl(`${fileId}/portal`);
   }
 }

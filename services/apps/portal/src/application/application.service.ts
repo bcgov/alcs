@@ -105,6 +105,7 @@ export class ApplicationService {
     } catch (ex) {
       this.logger.error(
         `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
+        ex,
       );
 
       //TODO set failed status here?

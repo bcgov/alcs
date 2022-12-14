@@ -14,7 +14,6 @@ describe('AlcsDocumentService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+    expect(service.createExternalDocument).toBeDefined();
   });
-
-  // it('should call grpc service', async () => {});
 });

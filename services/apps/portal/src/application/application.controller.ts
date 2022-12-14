@@ -132,7 +132,7 @@ export class ApplicationController {
     @Body() data: ApplicationSubmitToAlcsDto,
     @Req() req,
   ) {
-    const existingApplication = this.applicationService.getByFileId(
+    const existingApplication = await this.applicationService.getByFileId(
       fileId,
       req.user.entity,
     );

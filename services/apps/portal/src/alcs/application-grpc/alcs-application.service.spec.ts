@@ -14,7 +14,6 @@ describe('AlcsApplicationService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+    expect(service.create).toBeDefined();
   });
-
-  // it('should call grpc service', async () => {});
 });
