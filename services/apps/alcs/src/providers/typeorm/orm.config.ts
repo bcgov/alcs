@@ -3,6 +3,8 @@ import { IConfig } from 'config';
 import { join } from 'path';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+export const ALCS_DATABASE_SCHEMA = 'alcs';
+
 export const getTypeOrmModuleOptions = (
   config: IConfig,
 ): TypeOrmModuleOptions => {
@@ -13,7 +15,7 @@ export const getTypeOrmModuleOptions = (
     username: config.get<string>('DATABASE.USER'),
     password: config.get<string>('DATABASE.PASSWORD'),
     database: config.get<string>('DATABASE.NAME'),
-    schema: config.get<string>('ALCS.DATABASE_SCHEMA'),
+    schema: ALCS_DATABASE_SCHEMA,
     entities: [join(__dirname, '**', '*.{ts,js}')],
     synchronize: false,
     autoLoadEntities: true,
