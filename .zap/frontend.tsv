@@ -1,0 +1,3 @@
+10055	IGNORE	(CSP: style-src unsafe-inline)
+10015	IGNORE	(Incomplete or No Cache-control and Pragma HTTP Header Set)
+10110	IGNORE	(Dangerous JS Functions)
