@@ -38,20 +38,32 @@ $ npm run test:cov
 
 ## TypeOrm
 
+Typeorm commands are specific by application.
+
+### ALCS:
+
 ```bash
 # create empty migration file:
-  npm run migration:create --name=<file_name>
-
+  npm run alcs:migration:create --name=<file_name>
 # generate migrations:
-  npm run migration:generate --name=<file_name>
-#  or
-  npm run typeorm -- migration:generate ./src/providers/typeorm/migrations/<file_name>
-
+  npm run alcs:migration:generate --name=<file_name>
 # apply migration:
-  npm run typeorm migration:run
+  npm run alcs:migration:run
+# revert migration
+  npm run alcs:typeorm migration:revert
+```
 
-# revert migration:
-  npm run typeorm migration:revert
+### Portal
+
+```bash
+# create empty migration file:
+  npm run portal:migration:create --name=<file_name>
+# generate migrations:
+  npm run portal:migration:generate --name=<file_name>
+# apply migration:
+  npm run portal:migration:run
+# revert migration
+  npm run portal:typeorm migration:revert
 ```
 
 ## Postgres tests
@@ -88,5 +100,3 @@ Server communication between ALCS server and Portal server is performed using [g
 ALCS and Portal support mutual TLS to ensure secure communication. TLS also enabled for local environment using the self-signed certificates included in the source code. If you need to generate new set of certificates or learn more about the process refer to [certstrap](https://github.com/square/certstrap)
 
 TS implementation of \*.proto files can be provided manually or generated using [ts-proto](https://github.com/stephenh/ts-proto/blob/main/NESTJS.markdown) tool
-
-TODO: provide more detailed instruction on initial setup
