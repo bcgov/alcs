@@ -2,6 +2,7 @@ import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -15,6 +16,7 @@ import { generateModuleGraph } from './commands/graph';
 import { importApplications } from './commands/import';
 import { applyDefaultDocumentTags } from './commands/tag';
 import { HttpExceptionFilter } from './common/exceptions/exception.filter';
+import { grpcOptions } from './providers/grpc/grpc.options.config';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -130,8 +132,8 @@ async function bootstrap() {
 
   // microservices
   // TODO enable once openshift configuration is ready
-  // app.connectMicroservice<MicroserviceOptions>(grpcOptions);
-  // await app.startAllMicroservices();
+  app.connectMicroservice<MicroserviceOptions>(grpcOptions);
+  await app.startAllMicroservices();
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
