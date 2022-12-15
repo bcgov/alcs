@@ -1,10 +1,10 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { Board } from './board.entity';
 
 @Injectable()

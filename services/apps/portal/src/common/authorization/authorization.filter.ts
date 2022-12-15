@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import {
   ExceptionFilter,
   Catch,
@@ -10,7 +11,6 @@ import { UnauthorizedException } from '@nestjs/common';
 import { Keycloak } from 'keycloak-connect';
 import { KEYCLOAK_INSTANCE } from 'nest-keycloak-connect';
 import { v4 } from 'uuid';
-import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 
 @Catch(UnauthorizedException)
 export class AuthorizationFilter implements ExceptionFilter {

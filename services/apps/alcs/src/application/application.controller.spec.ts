@@ -1,3 +1,4 @@
+import { ConfigModule } from '@app/common/config/config.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -10,7 +11,6 @@ import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
-import { ConfigModule } from '../common/config/config.module';
 import {
   initApplicationMockEntity,
   initMockAssigneeDto,

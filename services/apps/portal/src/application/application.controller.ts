@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -11,7 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationDocument } from './application-document/application-document.entity';

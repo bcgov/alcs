@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -15,7 +16,6 @@ import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { CodeService } from '../../code/code.service';
 import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationDecision } from '../application-decision/application-decision.entity';
 import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {

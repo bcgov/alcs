@@ -1,3 +1,7 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -15,10 +19,6 @@ import * as config from 'config';
 import { ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../../common/exceptions/base.exception';
 import { CardService } from '../card.service';
 import {
   CARD_SUBTASK_TYPE,

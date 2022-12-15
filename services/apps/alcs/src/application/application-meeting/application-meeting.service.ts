@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
-} from '../../common/exceptions/base.exception';
+} from '@app/common/exceptions/base.exception';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationService } from '../application.service';

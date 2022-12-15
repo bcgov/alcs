@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import {
   GetObjectCommand,
   PutObjectCommand,
@@ -10,7 +11,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
-import { CONFIG_TOKEN, IConfig } from '../common/config/config.module';
 import { User } from '../user/user.entity';
 import { CreateDocumentDto } from './document.dto';
 import { Document } from './document.entity';

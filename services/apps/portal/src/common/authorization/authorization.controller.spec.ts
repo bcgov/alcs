@@ -1,10 +1,10 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { FastifyReply } from 'fastify';
 import { Keycloak } from 'keycloak-connect';
 import { KEYCLOAK_INSTANCE } from 'nest-keycloak-connect';
-import { CONFIG_TOKEN } from '../config/config.module';
 import { AuthorizationController } from './authorization.controller';
 import { AuthorizationService } from './authorization.service';
 

@@ -1,3 +1,4 @@
+import { HttpExceptionFilter } from '@app/common/exceptions/exception.filter';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
@@ -15,7 +16,6 @@ import { AlcsModule } from './alcs.module';
 import { generateModuleGraph } from './commands/graph';
 import { importApplications } from './commands/import';
 import { applyDefaultDocumentTags } from './commands/tag';
-import { HttpExceptionFilter } from './common/exceptions/exception.filter';
 import { grpcOptions } from './providers/grpc/grpc.options.config';
 
 const registerSwagger = (app: NestFastifyApplication) => {

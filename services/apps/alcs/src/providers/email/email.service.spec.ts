@@ -1,9 +1,9 @@
+import { ConfigModule } from '@app/common/config/config.module';
 import { createMock } from '@golevelup/nestjs-testing';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { of } from 'rxjs';
-import { ConfigModule } from '../../common/config/config.module';
 import { EmailService } from './email.service';
 
 describe('EmailService', () => {

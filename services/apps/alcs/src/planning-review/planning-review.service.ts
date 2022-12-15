@@ -1,3 +1,7 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -10,10 +14,6 @@ import {
 } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../common/exceptions/base.exception';
 import {
   CreatePlanningReviewDto,
   PlanningReviewDto,

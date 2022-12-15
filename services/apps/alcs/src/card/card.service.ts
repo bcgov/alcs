@@ -1,22 +1,16 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { CardType } from './card-type/card-type.entity';
-import {
-  CardCreateDto,
-  CardDetailedDto,
-  CardDto,
-  CardUpdateServiceDto,
-} from './card.dto';
+import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 
 @Injectable()
 export class CardService {
-  private logger = new Logger(CardService.name);
   private DEFAULT_RELATIONS: FindOptionsRelations<Card> = {
     type: true,
     status: true,

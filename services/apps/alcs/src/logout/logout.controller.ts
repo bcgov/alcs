@@ -1,7 +1,7 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { CONFIG_TOKEN, IConfig } from '../common/config/config.module';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('logout')

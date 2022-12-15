@@ -1,10 +1,10 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   KeycloakConnectOptions,
   KeycloakConnectOptionsFactory,
   TokenValidation,
 } from 'nest-keycloak-connect';
-import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 
 @Injectable()
 export class KeycloakConfigService implements KeycloakConnectOptionsFactory {

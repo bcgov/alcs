@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ArgumentsHost, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -5,7 +6,6 @@ import * as config from 'config';
 import { FastifyReply } from 'fastify';
 import { Keycloak } from 'keycloak-connect';
 import { KEYCLOAK_INSTANCE } from 'nest-keycloak-connect';
-import { CONFIG_TOKEN } from '../config/config.module';
 import { AuthorizationFilter } from './authorization.filter';
 
 describe('AuthorizationFilter', () => {

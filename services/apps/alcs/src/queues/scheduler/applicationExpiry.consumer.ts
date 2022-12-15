@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
@@ -5,7 +6,6 @@ import {
   ApplicationService,
   APPLICATION_EXPIRATION_DAY_RANGES,
 } from '../../application/application.service';
-import { CONFIG_TOKEN, IConfig } from '../../common/config/config.module';
 import { EmailService } from '../../providers/email/email.service';
 import { QUEUES } from './scheduler.service';
 

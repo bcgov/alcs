@@ -1,11 +1,11 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '../../common/exceptions/base.exception';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from './application-paused.service';
 

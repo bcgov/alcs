@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -12,7 +13,6 @@ import {
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { ApplicationDecisionService } from '../application-decision/application-decision.service';
 import {
   ApplicationReconsiderationCreateDto,

@@ -1,10 +1,10 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DocumentService } from '../../alcs/document/document.service';
-import { ServiceNotFoundException } from '../../common/exceptions/base.exception';
 import { User } from '../../user/user.entity';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';

@@ -1,8 +1,8 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RedisService } from '../../../common/redis/redis.service';
 import { ApplicationLocalGovernment } from './application-local-government.entity';
 import { ApplicationLocalGovernmentService } from './application-local-government.service';
 

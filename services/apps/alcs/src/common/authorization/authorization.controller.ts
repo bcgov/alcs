@@ -1,7 +1,7 @@
+import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Controller, Get, Inject, Logger, Query, Res } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { Public } from 'nest-keycloak-connect';
-import { CONFIG_TOKEN, IConfig } from '../config/config.module';
 import { AuthorizationService } from './authorization.service';
 
 @Controller('/authorize')

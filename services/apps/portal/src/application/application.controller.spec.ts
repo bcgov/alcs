@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -5,7 +6,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
-import { ServiceNotFoundException } from '../common/exceptions/base.exception';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';

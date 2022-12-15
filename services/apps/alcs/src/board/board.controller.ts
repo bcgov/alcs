@@ -1,11 +1,9 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
@@ -15,8 +13,10 @@ import {
 } from '../common/authorization/roles';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
-import { ServiceValidationException } from '../common/exceptions/base.exception';
 import { CovenantService } from '../covenant/covenant.service';
+import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BOARD_CODES, BoardDto } from './board.dto';
