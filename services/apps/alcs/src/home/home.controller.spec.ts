@@ -3,6 +3,8 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { In, Not } from 'typeorm';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
 import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
@@ -154,6 +156,11 @@ describe('HomeController', () => {
       const filterCondition = {
         card: {
           assigneeUuid: userId,
+          status: {
+            code: Not(
+              In([CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED]),
+            ),
+          },
         },
       };
       expect(mockApplicationService.getMany).toHaveBeenCalledTimes(1);

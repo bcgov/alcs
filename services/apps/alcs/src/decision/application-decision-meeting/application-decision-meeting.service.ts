@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
+import { CARD_STATUS } from '../../card/card-status/card-status.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 
 @Injectable()
@@ -72,7 +73,7 @@ export class ApplicationDecisionMeetingService {
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.reconsiderations', 'reconsideration')
       .innerJoin('reconsideration.card', 'card')
-      .where("card.status_code != 'RELE'")
+      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
       .groupBy('reconsideration.uuid')
       .getRawMany();
   }
@@ -85,7 +86,7 @@ export class ApplicationDecisionMeetingService {
       .select('application.uuid, MAX(meeting.date) as next_meeting')
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.card', 'card')
-      .where("card.status_code != 'RELE'")
+      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
       .groupBy('application.uuid')
       .getRawMany();
   }
