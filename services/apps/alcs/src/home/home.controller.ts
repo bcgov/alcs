@@ -3,17 +3,12 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { ApplicationModificationDto } from '../decision/application-modification/application-modification.dto';
-import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationDto } from '../decision/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { In, Not } from 'typeorm';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
 import {
   CARD_SUBTASK_TYPE,
   HomepageSubtaskDTO,
@@ -26,11 +21,22 @@ import { UserRoles } from '../common/authorization/roles.decorator';
 import { CovenantDto } from '../covenant/covenant.dto';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
+import { ApplicationModificationDto } from '../decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationDto } from '../decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { AssigneeDto } from '../user/user.dto';
 import { User } from '../user/user.entity';
+
+const HIDDEN_CARD_STATUSES = [
+  CARD_STATUS.CANCELLED,
+  CARD_STATUS.DECISION_RELEASED,
+];
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('home')
@@ -56,25 +62,32 @@ export class HomeController {
     covenants: CovenantDto[];
   }> {
     const userId = req.user.entity.uuid;
+    const assignedFindOptions = {
+      card: {
+        assigneeUuid: userId,
+        status: {
+          code: Not(In(HIDDEN_CARD_STATUSES)),
+        },
+      },
+    };
+
     if (userId) {
-      const applications = await this.applicationService.getMany({
-        card: { assigneeUuid: userId },
-      });
-      const reconsiderations = await this.reconsiderationService.getBy({
-        card: { assigneeUuid: userId },
-      });
+      const applications = await this.applicationService.getMany(
+        assignedFindOptions,
+      );
+      const reconsiderations = await this.reconsiderationService.getBy(
+        assignedFindOptions,
+      );
 
-      const planningReviews = await this.planningReviewService.getBy({
-        card: { assigneeUuid: userId },
-      });
+      const planningReviews = await this.planningReviewService.getBy(
+        assignedFindOptions,
+      );
 
-      const modifications = await this.modificationService.getBy({
-        card: { assigneeUuid: userId },
-      });
+      const modifications = await this.modificationService.getBy(
+        assignedFindOptions,
+      );
 
-      const covenants = await this.covenantService.getBy({
-        card: { assigneeUuid: userId },
-      });
+      const covenants = await this.covenantService.getBy(assignedFindOptions);
 
       return {
         applications: await this.applicationService.mapToDtos(applications),
