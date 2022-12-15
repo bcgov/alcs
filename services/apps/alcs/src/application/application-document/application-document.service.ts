@@ -108,14 +108,16 @@ export class ApplicationDocumentService {
     const application = await this.applicationService.getOrFail(fileNumber);
 
     return this.applicationDocumentRepository.save(
-      data.map(
-        (doc) =>
-          new ApplicationDocument({
-            type: doc.type,
-            applicationUuid: application.uuid,
-            documentUuid: doc.documentUuid,
-          }),
-      ),
+      data
+        ? data.map(
+            (doc) =>
+              new ApplicationDocument({
+                type: doc.type,
+                applicationUuid: application.uuid,
+                documentUuid: doc.documentUuid,
+              }),
+          )
+        : [],
     );
   }
 }
