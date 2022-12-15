@@ -1,5 +1,5 @@
 name: OWASP Zap Frontend Scan
-on: manual_dispatch
+on: workflow_dispatch
 
 jobs:
   zap_scan:

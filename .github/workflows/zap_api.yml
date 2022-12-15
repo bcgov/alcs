@@ -1,5 +1,5 @@
 name: OWASP Zap API Scan
-on: manual_dispatch
+on: workflow_dispatch
 
 jobs:
   zap_scan:
