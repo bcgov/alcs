@@ -5,7 +5,14 @@ export class updateDocumentTable1671058825737 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "alcs"."document" ADD "source" character varying NOT NULL`,
+      `ALTER TABLE "alcs"."document" ADD "source" character varying`,
+    );
+    await queryRunner.query(
+      `UPDATE "alcs"."document"
+       SET "source" = 'ALCS';`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "alcs"."document" ALTER COLUMN "source" SET NOT NULL`,
     );
     await queryRunner.query(
       `ALTER TABLE "alcs"."document" DROP CONSTRAINT "FK_9b9254f412e8a5a07063209a08c"`,
