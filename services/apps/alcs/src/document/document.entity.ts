@@ -35,6 +35,6 @@ export class Document extends Base {
   @CreateDateColumn({ type: 'timestamptz' })
   uploadedAt: Date;
 
-  @Column()
+  @Column({ default: 'ALCS' })
   source: string;
 }
