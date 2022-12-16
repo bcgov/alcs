@@ -45,8 +45,8 @@
         <ng-select
           class="subtask-assignee"
           [items]="users"
-          bindLabel="name"
-          bindValue="name"
+          bindLabel="prettyName"
+          bindValue="prettyName"
           [ngModel]="element.assignee?.prettyName"
           [searchFn]="filterAssigneeList"
           (change)="onAssigneeSelected($event, element.uuid)"
