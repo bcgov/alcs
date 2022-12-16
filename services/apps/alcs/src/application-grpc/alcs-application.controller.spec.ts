@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
@@ -87,5 +87,14 @@ describe('ApplicationGrpcController', () => {
       typeCode: mockTypeCode,
       fileNumber: mockFileNumber,
     } as ApplicationGrpcResponse);
+  });
+
+  it('should call through to service on generateNumber', async () => {
+    const fileNumber = 'file-id';
+    mockApplicationService.generateNextFileNumber.mockResolvedValue(fileNumber);
+    const res = await controller.generateFileNumber({});
+
+    expect(res).toEqual({ fileNumber });
+    expect(mockApplicationService.generateNextFileNumber).toBeCalledTimes(1);
   });
 });

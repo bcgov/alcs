@@ -62,6 +62,8 @@ export class ApplicationGrpcController implements AlcsApplicationService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ApplicationFileNumberGenerateGrpcRequest: any,
   ): Promise<ApplicationFileNumberGenerateGrpcResponse> {
-    return { fileNumber: await this.applicationService.getNextFileNumber() };
+    return {
+      fileNumber: await this.applicationService.generateNextFileNumber(),
+    };
   }
 }

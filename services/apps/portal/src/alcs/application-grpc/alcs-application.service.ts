@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { grpcClientOptions } from '../../providers/grpc/grpc-client.options';
 import {
   ApplicationCreateGrpcRequest,
+  ApplicationFileNumberGenerateGrpcRequest,
+  ApplicationFileNumberGenerateGrpcResponse,
   ApplicationGrpcResponse,
 } from './alcs-application.message.interface';
 
@@ -27,5 +29,11 @@ export class AlcsApplicationService
     request: ApplicationCreateGrpcRequest,
   ): Observable<ApplicationGrpcResponse> {
     return this.alcsApplicationService.create(request);
+  }
+
+  generateFileNumber(): Observable<ApplicationFileNumberGenerateGrpcResponse> {
+    return this.alcsApplicationService.generateFileNumber(
+      {} as ApplicationFileNumberGenerateGrpcRequest,
+    );
   }
 }

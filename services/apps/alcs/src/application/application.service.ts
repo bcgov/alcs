@@ -30,8 +30,8 @@ import {
   CreateApplicationServiceDto,
 } from './application.dto';
 import {
-  Application,
   APPLICATION_FILE_NUMBER_SEQUENCE,
+  Application,
 } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -300,11 +300,23 @@ export class ApplicationService {
     );
   }
 
-  async getNextFileNumber(): Promise<string> {
-    const db = this.applicationRepository.manager;
-    const fileNumberArr = await db.query(
+  private async getNextFileNumber() {
+    const fileNumberArr = await this.applicationRepository.query(
       `select nextval('${APPLICATION_FILE_NUMBER_SEQUENCE}') limit 1`,
     );
     return fileNumberArr[0].nextval;
+  }
+
+  async generateNextFileNumber(): Promise<string> {
+    let fileNumber: string;
+    let application: Application | null = null;
+    do {
+      fileNumber = await this.getNextFileNumber();
+      application = await this.applicationRepository.findOne({
+        where: { fileNumber },
+      });
+    } while (application);
+
+    return fileNumber;
   }
 }
