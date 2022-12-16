@@ -1,3 +1,7 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
@@ -17,10 +21,6 @@ import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
 import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
-import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
@@ -29,7 +29,10 @@ import {
   ApplicationUpdateServiceDto,
   CreateApplicationServiceDto,
 } from './application.dto';
-import { Application } from './application.entity';
+import {
+  Application,
+  APPLICATION_FILE_NUMBER_SEQUENCE,
+} from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
   ACTIVE_DAYS_START: 55,
@@ -295,5 +298,13 @@ export class ApplicationService {
     this.logger.debug(
       `Loaded ${localGovernments.length} application types into Redis`,
     );
+  }
+
+  async getNextFileNumber(): Promise<string> {
+    const db = this.applicationRepository.manager;
+    const fileNumberArr = await db.query(
+      `select nextval('${APPLICATION_FILE_NUMBER_SEQUENCE}') limit 1`,
+    );
+    return fileNumberArr[0].nextval;
   }
 }
