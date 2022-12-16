@@ -31,10 +31,11 @@ export class Application extends Base {
     }
   }
 
-  // TODO check if I can specify default sequence value here
-  // This has a default value from sequence
   @AutoMap()
-  @Column({ unique: true })
+  @Column({
+    unique: true,
+    default: () => `NEXTVAL('${APPLICATION_FILE_NUMBER_SEQUENCE}')`,
+  })
   fileNumber: string;
 
   @AutoMap()
