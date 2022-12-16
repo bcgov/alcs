@@ -11,6 +11,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
@@ -29,12 +30,28 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private documentService: ApplicationDocumentService,
+    private localGovernmentService: LocalGovernmentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get()
   async getApplications(@Req() req) {
     const user = req.user.entity as User;
+
+    if (user.bceidBusinessGuid) {
+      const localGovernments = await this.localGovernmentService.get();
+      const matchingGovernment = localGovernments.find(
+        (lg) => lg.bceidBusinessGuid === user.bceidBusinessGuid,
+      );
+      if (matchingGovernment) {
+        const applications =
+          await this.applicationService.getByBceidBusinessGuid(
+            user.bceidBusinessGuid,
+          );
+        return this.applicationService.mapToDTOs(applications);
+      }
+    }
+
     const applications = await this.applicationService.getByUser(user);
     return this.applicationService.mapToDTOs(applications);
   }

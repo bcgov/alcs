@@ -22,6 +22,7 @@ export class ApplicationLocalGovernmentService {
       select: {
         uuid: true,
         name: true,
+        bceidBusinessGuid: true,
       },
     });
 
