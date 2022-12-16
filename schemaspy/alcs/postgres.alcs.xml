@@ -160,7 +160,7 @@
             <column ascending="true" name="document_uuid"/>
          </index>
       </table>
-      <table name="application_local_government" remarks="" schema="alcs" type="TABLE">
+      <table name="application_local_government" numRows="148" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -175,9 +175,13 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="preferred_region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_b7e4525de796ada01f43f464d9d" implied="false" onDeleteCascade="false" schema="alcs" table="application_region"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="bceid_business_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_58853fcb8957e8b2c131cc12da1" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="UQ_412d09fb58f6c110625af6b4136" unique="true">
+            <column ascending="true" name="bceid_business_guid"/>
          </index>
       </table>
       <table name="application_meeting" remarks="" schema="alcs" type="TABLE">
@@ -436,7 +440,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_status" remarks="" schema="alcs" type="TABLE">
+      <table name="board_status" numRows="114" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>

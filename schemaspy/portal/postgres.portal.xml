@@ -87,6 +87,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="bceid_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="bceid_user_name" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="'{}'::text[]" digits="0" id="13" name="client_roles" nullable="false" remarks="" size="2147483647" type="_text" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="bceid_business_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_a95e949168be7b7ece1a2382fed" unique="true">
             <column ascending="true" name="uuid"/>
