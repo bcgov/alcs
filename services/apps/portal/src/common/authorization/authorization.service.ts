@@ -30,6 +30,8 @@ export type BCeIDBasicToken = {
   client_roles?: string[];
   bceid_user_guid: string;
   bceid_username: string;
+  bceid_business_guid?: string;
+  bceid_business_name?: string;
 };
 
 @Injectable()
@@ -124,6 +126,7 @@ export class AuthorizationService {
         bceidGuid: bceidToken.bceid_user_guid,
         bceidUserName: bceidToken.bceid_username,
         clientRoles: bceidToken.client_roles || [],
+        bceidBusinessGuid: bceidToken.bceid_business_guid,
       };
     }
     throw new Error(

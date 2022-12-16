@@ -7,6 +7,9 @@ export class ApplicationLocalGovernment extends Base {
   @Column()
   name: string;
 
+  @Column({ unique: true, nullable: true })
+  bceidBusinessGuid: string;
+
   @ManyToOne(() => ApplicationRegion, {
     nullable: false,
   })

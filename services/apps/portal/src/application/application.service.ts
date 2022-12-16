@@ -133,6 +133,19 @@ export class ApplicationService {
     });
   }
 
+  getByBceidBusinessGuid(bceidBusinessGuid: string) {
+    return this.applicationRepository.find({
+      where: {
+        createdBy: {
+          bceidBusinessGuid,
+        },
+      },
+      order: {
+        updatedAt: 'DESC',
+      },
+    });
+  }
+
   getByFileId(fileNumber: string, user: User) {
     return this.applicationRepository.findOne({
       where: {

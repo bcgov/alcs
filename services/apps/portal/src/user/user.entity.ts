@@ -39,6 +39,10 @@ export class User extends Base {
 
   @AutoMap()
   @Column({ nullable: true })
+  bceidBusinessGuid: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
   bceidUserName: string;
 
   @AutoMap()

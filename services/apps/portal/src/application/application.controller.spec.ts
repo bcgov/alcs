@@ -5,12 +5,13 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
+import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { ApplicationController } from './application.controller';
-import { ApplicationSubmitToAlcsDto } from './application.dto';
+import { ApplicationDto, ApplicationSubmitToAlcsDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -18,6 +19,7 @@ describe('ApplicationController', () => {
   let controller: ApplicationController;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockLgService: DeepMocked<LocalGovernmentService>;
 
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
@@ -25,6 +27,7 @@ describe('ApplicationController', () => {
   beforeEach(async () => {
     mockAppService = createMock();
     mockDocumentService = createMock();
+    mockLgService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -37,6 +40,10 @@ describe('ApplicationController', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockDocumentService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockLgService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -71,6 +78,78 @@ describe('ApplicationController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('should call out to service when fetching applications', async () => {
+    mockAppService.getByUser.mockResolvedValue([]);
+
+    const applications = await controller.getApplications({
+      user: {
+        entity: new User(),
+      },
+    });
+
+    expect(applications).toBeDefined();
+    expect(mockAppService.getByUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch by bceid if user has same guid as a local government', async () => {
+    const bceidBusinessGuid = 'business-guid';
+    mockLgService.get.mockResolvedValue([
+      {
+        uuid: '',
+        bceidBusinessGuid,
+        name: 'fake-name',
+      },
+    ]);
+    mockAppService.getByBceidBusinessGuid.mockResolvedValue([]);
+
+    const applications = await controller.getApplications({
+      user: {
+        entity: new User({
+          bceidBusinessGuid,
+        }),
+      },
+    });
+
+    expect(applications).toBeDefined();
+    expect(mockAppService.getByBceidBusinessGuid).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service when fetching an application', async () => {
+    mockAppService.getByFileId.mockResolvedValue(new Application());
+    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
+
+    const application = await controller.getApplication(
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+      'file-id',
+    );
+
+    expect(application).toBeDefined();
+    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service when creating an application', async () => {
+    mockAppService.create.mockResolvedValue('');
+    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
+
+    const application = await controller.create(
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+      {
+        type: '',
+      },
+    );
+
+    expect(application).toBeDefined();
+    expect(mockAppService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when attaching a document', async () => {
@@ -119,8 +198,6 @@ describe('ApplicationController', () => {
 
   it('should throw an exception if app doest not exist', async () => {
     mockAppService.getByFileId.mockResolvedValue(null);
-    const mockFileId = 'file-id';
-
     const promise = controller.update(
       'file-id',
       {

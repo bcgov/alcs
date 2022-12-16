@@ -12,7 +12,11 @@ export class LocalGovernmentService {
     const jsonBlob = await redis.get('localGovernments');
     if (jsonBlob) {
       const localGovernments = JSON.parse(jsonBlob);
-      return localGovernments as { name: string; uuid: string }[];
+      return localGovernments as {
+        name: string;
+        uuid: string;
+        bceidBusinessGuid?: string;
+      }[];
     } else {
       this.logger.error('Failed to load localGovernments from Redis');
       return [];
