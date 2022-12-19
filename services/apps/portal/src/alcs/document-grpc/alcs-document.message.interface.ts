@@ -19,7 +19,7 @@ export class CreateDocumentRequestGrpc {
 
   fileKey: string;
 
-  source: 'ALCS' | 'Local_Government' | 'Applicant';
+  source: 'Local_Government' | 'Applicant';
 }
 
 export class CreateDocumentResponseGrpc {
