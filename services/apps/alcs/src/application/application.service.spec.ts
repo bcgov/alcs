@@ -2,7 +2,7 @@ import { ServiceNotFoundException } from '@app/common/exceptions/base.exception'
 import { RedisService } from '@app/common/redis/redis.service';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RedisClientType } from 'redis';
@@ -246,5 +246,20 @@ describe('ApplicationService', () => {
 
     expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
+  });
+
+  it('should generate and return new fileNumber', async () => {
+    applicationRepositoryMock.findOne
+      .mockResolvedValueOnce({} as Application)
+      .mockResolvedValue(null);
+    applicationRepositoryMock.query.mockResolvedValue([
+      { nextval: applicationMockEntity.uuid },
+    ]);
+
+    const result = await applicationService.generateNextFileNumber();
+
+    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
+    expect(applicationRepositoryMock.query).toBeCalledTimes(2);
+    expect(result).toEqual(applicationMockEntity.uuid);
   });
 });

@@ -1,12 +1,15 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Observable, of } from 'rxjs';
 import { Repository } from 'typeorm';
-import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
+import {
+  ApplicationFileNumberGenerateGrpcResponse,
+  ApplicationGrpcResponse,
+} from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
@@ -82,15 +85,24 @@ describe('ApplicationService', () => {
   });
 
   it('save a new application for create', async () => {
+    const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
     mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
     mockRepository.save.mockResolvedValue(new Application());
+    mockAlcsApplicationService.generateFileNumber.mockReturnValue(
+      of({
+        fileNumber: fileId,
+      } as ApplicationFileNumberGenerateGrpcResponse),
+    );
 
     const fileNumber = await service.create('type', new User());
 
-    expect(fileNumber).toBeTruthy();
+    expect(fileNumber).toEqual(fileId);
     expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockAlcsApplicationService.generateFileNumber).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call through for get by user', async () => {
@@ -157,7 +169,6 @@ describe('ApplicationService', () => {
         throw new Error('failed');
       },
     );
-    // mockAlcsApplicationService.create.mockReturnValue(of());
     mockRepository.findOne.mockResolvedValue(mockApplication);
     mockRepository.save.mockResolvedValue(mockApplication);
     mockRepository.findOneOrFail.mockResolvedValue(mockApplication);

@@ -1,3 +1,7 @@
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
@@ -17,10 +21,6 @@ import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
 import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
-import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
 } from './application-time-tracking.service';
@@ -29,7 +29,10 @@ import {
   ApplicationUpdateServiceDto,
   CreateApplicationServiceDto,
 } from './application.dto';
-import { Application } from './application.entity';
+import {
+  APPLICATION_FILE_NUMBER_SEQUENCE,
+  Application,
+} from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
   ACTIVE_DAYS_START: 55,
@@ -295,5 +298,25 @@ export class ApplicationService {
     this.logger.debug(
       `Loaded ${localGovernments.length} application types into Redis`,
     );
+  }
+
+  private async getNextFileNumber() {
+    const fileNumberArr = await this.applicationRepository.query(
+      `select nextval('${APPLICATION_FILE_NUMBER_SEQUENCE}') limit 1`,
+    );
+    return fileNumberArr[0].nextval;
+  }
+
+  async generateNextFileNumber(): Promise<string> {
+    let fileNumber: string;
+    let application: Application | null = null;
+    do {
+      fileNumber = await this.getNextFileNumber();
+      application = await this.applicationRepository.findOne({
+        where: { fileNumber },
+      });
+    } while (application);
+
+    return fileNumber;
   }
 }

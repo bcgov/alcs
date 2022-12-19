@@ -10,12 +10,16 @@ import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import {
   ApplicationCreateGrpcRequest,
+  ApplicationFileNumberGenerateGrpcResponse,
   ApplicationGrpcResponse,
 } from './alcs-application.message.interface';
-import { GRPC_APPLICATION_SERVICE_NAME } from './alcs-application.service.interface';
+import {
+  AlcsApplicationService,
+  GRPC_APPLICATION_SERVICE_NAME,
+} from './alcs-application.service.interface';
 
 @Controller('application-grpc')
-export class ApplicationGrpcController {
+export class ApplicationGrpcController implements AlcsApplicationService {
   private logger = new Logger(ApplicationGrpcController.name);
 
   constructor(
@@ -51,5 +55,15 @@ export class ApplicationGrpcController {
       Application,
       ApplicationGrpcResponse,
     );
+  }
+
+  @GrpcMethod(GRPC_APPLICATION_SERVICE_NAME, 'generateFileNumber')
+  async generateFileNumber(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ApplicationFileNumberGenerateGrpcRequest: any,
+  ): Promise<ApplicationFileNumberGenerateGrpcResponse> {
+    return {
+      fileNumber: await this.applicationService.generateNextFileNumber(),
+    };
   }
 }
