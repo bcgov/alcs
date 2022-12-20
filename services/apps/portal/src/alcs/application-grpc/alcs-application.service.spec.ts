@@ -15,5 +15,6 @@ describe('AlcsApplicationService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(service.create).toBeDefined();
+    expect(service.generateFileNumber).toBeDefined();
   });
 });

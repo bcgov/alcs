@@ -3,7 +3,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
@@ -44,8 +44,9 @@ export class ApplicationService {
   }
 
   async create(type: string, createdBy: User) {
-    //TODO: Get File Number from ALCS
-    const fileNumber = Math.floor(Math.random() * 5000).toString(10);
+    const alcsApplicationNumber = await firstValueFrom(
+      this.alcsApplicationService.generateFileNumber(),
+    );
 
     const initialStatus = await this.applicationStatusRepository.findOne({
       where: {
@@ -60,14 +61,14 @@ export class ApplicationService {
     }
 
     const application = new Application({
-      fileNumber,
+      fileNumber: alcsApplicationNumber.fileNumber,
       status: initialStatus,
       typeCode: type,
       createdBy,
     });
     await this.applicationRepository.save(application);
 
-    return fileNumber;
+    return alcsApplicationNumber.fileNumber;
   }
 
   async update(fileNumber: string, updateDto: UpdateApplicationDto) {

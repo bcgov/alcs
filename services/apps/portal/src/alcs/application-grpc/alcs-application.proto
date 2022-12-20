@@ -4,6 +4,8 @@ package alcs_application;
 
 service AlcsApplicationService {
   rpc create(ApplicationCreateGrpcRequest) returns (ApplicationGrpcResponse);
+
+  rpc generateFileNumber(ApplicationFileNumberGenerateGrpcRequest) returns (ApplicationFileNumberGenerateGrpcResponse);
 }
 
 message ApplicationGrpcResponse {
@@ -37,4 +39,10 @@ message ApplicationCreateGrpcRequest {
 message ApplicationDocumentGrpcRequest {
   string type = 1;
   string documentUuid = 2;
+}
+
+message ApplicationFileNumberGenerateGrpcRequest {}
+
+message ApplicationFileNumberGenerateGrpcResponse {
+  string fileNumber = 1;
 }
