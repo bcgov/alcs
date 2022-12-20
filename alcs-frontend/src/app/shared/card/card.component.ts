@@ -17,6 +17,7 @@ export interface CardData {
   cardUuid: string;
   cardType: CardType;
   dateReceived: number;
+  verticalOutBound?: boolean;
 }
 
 export interface CardSelectedEvent {
@@ -67,5 +68,23 @@ export class CardComponent implements OnInit {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
     }
+  }
+
+  isEllipsisActive(e: string): boolean {
+    const el = document.getElementById(e);
+    if (el && el.offsetWidth < el.scrollWidth) {
+      debugger;
+    }
+    return el ? el.offsetWidth < el.scrollWidth : false;
+  }
+
+  onMouseHover(e: any) {
+    const el = document.getElementById(e);
+
+    if (el) {
+      this.cardData.verticalOutBound = el.offsetHeight - 24 > 0 ? true : false;
+    }
+
+    return;
   }
 }

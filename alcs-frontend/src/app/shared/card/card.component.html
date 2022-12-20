@@ -10,7 +10,12 @@
   </div>
   <div class="card-content">
     <div class="upper-card">
-      {{ cardData.title }}
+      <span class="ellipsis" 
+      [id]="cardData.id"
+      [matTooltip]="cardData.title"
+      (mouseover) = "onMouseHover(cardData.id)"
+      (focus) = "onMouseHover(cardData.id)"
+      [matTooltipDisabled]="!cardData.verticalOutBound" >{{ cardData.title }}</span>
       <span class="high-priority" *ngIf="cardData.highPriority">!</span>
       <div class="labels">
         <app-application-type-pill
