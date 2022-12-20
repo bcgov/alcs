@@ -28,7 +28,7 @@ export const childRoutes = [
   {
     path: 'applicant-info',
     menuTitle: 'Applicant Info',
-    icon: 'baby_changing_station',
+    icon: 'persons',
     component: ApplicantInfoComponent,
   },
   {
