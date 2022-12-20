@@ -49,7 +49,7 @@ export const grpcOptions: GrpcOptions = addReflectionToGrpcConfig({
   transport: Transport.GRPC,
   options: {
     package: grpcPackagesNames,
-    url: config.get('GRPC.URL'),
+    url: config.get('GRPC.BIND_URL'),
     credentials: ServerCredentials.createSsl(
       root,
       [

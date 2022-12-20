@@ -49,7 +49,7 @@ export const grpcClientOptions: GrpcOptions = {
   transport: Transport.GRPC,
   options: {
     package: grpcPackagesNames,
-    url: config.get('GRPC.URL'),
+    url: config.get('PORTAL.ALCS_GRPC_URL'),
     credentials: grpc.credentials.createSsl(root, key, cert),
     protoPath: findFilesInDir(__dirname, '.proto'),
   },
