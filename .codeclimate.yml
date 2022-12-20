@@ -34,8 +34,7 @@ plugins:
     config:
       languages:
         typescript:
-          count_threshold: 2
-          mass_threshold: 50
+          mass_threshold: 20
 exclude_patterns:
   - "bin/"
   - "**/node_modules/"
