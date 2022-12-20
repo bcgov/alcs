@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><database name="postgres" schema="alcs" type="PostgreSQL - 15.1 (Debian 15.1-1.pgdg110+1)">
    <sequences>
+      <sequence increment="1" name="alcs_file_number_seq" startValue="100000"/>
       <sequence increment="1" name="health_check_id_seq" startValue="1"/>
       <sequence increment="1" name="migrations_id_seq" startValue="1"/>
    </sequences>
@@ -19,7 +20,7 @@
             <child column="application_uuid" foreignKey="FK_57e39f7c811d07c646fc04e8bdf" implied="false" onDeleteCascade="false" schema="alcs" table="application_paused"/>
             <child column="application_uuid" foreignKey="FK_69f4ed0db8aa26fca099a85d3bd" implied="false" onDeleteCascade="false" schema="alcs" table="application_reconsideration"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="true" defaultValue="nextval('alcs.alcs_file_number_seq'::regclass)" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="applicant" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="summary" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
@@ -440,7 +441,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_status" numRows="114" remarks="" schema="alcs" type="TABLE">
+      <table name="board_status" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -784,7 +785,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" numRows="100" remarks="" schema="alcs" type="TABLE">
+      <table name="holiday_entity" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="day" nullable="false" remarks="" size="13" type="date" typeCode="91"/>
