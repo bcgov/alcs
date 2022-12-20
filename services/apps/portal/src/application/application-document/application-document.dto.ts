@@ -33,7 +33,7 @@ export class AttachExternalDocumentDto {
   fileKey: string;
 
   @IsString()
-  source: 'ALCS' | 'Local_Government' | 'Applicant';
+  source: 'Local_Government' | 'Applicant';
 
   @IsString()
   documentType: DOCUMENT_TYPE;

@@ -1,7 +1,6 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Client, ClientGrpc } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { grpcClientOptions } from '../../providers/grpc/grpc-client.options';
 import {
   ApplicationCreateGrpcRequest,
   ApplicationFileNumberGenerateGrpcRequest,
@@ -9,19 +8,26 @@ import {
   ApplicationGrpcResponse,
 } from './alcs-application.message.interface';
 
-import { AlcsApplicationServiceClient } from './alcs-application.service.interface';
+import { ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME } from '../../../../alcs/src/application-grpc/alcs-application.message.interface';
+import {
+  AlcsApplicationServiceClient,
+  GRPC_ALCS_APPLICATION_SERVICE_NAME,
+} from './alcs-application.service.interface';
 
 @Injectable()
 export class AlcsApplicationService
   implements OnModuleInit, AlcsApplicationServiceClient
 {
-  @Client(grpcClientOptions) private readonly client: ClientGrpc;
   private alcsApplicationService: AlcsApplicationServiceClient;
+
+  constructor(
+    @Inject(ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME) private client: ClientGrpc,
+  ) {}
 
   onModuleInit() {
     this.alcsApplicationService =
       this.client.getService<AlcsApplicationServiceClient>(
-        'AlcsApplicationService',
+        GRPC_ALCS_APPLICATION_SERVICE_NAME,
       );
   }
 

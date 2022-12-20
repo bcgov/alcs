@@ -16,4 +16,4 @@ export interface AlcsDocumentServiceClient {
   ): Observable<CreateDocumentResponseGrpc>;
 }
 
-export const ALCS_DOCUMENT_SERVICE_NAME = 'AlcsDocumentService';
+export const GRPC_ALCS_DOCUMENT_SERVICE_NAME = 'AlcsDocumentService';

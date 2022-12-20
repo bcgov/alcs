@@ -15,4 +15,4 @@ export interface AlcsApplicationServiceClient {
   ): Observable<ApplicationFileNumberGenerateGrpcResponse>;
 }
 
-export const GRPC_APPLICATION_SERVICE_NAME = 'AlcsApplicationService';
+export const GRPC_ALCS_APPLICATION_SERVICE_NAME = 'AlcsApplicationService';
