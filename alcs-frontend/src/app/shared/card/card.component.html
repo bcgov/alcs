@@ -12,7 +12,7 @@
     <div class="upper-card">
       <span class="ellipsis" 
       [id]="cardData.id"
-      [matTooltip]="cardData.title"
+      [matTooltip]="cardData.titleTooltip"
       (mouseover) = "onMouseHover(cardData.id)"
       (focus) = "onMouseHover(cardData.id)"
       [matTooltipDisabled]="!cardData.verticalOutBound" >{{ cardData.title }}</span>

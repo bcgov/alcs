@@ -6,6 +6,7 @@ import { ApplicationPill } from '../application-type-pill/application-type-pill.
 export interface CardData {
   id: string;
   title: string;
+  titleTooltip: string;
   labels: ApplicationPill[];
   status: string;
   assignee?: AssigneeDto;
