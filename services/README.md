@@ -10,18 +10,26 @@ $ npm install
 
 ## Running the app
 
+{env} = alcs or portal
+
+### ALCS
+
 ```bash
 # development
-$ npm run start
+$ npm run {env}:start
+# example:
+# $ npm run alcs:start
 
 # watch mode
-$ npm run start:dev
+$ npm run {env}:start:dev
 
 # production mode
-$ npm run start:prod
+$ npm run {env}:start:prod
 ```
 
 ## Test
+
+Since alcs and portal share nest infrastructure the tests are executed for both with the same commands.
 
 Create test.json
 
