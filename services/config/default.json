@@ -20,7 +20,8 @@
     "KEYCLOAK": {
       "CLIENT_ID": "",
       "SECRET": ""
-    }
+    },
+    "ALCS_GRPC_URL": "localhost:50057"
   },
   "DATABASE": {
     "HOST": "db",
@@ -59,7 +60,7 @@
     "DEFAULT_ADMINS": [""]
   },
   "GRPC": {
-    "URL": "localhost:50057",
+    "BIND_URL": "localhost:50057",
     "CERT_FOLDER": "/opt/app-root/local-certificates",
     "ROOT_CERT": "CertAuth.crt",
     "CERT": "localhost.crt",
