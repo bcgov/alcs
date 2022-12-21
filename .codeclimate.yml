@@ -24,6 +24,7 @@ checks:
   return-statements:
     config:
       threshold: 4
+# https://docs.codeclimate.com/docs/duplication
 plugins:
   duplication:
     enabled: true
