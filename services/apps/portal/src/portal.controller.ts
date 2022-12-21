@@ -8,15 +8,15 @@ import { PortalService } from './portal.service';
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
 
-  @Get('/token')
-  @UseGuards(AuthGuard)
-  checkTokenValid() {
-    return 'Token Valid';
-  }
-
   @Get()
   @Public()
   async getHealthStatus(): Promise<HealthCheckDto> {
     return await this.portalService.getHealthStatus();
+  }
+
+  @Get('/token')
+  @UseGuards(AuthGuard)
+  checkTokenValid() {
+    return 'Token Valid';
   }
 }
