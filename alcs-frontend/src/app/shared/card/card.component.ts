@@ -34,6 +34,8 @@ export enum CardType {
   COV = 'COV',
 }
 
+const lineHeight = 24;
+
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
@@ -71,19 +73,11 @@ export class CardComponent implements OnInit {
     }
   }
 
-  isEllipsisActive(e: string): boolean {
-    const el = document.getElementById(e);
-    if (el && el.offsetWidth < el.scrollWidth) {
-      debugger;
-    }
-    return el ? el.offsetWidth < el.scrollWidth : false;
-  }
-
   onMouseHover(e: any) {
     const el = document.getElementById(e);
 
     if (el) {
-      this.cardData.verticalOutBound = el.offsetHeight - 24 > 0 ? true : false;
+      this.cardData.verticalOutBound = el.offsetHeight - lineHeight > 0;
     }
 
     return;
