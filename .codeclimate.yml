@@ -24,17 +24,14 @@ checks:
   return-statements:
     config:
       threshold: 4
-  identical-code:
-    enabled: false
-  similar-code:
-    enabled: false
 plugins:
   duplication:
     enabled: true
     config:
       languages:
         typescript:
-          mass_threshold: 20
+          patterns:
+            - "**/*.ts"
 exclude_patterns:
   - "bin/"
   - "**/node_modules/"
