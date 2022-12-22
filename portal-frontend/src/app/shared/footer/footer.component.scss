@@ -1,24 +1,41 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/typography.scss';
+@import '../../../styles/functions.scss';
 
 footer {
   @extend .body-text;
-  padding: 1.6rem 8rem;
-  display: flex;
   background-color: $accent-color;
   color: $white;
 
-  a {
-    color: #fff;
+  .trademark {
+    padding: rem(40) rem(24);
   }
-}
-
-.links {
-  display: flex;
-  flex-grow: 1;
-  margin-left: 6.4rem;
 
   a {
-    margin-right: 2.4rem !important;
+    color: $white;
+    display: block;
+    padding: rem(12) rem(12) rem(12) rem(24);
+  }
+
+  a:last-child {
+    padding-bottom: rem(40);
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding-left: rem(47);
+
+    div {
+      display: inline-block;
+    }
+    .trademark {
+      padding: rem(16) rem(80) rem(16) rem(32);
+    }
+
+    a,
+    a:last-child {
+      color: $white;
+      display: inline-block;
+      padding: rem(12) rem(32);
+    }
   }
 }
