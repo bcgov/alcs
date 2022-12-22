@@ -59,9 +59,10 @@ p,
 }
 
 @mixin button-text {
-  @include typography-style(rem(14), 400);
+  @include typography-style(rem(14), 700);
   text-transform: uppercase;
   letter-spacing: 0.01rem;
+  line-height: rem(16);
 }
 
 %button-text {
@@ -70,7 +71,6 @@ p,
 
 button {
   @extend .button-text;
-  // padding: rem(8) rem(16);
 }
 
 .subheading1 {

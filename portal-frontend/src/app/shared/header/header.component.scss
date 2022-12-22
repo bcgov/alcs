@@ -30,7 +30,12 @@ header {
     left: 50%;
     transform: translate(-50%, -50%);
     margin-left: rem(24);
-    line-height: 20vh;
+    line-height: rem(52);
+
+    h1 {
+      font-size: rem(38) !important;
+      margin-bottom: rem(80) !important;
+    }
   }
 
   @media screen and (min-width: $tabletBreakpoint) {
@@ -51,9 +56,18 @@ header {
       }
 
       .title,
-      .title h5,
-      .controls {
+      .title h5 {
         display: flex;
+      }
+
+      .controls {
+        button {
+          margin-bottom: rem(7) !important;
+          margin-left: rem(7) !important;
+          padding: rem(14) rem(27) rem(14) rem(27) !important;
+        }
+
+        display: inline-block;
       }
 
       .title {
@@ -63,7 +77,7 @@ header {
         }
 
         h5 {
-          margin-left: rem(28) !important;
+          margin-left: rem(18) !important;
         }
       }
     }
