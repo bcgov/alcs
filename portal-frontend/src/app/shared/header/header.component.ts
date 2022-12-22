@@ -10,6 +10,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
   isAuthenticated = false;
+  isMenuOpen = false;
 
   constructor(private authenticationService: AuthenticationService) {}
 
@@ -28,5 +29,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  onMenuToggle() {
+    this.isMenuOpen = !this.isMenuOpen;
+    const body = document.getElementById('appBody');
+    const footer = document.getElementById('appFooter');
+    const hidden = 'display-none';
+    body?.classList.toggle(hidden);
+    footer?.classList.toggle(hidden);
   }
 }

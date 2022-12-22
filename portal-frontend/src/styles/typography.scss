@@ -1,7 +1,12 @@
 @import '@bcgov/bc-sans/css/BCSans.css';
 @import './colors';
+@import './functions.scss';
 
 $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+
+$tabletBreakpoint: rem(481);
+$desktopBreakpoint: rem(769);
+$minWidth: rem(300);
 
 @mixin typography-style($size, $weight) {
   font-family: $font-family !important;
@@ -18,49 +23,124 @@ $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
   font-family: Material Icons Outlined !important;
 }
 
-//TODO: Change these to use relative sizes are part of WCAG
 h1 {
-  @include typography-style(3.8rem, 700);
+  @include typography-style(rem(31), 700);
 }
 
 h2 {
-  @include typography-style(3.2rem, 700);
+  @include typography-style(rem(26), 700);
 }
 
 h3 {
-  @include typography-style(2.8rem, 700);
+  @include typography-style(rem(22), 700);
 }
 
 h4 {
-  @include typography-style(2.4rem, 700);
+  @include typography-style(rem(18), 700);
 }
 
 h5 {
-  @include typography-style(2rem, 700);
+  @include typography-style(rem(15), 700);
 }
 
 h6 {
-  @include typography-style(1.8rem, 700);
+  @include typography-style(rem(13), 700);
 }
 
 a,
 p,
 .body-text {
-  @include typography-style(1.6rem, 400);
-  line-height: 2.4rem;
+  @include typography-style(rem(16), 400);
+  // line-height: 2.4rem;
 }
 
 .nav-text {
-  @include typography-style(1.8rem, 400);
+  @include typography-style(rem(18), 400);
 }
 
-.button-text {
-  @include typography-style(1.4rem, 400);
+@mixin foo {
+  // do stuff
+}
+
+%foo {
+  @include foo;
+}
+
+@mixin button-text {
+  @include typography-style(rem(14), 400);
   text-transform: uppercase;
   letter-spacing: 0.01rem;
 }
 
+%button-text {
+  @include button-text;
+}
+
 button {
   @extend .button-text;
-  padding: 0.8rem 1.6rem;
+  // padding: rem(8) rem(16);
+}
+
+.subheading1 {
+  @include typography-style(rem(18), 400);
+}
+
+.subheading2 {
+  @include typography-style(rem(14), 700);
+}
+
+@media screen and (min-width: $tabletBreakpoint) {
+  h1 {
+    @include typography-style(rem(37), 700);
+  }
+
+  h2 {
+    @include typography-style(rem(31), 700);
+  }
+
+  h3 {
+    @include typography-style(rem(26), 700);
+  }
+
+  h4 {
+    @include typography-style(rem(22), 700);
+  }
+
+  h5 {
+    @include typography-style(rem(18), 700);
+  }
+
+  h6 {
+    @include typography-style(rem(15), 700);
+  }
+
+  a,
+  p,
+  .body-text {
+    @include typography-style(rem(16), 400);
+    // line-height: 2.4rem;
+  }
+
+  .nav-text {
+    @include typography-style(rem(18), 400);
+  }
+
+  .button-text {
+    @include typography-style(rem(14), 400);
+    text-transform: uppercase;
+    letter-spacing: 0.01rem;
+  }
+
+  button {
+    @include button-text;
+    padding: rem(8) rem(16);
+  }
+
+  .subheading1 {
+    @include typography-style(rem(22), 400);
+  }
+
+  .subheading2 {
+    @include typography-style(rem(16), 700);
+  }
 }
