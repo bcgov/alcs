@@ -10,7 +10,7 @@
     </div>
 
     <div *ngIf="isAuthenticated" class='controls'>
-      <button *ngIf="isAuthenticated" class="inbox-btn" routerLink='/home' mat-flat-button color="accent">Portal
+      <button *ngIf="isAuthenticated" class="inbox-btn" routerLink='/home' mat-flat-button color="primary">Portal
         Inbox</button>
       <button *ngIf="isAuthenticated" class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log
         Out</button>
