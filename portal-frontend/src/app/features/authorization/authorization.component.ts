@@ -19,7 +19,7 @@ export class AuthorizationComponent implements OnInit {
       if (targetUrl) {
         window.location.href = targetUrl;
       } else {
-        await this.router.navigateByUrl('/home');
+        await this.router.navigateByUrl('/landing');
       }
     } else {
       console.error('Failed to receive tokens from redirect');

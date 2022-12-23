@@ -17,7 +17,7 @@
     </div>
 
     <div *ngIf="isAuthenticated && isMenuOpen" class="mobile-menu-wrapper">
-      <h1 routerLink='/home'>Portal Inbox</h1>
+      <h1 (click)="onMenuClicked('/home')">Portal Inbox</h1>
       <h1 (click)="onLogout()">Log Out</h1>
     </div>
 

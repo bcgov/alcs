@@ -6,6 +6,7 @@ $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
 
 $tabletBreakpoint: rem(481);
 $desktopBreakpoint: rem(769);
+$midBreakpoint: rem(669);
 $minWidth: rem(300);
 
 @mixin typography-style($size, $weight) {

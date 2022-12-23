@@ -15,6 +15,7 @@ import { CreateApplicationDialogComponent } from './features/create-application-
 import { EditApplicationComponent } from './features/edit-application/edit-application.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
+import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
@@ -37,6 +38,7 @@ import { SharedModule } from './shared/shared.module';
     DragDropDirective,
     ApplicationListComponent,
     CreateApplicationDialogComponent,
+    LandingPageComponent,
   ],
   imports: [
     BrowserModule,

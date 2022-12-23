@@ -12,10 +12,16 @@
 
 html,
 body {
-  height: 100%;
+  position: relative;
+  height: auto;
+  min-height: 100% !important;
   scroll-behavior: smooth;
-  overflow: hidden;
   margin: 0;
+
+  @media screen and (min-height: $midBreakpoint) and (min-width: rem(500)) {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 body {
