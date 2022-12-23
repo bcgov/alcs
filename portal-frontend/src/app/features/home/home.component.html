@@ -5,8 +5,8 @@
       Create and manage your Applications, Notice of Intent, and Notification of SRW.
     </p>
     <div class="learn-more-wrapper">
-      <div class="learn-more-ctr" color="accent" (click)="onLearnMoreClick()">LEARN
-        MORE<mat-icon>{{isLearnMoreOpen ? 'expand_less' : 'expand_more'}}</mat-icon></div>
+      <div class="learn-more-ctr" color="accent" (click)="onLearnMoreClick()">Learn
+        more<mat-icon>{{isLearnMoreOpen ? 'expand_less' : 'expand_more'}}</mat-icon></div>
       <div *ngIf="isLearnMoreOpen">
         <app-landing-page [isControlsVisible]="false"></app-landing-page>
       </div>

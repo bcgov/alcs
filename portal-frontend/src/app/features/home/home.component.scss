@@ -25,11 +25,17 @@
   margin-top: rem(24);
   margin-bottom: rem(24);
   .learn-more-ctr {
+    display: inline-block;
     margin-bottom: rem(24);
     color: $accent-color;
+    text-transform: uppercase;
 
     mat-icon {
       padding-top: rem(6);
     }
+  }
+
+  .learn-more-ctr:hover {
+    cursor: pointer;
   }
 }
