@@ -1,21 +1,35 @@
 @import '../../../styles/colors';
+@import '../../../styles/functions';
 
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+// .header-row {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// }
 
-.warning-banner {
-  background-color: rgba($secondary-color-light, 0.5);
-  padding: 1.6rem;
-  display: flex;
-  margin: 2.4rem 0;
+// .warning-banner {
+//   background-color: rgba($secondary-color-light, 0.5);
+//   padding: 1.6rem;
+//   display: flex;
+//   margin: 2.4rem 0;
 
-  .icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1.2rem;
+//   .icon {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     padding: 1.2rem;
+//   }
+// }
+
+.learn-more-wrapper {
+  margin-top: rem(24);
+  margin-bottom: rem(24);
+  .learn-more-ctr {
+    margin-bottom: rem(24);
+    color: $accent-color;
+
+    mat-icon {
+      padding-top: rem(6);
+    }
   }
 }
