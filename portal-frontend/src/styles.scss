@@ -42,3 +42,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.no-padding .mat-dialog-container {
+  padding: 0;
+}

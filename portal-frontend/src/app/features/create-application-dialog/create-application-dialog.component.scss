@@ -1,41 +1,40 @@
 @import '../../../styles/colors';
+@import '../../../styles/functions';
 
-.app-type-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1.2rem;
+.create-new-app-modal {
+  line-height: rem(24);
 
-  .mat-radio-button {
-    margin: 1.2rem 0;
+  #radio-label {
+    display: block;
+    line-height: rem(36);
   }
 
-  .mat-radio-label {
-    align-items: flex-start;
+  .dialog-content-wrapper {
+    margin: rem(16);
   }
-}
 
-.app-type-description {
-  margin: 0.8rem 0;
-  padding: 0.8rem;
-  background-color: rgba($secondary-color-light, 0.5);
-  border-radius: 0.4rem;
-  word-wrap: normal;
-  white-space: normal;
-  font-size: 1.2rem !important;
-  line-height: 2.4rem !important;
+  mat-radio-button {
+    display: block;
+    margin: rem(14);
 
-  a {
-    font-size: 1.2rem !important;
-    line-height: 2.4rem !important;
+    .mat-radio-label-content {
+      display: block;
+      white-space: normal;
+    }
   }
-}
 
-.create-dialog-buttons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2.4rem;
+  .warning-banner {
+    padding: 0 rem(16) 0 rem(16);
+    background-color: $accent-color-light;
+    margin-bottom: rem(16);
+  }
 
-  button {
-    margin-left: 1.2rem !important;
+  .dialog-controls-wrapper {
+    padding: 0 rem(16) rem(16) rem(16);
+
+    button {
+      width: rem(116);
+      margin-right: rem(10);
+    }
   }
 }

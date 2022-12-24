@@ -1,15 +1,45 @@
-<div>
-  <label id='radio-label'><h4>Select Application Type</h4></label>
-  <mat-radio-group class='app-type-radio-group' aria-labelledby='radio-label' [(ngModel)]='applicationType' required>
-    <mat-radio-button *ngFor='let appType of applicationTypes' [value]='appType.code'>
-      {{ appType.portalLabel }}
-      <div *ngIf='applicationType === appType.code' class='app-type-description'>
-        <span [innerHTML]='appType.htmlDescription'></span>
+<div class="create-new-app-modal">
+
+
+  <div class="dialog-content-wrapper">
+    <label id='radio-label'>
+      <h4>Create New</h4>
+    </label>
+
+    <div class="steps">
+      <div *ngIf="currentStepIndex===0" class="step-1">
+        <mat-radio-group>
+          <mat-radio-button *ngFor='let subType of submissionTypes' [value]='subType.code'>
+            {{ subType.label }}
+          </mat-radio-button>
+        </mat-radio-group>
       </div>
-    </mat-radio-button>
-  </mat-radio-group>
-  <div class='create-dialog-buttons'>
-    <button mat-stroked-button color='primary' (click)='onCancel()'>Cancel</button>
-    <button mat-flat-button color='primary' (click)='onSubmit()' [disabled]='!applicationType'>Create</button>
+      <div *ngIf="currentStepIndex===1" class="step-2">
+        <mat-radio-group class='app-type-radio-group' aria-labelledby='radio-label' [(ngModel)]='applicationType'
+          required>
+          <mat-radio-button *ngFor='let appType of applicationTypes' [value]='appType.code'>
+            {{ appType.portalLabel }}
+            <div *ngIf='applicationType === appType.code' class='app-type-description'>
+              <span [innerHTML]='appType.htmlDescription'></span>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-banner">
+    Select an option to learn more about the submission type.
+  </div>
+
+  <div class="dialog-controls-wrapper">
+    <div *ngIf="currentStepIndex===0">
+      <button mat-stroked-button color='primary' (click)='onCancel()'>Cancel</button>
+      <button mat-flat-button color='primary' (click)="onStepChange(1)">Next</button>
+    </div>
+    <div *ngIf="currentStepIndex===1">
+      <button mat-stroked-button color='primary' (click)="onStepChange(-1)">Back</button>
+      <button mat-flat-button color='primary' (click)="onSubmit()" [disabled]='!applicationType'>create</button>
+    </div>
   </div>
 </div>
