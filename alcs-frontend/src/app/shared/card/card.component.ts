@@ -6,6 +6,7 @@ import { ApplicationPill } from '../application-type-pill/application-type-pill.
 export interface CardData {
   id: string;
   title: string;
+  titleTooltip: string;
   labels: ApplicationPill[];
   status: string;
   assignee?: AssigneeDto;
@@ -17,6 +18,7 @@ export interface CardData {
   cardUuid: string;
   cardType: CardType;
   dateReceived: number;
+  verticalOutBound?: boolean;
 }
 
 export interface CardSelectedEvent {
@@ -31,6 +33,8 @@ export enum CardType {
   MODI = 'MODI',
   COV = 'COV',
 }
+
+const lineHeight = 24;
 
 @Component({
   selector: 'app-card',
@@ -67,5 +71,15 @@ export class CardComponent implements OnInit {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
     }
+  }
+
+  onMouseHover(e: any) {
+    const el = document.getElementById(e);
+
+    if (el) {
+      this.cardData.verticalOutBound = el.offsetHeight - lineHeight > 0;
+    }
+
+    return;
   }
 }

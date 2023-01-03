@@ -26,12 +26,12 @@ import {
 } from '../../shared/application-type-pill/application-type-pill.constants';
 import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
-import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
-import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
+import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
+import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
@@ -242,6 +242,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     return {
       status: application.card!.status.code,
       title: `${application.fileNumber} (${application.applicant})`,
+      titleTooltip: application.applicant,
       assignee: application.card!.assignee,
       id: application.fileNumber,
       labels: [application.type],
@@ -259,6 +260,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     return {
       status: recon.card.status.code,
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
+      titleTooltip: recon.application.applicant,
       assignee: recon.card.assignee,
       id: recon.card.uuid,
       labels: [recon.application.type, RECON_TYPE_LABEL],
@@ -275,6 +277,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     return {
       status: modification.card.status.code,
       title: `${modification.application.fileNumber} (${modification.application.applicant})`,
+      titleTooltip: modification.application.applicant,
       assignee: modification.card.assignee,
       id: modification.card.uuid,
       labels: [modification.application.type, MODIFICATION_TYPE_LABEL],
@@ -291,6 +294,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     return {
       status: meeting.card.status.code,
       title: `${meeting.fileNumber} (${meeting.type})`,
+      titleTooltip: meeting.type,
       assignee: meeting.card.assignee,
       id: meeting.card.uuid,
       labels: [PLANNING_TYPE_LABEL],
@@ -306,6 +310,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     return {
       status: covenant.card.status.code,
       title: `${covenant.fileNumber} (${covenant.applicant})`,
+      titleTooltip: covenant.applicant,
       assignee: covenant.card.assignee,
       id: covenant.card.uuid,
       labels: [COVENANT_TYPE_LABEL],

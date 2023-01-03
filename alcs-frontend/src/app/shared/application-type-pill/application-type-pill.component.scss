@@ -1,23 +1,28 @@
-.application-pill {
-  margin-left: 12px;
-  border-radius: 10px;
-  padding: 2px 12px;
-  font-size: 11px;
-  letter-spacing: 0.01em;
-  font-weight: 700;
-  border: 3px solid;
+.application-pill-wrapper {
+  display: inline-block;
 
-  &.short-label {
-    margin-left: 0;
-    margin-right: 8px;
-    width: -moz-fit-content;
-    width: fit-content;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    font-weight: normal;
-    padding: 8px;
-    height: 24px;
-    letter-spacing: .03em;
+  .application-pill {
+    margin-right: 12px;
+    border-radius: 10px;
+    padding: 2px 12px;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+    font-weight: 700;
+    border: 3px solid;
+    position: relative;
+
+    &.short-label {
+      margin-left: 0;
+      margin-right: 8px;
+      width: -moz-fit-content;
+      width: fit-content;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      font-weight: normal;
+      padding: 8px;
+      height: 24px;
+      letter-spacing: 0.03em;
+    }
   }
 }
