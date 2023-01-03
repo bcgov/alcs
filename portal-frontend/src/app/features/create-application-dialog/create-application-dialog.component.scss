@@ -3,6 +3,7 @@
 
 .create-new-app-modal {
   line-height: rem(24);
+  max-height: rem(650);
 
   #radio-label {
     display: block;
@@ -24,9 +25,18 @@
   }
 
   .warning-banner {
-    padding: 0 rem(16) 0 rem(16);
-    background-color: $accent-color-light;
+    padding: rem(16);
+    background-color: rgba($accent-color-light, 0.5);
     margin-bottom: rem(16);
+
+    .read-more-btn {
+      padding-top: rem(8);
+
+      cursor: pointer;
+      display: flex;
+      justify-content: end;
+      color: $accent-color-dark;
+    }
   }
 
   .dialog-controls-wrapper {

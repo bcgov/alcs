@@ -1,27 +1,26 @@
 <div class="create-new-app-modal">
-
-
   <div class="dialog-content-wrapper">
-    <label id='radio-label'>
+    <label id="radio-label">
       <h4>Create New</h4>
     </label>
 
     <div class="steps">
-      <div *ngIf="currentStepIndex===0" class="step-1">
-        <mat-radio-group>
-          <mat-radio-button *ngFor='let subType of submissionTypes' [value]='subType.code'>
+      <div [ngClass]="{ 'step-submission-type': true, 'display-none': currentStepIndex !== 0 }">
+        <mat-radio-group (change)="onSubmissionTypeSelected($event)">
+          <mat-radio-button *ngFor="let subType of submissionTypes" [value]="subType.code" required>
             {{ subType.label }}
           </mat-radio-button>
         </mat-radio-group>
       </div>
-      <div *ngIf="currentStepIndex===1" class="step-2">
-        <mat-radio-group class='app-type-radio-group' aria-labelledby='radio-label' [(ngModel)]='applicationType'
-          required>
-          <mat-radio-button *ngFor='let appType of applicationTypes' [value]='appType.code'>
+      <div [ngClass]="{ 'step-application-type': true, 'display-none': currentStepIndex !== 1 }">
+        <mat-radio-group
+          class="app-type-radio-group"
+          aria-labelledby="radio-label"
+          (change)="onAppTypeSelected($event)"
+          required
+        >
+          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
             {{ appType.portalLabel }}
-            <div *ngIf='applicationType === appType.code' class='app-type-description'>
-              <span [innerHTML]='appType.htmlDescription'></span>
-            </div>
           </mat-radio-button>
         </mat-radio-group>
       </div>
@@ -29,17 +28,52 @@
   </div>
 
   <div class="warning-banner">
-    Select an option to learn more about the submission type.
+    <span
+      *ngIf="
+        (!selectedSubmissionType && currentStepIndex === submissionStep) ||
+        (!selectedAppType && currentStepIndex === applicationStep)
+      "
+      >Select an option to learn more about the
+      {{ currentStepIndex === 0 ? 'submission type' : 'application type' }}.</span
+    >
+    <div
+      *ngIf="currentStepIndex === submissionStep"
+      [ngClass]="{ 'ellipsis-3': !expendDescription }"
+      [innerHtml]="selectedSubmissionType?.description"
+    ></div>
+    <div
+      *ngIf="currentStepIndex === applicationStep"
+      [ngClass]="{ 'ellipsis-3': !expendDescription }"
+      [innerHtml]="selectedAppType?.htmlDescription"
+    ></div>
+    <span
+      class="read-more-btn"
+      *ngIf="
+        (selectedSubmissionType && currentStepIndex === submissionStep) ||
+        (selectedAppType && currentStepIndex === applicationStep)
+      "
+      (click)="onReadMoreClicked()"
+      ><u>Read More</u></span
+    >
   </div>
 
   <div class="dialog-controls-wrapper">
-    <div *ngIf="currentStepIndex===0">
-      <button mat-stroked-button color='primary' (click)='onCancel()'>Cancel</button>
-      <button mat-flat-button color='primary' (click)="onStepChange(1)">Next</button>
+    <div *ngIf="currentStepIndex === submissionStep">
+      <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+      <button [disabled]="!selectedSubmissionType" mat-flat-button color="primary" (click)="onStepChange(1)">
+        Next
+      </button>
     </div>
-    <div *ngIf="currentStepIndex===1">
-      <button mat-stroked-button color='primary' (click)="onStepChange(-1)">Back</button>
-      <button mat-flat-button color='primary' (click)="onSubmit()" [disabled]='!applicationType'>create</button>
+    <div *ngIf="currentStepIndex === applicationStep">
+      <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="!selectedAppType || !selectedSubmissionType"
+      >
+        create
+      </button>
     </div>
   </div>
 </div>
