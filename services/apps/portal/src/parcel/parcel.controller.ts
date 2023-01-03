@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
-import { ParcelLookupDto } from './parcel.dto';
+import { ParcelLookupDto, SearchParcelDto } from './parcel.dto';
 import { ParcelService } from './parcel.service';
 
 @Controller('parcel')
@@ -15,17 +15,11 @@ import { ParcelService } from './parcel.service';
 export class ParcelController {
   constructor(private parcelService: ParcelService) {}
 
-  @Get('search/:number')
+  @Get('search/:pid')
   async searchByPidPin(
-    @Param('number') number: string,
+    @Param() params: SearchParcelDto,
   ): Promise<ParcelLookupDto | undefined> {
-    const parsedNum = Number.parseInt(number);
-    if (parsedNum === 0 || isNaN(parsedNum)) {
-      throw new BadRequestException(
-        'Please pass a valid number to search by PID/PIN',
-      );
-    }
-    const lookupResult = await this.parcelService.fetchByPidPin(number);
+    const lookupResult = await this.parcelService.fetchByPidPin(params.pid);
     if (lookupResult) {
       return {
         pin: lookupResult.pin !== '0' ? lookupResult.pin : undefined,
