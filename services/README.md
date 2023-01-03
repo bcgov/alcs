@@ -10,18 +10,26 @@ $ npm install
 
 ## Running the app
 
+{env} = alcs or portal
+
+### ALCS
+
 ```bash
 # development
-$ npm run start
+$ npm run {env}:start
+# example:
+# $ npm run alcs:start
 
 # watch mode
-$ npm run start:dev
+$ npm run {env}:start:dev
 
 # production mode
-$ npm run start:prod
+$ npm run {env}:start:prod
 ```
 
 ## Test
+
+Since alcs and portal share nest infrastructure the tests are executed for both with the same commands.
 
 Create test.json
 
@@ -38,20 +46,32 @@ $ npm run test:cov
 
 ## TypeOrm
 
+Typeorm commands are specific by application.
+
+### ALCS:
+
 ```bash
 # create empty migration file:
-  npm run migration:create --name=<file_name>
-
+  npm run alcs:migration:create --name=<file_name>
 # generate migrations:
-  npm run migration:generate --name=<file_name>
-#  or
-  npm run typeorm -- migration:generate ./src/providers/typeorm/migrations/<file_name>
-
+  npm run alcs:migration:generate --name=<file_name>
 # apply migration:
-  npm run typeorm migration:run
+  npm run alcs:migration:run
+# revert migration
+  npm run alcs:typeorm migration:revert
+```
 
-# revert migration:
-  npm run typeorm migration:revert
+### Portal
+
+```bash
+# create empty migration file:
+  npm run portal:migration:create --name=<file_name>
+# generate migrations:
+  npm run portal:migration:generate --name=<file_name>
+# apply migration:
+  npm run portal:migration:run
+# revert migration
+  npm run portal:typeorm migration:revert
 ```
 
 ## Postgres tests
@@ -88,5 +108,3 @@ Server communication between ALCS server and Portal server is performed using [g
 ALCS and Portal support mutual TLS to ensure secure communication. TLS also enabled for local environment using the self-signed certificates included in the source code. If you need to generate new set of certificates or learn more about the process refer to [certstrap](https://github.com/square/certstrap)
 
 TS implementation of \*.proto files can be provided manually or generated using [ts-proto](https://github.com/stephenh/ts-proto/blob/main/NESTJS.markdown) tool
-
-TODO: provide more detailed instruction on initial setup
