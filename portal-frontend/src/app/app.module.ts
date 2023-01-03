@@ -3,24 +3,27 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
+import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
+import { EditApplicationComponent } from './features/edit-application/edit-application.component';
+import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
+import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
 import { DragDropDirective } from './shared/file-drag-drop/drag-drop.directive';
+import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
-import { EditApplicationComponent } from './features/edit-application/edit-application.component';
-import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.component';
-import { ApplicationListComponent } from './features/home/application-list/application-list.component';
-import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import { CreateApplicationDialogComponent } from './features/create-application-
     DragDropDirective,
     ApplicationListComponent,
     CreateApplicationDialogComponent,
+    LandingPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +50,8 @@ import { CreateApplicationDialogComponent } from './features/create-application-
     MatPaginatorModule,
     SharedModule,
     MatRadioModule,
+    MatSidenavModule,
+    MatToolbarModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },

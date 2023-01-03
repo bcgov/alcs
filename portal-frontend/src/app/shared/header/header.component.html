@@ -1,14 +1,25 @@
 <header>
-  <div>
-    <div>
-      <img src="assets/logo.png" alt="ALC Portal" />
-    </div>
+  <div class="title-wrapper">
+
     <div class="title">
-      <h5>Application Portal</h5>
+      <img class="logo" src="assets/logo.png" alt="ALC Portal" />
+      <h5 class="center">Provincial Agricultural Land Commission Portal</h5>
+      <div *ngIf="isAuthenticated" class="burger-menu">
+        <mat-icon (click)="onMenuToggle()">{{isMenuOpen? "close":"menu"}}</mat-icon>
+      </div>
     </div>
-  </div>
-  <div class='controls'>
-    <button *ngIf="isAuthenticated" routerLink='/home' mat-flat-button color="accent">Portal Inbox</button>
-    <button *ngIf="isAuthenticated" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
+
+    <div *ngIf="isAuthenticated" class='controls'>
+      <button *ngIf="isAuthenticated" class="inbox-btn" routerLink='/home' mat-flat-button color="primary">Portal
+        Inbox</button>
+      <button *ngIf="isAuthenticated" class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log
+        Out</button>
+    </div>
+
+    <div *ngIf="isAuthenticated && isMenuOpen" class="mobile-menu-wrapper">
+      <h1 (click)="onMenuClicked('/home')">Portal Inbox</h1>
+      <h1 (click)="onLogout()">Log Out</h1>
+    </div>
+
   </div>
 </header>

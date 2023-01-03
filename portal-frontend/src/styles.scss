@@ -12,22 +12,33 @@
 
 html,
 body {
-  height: 100%;
+  position: relative;
+  height: auto;
+  min-height: 100% !important;
   scroll-behavior: smooth;
-  overflow: hidden;
   margin: 0;
 
-}
-
-html {
-  font-size: 62.5% //Set here to 10px, so that 1rem = 10px
+  @media screen and (min-height: $midBreakpoint) and (min-width: rem(500)) {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 body {
-  font-size: 1.6rem;
+  font-size: rem(16);
 }
 
 * {
   box-sizing: border-box;
 }
 
+.display-none {
+  display: none;
+}
+
+.center {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}

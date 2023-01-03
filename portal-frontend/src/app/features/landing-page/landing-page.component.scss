@@ -1,0 +1,29 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/functions.scss';
+
+.color-accent-dark {
+  color: $accent-color-dark;
+}
+
+ul {
+  list-style-position: outside;
+
+  li {
+    position: relative;
+    list-style-type: none;
+  }
+
+  li:before {
+    content: 'arrow_right_alt';
+    font-size: rem(24);
+    font-family: 'Material Icons';
+    position: absolute;
+    left: rem(-36);
+    color: $accent-color;
+  }
+}
+
+.inbox-btn-wrapper {
+  margin-top: rem(40);
+  margin-bottom: rem(40);
+}

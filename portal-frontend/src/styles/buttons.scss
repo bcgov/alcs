@@ -1,7 +1,12 @@
 @import 'colors';
 
-.mat-flat-button, .mat-stroked-button {
+.mat-flat-button,
+.mat-stroked-button {
   font-weight: 700 !important;
+}
+
+.mat-stroked-button {
+  border: rem(2) solid $primary-color !important;
 }
 
 .mat-flat-button.mat-primary {
@@ -76,7 +81,6 @@
     }
   }
 }
-
 
 .mat-stroked-button.mat-accent {
   &:not(.mat-button-disabled) {

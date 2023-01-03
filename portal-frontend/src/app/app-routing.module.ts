@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { EditApplicationComponent } from './features/edit-application/edit-application.component';
 import { HomeComponent } from './features/home/home.component';
+import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 
@@ -20,6 +21,12 @@ const routes: Routes = [
     title: 'Home',
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    title: 'Landing page',
+    path: 'landing',
+    component: LandingPageComponent,
     canActivate: [AuthGuard],
   },
   {

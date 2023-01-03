@@ -1,25 +1,86 @@
-@import "../../../styles/colors";
+@import '../../../styles/functions.scss';
+@import '../../../styles/typography.scss';
 
 header {
-  display: flex;
-  align-content: center;
-  margin: 1.8rem 8rem;
-  justify-content: space-between;
+  .title-wrapper {
+    margin: rem(8) rem(24);
 
-  div {
-    display: flex;
+    .title {
+      .logo {
+        width: rem(49);
+        height: rem(32);
+      }
+      h5 {
+        display: none;
+      }
+      .burger-menu {
+        float: right;
+      }
+    }
+
+    .controls {
+      display: none;
+    }
   }
-}
 
-.title {
-  color: $primary-color;
-  align-items: center;
-  margin-left: 1.6rem;
-}
+  .mobile-menu-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    margin-left: rem(24);
+    line-height: rem(50);
 
-.controls {
-  button:not(:last-child) {
-    margin-right: 3.2rem !important;
-    height: 4.3rem;
+    h1 {
+      font-size: rem(38) !important;
+      margin-bottom: rem(80) !important;
+    }
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    margin: rem(18) rem(80) !important;
+    justify-content: space-between;
+
+    .burger-menu {
+      display: none;
+    }
+
+    .title-wrapper {
+      display: flex;
+      margin: 0;
+      justify-content: space-between;
+
+      button:not(:last-child) {
+        margin-right: rem(28) !important;
+      }
+
+      .title,
+      .title h5 {
+        display: flex;
+        margin-bottom: rem(5) !important;
+      }
+
+      .controls {
+        button {
+          margin-bottom: rem(7) !important;
+          margin-left: rem(7) !important;
+          padding: rem(14) rem(27) rem(14) rem(27) !important;
+        }
+
+        display: inline-block;
+      }
+
+      .title {
+        .logo {
+          width: rem(69);
+          height: rem(45);
+        }
+
+        h5 {
+          margin-left: rem(18) !important;
+        }
+      }
+    }
   }
 }

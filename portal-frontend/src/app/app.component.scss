@@ -1,3 +1,6 @@
+@import '../styles/functions.scss';
+@import '../styles/typography.scss';
+
 :host {
   width: 100%;
   height: 100%;
@@ -15,6 +18,11 @@
   div.main-content {
     flex-grow: 1;
     overflow: auto;
-    margin: 3.2rem 8rem;
+    margin: rem(8) rem(24);
+
+    // TODO: this is just a placeholder and will be addressed later
+    @media screen and (min-width: $tabletBreakpoint) {
+      margin: rem(18) rem(80) !important;
+    }
   }
 }
