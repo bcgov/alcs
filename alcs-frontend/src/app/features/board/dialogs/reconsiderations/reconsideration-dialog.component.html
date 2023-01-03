@@ -6,8 +6,8 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <h3 class="card-title center">
-        {{ recon.application.fileNumber }} ({{ recon.application.applicant }})
+      <h3 class="card-title">
+        <span class="margin-right">{{ recon.application.fileNumber }} ({{ recon.application.applicant }})</span>
         <app-application-type-pill [type]="recon.application.type"></app-application-type-pill>
         <app-application-type-pill [type]="reconType"></app-application-type-pill>
       </h3>
