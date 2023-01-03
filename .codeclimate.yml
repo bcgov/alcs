@@ -1,4 +1,4 @@
-version: "2"         # required to adjust maintainability checks
+version: "2" # required to adjust maintainability checks
 checks:
   argument-count:
     config:
@@ -24,12 +24,17 @@ checks:
   return-statements:
     config:
       threshold: 4
-  identical-code:
+# https://docs.codeclimate.com/docs/duplication
+plugins:
+  duplication:
+    enabled: true
     config:
-      threshold: 120
-  similar-code:
-    config:
-      threshold: 100
+      count_threshold: 3
+      languages:
+        typescript:
+          mass_threshold: 80
+          patterns:
+            - "**/*.ts"
 exclude_patterns:
   - "bin/"
   - "**/node_modules/"

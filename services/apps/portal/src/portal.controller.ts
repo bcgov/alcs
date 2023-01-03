@@ -1,8 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { AuthGuard } from './common/authorization/auth-guard.service';
-import { PortalService } from './portal.service';
-import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 import { Public } from 'nest-keycloak-connect';
+import { AuthGuard } from './common/authorization/auth-guard.service';
+import { HealthCheckDto } from './healthcheck/healthcheck.dto';
+import { PortalService } from './portal.service';
 
 @Controller()
 export class PortalController {
