@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastService } from '../../services/toast/toast.service';
-import { AssigneeDto, UserDto } from '../../services/user/user.dto';
+import { AssigneeDto } from '../../services/user/user.dto';
 import { CardData, CardType } from '../card/card.component';
 
 import { DragDropBoardComponent } from './drag-drop-board.component';
@@ -18,6 +18,7 @@ describe('DragDropBoardComponent', () => {
       initials: 'initials',
     } as AssigneeDto,
     title: 'Im Title',
+    titleTooltip: 'tooltip',
     activeDays: 2,
     paused: false,
     highPriority: true,
