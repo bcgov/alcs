@@ -3,3 +3,4 @@ user
 application
 application_document
 migrations
+parcel_lookup
