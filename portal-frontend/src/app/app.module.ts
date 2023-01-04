@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
 import { EditApplicationComponent } from './features/edit-application/edit-application.component';
+import { ParcelEntryComponent } from './features/edit-application/parcel-entry/parcel-entry.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
@@ -39,6 +40,7 @@ import { SharedModule } from './shared/shared.module';
     ApplicationListComponent,
     CreateApplicationDialogComponent,
     LandingPageComponent,
+    ParcelEntryComponent,
   ],
   imports: [
     BrowserModule,
