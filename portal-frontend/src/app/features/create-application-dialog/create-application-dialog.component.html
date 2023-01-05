@@ -6,7 +6,7 @@
 
     <div class="steps">
       <div [ngClass]="{ 'step-submission-type': true, 'display-none': currentStepIndex !== 0 }">
-        <mat-radio-group (change)="onSubmissionTypeSelected($event)">
+        <mat-radio-group (change)="onSubmissionTypeSelected($event)" color="primary">
           <mat-radio-button *ngFor="let subType of submissionTypes" [value]="subType.code" required>
             {{ subType.label }}
           </mat-radio-button>
@@ -17,6 +17,7 @@
           class="app-type-radio-group"
           aria-labelledby="radio-label"
           (change)="onAppTypeSelected($event)"
+          color="primary"
           required
         >
           <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
@@ -71,28 +72,19 @@
     >
   </div>
 
-  <div class="dialog-controls-wrapper">
-    <button class="stroked" color="primary">Cancel</button>
-    <button color="primary">Next</button>
+  <div class="dialog-controls-wrapper" *ngIf="currentStepIndex === submissionStep">
+    <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button [disabled]="!selectedSubmissionType" color="primary" (click)="onStepChange(1)">Next</button>
   </div>
-
-  <div class="dialog-controls-wrapper">
-    <div *ngIf="currentStepIndex === submissionStep">
-      <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
-      <button [disabled]="!selectedSubmissionType" mat-flat-button color="primary" (click)="onStepChange(1)">
-        Next
-      </button>
-    </div>
-    <div *ngIf="currentStepIndex === applicationStep">
-      <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="onSubmit()"
-        [disabled]="!selectedAppType || !selectedSubmissionType"
-      >
-        create
-      </button>
-    </div>
+  <div class="dialog-controls-wrapper" *ngIf="currentStepIndex === applicationStep">
+    <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!selectedAppType || !selectedSubmissionType"
+    >
+      create
+    </button>
   </div>
 </div>

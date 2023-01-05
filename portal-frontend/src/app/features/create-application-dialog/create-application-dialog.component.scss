@@ -13,6 +13,7 @@
   #radio-label {
     display: block;
     line-height: rem(36);
+    margin-bottom: 24px;
   }
 
   .dialog-content-wrapper {
@@ -21,7 +22,7 @@
 
   mat-radio-button {
     display: block;
-    margin: rem(14);
+    margin: rem(16);
     margin-left: 0;
 
     .mat-radio-label-content {
@@ -54,10 +55,9 @@
     display: flex;
     justify-content: space-between;
 
-    // button {
-    //   width: rem(116);
-    //   // margin-right: 0;
-    // }
+    button {
+      width: rem(116);
+    }
   }
 
   .sub-type-label,
@@ -69,15 +69,27 @@
     .sub-type-label,
     .app-type-label {
       display: block;
+      margin-bottom: 0.5rem;
     }
 
-    .warning-banner .ellipsis-3 {
-      display: block;
+    .warning-banner {
+      padding: 2rem 3rem;
+
+      .ellipsis-3 {
+        display: block;
+      }
     }
 
-    // button {
-    //   width: rem(116);
-    //   // margin-right: rem(10) !important;
-    // }
+    .dialog-content-wrapper {
+      margin: 2rem 3rem;
+    }
+
+    .dialog-controls-wrapper {
+      justify-content: flex-end;
+
+      button {
+        margin-left: 1rem !important;
+      }
+    }
   }
 }
