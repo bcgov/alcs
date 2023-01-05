@@ -27,27 +27,41 @@
     </div>
   </div>
 
-  <div class="warning-banner">
-    <span
-      *ngIf="
-        (!selectedSubmissionType && currentStepIndex === submissionStep) ||
-        (!selectedAppType && currentStepIndex === applicationStep)
-      "
-      >Select an option to learn more about the
-      {{ currentStepIndex === 0 ? 'submission type' : 'application type' }}.</span
-    >
+  <div id="warningBanner" class="warning-banner">
+    <div>
+      <span
+        *ngIf="
+          (!selectedSubmissionType && currentStepIndex === submissionStep) ||
+          (!selectedAppType && currentStepIndex === applicationStep)
+        "
+        >Select an option to learn more about the
+        {{ currentStepIndex === 0 ? 'submission type' : 'application type' }}.</span
+      >
+      <b class="sub-type-label" [ngClass]="{ 'display-none': currentStepIndex !== submissionStep }">{{
+        selectedSubmissionType?.label
+      }}</b>
+
+      <div
+        id="subTypeDescription"
+        *ngIf="currentStepIndex === submissionStep"
+        [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+        [innerHtml]="selectedSubmissionType?.htmlDescription"
+      ></div>
+    </div>
+    <div>
+      <b class="app-type-label" [ngClass]="{ 'display-none': currentStepIndex !== applicationStep }">{{
+        selectedAppType?.portalLabel
+      }}</b>
+    </div>
     <div
-      *ngIf="currentStepIndex === submissionStep"
-      [ngClass]="{ 'ellipsis-3': !expendDescription }"
-      [innerHtml]="selectedSubmissionType?.description"
-    ></div>
-    <div
+      id="appTypeDescription"
       *ngIf="currentStepIndex === applicationStep"
-      [ngClass]="{ 'ellipsis-3': !expendDescription }"
+      [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
       [innerHtml]="selectedAppType?.htmlDescription"
     ></div>
     <span
       class="read-more-btn"
+      [ngClass]="{ 'display-none': !isReadMoreVisible() }"
       *ngIf="
         (selectedSubmissionType && currentStepIndex === submissionStep) ||
         (selectedAppType && currentStepIndex === applicationStep)
@@ -58,22 +72,29 @@
   </div>
 
   <div class="dialog-controls-wrapper">
-    <div *ngIf="currentStepIndex === submissionStep">
-      <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
-      <button [disabled]="!selectedSubmissionType" mat-flat-button color="primary" (click)="onStepChange(1)">
-        Next
-      </button>
-    </div>
-    <div *ngIf="currentStepIndex === applicationStep">
-      <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="onSubmit()"
-        [disabled]="!selectedAppType || !selectedSubmissionType"
-      >
-        create
-      </button>
+    <button class="stroked" color="primary">Cancel</button>
+    <button color="primary">Next</button>
+  </div>
+
+  <div class="dialog-controls-wrapper">
+    <div>
+      <div *ngIf="currentStepIndex === submissionStep">
+        <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+        <button [disabled]="!selectedSubmissionType" mat-flat-button color="primary" (click)="onStepChange(1)">
+          Next
+        </button>
+      </div>
+      <div *ngIf="currentStepIndex === applicationStep">
+        <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="!selectedAppType || !selectedSubmissionType"
+        >
+          create
+        </button>
+      </div>
     </div>
   </div>
 </div>

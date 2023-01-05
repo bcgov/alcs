@@ -1,3 +1,4 @@
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
@@ -27,15 +28,23 @@ export class CreateApplicationDialogComponent implements OnInit {
   selectedSubmissionType: SubmissionTypeDto | undefined = undefined;
   submissionTypes: SubmissionTypeDto[] = [];
 
-  expendDescription: boolean = false;
+  readMoreClicked: boolean = false;
+  readMoreVisible: boolean = true;
   currentStepIndex: number = 0;
 
   constructor(
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private codeService: CodeService,
     private applicationService: ApplicationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
+  ) {
+    this.breakpointObserver.observe(['(max-width: 768px)']).subscribe((result: BreakpointState) => {
+      if (result.matches) {
+      } else {
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.loadCodes();
@@ -48,8 +57,9 @@ export class CreateApplicationDialogComponent implements OnInit {
     this.submissionTypes = [
       {
         code: 'APP',
+        description: '',
         label: 'Application',
-        description: `Create an <a target="_blank"
+        htmlDescription: `Create an <a target="_blank"
       href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/">Application</a> if you are
   proposing to exclude, include, subdivide, conduct a non-farm use activity, conduct a non-adhering residential
   use, conduct a transportation/utility/recreational trail use, or conduct a soil or fill use. Non-adhering
@@ -60,15 +70,17 @@ export class CreateApplicationDialogComponent implements OnInit {
       {
         code: 'NOI',
         label: 'Notice of Intent',
-        description: `Create a <a target="_blank"
+        description: '',
+        htmlDescription: `Create a <a target="_blank"
       href="https://www.alc.gov.bc.ca/application-and-notice-process/soil-and-fill-notice-of-intent/">Notice of
       Intent</a> if you are proposing to remove soil and/or place fill that does not qualify for exemption under
   Section 35 of the <i>Agricultural Land Reserve Use Regulation</i>. All notices are subject to a $150 fee.`,
       },
       {
         code: 'SRW',
+        description: '',
         label: 'Notification of Statutory Right of Way (SRW)',
-        description: `Create a <a target="_blank" href="https://www.alc.gov.bc.ca/application-and-notice-process/statutory-right-of-way-notice/">
+        htmlDescription: `Create a <a target="_blank" href="https://www.alc.gov.bc.ca/application-and-notice-process/statutory-right-of-way-notice/">
       Notification of Statutory Right of Way (SRW)</a> if you are notifying the ALC that you are planning to
   register a SRW under section 218 of the <i>Land Title Act</i> in accordance with section 18.1 (2) of the <i>Agricultural
   Land Commission Act</i>.`,
@@ -90,20 +102,36 @@ export class CreateApplicationDialogComponent implements OnInit {
 
   onStepChange(idx: number) {
     this.currentStepIndex += idx;
-    this.expendDescription = false;
+    this.readMoreClicked = false;
   }
 
   onSubmissionTypeSelected(event: MatRadioChange) {
     this.selectedSubmissionType = this.submissionTypes.find((e) => e.code === event.value);
-    this.expendDescription = false;
+    this.readMoreClicked = false;
   }
 
   onReadMoreClicked() {
-    this.expendDescription = !this.expendDescription;
+    this.readMoreClicked = !this.readMoreClicked;
   }
 
   onAppTypeSelected(event: MatRadioChange) {
     this.selectedAppType = this.applicationTypes.find((e) => e.code === event.value);
-    this.expendDescription = false;
+    this.readMoreClicked = false;
+  }
+
+  isEllipsisActive(e: string): boolean {
+    const el = document.getElementById(e);
+    return el ? el.clientHeight < el.scrollHeight : false;
+  }
+
+  isReadMoreVisible(): boolean {
+    switch (this.currentStepIndex) {
+      case this.applicationStep:
+        return this.readMoreClicked || this.isEllipsisActive('appTypeDescription');
+      case this.submissionStep:
+        return this.readMoreClicked || this.isEllipsisActive('subTypeDescription');
+      default:
+        return true;
+    }
   }
 }

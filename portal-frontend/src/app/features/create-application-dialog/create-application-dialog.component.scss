@@ -1,5 +1,10 @@
 @import '../../../styles/colors';
+@import '../../../styles/typography';
 @import '../../../styles/functions';
+
+.mat-dialog-container {
+  height: auto;
+}
 
 .create-new-app-modal {
   line-height: rem(24);
@@ -17,6 +22,7 @@
   mat-radio-button {
     display: block;
     margin: rem(14);
+    margin-left: 0;
 
     .mat-radio-label-content {
       display: block;
@@ -37,14 +43,41 @@
       justify-content: end;
       color: $accent-color-dark;
     }
+
+    .display-none {
+      display: none !important;
+    }
   }
 
   .dialog-controls-wrapper {
     padding: 0 rem(16) rem(16) rem(16);
+    display: flex;
+    justify-content: space-between;
 
-    button {
-      width: rem(116);
-      margin-right: rem(10);
+    // button {
+    //   width: rem(116);
+    //   // margin-right: 0;
+    // }
+  }
+
+  .sub-type-label,
+  .app-type-label {
+    display: none;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .sub-type-label,
+    .app-type-label {
+      display: block;
     }
+
+    .warning-banner .ellipsis-3 {
+      display: block;
+    }
+
+    // button {
+    //   width: rem(116);
+    //   // margin-right: rem(10) !important;
+    // }
   }
 }
