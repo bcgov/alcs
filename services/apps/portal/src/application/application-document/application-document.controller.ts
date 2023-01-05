@@ -96,19 +96,7 @@ export class ApplicationDocumentController {
   @Get('/:uuid/open')
   async open(@Param('uuid') fileUuid: string) {
     const document = await this.applicationDocumentService.get(fileUuid);
-    const url = await this.applicationDocumentService.getInlineUrl(document);
-    return {
-      url,
-    };
-  }
-
-  @Get('/:uuid/download')
-  async download(@Param('uuid') fileUuid: string) {
-    const document = await this.applicationDocumentService.get(fileUuid);
-    const url = await this.applicationDocumentService.getDownloadUrl(document);
-    return {
-      url,
-    };
+    return await this.applicationDocumentService.getInlineUrl(document);
   }
 
   @Delete('/:uuid')
@@ -131,6 +119,8 @@ export class ApplicationDocumentController {
     );
 
     const savedDocument = await this.applicationDocumentService.createRecord(
+      data.fileName,
+      data.fileSize,
       fileNumber,
       alcsDocument.alcsDocumentUuid,
       data.documentType as DOCUMENT_TYPE,

@@ -20,8 +20,12 @@
     overflow: auto;
     margin: rem(8) rem(24);
 
-    // TODO: this is just a placeholder and will be addressed later
     @media screen and (min-width: $tabletBreakpoint) {
+      margin: rem(12) rem(36) !important;
+    }
+
+    // TODO: this is just a placeholder and will be addressed later
+    @media screen and (min-width: $desktopBreakpoint) {
       margin: rem(18) rem(80) !important;
     }
   }

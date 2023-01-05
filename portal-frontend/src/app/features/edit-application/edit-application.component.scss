@@ -1,15 +1,22 @@
+@import '../../../styles/typography';
+
 .header {
   margin: 2em 0;
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 3em;
+  grid-template-columns: 1fr;
+  grid-column-gap: 4%;
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    & {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
 }
 
 .full-width-input {
-  margin-top: 0.5em;
   width: 100%;
 }
 
@@ -21,4 +28,32 @@
   margin-top: 3em;
   display: flex;
   justify-content: space-between;
+}
+
+:host::ng-deep {
+  .mat-horizontal-content-container {
+    padding: 0;
+  }
+
+  .mat-step-header .mat-step-icon-selected {
+    color: #fff;
+  }
+
+  .mat-step-header .mat-step-label.mat-step-label-active {
+    display: none;
+  }
+
+  .mat-step-label {
+    display: none;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .mat-step-header .mat-step-label.mat-step-label-active {
+      display: inherit;
+    }
+
+    .mat-step-label {
+      display: inherit;
+    }
+  }
 }

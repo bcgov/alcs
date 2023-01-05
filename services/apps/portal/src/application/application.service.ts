@@ -155,6 +155,9 @@ export class ApplicationService {
           uuid: user.uuid,
         },
       },
+      relations: {
+        documents: true,
+      },
     });
   }
 

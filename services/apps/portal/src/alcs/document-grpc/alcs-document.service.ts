@@ -5,6 +5,9 @@ import {
   ALCS_DOCUMENT_PROTOBUF_PACKAGE_NAME,
   CreateDocumentRequestGrpc,
   CreateDocumentResponseGrpc,
+  DocumentDeleteRequestGrpc,
+  DocumentDownloadRequestGrpc,
+  DocumentDownloadResponseGrpc,
   DocumentUploadRequestGrpc,
   DocumentUploadResponseGrpc,
 } from './alcs-document.message.interface';
@@ -36,9 +39,19 @@ export class AlcsDocumentService
     return this.alcsDocumentService.getUploadUrl(request);
   }
 
+  getDownloadUrl(
+    request: DocumentDownloadRequestGrpc,
+  ): Observable<DocumentDownloadResponseGrpc> {
+    return this.alcsDocumentService.getDownloadUrl(request);
+  }
+
   createExternalDocument(
     request: CreateDocumentRequestGrpc,
   ): Observable<CreateDocumentResponseGrpc> {
     return this.alcsDocumentService.createExternalDocument(request);
+  }
+
+  deleteExternalDocument(request: DocumentDeleteRequestGrpc) {
+    return this.alcsDocumentService.deleteExternalDocument(request);
   }
 }

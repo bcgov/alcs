@@ -18,9 +18,27 @@ export class ApplicationService {
     private documentService: DocumentService
   ) {}
 
+  async getApplications() {
+    try {
+      return await firstValueFrom(this.httpClient.get<ApplicationDto[]>(`${this.serviceUrl}`));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load Applications, please try again later');
+      return [];
+    }
+  }
+
+  async getByFileId(fileId: string) {
+    try {
+      return await firstValueFrom(this.httpClient.get<ApplicationDto>(`${this.serviceUrl}/${fileId}`));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load Application, please try again later');
+      return undefined;
+    }
+  }
+
   async create(type: string) {
     try {
-      return firstValueFrom(
+      return await firstValueFrom(
         this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}`, {
           type,
         })
@@ -40,23 +58,18 @@ export class ApplicationService {
     }
   }
 
-  async attachFile(fileId: string, documents: File[]) {
-    let formData: FormData = new FormData();
-    if (documents.length > 0) {
-      formData.append('certificateOfTitle', documents[0], documents[0].name);
-    }
-
+  async submitToAlcs(fileId: string, updateDto: UpdateApplicationDto) {
     try {
-      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/${fileId}/document`, formData));
-      this.toastService.showSuccessToast('Document uploaded');
+      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
+      this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
-      this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+      this.toastService.showErrorToast('Failed to submit Application, please try again');
     }
   }
 
-  async attachExternalFile(fileId: string, data: File[]) {
-    if (data.length > 0) {
-      const file: File = data[0];
+  async attachExternalFile(fileId: string, files: File[]) {
+    if (files.length > 0) {
+      const file: File = files[0];
       const documentType = 'certificateOfTitle';
 
       if (file.size > environment.maxFileSize) {
@@ -75,6 +88,7 @@ export class ApplicationService {
             documentType: documentType,
             mimeType: file.type,
             fileName: file.name,
+            fileSize: file.size,
             fileKey: fileKey,
             source: 'Applicant',
           })
@@ -87,30 +101,25 @@ export class ApplicationService {
     }
   }
 
-  async getApplications() {
+  async openFile(fileUuid: string) {
     try {
-      return await firstValueFrom(this.httpClient.get<ApplicationDto[]>(`${this.serviceUrl}`));
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${environment.apiUrl}/application-document/${fileUuid}/open`)
+      );
     } catch (e) {
-      this.toastService.showErrorToast('Failed to load Applications, please try again later');
-      return [];
+      console.error(e);
+      this.toastService.showErrorToast('Failed to delete document, please try again');
     }
+    return undefined;
   }
 
-  async getByFileId(fileId: string) {
+  async deleteExternalFile(fileUuid: string) {
     try {
-      return await firstValueFrom(this.httpClient.get<ApplicationDto>(`${this.serviceUrl}/${fileId}`));
+      await firstValueFrom(this.httpClient.delete(`${environment.apiUrl}/application-document/${fileUuid}`));
+      this.toastService.showSuccessToast('Document deleted');
     } catch (e) {
-      this.toastService.showErrorToast('Failed to load Application, please try again later');
-      return undefined;
-    }
-  }
-
-  async submitToAlcs(fileId: string, updateDto: UpdateApplicationDto) {
-    try {
-      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
-      this.toastService.showSuccessToast('Application Submitted');
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to submit Application, please try again');
+      console.error(e);
+      this.toastService.showErrorToast('Failed to delete document, please try again');
     }
   }
 }

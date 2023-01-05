@@ -6,6 +6,10 @@ import { UserService } from '../user/user.service';
 import {
   CreateDocumentRequestGrpc,
   CreateDocumentResponseGrpc,
+  DocumentDeleteRequestGrpc,
+  DocumentDeleteResponseGrpc,
+  DocumentDownloadRequestGrpc,
+  DocumentDownloadResponseGrpc,
   DocumentUploadRequestGrpc,
   DocumentUploadResponseGrpc,
 } from './alcs-document.message.interface';
@@ -45,6 +49,21 @@ export class DocumentGrpcController {
     return this.documentService.getUploadUrl(data.filePath);
   }
 
+  @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'getDownloadUrl')
+  async getDownloadUrl(
+    data: DocumentDownloadRequestGrpc,
+  ): Promise<DocumentDownloadResponseGrpc> {
+    this.logger.debug('ALCS-> GRPC -> AlcsDocumentService -> getDownloadUrl');
+    const document = await this.documentService.getDocument(data.uuid);
+    const downloadUrl = await this.documentService.getDownloadUrl(
+      document,
+      true,
+    );
+    return {
+      url: downloadUrl,
+    };
+  }
+
   @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'createExternalDocument')
   async attachExternalDocument(
     data: CreateDocumentRequestGrpc,
@@ -61,5 +80,20 @@ export class DocumentGrpcController {
     });
 
     return { alcsDocumentUuid: document.uuid };
+  }
+
+  @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'deleteExternalDocument')
+  async deleteExternalDocument(
+    data: DocumentDeleteRequestGrpc,
+  ): Promise<DocumentDeleteResponseGrpc> {
+    this.logger.debug(
+      'ALCS-> GRPC -> AlcsDocumentService -> deleteExternalDocument',
+    );
+    const document = await this.documentService.getDocument(data.uuid);
+
+    await this.documentService.softRemove(document);
+    return {
+      uuid: document.uuid,
+    };
   }
 }

@@ -1,4 +1,3 @@
-import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -16,13 +15,16 @@ export class DocumentService {
     return v4();
   }
 
-  async delete(uuid: string) {
-    //TODO: Call out to ALCS
+  delete(uuid: string) {
+    return this.alcsDocumentService.deleteExternalDocument({
+      uuid,
+    });
   }
 
-  async getDownloadUrl(uuid: string, openInline = false) {
-    //TODO: Call out to ALCS
-    return '';
+  getDownloadUrl(uuid: string) {
+    return this.alcsDocumentService.getDownloadUrl({
+      uuid,
+    });
   }
 
   getUploadUrl(filePath: string): Observable<DocumentUploadResponseGrpc> {

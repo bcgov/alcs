@@ -1,6 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { firstValueFrom } from 'rxjs';
 import { Any, Repository } from 'typeorm';
 import { DocumentService } from '../../alcs/document/document.service';
 import { User } from '../../user/user.entity';
@@ -54,8 +55,12 @@ export class ApplicationDocumentService {
   }
 
   async delete(document: ApplicationDocument) {
-    await this.applicationDocumentRepository.delete(document.uuid);
-    await this.documentService.delete(document.alcsDocumentUuid);
+    const res = await firstValueFrom(
+      this.documentService.delete(document.alcsDocumentUuid),
+    );
+    if (res) {
+      await this.applicationDocumentRepository.delete(document.uuid);
+    }
     return document;
   }
 
@@ -81,15 +86,15 @@ export class ApplicationDocumentService {
     });
   }
 
-  async getInlineUrl(document: ApplicationDocument) {
-    return this.documentService.getDownloadUrl(document.alcsDocumentUuid, true);
-  }
-
-  async getDownloadUrl(document: ApplicationDocument) {
-    return this.documentService.getDownloadUrl(document.alcsDocumentUuid);
+  getInlineUrl(document: ApplicationDocument) {
+    return firstValueFrom(
+      this.documentService.getDownloadUrl(document.alcsDocumentUuid),
+    );
   }
 
   async createRecord(
+    fileName: string,
+    fileSize: number,
     fileNumber: string,
     alcsDocumentUuid: string,
     documentType: DOCUMENT_TYPE,
@@ -99,6 +104,8 @@ export class ApplicationDocumentService {
 
     return this.applicationDocumentRepository.save(
       new ApplicationDocument({
+        fileName,
+        fileSize,
         type: documentType,
         application,
         alcsDocumentUuid: alcsDocumentUuid,

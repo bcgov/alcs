@@ -137,4 +137,12 @@ export class DocumentService {
       }),
     );
   }
+
+  async getDocument(uuid: string) {
+    return this.documentRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+    });
+  }
 }

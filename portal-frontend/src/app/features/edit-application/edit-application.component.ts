@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
+import { ApplicationDocumentDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
@@ -17,6 +18,7 @@ export class EditApplicationComponent implements OnInit {
   localGovernment = new FormControl<string | any>('');
   fileId = '';
   applicationType = '';
+  documents: ApplicationDocumentDto[] = [];
 
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
@@ -32,11 +34,6 @@ export class EditApplicationComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
-
-  filesDropped(files: FileHandle[]): void {
-    const mappedFiles = files.map((file) => file.file);
-    this.applicationService.attachExternalFile(this.fileId, mappedFiles);
-  }
 
   ngOnInit(): void {
     this.loadCodes().then(() => {
@@ -104,6 +101,7 @@ export class EditApplicationComponent implements OnInit {
     if (application) {
       this.applicantName.patchValue(application.applicant);
       this.applicationType = application.type;
+      this.documents = application.documents;
       const lg = this.localGovernments.find((lg) => lg.uuid === application.localGovernmentUuid);
       if (lg) {
         this.localGovernment.patchValue(lg.name);
@@ -126,5 +124,23 @@ export class EditApplicationComponent implements OnInit {
     }
 
     return localGovernment;
+  }
+
+  async attachFile(files: FileHandle[]) {
+    const mappedFiles = files.map((file) => file.file);
+    await this.applicationService.attachExternalFile(this.fileId, mappedFiles);
+    await this.loadExistingApplication(this.fileId);
+  }
+
+  async deleteFile($event: ApplicationDocumentDto) {
+    await this.applicationService.deleteExternalFile($event.uuid);
+    await this.loadExistingApplication(this.fileId);
+  }
+
+  async openFile(uuid: string) {
+    const res = await this.applicationService.openFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
+    }
   }
 }

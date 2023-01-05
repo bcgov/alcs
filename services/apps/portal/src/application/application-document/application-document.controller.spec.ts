@@ -149,7 +149,9 @@ describe('ApplicationDocumentController', () => {
 
   it('should call through for download', async () => {
     const fakeUrl = 'fake-url';
-    appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
+    appDocumentService.getInlineUrl.mockResolvedValue({
+      url: fakeUrl,
+    });
     appDocumentService.get.mockResolvedValue(mockDocument);
 
     const res = await controller.open('fake-uuid');
