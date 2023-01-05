@@ -77,24 +77,22 @@
   </div>
 
   <div class="dialog-controls-wrapper">
-    <div>
-      <div *ngIf="currentStepIndex === submissionStep">
-        <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
-        <button [disabled]="!selectedSubmissionType" mat-flat-button color="primary" (click)="onStepChange(1)">
-          Next
-        </button>
-      </div>
-      <div *ngIf="currentStepIndex === applicationStep">
-        <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="onSubmit()"
-          [disabled]="!selectedAppType || !selectedSubmissionType"
-        >
-          create
-        </button>
-      </div>
+    <div *ngIf="currentStepIndex === submissionStep">
+      <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+      <button [disabled]="!selectedSubmissionType" mat-flat-button color="primary" (click)="onStepChange(1)">
+        Next
+      </button>
+    </div>
+    <div *ngIf="currentStepIndex === applicationStep">
+      <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="!selectedAppType || !selectedSubmissionType"
+      >
+        create
+      </button>
     </div>
   </div>
 </div>
