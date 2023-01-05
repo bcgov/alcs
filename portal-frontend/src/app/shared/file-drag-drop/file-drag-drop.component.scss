@@ -42,9 +42,9 @@ a {
 }
 
 .uploaded-file {
-  border: 1px solid #000000;
-  border-radius: 4px;
-  padding: 8px;
+  border: 1px solid $black;
+  border-radius: rem(4);
+  padding: rem(8);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
