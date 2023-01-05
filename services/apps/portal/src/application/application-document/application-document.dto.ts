@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { DOCUMENT_TYPE } from './application-document.entity';
 
 export class ApplicationDocumentDto {
@@ -11,6 +11,9 @@ export class ApplicationDocumentDto {
 
   @AutoMap()
   fileName: string;
+
+  @AutoMap()
+  fileSize: number;
 
   @AutoMap()
   mimeType: string;
@@ -28,6 +31,9 @@ export class AttachExternalDocumentDto {
 
   @IsString()
   fileName: string;
+
+  @IsNumber()
+  fileSize: number;
 
   @IsString()
   fileKey: string;

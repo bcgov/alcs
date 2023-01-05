@@ -7,20 +7,21 @@
     <form [formGroup]="firstForm">
       <div class="form-row">
         <div>
-          <h6>Applicant Last Name</h6>
+          <label for='applicant-last-name'>Applicant Last Name</label>
           <mat-form-field class="full-width-input" appearance="outline">
-            <input matInput placeholder="Type last name" formControlName="applicantName" />
+            <input id='applicant-last-name' matInput placeholder="Type last name" formControlName="applicantName" />
           </mat-form-field>
         </div>
         <div>
-          <h6>Local/First Nation Government</h6>
+          <label for='local-government'>Local/First Nation Government</label>
           <mat-form-field class="full-width-input" appearance="outline">
             <input
+              id='local-government'
               type="text"
               aria-label="Text"
               matInput
               formControlName="localGovernment"
-              placeholder="Type and select from dropdown"
+              placeholder="Type government"
               [matAutocomplete]="auto"
             />
             <mat-autocomplete #auto="matAutocomplete">
@@ -32,9 +33,9 @@
         </div>
       </div>
       <div>
-        <h6>Document Uploads</h6>
+        <label for='file-upload'>Certificate of Title Upload</label>
         <div class="documents">
-          <app-file-drag-drop (files)="filesDropped($event)"></app-file-drag-drop>
+          <app-file-drag-drop id='file-upload' [uploadedFiles]='documents' (uploadFiles)="attachFile($event)" (deleteFile)='deleteFile($event)' (openFile)='openFile($event)'></app-file-drag-drop>
         </div>
       </div>
       <div class="step-buttons">

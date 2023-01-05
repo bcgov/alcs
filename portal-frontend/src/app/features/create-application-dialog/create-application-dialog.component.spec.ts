@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationService } from '../../services/application/application.service';
@@ -24,6 +25,7 @@ describe('CreateApplicationDialogComponent', () => {
         },
       ],
       declarations: [CreateApplicationDialogComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateApplicationDialogComponent);

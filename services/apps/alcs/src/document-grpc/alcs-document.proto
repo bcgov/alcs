@@ -5,7 +5,11 @@ package alcs_document;
 service AlcsDocumentService {
   rpc getUploadUrl(DocumentUploadRequestGrpc) returns (DocumentUploadResponseGrpc);
 
+  rpc getDownloadUrl(DocumentDownloadRequestGrpc) returns (DocumentDownloadResponseGrpc);
+
   rpc createExternalDocument(CreateDocumentRequestGrpc) returns (CreateDocumentResponseGrpc);
+
+  rpc deleteExternalDocument(DocumentDeleteRequestGrpc) returns (DocumentDeleteResponseGrpc);
 }
 
 message DocumentUploadRequestGrpc {
@@ -15,6 +19,14 @@ message DocumentUploadRequestGrpc {
 message DocumentUploadResponseGrpc {
   string uploadUrl = 1;
   string fileKey = 2;
+}
+
+message DocumentDeleteRequestGrpc {
+  string uuid = 1;
+}
+
+message DocumentDeleteResponseGrpc {
+  string uuid = 1;
 }
 
 message CreateDocumentRequestGrpc {
@@ -31,4 +43,12 @@ message CreateDocumentRequestGrpc {
 
 message CreateDocumentResponseGrpc {
   string alcsDocumentUuid = 1;
+}
+
+message DocumentDownloadRequestGrpc {
+  string uuid = 1;
+}
+
+message DocumentDownloadResponseGrpc {
+  string url = 1;
 }

@@ -1,0 +1,56 @@
+@import 'colors';
+@import 'functions';
+@import 'typography';
+
+// FORM FIELDS
+.mat-form-field-infix {
+  border-top: 0;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  top: 0 !important;
+  color: rgba(0, 0, 0, 0.42);
+}
+
+label {
+  font-weight: 700;
+  font-size: rem(13);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    & {
+      font-size: rem(16);
+    }
+  }
+}
+
+.mat-form-field {
+  margin-top: rem(8);
+}
+
+//This prevents the bottom of the text from being cut off
+.mat-form-field .mat-form-field-label-wrapper label {
+  line-height: 1.2;
+}
+
+.mat-form-field .mat-form-field-infix input {
+  line-height: 1.2;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: rem(6) 0;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    & {
+      padding: rem(18) 0;
+    }
+  }
+}
+
+input.mat-input-element {
+  margin-top: 0;
+}
+
+input.mat-input-element::placeholder {
+  color: $grey-dark;
+  opacity: 1;
+}

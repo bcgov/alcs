@@ -3,6 +3,7 @@ import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { firstValueFrom, of } from 'rxjs';
 import { Repository } from 'typeorm';
 import { DocumentService } from '../../alcs/document/document.service';
 import { User } from '../../user/user.entity';
@@ -94,7 +95,11 @@ describe('ApplicationDocumentService', () => {
   });
 
   it('should delete document and application document when deleting', async () => {
-    mockDocumentService.delete.mockResolvedValue();
+    mockDocumentService.delete.mockReturnValue(
+      of({
+        uuid: 'fake-uuid',
+      }),
+    );
     mockRepository.delete.mockResolvedValue({} as any);
 
     await service.delete(mockAppDocument);
@@ -148,11 +153,11 @@ describe('ApplicationDocumentService', () => {
     const mockAppDocument = new ApplicationDocument();
 
     const fakeUrl = 'mock-url';
-    mockDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    mockDocumentService.getDownloadUrl.mockReturnValue(of({ url: fakeUrl }));
 
     const res = await service.getInlineUrl(mockAppDocument);
 
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    expect(res).toEqual(fakeUrl);
+    expect(res.url).toEqual(fakeUrl);
   });
 });

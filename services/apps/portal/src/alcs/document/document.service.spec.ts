@@ -10,7 +10,7 @@ import { DocumentService } from './document.service';
 describe('DocumentService', () => {
   let service: DocumentService;
 
-  let mockAlcsDocumentService: DeepMocked<DocumentService>;
+  let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   beforeEach(async () => {
     mockAlcsDocumentService = createMock();
@@ -40,16 +40,30 @@ describe('DocumentService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should call out to ALCS for creation', async () => {
-    // TODO
-  });
-
   it('should call out to ALCS for deletion', async () => {
-    // TODO
+    mockAlcsDocumentService.deleteExternalDocument.mockReturnValue(
+      of({
+        uuid: '',
+      }),
+    );
+
+    await service.delete('');
+
+    expect(
+      mockAlcsDocumentService.deleteExternalDocument,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to ALCS for getDownloadUrl', async () => {
-    // TODO
+    mockAlcsDocumentService.getDownloadUrl.mockReturnValue(
+      of({
+        url: '',
+      }),
+    );
+
+    await service.getDownloadUrl('');
+
+    expect(mockAlcsDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to ALCS for getUploadUrl', async () => {

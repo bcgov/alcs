@@ -34,6 +34,12 @@ export class ApplicationDocument extends BaseEntity {
   @Column()
   alcsDocumentUuid: string;
 
+  @Column()
+  fileName: string;
+
+  @Column()
+  fileSize: number;
+
   @ManyToOne(() => User, (user) => user.documents, {
     nullable: false,
     eager: true,

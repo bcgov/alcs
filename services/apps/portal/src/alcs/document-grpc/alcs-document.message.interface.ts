@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, IsUrl, IsUUID } from 'class-validator';
 
 export class DocumentUploadRequestGrpc {
   @IsString()
@@ -8,6 +8,16 @@ export class DocumentUploadRequestGrpc {
 export interface DocumentUploadResponseGrpc {
   uploadUrl: string;
   fileKey: string;
+}
+
+export class DocumentDeleteRequestGrpc {
+  @IsUUID()
+  uuid: string;
+}
+
+export class DocumentDeleteResponseGrpc {
+  @IsUUID()
+  uuid: string;
 }
 
 export class CreateDocumentRequestGrpc {
@@ -24,6 +34,16 @@ export class CreateDocumentRequestGrpc {
 
 export class CreateDocumentResponseGrpc {
   alcsDocumentUuid: string;
+}
+
+export class DocumentDownloadRequestGrpc {
+  @IsUUID()
+  uuid: string;
+}
+
+export class DocumentDownloadResponseGrpc {
+  @IsUrl()
+  url: string;
 }
 
 export const ALCS_DOCUMENT_PROTOBUF_PACKAGE_NAME = 'alcs_document';

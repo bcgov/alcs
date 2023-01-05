@@ -24,6 +24,7 @@ import { DragDropDirective } from './shared/file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
+import { FileSizePipe } from './shared/pipes/fileSize.pipe';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -41,6 +42,7 @@ import { SharedModule } from './shared/shared.module';
     CreateApplicationDialogComponent,
     LandingPageComponent,
     ParcelEntryComponent,
+    FileSizePipe,
   ],
   imports: [
     BrowserModule,
