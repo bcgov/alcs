@@ -1,0 +1,42 @@
+<div class='container'>
+  <div class='type'>
+    <h6>Parcel Type</h6>
+    <mat-radio-group class='radio-row' aria-label='Select a parcel type'>
+      <mat-radio-button value='fee'>Fee Simple</mat-radio-button>
+      <mat-radio-button value='crown'>Crown</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <h5>Parcel Lookup</h5>
+  <form [formGroup]='parcelForm'>
+    <div class='form-row'>
+      <div>
+        <h6>PID/PIN</h6>
+        <mat-form-field class='full-width-input' appearance='outline'>
+          <input type='number' matInput placeholder='Enter PID / PIN' formControlName='pidPin' />
+        </mat-form-field>
+      </div>
+      <div class='search-buttons'>
+        <button (click)='onSearch()'>Search</button>
+        <button (click)='onReset()'>Reset</button>
+      </div>
+      <div class='full-row'>
+        <h6>Legal Description</h6>
+        <mat-form-field class='full-width-input' appearance='outline'>
+          <input matInput placeholder='Enter legal Description' formControlName='legalDescription' />
+        </mat-form-field>
+      </div>
+      <div>
+        <h6>Map Area (Hectares)</h6>
+        <mat-form-field class='full-width-input' appearance='outline'>
+          <input type='number' matInput placeholder='Enter parcel size' formControlName='mapArea' />
+        </mat-form-field>
+      </div>
+      <div>
+        <h6>PIN</h6>
+        <mat-form-field class='full-width-input' appearance='outline'>
+          <input type='number' matInput placeholder='Enter PIN' formControlName='pin' />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>

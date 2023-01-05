@@ -19,11 +19,31 @@
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell class="labels" *matCellDef="let element">
-        <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType"> </app-application-type-pill>
-        <app-application-type-pill [useShortLabel]="true" *ngIf="element.parentType === 'modification'" [type]="MODIFICATION_LABEL"> </app-application-type-pill>
-        <app-application-type-pill [useShortLabel]="true" *ngIf="element.parentType === 'reconsideration'" [type]="RECONSIDERATION_LABEL"> </app-application-type-pill>
-        <app-application-type-pill [useShortLabel]="true" *ngIf="element.parentType === 'covenant'" [type]="COVENANT_LABEL"> </app-application-type-pill>
-        <app-application-type-pill [useShortLabel]="true" *ngIf="element.parentType === 'planning-review'" [type]="PLANNING_REVIEW_LABEL"> </app-application-type-pill>
+        <app-application-type-pill
+          [useShortLabel]="true"
+          *ngIf="element.appType"
+          [type]="element.appType"
+        ></app-application-type-pill>
+        <app-application-type-pill
+          [useShortLabel]="true"
+          *ngIf="element.parentType === 'modification'"
+          [type]="MODIFICATION_LABEL"
+        ></app-application-type-pill>
+        <app-application-type-pill
+          [useShortLabel]="true"
+          *ngIf="element.parentType === 'reconsideration'"
+          [type]="RECONSIDERATION_LABEL"
+        ></app-application-type-pill>
+        <app-application-type-pill
+          [useShortLabel]="true"
+          *ngIf="element.parentType === 'covenant'"
+          [type]="COVENANT_LABEL"
+        ></app-application-type-pill>
+        <app-application-type-pill
+          [useShortLabel]="true"
+          *ngIf="element.parentType === 'planning-review'"
+          [type]="PLANNING_REVIEW_LABEL"
+        ></app-application-type-pill>
       </td>
     </ng-container>
 
@@ -82,4 +102,6 @@
       <td class="text-center" colspan="7">No Incomplete Subtasks</td>
     </tr>
   </table>
+
+  <iframe [src]="DASHBOARD_URL | safe" frameborder="0" width="350" height="400" allowtransparency></iframe>
 </div>

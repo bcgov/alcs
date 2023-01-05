@@ -17,6 +17,9 @@ export const environment = {
   shortTimeFormat: 'MMM D, h:mm a',
   longTimeFormat: 'YYYY-MMM-DD hh:mm:ss a',
   maxFileSize: 104857600, //should match setting in backend
+  embeddedDashboards: {
+    gis: 'https://alcs-metabase-test.apps.silver.devops.gov.bc.ca/public/dashboard/60dbe902-caea-4824-b7e5-ab2d7e5bdcbe',
+  },
 };
 
 /*

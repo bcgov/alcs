@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 import { ROLES } from '../../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
@@ -29,6 +30,7 @@ export class GisSubtasksComponent implements OnInit {
   RECONSIDERATION_LABEL = RECON_TYPE_LABEL;
   COVENANT_LABEL = COVENANT_TYPE_LABEL;
   PLANNING_REVIEW_LABEL = PLANNING_TYPE_LABEL;
+  DASHBOARD_URL = environment.embeddedDashboards.gis;
 
   constructor(
     private homeService: HomeService,
