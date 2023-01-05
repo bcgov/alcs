@@ -68,7 +68,7 @@
         (selectedAppType && currentStepIndex === applicationStep)
       "
       (click)="onReadMoreClicked()"
-      ><u>Read More</u></span
+      ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
     >
   </div>
 
