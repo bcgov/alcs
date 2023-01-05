@@ -4,6 +4,7 @@ import { ApplicationService } from '../../services/application/application.servi
 import { CodeService } from '../../services/code/code.service';
 
 import { CreateApplicationDialogComponent } from './create-application-dialog.component';
+import { SharedModule } from '../../shared/shared.module';
 
 describe('CreateApplicationDialogComponent', () => {
   let component: CreateApplicationDialogComponent;
@@ -11,7 +12,7 @@ describe('CreateApplicationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule],
+      imports: [MatDialogModule, SharedModule],
       providers: [
         { provide: MatDialogRef, useValue: {} },
         {

@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DATE_FORMATS } from './utils/date-format';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [CommonModule],
@@ -34,6 +35,7 @@ import { DATE_FORMATS } from './utils/date-format';
     MatProgressSpinnerModule,
     MatTooltipModule,
     BrowserAnimationsModule,
+    MatRadioModule,
   ],
 })
 export class SharedModule {
