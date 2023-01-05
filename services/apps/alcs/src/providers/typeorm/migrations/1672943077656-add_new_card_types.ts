@@ -19,5 +19,11 @@ export class addNewCardTypes1672943077656 implements MigrationInterface {
     await queryRunner.query(
       `DELETE FROM "alcs"."card_type" WHERE code IN ('NOI', 'SRW')`,
     );
+
+    await queryRunner.query(
+      `UPDATE "alcs"."card_type" 
+       SET portal_html_description = ''
+       WHERE code = 'APP';`,
+    );
   }
 }
