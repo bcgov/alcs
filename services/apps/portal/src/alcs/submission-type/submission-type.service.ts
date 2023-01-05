@@ -23,15 +23,4 @@ export class SubmissionTypeService {
       return [];
     }
   }
-
-  async get(typeCode: string) {
-    const list = await this.list();
-    const type = list.find((type) => type.code === typeCode);
-    if (type) {
-      return type.label;
-    } else {
-      this.logger.error(`Failed to find matching type for code ${typeCode}`);
-      return '';
-    }
-  }
 }
