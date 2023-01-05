@@ -1,4 +1,3 @@
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
@@ -36,15 +35,8 @@ export class CreateApplicationDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private codeService: CodeService,
     private applicationService: ApplicationService,
-    private router: Router,
-    private breakpointObserver: BreakpointObserver
-  ) {
-    this.breakpointObserver.observe(['(max-width: 768px)']).subscribe((result: BreakpointState) => {
-      if (result.matches) {
-      } else {
-      }
-    });
-  }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadCodes();
@@ -53,39 +45,7 @@ export class CreateApplicationDialogComponent implements OnInit {
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
     this.applicationTypes = codes.applicationTypes.filter((type) => !!type.portalLabel);
-    // TODO: this should be from alcs?
-    this.submissionTypes = [
-      {
-        code: 'APP',
-        description: '',
-        label: 'Application',
-        htmlDescription: `Create an <a target="_blank"
-      href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/">Application</a> if you are
-  proposing to exclude, include, subdivide, conduct a non-farm use activity, conduct a non-adhering residential
-  use, conduct a transportation/utility/recreational trail use, or conduct a soil or fill use. Non-adhering
-  residential use applications have a fee of $750. All other applications have a fee of $1,500 fee, except for
-  inclusion of land (no fee). Application fees are split equally between the
-  local government and the ALC.`,
-      },
-      {
-        code: 'NOI',
-        label: 'Notice of Intent',
-        description: '',
-        htmlDescription: `Create a <a target="_blank"
-      href="https://www.alc.gov.bc.ca/application-and-notice-process/soil-and-fill-notice-of-intent/">Notice of
-      Intent</a> if you are proposing to remove soil and/or place fill that does not qualify for exemption under
-  Section 35 of the <i>Agricultural Land Reserve Use Regulation</i>. All notices are subject to a $150 fee.`,
-      },
-      {
-        code: 'SRW',
-        description: '',
-        label: 'Notification of Statutory Right of Way (SRW)',
-        htmlDescription: `Create a <a target="_blank" href="https://www.alc.gov.bc.ca/application-and-notice-process/statutory-right-of-way-notice/">
-      Notification of Statutory Right of Way (SRW)</a> if you are notifying the ALC that you are planning to
-  register a SRW under section 218 of the <i>Land Title Act</i> in accordance with section 18.1 (2) of the <i>Agricultural
-  Land Commission Act</i>.`,
-      },
-    ];
+    this.submissionTypes = codes.submissionTypes.sort((a, b) => (a.code > b.code ? 1 : -1));
   }
 
   onCancel() {

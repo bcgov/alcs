@@ -1,9 +1,11 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
+import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { RedisClientType } from 'redis';
+import { FindOptionsRelations, Not, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
@@ -16,6 +18,7 @@ export class CardService {
     status: true,
     assignee: true,
   };
+  private logger = new Logger(CardService.name);
 
   constructor(
     @InjectMapper() private mapper: Mapper,
@@ -23,7 +26,28 @@ export class CardService {
     private cardRepository: Repository<Card>,
     @InjectRepository(CardType)
     private cardTypeRepository: Repository<CardType>,
-  ) {}
+    private redisService: RedisService,
+  ) {
+    this.loadCardTypesToRedis();
+  }
+
+  private async loadCardTypesToRedis() {
+    const cardTypes = await this.cardTypeRepository.find({
+      select: {
+        code: true,
+        portalHtmlDescription: true,
+        label: true,
+      },
+      where: {
+        portalHtmlDescription: Not(''),
+      },
+    });
+
+    const jsonBlob = JSON.stringify(cardTypes);
+    const redis = this.redisService.getClient() as RedisClientType;
+    await redis.set('cardTypes', jsonBlob);
+    this.logger.debug(`Loaded ${cardTypes.length} card types into Redis`);
+  }
 
   get(uuid: string) {
     return this.cardRepository.findOne({

@@ -12,5 +12,5 @@ export interface ApplicationTypeDto {
 }
 
 export interface SubmissionTypeDto extends BaseCodeDto {
-  htmlDescription: string;
+  portalHtmlDescription: string;
 }
