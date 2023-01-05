@@ -37,6 +37,7 @@ import { FavoriteButtonComponent } from './favorite-button/favorite-button.compo
 import { InlineEditComponent } from './inline-edit/inline-edit.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { MomentPipe } from './pipes/moment.pipe';
+import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
@@ -54,6 +55,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     ApplicationDocumentComponent,
     ApplicationTimeTrackerComponent,
     ApplicationTypePillComponent,
+    SafePipe,
   ],
   imports: [
     CommonModule,
@@ -106,6 +108,7 @@ import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
     MatSelectModule,
     ApplicationTimeTrackerComponent,
     ApplicationTypePillComponent,
+    SafePipe,
   ],
 })
 export class SharedModule {
