@@ -18,6 +18,7 @@ import { ApplicationDocument } from './application-document/application-document
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
+import mock = jest.mock;
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
@@ -141,6 +142,26 @@ describe('ApplicationService', () => {
     expect(res).toBe(application);
   });
 
+  it('should update the status when submitting to local government', async () => {
+    const mockStatus = new ApplicationStatus({
+      code: 'code',
+      label: 'label',
+    });
+
+    mockStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
+    mockRepository.update.mockResolvedValue({} as any);
+
+    await service.submitToLg('fileNumber');
+    expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.update).toHaveBeenCalledTimes(1);
+    expect(mockRepository.update.mock.calls[0][0]).toEqual({
+      fileNumber: 'fileNumber',
+    });
+    expect(mockRepository.update.mock.calls[0][1]).toEqual({
+      status: mockStatus,
+    });
+  });
+
   it('should use application type service for mapping DTOs', async () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
@@ -157,10 +178,14 @@ describe('ApplicationService', () => {
     const application = new Application({
       applicant,
       typeCode: typeCode,
+      status: new ApplicationStatus({
+        code: 'status-code',
+        label: '',
+      }),
     });
     mockRepository.findOne.mockResolvedValue(application);
 
-    const res = await service.mapToDTOs([application]);
+    const res = await service.mapToDTOs([application], new User());
     expect(mockAppTypeService.list).toHaveBeenCalledTimes(1);
     expect(res[0].type).toEqual('label');
     expect(res[0].applicant).toEqual(applicant);
@@ -215,6 +240,10 @@ describe('ApplicationService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
+      status: new ApplicationStatus({
+        code: 'status-code',
+        label: '',
+      }),
       documents: [
         { type: 'fake', alcsDocumentUuid: 'uuid-fake' } as ApplicationDocument,
       ],
@@ -223,9 +252,14 @@ describe('ApplicationService', () => {
     mockAlcsApplicationService.create.mockReturnValue(
       of({ fileNumber, applicant } as ApplicationGrpcResponse),
     );
+    mockRepository.update.mockResolvedValue({} as any);
     mockRepository.findOne.mockResolvedValue(mockApplication);
     mockRepository.save.mockResolvedValue(mockApplication);
     mockRepository.findOneOrFail.mockResolvedValue(mockApplication);
+
+    mockStatusRepository.findOneOrFail.mockResolvedValue(
+      new ApplicationStatus(),
+    );
 
     const res = await service.submitToAlcs(fileNumber, {
       applicant,

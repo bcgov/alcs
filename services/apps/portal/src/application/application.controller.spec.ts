@@ -103,7 +103,7 @@ describe('ApplicationController', () => {
         isFirstNation: false,
       },
     ]);
-    mockAppService.getByBceidBusinessGuid.mockResolvedValue([]);
+    mockAppService.getForGovernment.mockResolvedValue([]);
 
     const applications = await controller.getApplications({
       user: {
@@ -114,7 +114,7 @@ describe('ApplicationController', () => {
     });
 
     expect(applications).toBeDefined();
-    expect(mockAppService.getByBceidBusinessGuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getForGovernment).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when fetching an application', async () => {
@@ -194,13 +194,18 @@ describe('ApplicationController', () => {
     expect(mockAppService.mapToDTOs).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service on submitAlcs', async () => {
+  it('should call out to service on submitAlcs if application type is TURP', async () => {
     const mockFileId = 'file-id';
     mockAppService.submitToAlcs.mockResolvedValue(
       {} as ApplicationGrpcResponse,
     );
+    mockAppService.getIfCreator.mockResolvedValue(
+      new Application({
+        typeCode: 'TURP',
+      }),
+    );
 
-    await controller.submitToAlcs(
+    await controller.submitAsApplicant(
       mockFileId,
       {} as ApplicationSubmitToAlcsDto,
       {
@@ -212,5 +217,28 @@ describe('ApplicationController', () => {
 
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
+  });
+
+  it('should submit to LG if application type is NOT-TURP', async () => {
+    const mockFileId = 'file-id';
+    mockAppService.submitToLg.mockResolvedValue();
+    mockAppService.getIfCreator.mockResolvedValue(
+      new Application({
+        typeCode: 'NOT-TURP',
+      }),
+    );
+
+    await controller.submitAsApplicant(
+      mockFileId,
+      {} as ApplicationSubmitToAlcsDto,
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
+
+    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);
   });
 });

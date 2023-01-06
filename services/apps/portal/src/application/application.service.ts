@@ -11,7 +11,9 @@ import { Repository } from 'typeorm';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
+import { LocalGovernment } from '../alcs/local-government/local-government.service';
 import { User } from '../user/user.entity';
+import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import {
   ApplicationDto,
@@ -83,8 +85,27 @@ export class ApplicationService {
     return this.applicationRepository.save(application);
   }
 
+  async submitToLg(fileNumber: string) {
+    const submittedToLGStatus =
+      await this.applicationStatusRepository.findOneOrFail({
+        where: {
+          code: APPLICATION_STATUS.SUBMITTED_TO_LG,
+        },
+      });
+
+    await this.applicationRepository.update(
+      {
+        fileNumber,
+      },
+      {
+        status: submittedToLGStatus,
+      },
+    );
+  }
+
   async submitToAlcs(fileNumber: string, data: ApplicationSubmitToAlcsDto) {
     await this.update(fileNumber, data);
+
     const application = await this.applicationRepository.findOneOrFail({
       where: { fileNumber },
       relations: { documents: true },
@@ -106,6 +127,22 @@ export class ApplicationService {
           })),
         }),
       );
+
+      const submittedToALCStatus =
+        await this.applicationStatusRepository.findOneOrFail({
+          where: {
+            code: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+          },
+        });
+
+      await this.applicationRepository.update(
+        {
+          fileNumber,
+        },
+        {
+          status: submittedToALCStatus,
+        },
+      );
     } catch (ex) {
       this.logger.error(
         `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
@@ -118,8 +155,6 @@ export class ApplicationService {
         `Failed to submit application: ${fileNumber}`,
       );
     }
-
-    //TODO set submitted status here
 
     return submittedApp;
   }
@@ -137,13 +172,23 @@ export class ApplicationService {
     });
   }
 
-  getByBceidBusinessGuid(bceidBusinessGuid: string) {
+  getForGovernment(localGovernment: LocalGovernment) {
     return this.applicationRepository.find({
-      where: {
-        createdBy: {
-          bceidBusinessGuid,
+      where: [
+        //Owns
+        {
+          createdBy: {
+            bceidBusinessGuid: localGovernment.bceidBusinessGuid,
+          },
         },
-      },
+        //Submitted
+        {
+          localGovernmentUuid: localGovernment.uuid,
+          status: {
+            code: APPLICATION_STATUS.SUBMITTED_TO_LG,
+          },
+        },
+      ],
       order: {
         updatedAt: 'DESC',
       },
@@ -175,11 +220,21 @@ export class ApplicationService {
     return existingApplication;
   }
 
-  async mapToDTOs(apps: Application[]) {
+  async mapToDTOs(
+    apps: Application[],
+    user: User,
+    userGovernment?: LocalGovernment,
+  ) {
     const types = await this.applicationTypeService.list();
     return apps.map((app) => ({
       ...this.mapper.map(app, Application, ApplicationDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
+      canEdit: app.status.code == APPLICATION_STATUS.IN_PROGRESS,
+      canView: app.status.code == APPLICATION_STATUS.SUBMITTED_TO_ALC,
+      canReview:
+        app.status.code == APPLICATION_STATUS.SUBMITTED_TO_LG &&
+        userGovernment &&
+        userGovernment.uuid === app.localGovernmentUuid,
     }));
   }
 }

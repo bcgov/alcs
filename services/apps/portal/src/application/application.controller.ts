@@ -44,16 +44,20 @@ export class ApplicationController {
         (lg) => lg.bceidBusinessGuid === user.bceidBusinessGuid,
       );
       if (matchingGovernment) {
-        const applications =
-          await this.applicationService.getByBceidBusinessGuid(
-            user.bceidBusinessGuid,
-          );
-        return this.applicationService.mapToDTOs(applications);
+        const applications = await this.applicationService.getForGovernment(
+          matchingGovernment,
+        );
+
+        return this.applicationService.mapToDTOs(
+          [...applications],
+          user,
+          matchingGovernment,
+        );
       }
     }
 
     const applications = await this.applicationService.getByUser(user);
-    return this.applicationService.mapToDTOs(applications);
+    return this.applicationService.mapToDTOs(applications, user);
   }
 
   @Get('/:fileId')
@@ -64,7 +68,10 @@ export class ApplicationController {
       user,
     );
 
-    const mappedApps = await this.applicationService.mapToDTOs([application]);
+    const mappedApps = await this.applicationService.mapToDTOs(
+      [application],
+      req.user.entity,
+    );
     return mappedApps[0];
   }
 
@@ -91,7 +98,10 @@ export class ApplicationController {
       localGovernmentUuid: updateDto.localGovernmentUuid,
     });
 
-    const mappedApps = await this.applicationService.mapToDTOs([application]);
+    const mappedApps = await this.applicationService.mapToDTOs(
+      [application],
+      req.user.entity,
+    );
     return mappedApps[0];
   }
 
@@ -121,13 +131,20 @@ export class ApplicationController {
   }
 
   @Post('/alcs/submit/:fileId')
-  async submitToAlcs(
+  async submitAsApplicant(
     @Param('fileId') fileId: string,
     @Body() data: ApplicationSubmitToAlcsDto,
     @Req() req,
   ) {
-    await this.applicationService.getIfCreator(fileId, req.user.entity);
+    const application = await this.applicationService.getIfCreator(
+      fileId,
+      req.user.entity,
+    );
 
-    return await this.applicationService.submitToAlcs(fileId, data);
+    if (application.typeCode === 'TURP') {
+      return await this.applicationService.submitToAlcs(fileId, data);
+    } else {
+      return await this.applicationService.submitToLg(fileId);
+    }
   }
 }
