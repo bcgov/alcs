@@ -3,7 +3,7 @@
 # https://www.tomray.dev/nestjs-docker-production
 ###################
 
-FROM node:16.15-alpine As development
+FROM node:18.12-alpine As development
 
 WORKDIR /opt/app-root/
 
@@ -19,7 +19,7 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:16.15-alpine As build
+FROM node:18.12-alpine As build
 ARG NEST_APP=alcs
 
 WORKDIR /opt/app-root/
@@ -40,7 +40,7 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:16.15-alpine As production
+FROM node:18.12-alpine As production
 ARG NEST_APP=alcs
 
 # Init 
