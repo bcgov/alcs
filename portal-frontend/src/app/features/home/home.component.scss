@@ -36,6 +36,7 @@
   }
   .mobile-btn {
     width: 100%;
+    margin-bottom: rem(8) !important;
   }
   .btn {
     display: none;
@@ -45,7 +46,7 @@
     display: block;
   }
 
-  @media screen and (min-height: $desktopBreakpoint) {
+  @media screen and (min-width: $desktopBreakpoint) {
     .title {
       line-height: rem(52);
       display: flex;
@@ -60,6 +61,68 @@
       display: inline-block;
       width: rem(193);
       height: rem(43);
+    }
+  }
+}
+
+.navigation-wrapper {
+  ::ng-deep .mat-tab-header-pagination {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-tab-header {
+    overflow-x: scroll !important;
+    display: flex;
+    flex-wrap: nowrap;
+    border-bottom: none;
+  }
+
+  ::ng-deep .mat-tab-label-container {
+    overflow: visible !important;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row !important;
+    flex-flow: row wrap !important;
+    justify-content: space-between;
+  }
+
+  ::ng-deep .mat-tab-header::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-ink-bar {
+    display: none;
+  }
+  ::ng-deep .mat-tab-labels {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex-flow: row wrap;
+    justify-content: space-between;
+
+    .mat-tab-label {
+      width: 100%;
+      margin-top: rem(24);
+      height: rem(32);
+      background: $primary-color;
+      opacity: 1;
+      color: $white;
+    }
+
+    .mat-tab-label.mat-tab-label-active {
+      background-color: $primary-color-dark;
+    }
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    ::ng-deep .mat-tab-labels {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-evenly;
+
+      .mat-tab-label {
+        width: 33%;
+      }
     }
   }
 }
