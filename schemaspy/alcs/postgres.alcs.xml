@@ -177,6 +177,7 @@
             <parent column="code" foreignKey="FK_b7e4525de796ada01f43f464d9d" implied="false" onDeleteCascade="false" schema="alcs" table="application_region"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="bceid_business_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="9" name="is_first_nation" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_58853fcb8957e8b2c131cc12da1" unique="true">
             <column ascending="true" name="uuid"/>
