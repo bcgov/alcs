@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 import { ApplicationService } from '../../services/application/application.service';
 import { CodeService } from '../../services/code/code.service';
-
 import { CreateApplicationDialogComponent } from './create-application-dialog.component';
-import { SharedModule } from '../../shared/shared.module';
 
 describe('CreateApplicationDialogComponent', () => {
   let component: CreateApplicationDialogComponent;
@@ -12,7 +11,7 @@ describe('CreateApplicationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, SharedModule],
+      imports: [MatDialogModule, MatRadioModule],
       providers: [
         { provide: MatDialogRef, useValue: {} },
         {
