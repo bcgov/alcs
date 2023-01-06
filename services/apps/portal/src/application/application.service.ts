@@ -1,4 +1,7 @@
-import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceNotFoundException,
+} from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
@@ -159,6 +162,17 @@ export class ApplicationService {
         documents: true,
       },
     });
+  }
+
+  async getIfCreator(fileNumber: string, user: User) {
+    //Verify User has Access
+    const existingApplication = await this.getByFileId(fileNumber, user);
+    if (!existingApplication) {
+      throw new ServiceNotFoundException(
+        `Failed to load application with File ID ${fileNumber}`,
+      );
+    }
+    return existingApplication;
   }
 
   async mapToDTOs(apps: Application[]) {

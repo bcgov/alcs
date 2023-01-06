@@ -1,7 +1,6 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
@@ -64,6 +63,7 @@ describe('ApplicationController', () => {
     );
 
     mockAppService.create.mockResolvedValue('2');
+    mockAppService.getIfCreator.mockResolvedValue(new Application());
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
 
@@ -118,7 +118,6 @@ describe('ApplicationController', () => {
   });
 
   it('should call out to service when fetching an application', async () => {
-    mockAppService.getByFileId.mockResolvedValue(new Application());
     mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
 
     const application = await controller.getApplication(
@@ -131,7 +130,7 @@ describe('ApplicationController', () => {
     );
 
     expect(application).toBeDefined();
-    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating an application', async () => {
@@ -178,8 +177,6 @@ describe('ApplicationController', () => {
   });
 
   it('should call out to service for update and map', async () => {
-    mockAppService.getByFileId.mockResolvedValue(new Application());
-
     await controller.update(
       'file-id',
       {
@@ -193,35 +190,12 @@ describe('ApplicationController', () => {
       },
     );
 
-    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.mapToDTOs).toHaveBeenCalledTimes(1);
-  });
-
-  it('should throw an exception if app doest not exist', async () => {
-    mockAppService.getByFileId.mockResolvedValue(null);
-    const promise = controller.update(
-      'file-id',
-      {
-        localGovernmentUuid,
-        applicant,
-      },
-      {
-        user: {
-          entity: new User(),
-        },
-      },
-    );
-    await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        'Failed to find application with given File ID and User',
-      ),
-    );
-    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service on submitAlcs', async () => {
     const mockFileId = 'file-id';
-    mockAppService.getByFileId.mockResolvedValue({} as Application);
     mockAppService.submitToAlcs.mockResolvedValue(
       {} as ApplicationGrpcResponse,
     );
@@ -236,27 +210,7 @@ describe('ApplicationController', () => {
       },
     );
 
-    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
-  });
-
-  it('should throw an exception on submitAlcs if app doest not exist', async () => {
-    mockAppService.getByFileId.mockResolvedValue(null);
-
-    const promise = controller.submitToAlcs(
-      'file-id',
-      {} as ApplicationSubmitToAlcsDto,
-      {
-        user: {
-          entity: new User(),
-        },
-      },
-    );
-    await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Failed to find application with given File ID file-id and User`,
-      ),
-    );
-    expect(mockAppService.getByFileId).toHaveBeenCalledTimes(1);
   });
 });

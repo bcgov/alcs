@@ -3,7 +3,7 @@ import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { firstValueFrom, of } from 'rxjs';
+import { of } from 'rxjs';
 import { Repository } from 'typeorm';
 import { DocumentService } from '../../alcs/document/document.service';
 import { User } from '../../user/user.entity';
@@ -32,6 +32,7 @@ describe('ApplicationDocumentService', () => {
     });
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockDocumentService.create.mockResolvedValue('fake-uuid');
+    mockApplicationService.getIfCreator.mockResolvedValue(mockApplication);
 
     mockAppDocument = new ApplicationDocument({
       uuid: 'document-uuid',

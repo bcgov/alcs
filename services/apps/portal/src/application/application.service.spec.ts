@@ -75,6 +75,23 @@ describe('ApplicationService', () => {
     expect(app).toBe(application);
   });
 
+  it('should return the fetched application when fetching with user', async () => {
+    const application = new Application();
+    mockRepository.findOne.mockResolvedValue(application);
+
+    const app = await service.getIfCreator('', new User());
+    expect(app).toBe(application);
+  });
+
+  it('should throw an exception if the application is not found the fetched application', async () => {
+    mockRepository.findOne.mockResolvedValue(null);
+
+    const promise = service.getIfCreator('', new User());
+    await expect(promise).rejects.toMatchObject(
+      new Error(`Failed to load application with File ID `),
+    );
+  });
+
   it("should throw an error if application doesn't exist", async () => {
     mockRepository.findOne.mockResolvedValue(null);
 

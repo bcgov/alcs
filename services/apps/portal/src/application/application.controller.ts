@@ -59,13 +59,10 @@ export class ApplicationController {
   @Get('/:fileId')
   async getApplication(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
-    const application = await this.applicationService.getByFileId(fileId, user);
-
-    if (!application) {
-      throw new ServiceNotFoundException(
-        `Failed to load application with File ID ${fileId}`,
-      );
-    }
+    const application = await this.applicationService.getIfCreator(
+      fileId,
+      user,
+    );
 
     const mappedApps = await this.applicationService.mapToDTOs([application]);
     return mappedApps[0];
@@ -87,17 +84,7 @@ export class ApplicationController {
     @Body() updateDto: UpdateApplicationDto,
     @Req() req,
   ) {
-    //Verify User has Access
-    const existingApplication = await this.applicationService.getByFileId(
-      fileId,
-      req.user.entity,
-    );
-
-    if (!existingApplication) {
-      throw new ServiceNotFoundException(
-        'Failed to find application with given File ID and User',
-      );
-    }
+    await this.applicationService.getIfCreator(fileId, req.user.entity);
 
     const application = await this.applicationService.update(fileId, {
       applicant: updateDto.applicant,
@@ -110,17 +97,7 @@ export class ApplicationController {
 
   @Post('/:fileId/document')
   async attachDocument(@Req() req, @Param('fileId') fileId: string) {
-    //Verify User has Access
-    const existingApplication = this.applicationService.getByFileId(
-      fileId,
-      req.user.entity,
-    );
-
-    if (!existingApplication) {
-      throw new ServiceNotFoundException(
-        'Failed to find application with given File ID and User',
-      );
-    }
+    await this.applicationService.getIfCreator(fileId, req.user.entity);
 
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
@@ -149,16 +126,7 @@ export class ApplicationController {
     @Body() data: ApplicationSubmitToAlcsDto,
     @Req() req,
   ) {
-    const existingApplication = await this.applicationService.getByFileId(
-      fileId,
-      req.user.entity,
-    );
-
-    if (!existingApplication) {
-      throw new ServiceNotFoundException(
-        `Failed to find application with given File ID ${fileId} and User`,
-      );
-    }
+    await this.applicationService.getIfCreator(fileId, req.user.entity);
 
     return await this.applicationService.submitToAlcs(fileId, data);
   }
