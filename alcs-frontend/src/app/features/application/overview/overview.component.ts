@@ -18,6 +18,22 @@ const editLink = new Map<string, string>([
   ['SV', './site-visit-meeting'],
 ]);
 
+const SORTING_ORDER = {
+  //high comes first, 1 shows at bottom
+  MODIFICATION_REVIEW: 12,
+  MODIFICATION_REQUEST: 11,
+  RECON_REVIEW: 10,
+  RECON_REQUEST: 9,
+  CHAIR_REVIEW_DECISION: 8,
+  AUDITED_DECISION: 7,
+  DECISION_MADE: 6,
+  VISIT_REPORTS: 5,
+  VISIT_REQUESTS: 4,
+  ACKNOWLEDGE_COMPLETE: 3,
+  ACKNOWLEDGED_INCOMPLETE: 2,
+  SUBMITTED: 1,
+};
+
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
@@ -77,7 +93,7 @@ export class OverviewComponent implements OnInit {
     if (application.dateSubmittedToAlc) {
       mappedEvents.push({
         name: 'Submitted to ALC',
-        startDate: new Date(application.dateSubmittedToAlc),
+        startDate: new Date(application.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),
         isFulfilled: true,
       });
     }
@@ -85,7 +101,7 @@ export class OverviewComponent implements OnInit {
     if (application.dateAcknowledgedIncomplete) {
       mappedEvents.push({
         name: 'Acknowledged Incomplete',
-        startDate: new Date(application.dateAcknowledgedIncomplete),
+        startDate: new Date(application.dateAcknowledgedIncomplete + SORTING_ORDER.ACKNOWLEDGED_INCOMPLETE),
         isFulfilled: true,
       });
     }
@@ -93,7 +109,7 @@ export class OverviewComponent implements OnInit {
     if (application.dateAcknowledgedComplete) {
       mappedEvents.push({
         name: 'Acknowledged Complete',
-        startDate: new Date(application.dateAcknowledgedComplete),
+        startDate: new Date(application.dateAcknowledgedComplete + SORTING_ORDER.ACKNOWLEDGE_COMPLETE),
         isFulfilled: true,
       });
     }
@@ -111,7 +127,7 @@ export class OverviewComponent implements OnInit {
       if (decision.auditDate) {
         mappedEvents.push({
           name: `Audited Decision #${decisions.length - index}`,
-          startDate: new Date(decision.auditDate),
+          startDate: new Date(decision.auditDate + SORTING_ORDER.AUDITED_DECISION),
           isFulfilled: true,
         });
       }
@@ -119,7 +135,7 @@ export class OverviewComponent implements OnInit {
       if (decision.chairReviewDate) {
         mappedEvents.push({
           name: `Chair Reviewed Decision #${decisions.length - index}`,
-          startDate: new Date(decision.chairReviewDate),
+          startDate: new Date(decision.chairReviewDate + SORTING_ORDER.CHAIR_REVIEW_DECISION),
           isFulfilled: true,
         });
       }
@@ -128,7 +144,7 @@ export class OverviewComponent implements OnInit {
         name: `Decision #${decisions.length - index} Made${
           decisions.length - 1 === index ? ` - Active Days: ${application.activeDays}` : ''
         }`,
-        startDate: new Date(decision.date),
+        startDate: new Date(decision.date + SORTING_ORDER.DECISION_MADE),
         isFulfilled: true,
       });
     }
@@ -147,8 +163,8 @@ export class OverviewComponent implements OnInit {
       const count = typeCount.get(meeting.meetingType.code) || 0;
 
       mappedEvents.push({
-        name: `${meeting.meetingType.label} #${count + 1} Requested`,
-        startDate: new Date(meeting.meetingStartDate),
+        name: `${meeting.meetingType.label} #${count + 1}`,
+        startDate: new Date(meeting.meetingStartDate + SORTING_ORDER.VISIT_REQUESTS),
         fulfilledDate: meeting.meetingEndDate ? new Date(meeting.meetingEndDate) : undefined,
         isFulfilled: !!meeting.meetingEndDate,
         link: editLink.get(meeting.meetingType.code),
@@ -157,7 +173,7 @@ export class OverviewComponent implements OnInit {
       if (meeting.reportStartDate) {
         mappedEvents.push({
           name: `${meeting.meetingType.label} #${count + 1} Sent to Applicant`,
-          startDate: new Date(meeting.reportStartDate),
+          startDate: new Date(meeting.reportStartDate + SORTING_ORDER.VISIT_REPORTS),
           fulfilledDate: meeting.reportEndDate ? new Date(meeting.reportEndDate) : undefined,
           isFulfilled: !!meeting.reportEndDate,
           link: editLink.get(meeting.meetingType.code),
@@ -185,22 +201,22 @@ export class OverviewComponent implements OnInit {
       .entries()) {
       if (reconsideration.type.code === '33.1') {
         events.push({
-          name: `Reconsideration Request #${reconsiderations.length - index} ${reconsideration.type.code}`,
-          startDate: new Date(reconsideration.submittedDate),
+          name: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.type.code}`,
+          startDate: new Date(reconsideration.submittedDate + SORTING_ORDER.RECON_REQUEST),
           isFulfilled: true,
         });
       } else {
         events.push({
-          name: `Reconsideration Requested #${reconsiderations.length - index} ${reconsideration.type.code}`,
-          startDate: new Date(reconsideration.submittedDate),
+          name: `Reconsideration Requested #${reconsiderations.length - index} - ${reconsideration.type.code}`,
+          startDate: new Date(reconsideration.submittedDate + SORTING_ORDER.RECON_REQUEST),
           isFulfilled: true,
         });
         if (reconsideration.reviewDate) {
           events.push({
-            name: `Reconsideration Request Reviewed #${reconsiderations.length - index} ${
+            name: `Reconsideration Request Reviewed #${reconsiderations.length - index} - ${
               reconsideration.reviewOutcome?.label
             }`,
-            startDate: new Date(reconsideration.reviewDate),
+            startDate: new Date(reconsideration.reviewDate + SORTING_ORDER.RECON_REVIEW),
             isFulfilled: true,
           });
         }
@@ -216,13 +232,13 @@ export class OverviewComponent implements OnInit {
         name: `Modification Requested #${modifications.length - index} - ${
           modification.isTimeExtension ? 'Time Extension' : 'Other'
         }`,
-        startDate: new Date(modification.submittedDate),
+        startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
         isFulfilled: true,
       });
       if (modification.reviewDate) {
         events.push({
-          name: `Modification Request Reviewed #${modifications.length - index} ${modification.reviewOutcome?.label}`,
-          startDate: new Date(modification.reviewDate),
+          name: `Modification Request Reviewed #${modifications.length - index} - ${modification.reviewOutcome?.label}`,
+          startDate: new Date(modification.reviewDate + SORTING_ORDER.MODIFICATION_REVIEW),
           isFulfilled: true,
         });
       }
