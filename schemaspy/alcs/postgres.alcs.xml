@@ -593,6 +593,7 @@
             <child column="type_code" foreignKey="FK_30b9e07ab7c729f90911604179f" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="8" name="portal_html_description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="code" sequenceNumberInPK="1"/>
          <index name="PK_30b9e07ab7c729f90911604179f" unique="true">
             <column ascending="true" name="code"/>
