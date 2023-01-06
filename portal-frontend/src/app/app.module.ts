@@ -2,8 +2,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -53,8 +51,6 @@ import { SharedModule } from './shared/shared.module';
     MatSortModule,
     MatPaginatorModule,
     SharedModule,
-    MatRadioModule,
-    MatSidenavModule,
     MatToolbarModule,
   ],
   providers: [

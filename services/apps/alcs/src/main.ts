@@ -131,7 +131,6 @@ async function bootstrap() {
   registerPipes(app);
 
   // microservices
-  // TODO enable once openshift configuration is ready
   app.connectMicroservice<MicroserviceOptions>(grpcOptions);
   await app.startAllMicroservices();
 

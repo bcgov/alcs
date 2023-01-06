@@ -1,8 +1,25 @@
 <div>
   <div class="header-row">
-    <h3>Application Inbox</h3>
+    <diV class="title">
+      <h3>Portal Inbox</h3>
+      <button class="btn" (click)="onCreateApplication()" color="accent" mat-flat-button>
+        + Create New
+      </button>
+    </diV>
+    <p>
+      Create and manage your Applications, Notice of Intent, and Notification of SRW.
+    </p>
+    <div class="learn-more-wrapper">
+      <div class="learn-more-ctr" color="accent" (click)="onLearnMoreClick()">Learn
+        more<mat-icon>{{isLearnMoreOpen ? 'expand_less' : 'expand_more'}}</mat-icon></div>
+      <div *ngIf="isLearnMoreOpen">
+        <app-landing-page [isControlsVisible]="false"></app-landing-page>
+      </div>
+    </div>
     <div>
-      <button (click)="onCreateApplication()" color="accent" mat-flat-button>Create Application</button>
+      <button class="mobile-btn" (click)="onCreateApplication()" color="accent" mat-flat-button>
+        + Create New
+      </button>
     </div>
   </div>
   <div>

@@ -10,6 +10,7 @@ import { CreateApplicationDialogComponent } from '../create-application-dialog/c
 })
 export class HomeComponent implements OnInit {
   public name = '';
+  public isLearnMoreOpen = false;
 
   constructor(private authenticationService: AuthenticationService, private dialog: MatDialog) {}
 
@@ -21,6 +22,10 @@ export class HomeComponent implements OnInit {
   }
 
   async onCreateApplication() {
-    this.dialog.open(CreateApplicationDialogComponent);
+    this.dialog.open(CreateApplicationDialogComponent, { panelClass: 'no-padding', disableClose: true });
+  }
+
+  onLearnMoreClick() {
+    this.isLearnMoreOpen = !this.isLearnMoreOpen;
   }
 }

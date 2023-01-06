@@ -14,6 +14,7 @@ import { ApplicationModule } from './application/application.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
+import { DocumentModule } from './document/document.module';
 import { LogoutController } from './logout/logout.controller';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';

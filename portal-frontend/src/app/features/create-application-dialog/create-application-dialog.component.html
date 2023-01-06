@@ -1,15 +1,90 @@
-<div>
-  <label id='radio-label'><h4>Select Application Type</h4></label>
-  <mat-radio-group class='app-type-radio-group' aria-labelledby='radio-label' [(ngModel)]='applicationType' required>
-    <mat-radio-button *ngFor='let appType of applicationTypes' [value]='appType.code'>
-      {{ appType.portalLabel }}
-      <div *ngIf='applicationType === appType.code' class='app-type-description'>
-        <span [innerHTML]='appType.htmlDescription'></span>
+<div class="create-new-app-modal">
+  <div class="dialog-content-wrapper">
+    <label id="radio-label">
+      <h4>Create New</h4>
+    </label>
+
+    <div class="steps">
+      <div [ngClass]="{ 'step-submission-type': true, 'display-none': currentStepIndex !== 0 }">
+        <mat-radio-group (change)="onSubmissionTypeSelected($event)" color="primary">
+          <mat-radio-button *ngFor="let subType of submissionTypes" [value]="subType.code" required>
+            {{ subType.label }}
+          </mat-radio-button>
+        </mat-radio-group>
       </div>
-    </mat-radio-button>
-  </mat-radio-group>
-  <div class='create-dialog-buttons'>
-    <button mat-stroked-button color='primary' (click)='onCancel()'>Cancel</button>
-    <button mat-flat-button color='primary' (click)='onSubmit()' [disabled]='!applicationType'>Create</button>
+      <div [ngClass]="{ 'step-application-type': true, 'display-none': currentStepIndex !== 1 }">
+        <mat-radio-group
+          class="app-type-radio-group"
+          aria-labelledby="radio-label"
+          (change)="onAppTypeSelected($event)"
+          color="primary"
+          required
+        >
+          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
+            {{ appType.portalLabel }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+
+  <div id="warningBanner" class="warning-banner">
+    <div>
+      <span
+        *ngIf="
+          (!selectedSubmissionType && currentStepIndex === submissionStep) ||
+          (!selectedAppType && currentStepIndex === applicationStep)
+        "
+        >Select an option to learn more about the
+        {{ currentStepIndex === 0 ? 'submission type' : 'application type' }}.</span
+      >
+      <b class="sub-type-label" [ngClass]="{ 'display-none': currentStepIndex !== submissionStep }">{{
+        selectedSubmissionType?.label
+      }}</b>
+
+      <div
+        id="subTypeDescription"
+        *ngIf="currentStepIndex === submissionStep"
+        [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+        [innerHtml]="selectedSubmissionType?.portalHtmlDescription"
+      ></div>
+    </div>
+    <div>
+      <b class="app-type-label" [ngClass]="{ 'display-none': currentStepIndex !== applicationStep }">{{
+        selectedAppType?.portalLabel
+      }}</b>
+    </div>
+    <div
+      id="appTypeDescription"
+      *ngIf="currentStepIndex === applicationStep"
+      [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+      [innerHtml]="selectedAppType?.htmlDescription"
+    ></div>
+    <span
+      class="read-more-btn"
+      [ngClass]="{ 'display-none': !isReadMoreVisible() }"
+      *ngIf="
+        (selectedSubmissionType && currentStepIndex === submissionStep) ||
+        (selectedAppType && currentStepIndex === applicationStep)
+      "
+      (click)="onReadMoreClicked()"
+      ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+    >
+  </div>
+
+  <div class="dialog-controls-wrapper" *ngIf="currentStepIndex === submissionStep">
+    <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button [disabled]="!selectedSubmissionType" color="primary" (click)="onStepChange(1)">Next</button>
+  </div>
+  <div class="dialog-controls-wrapper" *ngIf="currentStepIndex === applicationStep">
+    <button mat-stroked-button color="primary" (click)="onStepChange(-1)">Back</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!selectedAppType || !selectedSubmissionType"
+    >
+      create
+    </button>
   </div>
 </div>

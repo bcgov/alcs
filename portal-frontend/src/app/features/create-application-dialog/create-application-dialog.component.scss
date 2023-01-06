@@ -1,41 +1,95 @@
 @import '../../../styles/colors';
+@import '../../../styles/typography';
+@import '../../../styles/functions';
 
-.app-type-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1.2rem;
-
-  .mat-radio-button {
-    margin: 1.2rem 0;
-  }
-
-  .mat-radio-label {
-    align-items: flex-start;
-  }
+.mat-dialog-container {
+  height: auto;
 }
 
-.app-type-description {
-  margin: 0.8rem 0;
-  padding: 0.8rem;
-  background-color: rgba($secondary-color-light, 0.5);
-  border-radius: 0.4rem;
-  word-wrap: normal;
-  white-space: normal;
-  font-size: 1.2rem !important;
-  line-height: 2.4rem !important;
+.create-new-app-modal {
+  line-height: rem(24);
+  max-height: rem(650);
 
-  a {
-    font-size: 1.2rem !important;
-    line-height: 2.4rem !important;
+  #radio-label {
+    display: block;
+    line-height: rem(36);
+    margin-bottom: rem(24);
   }
-}
 
-.create-dialog-buttons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2.4rem;
+  .dialog-content-wrapper {
+    margin: rem(16);
+  }
 
-  button {
-    margin-left: 1.2rem !important;
+  mat-radio-button {
+    display: block;
+    margin: rem(16);
+    margin-left: 0;
+
+    .mat-radio-label-content {
+      display: block;
+      white-space: normal;
+    }
+  }
+
+  .warning-banner {
+    padding: rem(16);
+    background-color: rgba($accent-color-light, 0.5);
+    margin-bottom: rem(16);
+
+    .read-more-btn {
+      padding-top: rem(8);
+
+      cursor: pointer;
+      display: flex;
+      justify-content: end;
+      color: $accent-color-dark;
+    }
+
+    .display-none {
+      display: none !important;
+    }
+  }
+
+  .dialog-controls-wrapper {
+    padding: 0 rem(16) rem(16) rem(16);
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      width: rem(116);
+    }
+  }
+
+  .sub-type-label,
+  .app-type-label {
+    display: none;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .sub-type-label,
+    .app-type-label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .warning-banner {
+      padding: 2rem 3rem;
+
+      .ellipsis-3 {
+        display: block;
+      }
+    }
+
+    .dialog-content-wrapper {
+      margin: 2rem 3rem;
+    }
+
+    .dialog-controls-wrapper {
+      justify-content: flex-end;
+
+      button {
+        margin-left: 1rem !important;
+      }
+    }
   }
 }
