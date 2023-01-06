@@ -16,6 +16,7 @@ export class LocalGovernmentService {
         name: string;
         uuid: string;
         bceidBusinessGuid?: string;
+        isFirstNation: boolean;
       }[];
     } else {
       this.logger.error('Failed to load localGovernments from Redis');

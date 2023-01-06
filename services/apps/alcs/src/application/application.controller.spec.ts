@@ -1,9 +1,14 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import {
+  initApplicationMockEntity,
+  initMockAssigneeDto,
+} from '../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { BoardSmallDto } from '../board/board.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
@@ -11,11 +16,6 @@ import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
-import {
-  initApplicationMockEntity,
-  initMockAssigneeDto,
-} from '../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
@@ -44,6 +44,7 @@ describe('ApplicationController', () => {
       uuid: 'fake',
       name: 'Local Government',
       preferredRegionCode: 'fake',
+      isFirstNation: false,
     },
     activeDays: 2,
     pausedDays: 0,

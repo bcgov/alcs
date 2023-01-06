@@ -22,7 +22,6 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
-import { DocumentModule } from './document/document.module';
 import { ParcelModule } from './parcel/parcel.module';
 
 @Module({

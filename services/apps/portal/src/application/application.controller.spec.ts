@@ -1,7 +1,7 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
@@ -100,6 +100,7 @@ describe('ApplicationController', () => {
         uuid: '',
         bceidBusinessGuid,
         name: 'fake-name',
+        isFirstNation: false,
       },
     ]);
     mockAppService.getByBceidBusinessGuid.mockResolvedValue([]);
