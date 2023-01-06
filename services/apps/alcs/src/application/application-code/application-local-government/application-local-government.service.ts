@@ -23,6 +23,7 @@ export class ApplicationLocalGovernmentService {
         uuid: true,
         name: true,
         bceidBusinessGuid: true,
+        isFirstNation: true,
       },
     });
 

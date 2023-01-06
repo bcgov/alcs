@@ -10,6 +10,9 @@ export class ApplicationLocalGovernment extends Base {
   @Column({ unique: true, nullable: true })
   bceidBusinessGuid: string;
 
+  @Column({ default: false })
+  isFirstNation: boolean;
+
   @ManyToOne(() => ApplicationRegion, {
     nullable: false,
   })

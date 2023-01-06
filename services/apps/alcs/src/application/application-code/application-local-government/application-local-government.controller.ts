@@ -3,8 +3,8 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
+import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { ApplicationLocalGovernmentDto } from './application-local-government.dto';
 import { ApplicationLocalGovernmentService } from './application-local-government.service';
@@ -26,6 +26,7 @@ export class ApplicationLocalGovernmentController {
       name: government.name,
       preferredRegionCode: government.preferredRegion.code,
       uuid: government.uuid,
+      isFirstNation: government.isFirstNation,
     }));
   }
 }
