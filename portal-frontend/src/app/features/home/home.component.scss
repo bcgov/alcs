@@ -2,30 +2,6 @@
 @import '../../../styles/functions';
 @import '../../../styles/typography';
 
-.warning-banner {
-  background-color: rgba($accent-color-light, 0.5);
-  padding: 1.6rem;
-  display: flex;
-  margin: 2.4rem 0;
-
-  .description {
-    min-width: 0;
-    word-break: break-word;
-  }
-
-  .icon {
-    display: flex;
-    justify-content: center;
-    padding: 1.2rem;
-  }
-
-  @media screen and (min-width: $desktopBreakpoint) {
-    .icon {
-      align-items: center;
-    }
-  }
-}
-
 .header-row {
   .learn-more-wrapper {
     margin-top: rem(24);
@@ -76,6 +52,30 @@
 }
 
 .navigation-wrapper {
+  .warning-banner {
+    background-color: rgba($accent-color-light, 0.5);
+    padding: 1.6rem;
+    display: flex;
+    margin: 2.4rem 0;
+
+    .description {
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      padding: 1.2rem;
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      .icon {
+        align-items: center;
+      }
+    }
+  }
+
   ::ng-deep .mat-tab-body-content {
     overflow-x: hidden;
   }
