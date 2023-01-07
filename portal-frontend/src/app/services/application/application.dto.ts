@@ -19,7 +19,10 @@ export interface ApplicationDto {
   type: string;
   localGovernmentUuid: string;
   documents: ApplicationDocumentDto[];
-  status: ApplicationStatusDto[];
+  status: ApplicationStatusDto;
+  canEdit: boolean;
+  canReview: boolean;
+  canView: boolean;
 }
 
 export interface UpdateApplicationDto {

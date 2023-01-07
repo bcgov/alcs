@@ -1,6 +1,13 @@
 import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 
+export type LocalGovernment = {
+  name: string;
+  uuid: string;
+  bceidBusinessGuid?: string;
+  isFirstNation: boolean;
+};
+
 @Injectable()
 export class LocalGovernmentService {
   private logger: Logger = new Logger(LocalGovernmentService.name);
@@ -12,12 +19,7 @@ export class LocalGovernmentService {
     const jsonBlob = await redis.get('localGovernments');
     if (jsonBlob) {
       const localGovernments = JSON.parse(jsonBlob);
-      return localGovernments as {
-        name: string;
-        uuid: string;
-        bceidBusinessGuid?: string;
-        isFirstNation: boolean;
-      }[];
+      return localGovernments as LocalGovernment[];
     } else {
       this.logger.error('Failed to load localGovernments from Redis');
       return [];

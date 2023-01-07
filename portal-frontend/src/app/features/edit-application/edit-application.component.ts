@@ -70,9 +70,9 @@ export class EditApplicationComponent implements OnInit {
   async onSaveAndExit() {
     if (this.firstForm.dirty) {
       const localGovernment = this.validateAndGetLocalGovernment();
-
+      const applicantName = this.applicantName.getRawValue();
       await this.applicationService.updatePending(this.fileId, {
-        applicant: this.applicantName.getRawValue(),
+        applicant: applicantName,
         localGovernmentUuid: localGovernment?.uuid,
       });
     }
@@ -89,17 +89,20 @@ export class EditApplicationComponent implements OnInit {
     if (this.firstForm.valid) {
       const localGovernment = this.validateAndGetLocalGovernment();
 
-      this.applicationService.submitToAlcs(this.fileId, {
+      await this.applicationService.submitToAlcs(this.fileId, {
         applicant: this.applicantName.getRawValue(),
         localGovernmentUuid: localGovernment?.uuid,
       });
+      await this.router.navigateByUrl('/home');
     }
   }
 
   private async loadExistingApplication(fileId: string) {
     const application = await this.applicationService.getByFileId(fileId);
     if (application) {
-      this.applicantName.patchValue(application.applicant);
+      if (application.applicant) {
+        this.applicantName.patchValue(application.applicant);
+      }
       this.applicationType = application.type;
       this.documents = application.documents;
       const lg = this.localGovernments.find((lg) => lg.uuid === application.localGovernmentUuid);

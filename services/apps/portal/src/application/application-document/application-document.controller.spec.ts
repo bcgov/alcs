@@ -9,6 +9,8 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
+import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationDocumentController } from './application-document.controller';
 import { AttachExternalDocumentDto } from './application-document.dto';
 import { ApplicationDocument } from './application-document.entity';
@@ -17,6 +19,7 @@ import { ApplicationDocumentService } from './application-document.service';
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
   let appDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
   let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   const mockDocument = new ApplicationDocument({
@@ -24,8 +27,9 @@ describe('ApplicationDocumentController', () => {
   });
 
   beforeEach(async () => {
-    appDocumentService = createMock<ApplicationDocumentService>();
+    appDocumentService = createMock();
     mockAlcsDocumentService = createMock();
+    mockApplicationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -45,6 +49,10 @@ describe('ApplicationDocumentController', () => {
           useValue: {},
         },
         {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
+        },
+        {
           provide: AlcsDocumentService,
           useValue: mockAlcsDocumentService,
         },
@@ -54,6 +62,8 @@ describe('ApplicationDocumentController', () => {
     controller = module.get<ApplicationDocumentController>(
       ApplicationDocumentController,
     );
+
+    mockApplicationService.verifyAccess.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -132,6 +142,11 @@ describe('ApplicationDocumentController', () => {
     const res = await controller.listDocuments(
       'fake-number',
       'certificateOfTitle',
+      {
+        user: {
+          entity: {},
+        },
+      },
     );
 
     //expect(res[0].mimeType).toEqual(mockDocument.document.mimeType);
@@ -141,7 +156,11 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.delete.mockResolvedValue(mockDocument);
     appDocumentService.get.mockResolvedValue(mockDocument);
 
-    await controller.delete('fake-uuid');
+    await controller.delete('fake-uuid', {
+      user: {
+        entity: {},
+      },
+    });
 
     expect(appDocumentService.get).toHaveBeenCalledTimes(1);
     expect(appDocumentService.delete).toHaveBeenCalledTimes(1);
@@ -154,7 +173,11 @@ describe('ApplicationDocumentController', () => {
     });
     appDocumentService.get.mockResolvedValue(mockDocument);
 
-    const res = await controller.open('fake-uuid');
+    const res = await controller.open('fake-uuid', {
+      user: {
+        entity: {},
+      },
+    });
 
     expect(res.url).toEqual(fakeUrl);
   });

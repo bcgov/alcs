@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -16,6 +17,7 @@ import * as config from 'config';
 import { firstValueFrom } from 'rxjs';
 import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
+import { ApplicationService } from '../application.service';
 import {
   ApplicationDocumentDto,
   AttachExternalDocumentDto,
@@ -33,6 +35,7 @@ import { ApplicationDocumentService } from './application-document.service';
 export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationService: ApplicationService,
     private alcsDocumentService: AlcsDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -43,6 +46,8 @@ export class ApplicationDocumentController {
     @Param('documentType') documentType: string,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
+
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
@@ -73,7 +78,10 @@ export class ApplicationDocumentController {
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
     @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Req() req,
   ): Promise<ApplicationDocumentDto[]> {
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
+
     if (!DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
         `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
@@ -94,14 +102,26 @@ export class ApplicationDocumentController {
   }
 
   @Get('/:uuid/open')
-  async open(@Param('uuid') fileUuid: string) {
+  async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+
+    await this.applicationService.verifyAccess(
+      document.applicationFileNumber,
+      req.user.entity,
+    );
+
     return await this.applicationDocumentService.getInlineUrl(document);
   }
 
   @Delete('/:uuid')
-  async delete(@Param('uuid') fileUuid: string) {
+  async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+
+    await this.applicationService.verifyAccess(
+      document.applicationFileNumber,
+      req.user.entity,
+    );
+
     await this.applicationDocumentService.delete(document);
     return {};
   }
@@ -112,6 +132,8 @@ export class ApplicationDocumentController {
     @Body() data: AttachExternalDocumentDto,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
+
     const alcsDocument = await firstValueFrom(
       this.alcsDocumentService.createExternalDocument({
         ...data,

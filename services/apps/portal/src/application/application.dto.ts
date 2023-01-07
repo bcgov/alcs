@@ -26,6 +26,10 @@ export class ApplicationDto {
   status: ApplicationStatusDto;
 
   type: string;
+
+  canEdit: boolean;
+  canReview: boolean;
+  canView: boolean;
 }
 
 export class CreateApplicationDto {

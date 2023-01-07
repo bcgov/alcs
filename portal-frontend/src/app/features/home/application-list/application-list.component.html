@@ -33,7 +33,8 @@
       <td mat-cell *matCellDef='let row'>
         <div class='label' [ngClass]='{
         "in-progress": row.status.code == "PROG",
-        "submitted": row.status.code == "SUBM",
+        "submitted-to-alc": row.status.code == "SUBM",
+        "submitted-to-lg": row.status.code == "SUBG",
         "cancelled": row.status.code == "CANC"
         }'>
           {{row.status.label}}
@@ -51,11 +52,27 @@
       <td mat-cell *matCellDef='let row'>
         <button
           [routerLink]="'/application/' + row.fileNumber"
-          *ngIf="row.status.code === 'PROG'"
+          *ngIf='row.canEdit'
           mat-flat-button
           color='primary'
         >
           Edit
+        </button>
+
+        <button
+          *ngIf='row.canReview'
+          mat-flat-button
+          color='primary'
+        >
+          Review
+        </button>
+
+        <button
+          *ngIf='row.canView'
+          mat-flat-button
+          color='primary'
+        >
+          View
         </button>
       </td>
     </ng-container>
