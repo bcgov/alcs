@@ -76,6 +76,10 @@
 }
 
 .navigation-wrapper {
+  ::ng-deep .mat-tab-body-content {
+    overflow-x: hidden;
+  }
+
   ::ng-deep .mat-tab-header-pagination {
     display: none !important;
   }

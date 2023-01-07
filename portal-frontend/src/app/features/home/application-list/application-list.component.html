@@ -1,64 +1,70 @@
-<div>
-  <table mat-table [dataSource]='dataSource'>
-    <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
-    <tr mat-row *matRowDef='let row; columns: displayedColumns'></tr>
+<div class="table-wrapper">
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource">
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-    <!-- Row shown when there is no matching data. -->
-    <tr class='mat-row' *matNoDataRow>
-      <td class='mat-cell' colspan='4'>No Applications Created</td>
-    </tr>
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No Applications Created</td>
+      </tr>
 
-    <ng-container matColumnDef='fileNumber'>
-      <th mat-header-cell *matHeaderCellDef>Application ID</th>
-      <td mat-cell *matCellDef='let row'>{{ row.fileNumber }}</td>
-    </ng-container>
+      <ng-container matColumnDef="fileNumber">
+        <th mat-header-cell *matHeaderCellDef>Application ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.fileNumber }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef='dateCreated'>
-      <th mat-header-cell *matHeaderCellDef>Date Created</th>
-      <td mat-cell *matCellDef='let row'>{{ row.createdAt | date }}</td>
-    </ng-container>
+      <ng-container matColumnDef="dateCreated">
+        <th mat-header-cell *matHeaderCellDef>Date Created</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdAt | date }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef='applicant'>
-      <th mat-header-cell *matHeaderCellDef>Applicant Name</th>
-      <td mat-cell *matCellDef='let row'>{{ row.applicant || '(Unknown)' }}</td>
-    </ng-container>
+      <ng-container matColumnDef="applicant">
+        <th mat-header-cell *matHeaderCellDef>Applicant Name</th>
+        <td mat-cell *matCellDef="let row">{{ row.applicant || '(Unknown)' }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef='applicationType'>
-      <th mat-header-cell *matHeaderCellDef>Application Type</th>
-      <td mat-cell *matCellDef='let row'>{{ row.type }}</td>
-    </ng-container>
+      <ng-container matColumnDef="applicationType">
+        <th mat-header-cell *matHeaderCellDef>Application Type</th>
+        <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef='status'>
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef='let row'>
-        <div class='label' [ngClass]='{
-        "in-progress": row.status.code == "PROG",
-        "submitted": row.status.code == "SUBM",
-        "cancelled": row.status.code == "CANC"
-        }'>
-          {{row.status.label}}
-        </div>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <div
+            class="label"
+            [ngClass]="{
+              'in-progress': row.status.code == 'PROG',
+              submitted: row.status.code == 'SUBM',
+              cancelled: row.status.code == 'CANC'
+            }"
+          >
+            {{ row.status.label }}
+          </div>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef='lastUpdated'>
-      <th mat-header-cell *matHeaderCellDef>Last Updated</th>
-      <td mat-cell *matCellDef='let row'>{{ row.updatedAt | date }}</td>
-    </ng-container>
+      <ng-container matColumnDef="lastUpdated">
+        <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+        <td mat-cell *matCellDef="let row">{{ row.updatedAt | date }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef='actions'>
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef='let row'>
-        <button
-          [routerLink]="'/application/' + row.fileNumber"
-          *ngIf="row.status.code === 'PROG'"
-          mat-flat-button
-          color='primary'
-        >
-          Edit
-        </button>
-      </td>
-    </ng-container>
-  </table>
-  <mat-paginator [pageSizeOptions]='[5, 10, 25, 100]' aria-label='Select page of applications'></mat-paginator>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <button
+            [routerLink]="'/application/' + row.fileNumber"
+            *ngIf="row.status.code === 'PROG'"
+            mat-flat-button
+            color="primary"
+          >
+            Edit
+          </button>
+        </td>
+      </ng-container>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of applications"></mat-paginator>
+  </div>
 </div>
