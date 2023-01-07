@@ -8,11 +8,21 @@
   display: flex;
   margin: 2.4rem 0;
 
+  .description {
+    min-width: 0;
+    word-break: break-word;
+  }
+
   .icon {
     display: flex;
     justify-content: center;
-    align-items: center;
     padding: 1.2rem;
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    .icon {
+      align-items: center;
+    }
   }
 }
 
@@ -100,7 +110,7 @@
     flex-flow: row wrap;
     justify-content: space-between;
 
-    .mat-tab-label {
+    ::ng-deep .mat-tab-label {
       width: 100%;
       margin-top: rem(24);
       height: rem(32);
@@ -109,7 +119,7 @@
       color: $white;
     }
 
-    .mat-tab-label.mat-tab-label-active {
+    ::ng-deep .mat-tab-label.mat-tab-label-active {
       background-color: $primary-color-dark;
     }
   }
