@@ -2,20 +2,6 @@
 @import '../../../styles/functions';
 @import '../../../styles/typography';
 
-.warning-banner {
-  background-color: rgba($accent-color-light, 0.5);
-  padding: 1.6rem;
-  display: flex;
-  margin: 2.4rem 0;
-
-  .icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1.2rem;
-  }
-}
-
 .header-row {
   .learn-more-wrapper {
     margin-top: rem(24);
@@ -36,6 +22,7 @@
   }
   .mobile-btn {
     width: 100%;
+    margin-bottom: rem(8) !important;
   }
   .btn {
     display: none;
@@ -45,7 +32,7 @@
     display: block;
   }
 
-  @media screen and (min-height: $desktopBreakpoint) {
+  @media screen and (min-width: $desktopBreakpoint) {
     .title {
       line-height: rem(52);
       display: flex;
@@ -60,6 +47,96 @@
       display: inline-block;
       width: rem(193);
       height: rem(43);
+    }
+  }
+}
+
+.navigation-wrapper {
+  .warning-banner {
+    background-color: rgba($accent-color-light, 0.5);
+    padding: 1.6rem;
+    display: flex;
+    margin: 2.4rem 0;
+
+    .description {
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      padding: 1.2rem;
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      .icon {
+        align-items: center;
+      }
+    }
+  }
+
+  ::ng-deep .mat-tab-body-content {
+    overflow-x: hidden;
+  }
+
+  ::ng-deep .mat-tab-header-pagination {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-tab-header {
+    overflow-x: scroll !important;
+    display: flex;
+    flex-wrap: nowrap;
+    border-bottom: none;
+  }
+
+  ::ng-deep .mat-tab-label-container {
+    overflow: visible !important;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row !important;
+    flex-flow: row wrap !important;
+    justify-content: space-between;
+  }
+
+  ::ng-deep .mat-tab-header::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-ink-bar {
+    display: none;
+  }
+  ::ng-deep .mat-tab-labels {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex-flow: row wrap;
+    justify-content: space-between;
+
+    ::ng-deep .mat-tab-label {
+      width: 100%;
+      margin-top: rem(24);
+      height: rem(32);
+      background: $primary-color;
+      opacity: 1;
+      color: $white;
+    }
+
+    ::ng-deep .mat-tab-label.mat-tab-label-active {
+      background-color: $primary-color-dark;
+    }
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    ::ng-deep .mat-tab-labels {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+
+      .mat-tab-label {
+        width: 33%;
+      }
     }
   }
 }

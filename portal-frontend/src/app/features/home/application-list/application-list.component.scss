@@ -1,8 +1,5 @@
-@import "../../../../styles/colors";
-
-table {
-  width: 100%;
-}
+@import '../../../../styles/colors';
+@import '../../../../styles/functions';
 
 .label {
   display: inline-block;
@@ -28,4 +25,25 @@ table {
 .cancelled {
   background-color: $secondary-color-light;
   color: $secondary-color-dark;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+
+  .table-container {
+    display: table;
+
+    table {
+      width: 100%;
+    }
+
+    ::ng-deep .mat-table {
+      ::ng-deep .mat-cell,
+      ::ng-deep .mat-header-cell,
+      ::ng-deep .mat-row,
+      ::ng-deep .mat-header-row {
+        min-width: rem(150);
+      }
+    }
+  }
 }

@@ -10,12 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DATE_FORMATS } from './utils/date-format';
-import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [CommonModule],
@@ -36,6 +37,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatTooltipModule,
     BrowserAnimationsModule,
     MatRadioModule,
+    MatTabsModule,
   ],
 })
 export class SharedModule {

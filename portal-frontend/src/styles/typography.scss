@@ -82,6 +82,10 @@ button {
   @include typography-style(rem(14), 700);
 }
 
+.mat-radio-label-content {
+  font-weight: 400;
+}
+
 @media screen and (min-width: $tabletBreakpoint) {
   h1 {
     @include typography-style(rem(37), 700);
