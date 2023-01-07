@@ -63,7 +63,7 @@ describe('ApplicationDocumentController', () => {
       ApplicationDocumentController,
     );
 
-    mockApplicationService.getIfCreator.mockResolvedValue({} as Application);
+    mockApplicationService.verifyAccess.mockResolvedValue();
   });
 
   it('should be defined', () => {

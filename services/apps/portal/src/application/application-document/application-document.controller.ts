@@ -46,8 +46,7 @@ export class ApplicationDocumentController {
     @Param('documentType') documentType: string,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
-    //Verify Access
-    await this.applicationService.getIfCreator(fileNumber, req.user.entity);
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
 
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
@@ -81,8 +80,7 @@ export class ApplicationDocumentController {
     @Param('documentType') documentType: DOCUMENT_TYPE,
     @Req() req,
   ): Promise<ApplicationDocumentDto[]> {
-    //Verify Access
-    await this.applicationService.getIfCreator(fileNumber, req.user.entity);
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
 
     if (!DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
@@ -107,8 +105,7 @@ export class ApplicationDocumentController {
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
 
-    //Verify Access
-    await this.applicationService.getIfCreator(
+    await this.applicationService.verifyAccess(
       document.applicationFileNumber,
       req.user.entity,
     );
@@ -120,8 +117,7 @@ export class ApplicationDocumentController {
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
 
-    //Verify Access
-    await this.applicationService.getIfCreator(
+    await this.applicationService.verifyAccess(
       document.applicationFileNumber,
       req.user.entity,
     );
@@ -136,8 +132,7 @@ export class ApplicationDocumentController {
     @Body() data: AttachExternalDocumentDto,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
-    //Verify Access
-    await this.applicationService.getIfCreator(fileNumber, req.user.entity);
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
 
     const alcsDocument = await firstValueFrom(
       this.alcsDocumentService.createExternalDocument({

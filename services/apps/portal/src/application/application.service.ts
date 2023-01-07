@@ -210,7 +210,6 @@ export class ApplicationService {
   }
 
   async getIfCreator(fileNumber: string, user: User) {
-    //Verify User has Access
     const existingApplication = await this.getByFileId(fileNumber, user);
     if (!existingApplication) {
       throw new ServiceNotFoundException(
@@ -218,6 +217,10 @@ export class ApplicationService {
       );
     }
     return existingApplication;
+  }
+
+  async verifyAccess(fileNumber: string, user: User) {
+    await this.getIfCreator(fileNumber, user);
   }
 
   async mapToDTOs(
