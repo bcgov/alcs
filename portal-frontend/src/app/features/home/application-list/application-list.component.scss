@@ -12,9 +12,14 @@
   color: $accent-color-dark;
 }
 
-.submitted {
+.submitted-to-alc {
   background-color: $primary-color-light;
   color: $primary-color-dark;
+}
+
+.submitted-to-lg {
+  background-color: $secondary-color-light;
+  color: $secondary-color-dark;
 }
 
 .cancelled {

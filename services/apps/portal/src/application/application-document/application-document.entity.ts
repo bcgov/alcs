@@ -32,6 +32,9 @@ export class ApplicationDocument extends BaseEntity {
   application: Application;
 
   @Column()
+  applicationFileNumber: string;
+
+  @Column()
   alcsDocumentUuid: string;
 
   @Column()

@@ -44,30 +44,34 @@ export class ApplicationController {
         (lg) => lg.bceidBusinessGuid === user.bceidBusinessGuid,
       );
       if (matchingGovernment) {
-        const applications =
-          await this.applicationService.getByBceidBusinessGuid(
-            user.bceidBusinessGuid,
-          );
-        return this.applicationService.mapToDTOs(applications);
+        const applications = await this.applicationService.getForGovernment(
+          matchingGovernment,
+        );
+
+        return this.applicationService.mapToDTOs(
+          [...applications],
+          user,
+          matchingGovernment,
+        );
       }
     }
 
     const applications = await this.applicationService.getByUser(user);
-    return this.applicationService.mapToDTOs(applications);
+    return this.applicationService.mapToDTOs(applications, user);
   }
 
   @Get('/:fileId')
   async getApplication(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
-    const application = await this.applicationService.getByFileId(fileId, user);
+    const application = await this.applicationService.getIfCreator(
+      fileId,
+      user,
+    );
 
-    if (!application) {
-      throw new ServiceNotFoundException(
-        `Failed to load application with File ID ${fileId}`,
-      );
-    }
-
-    const mappedApps = await this.applicationService.mapToDTOs([application]);
+    const mappedApps = await this.applicationService.mapToDTOs(
+      [application],
+      req.user.entity,
+    );
     return mappedApps[0];
   }
 
@@ -87,40 +91,23 @@ export class ApplicationController {
     @Body() updateDto: UpdateApplicationDto,
     @Req() req,
   ) {
-    //Verify User has Access
-    const existingApplication = await this.applicationService.getByFileId(
-      fileId,
-      req.user.entity,
-    );
-
-    if (!existingApplication) {
-      throw new ServiceNotFoundException(
-        'Failed to find application with given File ID and User',
-      );
-    }
+    await this.applicationService.getIfCreator(fileId, req.user.entity);
 
     const application = await this.applicationService.update(fileId, {
       applicant: updateDto.applicant,
       localGovernmentUuid: updateDto.localGovernmentUuid,
     });
 
-    const mappedApps = await this.applicationService.mapToDTOs([application]);
+    const mappedApps = await this.applicationService.mapToDTOs(
+      [application],
+      req.user.entity,
+    );
     return mappedApps[0];
   }
 
   @Post('/:fileId/document')
   async attachDocument(@Req() req, @Param('fileId') fileId: string) {
-    //Verify User has Access
-    const existingApplication = this.applicationService.getByFileId(
-      fileId,
-      req.user.entity,
-    );
-
-    if (!existingApplication) {
-      throw new ServiceNotFoundException(
-        'Failed to find application with given File ID and User',
-      );
-    }
+    await this.applicationService.getIfCreator(fileId, req.user.entity);
 
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
@@ -144,22 +131,20 @@ export class ApplicationController {
   }
 
   @Post('/alcs/submit/:fileId')
-  async submitToAlcs(
+  async submitAsApplicant(
     @Param('fileId') fileId: string,
     @Body() data: ApplicationSubmitToAlcsDto,
     @Req() req,
   ) {
-    const existingApplication = await this.applicationService.getByFileId(
+    const application = await this.applicationService.getIfCreator(
       fileId,
       req.user.entity,
     );
 
-    if (!existingApplication) {
-      throw new ServiceNotFoundException(
-        `Failed to find application with given File ID ${fileId} and User`,
-      );
+    if (application.typeCode === 'TURP') {
+      return await this.applicationService.submitToAlcs(fileId, data);
+    } else {
+      return await this.applicationService.submitToLg(fileId);
     }
-
-    return await this.applicationService.submitToAlcs(fileId, data);
   }
 }

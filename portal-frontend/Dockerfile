@@ -1,5 +1,5 @@
 ###### Install dependencies only when needed ######
-FROM node:16.15-alpine AS build
+FROM node:18.12-alpine AS build
 
 # Make /app as working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy package.json file
 COPY package.json package-lock.json ./
 
-# Install dependencies 
+# Install dependencies
 RUN npm ci
 
 # Copy the source code to the /app directory
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build --  --output-path=dist --output-hashing=all
 
 
-######  Use Nginx alpine image  ###### 
+######  Use Nginx alpine image  ######
 FROM nginx:stable-alpine
 
 ### OpenShift fixes ####
