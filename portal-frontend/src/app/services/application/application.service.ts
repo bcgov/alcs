@@ -58,6 +58,15 @@ export class ApplicationService {
     }
   }
 
+  async cancel(fileId: string) {
+    try {
+      return await firstValueFrom(this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}/${fileId}/cancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to cancel Application, please try again later');
+    }
+    return undefined;
+  }
+
   async submitToAlcs(fileId: string, updateDto: UpdateApplicationDto) {
     try {
       await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));

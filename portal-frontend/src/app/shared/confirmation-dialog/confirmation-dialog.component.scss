@@ -1,0 +1,25 @@
+@import '../../../styles/functions';
+@import '../../../styles/typography';
+
+.mat-dialog-actions {
+  justify-content: flex-end;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    & {
+      justify-content: flex-end;
+
+      button:not(:last-child) {
+        margin-right: rem(24) !important;
+      }
+    }
+  }
+
+  button:not(:last-child) {
+    margin-right: rem(9) !important;
+  }
+}

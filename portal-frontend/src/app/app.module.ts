@@ -18,6 +18,8 @@ import { LandingPageComponent } from './features/landing-page/landing-page.compo
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
 import { DragDropDirective } from './shared/file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './shared/file-drag-drop/file-drag-drop.component';
 import { FooterComponent } from './shared/footer/footer.component';
@@ -41,6 +43,7 @@ import { SharedModule } from './shared/shared.module';
     LandingPageComponent,
     ParcelEntryComponent,
     FileSizePipe,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { SharedModule } from './shared/shared.module';
     MatToolbarModule,
   ],
   providers: [
+    ConfirmationDialogService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     {
       provide: APP_INITIALIZER,
