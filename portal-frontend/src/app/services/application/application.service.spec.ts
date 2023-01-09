@@ -147,4 +147,22 @@ describe('ApplicationService', () => {
     expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
+
+  it('should make a post request for cancelling', async () => {
+    mockHttpClient.post.mockReturnValue(of({}));
+
+    await service.cancel('fileId');
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.post.mock.calls[0][0]).toContain('application');
+  });
+
+  it('should show an error toast if cancelling a file fails', async () => {
+    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
+
+    await service.cancel('fileId');
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
 });

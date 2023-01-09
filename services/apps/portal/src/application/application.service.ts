@@ -240,4 +240,22 @@ export class ApplicationService {
         userGovernment.uuid === app.localGovernmentUuid,
     }));
   }
+
+  async cancel(application: Application) {
+    const cancelledStatus = await this.applicationStatusRepository.findOne({
+      where: {
+        code: APPLICATION_STATUS.CANCELLED,
+      },
+    });
+
+    if (!cancelledStatus) {
+      throw new BaseServiceException(
+        `Failed to load Cancelled Status for Cancelling Application ${application.fileNumber}`,
+      );
+    }
+
+    application.status = cancelledStatus;
+
+    return this.applicationRepository.save(application);
+  }
 }

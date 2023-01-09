@@ -58,6 +58,8 @@
             Edit
           </button>
 
+          <button *ngIf="row.canEdit" mat-flat-button color="primary" (click)="onCancel(row.fileNumber)">Cancel</button>
+
           <button *ngIf="row.canReview" mat-flat-button color="primary">Review</button>
 
           <button *ngIf="row.canView" mat-flat-button color="primary">View</button>

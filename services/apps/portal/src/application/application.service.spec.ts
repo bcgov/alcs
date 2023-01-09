@@ -15,6 +15,7 @@ import { ApplicationTypeService } from '../alcs/application-type/application-typ
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
+import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -140,6 +141,36 @@ describe('ApplicationService', () => {
     const res = await service.getByFileId('', new User());
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
+  });
+
+  it('should load the canceled status and save the application for cancel', async () => {
+    const application = new Application();
+    const cancelStatus = new ApplicationStatus({
+      code: APPLICATION_STATUS.CANCELLED,
+    });
+    mockStatusRepository.findOne.mockResolvedValue(cancelStatus);
+
+    mockRepository.save.mockResolvedValue(new Application());
+
+    const res = await service.cancel(application);
+    expect(res).toBeDefined();
+    expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save.mock.calls[0][0].status).toEqual(cancelStatus);
+  });
+
+  it('should throw an exception if it fails to load cancelled status', async () => {
+    const application = new Application();
+    mockStatusRepository.findOne.mockResolvedValue(null);
+
+    const promise = service.cancel(application);
+    await expect(promise).rejects.toMatchObject(
+      new BaseServiceException(
+        `Failed to load Cancelled Status for Cancelling Application ${application.fileNumber}`,
+      ),
+    );
+
+    expect(mockRepository.save).toHaveBeenCalledTimes(0);
   });
 
   it('should update the status when submitting to local government', async () => {

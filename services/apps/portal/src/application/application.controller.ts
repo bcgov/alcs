@@ -17,6 +17,7 @@ import { User } from '../user/user.entity';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
+import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import {
   ApplicationSubmitToAlcsDto,
   CreateApplicationDto,
@@ -91,7 +92,7 @@ export class ApplicationController {
     @Body() updateDto: UpdateApplicationDto,
     @Req() req,
   ) {
-    await this.applicationService.getIfCreator(fileId, req.user.entity);
+    await this.applicationService.verifyAccess(fileId, req.user.entity);
 
     const application = await this.applicationService.update(fileId, {
       applicant: updateDto.applicant,
@@ -105,9 +106,31 @@ export class ApplicationController {
     return mappedApps[0];
   }
 
+  @Post('/:fileId/cancel')
+  async cancel(@Param('fileId') fileId: string, @Req() req) {
+    const application = await this.applicationService.getIfCreator(
+      fileId,
+      req.user.entity,
+    );
+
+    if (application.status.code !== APPLICATION_STATUS.IN_PROGRESS) {
+      throw new BadRequestException('Can only cancel in progress Applications');
+    }
+
+    const updatedApplication = await this.applicationService.cancel(
+      application,
+    );
+
+    const mappedApps = await this.applicationService.mapToDTOs(
+      [updatedApplication],
+      req.user.entity,
+    );
+    return mappedApps[0];
+  }
+
   @Post('/:fileId/document')
   async attachDocument(@Req() req, @Param('fileId') fileId: string) {
-    await this.applicationService.getIfCreator(fileId, req.user.entity);
+    await this.applicationService.verifyAccess(fileId, req.user.entity);
 
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
