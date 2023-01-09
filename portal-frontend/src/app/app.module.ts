@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
+import { ChangeApplicationTypeDialogComponent } from './features/edit-application/change-application-type-dialog/change-application-type-dialog.component';
 import { EditApplicationComponent } from './features/edit-application/edit-application.component';
 import { ParcelEntryComponent } from './features/edit-application/parcel-entry/parcel-entry.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
@@ -38,6 +39,7 @@ import { SharedModule } from './shared/shared.module';
     DragDropDirective,
     ApplicationListComponent,
     CreateApplicationDialogComponent,
+    ChangeApplicationTypeDialogComponent,
     LandingPageComponent,
     ParcelEntryComponent,
     FileSizePipe,

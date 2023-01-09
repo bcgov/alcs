@@ -1,0 +1,64 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/functions';
+@import '../../../../styles/typography';
+
+.change-app-type-modal {
+  .content {
+    padding: rem(16);
+
+    ::ng-deep .mat-horizontal-stepper-header-container {
+      display: none;
+    }
+
+    ::ng-deep .mat-horizontal-content-container {
+      padding: 0;
+    }
+
+    .step-header {
+      margin-bottom: rem(24);
+    }
+
+    .step-body {
+      margin-bottom: rem(32);
+    }
+
+    .step-controls {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    // TODO this is a desktop version
+    // .step-controls {
+    //   display: flex;
+    //   justify-content: flex-end;
+
+    //   button {
+    //     margin-left: rem(24);
+    //   }
+    // }
+
+    .warning-banner {
+      background-color: rgba($accent-color-light, 0.5);
+      display: flex;
+      padding: rem(16);
+
+      .description {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .icon {
+        display: flex;
+        justify-content: center;
+        padding: 1.2rem;
+      }
+
+      @media screen and (min-width: $desktopBreakpoint) {
+        .icon {
+          align-items: center;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+<ng-template #startStepControls>
+  <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+  <button mat-flat-button color="primary" (click)="stepper.next()">continue</button>
+</ng-template>
+
+<ng-template #intermediateStepControls>
+  <button mat-stroked-button color="primary" (click)="stepper.previous()">back</button>
+  <button mat-flat-button color="primary" (click)="stepper.next()">update</button>
+</ng-template>
+
+<ng-template #lastStepControls>
+  <button mat-stroked-button color="primary" (click)="stepper.previous()">back</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
+</ng-template>
+
+<div class="change-app-type-modal">
+  <div class="content">
+    <mat-stepper [linear]="false" #stepper>
+      <mat-step>
+        <div class="step-header">
+          <h4>Change Application Type</h4>
+        </div>
+
+        <div class="step-body">
+          <div class="warning-banner responsive-flex-wrapper">
+            <div class="icon">
+              <mat-icon>warning</mat-icon>
+            </div>
+            <div class="description">
+              <div>
+                <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want
+                to continue?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-controls">
+          <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
+        </div>
+      </mat-step>
+
+      <mat-step>
+        <div class="step-body">body here</div>
+
+        <div class="step-controls">
+          <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
+        </div>
+      </mat-step>
+
+      <mat-step>
+        <div class="step-body">body here</div>
+
+        <div class="step-controls">
+          <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
+  <!-- <div>
+    Place option description here
+  </div> -->
+</div>
