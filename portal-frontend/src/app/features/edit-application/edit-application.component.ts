@@ -151,12 +151,19 @@ export class EditApplicationComponent implements OnInit {
   }
 
   async onApplicationTypeChangeClicked() {
-    this.dialog.open(ChangeApplicationTypeDialogComponent, {
-      panelClass: 'no-padding',
-      disableClose: true,
-      data: {
-        fileId: this.fileId,
-      },
-    });
+    this.dialog
+      .open(ChangeApplicationTypeDialogComponent, {
+        panelClass: 'no-padding',
+        disableClose: true,
+        data: {
+          fileId: this.fileId,
+        },
+      })
+      .beforeClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.loadExistingApplication(this.fileId);
+        }
+      });
   }
 }

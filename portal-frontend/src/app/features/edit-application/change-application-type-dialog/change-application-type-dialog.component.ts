@@ -61,8 +61,6 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterConten
     const result = await this.applicationService.updatePending(this.fileId, { typeCode: this.selectedAppType!.code });
     if (result) {
       this.onCancel(true);
-      // FIXME? should this be calling fetch application and reloading observable (note: observable is not implemented)
-      window.location.reload();
     }
   }
 
