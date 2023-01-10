@@ -82,7 +82,9 @@ export class ApplicationService {
     application.applicant = updateDto.applicant || null;
     application.localGovernmentUuid = updateDto.localGovernmentUuid || null;
 
-    return this.applicationRepository.save(application);
+    await this.applicationRepository.save(application);
+
+    return this.getOrFail(application.fileNumber);
   }
 
   async submitToLg(fileNumber: string) {
@@ -108,7 +110,11 @@ export class ApplicationService {
 
     const application = await this.applicationRepository.findOneOrFail({
       where: { fileNumber },
-      relations: { documents: true },
+      relations: {
+        documents: {
+          document: true,
+        },
+      },
     });
 
     let submittedApp: ApplicationGrpcResponse | null = null;
@@ -123,7 +129,7 @@ export class ApplicationService {
           dateSubmittedToAlc: Date.now().toString(),
           documents: application?.documents.map((d) => ({
             type: d.type,
-            documentUuid: d.alcsDocumentUuid,
+            documentUuid: d.document.alcsDocumentUuid,
           })),
         }),
       );
@@ -204,7 +210,9 @@ export class ApplicationService {
         },
       },
       relations: {
-        documents: true,
+        documents: {
+          document: true,
+        },
       },
     });
   }

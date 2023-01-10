@@ -8,7 +8,6 @@ import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-applicati
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
-import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -70,14 +69,6 @@ describe('ApplicationController', () => {
     mockAppService.verifyAccess.mockResolvedValue();
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
-
-    mockDocumentService.attachDocument.mockResolvedValue(
-      new ApplicationDocument({
-        uploadedBy: new User({
-          name: 'Bruce Wayne',
-        }),
-      }),
-    );
   });
 
   it('should be defined', () => {
@@ -198,30 +189,6 @@ describe('ApplicationController', () => {
 
     expect(application).toBeDefined();
     expect(mockAppService.create).toHaveBeenCalledTimes(1);
-  });
-
-  it('should call out to service when attaching a document', async () => {
-    const document = await controller.attachDocument(
-      {
-        isMultipart: () => true,
-        file: () => ({
-          fields: {
-            localGovernment: localGovernmentUuid,
-            applicant,
-          },
-        }),
-        user: {
-          entity: new User({
-            name: 'Bruce Wayne',
-          }),
-        },
-      },
-      'file-id',
-    );
-
-    expect(document).toBeDefined();
-    expect(document!.uploadedBy).toEqual('Bruce Wayne');
-    expect(mockDocumentService.attachDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service for update and map', async () => {

@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, Index, OneToMany } from 'typeorm';
-import { ApplicationDocument } from '../application/application-document/application-document.entity';
+import { Document } from '../document/document.entity';
 import { Base } from '../common/entities/base.entity';
 
 @Entity()
@@ -48,8 +48,4 @@ export class User extends Base {
   @AutoMap()
   @Column({ default: [], array: true, type: 'text' })
   clientRoles: string[];
-
-  @AutoMap()
-  @OneToMany(() => ApplicationDocument, (document) => document.uploadedBy)
-  documents: Document[];
 }

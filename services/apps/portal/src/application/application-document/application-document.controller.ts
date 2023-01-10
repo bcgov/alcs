@@ -1,4 +1,3 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -39,40 +38,6 @@ export class ApplicationDocumentController {
     private alcsDocumentService: AlcsDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
-
-  @Post('/application/:fileNumber/:documentType')
-  async attachDocument(
-    @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: string,
-    @Req() req,
-  ): Promise<ApplicationDocumentDto> {
-    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
-
-    if (!req.isMultipart()) {
-      throw new BadRequestException('Request is not multipart');
-    }
-
-    if (!DOCUMENT_TYPES.includes(documentType as DOCUMENT_TYPE)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
-    const file = await req.file();
-    const savedDocument = await this.applicationDocumentService.attachDocument(
-      fileNumber,
-      file,
-      req.user.entity,
-      documentType as DOCUMENT_TYPE,
-    );
-    return this.mapper.map(
-      savedDocument,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
-  }
 
   @Get('/application/:fileNumber/:documentType')
   async listDocuments(
