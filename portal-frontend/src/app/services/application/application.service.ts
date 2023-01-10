@@ -22,6 +22,7 @@ export class ApplicationService {
     try {
       return await firstValueFrom(this.httpClient.get<ApplicationDto[]>(`${this.serviceUrl}`));
     } catch (e) {
+      console.error(e);
       this.toastService.showErrorToast('Failed to load Applications, please try again later');
       return [];
     }
@@ -31,6 +32,7 @@ export class ApplicationService {
     try {
       return await firstValueFrom(this.httpClient.get<ApplicationDto>(`${this.serviceUrl}/${fileId}`));
     } catch (e) {
+      console.error(e);
       this.toastService.showErrorToast('Failed to load Application, please try again later');
       return undefined;
     }
@@ -44,6 +46,7 @@ export class ApplicationService {
         })
       );
     } catch (e) {
+      console.error(e);
       this.toastService.showErrorToast('Failed to create Application, please try again later');
     }
     return undefined;
@@ -54,8 +57,19 @@ export class ApplicationService {
       await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto));
       this.toastService.showSuccessToast('Application Saved');
     } catch (e) {
+      console.error(e);
       this.toastService.showErrorToast('Failed to update Application, please try again');
     }
+  }
+
+  async cancel(fileId: string) {
+    try {
+      return await firstValueFrom(this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}/${fileId}/cancel`, {}));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to cancel Application, please try again later');
+    }
+    return undefined;
   }
 
   async submitToAlcs(fileId: string, updateDto: UpdateApplicationDto) {
@@ -63,6 +77,7 @@ export class ApplicationService {
       await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
+      console.error(e);
       this.toastService.showErrorToast('Failed to submit Application, please try again');
     }
   }

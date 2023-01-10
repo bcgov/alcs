@@ -4,6 +4,7 @@ import { AlcsModule } from '../alcs/alcs.module';
 import { ApplicationGrpcModule } from '../alcs/application-grpc/application-grpc.module';
 import { AuthorizationModule } from '../common/authorization/authorization.module';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { DocumentModule } from '../document/document.module';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -22,6 +23,7 @@ import { ApplicationService } from './application.service';
     AlcsModule,
     AuthorizationModule,
     ApplicationGrpcModule,
+    DocumentModule,
   ],
   providers: [
     ApplicationService,

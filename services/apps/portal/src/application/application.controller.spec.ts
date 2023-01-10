@@ -1,14 +1,16 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
-import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
+import { APPLICATION_STATUS } from './application-status/application-status.dto';
+import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto, ApplicationSubmitToAlcsDto } from './application.dto';
 import { Application } from './application.entity';
@@ -64,16 +66,9 @@ describe('ApplicationController', () => {
 
     mockAppService.create.mockResolvedValue('2');
     mockAppService.getIfCreator.mockResolvedValue(new Application());
+    mockAppService.verifyAccess.mockResolvedValue();
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
-
-    mockDocumentService.attachDocument.mockResolvedValue(
-      new ApplicationDocument({
-        uploadedBy: new User({
-          name: 'Bruce Wayne',
-        }),
-      }),
-    );
   });
 
   it('should be defined', () => {
@@ -117,6 +112,50 @@ describe('ApplicationController', () => {
     expect(mockAppService.getForGovernment).toHaveBeenCalledTimes(1);
   });
 
+  it('should call out to service when cancelling an application', async () => {
+    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
+    mockAppService.getIfCreator.mockResolvedValue(
+      new Application({
+        status: new ApplicationStatus({
+          code: APPLICATION_STATUS.IN_PROGRESS,
+        }),
+      }),
+    );
+    mockAppService.cancel.mockResolvedValue(new Application());
+
+    const application = await controller.cancel('file-id', {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    expect(application).toBeDefined();
+    expect(mockAppService.cancel).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an exception when trying to cancel an application that is not in progress', async () => {
+    mockAppService.getIfCreator.mockResolvedValue(
+      new Application({
+        status: new ApplicationStatus({
+          code: APPLICATION_STATUS.CANCELLED,
+        }),
+      }),
+    );
+
+    const promise = controller.cancel('file-id', {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    await expect(promise).rejects.toMatchObject(
+      new BadRequestException('Can only cancel in progress Applications'),
+    );
+    expect(mockAppService.cancel).toHaveBeenCalledTimes(0);
+    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+  });
+
   it('should call out to service when fetching an application', async () => {
     mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
 
@@ -152,30 +191,6 @@ describe('ApplicationController', () => {
     expect(mockAppService.create).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service when attaching a document', async () => {
-    const document = await controller.attachDocument(
-      {
-        isMultipart: () => true,
-        file: () => ({
-          fields: {
-            localGovernment: localGovernmentUuid,
-            applicant,
-          },
-        }),
-        user: {
-          entity: new User({
-            name: 'Bruce Wayne',
-          }),
-        },
-      },
-      'file-id',
-    );
-
-    expect(document).toBeDefined();
-    expect(document!.uploadedBy).toEqual('Bruce Wayne');
-    expect(mockDocumentService.attachDocument).toHaveBeenCalledTimes(1);
-  });
-
   it('should call out to service for update and map', async () => {
     await controller.update(
       'file-id',
@@ -190,7 +205,7 @@ describe('ApplicationController', () => {
       },
     );
 
-    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccess).toHaveBeenCalledTimes(1);
     expect(mockAppService.mapToDTOs).toHaveBeenCalledTimes(1);
   });
 

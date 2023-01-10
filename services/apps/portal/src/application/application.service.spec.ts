@@ -1,7 +1,7 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Observable, of } from 'rxjs';
@@ -13,12 +13,13 @@ import {
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
+import { Document } from '../document/document.entity';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
+import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import mock = jest.mock;
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
@@ -142,6 +143,36 @@ describe('ApplicationService', () => {
     expect(res).toBe(application);
   });
 
+  it('should load the canceled status and save the application for cancel', async () => {
+    const application = new Application();
+    const cancelStatus = new ApplicationStatus({
+      code: APPLICATION_STATUS.CANCELLED,
+    });
+    mockStatusRepository.findOne.mockResolvedValue(cancelStatus);
+
+    mockRepository.save.mockResolvedValue(new Application());
+
+    const res = await service.cancel(application);
+    expect(res).toBeDefined();
+    expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save.mock.calls[0][0].status).toEqual(cancelStatus);
+  });
+
+  it('should throw an exception if it fails to load cancelled status', async () => {
+    const application = new Application();
+    mockStatusRepository.findOne.mockResolvedValue(null);
+
+    const promise = service.cancel(application);
+    await expect(promise).rejects.toMatchObject(
+      new BaseServiceException(
+        `Failed to load Cancelled Status for Cancelling Application ${application.fileNumber}`,
+      ),
+    );
+
+    expect(mockRepository.save).toHaveBeenCalledTimes(0);
+  });
+
   it('should update the status when submitting to local government', async () => {
     const mockStatus = new ApplicationStatus({
       code: 'code',
@@ -202,7 +233,12 @@ describe('ApplicationService', () => {
       typeCode,
       localGovernmentUuid,
       documents: [
-        { type: 'fake', alcsDocumentUuid: 'uuid-fake' } as ApplicationDocument,
+        new ApplicationDocument({
+          type: 'fake',
+          document: new Document({
+            alcsDocumentUuid: 'document-uuid',
+          }),
+        }),
       ],
     });
 
@@ -227,7 +263,7 @@ describe('ApplicationService', () => {
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(1);
+    expect(mockRepository.findOne).toBeCalledTimes(2);
   });
 
   it('should call out to grpc service on submitToAlcs', async () => {
@@ -245,7 +281,12 @@ describe('ApplicationService', () => {
         label: '',
       }),
       documents: [
-        { type: 'fake', alcsDocumentUuid: 'uuid-fake' } as ApplicationDocument,
+        new ApplicationDocument({
+          type: 'fake',
+          document: new Document({
+            alcsDocumentUuid: 'document-uuid',
+          }),
+        }),
       ],
     });
 
@@ -271,6 +312,6 @@ describe('ApplicationService', () => {
     expect(res.fileNumber).toEqual(mockApplication.fileNumber);
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(1);
+    expect(mockRepository.findOne).toBeCalledTimes(2);
   });
 });

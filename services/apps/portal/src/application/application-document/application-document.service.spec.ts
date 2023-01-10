@@ -1,12 +1,11 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { of } from 'rxjs';
 import { Repository } from 'typeorm';
-import { DocumentService } from '../../alcs/document/document.service';
-import { User } from '../../user/user.entity';
+import { Document } from '../../document/document.entity';
+import { DocumentService } from '../../document/document.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationDocument } from './application-document.entity';
@@ -31,12 +30,13 @@ describe('ApplicationDocumentService', () => {
       fileNumber,
     });
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
-    mockDocumentService.create.mockResolvedValue('fake-uuid');
     mockApplicationService.getIfCreator.mockResolvedValue(mockApplication);
 
     mockAppDocument = new ApplicationDocument({
       uuid: 'document-uuid',
-      alcsDocumentUuid: 'alcs-document-uuid',
+      document: new Document({
+        alcsDocumentUuid: 'alcs-document-uuid',
+      }),
     });
 
     const module: TestingModule = await Test.createTestingModule({
@@ -66,52 +66,17 @@ describe('ApplicationDocumentService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create a document in the happy path', async () => {
-    const mockUser = {};
-    const mockFile = {};
-
-    mockRepository.save.mockResolvedValue(mockAppDocument);
-
-    const res = await service.attachDocument(
-      fileNumber,
-      mockFile as MultipartFile,
-      mockUser as User,
-      'certificateOfTitle',
-    );
-
-    expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
-    expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
-    expect(mockDocumentService.create.mock.calls[0][0]).toBe(
-      'application/12345',
-    );
-    expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockFile);
-    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockUser);
-
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save.mock.calls[0][0].application).toBe(
-      mockApplication,
-    );
-
-    expect(res).toBe(mockAppDocument);
-  });
-
-  it('should delete document and application document when deleting', async () => {
-    mockDocumentService.delete.mockReturnValue(
-      of({
-        uuid: 'fake-uuid',
-      }),
-    );
-    mockRepository.delete.mockResolvedValue({} as any);
+  it('should call through when deleting a document', async () => {
+    mockDocumentService.delete.mockResolvedValue({
+      uuid: 'fake-uuid',
+    });
 
     await service.delete(mockAppDocument);
 
     expect(mockDocumentService.delete).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.delete.mock.calls[0][0]).toBe(
-      mockAppDocument.alcsDocumentUuid,
+      mockAppDocument.document,
     );
-
-    expect(mockRepository.delete).toHaveBeenCalledTimes(1);
-    expect(mockRepository.delete.mock.calls[0][0]).toBe(mockAppDocument.uuid);
   });
 
   it('should call through for get', async () => {
@@ -151,7 +116,11 @@ describe('ApplicationDocumentService', () => {
   });
 
   it('should call through for download', async () => {
-    const mockAppDocument = new ApplicationDocument();
+    const mockAppDocument = new ApplicationDocument({
+      document: new Document({
+        alcsDocumentUuid: 'document-id',
+      }),
+    });
 
     const fakeUrl = 'mock-url';
     mockDocumentService.getDownloadUrl.mockReturnValue(of({ url: fakeUrl }));

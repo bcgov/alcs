@@ -83,7 +83,9 @@ export class ApplicationService {
     application.localGovernmentUuid = updateDto.localGovernmentUuid || null;
     application.typeCode = updateDto.typeCode || application.typeCode;
 
-    return this.applicationRepository.save(application);
+    await this.applicationRepository.save(application);
+
+    return this.getOrFail(application.fileNumber);
   }
 
   async submitToLg(fileNumber: string) {
@@ -109,7 +111,11 @@ export class ApplicationService {
 
     const application = await this.applicationRepository.findOneOrFail({
       where: { fileNumber },
-      relations: { documents: true },
+      relations: {
+        documents: {
+          document: true,
+        },
+      },
     });
 
     let submittedApp: ApplicationGrpcResponse | null = null;
@@ -124,7 +130,7 @@ export class ApplicationService {
           dateSubmittedToAlc: Date.now().toString(),
           documents: application?.documents.map((d) => ({
             type: d.type,
-            documentUuid: d.alcsDocumentUuid,
+            documentUuid: d.document.alcsDocumentUuid,
           })),
         }),
       );
@@ -205,7 +211,9 @@ export class ApplicationService {
         },
       },
       relations: {
-        documents: true,
+        documents: {
+          document: true,
+        },
       },
     });
   }
@@ -240,5 +248,23 @@ export class ApplicationService {
         userGovernment &&
         userGovernment.uuid === app.localGovernmentUuid,
     }));
+  }
+
+  async cancel(application: Application) {
+    const cancelledStatus = await this.applicationStatusRepository.findOne({
+      where: {
+        code: APPLICATION_STATUS.CANCELLED,
+      },
+    });
+
+    if (!cancelledStatus) {
+      throw new BaseServiceException(
+        `Failed to load Cancelled Status for Cancelling Application ${application.fileNumber}`,
+      );
+    }
+
+    application.status = cancelledStatus;
+
+    return this.applicationRepository.save(application);
   }
 }

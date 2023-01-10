@@ -5,6 +5,7 @@
   display: inline-block;
   padding: 0.4rem 2rem;
   border-radius: 1.6rem;
+  font-weight: bold;
 }
 
 .in-progress {
@@ -23,8 +24,8 @@
 }
 
 .cancelled {
-  background-color: $secondary-color-light;
-  color: $secondary-color-dark;
+  background-color: $grey-light;
+  color: $grey-dark;
 }
 
 .table-wrapper {
@@ -32,6 +33,7 @@
 
   .table-container {
     display: table;
+    width: 100%;
 
     table {
       width: 100%;

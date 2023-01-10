@@ -1,9 +1,10 @@
-import { MultipartFile } from '@fastify/multipart';
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { Any, Repository } from 'typeorm';
-import { DocumentService } from '../../alcs/document/document.service';
+import { Document } from '../../document/document.entity';
+import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application.service';
 import {
@@ -20,48 +21,30 @@ export class ApplicationDocumentService {
     private applicationDocumentRepository: Repository<ApplicationDocument>,
   ) {}
 
-  async attachDocument(
-    fileNumber: string,
-    file: MultipartFile,
-    user: User,
-    documentType: DOCUMENT_TYPE,
-  ) {
-    const application = await this.applicationService.getOrFail(fileNumber);
-    const documentUuid = await this.documentService.create(
-      `application/${fileNumber}`,
-      file,
-      user,
-    );
-    const appDocument = new ApplicationDocument({
-      type: documentType,
-      application,
-      alcsDocumentUuid: documentUuid,
-      uploadedBy: user,
-    });
-
-    return this.applicationDocumentRepository.save(appDocument);
-  }
-
   async get(uuid: string) {
-    const document = await this.applicationDocumentRepository.findOne({
-      where: {
-        uuid: uuid,
-      },
-    });
-    if (!document) {
+    const applicationDocument =
+      await this.applicationDocumentRepository.findOne({
+        where: {
+          uuid: uuid,
+        },
+        relations: {
+          document: true,
+        },
+      });
+    if (!applicationDocument) {
       throw new NotFoundException(`Failed to find document ${uuid}`);
     }
-    return document;
+    return applicationDocument;
   }
 
-  async delete(document: ApplicationDocument) {
-    const res = await firstValueFrom(
-      this.documentService.delete(document.alcsDocumentUuid),
-    );
-    if (res) {
-      await this.applicationDocumentRepository.delete(document.uuid);
+  async delete(applicationDocument: ApplicationDocument) {
+    if (!applicationDocument.document) {
+      throw new BaseServiceException(
+        'Failed to delete ApplicationDocument, passed ApplicationDocument without Document',
+      );
     }
-    return document;
+
+    return this.documentService.delete(applicationDocument.document);
   }
 
   async list(fileNumber: string, documentType: DOCUMENT_TYPE) {
@@ -71,6 +54,9 @@ export class ApplicationDocumentService {
         application: {
           fileNumber,
         },
+      },
+      relations: {
+        document: true,
       },
     });
   }
@@ -86,9 +72,11 @@ export class ApplicationDocumentService {
     });
   }
 
-  getInlineUrl(document: ApplicationDocument) {
+  getInlineUrl(applicationDocument: ApplicationDocument) {
     return firstValueFrom(
-      this.documentService.getDownloadUrl(document.alcsDocumentUuid),
+      this.documentService.getDownloadUrl(
+        applicationDocument.document.alcsDocumentUuid,
+      ),
     );
   }
 
@@ -102,14 +90,18 @@ export class ApplicationDocumentService {
   ) {
     const application = await this.applicationService.getOrFail(fileNumber);
 
+    const document = new Document({
+      fileName,
+      fileSize,
+      alcsDocumentUuid,
+      uploadedBy: user,
+    });
+
     return this.applicationDocumentRepository.save(
       new ApplicationDocument({
-        fileName,
-        fileSize,
+        document,
         type: documentType,
         application,
-        alcsDocumentUuid: alcsDocumentUuid,
-        uploadedBy: user,
       }),
     );
   }
