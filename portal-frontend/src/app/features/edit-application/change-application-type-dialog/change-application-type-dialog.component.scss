@@ -36,6 +36,15 @@
     display: flex;
     justify-content: space-between;
     padding: 0 rem(16);
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      justify-content: flex-end;
+      padding: 0 rem(48);
+
+      button {
+        margin-left: rem(25) !important;
+      }
+    }
   }
 
   .app-type-step-extension {
@@ -43,10 +52,11 @@
   }
 
   .content {
-    padding: rem(16);
+    margin: rem(16);
 
     .mat-radio-button {
       display: block;
+      margin: rem(16) 0;
     }
 
     ::ng-deep .mat-horizontal-stepper-header-container {
@@ -91,12 +101,24 @@
       .icon {
         display: flex;
         justify-content: center;
-        padding: 1.2rem;
+        margin-right: 1.2rem;
+      }
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      margin: rem(32) rem(48);
+      margin-bottom: rem(16);
+      padding: 0;
+
+      .warning-banner .icon {
+        align-items: center;
       }
 
-      @media screen and (min-width: $desktopBreakpoint) {
-        .icon {
-          align-items: center;
+      .step-controls {
+        justify-content: flex-end;
+
+        button {
+          margin-left: rem(25) !important;
         }
       }
     }
