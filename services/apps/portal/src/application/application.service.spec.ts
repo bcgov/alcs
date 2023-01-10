@@ -1,7 +1,7 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Observable, of } from 'rxjs';
@@ -313,5 +313,39 @@ describe('ApplicationService', () => {
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
     expect(mockRepository.findOne).toBeCalledTimes(2);
+  });
+
+  it('should update fields if application exists', async () => {
+    const applicant = 'Bruce Wayne';
+    const typeCode = 'fake-code';
+    const fileNumber = 'fake';
+    const localGovernmentUuid = 'fake-uuid';
+
+    const mockApplication = new Application({
+      fileNumber,
+      applicant: 'incognito',
+      typeCode: 'fake',
+      localGovernmentUuid: 'uuid',
+    });
+
+    mockRepository.findOne.mockResolvedValue(mockApplication);
+    mockRepository.save.mockResolvedValue(mockApplication);
+
+    const result = await service.update(fileNumber, {
+      applicant,
+      typeCode,
+      localGovernmentUuid,
+    });
+
+    expect(mockRepository.save).toBeCalledTimes(1);
+    expect(mockRepository.findOne).toBeCalledTimes(2);
+    expect(result).toEqual(
+      new Application({
+        fileNumber,
+        applicant,
+        typeCode,
+        localGovernmentUuid,
+      }),
+    );
   });
 });
