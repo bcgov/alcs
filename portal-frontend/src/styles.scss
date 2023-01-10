@@ -65,3 +65,7 @@ body {
 .ellipsis-3 {
   @include text-ellipsis($lines: 3);
 }
+
+.mat-dialog-container {
+  max-height: 99vh !important;
+}
