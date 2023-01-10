@@ -172,6 +172,35 @@ describe('ApplicationController', () => {
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
   });
 
+  it('should fetch application by bceid if user has same guid as a local government', async () => {
+    const bceidBusinessGuid = 'business-guid';
+    mockLgService.get.mockResolvedValue([
+      {
+        uuid: '',
+        bceidBusinessGuid,
+        name: 'fake-name',
+        isFirstNation: false,
+      },
+    ]);
+    const mockApplication = new Application();
+    mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
+    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
+
+    const application = await controller.getApplication(
+      {
+        user: {
+          entity: new User({
+            bceidBusinessGuid,
+          }),
+        },
+      },
+      'file-id',
+    );
+
+    expect(application).toBeDefined();
+    expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
+  });
+
   it('should call out to service when creating an application', async () => {
     mockAppService.create.mockResolvedValue('');
     mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);

@@ -76,7 +76,7 @@ export class EditApplicationComponent implements OnInit {
         localGovernmentUuid: localGovernment?.uuid,
       });
     }
-    await this.router.navigateByUrl('/home');
+    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSubmit() {

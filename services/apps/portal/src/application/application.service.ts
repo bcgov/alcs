@@ -201,6 +201,42 @@ export class ApplicationService {
     });
   }
 
+  async getForGovernmentByFileId(
+    fileNumber: string,
+    localGovernment: LocalGovernment,
+  ) {
+    const existingApplication = await this.applicationRepository.findOne({
+      where: [
+        //Owns
+        {
+          fileNumber,
+          createdBy: {
+            bceidBusinessGuid: localGovernment.bceidBusinessGuid,
+          },
+        },
+        //Submitted
+        {
+          fileNumber,
+          localGovernmentUuid: localGovernment.uuid,
+          status: {
+            code: APPLICATION_STATUS.SUBMITTED_TO_LG,
+          },
+        },
+      ],
+      order: {
+        updatedAt: 'DESC',
+      },
+    });
+
+    if (!existingApplication) {
+      throw new ServiceNotFoundException(
+        `Failed to load application with File ID ${fileNumber}`,
+      );
+    }
+
+    return existingApplication;
+  }
+
   getByFileId(fileNumber: string, user: User) {
     return this.applicationRepository.findOne({
       where: {
@@ -241,7 +277,7 @@ export class ApplicationService {
       ...this.mapper.map(app, Application, ApplicationDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
       canEdit: app.status.code == APPLICATION_STATUS.IN_PROGRESS,
-      canView: app.status.code == APPLICATION_STATUS.SUBMITTED_TO_ALC,
+      canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
       canReview:
         app.status.code == APPLICATION_STATUS.SUBMITTED_TO_LG &&
         userGovernment &&

@@ -26,6 +26,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { FileSizePipe } from './shared/pipes/fileSize.pipe';
 import { SharedModule } from './shared/shared.module';
+import { ViewApplicationComponent } from './features/view-application/view-application.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { SharedModule } from './shared/shared.module';
     ParcelEntryComponent,
     FileSizePipe,
     ConfirmationDialogComponent,
+    ViewApplicationComponent,
   ],
   imports: [
     BrowserModule,
