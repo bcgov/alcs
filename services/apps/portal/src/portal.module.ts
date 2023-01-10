@@ -23,6 +23,7 @@ import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
 import { ParcelModule } from './parcel/parcel.module';
+import { ApplicationReviewModule } from './application-review/application-review.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { ParcelModule } from './parcel/parcel.module';
     AlcsModule,
     DocumentModule,
     ParcelModule,
+    ApplicationReviewModule,
   ],
   controllers: [PortalController, LogoutController],
   providers: [

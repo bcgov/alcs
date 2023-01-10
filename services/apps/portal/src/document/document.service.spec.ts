@@ -1,19 +1,24 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { of } from 'rxjs';
-import { DocumentUploadResponseGrpc } from '../document-grpc/alcs-document.message.interface';
-import { AlcsDocumentService } from '../document-grpc/alcs-document.service';
+import { Repository } from 'typeorm';
+import { DocumentUploadResponseGrpc } from '../alcs/document-grpc/alcs-document.message.interface';
+import { AlcsDocumentService } from '../alcs/document-grpc/alcs-document.service';
+import { Document } from './document.entity';
 import { DocumentService } from './document.service';
 
 describe('DocumentService', () => {
   let service: DocumentService;
 
   let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
+  let mockRepository: DeepMocked<Repository<Document>>;
 
   beforeEach(async () => {
     mockAlcsDocumentService = createMock();
+    mockRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -27,8 +32,8 @@ describe('DocumentService', () => {
           useValue: mockAlcsDocumentService,
         },
         {
-          provide: AlcsDocumentService,
-          useValue: mockAlcsDocumentService,
+          provide: getRepositoryToken(Document),
+          useValue: mockRepository,
         },
       ],
     }).compile();
@@ -46,12 +51,14 @@ describe('DocumentService', () => {
         uuid: '',
       }),
     );
+    mockRepository.delete.mockResolvedValue({} as any);
 
-    await service.delete('');
+    await service.delete(new Document());
 
     expect(
       mockAlcsDocumentService.deleteExternalDocument,
     ).toHaveBeenCalledTimes(1);
+    expect(mockRepository.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to ALCS for getDownloadUrl', async () => {

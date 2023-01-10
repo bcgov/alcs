@@ -1,4 +1,3 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -14,8 +13,6 @@ import {
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
-import { ApplicationDocumentDto } from './application-document/application-document.dto';
-import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import {
@@ -126,31 +123,6 @@ export class ApplicationController {
       req.user.entity,
     );
     return mappedApps[0];
-  }
-
-  @Post('/:fileId/document')
-  async attachDocument(@Req() req, @Param('fileId') fileId: string) {
-    await this.applicationService.verifyAccess(fileId, req.user.entity);
-
-    if (!req.isMultipart()) {
-      throw new BadRequestException('Request is not multipart');
-    }
-
-    const data = await req.file();
-    if (data) {
-      const document = await this.documentService.attachDocument(
-        fileId,
-        data,
-        req.user.entity,
-        'certificateOfTitle',
-      );
-
-      return this.mapper.mapAsync(
-        document,
-        ApplicationDocument,
-        ApplicationDocumentDto,
-      );
-    }
   }
 
   @Post('/alcs/submit/:fileId')

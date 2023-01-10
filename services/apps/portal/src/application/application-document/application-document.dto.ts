@@ -16,9 +16,6 @@ export class ApplicationDocumentDto {
   fileSize: number;
 
   @AutoMap()
-  mimeType: string;
-
-  @AutoMap()
   uploadedBy: string;
 
   @AutoMap()

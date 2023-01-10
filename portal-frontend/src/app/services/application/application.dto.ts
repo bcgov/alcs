@@ -7,7 +7,6 @@ export interface ApplicationDocumentDto {
   uuid: string;
   fileName: string;
   fileSize: number;
-  mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
 }

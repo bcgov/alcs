@@ -1,15 +1,14 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
-import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationDocumentController } from './application-document.controller';
 import { AttachExternalDocumentDto } from './application-document.dto';
@@ -23,7 +22,9 @@ describe('ApplicationDocumentController', () => {
   let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   const mockDocument = new ApplicationDocument({
-    uploadedBy: new User(),
+    document: new Document({
+      uploadedBy: new User(),
+    }),
   });
 
   beforeEach(async () => {
@@ -68,72 +69,6 @@ describe('ApplicationDocumentController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  it('should return the attached document', async () => {
-    const mockFile = {};
-    const mockUser = {};
-
-    appDocumentService.attachDocument.mockResolvedValue(mockDocument);
-
-    const res = await controller.attachDocument('file', 'certificateOfTitle', {
-      isMultipart: () => true,
-      file: () => mockFile,
-      user: {
-        entity: mockUser,
-      },
-    });
-
-    //expect(res.mimeType).toEqual(mockDocument.document.mimeType);
-
-    expect(appDocumentService.attachDocument).toHaveBeenCalledTimes(1);
-    expect(appDocumentService.attachDocument.mock.calls[0][0]).toEqual('file');
-    expect(appDocumentService.attachDocument.mock.calls[0][1]).toEqual(
-      mockFile,
-    );
-    expect(appDocumentService.attachDocument.mock.calls[0][2]).toEqual(
-      mockUser,
-    );
-  });
-
-  it('should throw an exception if request is not the right type', async () => {
-    const mockFile = {};
-    const mockUser = {};
-
-    appDocumentService.attachDocument.mockResolvedValue(mockDocument);
-
-    await expect(
-      controller.attachDocument('file', 'certificateOfTitle', {
-        isMultipart: () => false,
-        file: () => mockFile,
-        user: {
-          entity: mockUser,
-        },
-      }),
-    ).rejects.toMatchObject(
-      new BadRequestException('Request is not multipart'),
-    );
-  });
-
-  it('should throw an exception if pass an invalid document type', async () => {
-    const mockFile = {};
-    const mockUser = {};
-
-    appDocumentService.attachDocument.mockResolvedValue(mockDocument);
-
-    await expect(
-      controller.attachDocument('file', 'invalidDocumentType', {
-        isMultipart: () => true,
-        file: () => mockFile,
-        user: {
-          entity: mockUser,
-        },
-      }),
-    ).rejects.toMatchObject(
-      new BadRequestException(
-        'Invalid document type specified, must be one of certificateOfTitle',
-      ),
-    );
   });
 
   it('should list documents', async () => {
@@ -195,13 +130,20 @@ describe('ApplicationDocumentController', () => {
     };
 
     mockAlcsDocumentService.createExternalDocument.mockReturnValue(of(docObj));
-    appDocumentService.createRecord.mockResolvedValue({
-      type: 'fakeType',
-      uuid: fakeUuid,
-      uploadedBy: {
-        name: user.user.entity,
-      },
-    } as ApplicationDocument);
+
+    appDocumentService.createRecord.mockResolvedValue(
+      new ApplicationDocument({
+        application: undefined,
+        applicationFileNumber: '',
+        type: 'fakeType',
+        uuid: fakeUuid,
+        document: new Document({
+          uploadedBy: new User({
+            name: user.user.entity,
+          }),
+        }),
+      }),
+    );
 
     const res = await controller.attachExternalDocument(
       'fake-number',

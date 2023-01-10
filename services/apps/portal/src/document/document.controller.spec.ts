@@ -2,8 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
 import { DocumentUploadResponseGrpc } from '../alcs/document-grpc/alcs-document.message.interface';
-import { DocumentService } from '../alcs/document/document.service';
 import { DocumentController } from './document.controller';
+import { DocumentService } from './document.service';
 
 describe('DocumentController', () => {
   let controller: DocumentController;
