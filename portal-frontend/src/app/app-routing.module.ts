@@ -5,6 +5,7 @@ import { EditApplicationComponent } from './features/edit-application/edit-appli
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
+import { ViewApplicationComponent } from './features/view-application/view-application.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 
 const routes: Routes = [
@@ -30,8 +31,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    title: 'Edit Application',
+    title: 'View Application',
     path: 'application/:fileId',
+    component: ViewApplicationComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    title: 'Edit Application',
+    path: 'application/:fileId/edit',
     component: EditApplicationComponent,
     canActivate: [AuthGuard],
   },

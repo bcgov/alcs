@@ -1,0 +1,55 @@
+@import "../../../styles/functions";
+@import "../../../styles/colors";
+@import "../../../styles/typography";
+
+.content {
+  margin-top: rem(24);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.view-box {
+  margin: rem(12) 0 rem(20) 0;
+  background-color: $grey-light;
+  padding: rem(16);
+  display: grid;
+  grid-row-gap: rem(32);
+  grid-template-columns: 1fr;
+
+  .subheading2 {
+    margin-bottom: rem(4) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    margin: rem(24) 0 rem(40) 0;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: $primary-color-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: rem(56);
+
+  .action-bar-button {
+    display: none;
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      display: block;
+    }
+  }
+}

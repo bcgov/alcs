@@ -110,6 +110,10 @@
   }
 }
 
+.mat-stroked-button.mat-warn {
+  border: rem(2) solid $error-color !important;
+}
+
 .mat-button-disabled {
   background-color: $grey !important;
   color: #fff !important;

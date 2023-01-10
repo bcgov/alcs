@@ -3,7 +3,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-application-list',
@@ -24,10 +23,7 @@ export class ApplicationListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(
-    private applicationService: ApplicationService,
-    private confirmationDialogService: ConfirmationDialogService
-  ) {}
+  constructor(private applicationService: ApplicationService) {}
 
   ngOnInit(): void {
     this.loadApplications();
@@ -37,20 +33,5 @@ export class ApplicationListComponent implements OnInit {
     const applications = await this.applicationService.getApplications();
     this.dataSource = new MatTableDataSource(applications);
     this.dataSource.paginator = this.paginator;
-  }
-
-  onCancel(fileId: string) {
-    const dialog = this.confirmationDialogService.openDialog({
-      body: 'Are you sure you want to cancel your application? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
-      confirmAction: 'Confirm',
-      cancelAction: 'Return',
-    });
-
-    dialog.subscribe(async (isConfirmed) => {
-      if (isConfirmed) {
-        await this.applicationService.cancel(fileId);
-        await this.loadApplications();
-      }
-    });
   }
 }

@@ -61,6 +61,28 @@ export class ApplicationController {
   @Get('/:fileId')
   async getApplication(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
+
+    if (user.bceidBusinessGuid) {
+      const localGovernments = await this.localGovernmentService.get();
+      const matchingGovernment = localGovernments.find(
+        (lg) => lg.bceidBusinessGuid === user.bceidBusinessGuid,
+      );
+      if (matchingGovernment) {
+        const application =
+          await this.applicationService.getForGovernmentByFileId(
+            fileId,
+            matchingGovernment,
+          );
+
+        const mappedApps = await this.applicationService.mapToDTOs(
+          [application],
+          req.user.entity,
+          matchingGovernment,
+        );
+        return mappedApps[0];
+      }
+    }
+
     const application = await this.applicationService.getIfCreator(
       fileId,
       user,

@@ -143,6 +143,19 @@ describe('ApplicationService', () => {
     expect(res).toBe(application);
   });
 
+  it('should call through for getForGovernmentByFileId', async () => {
+    const application = new Application();
+    mockRepository.findOne.mockResolvedValue(application);
+
+    const res = await service.getForGovernmentByFileId('', {
+      uuid: '',
+      name: '',
+      isFirstNation: false,
+    });
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(res).toBe(application);
+  });
+
   it('should load the canceled status and save the application for cancel', async () => {
     const application = new Application();
     const cancelStatus = new ApplicationStatus({
