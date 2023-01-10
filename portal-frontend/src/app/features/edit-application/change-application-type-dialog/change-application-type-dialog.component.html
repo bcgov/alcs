@@ -1,78 +1,76 @@
 <ng-template #startStepControls>
   <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
-  <button mat-flat-button color="primary" (click)="stepper.next()">continue</button>
+  <button mat-flat-button color="primary" (click)="next()">continue</button>
 </ng-template>
 
 <ng-template #intermediateStepControls>
-  <button mat-stroked-button color="primary" (click)="stepper.previous()">back</button>
-  <button mat-flat-button color="primary" (click)="stepper.next()">update</button>
+  <button mat-stroked-button color="primary" (click)="back()">back</button>
+  <button mat-flat-button color="primary" (click)="next()">update</button>
 </ng-template>
 
 <ng-template #lastStepControls>
-  <button mat-stroked-button color="primary" (click)="stepper.previous()">back</button>
+  <button mat-stroked-button color="primary" (click)="back()">back</button>
   <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
 </ng-template>
 
 <div class="change-app-type-modal">
   <div class="content">
-    <mat-stepper [linear]="false" #stepper>
-      <mat-step>
-        <div class="step-header">
-          <h4>Change Application Type</h4>
-        </div>
+    <div *ngIf="stepIdx === warningStep">
+      <div class="step-header">
+        <h4>Change Application Type</h4>
+      </div>
 
-        <div class="step-body">
-          <div class="warning-banner responsive-flex-wrapper">
-            <div class="icon">
-              <mat-icon>warning</mat-icon>
-            </div>
-            <div class="description">
-              <div>
-                <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want
-                to continue?
-              </div>
+      <div class="step-body">
+        <div class="warning-banner responsive-flex-wrapper">
+          <div class="icon">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <div class="description">
+            <div>
+              <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
+              continue?
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="step-controls">
-          <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
-        </div>
-      </mat-step>
+      <div class="step-controls">
+        <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
+      </div>
+    </div>
 
-      <mat-step>
-        <div class="step-header">
-          <h4>Change Application Type</h4>
-        </div>
+    <div *ngIf="stepIdx === applicationTypeStep">
+      <div class="step-header">
+        <h4>Change Application Type</h4>
+      </div>
 
-        <div>
-          <mat-radio-group
-            class="app-type-radio-group"
-            aria-labelledby="radio-label"
-            (change)="onAppTypeSelected($event)"
-            color="primary"
-            required
-          >
-            <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
-              {{ appType.portalLabel }}
-            </mat-radio-button>
-          </mat-radio-group>
-        </div>
-      </mat-step>
+      <div>
+        <mat-radio-group
+          class="app-type-radio-group"
+          aria-labelledby="radio-label"
+          (change)="onAppTypeSelected($event)"
+          color="primary"
+          required
+        >
+          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
+            {{ appType.portalLabel }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
 
-      <mat-step>
-        <div class="step-header">
-          <h5>Are you sure you want to change your application type?</h5>
-        </div>
+    <div *ngIf="stepIdx === confirmationStep">
+      <div class="step-header">
+        <h5>Are you sure you want to change your application type?</h5>
+      </div>
 
-        <div class="step-controls">
-          <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
-        </div>
-      </mat-step>
-    </mat-stepper>
+      <div class="step-controls">
+        <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
+      </div>
+    </div>
   </div>
 
-  <div class="app-type-step-extension" *ngIf="stepper.selectedIndex === 1">
+  <div class="app-type-step-extension" *ngIf="stepIdx === applicationTypeStep">
     <div id="warningBanner" class="warning-banner margin-bottom-1">
       <div *ngIf="!selectedAppType">Select an option to learn more about the application type</div>
       <div>

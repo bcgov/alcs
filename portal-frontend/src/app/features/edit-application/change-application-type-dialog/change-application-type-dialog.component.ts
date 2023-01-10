@@ -5,6 +5,12 @@ import { ApplicationService } from '../../../services/application/application.se
 import { ApplicationTypeDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 
+export enum ApplicationChangeTypeStepsEnum {
+  warning = 0,
+  applicationType = 1,
+  confirmation = 2,
+}
+
 @Component({
   selector: 'app-change-application-type-dialog',
   templateUrl: './change-application-type-dialog.component.html',
@@ -17,6 +23,12 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
   selectedAppType: ApplicationTypeDto | undefined = undefined;
 
   readMoreClicked: boolean = false;
+
+  warningStep = ApplicationChangeTypeStepsEnum.warning;
+  applicationTypeStep = ApplicationChangeTypeStepsEnum.applicationType;
+  confirmationStep = ApplicationChangeTypeStepsEnum.confirmation;
+
+  stepIdx = 0;
 
   constructor(
     private dialogRef: MatDialogRef<ChangeApplicationTypeDialogComponent>,
@@ -43,7 +55,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
   async onSubmit() {
     await this.applicationService.updatePending(this.fileId, { typeCode: this.selectedAppType!.code });
     this.onCancel();
-    // FIXME? should this be calling fetch application and reloading observable (note observable is not implemented)
+    // FIXME? should this be calling fetch application and reloading observable (note: observable is not implemented)
     window.location.reload();
   }
 
@@ -63,5 +75,13 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
 
   onReadMoreClicked() {
     this.readMoreClicked = !this.readMoreClicked;
+  }
+
+  async next() {
+    this.stepIdx += 1;
+  }
+
+  async back() {
+    this.stepIdx -= 1;
   }
 }

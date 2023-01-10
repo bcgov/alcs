@@ -1,7 +1,6 @@
 @import '../../../../styles/colors';
 @import '../../../../styles/functions';
 @import '../../../../styles/typography';
-
 .margin-bottom-1 {
   margin-bottom: rem(16);
 }
@@ -22,29 +21,12 @@
     .display-none {
       display: none !important;
     }
-
-    @media screen and (min-width: $desktopBreakpoint) {
-      padding: 2rem 3rem;
-
-      .ellipsis-3 {
-        display: block;
-      }
-    }
   }
 
   .step-controls {
     display: flex;
     justify-content: space-between;
     padding: 0 rem(16);
-
-    @media screen and (min-width: $desktopBreakpoint) {
-      justify-content: flex-end;
-      padding: 0 rem(48);
-
-      button {
-        margin-left: rem(25) !important;
-      }
-    }
   }
 
   .app-type-step-extension {
@@ -54,17 +36,13 @@
   .content {
     margin: rem(16);
 
-    .mat-radio-button {
+    ::ng-deep .mat-radio-button {
       display: block;
       margin: rem(16) 0;
-    }
 
-    ::ng-deep .mat-horizontal-stepper-header-container {
-      display: none;
-    }
-
-    ::ng-deep .mat-horizontal-content-container {
-      padding: 0;
+      ::ng-deep .mat-radio-label-content {
+        white-space: break-spaces;
+      }
     }
 
     .step-header {
@@ -94,8 +72,27 @@
         margin-right: 1.2rem;
       }
     }
+  }
 
-    @media screen and (min-width: $desktopBreakpoint) {
+  @media screen and (min-width: $desktopBreakpoint) {
+    .warning-banner {
+      padding: 2rem 3rem;
+
+      .ellipsis-3 {
+        display: block;
+      }
+    }
+
+    .step-controls {
+      justify-content: flex-end;
+      padding: 0 rem(48);
+
+      button {
+        margin-left: rem(25) !important;
+      }
+    }
+
+    .content {
       margin: rem(32) rem(48);
       margin-bottom: rem(16);
       padding: 0;
