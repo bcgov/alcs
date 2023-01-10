@@ -1,4 +1,3 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -96,6 +95,7 @@ export class ApplicationController {
     const application = await this.applicationService.update(fileId, {
       applicant: updateDto.applicant,
       localGovernmentUuid: updateDto.localGovernmentUuid,
+      typeCode: updateDto.typeCode,
     });
 
     const mappedApps = await this.applicationService.mapToDTOs(

@@ -81,6 +81,7 @@ export class ApplicationService {
 
     application.applicant = updateDto.applicant || null;
     application.localGovernmentUuid = updateDto.localGovernmentUuid || null;
+    application.typeCode = updateDto.typeCode || application.typeCode;
 
     return this.applicationRepository.save(application);
   }

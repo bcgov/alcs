@@ -28,4 +28,5 @@ export interface ApplicationDto {
 export interface UpdateApplicationDto {
   applicant?: string;
   localGovernmentUuid?: string;
+  typeCode?: string;
 }

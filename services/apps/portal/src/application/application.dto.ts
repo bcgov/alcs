@@ -46,6 +46,10 @@ export class UpdateApplicationDto {
   @IsUUID()
   @IsOptional()
   localGovernmentUuid?: string;
+
+  @IsString()
+  @IsOptional()
+  typeCode?: string;
 }
 
 export class ApplicationSubmitToAlcsDto {

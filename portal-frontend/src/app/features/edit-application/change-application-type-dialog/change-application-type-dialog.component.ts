@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ApplicationTypeDto } from '../../../services/code/code.dto';
@@ -11,6 +11,8 @@ import { CodeService } from '../../../services/code/code.service';
   styleUrls: ['./change-application-type-dialog.component.scss'],
 })
 export class ChangeApplicationTypeDialogComponent implements OnInit {
+  fileId: string;
+
   applicationTypes: ApplicationTypeDto[] = [];
   selectedAppType: ApplicationTypeDto | undefined = undefined;
 
@@ -19,8 +21,11 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<ChangeApplicationTypeDialogComponent>,
     private applicationService: ApplicationService,
-    private codeService: CodeService
-  ) {}
+    private codeService: CodeService,
+    @Inject(MAT_DIALOG_DATA) public data: ChangeApplicationTypeDialogComponent
+  ) {
+    this.fileId = data.fileId;
+  }
 
   ngOnInit(): void {
     this.loadCodes();
@@ -36,8 +41,10 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
   }
 
   async onSubmit() {
-    console.log('submit');
+    await this.applicationService.updatePending(this.fileId, { typeCode: this.selectedAppType!.code });
     this.onCancel();
+    // FIXME? should this be calling fetch application and reloading observable (note observable is not implemented)
+    window.location.reload();
   }
 
   async onAppTypeSelected(event: MatRadioChange) {
