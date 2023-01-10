@@ -5,7 +5,7 @@
 
 <ng-template #intermediateStepControls>
   <button mat-stroked-button color="primary" (click)="back()">back</button>
-  <button mat-flat-button color="primary" (click)="next()">update</button>
+  <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">update</button>
 </ng-template>
 
 <ng-template #lastStepControls>
