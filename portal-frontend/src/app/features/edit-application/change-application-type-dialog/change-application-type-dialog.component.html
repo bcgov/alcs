@@ -41,15 +41,29 @@
       </mat-step>
 
       <mat-step>
-        <div class="step-body">body here</div>
+        <div class="step-header">
+          <h4>Change Application Type</h4>
+        </div>
 
-        <div class="step-controls">
-          <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
+        <div>
+          <mat-radio-group
+            class="app-type-radio-group"
+            aria-labelledby="radio-label"
+            (change)="onAppTypeSelected($event)"
+            color="primary"
+            required
+          >
+            <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
+              {{ appType.portalLabel }}
+            </mat-radio-button>
+          </mat-radio-group>
         </div>
       </mat-step>
 
       <mat-step>
-        <div class="step-body">body here</div>
+        <div class="step-header">
+          <h5>Are you sure you want to change your application type?</h5>
+        </div>
 
         <div class="step-controls">
           <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
@@ -57,7 +71,29 @@
       </mat-step>
     </mat-stepper>
   </div>
-  <!-- <div>
-    Place option description here
-  </div> -->
+
+  <div class="app-type-step-extension" *ngIf="stepper.selectedIndex === 1">
+    <div id="warningBanner" class="warning-banner margin-bottom-1">
+      <div *ngIf="!selectedAppType">Select an option to learn more about the application type</div>
+      <div>
+        <b class="app-type-label">{{ selectedAppType?.portalLabel }}</b>
+      </div>
+      <div
+        id="appTypeDescription"
+        [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+        [innerHtml]="selectedAppType?.htmlDescription"
+      ></div>
+      <span
+        class="read-more-btn"
+        [ngClass]="{ 'display-none': !isReadMoreVisible() }"
+        *ngIf="!!selectedAppType"
+        (click)="onReadMoreClicked()"
+        ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+      >
+    </div>
+
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
+    </div>
+  </div>
 </div>

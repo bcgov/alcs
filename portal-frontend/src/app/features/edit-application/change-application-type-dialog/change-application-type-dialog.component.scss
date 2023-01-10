@@ -2,9 +2,52 @@
 @import '../../../../styles/functions';
 @import '../../../../styles/typography';
 
+.margin-bottom-1 {
+  margin-bottom: rem(16);
+}
+
 .change-app-type-modal {
+  .warning-banner {
+    background-color: rgba($accent-color-light, 0.5);
+    padding: rem(16);
+
+    .read-more-btn {
+      padding-top: rem(8);
+      cursor: pointer;
+      display: flex;
+      justify-content: end;
+      color: $accent-color-dark;
+    }
+
+    .display-none {
+      display: none !important;
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      padding: 2rem 3rem;
+
+      .ellipsis-3 {
+        display: block;
+      }
+    }
+  }
+
+  .step-controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 rem(16);
+  }
+
+  .app-type-step-extension {
+    margin-bottom: rem(16);
+  }
+
   .content {
     padding: rem(16);
+
+    .mat-radio-button {
+      display: block;
+    }
 
     ::ng-deep .mat-horizontal-stepper-header-container {
       display: none;
@@ -23,8 +66,7 @@
     }
 
     .step-controls {
-      display: flex;
-      justify-content: space-between;
+      padding: 0;
     }
 
     // TODO this is a desktop version
@@ -38,9 +80,7 @@
     // }
 
     .warning-banner {
-      background-color: rgba($accent-color-light, 0.5);
       display: flex;
-      padding: rem(16);
 
       .description {
         display: flex;
