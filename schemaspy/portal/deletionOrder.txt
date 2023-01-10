@@ -2,5 +2,6 @@ parcel_lookup
 migrations
 application_document
 application
+document
 user
 application_status

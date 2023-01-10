@@ -3,7 +3,6 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application":"created_by_uuid":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"status_code":w -> "application_status":"code.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_document":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_document":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">

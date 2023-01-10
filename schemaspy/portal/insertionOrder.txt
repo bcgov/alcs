@@ -1,5 +1,6 @@
 application_status
 user
+document
 application
 application_document
 migrations

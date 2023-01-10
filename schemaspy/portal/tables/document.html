@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>board_status - postgres Database</title>
+        <title>document - postgres Database</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>board_status</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>document</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -202,6 +202,10 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_document.document_uuid references document.uuid via FK_12ae8ee45c8e1f1b074c169a3e5"><a href='application_document.html'>application_document</a><span class='relatedKey'>.document_uuid</span></td>
+                                                <td class="constraint detail">FK_12ae8ee45c8e1f1b074c169a3e5<span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -211,7 +215,41 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="order">order</span></td>
+                                    <td><span id="alcs_document_uuid">alcs_document_uuid</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="file_name">file_name</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="file_size">file_size</span></td>
                                     <td>int4</td>
                                     <td>10</td>
                                     <td title=''></td>
@@ -228,7 +266,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="board_uuid">board_uuid</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uploaded_by_uuid">uploaded_by_uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -241,29 +279,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="board_status.board_uuid references board.uuid via FK_30cd0aba1ecf48c3687eaa215e1"><a href='board.html'>board</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_30cd0aba1ecf48c3687eaa215e1<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="status_code">status_code</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="board_status.status_code references card_status.code via FK_f7dd22f525a7b3712256f63ebcb"><a href='card_status.html'>card_status</a><span class='relatedKey'>.code</span></td>
-                                                <td class="constraint detail">FK_f7dd22f525a7b3712256f63ebcb<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td title="document.uploaded_by_uuid references user.uuid via FK_9b9254f412e8a5a07063209a08c"><a href='user.html'>user</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_9b9254f412e8a5a07063209a08c<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -300,16 +317,10 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_011eeedcd1eb7802ad33e26a32c</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_8960855240f8a386eed1d7791c1</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_cf22f0a664bdb4efafd1bce647d</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
-                                    <td>board_uuid + status_code</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -334,20 +345,20 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="board_status.html" target="_top" title="board_status" alt="" coords="273,5,652,339">
-<area shape="rect" id="node2" href="board.html" target="_top" title="board" alt="" coords="5,145,229,292">
-<area shape="rect" id="node3" href="card_status.html" target="_top" title="card_status" alt="" coords="5,309,229,456">
+<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="696,96,953,272">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="273,5,652,368">
+<area shape="rect" id="node3" href="user.html" target="_top" title="user" alt="" coords="5,272,229,419">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/board_status.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="board_status.html" target="_top" title="board_status" alt="" coords="273,5,652,339">
-<area shape="rect" id="node2" href="board.html" target="_top" title="board" alt="" coords="5,207,229,353">
-<area shape="rect" id="node3" href="card_status.html" target="_top" title="card_status" alt="" coords="5,371,229,517">
-<area shape="rect" id="node4" href="card.html" target="_top" title="card" alt="" coords="405,361,520,449">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="378,5,547,93">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,191,229,337">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="696,88,953,264">
+<area shape="rect" id="node4" href="document.html" target="_top" title="document" alt="" coords="273,111,652,473">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/board_status.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
