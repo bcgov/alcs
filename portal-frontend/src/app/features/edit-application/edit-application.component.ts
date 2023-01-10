@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable, startWith } from 'rxjs';
+import { Observable, map, startWith } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
 import { FileHandle } from '../../shared/file-drag-drop/drag-drop.directive';
+import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 
 @Component({
   selector: 'app-create-application',
@@ -32,7 +34,8 @@ export class EditApplicationComponent implements OnInit {
     private applicationService: ApplicationService,
     private codeService: CodeService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -145,5 +148,22 @@ export class EditApplicationComponent implements OnInit {
     if (res) {
       window.open(res.url, '_blank');
     }
+  }
+
+  async onApplicationTypeChangeClicked() {
+    this.dialog
+      .open(ChangeApplicationTypeDialogComponent, {
+        panelClass: 'no-padding',
+        disableClose: true,
+        data: {
+          fileId: this.fileId,
+        },
+      })
+      .beforeClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.loadExistingApplication(this.fileId);
+        }
+      });
   }
 }

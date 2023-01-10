@@ -54,12 +54,17 @@ export class ApplicationService {
 
   async updatePending(fileId: string, updateDto: UpdateApplicationDto) {
     try {
-      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto));
+      const result = await firstValueFrom(
+        this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto)
+      );
       this.toastService.showSuccessToast('Application Saved');
+      return result;
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update Application, please try again');
     }
+
+    return undefined;
   }
 
   async cancel(fileId: string) {

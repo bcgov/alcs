@@ -94,6 +94,7 @@ export class ApplicationController {
     const application = await this.applicationService.update(fileId, {
       applicant: updateDto.applicant,
       localGovernmentUuid: updateDto.localGovernmentUuid,
+      typeCode: updateDto.typeCode,
     });
 
     const mappedApps = await this.applicationService.mapToDTOs(

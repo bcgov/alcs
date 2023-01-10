@@ -5,9 +5,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ApplicationService } from '../../services/application/application.service';
 import { CodeService } from '../../services/code/code.service';
 
+import { MatDialogModule } from '@angular/material/dialog';
 import { EditApplicationComponent } from './edit-application.component';
 
-describe('CreateApplicationComponent', () => {
+describe('EditApplicationComponent', () => {
   let component: EditApplicationComponent;
   let fixture: ComponentFixture<EditApplicationComponent>;
 
@@ -24,7 +25,7 @@ describe('CreateApplicationComponent', () => {
           useValue: {},
         },
       ],
-      imports: [RouterTestingModule, MatAutocompleteModule],
+      imports: [RouterTestingModule, MatAutocompleteModule, MatDialogModule],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
