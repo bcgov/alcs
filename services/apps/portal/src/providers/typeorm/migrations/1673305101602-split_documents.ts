@@ -10,7 +10,19 @@ export class splitDocuments1673305101602 implements MigrationInterface {
       `ALTER TABLE "portal"."application_document" DROP CONSTRAINT "FK_46513c7fcfe20e70a9bef55baae"`,
     );
     await queryRunner.query(
-      `CREATE TABLE "portal"."document" ("audit_deleted_date_at" TIMESTAMP WITH TIME ZONE, "audit_created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "audit_updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "audit_created_by" character varying NOT NULL, "audit_updated_by" character varying, "uuid" uuid NOT NULL DEFAULT gen_random_uuid(), "alcs_document_uuid" character varying NOT NULL, "file_name" character varying NOT NULL, "file_size" integer NOT NULL, "uploaded_by_uuid" uuid NOT NULL, CONSTRAINT "PK_8960855240f8a386eed1d7791c1" PRIMARY KEY ("uuid"))`,
+      `CREATE TABLE "portal"."document" (
+                "audit_deleted_date_at" TIMESTAMP WITH TIME ZONE,
+                "audit_created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+                "audit_updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+                "audit_created_by" character varying NOT NULL,
+                "audit_updated_by" character varying,
+                "uuid" uuid NOT NULL DEFAULT gen_random_uuid(),
+                "alcs_document_uuid" character varying NOT NULL,
+                "file_name" character varying NOT NULL,
+                "file_size" integer NOT NULL,
+                "uploaded_by_uuid" uuid NOT NULL,
+                CONSTRAINT "PK_8960855240f8a386eed1d7791c1" PRIMARY KEY ("uuid")
+      )`,
     );
     await queryRunner.query(
       `ALTER TABLE "portal"."application_document" DROP COLUMN "alcs_document_uuid"`,
