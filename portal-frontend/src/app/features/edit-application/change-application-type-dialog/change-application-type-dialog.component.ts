@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -16,13 +16,14 @@ export enum ApplicationChangeTypeStepsEnum {
   templateUrl: './change-application-type-dialog.component.html',
   styleUrls: ['./change-application-type-dialog.component.scss'],
 })
-export class ChangeApplicationTypeDialogComponent implements OnInit {
+export class ChangeApplicationTypeDialogComponent implements OnInit, AfterContentChecked {
   fileId: string;
 
   applicationTypes: ApplicationTypeDto[] = [];
   selectedAppType: ApplicationTypeDto | undefined = undefined;
 
   readMoreClicked: boolean = false;
+  isReadMoreVisible: boolean = false;
 
   warningStep = ApplicationChangeTypeStepsEnum.warning;
   applicationTypeStep = ApplicationChangeTypeStepsEnum.applicationType;
@@ -43,20 +44,26 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
     this.loadCodes();
   }
 
+  ngAfterContentChecked() {
+    this.isReadMoreVisible = this.checkIfReadMoreVisible();
+  }
+
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
     this.applicationTypes = codes.applicationTypes.filter((type) => !!type.portalLabel);
   }
 
-  async onCancel() {
-    this.dialogRef.close();
+  async onCancel(dialogResult: boolean = false) {
+    this.dialogRef.close(dialogResult);
   }
 
   async onSubmit() {
-    await this.applicationService.updatePending(this.fileId, { typeCode: this.selectedAppType!.code });
-    this.onCancel();
-    // FIXME? should this be calling fetch application and reloading observable (note: observable is not implemented)
-    window.location.reload();
+    const result = await this.applicationService.updatePending(this.fileId, { typeCode: this.selectedAppType!.code });
+    if (result) {
+      this.onCancel(true);
+      // FIXME? should this be calling fetch application and reloading observable (note: observable is not implemented)
+      window.location.reload();
+    }
   }
 
   async onAppTypeSelected(event: MatRadioChange) {
@@ -69,7 +76,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit {
     return el ? el.clientHeight < el.scrollHeight : false;
   }
 
-  isReadMoreVisible(): boolean {
+  private checkIfReadMoreVisible(): boolean {
     return this.readMoreClicked || this.isEllipsisActive('appTypeDescription');
   }
 

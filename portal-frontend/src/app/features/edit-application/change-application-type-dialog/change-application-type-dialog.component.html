@@ -83,7 +83,7 @@
       ></div>
       <span
         class="read-more-btn"
-        [ngClass]="{ 'display-none': !isReadMoreVisible() }"
+        [ngClass]="{ 'display-none': !isReadMoreVisible }"
         *ngIf="!!selectedAppType"
         (click)="onReadMoreClicked()"
         ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
