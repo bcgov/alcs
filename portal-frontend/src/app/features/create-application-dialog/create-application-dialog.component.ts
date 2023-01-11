@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export enum ApplicationCreateDialogStepsEnum {
   styleUrls: ['./create-application-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateApplicationDialogComponent implements OnInit {
+export class CreateApplicationDialogComponent implements OnInit, AfterViewChecked {
   submissionStep = ApplicationCreateDialogStepsEnum.submissionType;
   applicationStep = ApplicationCreateDialogStepsEnum.applicationType;
 
@@ -28,7 +28,7 @@ export class CreateApplicationDialogComponent implements OnInit {
   submissionTypes: SubmissionTypeDto[] = [];
 
   readMoreClicked: boolean = false;
-  readMoreVisible: boolean = true;
+  isReadMoreVisible: boolean = false;
   currentStepIndex: number = 0;
 
   constructor(
@@ -40,6 +40,11 @@ export class CreateApplicationDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCodes();
+  }
+
+  ngAfterViewChecked(): void {
+    // timeout is required due to the value change of isReadMoreVisible, otherwise it will error out
+    setTimeout(() => (this.isReadMoreVisible = this.checkIfReadMoreVisible()), 0);
   }
 
   private async loadCodes() {
@@ -84,7 +89,7 @@ export class CreateApplicationDialogComponent implements OnInit {
     return el ? el.clientHeight < el.scrollHeight : false;
   }
 
-  isReadMoreVisible(): boolean {
+  checkIfReadMoreVisible(): boolean {
     switch (this.currentStepIndex) {
       case this.applicationStep:
         return this.readMoreClicked || this.isEllipsisActive('appTypeDescription');

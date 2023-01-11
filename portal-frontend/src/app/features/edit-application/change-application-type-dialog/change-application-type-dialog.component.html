@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div *ngIf="stepIdx === applicationTypeStep">
+    <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
       <div class="step-header">
         <h4>Change Application Type</h4>
       </div>

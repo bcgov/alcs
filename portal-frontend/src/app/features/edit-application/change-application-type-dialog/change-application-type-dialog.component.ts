@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -16,7 +16,7 @@ export enum ApplicationChangeTypeStepsEnum {
   templateUrl: './change-application-type-dialog.component.html',
   styleUrls: ['./change-application-type-dialog.component.scss'],
 })
-export class ChangeApplicationTypeDialogComponent implements OnInit, AfterContentChecked {
+export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewChecked {
   fileId: string;
 
   applicationTypes: ApplicationTypeDto[] = [];
@@ -40,12 +40,13 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterConten
     this.fileId = data.fileId;
   }
 
-  ngOnInit(): void {
-    this.loadCodes();
+  ngAfterViewChecked(): void {
+    // timeout is required due to the value change of isReadMoreVisible, otherwise it will error out
+    setTimeout(() => (this.isReadMoreVisible = this.checkIfReadMoreVisible()), 0);
   }
 
-  ngAfterContentChecked() {
-    this.isReadMoreVisible = this.checkIfReadMoreVisible();
+  ngOnInit(): void {
+    this.loadCodes();
   }
 
   private async loadCodes() {
