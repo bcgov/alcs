@@ -172,7 +172,7 @@ export class OverviewComponent implements OnInit {
 
       if (meeting.reportStartDate) {
         mappedEvents.push({
-          name: `${meeting.meetingType.label} #${count + 1} Sent to Applicant`,
+          name: `${meeting.meetingType.label} #${count + 1} Report Sent to Applicant`,
           startDate: new Date(meeting.reportStartDate + SORTING_ORDER.VISIT_REPORTS),
           fulfilledDate: meeting.reportEndDate ? new Date(meeting.reportEndDate) : undefined,
           isFulfilled: !!meeting.reportEndDate,
