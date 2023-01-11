@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import moment from 'moment';
 import { combineLatestWith } from 'rxjs';
 import {
@@ -139,7 +139,7 @@ export class DecisionDialogComponent implements OnInit {
       selectedDecision && selectedDecision.type === PostDecisionType.Reconsideration;
 
     const data: CreateApplicationDecisionDto = {
-      date: date!.getTime(),
+      date: formatDateForApi(date!),
       resolutionNumber: resolutionNumber!,
       resolutionYear: resolutionYear!,
       chairReviewRequired: chairReviewRequired === 'true',
