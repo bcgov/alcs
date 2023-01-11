@@ -62,7 +62,7 @@
     ></div>
     <span
       class="read-more-btn"
-      [ngClass]="{ 'display-none': !isReadMoreVisible() }"
+      [ngClass]="{ 'display-none': !isReadMoreVisible }"
       *ngIf="
         (selectedSubmissionType && currentStepIndex === submissionStep) ||
         (selectedAppType && currentStepIndex === applicationStep)
