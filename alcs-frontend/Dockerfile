@@ -32,6 +32,9 @@ EXPOSE 8081
 # Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
+# Copy init.sh
+COPY ./init.sh .
+
 # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
@@ -41,5 +44,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Dynamically update environment values
 RUN chmod -R go+rwx /usr/share/nginx/html/assets
 
+ENV ENABLED_CONNECT_SRC='this is test value'
+
 # When the container starts, replace the settings.json with values from environment variables
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
+ENTRYPOINT [ "./init.sh" ]
