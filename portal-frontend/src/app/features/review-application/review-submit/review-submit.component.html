@@ -1,0 +1,337 @@
+<h2>Review & Submit</h2>
+<div>
+  <div class="description">
+    <div>Complete Local government review and submit to ALC</div>
+    <div>
+      <button class="save-button" mat-flat-button color="primary">Save Progress</button>
+    </div>
+  </div>
+  <div *ngIf="_applicationReview" class="mobile-hidden">
+    <section>
+      <h4>1. Contact Information</h4>
+      <div class="review-table">
+        <div>
+          <div class="subheading2">Local Government File Number</div>
+          <div>
+            {{ _applicationReview.localGovernmentFileNumber }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.localGovernmentFileNumber">
+            </app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">First Name</div>
+          <div>
+            {{ _applicationReview.firstName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.firstName"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Last Name</div>
+          <div>
+            {{ _applicationReview.lastName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.lastName"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Position</div>
+          <div>
+            {{ _applicationReview.position }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.position"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Department</div>
+          <div>
+            {{ _applicationReview.department }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.department"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Phone Number</div>
+          <div>
+            {{ _applicationReview.phoneNumber }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Email</div>
+          <div>
+            {{ _applicationReview.email }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.email"></app-no-data>
+          </div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(0)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h4>2. Plans & Bylaws: OCP</h4>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
+          <div>
+            {{ _applicationReview.isOCPDesignation ? 'Yes' : 'No' }}
+            <app-no-data
+              [showRequired]="showErrors"
+              *ngIf="!_applicationReview.isOCPDesignation === null"
+            ></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isOCPDesignation">
+          <div class="subheading2">OCP Bylaw Name</div>
+          <div>
+            {{ _applicationReview.OCPBylawName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPBylawName"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isOCPDesignation">
+          <div class="subheading2">OCP Designation</div>
+          <div>
+            {{ _applicationReview.OCPDesignation }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isOCPDesignation">
+          <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+          <div>
+            {{ _applicationReview.OCPConsistent ? 'Yes' : 'No' }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPConsistent === null"></app-no-data>
+          </div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(1)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h4>3. Plans & Bylaws: Zoning</h4>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
+          <div>
+            {{ _applicationReview.isSubjectToZoning ? 'Yes' : 'No' }}
+            <app-no-data
+              [showRequired]="showErrors"
+              *ngIf="!_applicationReview.isSubjectToZoning === null"
+            ></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Zoning Bylaw Name</div>
+          <div>
+            {{ _applicationReview.zoningBylawName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningBylawName"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">
+            Zoning Designation
+            <app-no-data
+              [showRequired]="showErrors"
+              *ngIf="!_applicationReview.isSubjectToZoning === null"
+            ></app-no-data>
+          </div>
+          <div>
+            {{ _applicationReview.zoningDesignation }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningDesignation"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Minimum Lot Size (hectares)</div>
+          <div>
+            {{ _applicationReview.zoningMinimumLotSize }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningMinimumLotSize"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+          <div>
+            {{ _applicationReview.isZoningConsistent ? 'Yes' : 'No' }}
+            <app-no-data
+              [showRequired]="showErrors"
+              *ngIf="!_applicationReview.isZoningConsistent === null"
+            ></app-no-data>
+          </div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(2)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h4>4. Resolution</h4>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div>
+            {{ _applicationReview.isAuthorized ? 'Yes' : 'No' }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.isAuthorized === null"></app-no-data>
+          </div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h4>4. Attachments</h4>
+      <div class="review-table">
+        <div>
+          <div class="subheading2">Resolution Document</div>
+          <div>TODO</div>
+        </div>
+        <div>
+          <div class="subheading2">Staff Report</div>
+          <div>TODO</div>
+        </div>
+        <div class="full-width">
+          <div class="subheading2">Other Attachments (optional):</div>
+          <div>TODO</div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div *ngIf="_applicationReview" class="tablet-hidden">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <h4>1. Contact Information</h4>
+      </mat-expansion-panel-header>
+      <div class="review-table">
+        <div>
+          <div class="subheading2">Local Government File Number</div>
+          <div>{{ _applicationReview.localGovernmentFileNumber }}</div>
+        </div>
+        <div>
+          <div class="subheading2">First Name</div>
+          <div>{{ _applicationReview.firstName }}</div>
+        </div>
+        <div>
+          <div class="subheading2">Last Name</div>
+          <div>{{ _applicationReview.lastName }}</div>
+        </div>
+        <div>
+          <div class="subheading2">Position</div>
+          <div>{{ _applicationReview.position }}</div>
+        </div>
+        <div>
+          <div class="subheading2">Department</div>
+          <div>{{ _applicationReview.department }}</div>
+        </div>
+        <div>
+          <div class="subheading2">Phone Number</div>
+          <div>{{ _applicationReview.phoneNumber }}</div>
+        </div>
+        <div>
+          <div class="subheading2">Email</div>
+          <div>{{ _applicationReview.email }}</div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(0)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <h4>2. Plans & Bylaws: OCP</h4>
+      </mat-expansion-panel-header>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
+          <div>{{ _applicationReview.isOCPDesignation ? 'Yes' : 'No' }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isOCPDesignation">
+          <div class="subheading2">OCP Bylaw Name</div>
+          <div>{{ _applicationReview.OCPBylawName }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isOCPDesignation">
+          <div class="subheading2">OCP Designation</div>
+          <div>{{ _applicationReview.OCPDesignation }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isOCPDesignation">
+          <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+          <div>{{ _applicationReview.OCPConsistent ? 'Yes' : 'No' }}</div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(1)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header><h4>3. Plans & Bylaws: Zoning</h4></mat-expansion-panel-header>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
+          <div>{{ _applicationReview.isSubjectToZoning ? 'Yes' : 'No' }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Zoning Bylaw Name</div>
+          <div>{{ _applicationReview.zoningBylawName }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Zoning Designation</div>
+          <div>{{ _applicationReview.zoningDesignation }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Minimum Lot Size (hectares)</div>
+          <div>{{ _applicationReview.zoningMinimumLotSize }}</div>
+        </div>
+        <div *ngIf="_applicationReview.isSubjectToZoning">
+          <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+          <div>{{ _applicationReview.isZoningConsistent ? 'Yes' : 'No' }}</div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(2)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <h4>4. Resolution</h4>
+      </mat-expansion-panel-header>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div>{{ _applicationReview.isAuthorized ? 'Yes' : 'No' }}</div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <h4>4. Attachments</h4>
+      </mat-expansion-panel-header>
+      <div class="review-table">
+        <div>
+          <div class="subheading2">Resolution Document</div>
+          <div>TODO</div>
+        </div>
+        <div>
+          <div class="subheading2">Staff Report</div>
+          <div>TODO</div>
+        </div>
+        <div class="full-width">
+          <div class="subheading2">Other Attachments (optional):</div>
+          <div>TODO</div>
+        </div>
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+  <div class="button-container">
+    <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <button mat-stroked-button matStepperPrevious color="primary">
+        Previous<span class="mobile-hidden"> Step</span>
+      </button>
+      <button (click)="onSubmit()" mat-flat-button color="primary">Submit</button>
+    </div>
+  </div>
+</div>

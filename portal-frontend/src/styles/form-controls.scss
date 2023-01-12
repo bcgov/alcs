@@ -27,6 +27,10 @@ label {
   margin-top: rem(8);
 }
 
+.mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
 //This prevents the bottom of the text from being cut off
 .mat-form-field .mat-form-field-label-wrapper label {
   line-height: 1.2;
@@ -41,7 +45,7 @@ label {
 
   @media screen and (min-width: $tabletBreakpoint) {
     & {
-      padding: rem(18) 0;
+      padding: rem(14) 0;
     }
   }
 }

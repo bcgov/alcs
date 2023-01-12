@@ -1,0 +1,59 @@
+<h2>Plans & Bylaws: OCP</h2>
+<div>
+  <div class="description">
+    <div>Provide information about applicable Official Community Plan (OCP)</div>
+    <div>
+      <button class='save-button' (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
+    </div>
+  </div>
+  <form [formGroup]="ocpForm">
+    <div class="form-row">
+      <div class="full-row">
+        <label for="is-ocp">Is the application parcel(s) subject to a Local Government OCP designation?</label>
+        <div class="subtext">
+          Note: Selecting “Yes” in the following field will display mandatory OCP designation questions that must be
+          answered.
+        </div>
+        <mat-button-toggle-group
+          class="input"
+          (change)="onChangeDesignation($event)"
+          id="is-ocp"
+          formControlName="isOCPDesignation"
+        >
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div>
+        <label for="bylaw-name">OCP Bylaw Name</label>
+        <mat-form-field class="input" appearance="outline">
+          <input id="bylaw-name" matInput placeholder="Type OCP Bylaw Name" formControlName="OCPBylawName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="designation">OCP Designation</label>
+        <mat-form-field class="input" appearance="outline">
+          <input id="designation" matInput placeholder="Type OCP Designation" formControlName="OCPDesignation" />
+        </mat-form-field>
+      </div>
+      <div class="full-row">
+        <label for="is-consistent">Is the application parcel(s) subject to a Local Government OCP designation?</label>
+        <mat-button-toggle-group class="input" id="is-consistent" formControlName="isOCPConsistent">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </form>
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+        Previous<span class="mobile-hidden"> Step</span>
+      </button>
+      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
+    </div>
+  </div>
+</div>

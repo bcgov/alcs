@@ -121,7 +121,7 @@ describe('ApplicationController', () => {
         }),
       }),
     );
-    mockAppService.cancel.mockResolvedValue(new Application());
+    mockAppService.cancel.mockResolvedValue();
 
     const application = await controller.cancel('file-id', {
       user: {

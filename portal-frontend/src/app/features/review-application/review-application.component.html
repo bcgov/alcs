@@ -1,0 +1,32 @@
+<ng-template #header>
+  <div class="header">
+    <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
+  </div>
+</ng-template>
+
+<mat-stepper class="review-application" linear="true" #stepper>
+  <mat-step label="Contact Information">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-contact-information></app-review-contact-information>
+  </mat-step>
+  <mat-step label="Plans & Bylaws: OCP">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-ocp></app-review-ocp>
+  </mat-step>
+  <mat-step label="Plans & Bylaws: Zoning">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-zoning></app-review-zoning>
+  </mat-step>
+  <mat-step label="Resolution">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-resolution></app-review-resolution>
+  </mat-step>
+  <mat-step label="Attachments">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-attachments></app-review-attachments>
+  </mat-step>
+  <mat-step label="Review & Submit">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-submit [stepper]='stepper'></app-review-submit>
+  </mat-step>
+</mat-stepper>

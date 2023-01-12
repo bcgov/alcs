@@ -1,0 +1,66 @@
+<div class="review-step">
+  <h2>Contact Information</h2>
+  <div>
+    <div class="description">
+      <div>Provide contact information for Local government staff</div>
+      <div>
+        <button class="save-button" (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
+      </div>
+    </div>
+    <form [formGroup]="contactForm">
+      <div class="form-row">
+        <div class="full-row">
+          <label for="lg-file-number">Local Government File Number</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="lg-file-number" matInput placeholder="Type file number" formControlName="lgFileNumber" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="first-name">First Name</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="first-name" matInput placeholder="Type first name" formControlName="firstName" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="last-name">Last Name</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="last-name" matInput placeholder="Type first name" formControlName="lastName" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="position">Position</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="position" matInput placeholder="Type position" formControlName="position" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="department">Department</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="department" matInput placeholder="Type department" formControlName="department" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="phone-number">Phone Number</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="phone-number" matInput placeholder="Type phone number" formControlName="phoneNumber" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <mat-form-field class="input" appearance="outline">
+            <input id="email" matInput placeholder="Type email" formControlName="email" />
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+      <div>
+        <div></div>
+        <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+          Next<span class="mobile-hidden"> Step</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

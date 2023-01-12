@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationReviewService } from '../../services/application-review/application-review.service';
 import { ApplicationService } from '../../services/application/application.service';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ViewApplicationComponent } from './view-application.component';
-import mock = jest.mock;
 
 describe('ViewApplicationComponent', () => {
   let component: ViewApplicationComponent;
@@ -14,6 +14,7 @@ describe('ViewApplicationComponent', () => {
 
   let mockRoute;
   let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppReviewService: DeepMocked<ApplicationReviewService>;
   let mockDialogService: DeepMocked<ConfirmationDialogService>;
 
   let routeParamMap: BehaviorSubject<Map<string, any>>;
@@ -21,6 +22,7 @@ describe('ViewApplicationComponent', () => {
   beforeEach(async () => {
     mockRoute = createMock();
     mockAppService = createMock();
+    mockAppReviewService = createMock();
 
     routeParamMap = new BehaviorSubject(new Map());
     mockRoute.paramMap = routeParamMap;
@@ -34,6 +36,10 @@ describe('ViewApplicationComponent', () => {
         {
           provide: ApplicationService,
           useValue: mockAppService,
+        },
+        {
+          provide: ApplicationReviewService,
+          useValue: mockAppReviewService,
         },
         {
           provide: ConfirmationDialogService,

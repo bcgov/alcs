@@ -1,0 +1,64 @@
+<h2>Plans & Bylaws: Zoning</h2>
+<div>
+  <div class="description">
+    <div>Provide information about applicable zoning</div>
+    <div>
+      <button class="save-button" (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
+    </div>
+  </div>
+  <form [formGroup]="zoningForm">
+    <div class="form-row">
+      <div class="full-row">
+        <label for="is-ocp">Is the application parcel(s) subject to a Local Government zoning designation?</label>
+        <div class="subtext">
+          Note: Selecting “Yes” in the following field will display mandatory zoning designation questions that must be
+          answered.
+        </div>
+        <mat-button-toggle-group
+          class="input"
+          (change)="onChangeDesignation($event)"
+          id="is-ocp"
+          formControlName="isSubjectToZoning"
+        >
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div>
+        <label for="bylaw-name">Zoning Bylaw Name</label>
+        <mat-form-field class="input" appearance="outline">
+          <input id="bylaw-name" matInput placeholder="Type zoning bylaw name" formControlName="zoningBylawName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="lot-size">Minimum Lot Size (hectares)</label>
+        <mat-form-field class="input" appearance="outline">
+          <input
+            id="lot-size"
+            matInput
+            placeholder="Type minimum lot size or N/A"
+            formControlName="zoningMinimumLotSize"
+          />
+        </mat-form-field>
+      </div>
+      <div class="full-row">
+        <label for="is-consistent">Is this proposal consistent with the current zoning designation?</label>
+        <mat-button-toggle-group class="input" id="is-consistent" formControlName="isZoningConsistent">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </form>
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+        Previous<span class="mobile-hidden"> Step</span>
+      </button>
+      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
+    </div>
+  </div>
+</div>

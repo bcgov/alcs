@@ -1,5 +1,14 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 
+export enum APPLICATION_STATUS {
+  IN_PROGRESS = 'PROG',
+  SUBMITTED_TO_ALC = 'SUBM',
+  SUBMITTED_TO_LG = 'SUBG',
+  IN_REVIEW = 'REVW',
+  REFUSED_TO_FORWARD = 'REFU',
+  CANCELLED = 'CANC',
+}
+
 export interface ApplicationStatusDto extends BaseCodeDto {}
 
 export interface ApplicationDocumentDto {

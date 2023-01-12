@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -26,6 +27,7 @@ describe('ChangeApplicationTypeDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: { fileId: 'fake' } },
       ],
       declarations: [ChangeApplicationTypeDialogComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChangeApplicationTypeDialogComponent);

@@ -57,7 +57,7 @@
 
 .mat-stroked-button.mat-primary {
   &:not(.mat-button-disabled) {
-    border-color: $primary-color-dark;
+    border-color: $primary-color-dark !important;
   }
 
   .mat-button-wrapper {
@@ -84,7 +84,7 @@
 
 .mat-stroked-button.mat-accent {
   &:not(.mat-button-disabled) {
-    border-color: $accent-color-dark;
+    border-color: $accent-color-dark !important;
   }
 
   .mat-button-wrapper {

@@ -25,4 +25,11 @@ export class LocalGovernmentService {
       return [];
     }
   }
+
+  async getByGuid(bceidBusinessGuid: string) {
+    const localGovernments = await this.get();
+    return localGovernments.find(
+      (lg) => lg.bceidBusinessGuid === bceidBusinessGuid,
+    );
+  }
 }

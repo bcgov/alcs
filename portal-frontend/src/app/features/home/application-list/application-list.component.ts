@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { APPLICATION_STATUS, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 @Component({
@@ -10,6 +10,8 @@ import { ApplicationService } from '../../../services/application/application.se
   styleUrls: ['./application-list.component.scss'],
 })
 export class ApplicationListComponent implements OnInit {
+  applicationStatus = APPLICATION_STATUS;
+
   dataSource: MatTableDataSource<ApplicationDto> = new MatTableDataSource<ApplicationDto>();
   displayedColumns: string[] = [
     'fileNumber',

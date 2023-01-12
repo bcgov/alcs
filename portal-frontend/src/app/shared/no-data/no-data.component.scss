@@ -1,0 +1,20 @@
+@import '../../../styles/colors';
+@import '../../../styles/typography';
+
+.text {
+  color: $grey-dark;
+}
+
+.error {
+  margin-top: rem(4);
+  color: $error-color;
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    margin-right: rem(4);
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}

@@ -137,15 +137,11 @@ export class ApplicationController {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
 
-    const updatedApplication = await this.applicationService.cancel(
-      application,
-    );
+    await this.applicationService.cancel(application);
 
-    const mappedApps = await this.applicationService.mapToDTOs(
-      [updatedApplication],
-      req.user.entity,
-    );
-    return mappedApps[0];
+    return {
+      cancelled: true,
+    };
   }
 
   @Post('/alcs/submit/:fileId')

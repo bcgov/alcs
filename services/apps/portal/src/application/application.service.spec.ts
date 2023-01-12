@@ -161,27 +161,25 @@ describe('ApplicationService', () => {
     const cancelStatus = new ApplicationStatus({
       code: APPLICATION_STATUS.CANCELLED,
     });
-    mockStatusRepository.findOne.mockResolvedValue(cancelStatus);
+    mockStatusRepository.findOneOrFail.mockResolvedValue(cancelStatus);
 
-    mockRepository.save.mockResolvedValue(new Application());
+    mockRepository.update.mockResolvedValue({} as any);
 
-    const res = await service.cancel(application);
-    expect(res).toBeDefined();
-    expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save.mock.calls[0][0].status).toEqual(cancelStatus);
+    await service.cancel(application);
+    expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.update).toHaveBeenCalledTimes(1);
+    expect(mockRepository.update.mock.calls[0][1].status!).toEqual(
+      cancelStatus,
+    );
   });
 
   it('should throw an exception if it fails to load cancelled status', async () => {
     const application = new Application();
-    mockStatusRepository.findOne.mockResolvedValue(null);
+    const exception = new BaseServiceException('');
+    mockStatusRepository.findOneOrFail.mockRejectedValue(exception);
 
     const promise = service.cancel(application);
-    await expect(promise).rejects.toMatchObject(
-      new BaseServiceException(
-        `Failed to load Cancelled Status for Cancelling Application ${application.fileNumber}`,
-      ),
-    );
+    await expect(promise).rejects.toMatchObject(exception);
 
     expect(mockRepository.save).toHaveBeenCalledTimes(0);
   });
