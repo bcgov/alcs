@@ -42,12 +42,6 @@ export class ApplicationReviewController {
       userLocalGovernment,
     );
 
-    if (!applicationReview) {
-      throw new ServiceNotFoundException(
-        `Failed to find Application Review for Application ${fileNumber}`,
-      );
-    }
-
     return this.mapper.mapAsync(
       applicationReview,
       ApplicationReview,

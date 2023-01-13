@@ -4,10 +4,6 @@
 .mat-flat-button,
 .mat-stroked-button {
   font-weight: 700 !important;
-
-  @media screen and (max-width: $tabletBreakpoint) {
-    line-height: 36px; //REMS IS BREAKING
-  }
 }
 
 .mat-stroked-button {

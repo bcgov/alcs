@@ -54,12 +54,11 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
   async onReview(fileId: string) {
     if (this.application?.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG) {
       const review = await this.applicationReviewService.startReview(fileId);
-      if (review) {
-        await this.router.navigateByUrl(`application/${fileId}/review`);
+      if (!review) {
+        return;
       }
-    } else {
-      await this.router.navigateByUrl(`application/${fileId}/review`);
     }
+    await this.router.navigateByUrl(`application/${fileId}/review`);
   }
 
   ngOnDestroy(): void {
