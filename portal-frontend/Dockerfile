@@ -31,6 +31,9 @@ EXPOSE 8081
 # Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
+# Copy init.sh
+COPY ./init.sh .
+
 # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
