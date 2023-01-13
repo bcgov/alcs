@@ -1,6 +1,8 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -28,6 +30,14 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FileSizePipe } from './shared/pipes/fileSize.pipe';
 import { SharedModule } from './shared/shared.module';
 import { ViewApplicationComponent } from './features/view-application/view-application.component';
+import { ReviewApplicationComponent } from './features/review-application/review-application.component';
+import { ReviewContactInformationComponent } from './features/review-application/review-contact-information/review-contact-information.component';
+import { ReviewOcpComponent } from './features/review-application/review-ocp/review-ocp.component';
+import { ReviewZoningComponent } from './features/review-application/review-zoning/review-zoning.component';
+import { ReviewResolutionComponent } from './features/review-application/review-resolution/review-resolution.component';
+import { ReviewAttachmentsComponent } from './features/review-application/review-attachments/review-attachments.component';
+import { ReviewSubmitComponent } from './features/review-application/review-submit/review-submit.component';
+import { NoDataComponent } from './shared/no-data/no-data.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +58,14 @@ import { ViewApplicationComponent } from './features/view-application/view-appli
     FileSizePipe,
     ConfirmationDialogComponent,
     ViewApplicationComponent,
+    ReviewApplicationComponent,
+    ReviewContactInformationComponent,
+    ReviewOcpComponent,
+    ReviewZoningComponent,
+    ReviewResolutionComponent,
+    ReviewAttachmentsComponent,
+    ReviewSubmitComponent,
+    NoDataComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +77,8 @@ import { ViewApplicationComponent } from './features/view-application/view-appli
     MatPaginatorModule,
     SharedModule,
     MatToolbarModule,
+    MatButtonToggleModule,
+    MatExpansionModule,
   ],
   providers: [
     ConfirmationDialogService,

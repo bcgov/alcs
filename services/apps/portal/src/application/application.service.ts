@@ -89,19 +89,22 @@ export class ApplicationService {
   }
 
   async submitToLg(fileNumber: string) {
-    const submittedToLGStatus =
-      await this.applicationStatusRepository.findOneOrFail({
-        where: {
-          code: APPLICATION_STATUS.SUBMITTED_TO_LG,
-        },
-      });
+    await this.updateStatus(fileNumber, APPLICATION_STATUS.SUBMITTED_TO_LG);
+  }
 
-    await this.applicationRepository.update(
+  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
+    const status = await this.applicationStatusRepository.findOneOrFail({
+      where: {
+        code: statusCode,
+      },
+    });
+
+    return await this.applicationRepository.update(
       {
         fileNumber,
       },
       {
-        status: submittedToLGStatus,
+        status,
       },
     );
   }
@@ -135,21 +138,7 @@ export class ApplicationService {
         }),
       );
 
-      const submittedToALCStatus =
-        await this.applicationStatusRepository.findOneOrFail({
-          where: {
-            code: APPLICATION_STATUS.SUBMITTED_TO_ALC,
-          },
-        });
-
-      await this.applicationRepository.update(
-        {
-          fileNumber,
-        },
-        {
-          status: submittedToALCStatus,
-        },
-      );
+      await this.updateStatus(fileNumber, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
       this.logger.error(
         `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
@@ -195,6 +184,13 @@ export class ApplicationService {
             code: APPLICATION_STATUS.SUBMITTED_TO_LG,
           },
         },
+        //In Review
+        {
+          localGovernmentUuid: localGovernment.uuid,
+          status: {
+            code: APPLICATION_STATUS.IN_REVIEW,
+          },
+        },
       ],
       order: {
         updatedAt: 'DESC',
@@ -221,6 +217,14 @@ export class ApplicationService {
           localGovernmentUuid: localGovernment.uuid,
           status: {
             code: APPLICATION_STATUS.SUBMITTED_TO_LG,
+          },
+        },
+        //In Review
+        {
+          fileNumber,
+          localGovernmentUuid: localGovernment.uuid,
+          status: {
+            code: APPLICATION_STATUS.IN_REVIEW,
           },
         },
       ],
@@ -280,27 +284,19 @@ export class ApplicationService {
       canEdit: app.status.code == APPLICATION_STATUS.IN_PROGRESS,
       canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
       canReview:
-        app.status.code == APPLICATION_STATUS.SUBMITTED_TO_LG &&
+        [
+          APPLICATION_STATUS.SUBMITTED_TO_LG,
+          APPLICATION_STATUS.IN_REVIEW,
+        ].includes(app.status.code as APPLICATION_STATUS) &&
         userGovernment &&
         userGovernment.uuid === app.localGovernmentUuid,
     }));
   }
 
   async cancel(application: Application) {
-    const cancelledStatus = await this.applicationStatusRepository.findOne({
-      where: {
-        code: APPLICATION_STATUS.CANCELLED,
-      },
-    });
-
-    if (!cancelledStatus) {
-      throw new BaseServiceException(
-        `Failed to load Cancelled Status for Cancelling Application ${application.fileNumber}`,
-      );
-    }
-
-    application.status = cancelledStatus;
-
-    return this.applicationRepository.save(application);
+    await this.updateStatus(
+      application.fileNumber,
+      APPLICATION_STATUS.CANCELLED,
+    );
   }
 }

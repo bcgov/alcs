@@ -1,6 +1,6 @@
-@import "../../../styles/functions";
-@import "../../../styles/colors";
-@import "../../../styles/typography";
+@import '../../../styles/functions';
+@import '../../../styles/colors';
+@import '../../../styles/typography';
 
 .content {
   margin-top: rem(24);
@@ -45,11 +45,12 @@
   justify-content: center;
   height: rem(56);
 
-  .action-bar-button {
-    display: none;
+  button {
+    width: 100%;
+    height: 100%;
+  }
 
-    @media screen and (min-width: $tabletBreakpoint) {
-      display: block;
-    }
+  .mat-icon {
+    margin-left: rem(6);
   }
 }

@@ -1,68 +1,55 @@
-<div class='buttons' *ngIf='application'>
+<div class="buttons" *ngIf="application">
   <div>
-    <button *ngIf='application.canEdit' mat-stroked-button color='warn' (click)='onCancel(application.fileNumber)'>
+    <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">
       Cancel Application
     </button>
   </div>
   <div>
     <button
       [routerLink]="'/application/' + application.fileNumber + '/edit'"
-      *ngIf='application.canEdit'
+      *ngIf="application.canEdit"
       mat-flat-button
-      color='primary'
+      color="primary"
     >
       Edit Application
     </button>
-    <button *ngIf='application.canReview' mat-flat-button color='primary'>Review Application</button>
+    <button *ngIf="application.canReview" (click)="onReview(application.fileNumber)" mat-flat-button color="primary">
+      Review Application
+    </button>
   </div>
 </div>
-<div *ngIf='application' class='content'>
+<div *ngIf="application" class="content">
   <section>
     <h5>1. Application</h5>
-    <div class='view-box'>
+    <div class="view-box">
       <div>
-        <div class='subheading2'>Application ID</div>
+        <div class="subheading2">Application ID</div>
         <div>{{ application.fileNumber }}</div>
       </div>
       <div>
-        <div class='subheading2'>Applicant Status</div>
+        <div class="subheading2">Applicant Status</div>
         <div>{{ application.status.label }}</div>
       </div>
       <div>
-        <div class='subheading2'>Applicant Name</div>
+        <div class="subheading2">Applicant Name</div>
         <div>{{ application.applicant }}</div>
       </div>
       <div>
-        <div class='subheading2'>Application Type</div>
+        <div class="subheading2">Application Type</div>
         <div>{{ application.type }}</div>
       </div>
     </div>
   </section>
 </div>
-<div *ngIf='application && application.canReview' class='action-bar'>
-  <span class='subheading2'>Start Local Government Review</span>
-  <button mat-button>
+<div *ngIf="application && application.canReview" class="action-bar">
+  <button (click)="onReview(application.fileNumber)" mat-button>
+    <span (click)="onReview(application.fileNumber)" class="subheading2">Start Local Government Review</span>
     <mat-icon>keyboard_double_arrow_right</mat-icon>
-  </button>
-  <button
-    mat-stroked-button
-    color='primary'
-    class='action-bar-button'
-  >
-    Review Now
   </button>
 </div>
-<div *ngIf='application && application.canEdit' class='action-bar'>
-  <span class='subheading2'>Continue Application</span>
+<div *ngIf="application && application.canEdit" class="action-bar">
   <button [routerLink]="'/application/' + application.fileNumber + '/edit'" mat-button>
+    <span class="subheading2">Continue Application</span>
     <mat-icon>keyboard_double_arrow_right</mat-icon>
-  </button>
-  <button
-    [routerLink]="'/application/' + application.fileNumber + '/edit'"
-    mat-stroked-button
-    color='primary'
-    class='action-bar-button'
-  >
-    Edit
   </button>
 </div>

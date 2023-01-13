@@ -5,6 +5,7 @@ import { EditApplicationComponent } from './features/edit-application/edit-appli
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
+import { ReviewApplicationComponent } from './features/review-application/review-application.component';
 import { ViewApplicationComponent } from './features/view-application/view-application.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 
@@ -40,6 +41,12 @@ const routes: Routes = [
     title: 'Edit Application',
     path: 'application/:fileId/edit',
     component: EditApplicationComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    title: 'Review Application',
+    path: 'application/:fileId/review',
+    component: ReviewApplicationComponent,
     canActivate: [AuthGuard],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

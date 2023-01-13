@@ -35,10 +35,11 @@
           <div
             class="label"
             [ngClass]="{
-              'in-progress': row.status.code == 'PROG',
-              'submitted-to-alc': row.status.code == 'SUBM',
-              'submitted-to-lg': row.status.code == 'SUBG',
-              cancelled: row.status.code == 'CANC'
+              'in-progress': row.status.code == applicationStatus.IN_PROGRESS,
+              'submitted-to-alc': row.status.code == applicationStatus.SUBMITTED_TO_ALC,
+              'submitted-to-lg': row.status.code == applicationStatus.SUBMITTED_TO_LG,
+              'in-review': row.status.code == applicationStatus.IN_REVIEW,
+              cancelled: row.status.code == applicationStatus.CANCELLED
             }"
           >
             {{ row.status.label }}

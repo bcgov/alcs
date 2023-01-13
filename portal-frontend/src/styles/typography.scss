@@ -63,11 +63,19 @@ p,
   @include typography-style(rem(14), 700);
   text-transform: uppercase;
   letter-spacing: 0.01rem;
-  line-height: rem(16);
+  line-height: rem(32);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    line-height: rem(16);
+  }
 }
 
-%button-text {
+.button-text {
   @include button-text;
+}
+
+.mat-button-toggle-button {
+  text-transform: unset; //Prevent button text above from upper casing toggle buttons
 }
 
 button {
@@ -84,6 +92,11 @@ button {
 
 .mat-radio-label-content {
   font-weight: 400;
+}
+
+.subtext {
+  @include typography-style(rem(12), 400);
+  line-height: rem(24);
 }
 
 @media screen and (min-width: $tabletBreakpoint) {

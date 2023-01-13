@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationReviewService } from '../../services/application-review/application-review.service';
+import { APPLICATION_STATUS, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -17,8 +18,10 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
   constructor(
     private applicationService: ApplicationService,
+    private applicationReviewService: ApplicationReviewService,
+    private confirmationDialogService: ConfirmationDialogService,
     private route: ActivatedRoute,
-    private confirmationDialogService: ConfirmationDialogService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +49,16 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
         await this.applicationService.cancel(fileId);
       }
     });
+  }
+
+  async onReview(fileId: string) {
+    if (this.application?.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG) {
+      const review = await this.applicationReviewService.startReview(fileId);
+      if (!review) {
+        return;
+      }
+    }
+    await this.router.navigateByUrl(`application/${fileId}/review`);
   }
 
   ngOnDestroy(): void {

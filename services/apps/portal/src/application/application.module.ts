@@ -31,5 +31,6 @@ import { ApplicationService } from './application.service';
     ApplicationProfile,
   ],
   controllers: [ApplicationController, ApplicationDocumentController],
+  exports: [ApplicationService],
 })
 export class ApplicationModule {}

@@ -10,6 +10,7 @@ import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AlcsModule } from './alcs/alcs.module';
+import { ApplicationReviewModule } from './application-review/application-review.module';
 import { ApplicationModule } from './application/application.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
@@ -61,6 +62,7 @@ import { ParcelModule } from './parcel/parcel.module';
     AlcsModule,
     DocumentModule,
     ParcelModule,
+    ApplicationReviewModule,
   ],
   controllers: [PortalController, LogoutController],
   providers: [
