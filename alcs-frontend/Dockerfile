@@ -44,7 +44,8 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Dynamically update environment values
 RUN chmod -R go+rwx /usr/share/nginx/html/assets
 
-ENV ENABLED_CONNECT_SRC="'self' alcs-dev-api.apps.silver.devops.gov.bc.ca alcs-test-api.apps.silver.devops.gov.bc.ca alcs.nr.gov.bc.ca alcs-dev-portal-api.apps.silver.devops.gov.bc.ca alcs-test-portal-api.apps.silver.devops.gov.bc.ca nrs.objectstore.gov.bc.ca"
+# provide dynamic scp content-src
+ENV ENABLED_CONNECT_SRC="'self' http://localhost:* nrs.objectstore.gov.bc.ca"
 
 # When the container starts, replace the settings.json with values from environment variables
 ENTRYPOINT [ "./init.sh" ]
