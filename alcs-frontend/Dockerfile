@@ -45,7 +45,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 RUN chmod -R go+rwx /usr/share/nginx/html/assets
 
 # provide dynamic scp content-src
-ENV ENABLED_CONNECT_SRC="'self' http://localhost:* nrs.objectstore.gov.bc.ca"
+ENV ENABLED_CONNECT_SRC=" 'self' http://localhost:* nrs.objectstore.gov.bc.ca"
 
 # When the container starts, replace the settings.json with values from environment variables
 ENTRYPOINT [ "./init.sh" ]
