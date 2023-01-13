@@ -121,6 +121,14 @@
                                                 <td title="application_document.application_file_number references application.file_number via FK_92f7df78b61a235c89d08c34e3b"><a href='application_document.html'>application_document</a><span class='relatedKey'>.application_file_number</span></td>
                                                 <td class="constraint detail">FK_92f7df78b61a235c89d08c34e3b<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
+                                            <tr>
+                                                <td title="application_review.application_file_number references application.file_number via FK_325a8bf11bfc0f46f45069c3d1e"><a href='application_review.html'>application_review</a><span class='relatedKey'>.application_file_number</span></td>
+                                                <td class="constraint detail">FK_325a8bf11bfc0f46f45069c3d1e<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_review.local_government_file_number&#39;s name implies that it&#39;s a child of application.file_number, but it doesn&#39;t reference that column."><a href='application_review.html'>application_review</a><span class='relatedKey'>.local_government_file_number</span></td>
+                                                <td class="constraint detail">Implied Constraint<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -321,39 +329,43 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,32,663,336">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,277,230,424">
-<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,113,231,260">
-<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="707,5,964,181">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,143,663,447">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,388,230,535">
+<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,224,231,371">
+<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="725,5,982,181">
+<area shape="rect" id="node5" href="application_review.html" target="_top" title="application_review" alt="" coords="707,199,1000,375">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,5,663,309">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,321,230,468">
-<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,155,231,301">
-<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="707,123,964,299">
-<area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="388,327,549,415">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,61,663,365">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,377,230,524">
+<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,211,231,357">
+<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="725,260,982,436">
+<area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="388,383,549,471">
+<area shape="rect" id="node6" href="application_review.html" target="_top" title="application_review" alt="" coords="707,5,1000,181">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,32,663,336">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,76,230,223">
-<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,240,231,387">
-<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="707,5,964,181">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,225,663,529">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,269,230,416">
+<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,433,231,580">
+<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="725,5,982,181">
+<area shape="rect" id="node5" href="application_review.html" target="_top" title="application_review" alt="" coords="707,199,1000,375">
 </map>
                                         <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,5,663,309">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,323,230,469">
-<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,157,231,304">
-<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="707,123,964,299">
-<area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="388,327,549,415">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,47,663,351">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="6,364,230,511">
+<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,199,231,345">
+<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="725,253,982,429">
+<area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="388,368,549,456">
+<area shape="rect" id="node6" href="application_review.html" target="_top" title="application_review" alt="" coords="707,5,1000,181">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>

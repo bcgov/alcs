@@ -1,7 +1,8 @@
 application_status
 user
-document
 application
+document
 application_document
+application_review
 migrations
 parcel_lookup
