@@ -37,6 +37,7 @@ COPY ./init.sh .
 
 # Copy nginx config file
 COPY ./nginx.conf /etc/nginx/nginx.conf
+RUN chmod go+rwx /etc/nginx/nginx.conf
 
 # Copy dist folder fro build stage to nginx public folder
 COPY --from=build /app/dist /usr/share/nginx/html
