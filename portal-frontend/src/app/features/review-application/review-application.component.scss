@@ -13,9 +13,33 @@
   .mat-horizontal-stepper-wrapper {
     min-height: 100%;
   }
-}
 
-::ng-deep {
+  .subtext {
+    margin: rem(8) 0 !important;
+  }
+
+  .mat-step-header .mat-step-icon-selected {
+    color: #fff;
+  }
+
+  .mat-step-header .mat-step-label.mat-step-label-active {
+    display: none;
+  }
+
+  .mat-step-label {
+    display: none;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .mat-step-header .mat-step-label.mat-step-label-active {
+      display: inherit;
+    }
+
+    .mat-step-label {
+      display: inherit;
+    }
+  }
+
   .review-step {
     min-height: 100%;
   }
@@ -67,7 +91,7 @@
 
         .save-button {
           margin-left: rem(12) !important;
-          margin-top: unset;
+          margin-top: unset !important;
           width: unset;
         }
       }

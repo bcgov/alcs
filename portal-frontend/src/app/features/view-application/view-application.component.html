@@ -42,25 +42,14 @@
   </section>
 </div>
 <div *ngIf="application && application.canReview" class="action-bar">
-  <span (click)="onReview(application.fileNumber)" class="subheading2">Start Local Government Review</span>
   <button (click)="onReview(application.fileNumber)" mat-button>
+    <span (click)="onReview(application.fileNumber)" class="subheading2">Start Local Government Review</span>
     <mat-icon>keyboard_double_arrow_right</mat-icon>
-  </button>
-  <button mat-stroked-button color="primary" class="action-bar-button" (click)="onReview(application.fileNumber)">
-    Review Now
   </button>
 </div>
 <div *ngIf="application && application.canEdit" class="action-bar">
-  <span class="subheading2">Continue Application</span>
   <button [routerLink]="'/application/' + application.fileNumber + '/edit'" mat-button>
+    <span class="subheading2">Continue Application</span>
     <mat-icon>keyboard_double_arrow_right</mat-icon>
-  </button>
-  <button
-    [routerLink]="'/application/' + application.fileNumber + '/edit'"
-    mat-stroked-button
-    color="primary"
-    class="action-bar-button"
-  >
-    Edit
   </button>
 </div>

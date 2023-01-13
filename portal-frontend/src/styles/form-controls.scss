@@ -58,3 +58,7 @@ input.mat-input-element::placeholder {
   color: $grey-dark;
   opacity: 1;
 }
+
+input.mat-input-element:disabled::placeholder{
+  color: $grey;
+}
