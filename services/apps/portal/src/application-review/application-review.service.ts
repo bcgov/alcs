@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPES } from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
 import { UpdateApplicationReviewDto } from './application-review.dto';
 import { ApplicationReview } from './application-review.entity';
@@ -126,6 +127,7 @@ export class ApplicationReviewService {
   }
 
   verifyComplete(
+    application: Application,
     applicationReview: ApplicationReview,
   ): CompletedApplicationReview {
     if (
@@ -173,8 +175,20 @@ export class ApplicationReviewService {
       throw new BaseServiceException('Review authorization needs to be set');
     }
 
-    //TODO: Where do we verify the documents are uploaded?
+    //Verify Documents
+    if (
+      !application.documents.some(
+        (doc) => doc.type === 'reviewResolutionDocument',
+      )
+    ) {
+      throw new BaseServiceException('Review missing resolution document');
+    }
 
+    if (
+      !application.documents.some((doc) => doc.type === 'reviewStaffReport')
+    ) {
+      throw new BaseServiceException('Review missing staff report document');
+    }
     return applicationReview as CompletedApplicationReview;
   }
 }

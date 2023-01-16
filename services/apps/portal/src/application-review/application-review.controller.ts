@@ -109,8 +109,10 @@ export class ApplicationReviewController {
       userLocalGovernment,
     );
 
-    const completedApplication =
-      this.applicationReviewService.verifyComplete(applicationReview);
+    const completedApplication = this.applicationReviewService.verifyComplete(
+      application,
+      applicationReview,
+    );
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
       if (completedApplication.isAuthorized) {
