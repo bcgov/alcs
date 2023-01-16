@@ -1,3 +1,4 @@
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -5,6 +6,26 @@ import { LocalGovernment } from '../alcs/local-government/local-government.servi
 import { Application } from '../application/application.entity';
 import { UpdateApplicationReviewDto } from './application-review.dto';
 import { ApplicationReview } from './application-review.entity';
+
+export type CompletedApplicationReview = {
+  localGovernmentFileNumber: string;
+  firstName: string;
+  lastName: string;
+  position: string;
+  department: string;
+  phoneNumber: string;
+  email: string;
+  isOCPDesignation: boolean;
+  OCPBylawName: string | null;
+  OCPDesignation: string | null;
+  OCPConsistent: boolean | null;
+  isSubjectToZoning: boolean;
+  zoningBylawName: string | null;
+  zoningDesignation: string | null;
+  zoningMinimumLotSize: string | null;
+  isZoningConsistent: boolean | null;
+  isAuthorized: boolean;
+};
 
 @Injectable()
 export class ApplicationReviewService {
@@ -102,5 +123,58 @@ export class ApplicationReviewService {
         : applicationReview.isAuthorized;
 
     return await this.applicationReviewRepository.save(applicationReview);
+  }
+
+  verifyComplete(
+    applicationReview: ApplicationReview,
+  ): CompletedApplicationReview {
+    if (
+      !applicationReview.localGovernmentFileNumber ||
+      !applicationReview.firstName ||
+      !applicationReview.lastName ||
+      !applicationReview.position ||
+      !applicationReview.department ||
+      !applicationReview.phoneNumber ||
+      !applicationReview.email
+    ) {
+      throw new BaseServiceException('Contact information not complete');
+    }
+
+    if (applicationReview.isOCPDesignation === null) {
+      throw new BaseServiceException('OCP information not complete');
+    }
+
+    if (applicationReview.isOCPDesignation) {
+      if (
+        !applicationReview.OCPBylawName ||
+        !applicationReview.OCPDesignation ||
+        applicationReview.OCPConsistent === null
+      ) {
+        throw new BaseServiceException('OCP information not complete');
+      }
+    }
+
+    if (applicationReview.isSubjectToZoning === null) {
+      throw new BaseServiceException('Zoning information not complete');
+    }
+
+    if (applicationReview.isSubjectToZoning) {
+      if (
+        !applicationReview.zoningBylawName ||
+        !applicationReview.zoningDesignation ||
+        !applicationReview.zoningMinimumLotSize ||
+        applicationReview.isZoningConsistent === null
+      ) {
+        throw new BaseServiceException('Zoning information not complete');
+      }
+    }
+
+    if (applicationReview.isAuthorized === null) {
+      throw new BaseServiceException('Review authorization needs to be set');
+    }
+
+    //TODO: Where do we verify the documents are uploaded?
+
+    return applicationReview as CompletedApplicationReview;
   }
 }

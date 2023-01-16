@@ -1,20 +1,49 @@
 <h2>Attachments</h2>
 <div>
-  <div class='description'>
+  <div class="description">
     <div>Provide mandatory and optional attachments</div>
     <div>
-      <button class='save-button' mat-flat-button color='primary'>Save Progress</button>
+      <button class="save-button" mat-flat-button color="primary">Save Progress</button>
     </div>
   </div>
+  <section>
+    <label for="resolution-document">Resolution Document</label>
+    <app-file-drag-drop
+      id="resolution-document"
+      [uploadedFiles]="resolutionDocument"
+      (uploadFiles)="attachFile($event, documentTypes.RESOLUTION_DOCUMENT)"
+      (deleteFile)="deleteFile($event)"
+      (openFile)="openFile($event)"
+    ></app-file-drag-drop>
+  </section>
+  <section>
+    <label for="staff-report">Staff Report</label>
+    <app-file-drag-drop
+      id="staff-report"
+      [uploadedFiles]="staffReport"
+      (uploadFiles)="attachFile($event, documentTypes.STAFF_REPORT)"
+      (deleteFile)="deleteFile($event)"
+      (openFile)="openFile($event)"
+    ></app-file-drag-drop>
+  </section>
+  <section>
+    <label for="other-document">Other Attachments (optional)</label>
+    <app-file-drag-drop
+      id="other-document"
+      [uploadedFiles]="otherAttachments"
+      (uploadFiles)="attachFile($event, documentTypes.REVIEW_OTHER)"
+      (deleteFile)="deleteFile($event)"
+      (openFile)="openFile($event)"
+      [allowMultiple]="true"
+    ></app-file-drag-drop>
+  </section>
   <div class="button-container">
     <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
       <button mat-stroked-button matStepperPrevious color="primary">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button mat-flat-button matStepperNext color="primary">
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
+      <button mat-flat-button matStepperNext color="primary">Next<span class="mobile-hidden"> Step</span></button>
     </div>
   </div>
 </div>

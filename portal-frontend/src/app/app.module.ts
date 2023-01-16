@@ -22,10 +22,8 @@ import { AuthInterceptorService } from './services/authentication/auth-intercept
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
-import { DragDropDirective } from './shared/file-drag-drop/drag-drop.directive';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
-import { FileSizePipe } from './shared/pipes/fileSize.pipe';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -37,7 +35,6 @@ import { SharedModule } from './shared/shared.module';
     HomeComponent,
     AuthorizationComponent,
     EditApplicationComponent,
-    DragDropDirective,
     ApplicationListComponent,
     CreateApplicationDialogComponent,
     ChangeApplicationTypeDialogComponent,

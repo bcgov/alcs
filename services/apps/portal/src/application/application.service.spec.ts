@@ -12,6 +12,7 @@ import {
 } from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
+import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { Document } from '../document/document.entity';
 import { User } from '../user/user.entity';
@@ -27,12 +28,14 @@ describe('ApplicationService', () => {
   let mockRepository: DeepMocked<Repository<Application>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
   let mockAlcsApplicationService: DeepMocked<AlcsApplicationService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
     mockStatusRepository = createMock();
     mockAppTypeService = createMock();
     mockAlcsApplicationService = createMock();
+    mockLGService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -58,6 +61,10 @@ describe('ApplicationService', () => {
         {
           provide: AlcsApplicationService,
           useValue: mockAlcsApplicationService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockLGService,
         },
       ],
     }).compile();

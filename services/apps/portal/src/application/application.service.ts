@@ -7,11 +7,18 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { Repository } from 'typeorm';
-import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
+import { In, Repository } from 'typeorm';
+import {
+  ApplicationGrpcResponse,
+  ApplicationReviewGrpc,
+} from '../alcs/application-grpc/alcs-application.message.interface';
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
-import { LocalGovernment } from '../alcs/local-government/local-government.service';
+import {
+  LocalGovernment,
+  LocalGovernmentService,
+} from '../alcs/local-government/local-government.service';
+import { CompletedApplicationReview } from '../application-review/application-review.service';
 import { User } from '../user/user.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -21,6 +28,13 @@ import {
   UpdateApplicationDto,
 } from './application.dto';
 import { Application } from './application.entity';
+
+const LG_VISIBLE_STATUSES = [
+  APPLICATION_STATUS.SUBMITTED_TO_LG,
+  APPLICATION_STATUS.IN_REVIEW,
+  APPLICATION_STATUS.REFUSED_TO_FORWARD,
+  APPLICATION_STATUS.SUBMITTED_TO_ALC,
+];
 
 @Injectable()
 export class ApplicationService {
@@ -33,6 +47,7 @@ export class ApplicationService {
     private applicationStatusRepository: Repository<ApplicationStatus>,
     private alcsApplicationService: AlcsApplicationService,
     private applicationTypeService: ApplicationTypeService,
+    private localGovernmentService: LocalGovernmentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -109,7 +124,11 @@ export class ApplicationService {
     );
   }
 
-  async submitToAlcs(fileNumber: string, data: ApplicationSubmitToAlcsDto) {
+  async submitToAlcs(
+    fileNumber: string,
+    data: ApplicationSubmitToAlcsDto,
+    applicationReview?: CompletedApplicationReview,
+  ) {
     await this.update(fileNumber, data);
 
     const application = await this.applicationRepository.findOneOrFail({
@@ -123,6 +142,29 @@ export class ApplicationService {
 
     let submittedApp: ApplicationGrpcResponse | null = null;
 
+    const mappedReview: ApplicationReviewGrpc | undefined = applicationReview
+      ? {
+          localGovernmentFileNumber:
+            applicationReview.localGovernmentFileNumber,
+          firstName: applicationReview.firstName,
+          lastName: applicationReview.lastName,
+          position: applicationReview.position,
+          department: applicationReview.department,
+          phoneNumber: applicationReview.phoneNumber,
+          email: applicationReview.email,
+          isOCPDesignation: applicationReview.isOCPDesignation,
+          OCPBylawName: applicationReview.OCPBylawName,
+          OCPDesignation: applicationReview.OCPDesignation,
+          OCPConsistent: applicationReview.OCPConsistent,
+          isSubjectToZoning: applicationReview.isSubjectToZoning,
+          zoningBylawName: applicationReview.zoningBylawName,
+          zoningDesignation: applicationReview.zoningDesignation,
+          zoningMinimumLotSize: applicationReview.zoningMinimumLotSize,
+          isZoningConsistent: applicationReview.isZoningConsistent,
+          isAuthorized: applicationReview.isAuthorized,
+        }
+      : undefined;
+
     try {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
@@ -135,6 +177,7 @@ export class ApplicationService {
             type: d.type,
             documentUuid: d.document.alcsDocumentUuid,
           })),
+          applicationReview: mappedReview,
         }),
       );
 
@@ -177,18 +220,11 @@ export class ApplicationService {
             bceidBusinessGuid: localGovernment.bceidBusinessGuid,
           },
         },
-        //Submitted
+        //Local Government
         {
           localGovernmentUuid: localGovernment.uuid,
           status: {
-            code: APPLICATION_STATUS.SUBMITTED_TO_LG,
-          },
-        },
-        //In Review
-        {
-          localGovernmentUuid: localGovernment.uuid,
-          status: {
-            code: APPLICATION_STATUS.IN_REVIEW,
+            code: In(LG_VISIBLE_STATUSES),
           },
         },
       ],
@@ -211,25 +247,22 @@ export class ApplicationService {
             bceidBusinessGuid: localGovernment.bceidBusinessGuid,
           },
         },
-        //Submitted
+        //Local Government
         {
           fileNumber,
           localGovernmentUuid: localGovernment.uuid,
           status: {
-            code: APPLICATION_STATUS.SUBMITTED_TO_LG,
-          },
-        },
-        //In Review
-        {
-          fileNumber,
-          localGovernmentUuid: localGovernment.uuid,
-          status: {
-            code: APPLICATION_STATUS.IN_REVIEW,
+            code: In(LG_VISIBLE_STATUSES),
           },
         },
       ],
       order: {
         updatedAt: 'DESC',
+      },
+      relations: {
+        documents: {
+          document: true,
+        },
       },
     });
 
@@ -268,8 +301,17 @@ export class ApplicationService {
     return existingApplication;
   }
 
-  async verifyAccess(fileNumber: string, user: User) {
-    await this.getIfCreator(fileNumber, user);
+  async verifyAccess(fileId: string, user: User) {
+    if (user.bceidBusinessGuid) {
+      const localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+      if (localGovernment) {
+        return await this.getForGovernmentByFileId(fileId, localGovernment);
+      }
+    }
+
+    return await this.getIfCreator(fileId, user);
   }
 
   async mapToDTOs(
