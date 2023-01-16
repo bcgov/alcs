@@ -282,4 +282,77 @@
       }
     }
   }
+  // parcel entry details
+  .float-right {
+    float: right;
+  }
+
+  .container {
+    margin: rem(20) 0 rem(40) 0;
+  }
+
+  .type {
+    margin-bottom: rem(30);
+  }
+
+  .pmbc-search {
+    border: 1px solid $primary-color-dark;
+    border-radius: rem(4);
+    background-color: rgba($accent-color-light, 0.2);
+    padding: rem(16);
+  }
+
+  .form-row {
+    margin-top: rem(16);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-gap: rem(30);
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      & {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .full-row {
+        grid-column: 1/4;
+      }
+    }
+  }
+
+  .radio-row {
+    margin: rem(10) 0;
+    display: block;
+
+    .mat-radio-button {
+      margin-right: rem(12);
+    }
+  }
+
+  .search-buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  .full-width-input {
+    margin-top: rem(5);
+    width: 100%;
+  }
+
+  .mat-expansion-panel {
+    margin-bottom: rem(16);
+  }
+
+  .mat-checkbox {
+    display: flex;
+    justify-content: center;
+    .mat-checkbox-layout {
+      white-space: break-spaces;
+    }
+  }
+
+  .flex-center-wrap {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }

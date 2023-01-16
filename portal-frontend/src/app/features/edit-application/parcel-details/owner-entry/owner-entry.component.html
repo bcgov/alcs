@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="type">
+    <h6>Select owner type:</h6>
+    <mat-radio-group class="radio-row" aria-label="Select a parcel type">
+      <mat-radio-button value="individual">Individual</mat-radio-button>
+      <mat-radio-button value="organization">Organization</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <form [formGroup]="ownerForm">
+    <div class="form-row">
+      <div>
+        <label for="map-area">First Name</label>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <input id="map-area" type="number" matInput placeholder="Enter First Name" formControlName="firstName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="pin">Last Name</label>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <input id="pin" type="number" matInput placeholder="Enter Last Name" formControlName="lastName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="pin">Phone Number</label>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <input id="pin" type="number" matInput placeholder="Enter Phone Number" formControlName="phoneNumber" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="pin">Email</label>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <input id="pin" type="number" matInput placeholder="Enter Email" formControlName="email" />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,1 +1,49 @@
-<app-parcel-entry></app-parcel-entry>
+<div>
+  <mat-expansion-panel
+    [expanded]="parcelInd === parcels.length - 1"
+    *ngFor="let parcel of parcels; let parcelInd = index"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-parcel-entry></app-parcel-entry>
+
+    <section>
+      <h6>Owner Information</h6>
+      <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
+      <div>
+        <mat-expansion-panel *ngFor="let owner of parcel.owners; let ownerInd = index">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Owner #{{ ownerInd + 1 }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-owner-entry></app-owner-entry>
+        </mat-expansion-panel>
+      </div>
+      <button mat-stroked-button color="primary">Add another owner</button>
+    </section>
+
+    <p>Certificate of title placeholder</p>
+
+    <div class="flex-center-wrap">
+      <mat-checkbox
+        >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
+        information can cause significant delays to processing time.
+      </mat-checkbox>
+      <button mat-stroked-button color="primary">Save Parcel #{{ parcelInd + 1 }} Details & Owner Information</button>
+    </div>
+  </mat-expansion-panel>
+
+  <div>
+    <button mat-stroked-button color="primary" (click)="onAddParcel()">Add another parcel to the application</button>
+  </div>
+
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <div></div>
+      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
+    </div>
+  </div>
+</div>

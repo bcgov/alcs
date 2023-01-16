@@ -8,10 +8,13 @@ import { ParcelService } from '../../../../services/parcel/parcel.service';
   styleUrls: ['./parcel-entry.component.scss'],
 })
 export class ParcelEntryComponent implements OnInit {
+  // owners: ParcelOwnerDto[] = [];
+
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string>('');
   mapArea = new FormControl<string>('');
   pin = new FormControl<string>('');
+  pid = new FormControl<string>('');
 
   constructor(private parcelService: ParcelService) {}
 
@@ -20,6 +23,7 @@ export class ParcelEntryComponent implements OnInit {
     legalDescription: this.legalDescription,
     mapArea: this.mapArea,
     pin: this.pin,
+    pid: this.pid,
   });
 
   ngOnInit(): void {}

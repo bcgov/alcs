@@ -39,6 +39,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NoDataComponent } from './shared/no-data/no-data.component';
 import { FileSizePipe } from './shared/pipes/fileSize.pipe';
 import { SharedModule } from './shared/shared.module';
+import { OwnerEntryComponent } from './features/edit-application/parcel-details/owner-entry/owner-entry.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { SharedModule } from './shared/shared.module';
     ReviewSubmitComponent,
     NoDataComponent,
     ParcelDetailsComponent,
+    OwnerEntryComponent,
   ],
   imports: [
     BrowserModule,
