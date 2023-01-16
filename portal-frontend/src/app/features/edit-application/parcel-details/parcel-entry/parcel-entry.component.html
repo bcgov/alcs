@@ -1,6 +1,10 @@
 <div class="container">
   <div class="type">
-    <h6>Parcel Type</h6>
+    <h6>Select ownership type:</h6>
+    <div class="warning">
+      The answer to the following question will change the rest of the application form. Do not change this answer once
+      selected.
+    </div>
     <mat-radio-group class="radio-row" aria-label="Select a parcel type">
       <mat-radio-button value="fee">Fee Simple</mat-radio-button>
       <mat-radio-button value="crown">Crown</mat-radio-button>
@@ -9,15 +13,24 @@
   <h5>Parcel Lookup</h5>
   <form [formGroup]="parcelForm">
     <div class="form-row">
-      <div>
-        <label for="pid">PID/PIN</label>
-        <mat-form-field class="full-width-input" appearance="outline">
-          <input id="pid" type="number" matInput placeholder="Enter PID / PIN" formControlName="pidPin" />
-        </mat-form-field>
-      </div>
-      <div class="search-buttons">
-        <button (click)="onSearch()">Search</button>
-        <button (click)="onReset()">Reset</button>
+      <div class="full-row pmbc-search">
+        <label for="pid">Enter PID (and/or PIN for Crown Land) to auto-fill parcel details</label>
+        <div>
+          <mat-form-field class="full-width-input" appearance="outline">
+            <input
+              id="pid"
+              type="number"
+              matInput
+              placeholder="Enter PID (and/or PIN for Crown Land) to auto-fill parcel details"
+              formControlName="pidPin"
+            />
+          </mat-form-field>
+          <div class="search-buttons">
+            <button (click)="onSearch()">Search</button>
+            <button (click)="onReset()">Reset</button>
+          </div>
+        </div>
+        <span class="float-right">Powered by PMBC!</span>
       </div>
       <div class="full-row">
         <label for="legal-description">Legal Description</label>
@@ -31,9 +44,15 @@
         </mat-form-field>
       </div>
       <div>
-        <label for="map-area">Map Area (Hectares)</label>
+        <label for="map-area">Approx. Map Area (Hectares)</label>
         <mat-form-field class="full-width-input" appearance="outline">
           <input id="map-area" type="number" matInput placeholder="Enter parcel size" formControlName="mapArea" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="pin">PID</label>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <input id="pin" type="number" matInput placeholder="Enter PIN" formControlName="pin" />
         </mat-form-field>
       </div>
       <div>
