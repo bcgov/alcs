@@ -11,8 +11,17 @@ import {
 import { Document } from '../../document/document.entity';
 import { Application } from '../application.entity';
 
-export const DOCUMENT_TYPES = ['certificateOfTitle'] as const;
-export type DOCUMENT_TYPE = 'certificateOfTitle';
+export const DOCUMENT_TYPES = [
+  'certificateOfTitle',
+  'reviewResolutionDocument',
+  'reviewStaffReport',
+  'reviewOther',
+] as const;
+export type DOCUMENT_TYPE =
+  | 'certificateOfTitle'
+  | 'reviewResolutionDocument'
+  | 'reviewStaffReport'
+  | 'reviewOther';
 
 @Entity()
 export class ApplicationDocument extends BaseEntity {

@@ -176,15 +176,27 @@
       <div class="review-table">
         <div>
           <div class="subheading2">Resolution Document</div>
-          <div>TODO</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{ document.fileName }}</a>
+            <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
+          </div>
         </div>
         <div>
           <div class="subheading2">Staff Report</div>
-          <div>TODO</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
+              document.fileName
+            }}</a>
+            <app-no-data [showRequired]="showErrors" *ngIf="staffReport.length === 0"></app-no-data>
+          </div>
         </div>
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
-          <div>TODO</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
+              document.fileName
+            }}</a>
+          </div>
         </div>
         <div class="edit-button">
           <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>
@@ -306,15 +318,27 @@
       <div class="review-table">
         <div>
           <div class="subheading2">Resolution Document</div>
-          <div>TODO</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{ document.fileName }}</a>
+            <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
+          </div>
         </div>
         <div>
           <div class="subheading2">Staff Report</div>
-          <div>TODO</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
+              document.fileName
+            }}</a>
+            <app-no-data [showRequired]="showErrors" *ngIf="staffReport.length === 0"></app-no-data>
+          </div>
         </div>
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
-          <div>TODO</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
+              document.fileName
+            }}</a>
+          </div>
         </div>
         <div class="edit-button">
           <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>

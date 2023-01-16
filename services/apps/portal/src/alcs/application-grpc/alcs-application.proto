@@ -34,11 +34,33 @@ message ApplicationCreateGrpcRequest {
   string localGovernmentUuid = 5;
 
   repeated ApplicationDocumentGrpcRequest documents = 6;
+
+  optional ApplicationReviewGrpc applicationReview = 7;
 }
 
 message ApplicationDocumentGrpcRequest {
   string type = 1;
   string documentUuid = 2;
+}
+
+message ApplicationReviewGrpc {
+  string localGovernmentFileNumber = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string position = 4;
+  string department = 5;
+  string phoneNumber = 6;
+  string email = 7;
+  bool isOCPDesignation = 8;
+  optional string OCPBylawName = 9;
+  optional string OCPDesignation = 10;
+  optional bool OCPConsistent = 11;
+  bool isSubjectToZoning = 12;
+  optional string zoningBylawName = 13;
+  optional string zoningDesignation = 14;
+  optional string zoningMinimumLotSize = 15;
+  optional bool isZoningConsistent = 16;
+  bool isAuthorized = 17;
 }
 
 message ApplicationFileNumberGenerateGrpcRequest {}

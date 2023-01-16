@@ -1,4 +1,4 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
@@ -93,6 +93,46 @@ export class ApplicationReviewController {
       ApplicationReview,
       ApplicationReviewDto,
     );
+  }
+
+  @Post('/:fileNumber/finish')
+  async finish(@Param('fileNumber') fileNumber: string, @Req() req) {
+    const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+
+    const application = await this.applicationService.getForGovernmentByFileId(
+      fileNumber,
+      userLocalGovernment,
+    );
+
+    const applicationReview = await this.applicationReviewService.get(
+      application.fileNumber,
+      userLocalGovernment,
+    );
+
+    const completedApplication = this.applicationReviewService.verifyComplete(
+      application,
+      applicationReview,
+    );
+
+    if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+      if (completedApplication.isAuthorized) {
+        await this.applicationService.submitToAlcs(
+          fileNumber,
+          {
+            applicant: application.applicant!,
+            localGovernmentUuid: application.localGovernmentUuid!,
+          },
+          completedApplication,
+        );
+      } else {
+        await this.applicationService.updateStatus(
+          fileNumber,
+          APPLICATION_STATUS.REFUSED_TO_FORWARD,
+        );
+      }
+    } else {
+      throw new BaseServiceException('Application not in correct status');
+    }
   }
 
   private async getUserGovernment(user: User) {

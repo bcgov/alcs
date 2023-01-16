@@ -49,4 +49,14 @@ export class ApplicationReviewService {
       this.toastService.showErrorToast('Failed to update Application Review, please try again later');
     }
   }
+
+  async complete(fileId: string) {
+    try {
+      await firstValueFrom(this.httpClient.post<{}>(`${this.serviceUrl}/${fileId}/finish`, {}));
+      this.toastService.showSuccessToast('Application Review Submitted');
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to submit Application Review, please try again later');
+    }
+  }
 }

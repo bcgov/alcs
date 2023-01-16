@@ -46,8 +46,9 @@ const routes: Routes = [
   {
     title: 'Review Application',
     path: 'application/:fileId/review',
-    component: ReviewApplicationComponent,
     canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/review-application/review-application.module').then((m) => m.ReviewApplicationModule),
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, startWith } from 'rxjs';
-import { ApplicationDocumentDto } from '../../services/application/application.dto';
+import { map, Observable, startWith } from 'rxjs';
+import { APPLICATION_DOCUMENT, ApplicationDocumentDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
@@ -134,7 +134,11 @@ export class EditApplicationComponent implements OnInit {
 
   async attachFile(files: FileHandle[]) {
     const mappedFiles = files.map((file) => file.file);
-    await this.applicationService.attachExternalFile(this.fileId, mappedFiles);
+    await this.applicationService.attachExternalFile(
+      this.fileId,
+      mappedFiles,
+      APPLICATION_DOCUMENT.CERTIFICATE_OF_TILE
+    );
     await this.loadExistingApplication(this.fileId);
   }
 

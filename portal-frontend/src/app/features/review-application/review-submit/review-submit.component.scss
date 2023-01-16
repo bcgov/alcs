@@ -10,6 +10,11 @@ section {
   margin-bottom: rem(24);
 }
 
+.link {
+  color: $link-color;
+  cursor: pointer;
+}
+
 :host::ng-deep {
   .mat-expansion-panel {
     box-shadow: none;

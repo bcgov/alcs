@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationDto, UpdateApplicationDto } from './application.dto';
+import { APPLICATION_DOCUMENT, ApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -87,10 +87,9 @@ export class ApplicationService {
     }
   }
 
-  async attachExternalFile(fileId: string, files: File[]) {
+  async attachExternalFile(fileId: string, files: File[], documentType: APPLICATION_DOCUMENT) {
     if (files.length > 0) {
       const file: File = files[0];
-      const documentType = 'certificateOfTitle';
 
       if (file.size > environment.maxFileSize) {
         const niceSize = environment.maxFileSize / 1048576;
@@ -128,7 +127,7 @@ export class ApplicationService {
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to delete document, please try again');
+      this.toastService.showErrorToast('Failed to open the document, please try again');
     }
     return undefined;
   }
