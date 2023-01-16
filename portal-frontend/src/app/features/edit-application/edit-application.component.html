@@ -1,4 +1,4 @@
-<mat-stepper linear="true" #stepper>
+<!-- <mat-stepper linear="true" #stepper>
   <mat-step label="Application" [stepControl]="firstForm">
     <div class="header">
       <h6>Application ID: {{ fileId }} | {{ applicationType }}</h6>
@@ -60,4 +60,46 @@
     </form>
   </mat-step>
   <mat-step label="Review & Submit"></mat-step>
+</mat-stepper> -->
+<ng-template #header>
+  <div class="header">
+    <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
+    <div class="change-app-type-btn-wrapper">
+      <button mat-flat-button color="accent" (click)="onApplicationTypeChangeClicked()">Change Application Type</button>
+      <mat-icon color="accent" matTooltip="Changing application type will remove some inputs from your saved progress"
+        >help_outline</mat-icon
+      >
+    </div>
+  </div>
+</ng-template>
+
+<mat-stepper class="review-application" linear="true" #stepper>
+  <mat-step label="Parcel Details">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-parcel-details></app-parcel-details>
+  </mat-step>
+  <mat-step label="Other Parcels in the Community">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <p>Other Parcels in the Community</p>
+  </mat-step>
+  <mat-step label="Primary Contact">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <p>Primary Contact</p>
+  </mat-step>
+  <mat-step label="Government">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <p>Government</p>
+  </mat-step>
+  <mat-step label="Land Use">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <p>Land Use</p>
+  </mat-step>
+  <mat-step label="Proposal">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <p>Proposal (Exclusion)</p>
+  </mat-step>
+  <mat-step label="Upload Attachments">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <p>Proposal (Exclusion)</p>
+  </mat-step>
 </mat-stepper>

@@ -1,5 +1,5 @@
-@import '../../../../styles/functions.scss';
-@import '../../../../styles/typography.scss';
+@import '../../../../../styles/functions';
+@import '../../../../../styles/typography';
 
 .container {
   margin: rem(20) 0 rem(40) 0;
@@ -25,7 +25,6 @@
     }
   }
 }
-
 
 .radio-row {
   margin: rem(10) 0;

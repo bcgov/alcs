@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ParcelService } from '../../../services/parcel/parcel.service';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { ParcelService } from '../../../../services/parcel/parcel.service';
 
 import { ParcelEntryComponent } from './parcel-entry.component';
 

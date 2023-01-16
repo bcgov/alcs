@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ParcelService } from '../../../services/parcel/parcel.service';
+import { ParcelService } from '../../../../services/parcel/parcel.service';
 
 @Component({
   selector: 'app-parcel-entry',

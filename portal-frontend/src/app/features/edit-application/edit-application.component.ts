@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, startWith } from 'rxjs';
-import { ApplicationDocumentDto } from '../../services/application/application.dto';
+import { Observable, Subject, map, startWith } from 'rxjs';
+import { ApplicationDocumentDto, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
 import { FileHandle } from '../../shared/file-drag-drop/drag-drop.directive';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 
+// TODO cleanup
 @Component({
   selector: 'app-create-application',
   templateUrl: './edit-application.component.html',
   styleUrls: ['./edit-application.component.scss'],
 })
-export class EditApplicationComponent implements OnInit {
+export class EditApplicationComponent implements OnInit, OnDestroy {
   applicantName = new FormControl<string | any>('');
   localGovernment = new FormControl<string | any>('');
   fileId = '';
@@ -30,6 +31,9 @@ export class EditApplicationComponent implements OnInit {
     localGovernment: this.localGovernment,
   });
 
+  $destroy = new Subject<void>();
+  application: ApplicationDto | undefined;
+
   constructor(
     private applicationService: ApplicationService,
     private codeService: CodeService,
@@ -37,6 +41,10 @@ export class EditApplicationComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog
   ) {}
+
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
+  }
 
   ngOnInit(): void {
     this.loadCodes().then(() => {
@@ -101,14 +109,14 @@ export class EditApplicationComponent implements OnInit {
   }
 
   private async loadExistingApplication(fileId: string) {
-    const application = await this.applicationService.getByFileId(fileId);
-    if (application) {
-      if (application.applicant) {
-        this.applicantName.patchValue(application.applicant);
+    this.application = await this.applicationService.getByFileId(fileId);
+    if (this.application) {
+      if (this.application.applicant) {
+        this.applicantName.patchValue(this.application.applicant);
       }
-      this.applicationType = application.type;
-      this.documents = application.documents;
-      const lg = this.localGovernments.find((lg) => lg.uuid === application.localGovernmentUuid);
+      this.applicationType = this.application.type;
+      this.documents = this.application.documents;
+      const lg = this.localGovernments.find((lg) => lg.uuid === this.application!.localGovernmentUuid);
       if (lg) {
         this.localGovernment.patchValue(lg.name);
       }
