@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationReviewDto } from '../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../services/application-review/application-review.service';
 import { ApplicationService } from '../../services/application/application.service';
 import { ReviewApplicationComponent } from './review-application.component';
@@ -18,6 +19,8 @@ describe('ReviewApplicationComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
+
     mockAppService = createMock();
 
     mockRoute = createMock();
