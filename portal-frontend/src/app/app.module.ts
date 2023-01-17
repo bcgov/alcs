@@ -12,6 +12,8 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
 import { ChangeApplicationTypeDialogComponent } from './features/edit-application/change-application-type-dialog/change-application-type-dialog.component';
 import { EditApplicationComponent } from './features/edit-application/edit-application.component';
+import { OwnerEntryComponent } from './features/edit-application/parcel-details/owner-entry/owner-entry.component';
+import { ParcelDetailsComponent } from './features/edit-application/parcel-details/parcel-details.component';
 import { ParcelEntryComponent } from './features/edit-application/parcel-details/parcel-entry/parcel-entry.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
@@ -42,6 +44,8 @@ import { SharedModule } from './shared/shared.module';
     ParcelEntryComponent,
     ConfirmationDialogComponent,
     ViewApplicationComponent,
+    ParcelDetailsComponent,
+    OwnerEntryComponent,
   ],
   imports: [
     BrowserModule,
