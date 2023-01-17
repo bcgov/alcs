@@ -66,7 +66,7 @@ describe('ApplicationController', () => {
 
     mockAppService.create.mockResolvedValue('2');
     mockAppService.getIfCreator.mockResolvedValue(new Application());
-    mockAppService.verifyAccess.mockResolvedValue();
+    mockAppService.verifyAccess.mockResolvedValue(new Application());
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
   });
@@ -174,14 +174,12 @@ describe('ApplicationController', () => {
 
   it('should fetch application by bceid if user has same guid as a local government', async () => {
     const bceidBusinessGuid = 'business-guid';
-    mockLgService.get.mockResolvedValue([
-      {
-        uuid: '',
-        bceidBusinessGuid,
-        name: 'fake-name',
-        isFirstNation: false,
-      },
-    ]);
+    mockLgService.getByGuid.mockResolvedValue({
+      uuid: '',
+      bceidBusinessGuid,
+      name: 'fake-name',
+      isFirstNation: false,
+    });
     const mockApplication = new Application();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
     mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);

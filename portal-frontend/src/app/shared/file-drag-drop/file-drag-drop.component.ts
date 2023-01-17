@@ -13,6 +13,7 @@ export class FileDragDropComponent implements OnInit {
   @Output() deleteFile: EventEmitter<ApplicationDocumentDto> = new EventEmitter();
   @Output() openFile: EventEmitter<string> = new EventEmitter();
 
+  @Input() allowMultiple = false;
   @Input() uploadedFiles: ApplicationDocumentDto[] = [];
 
   constructor(private sanitizer: DomSanitizer) {}

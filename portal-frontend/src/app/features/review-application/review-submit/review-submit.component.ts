@@ -1,9 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import {
+  APPLICATION_DOCUMENT,
+  ApplicationDocumentDto,
+  ApplicationDto,
+} from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -11,19 +17,43 @@ import { ApplicationReviewService } from '../../../services/application-review/a
   styleUrls: ['./review-submit.component.scss'],
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() stepper!: MatStepper;
 
+  $destroy = new Subject<void>();
   _applicationReview: ApplicationReviewDto | undefined;
   showErrors = false;
 
-  @Input() stepper!: MatStepper;
+  resolutionDocument: ApplicationDocumentDto[] = [];
+  staffReport: ApplicationDocumentDto[] = [];
+  otherAttachments: ApplicationDocumentDto[] = [];
+  private fileId: string | undefined;
 
-  constructor(private router: Router, private applicationReviewService: ApplicationReviewService) {}
+  constructor(
+    private router: Router,
+    private applicationReviewService: ApplicationReviewService,
+    private applicationService: ApplicationService
+  ) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
       if (applicationReview) {
         this._applicationReview = applicationReview;
+      }
+    });
+
+    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+      if (application) {
+        this.fileId = application.fileNumber;
+        this.resolutionDocument = application.documents.filter(
+          (document) => document.type === APPLICATION_DOCUMENT.RESOLUTION_DOCUMENT
+        );
+        this.staffReport = application.documents.filter(
+          (document) => document.type === APPLICATION_DOCUMENT.STAFF_REPORT
+        );
+        this.otherAttachments = application.documents.filter(
+          (document) => document.type === APPLICATION_DOCUMENT.REVIEW_OTHER
+        );
       }
     });
   }
@@ -43,7 +73,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     this.stepper.selectedIndex = index;
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.runValidation();
     const el = document.getElementsByClassName('no-data');
 
@@ -52,6 +82,18 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
         behavior: 'smooth',
         block: 'center',
       });
+    } else {
+      if (this.fileId) {
+        await this.applicationReviewService.complete(this.fileId);
+        await this.router.navigateByUrl(`/application/${this.fileId}`);
+      }
+    }
+  }
+
+  async openFile(uuid: string) {
+    const res = await this.applicationService.openFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
     }
   }
 

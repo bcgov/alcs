@@ -87,6 +87,8 @@ export class ApplicationDocumentController {
       req.user.entity,
     );
 
+    //TODO: How do we control who can delete which document types?
+
     await this.applicationDocumentService.delete(document);
     return {};
   }

@@ -1,8 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import {
+  APPLICATION_DOCUMENT,
+  ApplicationDocumentDto,
+  ApplicationDto,
+} from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
+import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 
 @Component({
   selector: 'app-review-attachments',
@@ -10,11 +16,22 @@ import { ApplicationReviewService } from '../../../services/application-review/a
   styleUrls: ['./review-attachments.component.scss'],
 })
 export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
+  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+
   $destroy = new Subject<void>();
 
-  private fileId: string | undefined;
+  documentTypes = APPLICATION_DOCUMENT;
 
-  constructor(private router: Router, private applicationReviewService: ApplicationReviewService) {}
+  private fileId: string | undefined;
+  resolutionDocument: ApplicationDocumentDto[] = [];
+  staffReport: ApplicationDocumentDto[] = [];
+  otherAttachments: ApplicationDocumentDto[] = [];
+
+  constructor(
+    private router: Router,
+    private applicationReviewService: ApplicationReviewService,
+    private applicationService: ApplicationService
+  ) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
@@ -22,11 +39,52 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
         this.fileId = applicationReview.applicationFileNumber;
       }
     });
+
+    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+      if (application) {
+        this.resolutionDocument = application.documents.filter(
+          (document) => document.type === APPLICATION_DOCUMENT.RESOLUTION_DOCUMENT
+        );
+        this.staffReport = application.documents.filter(
+          (document) => document.type === APPLICATION_DOCUMENT.STAFF_REPORT
+        );
+        this.otherAttachments = application.documents.filter(
+          (document) => document.type === APPLICATION_DOCUMENT.REVIEW_OTHER
+        );
+      }
+    });
   }
 
   async onExit() {
     if (this.fileId) {
       await this.router.navigateByUrl(`/application/${this.fileId}`);
+    }
+  }
+
+  async loadApplication(fileId: string) {
+    const application = await this.applicationService.getByFileId(fileId);
+    this.$application.next(application);
+  }
+
+  async attachFile(files: FileHandle[], documentType: APPLICATION_DOCUMENT) {
+    if (this.fileId) {
+      const mappedFiles = files.map((file) => file.file);
+      await this.applicationService.attachExternalFile(this.fileId, mappedFiles, documentType);
+      await this.loadApplication(this.fileId);
+    }
+  }
+
+  async deleteFile($event: ApplicationDocumentDto) {
+    if (this.fileId) {
+      await this.applicationService.deleteExternalFile($event.uuid);
+      await this.loadApplication(this.fileId);
+    }
+  }
+
+  async openFile(uuid: string) {
+    const res = await this.applicationService.openFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
     }
   }
 

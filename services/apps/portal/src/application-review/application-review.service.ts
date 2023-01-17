@@ -1,10 +1,32 @@
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPES } from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
 import { UpdateApplicationReviewDto } from './application-review.dto';
 import { ApplicationReview } from './application-review.entity';
+
+export type CompletedApplicationReview = {
+  localGovernmentFileNumber: string;
+  firstName: string;
+  lastName: string;
+  position: string;
+  department: string;
+  phoneNumber: string;
+  email: string;
+  isOCPDesignation: boolean;
+  OCPBylawName: string | null;
+  OCPDesignation: string | null;
+  OCPConsistent: boolean | null;
+  isSubjectToZoning: boolean;
+  zoningBylawName: string | null;
+  zoningDesignation: string | null;
+  zoningMinimumLotSize: string | null;
+  isZoningConsistent: boolean | null;
+  isAuthorized: boolean;
+};
 
 @Injectable()
 export class ApplicationReviewService {
@@ -102,5 +124,71 @@ export class ApplicationReviewService {
         : applicationReview.isAuthorized;
 
     return await this.applicationReviewRepository.save(applicationReview);
+  }
+
+  verifyComplete(
+    application: Application,
+    applicationReview: ApplicationReview,
+  ): CompletedApplicationReview {
+    if (
+      !applicationReview.localGovernmentFileNumber ||
+      !applicationReview.firstName ||
+      !applicationReview.lastName ||
+      !applicationReview.position ||
+      !applicationReview.department ||
+      !applicationReview.phoneNumber ||
+      !applicationReview.email
+    ) {
+      throw new BaseServiceException('Contact information not complete');
+    }
+
+    if (applicationReview.isOCPDesignation === null) {
+      throw new BaseServiceException('OCP information not complete');
+    }
+
+    if (applicationReview.isOCPDesignation) {
+      if (
+        !applicationReview.OCPBylawName ||
+        !applicationReview.OCPDesignation ||
+        applicationReview.OCPConsistent === null
+      ) {
+        throw new BaseServiceException('OCP information not complete');
+      }
+    }
+
+    if (applicationReview.isSubjectToZoning === null) {
+      throw new BaseServiceException('Zoning information not complete');
+    }
+
+    if (applicationReview.isSubjectToZoning) {
+      if (
+        !applicationReview.zoningBylawName ||
+        !applicationReview.zoningDesignation ||
+        !applicationReview.zoningMinimumLotSize ||
+        applicationReview.isZoningConsistent === null
+      ) {
+        throw new BaseServiceException('Zoning information not complete');
+      }
+    }
+
+    if (applicationReview.isAuthorized === null) {
+      throw new BaseServiceException('Review authorization needs to be set');
+    }
+
+    //Verify Documents
+    if (
+      !application.documents.some(
+        (doc) => doc.type === 'reviewResolutionDocument',
+      )
+    ) {
+      throw new BaseServiceException('Review missing resolution document');
+    }
+
+    if (
+      !application.documents.some((doc) => doc.type === 'reviewStaffReport')
+    ) {
+      throw new BaseServiceException('Review missing staff report document');
+    }
+    return applicationReview as CompletedApplicationReview;
   }
 }

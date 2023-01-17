@@ -9,6 +9,7 @@ import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.serv
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
+import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationDocumentController } from './application-document.controller';
 import { AttachExternalDocumentDto } from './application-document.dto';
@@ -64,7 +65,7 @@ describe('ApplicationDocumentController', () => {
       ApplicationDocumentController,
     );
 
-    mockApplicationService.verifyAccess.mockResolvedValue();
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
   });
 
   it('should be defined', () => {

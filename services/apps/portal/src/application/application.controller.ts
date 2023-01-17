@@ -63,21 +63,20 @@ export class ApplicationController {
     const user = req.user.entity as User;
 
     if (user.bceidBusinessGuid) {
-      const localGovernments = await this.localGovernmentService.get();
-      const matchingGovernment = localGovernments.find(
-        (lg) => lg.bceidBusinessGuid === user.bceidBusinessGuid,
+      const localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
       );
-      if (matchingGovernment) {
+      if (localGovernment) {
         const application =
           await this.applicationService.getForGovernmentByFileId(
             fileId,
-            matchingGovernment,
+            localGovernment,
           );
 
         const mappedApps = await this.applicationService.mapToDTOs(
           [application],
           req.user.entity,
-          matchingGovernment,
+          localGovernment,
         );
         return mappedApps[0];
       }

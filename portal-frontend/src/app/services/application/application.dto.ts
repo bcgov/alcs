@@ -9,10 +9,17 @@ export enum APPLICATION_STATUS {
   CANCELLED = 'CANC',
 }
 
+export enum APPLICATION_DOCUMENT {
+  CERTIFICATE_OF_TILE = 'certificateOfTitle',
+  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
+  STAFF_REPORT = 'reviewStaffReport',
+  REVIEW_OTHER = 'reviewOther',
+}
+
 export interface ApplicationStatusDto extends BaseCodeDto {}
 
 export interface ApplicationDocumentDto {
-  type: string;
+  type: APPLICATION_DOCUMENT;
   uuid: string;
   fileName: string;
   fileSize: number;

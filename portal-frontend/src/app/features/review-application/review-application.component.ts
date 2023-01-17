@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import { ApplicationDto } from '../../services/application/application.dto';
+import {
+  APPLICATION_DOCUMENT,
+  ApplicationDocumentDto,
+  ApplicationDto,
+} from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 
 @Component({
@@ -13,6 +17,7 @@ import { ApplicationService } from '../../services/application/application.servi
 export class ReviewApplicationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   application: ApplicationDto | undefined;
+  $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
   constructor(
     private applicationService: ApplicationService,
@@ -28,6 +33,9 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
         this.loadApplicationReview(fileId);
       }
     });
+    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+      this.application = application;
+    });
   }
 
   async loadApplicationReview(fileId: string) {
@@ -35,7 +43,8 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   async loadApplication(fileId: string) {
-    this.application = await this.applicationService.getByFileId(fileId);
+    const application = await this.applicationService.getByFileId(fileId);
+    this.$application.next(application);
   }
 
   ngOnDestroy(): void {
