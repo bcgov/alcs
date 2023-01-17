@@ -12,6 +12,7 @@ import { ApplicationService } from '../application/application.service';
 import { ApplicationReviewProfile } from '../common/automapper/application-review.automapper.profile';
 import { User } from '../user/user.entity';
 import { ApplicationReviewController } from './application-review.controller';
+import { ApplicationReviewDto } from './application-review.dto';
 import { ApplicationReview } from './application-review.entity';
 import {
   ApplicationReviewService,
@@ -43,15 +44,11 @@ describe('ApplicationReviewController', () => {
       applicationFileNumber: fileNumber,
     });
 
+    mockAppReviewService.mapToDto.mockResolvedValue({} as ApplicationReviewDto);
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        AutomapperModule.forRoot({
-          strategyInitializer: classes(),
-        }),
-      ],
       controllers: [ApplicationReviewController],
       providers: [
-        ApplicationReviewProfile,
         {
           provide: ApplicationReviewService,
           useValue: mockAppReviewService,
@@ -89,7 +86,7 @@ describe('ApplicationReviewController', () => {
       },
     });
     expect(res).toBeDefined();
-    expect(res.applicationFileNumber).toEqual(fileNumber);
+    expect(mockAppReviewService.mapToDto).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception for get if user is not local government', async () => {

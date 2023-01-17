@@ -1,13 +1,15 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationDocument } from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
+import { ApplicationReviewProfile } from '../common/automapper/application-review.automapper.profile';
 import { ApplicationReview } from './application-review.entity';
 import { ApplicationReviewService } from './application-review.service';
-import { Document } from '../document/document.entity';
 
 describe('ApplicationReviewService', () => {
   let service: ApplicationReviewService;
@@ -23,7 +25,13 @@ describe('ApplicationReviewService', () => {
     mockRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
+        ApplicationReviewProfile,
         {
           provide: getRepositoryToken(ApplicationReview),
           useValue: mockRepository,
@@ -71,7 +79,7 @@ describe('ApplicationReviewService', () => {
     const appReview = new ApplicationReview();
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview);
+      service.verifyComplete(new Application(), appReview, false);
     }).toThrow(new BaseServiceException('Contact information not complete'));
   });
 
@@ -88,7 +96,7 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview);
+      service.verifyComplete(new Application(), appReview, false);
     }).toThrow(new BaseServiceException('OCP information not complete'));
   });
 
@@ -106,7 +114,7 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview);
+      service.verifyComplete(new Application(), appReview, false);
     }).toThrow(new BaseServiceException('Zoning information not complete'));
   });
 
@@ -125,7 +133,7 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview);
+      service.verifyComplete(new Application(), appReview, false);
     }).toThrow(
       new BaseServiceException('Review authorization needs to be set'),
     );
@@ -154,7 +162,7 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(application, appReview);
+      service.verifyComplete(application, appReview, false);
     }).toThrow(
       new BaseServiceException('Review missing staff report document'),
     );
@@ -185,9 +193,54 @@ describe('ApplicationReviewService', () => {
       ],
     });
 
-    const completedReview = service.verifyComplete(application, appReview);
+    const completedReview = service.verifyComplete(
+      application,
+      appReview,
+      false,
+    );
 
     expect(completedReview).toBeDefined();
     expect(completedReview).toMatchObject(appReview);
+  });
+
+  it('should return the completed review when its valid and first nations', () => {
+    const appReview = new ApplicationReview({
+      localGovernmentFileNumber: '123',
+      firstName: 'Bruce',
+      lastName: 'Wayne',
+      position: 'Not Batman',
+      department: 'Gotham',
+      phoneNumber: 'phoneNumber',
+      email: 'email',
+      isAuthorized: true,
+    });
+
+    const application = new Application({
+      documents: [
+        new ApplicationDocument({
+          type: 'reviewResolutionDocument',
+        }),
+      ],
+    });
+
+    const completedReview = service.verifyComplete(
+      application,
+      appReview,
+      true,
+    );
+
+    expect(completedReview).toBeDefined();
+    expect(completedReview).toMatchObject(appReview);
+  });
+
+  it('should map in the local government first nation flag when mapping dto', async () => {
+    const res = await service.mapToDto(new ApplicationReview(), {
+      bceidBusinessGuid: '',
+      uuid: '',
+      name: '',
+      isFirstNation: true,
+    });
+
+    expect(res.isFirstNationGovernment).toBeTruthy();
   });
 });

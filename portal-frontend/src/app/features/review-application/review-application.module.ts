@@ -8,6 +8,7 @@ import { ReviewAttachmentsComponent } from './review-attachments/review-attachme
 import { ReviewContactInformationComponent } from './review-contact-information/review-contact-information.component';
 import { ReviewOcpComponent } from './review-ocp/review-ocp.component';
 import { ReviewResolutionComponent } from './review-resolution/review-resolution.component';
+import { ReviewSubmitFngComponent } from './review-submit-fng/review-submit-fng.component';
 import { ReviewSubmitComponent } from './review-submit/review-submit.component';
 import { ReviewZoningComponent } from './review-zoning/review-zoning.component';
 
@@ -27,6 +28,7 @@ const routes: Routes = [
     ReviewResolutionComponent,
     ReviewAttachmentsComponent,
     ReviewSubmitComponent,
+    ReviewSubmitFngComponent,
     NoDataComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],

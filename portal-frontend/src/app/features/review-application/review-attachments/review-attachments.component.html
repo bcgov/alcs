@@ -16,7 +16,7 @@
       (openFile)="openFile($event)"
     ></app-file-drag-drop>
   </section>
-  <section>
+  <section *ngIf='!isFirstNationGovernment'>
     <label for="staff-report">Staff Report</label>
     <app-file-drag-drop
       id="staff-report"
