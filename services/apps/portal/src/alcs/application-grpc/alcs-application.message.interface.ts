@@ -45,11 +45,11 @@ export class ApplicationReviewGrpc {
   department: string;
   phoneNumber: string;
   email: string;
-  isOCPDesignation: boolean;
+  isOCPDesignation: boolean | null;
   OCPBylawName: string | null;
   OCPDesignation: string | null;
   OCPConsistent: boolean | null;
-  isSubjectToZoning: boolean;
+  isSubjectToZoning: boolean | null;
   zoningBylawName: string | null;
   zoningDesignation: string | null;
   zoningMinimumLotSize: string | null;

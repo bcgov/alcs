@@ -1,19 +1,20 @@
 <h2>Resolution</h2>
 <div>
   <div class='description'>
-    <div>Provide Local government authorizing resolution</div>
+    <div *ngIf='isFirstNationGovernment'>Provide First Nation government authorizing resolution</div>
+    <div *ngIf='!isFirstNationGovernment'>Provide Local government authorizing resolution</div>
     <div>
       <button class='save-button' (click)='onSave()' mat-flat-button color='primary'>Save Progress</button>
     </div>
   </div>
-  <div *ngIf='!this.isOCPDesignation && !this.isSubjectToZoning'>
+  <div *ngIf='!isFirstNationGovernment && !this.isOCPDesignation && !this.isSubjectToZoning'>
     By indicating that the parcel(s) is not subject to Local Government OCP or Zoning, no authorizing resolution is
     required as per S. 25 (3) or S. 29 (4) of the ALC Act. The only option available to you is to forward this
     application on to the ALC.
   </div>
   <form [formGroup]='resolutionForm'>
     <div class='form-row'>
-      <div class='full-row' *ngIf='this.isOCPDesignation || this.isSubjectToZoning'>
+      <div class='full-row' *ngIf='this.isOCPDesignation || this.isSubjectToZoning || this.isFirstNationGovernment'>
         <label for='is-consistent'>Resolution for Application to Proceed to the ALC</label>
         <mat-button-toggle-group class='input' id='is-consistent' formControlName='isAuthorized'>
           <mat-button-toggle value='true'>Authorize</mat-button-toggle>

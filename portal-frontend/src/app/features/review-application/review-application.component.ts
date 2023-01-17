@@ -19,6 +19,8 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   application: ApplicationDto | undefined;
   $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
+  isFirstNationGovernment = true;
+
   constructor(
     private applicationService: ApplicationService,
     private applicationReviewService: ApplicationReviewService,
@@ -35,6 +37,9 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
     });
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
+    });
+    this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
+      this.isFirstNationGovernment = appReview?.isFirstNationGovernment ?? false;
     });
   }
 

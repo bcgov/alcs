@@ -55,6 +55,8 @@ export class ApplicationReviewDto {
 
   @AutoMap(() => Boolean)
   isAuthorized: boolean | null;
+
+  isFirstNationGovernment: boolean;
 }
 
 export class UpdateApplicationReviewDto {

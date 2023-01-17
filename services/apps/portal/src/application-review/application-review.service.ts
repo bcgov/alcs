@@ -1,11 +1,15 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
-import { DOCUMENT_TYPES } from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
-import { UpdateApplicationReviewDto } from './application-review.dto';
+import {
+  ApplicationReviewDto,
+  UpdateApplicationReviewDto,
+} from './application-review.dto';
 import { ApplicationReview } from './application-review.entity';
 
 export type CompletedApplicationReview = {
@@ -16,11 +20,11 @@ export type CompletedApplicationReview = {
   department: string;
   phoneNumber: string;
   email: string;
-  isOCPDesignation: boolean;
+  isOCPDesignation: boolean | null;
   OCPBylawName: string | null;
   OCPDesignation: string | null;
   OCPConsistent: boolean | null;
-  isSubjectToZoning: boolean;
+  isSubjectToZoning: boolean | null;
   zoningBylawName: string | null;
   zoningDesignation: string | null;
   zoningMinimumLotSize: string | null;
@@ -33,6 +37,7 @@ export class ApplicationReviewService {
   constructor(
     @InjectRepository(ApplicationReview)
     private applicationReviewRepository: Repository<ApplicationReview>,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   get(fileNumber: string, localGovernment: LocalGovernment) {
@@ -129,6 +134,7 @@ export class ApplicationReviewService {
   verifyComplete(
     application: Application,
     applicationReview: ApplicationReview,
+    isFirstNationGovernment: boolean,
   ): CompletedApplicationReview {
     if (
       !applicationReview.localGovernmentFileNumber ||
@@ -142,32 +148,36 @@ export class ApplicationReviewService {
       throw new BaseServiceException('Contact information not complete');
     }
 
-    if (applicationReview.isOCPDesignation === null) {
-      throw new BaseServiceException('OCP information not complete');
-    }
-
-    if (applicationReview.isOCPDesignation) {
-      if (
-        !applicationReview.OCPBylawName ||
-        !applicationReview.OCPDesignation ||
-        applicationReview.OCPConsistent === null
-      ) {
+    if (!isFirstNationGovernment) {
+      if (applicationReview.isOCPDesignation === null) {
         throw new BaseServiceException('OCP information not complete');
+      }
+
+      if (applicationReview.isOCPDesignation) {
+        if (
+          !applicationReview.OCPBylawName ||
+          !applicationReview.OCPDesignation ||
+          applicationReview.OCPConsistent === null
+        ) {
+          throw new BaseServiceException('OCP information not complete');
+        }
       }
     }
 
-    if (applicationReview.isSubjectToZoning === null) {
-      throw new BaseServiceException('Zoning information not complete');
-    }
-
-    if (applicationReview.isSubjectToZoning) {
-      if (
-        !applicationReview.zoningBylawName ||
-        !applicationReview.zoningDesignation ||
-        !applicationReview.zoningMinimumLotSize ||
-        applicationReview.isZoningConsistent === null
-      ) {
+    if (!isFirstNationGovernment) {
+      if (applicationReview.isSubjectToZoning === null) {
         throw new BaseServiceException('Zoning information not complete');
+      }
+
+      if (applicationReview.isSubjectToZoning) {
+        if (
+          !applicationReview.zoningBylawName ||
+          !applicationReview.zoningDesignation ||
+          !applicationReview.zoningMinimumLotSize ||
+          applicationReview.isZoningConsistent === null
+        ) {
+          throw new BaseServiceException('Zoning information not complete');
+        }
       }
     }
 
@@ -184,11 +194,28 @@ export class ApplicationReviewService {
       throw new BaseServiceException('Review missing resolution document');
     }
 
-    if (
-      !application.documents.some((doc) => doc.type === 'reviewStaffReport')
-    ) {
-      throw new BaseServiceException('Review missing staff report document');
+    if (!isFirstNationGovernment) {
+      if (
+        !application.documents.some((doc) => doc.type === 'reviewStaffReport')
+      ) {
+        throw new BaseServiceException('Review missing staff report document');
+      }
     }
     return applicationReview as CompletedApplicationReview;
+  }
+
+  async mapToDto(
+    review: ApplicationReview,
+    localGovernment: LocalGovernment,
+  ): Promise<ApplicationReviewDto> {
+    const mappedReview = await this.mapper.mapAsync(
+      review,
+      ApplicationReview,
+      ApplicationReviewDto,
+    );
+    return {
+      ...mappedReview,
+      isFirstNationGovernment: localGovernment.isFirstNation,
+    };
   }
 }

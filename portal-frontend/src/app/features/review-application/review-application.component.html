@@ -4,7 +4,7 @@
   </div>
 </ng-template>
 
-<mat-stepper class="review-application" linear="true" #stepper>
+<mat-stepper *ngIf="!isFirstNationGovernment" class="review-application" linear="true" #stepper>
   <mat-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <app-review-contact-information></app-review-contact-information>
@@ -23,10 +23,29 @@
   </mat-step>
   <mat-step label="Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-attachments [$application]='$application'></app-review-attachments>
+    <app-review-attachments [$application]="$application"></app-review-attachments>
   </mat-step>
   <mat-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-submit [$application]='$application' [stepper]='stepper'></app-review-submit>
+    <app-review-submit [$application]="$application" [stepper]="stepper"></app-review-submit>
+  </mat-step>
+</mat-stepper>
+
+<mat-stepper *ngIf="isFirstNationGovernment" class="review-application" linear="true" #stepper>
+  <mat-step label="Contact Information">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-contact-information></app-review-contact-information>
+  </mat-step>
+  <mat-step label="Resolution">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-resolution></app-review-resolution>
+  </mat-step>
+  <mat-step label="Attachments">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-attachments [$application]="$application"></app-review-attachments>
+  </mat-step>
+  <mat-step label="Review & Submit">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-submit-fng [$application]="$application" [stepper]="stepper"></app-review-submit-fng>
   </mat-step>
 </mat-stepper>

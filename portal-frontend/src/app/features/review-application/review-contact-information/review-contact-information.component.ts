@@ -3,7 +3,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-review-contact-information',
@@ -20,6 +19,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   department = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('');
   email = new FormControl<string | null>('');
+  isFirstNationGovernment = false;
 
   contactForm = new FormGroup({
     lgFileNumber: this.lgFileNumber,
@@ -46,6 +46,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
         this.department.setValue(applicationReview.department);
         this.phoneNumber.setValue(applicationReview.phoneNumber);
         this.email.setValue(applicationReview.email);
+        this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
       }
     });
   }

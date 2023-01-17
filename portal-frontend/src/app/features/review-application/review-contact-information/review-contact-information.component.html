@@ -2,7 +2,8 @@
   <h2>Contact Information</h2>
   <div>
     <div class="description">
-      <div>Provide contact information for Local government staff</div>
+      <div *ngIf='isFirstNationGovernment'>Provide contact information for First Nation government staff</div>
+      <div *ngIf='!isFirstNationGovernment'>Provide contact information for Local government staff</div>
       <div>
         <button class="save-button" (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
       </div>
@@ -10,7 +11,8 @@
     <form [formGroup]="contactForm">
       <div class="form-row">
         <div class="full-row">
-          <label for="lg-file-number">Local Government File Number</label>
+          <label *ngIf='isFirstNationGovernment' for="lg-file-number">First Nation Government File Number</label>
+          <label *ngIf='!isFirstNationGovernment' for="lg-file-number">Local Government File Number</label>
           <mat-form-field class="input" appearance="outline">
             <input id="lg-file-number" matInput placeholder="Type file number" formControlName="lgFileNumber" />
           </mat-form-field>

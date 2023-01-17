@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -20,6 +20,7 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   private fileId: string | undefined;
   isOCPDesignation: boolean | null = null;
   isSubjectToZoning: boolean | null = null;
+  isFirstNationGovernment = false;
 
   constructor(private applicationReviewService: ApplicationReviewService, private router: Router) {}
 
@@ -29,6 +30,7 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
         this.fileId = applicationReview.applicationFileNumber;
         this.isOCPDesignation = applicationReview.isOCPDesignation;
         this.isSubjectToZoning = applicationReview.isSubjectToZoning;
+        this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
 
         if (applicationReview.isAuthorized !== null) {
           this.isAuthorized.setValue(applicationReview.isAuthorized ? 'true' : 'false');
@@ -50,15 +52,17 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
 
   private async saveProgress() {
     if (this.fileId) {
-      if (this.isSubjectToZoning || (this.isOCPDesignation && this.isAuthorized.getRawValue() !== null)) {
-        await this.applicationReviewService.update(this.fileId, {
-          isAuthorized: this.isAuthorized.getRawValue() === 'true',
-        });
-      } else {
-        await this.applicationReviewService.update(this.fileId, {
-          isAuthorized: null,
-        });
+      if (this.isAuthorized.getRawValue() !== null) {
+        if (this.isFirstNationGovernment || this.isSubjectToZoning || this.isOCPDesignation) {
+          await this.applicationReviewService.update(this.fileId, {
+            isAuthorized: this.isAuthorized.getRawValue() === 'true',
+          });
+          return;
+        }
       }
+      await this.applicationReviewService.update(this.fileId, {
+        isAuthorized: null,
+      });
     }
   }
 
