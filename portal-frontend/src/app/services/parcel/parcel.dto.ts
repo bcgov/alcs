@@ -11,11 +11,12 @@ export interface ParcelOwnerDto {
   email: string | undefined;
 }
 export interface ParcelDto {
-  PID: string | undefined;
-  PIN: string | undefined;
-  legalDescription: string | undefined;
-  mapAreaHectares: number | undefined;
-  purchasedDate: number | undefined;
+  uuid: string;
+  PID: string | undefined | null;
+  PIN: string | undefined | null;
+  legalDescription: string | undefined | null;
+  mapAreaHectares: string | undefined | null;
+  purchasedDate: number | undefined | null;
   isFarm: boolean | undefined;
   owners: ParcelOwnerDto[];
 }

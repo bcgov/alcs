@@ -1,6 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ParcelDto } from '../../../../services/parcel/parcel.dto';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
+
+export interface ParcelEntryFormData {
+  uuid: string;
+  pidPin: string | undefined | null;
+  legalDescription: string | undefined | null;
+  mapArea: string | undefined | null;
+  pin: string | undefined | null;
+  pid: string | undefined | null;
+}
 
 @Component({
   selector: 'app-parcel-entry',
@@ -8,7 +18,10 @@ import { ParcelService } from '../../../../services/parcel/parcel.service';
   styleUrls: ['./parcel-entry.component.scss'],
 })
 export class ParcelEntryComponent implements OnInit {
-  // owners: ParcelOwnerDto[] = [];
+  @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
+
+  @Input()
+  parcel!: ParcelDto;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string>('');
@@ -26,7 +39,18 @@ export class ParcelEntryComponent implements OnInit {
     pid: this.pid,
   });
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.parcelForm.valueChanges.subscribe((formData) => {
+      return this.onFormGroupChange.emit({ uuid: this.parcel.uuid || 'aa', ...formData });
+    });
+
+    this.parcelForm.patchValue({
+      legalDescription: this.parcel.legalDescription,
+      mapArea: this.parcel.mapAreaHectares,
+      pid: this.parcel.PID,
+      pin: this.parcel.PIN,
+    });
+  }
 
   async onSearch() {
     const result = await this.parcelService.getByPidPin(this.pidPin.getRawValue()!);

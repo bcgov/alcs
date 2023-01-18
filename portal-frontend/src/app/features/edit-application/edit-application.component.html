@@ -1,66 +1,3 @@
-<!-- <mat-stepper linear="true" #stepper>
-  <mat-step label="Application" [stepControl]="firstForm">
-    <div class="header">
-      <h6>Application ID: {{ fileId }} | {{ applicationType }}</h6>
-      <div class="change-app-type-btn-wrapper">
-        <button mat-flat-button color="accent" (click)="onApplicationTypeChangeClicked()">
-          Change Application Type
-        </button>
-        <mat-icon color="accent" matTooltip="Changing application type will remove some inputs from your saved progress"
-          >help_outline</mat-icon
-        >
-      </div>
-    </div>
-
-    <app-parcel-entry></app-parcel-entry>
-    <form [formGroup]="firstForm">
-      <div class="form-row">
-        <div>
-          <label for="applicant-last-name">Applicant Last Name</label>
-          <mat-form-field class="full-width-input" appearance="outline">
-            <input id="applicant-last-name" matInput placeholder="Type last name" formControlName="applicantName" />
-          </mat-form-field>
-        </div>
-        <div>
-          <label for="local-government">Local/First Nation Government</label>
-          <mat-form-field class="full-width-input" appearance="outline">
-            <input
-              id="local-government"
-              type="text"
-              aria-label="Text"
-              matInput
-              formControlName="localGovernment"
-              placeholder="Type government"
-              [matAutocomplete]="auto"
-            />
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
-                {{ option.name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-      </div>
-      <div>
-        <label for="file-upload">Certificate of Title Upload</label>
-        <div class="documents">
-          <app-file-drag-drop
-            id="file-upload"
-            [uploadedFiles]="documents"
-            (uploadFiles)="attachFile($event)"
-            (deleteFile)="deleteFile($event)"
-            (openFile)="openFile($event)"
-          ></app-file-drag-drop>
-        </div>
-      </div>
-      <div class="step-buttons">
-        <button type="button" mat-stroked-button (click)="onSaveAndExit()">Save and exit</button>
-        <button type="button" mat-flat-button color="primary" (click)="onSubmit()">Submit</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step label="Review & Submit"></mat-step>
-</mat-stepper> -->
 <ng-template #header>
   <div class="header">
     <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
@@ -76,7 +13,7 @@
 <mat-stepper class="review-application" linear="true" #stepper>
   <mat-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-parcel-details></app-parcel-details>
+    <app-parcel-details [$application]="$application"></app-parcel-details>
   </mat-step>
   <mat-step label="Other Parcels in the Community">
     <ng-container *ngTemplateOutlet="header"></ng-container>

@@ -6,7 +6,8 @@
     <mat-expansion-panel-header>
       <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-parcel-entry></app-parcel-entry>
+
+    <app-parcel-entry (onFormGroupChange)="onParcelFormChange($event)" [parcel]="parcel"></app-parcel-entry>
 
     <section>
       <h6>Owner Information</h6>
@@ -22,7 +23,16 @@
       <button mat-stroked-button color="primary">Add another owner</button>
     </section>
 
-    <p>Certificate of title placeholder</p>
+    <div>
+      <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+      <app-file-drag-drop
+        id="certificate-of-title-upload"
+        [uploadedFiles]="certificateOfTitleDocument"
+        (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+      ></app-file-drag-drop>
+    </div>
 
     <div class="flex-center-wrap">
       <mat-checkbox
