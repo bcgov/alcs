@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ParcelDto } from '../../../../services/parcel/parcel.dto';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+
+import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 
 export interface ParcelEntryFormData {
@@ -10,6 +12,8 @@ export interface ParcelEntryFormData {
   mapArea: string | undefined | null;
   pin: string | undefined | null;
   pid: string | undefined | null;
+  parcelType: string | undefined | null;
+  isFarm: string | undefined | null;
 }
 
 @Component({
@@ -21,13 +25,16 @@ export class ParcelEntryComponent implements OnInit {
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
 
   @Input()
-  parcel!: ParcelDto;
+  parcel!: ApplicationParcelDto;
 
   pidPin = new FormControl<string>('');
-  legalDescription = new FormControl<string>('');
-  mapArea = new FormControl<string>('');
-  pin = new FormControl<string>('');
-  pid = new FormControl<string>('');
+  legalDescription = new FormControl<string | null>(null);
+  mapArea = new FormControl<string | null>(null);
+  pin = new FormControl<string | null>(null);
+  pid = new FormControl<string | null>(null);
+  parcelType = new FormControl<string | null>(null);
+  isFarm = new FormControl<string | null>(null);
+  purchaseDate = new FormControl<Date | null>(null);
 
   constructor(private parcelService: ParcelService) {}
 
@@ -37,6 +44,9 @@ export class ParcelEntryComponent implements OnInit {
     mapArea: this.mapArea,
     pin: this.pin,
     pid: this.pid,
+    parcelType: this.parcelType,
+    isFarm: this.isFarm,
+    purchaseDate: this.purchaseDate,
   });
 
   ngOnInit(): void {
@@ -44,11 +54,15 @@ export class ParcelEntryComponent implements OnInit {
       return this.onFormGroupChange.emit({ uuid: this.parcel.uuid || 'aa', ...formData });
     });
 
+    console.log('parcel-entry', this.parcel);
+
     this.parcelForm.patchValue({
       legalDescription: this.parcel.legalDescription,
       mapArea: this.parcel.mapAreaHectares,
-      pid: this.parcel.PID,
-      pin: this.parcel.PIN,
+      pid: this.parcel.pid,
+      pin: this.parcel.pin,
+      parcelType: this.parcel.ownershipTypeCode,
+      isFarm: this.formatBoolean(this.parcel.isFarm),
     });
   }
 
@@ -65,5 +79,21 @@ export class ParcelEntryComponent implements OnInit {
 
   onReset() {
     this.parcelForm.reset();
+  }
+
+  onChangeParcelType($event: MatButtonToggleChange) {
+    console.log('onChangeParcelType', $event);
+  }
+
+  // TODO move to utils
+  private formatBoolean(val?: boolean | null) {
+    switch (val) {
+      case true:
+        return 'true';
+      case false:
+        return 'false';
+      default:
+        return undefined;
+    }
   }
 }

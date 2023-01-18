@@ -1,13 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import {
   APPLICATION_DOCUMENT,
   ApplicationDocumentDto,
   ApplicationDto,
 } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { ParcelDto } from '../../../services/parcel/parcel.dto';
+import { ToastService } from '../../../services/toast/toast.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -23,11 +25,16 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   certificateOfTitleDocument: ApplicationDocumentDto[] = [];
   documentTypes = APPLICATION_DOCUMENT;
-  private fileId: string | undefined;
+  private fileId!: string;
 
-  parcels: ParcelDto[] = [];
+  parcels: ApplicationParcelDto[] = [];
 
-  constructor(private applicationService: ApplicationService, private router: Router) {}
+  constructor(
+    private applicationService: ApplicationService,
+    private router: Router,
+    private applicationParcelService: ApplicationParcelService,
+    private toastService: ToastService
+  ) {}
 
   ngOnDestroy(): void {
     this.$destroy.next();
@@ -41,95 +48,58 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         this.certificateOfTitleDocument = application.documents.filter(
           (document) => document.type === APPLICATION_DOCUMENT.CERTIFICATE_OF_TILE
         );
+        this.loadParcels();
       }
     });
-
-    this.loadParcels();
   }
 
   private async loadParcels() {
-    this.parcels = [
-      {
-        uuid: '111-aaaa-bbb',
-        PID: '100111222',
-        PIN: '133444555',
-        legalDescription: 'This is a legal description',
-        mapAreaHectares: '10',
-        purchasedDate: Date.now(),
-        isFarm: false,
-        owners: [
-          {
-            type: 'individual',
-            firstName: 'First',
-            lastName: 'Owner',
-            phoneNumber: '1111111111',
-            email: 'someEmail.com',
-          },
-          {
-            type: 'individual',
-            firstName: 'Second',
-            lastName: 'Owner',
-            phoneNumber: '2222222222',
-            email: 'someEmail2.com',
-          },
-        ],
-      },
-      {
-        uuid: '222-aaaa-bbb',
-        PID: '200111222',
-        PIN: '133444555',
-        legalDescription: 'This is a legal description 2',
-        mapAreaHectares: '10',
-        purchasedDate: Date.now(),
-        isFarm: false,
-        owners: [
-          {
-            type: 'individual',
-            firstName: 'First',
-            lastName: 'Owner',
-            phoneNumber: '1111111111',
-            email: 'someEmail.com',
-          },
-          {
-            type: 'individual',
-            firstName: 'Second',
-            lastName: 'Owner',
-            phoneNumber: '2222222222',
-            email: 'someEmail2.com',
-          },
-        ],
-      },
-    ];
+    this.parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    if (!this.parcels || this.parcels.length === 0) {
+      await this.onAddParcel();
+    }
   }
 
   async onAddParcel() {
-    /*
-    call portal api to create a new parcel with uuid
-    use uuid to push into array
-    */
-    this.parcels.push({
-      uuid: '333-aaaa-bbb',
-      PID: undefined,
-      PIN: undefined,
-      legalDescription: undefined,
-      mapAreaHectares: undefined,
-      purchasedDate: undefined,
-      isFarm: undefined,
-      owners: []
-    });
+    const parcel = await this.applicationParcelService.create(this.fileId);
+
+    if (parcel) {
+      this.parcels.push({
+        uuid: parcel!.uuid,
+      } as ApplicationParcelDto);
+    } else {
+      this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
+    }
   }
 
   async onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
-    const ind = this.parcels.findIndex((e) => e.uuid === formData.uuid);
+    const parcel = this.parcels.find((e) => e.uuid === formData.uuid);
+    if (!parcel) {
+      this.toastService.showErrorToast('Error updating the parcel. Please refresh page and try again.');
+      return;
+    }
 
-    this.parcels[ind].PID = formData.pid;
-    this.parcels[ind].PID = formData.pin;
-    this.parcels[ind].legalDescription = formData.legalDescription;
-    this.parcels[ind].mapAreaHectares = formData.mapArea;
+    parcel.pid = formData.pid;
+    parcel.pin = formData.pin;
+    parcel.legalDescription = formData.legalDescription;
+    parcel.mapAreaHectares = formData.mapArea;
+    parcel.ownershipTypeCode = formData.parcelType;
+    parcel.isFarm = this.parseStringToBoolean(formData.isFarm);
   }
 
   async saveProgress() {
-    console.log('saveProgress', this.parcels);
+    for (const parcel of this.parcels) {
+      console.log('saveProgress', parcel);
+      await this.applicationParcelService.update(parcel.uuid, {
+        pid: parcel.pid?.toString(),
+        pin: parcel.pin?.toString(),
+        legalDescription: parcel.legalDescription,
+        isFarm: parcel.isFarm,
+        purchasedDate: parcel.purchasedDate,
+        mapAreaHectares: parcel.mapAreaHectares,
+        ownershipTypeCode: parcel.ownershipTypeCode,
+      });
+    }
   }
 
   async onSave() {
@@ -167,6 +137,20 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     const res = await this.applicationService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
+    }
+  }
+
+  // TODO move to utils
+  private parseStringToBoolean(val?: string | null) {
+    switch (val) {
+      case 'true':
+        return true;
+      case 'false':
+        return false;
+      case null:
+        return null;
+      default:
+        return undefined;
     }
   }
 }

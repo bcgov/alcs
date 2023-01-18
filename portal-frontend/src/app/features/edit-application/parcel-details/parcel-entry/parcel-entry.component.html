@@ -6,10 +6,15 @@
         The answer to the following question will change the rest of the application form. Do not change this answer
         once selected.
       </div>
-      <mat-radio-group class="radio-row" aria-label="Select a parcel type">
-        <mat-radio-button value="fee">Fee Simple</mat-radio-button>
-        <mat-radio-button value="crown">Crown</mat-radio-button>
-      </mat-radio-group>
+      <mat-button-toggle-group
+        class="input"
+        (change)="onChangeParcelType($event)"
+        id="parcelType"
+        formControlName="parcelType"
+      >
+        <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
+        <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
 
     <h5>Parcel Lookup</h5>
@@ -54,18 +59,25 @@
       </div>
 
       <div>
-        <label for="pin">PID</label>
+        <label for="pid">PID</label>
         <mat-form-field class="full-width-input" appearance="outline">
-          <input id="pid" type="number" matInput placeholder="Enter PID" formControlName="pid" />
+          <input id="pid" matInput placeholder="Enter PID" formControlName="pid" />
         </mat-form-field>
       </div>
 
       <div>
         <label for="pin">PIN</label>
         <mat-form-field class="full-width-input" appearance="outline">
-          <input id="pin" type="number" matInput placeholder="Enter PIN" formControlName="pin" />
+          <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
         </mat-form-field>
       </div>
+    </div>
+    <div class="full-row">
+      <label for="isFarm">Farm classification</label>
+      <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
+        <mat-button-toggle value="true">Yes</mat-button-toggle>
+        <mat-button-toggle value="false">No</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
   </form>
 </div>
