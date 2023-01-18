@@ -22,6 +22,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="type_code" nullable="false" remarks="Application Type Code from ALCS System" size="2147483647" type="varchar" typeCode="12">
             <parent column="code" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="portal" table="application_status"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="returned_comment" nullable="true" remarks="Used to store comments when an Application is returned to the Applicant" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="file_number" sequenceNumberInPK="1"/>
          <index name="PK_39c4f5ceb0f5a7a4c819d46a0d5" unique="true">
             <column ascending="true" name="file_number"/>
