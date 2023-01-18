@@ -17,6 +17,7 @@ export interface ApplicationReviewDto {
   zoningMinimumLotSize: string | null;
   isZoningConsistent: boolean | null;
   isAuthorized: boolean | null;
+  isFirstNationGovernment: boolean;
 }
 
 export interface UpdateApplicationReviewDto {

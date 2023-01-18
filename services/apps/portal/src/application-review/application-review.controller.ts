@@ -1,6 +1,4 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
@@ -16,11 +14,7 @@ import { APPLICATION_STATUS } from '../application/application-status/applicatio
 import { ApplicationService } from '../application/application.service';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
-import {
-  ApplicationReviewDto,
-  UpdateApplicationReviewDto,
-} from './application-review.dto';
-import { ApplicationReview } from './application-review.entity';
+import { UpdateApplicationReviewDto } from './application-review.dto';
 import { ApplicationReviewService } from './application-review.service';
 
 @Controller('application-review')
@@ -30,7 +24,6 @@ export class ApplicationReviewController {
     private applicationService: ApplicationService,
     private applicationReviewService: ApplicationReviewService,
     private localGovernmentService: LocalGovernmentService,
-    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/:fileNumber')
@@ -42,10 +35,9 @@ export class ApplicationReviewController {
       userLocalGovernment,
     );
 
-    return this.mapper.mapAsync(
+    return this.applicationReviewService.mapToDto(
       applicationReview,
-      ApplicationReview,
-      ApplicationReviewDto,
+      userLocalGovernment,
     );
   }
 
@@ -63,10 +55,9 @@ export class ApplicationReviewController {
       updateDto,
     );
 
-    return this.mapper.mapAsync(
+    return this.applicationReviewService.mapToDto(
       applicationReview,
-      ApplicationReview,
-      ApplicationReviewDto,
+      userLocalGovernment,
     );
   }
 
@@ -88,10 +79,9 @@ export class ApplicationReviewController {
       APPLICATION_STATUS.IN_REVIEW,
     );
 
-    return this.mapper.mapAsync(
+    return this.applicationReviewService.mapToDto(
       applicationReview,
-      ApplicationReview,
-      ApplicationReviewDto,
+      userLocalGovernment,
     );
   }
 
@@ -112,6 +102,7 @@ export class ApplicationReviewController {
     const completedApplication = this.applicationReviewService.verifyComplete(
       application,
       applicationReview,
+      userLocalGovernment.isFirstNation,
     );
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {

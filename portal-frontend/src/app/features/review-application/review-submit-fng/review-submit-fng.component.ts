@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import {
   APPLICATION_DOCUMENT,
@@ -8,25 +10,23 @@ import {
   ApplicationDto,
 } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 
 @Component({
-  selector: 'app-review-attachments',
-  templateUrl: './review-attachments.component.html',
-  styleUrls: ['./review-attachments.component.scss'],
+  selector: 'app-review-submit-fng[stepper]',
+  templateUrl: './review-submit-fng.component.html',
+  styleUrls: ['./review-submit-fng.component.scss'],
 })
-export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
+export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() stepper!: MatStepper;
 
   $destroy = new Subject<void>();
+  _applicationReview: ApplicationReviewDto | undefined;
+  showErrors = false;
 
-  documentTypes = APPLICATION_DOCUMENT;
-
-  private fileId: string | undefined;
   resolutionDocument: ApplicationDocumentDto[] = [];
-  staffReport: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
-  isFirstNationGovernment = false;
+  private fileId: string | undefined;
 
   constructor(
     private router: Router,
@@ -37,18 +37,15 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
       if (applicationReview) {
-        this.fileId = applicationReview.applicationFileNumber;
-        this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        this._applicationReview = applicationReview;
       }
     });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
+        this.fileId = application.fileNumber;
         this.resolutionDocument = application.documents.filter(
           (document) => document.type === APPLICATION_DOCUMENT.RESOLUTION_DOCUMENT
-        );
-        this.staffReport = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.STAFF_REPORT
         );
         this.otherAttachments = application.documents.filter(
           (document) => document.type === APPLICATION_DOCUMENT.REVIEW_OTHER
@@ -58,28 +55,34 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   }
 
   async onExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
+    if (this._applicationReview) {
+      await this.router.navigateByUrl(`/application/${this._applicationReview.applicationFileNumber}`);
     }
   }
 
-  async loadApplication(fileId: string) {
-    const application = await this.applicationService.getByFileId(fileId);
-    this.$application.next(application);
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
-  async attachFile(files: FileHandle[], documentType: APPLICATION_DOCUMENT) {
-    if (this.fileId) {
-      const mappedFiles = files.map((file) => file.file);
-      await this.applicationService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      await this.loadApplication(this.fileId);
-    }
+  onEditSection(index: number) {
+    this.stepper.selectedIndex = index;
   }
 
-  async deleteFile($event: ApplicationDocumentDto) {
-    if (this.fileId) {
-      await this.applicationService.deleteExternalFile($event.uuid);
-      await this.loadApplication(this.fileId);
+  async onSubmit() {
+    this.runValidation();
+    const el = document.getElementsByClassName('no-data');
+
+    if (el && el.length > 0) {
+      el[0].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    } else {
+      if (this.fileId) {
+        await this.applicationReviewService.complete(this.fileId);
+        await this.router.navigateByUrl(`/application/${this.fileId}`);
+      }
     }
   }
 
@@ -90,8 +93,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
+  private runValidation() {
+    this.showErrors = true;
   }
 }
