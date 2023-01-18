@@ -106,7 +106,7 @@ export class ApplicationReviewController {
     );
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-      if (completedApplication.isAuthorized) {
+      if (completedApplication.isAuthorized !== false) {
         await this.applicationService.submitToAlcs(
           fileNumber,
           {

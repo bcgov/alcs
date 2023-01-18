@@ -127,7 +127,10 @@ describe('ApplicationReviewService', () => {
       department: 'Gotham',
       phoneNumber: 'phoneNumber',
       email: 'email',
-      isOCPDesignation: false,
+      isOCPDesignation: true,
+      OCPDesignation: 'designation',
+      OCPConsistent: true,
+      OCPBylawName: 'bylaw',
       isSubjectToZoning: false,
       isAuthorized: null,
     });
@@ -177,9 +180,47 @@ describe('ApplicationReviewService', () => {
       department: 'Gotham',
       phoneNumber: 'phoneNumber',
       email: 'email',
-      isOCPDesignation: false,
+      isOCPDesignation: true,
+      OCPDesignation: 'designation',
+      OCPConsistent: true,
+      OCPBylawName: 'bylaw',
       isSubjectToZoning: false,
       isAuthorized: true,
+    });
+
+    const application = new Application({
+      documents: [
+        new ApplicationDocument({
+          type: 'reviewResolutionDocument',
+        }),
+        new ApplicationDocument({
+          type: 'reviewStaffReport',
+        }),
+      ],
+    });
+
+    const completedReview = service.verifyComplete(
+      application,
+      appReview,
+      false,
+    );
+
+    expect(completedReview).toBeDefined();
+    expect(completedReview).toMatchObject(appReview);
+  });
+
+  it('should allow null authorization if both ocp and zoning are false', () => {
+    const appReview = new ApplicationReview({
+      localGovernmentFileNumber: '123',
+      firstName: 'Bruce',
+      lastName: 'Wayne',
+      position: 'Not Batman',
+      department: 'Gotham',
+      phoneNumber: 'phoneNumber',
+      email: 'email',
+      isOCPDesignation: false,
+      isSubjectToZoning: false,
+      isAuthorized: null,
     });
 
     const application = new Application({

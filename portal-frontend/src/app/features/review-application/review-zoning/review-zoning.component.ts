@@ -16,12 +16,14 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
   isSubjectToZoning = new FormControl<string | null>(null);
   zoningBylawName = new FormControl<string | null>('');
   zoningMinimumLotSize = new FormControl<string | null>('');
+  zoningDesignation = new FormControl<string | null>('');
   isZoningConsistent = new FormControl<string | null>(null);
 
   zoningForm = new FormGroup({
     isSubjectToZoning: this.isSubjectToZoning,
     zoningBylawName: this.zoningBylawName,
     zoningMinimumLotSize: this.zoningMinimumLotSize,
+    zoningDesignation: this.zoningDesignation,
     isZoningConsistent: this.isZoningConsistent,
   });
   private fileId: string | undefined;
@@ -37,11 +39,13 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
           this.isSubjectToZoning.setValue(applicationReview.isSubjectToZoning === null ? null : 'false');
           this.zoningBylawName.disable();
           this.zoningMinimumLotSize.disable();
+          this.zoningDesignation.disable();
           this.isZoningConsistent.disable();
         } else {
           this.isSubjectToZoning.setValue('true');
           this.zoningBylawName.setValue(applicationReview.zoningBylawName);
           this.zoningMinimumLotSize.setValue(applicationReview.zoningMinimumLotSize);
+          this.zoningDesignation.setValue(applicationReview.zoningDesignation);
           if (applicationReview.isZoningConsistent !== null) {
             this.isZoningConsistent.setValue(applicationReview.isZoningConsistent ? 'true' : 'false');
           }
@@ -79,6 +83,7 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
         isSubjectToZoning: subjectToZoningResult,
         zoningBylawName: this.zoningBylawName.getRawValue(),
         zoningMinimumLotSize: this.zoningMinimumLotSize.getRawValue(),
+        zoningDesignation: this.zoningDesignation.getRawValue(),
         isZoningConsistent: zoningConsistentResult,
       });
     }
@@ -94,13 +99,16 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
       this.zoningBylawName.enable();
       this.zoningMinimumLotSize.enable();
       this.isZoningConsistent.enable();
+      this.zoningDesignation.enable();
     } else {
       this.zoningBylawName.setValue(null);
       this.zoningMinimumLotSize.setValue(null);
       this.isZoningConsistent.setValue(null);
+      this.zoningDesignation.setValue(null);
       this.zoningBylawName.disable();
       this.zoningMinimumLotSize.disable();
       this.isZoningConsistent.disable();
+      this.zoningDesignation.disable();
     }
   }
 }

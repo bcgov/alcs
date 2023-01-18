@@ -54,7 +54,7 @@ export class ApplicationReviewGrpc {
   zoningDesignation: string | null;
   zoningMinimumLotSize: string | null;
   isZoningConsistent: boolean | null;
-  isAuthorized: boolean;
+  isAuthorized: boolean | null;
 }
 
 // Protobuf does not allow method without parameters so the only way is to specify interface without properties
