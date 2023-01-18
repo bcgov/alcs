@@ -13,7 +13,10 @@ import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationDocumentController } from './application-document.controller';
 import { AttachExternalDocumentDto } from './application-document.dto';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentController', () => {
@@ -24,6 +27,7 @@ describe('ApplicationDocumentController', () => {
 
   const mockDocument = new ApplicationDocument({
     document: new Document({
+      fileName: 'fileName',
       uploadedBy: new User(),
     }),
   });
@@ -77,7 +81,7 @@ describe('ApplicationDocumentController', () => {
 
     const res = await controller.listDocuments(
       'fake-number',
-      'certificateOfTitle',
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
       {
         user: {
           entity: {},
@@ -85,7 +89,8 @@ describe('ApplicationDocumentController', () => {
       },
     );
 
-    //expect(res[0].mimeType).toEqual(mockDocument.document.mimeType);
+    expect(res[0].fileName).toEqual(mockDocument.document.fileName);
+    expect(appDocumentService.list).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to delete documents', async () => {

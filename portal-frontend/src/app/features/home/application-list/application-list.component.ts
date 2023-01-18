@@ -10,8 +10,6 @@ import { ApplicationService } from '../../../services/application/application.se
   styleUrls: ['./application-list.component.scss'],
 })
 export class ApplicationListComponent implements OnInit {
-  applicationStatus = APPLICATION_STATUS;
-
   dataSource: MatTableDataSource<ApplicationDto> = new MatTableDataSource<ApplicationDto>();
   displayedColumns: string[] = [
     'fileNumber',
@@ -22,6 +20,17 @@ export class ApplicationListComponent implements OnInit {
     'lastUpdated',
     'actions',
   ];
+
+  statusToCssMap = new Map<string, string>([
+    [APPLICATION_STATUS.IN_PROGRESS, 'in-progress'],
+    [APPLICATION_STATUS.SUBMITTED_TO_ALC, 'submitted-to-alc'],
+    [APPLICATION_STATUS.SUBMITTED_TO_LG, 'submitted-to-lg'],
+    [APPLICATION_STATUS.IN_REVIEW, 'in-review'],
+    [APPLICATION_STATUS.REFUSED_TO_FORWARD, 'refused-to-forward'],
+    [APPLICATION_STATUS.INCOMPLETE, 'incomplete'],
+    [APPLICATION_STATUS.WRONG_GOV, 'wrong-government'],
+    [APPLICATION_STATUS.CANCELLED, 'cancelled'],
+  ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

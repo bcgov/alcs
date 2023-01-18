@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
 import {
   ApplicationReviewDto,
@@ -196,7 +197,7 @@ export class ApplicationReviewService {
     //Verify Documents
     if (
       !application.documents.some(
-        (doc) => doc.type === 'reviewResolutionDocument',
+        (doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
       )
     ) {
       throw new BaseServiceException('Review missing resolution document');
@@ -225,5 +226,9 @@ export class ApplicationReviewService {
       ...mappedReview,
       isFirstNationGovernment: localGovernment.isFirstNation,
     };
+  }
+
+  async delete(applicationReview: ApplicationReview) {
+    await this.applicationReviewRepository.remove(applicationReview);
   }
 }

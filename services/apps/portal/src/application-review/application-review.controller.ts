@@ -10,11 +10,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { APPLICATION_STATUS } from '../application/application-status/application-status.dto';
 import { ApplicationService } from '../application/application.service';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
-import { UpdateApplicationReviewDto } from './application-review.dto';
+import {
+  ReturnApplicationDto,
+  UpdateApplicationReviewDto,
+} from './application-review.dto';
 import { ApplicationReviewService } from './application-review.service';
 
 @Controller('application-review')
@@ -23,6 +28,7 @@ export class ApplicationReviewController {
   constructor(
     private applicationService: ApplicationService,
     private applicationReviewService: ApplicationReviewService,
+    private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: LocalGovernmentService,
   ) {}
 
@@ -119,6 +125,58 @@ export class ApplicationReviewController {
         await this.applicationService.updateStatus(
           fileNumber,
           APPLICATION_STATUS.REFUSED_TO_FORWARD,
+        );
+      }
+    } else {
+      throw new BaseServiceException('Application not in correct status');
+    }
+  }
+
+  @Post('/:fileNumber/return')
+  async return(
+    @Param('fileNumber') fileNumber: string,
+    @Req() req,
+    @Body() returnDto: ReturnApplicationDto,
+  ) {
+    const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+
+    const application = await this.applicationService.getForGovernmentByFileId(
+      fileNumber,
+      userLocalGovernment,
+    );
+
+    const applicationReview = await this.applicationReviewService.get(
+      application.fileNumber,
+      userLocalGovernment,
+    );
+
+    if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+      await this.applicationService.update(application.fileNumber, {
+        returnedComment: returnDto.applicantComment,
+      });
+
+      const documentsToDelete = application.documents.filter((document) =>
+        [
+          DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+          DOCUMENT_TYPE.STAFF_REPORT,
+          DOCUMENT_TYPE.REVIEW_OTHER,
+        ].includes(document.type as DOCUMENT_TYPE),
+      );
+      for (const document of documentsToDelete) {
+        await this.applicationDocumentService.delete(document);
+      }
+
+      await this.applicationReviewService.delete(applicationReview);
+
+      if (returnDto.reasonForReturn === 'incomplete') {
+        await this.applicationService.updateStatus(
+          fileNumber,
+          APPLICATION_STATUS.INCOMPLETE,
+        );
+      } else {
+        await this.applicationService.updateStatus(
+          fileNumber,
+          APPLICATION_STATUS.WRONG_GOV,
         );
       }
     } else {

@@ -50,6 +50,10 @@ export class UpdateApplicationDto {
   @IsString()
   @IsOptional()
   typeCode?: string;
+
+  @IsString()
+  @IsOptional()
+  returnedComment?: string;
 }
 
 export class ApplicationSubmitToAlcsDto {
