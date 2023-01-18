@@ -5,7 +5,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDocument } from '../application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
 import { ApplicationReviewProfile } from '../common/automapper/application-review.automapper.profile';
 import { ApplicationReview } from './application-review.entity';
@@ -73,6 +76,15 @@ describe('ApplicationReviewService', () => {
     const res = await service.update('', mockLocalGovernment, {});
 
     expect(res).toBeDefined();
+  });
+
+  it('should call remove for delete', async () => {
+    const appReview = new ApplicationReview();
+    mockRepository.remove.mockResolvedValue(appReview);
+
+    await service.delete(appReview);
+
+    expect(mockRepository.remove).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception for when verifying an incomplete review', () => {
@@ -159,7 +171,7 @@ describe('ApplicationReviewService', () => {
     const application = new Application({
       documents: [
         new ApplicationDocument({
-          type: 'reviewResolutionDocument',
+          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       ],
     });
@@ -191,7 +203,7 @@ describe('ApplicationReviewService', () => {
     const application = new Application({
       documents: [
         new ApplicationDocument({
-          type: 'reviewResolutionDocument',
+          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
         new ApplicationDocument({
           type: 'reviewStaffReport',
@@ -226,7 +238,7 @@ describe('ApplicationReviewService', () => {
     const application = new Application({
       documents: [
         new ApplicationDocument({
-          type: 'reviewResolutionDocument',
+          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
         new ApplicationDocument({
           type: 'reviewStaffReport',
@@ -259,7 +271,7 @@ describe('ApplicationReviewService', () => {
     const application = new Application({
       documents: [
         new ApplicationDocument({
-          type: 'reviewResolutionDocument',
+          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       ],
     });

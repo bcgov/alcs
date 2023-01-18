@@ -45,7 +45,7 @@ describe('ApplicationReviewService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(0);
   });
 
-  it('should show an error test if get fails', async () => {
+  it('should show an error toast if get fails', async () => {
     mockHttpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
@@ -68,7 +68,7 @@ describe('ApplicationReviewService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(0);
   });
 
-  it('should show an error test if start fails', async () => {
+  it('should show an error toast if start fails', async () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
@@ -92,7 +92,7 @@ describe('ApplicationReviewService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(0);
   });
 
-  it('should show an error test if update fails', async () => {
+  it('should show an error toast if update fails', async () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
@@ -116,7 +116,7 @@ describe('ApplicationReviewService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(0);
   });
 
-  it('should show an error test if complete fails', async () => {
+  it('should show an error toast if complete fails', async () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
@@ -124,6 +124,36 @@ describe('ApplicationReviewService', () => {
     );
     const fileId = 'file-id';
     await service.complete(fileId);
+
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should make a post request for return', async () => {
+    mockHttpClient.post.mockReturnValue(of({}));
+    mockToastService.showSuccessToast.mockReturnValue({} as any);
+    const fileId = 'file-id';
+    await service.returnApplication(fileId, {
+      applicantComment: '',
+      reasonForReturn: 'incomplete',
+    });
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.post.mock.calls[0][0]).toContain(fileId);
+    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(0);
+  });
+
+  it('should show an error toast if return fails', async () => {
+    mockHttpClient.post.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+    const fileId = 'file-id';
+    await service.returnApplication(fileId, {
+      applicantComment: '',
+      reasonForReturn: 'incomplete',
+    });
 
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });

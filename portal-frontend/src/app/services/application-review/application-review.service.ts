@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationReviewDto, UpdateApplicationReviewDto } from './application-review.dto';
+import { ApplicationReviewDto, ReturnApplicationDto, UpdateApplicationReviewDto } from './application-review.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +57,16 @@ export class ApplicationReviewService {
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to submit Application Review, please try again later');
+    }
+  }
+
+  async returnApplication(fileId: string, returnDto: ReturnApplicationDto) {
+    try {
+      await firstValueFrom(this.httpClient.post<{}>(`${this.serviceUrl}/${fileId}/return`, returnDto));
+      this.toastService.showSuccessToast('Application returned to Applicant');
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to return Application, please try again later');
     }
   }
 }

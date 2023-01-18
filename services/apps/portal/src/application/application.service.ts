@@ -94,9 +94,12 @@ export class ApplicationService {
   async update(fileNumber: string, updateDto: UpdateApplicationDto) {
     const application = await this.getOrFail(fileNumber);
 
-    application.applicant = updateDto.applicant || null;
-    application.localGovernmentUuid = updateDto.localGovernmentUuid || null;
+    application.applicant = updateDto.applicant || application.applicant;
+    application.localGovernmentUuid =
+      updateDto.localGovernmentUuid || application.localGovernmentUuid;
     application.typeCode = updateDto.typeCode || application.typeCode;
+    application.returnedComment =
+      updateDto.returnedComment || application.returnedComment;
 
     await this.applicationRepository.save(application);
 
@@ -323,7 +326,11 @@ export class ApplicationService {
     return apps.map((app) => ({
       ...this.mapper.map(app, Application, ApplicationDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
-      canEdit: app.status.code == APPLICATION_STATUS.IN_PROGRESS,
+      canEdit: [
+        APPLICATION_STATUS.IN_PROGRESS,
+        APPLICATION_STATUS.INCOMPLETE,
+        APPLICATION_STATUS.WRONG_GOV,
+      ].includes(app.status.code as APPLICATION_STATUS),
       canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
       canReview:
         [
