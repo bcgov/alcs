@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -19,6 +20,10 @@ import { ApplicationService } from '../../../services/application/application.se
 export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
   @Input() stepper!: MatStepper;
+
+  @ViewChild('contactInfo') contactInfoPanel?: MatExpansionPanel;
+  @ViewChild('attachmentInfo') attachmentPanel?: MatExpansionPanel;
+  @ViewChild('resolutionInfo') resolutionPanel?: MatExpansionPanel;
 
   $destroy = new Subject<void>();
   _applicationReview: ApplicationReviewDto | undefined;
@@ -70,19 +75,10 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
-    this.runValidation();
-    const el = document.getElementsByClassName('no-data');
-
-    if (el && el.length > 0) {
-      el[0].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    } else {
-      if (this.fileId) {
-        await this.applicationReviewService.complete(this.fileId);
-        await this.router.navigateByUrl(`/application/${this.fileId}`);
-      }
+    const isValid = this.runValidation();
+    if (isValid && this.fileId) {
+      await this.applicationReviewService.complete(this.fileId);
+      await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
 
@@ -95,5 +91,63 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
 
   private runValidation() {
     this.showErrors = true;
+
+    const contactInfoValid = this.validateContactInfo();
+    if (!contactInfoValid) {
+      if (this.contactInfoPanel) {
+        this.contactInfoPanel.open();
+      }
+    }
+
+    const resolutionValid = this.validateResolution();
+    if (!resolutionValid) {
+      if (this.resolutionPanel) {
+        this.resolutionPanel.open();
+      }
+    }
+
+    const attachmentsValid = this.validateAttachments();
+    if (!attachmentsValid) {
+      if (this.attachmentPanel) {
+        this.attachmentPanel.open();
+      }
+    }
+
+    const el = document.getElementsByClassName('no-data');
+    if (el && el.length > 0) {
+      el[0].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+
+    return contactInfoValid && resolutionValid && attachmentsValid;
+  }
+
+  private validateContactInfo() {
+    if (this._applicationReview) {
+      const review = this._applicationReview;
+      return (
+        review.localGovernmentFileNumber &&
+        review.firstName &&
+        review.lastName &&
+        review.position &&
+        review.department &&
+        review.position &&
+        review.email
+      );
+    }
+    return false;
+  }
+
+  private validateResolution() {
+    if (this._applicationReview) {
+      return this._applicationReview.isAuthorized !== null;
+    }
+    return false;
+  }
+
+  private validateAttachments() {
+    return this.resolutionDocument.length > 0;
   }
 }

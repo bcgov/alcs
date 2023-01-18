@@ -29,7 +29,7 @@ export type CompletedApplicationReview = {
   zoningDesignation: string | null;
   zoningMinimumLotSize: string | null;
   isZoningConsistent: boolean | null;
-  isAuthorized: boolean;
+  isAuthorized: boolean | null;
 };
 
 @Injectable()
@@ -115,6 +115,10 @@ export class ApplicationReviewService {
       updateDto.zoningBylawName !== undefined
         ? updateDto.zoningBylawName
         : applicationReview.zoningBylawName;
+    applicationReview.zoningDesignation =
+      updateDto.zoningDesignation !== undefined
+        ? updateDto.zoningDesignation
+        : applicationReview.zoningDesignation;
     applicationReview.zoningMinimumLotSize =
       updateDto.zoningMinimumLotSize !== undefined
         ? updateDto.zoningMinimumLotSize
@@ -181,7 +185,11 @@ export class ApplicationReviewService {
       }
     }
 
-    if (applicationReview.isAuthorized === null) {
+    if (
+      (applicationReview.isOCPDesignation ||
+        applicationReview.isSubjectToZoning) &&
+      applicationReview.isAuthorized === null
+    ) {
       throw new BaseServiceException('Review authorization needs to be set');
     }
 
