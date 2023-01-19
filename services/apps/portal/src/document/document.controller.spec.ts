@@ -2,6 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
 import { DocumentUploadResponseGrpc } from '../alcs/document-grpc/alcs-document.message.interface';
+import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { DocumentController } from './document.controller';
 import { DocumentService } from './document.service';
 
@@ -34,7 +35,7 @@ describe('DocumentController', () => {
       of({} as DocumentUploadResponseGrpc),
     );
 
-    await controller.getUploadUrl('mock', 'certificateOfTitle');
+    await controller.getUploadUrl('mock', DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
 
     expect(mockDocumentService.getUploadUrl).toBeCalledTimes(1);
   });

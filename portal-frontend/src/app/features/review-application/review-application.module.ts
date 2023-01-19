@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NoDataComponent } from '../../shared/no-data/no-data.component';
 import { SharedModule } from '../../shared/shared.module';
+import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 import { ReviewApplicationComponent } from './review-application.component';
 import { ReviewAttachmentsComponent } from './review-attachments/review-attachments.component';
 import { ReviewContactInformationComponent } from './review-contact-information/review-contact-information.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
     ReviewAttachmentsComponent,
     ReviewSubmitComponent,
     ReviewSubmitFngComponent,
+    ReturnApplicationDialogComponent,
     NoDataComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],

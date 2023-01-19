@@ -50,6 +50,6 @@ import { ApplicationService } from './application.service';
     ApplicationParcelController,
     ApplicationParcelDocumentController,
   ],
-  exports: [ApplicationService],
+  exports: [ApplicationService, ApplicationDocumentService],
 })
 export class ApplicationModule {}

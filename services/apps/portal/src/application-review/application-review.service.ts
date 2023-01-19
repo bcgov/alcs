@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { Application } from '../application/application.entity';
 import {
   ApplicationReviewDto,
@@ -29,7 +30,7 @@ export type CompletedApplicationReview = {
   zoningDesignation: string | null;
   zoningMinimumLotSize: string | null;
   isZoningConsistent: boolean | null;
-  isAuthorized: boolean;
+  isAuthorized: boolean | null;
 };
 
 @Injectable()
@@ -115,6 +116,10 @@ export class ApplicationReviewService {
       updateDto.zoningBylawName !== undefined
         ? updateDto.zoningBylawName
         : applicationReview.zoningBylawName;
+    applicationReview.zoningDesignation =
+      updateDto.zoningDesignation !== undefined
+        ? updateDto.zoningDesignation
+        : applicationReview.zoningDesignation;
     applicationReview.zoningMinimumLotSize =
       updateDto.zoningMinimumLotSize !== undefined
         ? updateDto.zoningMinimumLotSize
@@ -181,14 +186,18 @@ export class ApplicationReviewService {
       }
     }
 
-    if (applicationReview.isAuthorized === null) {
+    if (
+      (applicationReview.isOCPDesignation ||
+        applicationReview.isSubjectToZoning) &&
+      applicationReview.isAuthorized === null
+    ) {
       throw new BaseServiceException('Review authorization needs to be set');
     }
 
     //Verify Documents
     if (
       !application.documents.some(
-        (doc) => doc.type === 'reviewResolutionDocument',
+        (doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
       )
     ) {
       throw new BaseServiceException('Review missing resolution document');
@@ -217,5 +226,9 @@ export class ApplicationReviewService {
       ...mappedReview,
       isFirstNationGovernment: localGovernment.isFirstNation,
     };
+  }
+
+  async delete(applicationReview: ApplicationReview) {
+    await this.applicationReviewRepository.remove(applicationReview);
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../services/application-review/application-review.service';
 import {
@@ -8,6 +9,8 @@ import {
   ApplicationDto,
 } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { ChangeApplicationTypeDialogComponent } from '../edit-application/change-application-type-dialog/change-application-type-dialog.component';
+import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 
 @Component({
   selector: 'app-review-application',
@@ -24,7 +27,9 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   constructor(
     private applicationService: ApplicationService,
     private applicationReviewService: ApplicationReviewService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +55,23 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   async loadApplication(fileId: string) {
     const application = await this.applicationService.getByFileId(fileId);
     this.$application.next(application);
+  }
+
+  onReturnApplication() {
+    this.dialog
+      .open(ReturnApplicationDialogComponent, {
+        panelClass: 'no-padding',
+        disableClose: true,
+        data: {
+          fileId: this.application?.fileNumber,
+        },
+      })
+      .beforeClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this.router.navigateByUrl('/home');
+        }
+      });
   }
 
   ngOnDestroy(): void {

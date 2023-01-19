@@ -8,7 +8,10 @@ import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentService', () => {
@@ -99,7 +102,10 @@ describe('ApplicationDocumentService', () => {
   it('should call through for list', async () => {
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.list(fileNumber, 'certificateOfTitle');
+    const res = await service.list(
+      fileNumber,
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+    );
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);
@@ -109,7 +115,10 @@ describe('ApplicationDocumentService', () => {
     const mockAppDocument = new ApplicationDocument();
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.listAll([fileNumber], 'certificateOfTitle');
+    const res = await service.listAll(
+      [fileNumber],
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+    );
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);

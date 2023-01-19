@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
@@ -13,6 +14,7 @@ describe('ReviewApplicationComponent', () => {
   let fixture: ComponentFixture<ReviewApplicationComponent>;
   let mockAppReviewService: DeepMocked<ApplicationReviewService>;
   let mockAppService: DeepMocked<ApplicationService>;
+  let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
   let routeParamMap: BehaviorSubject<Map<string, any>>;
@@ -41,6 +43,10 @@ describe('ReviewApplicationComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: mockRoute,
+        },
+        {
+          provide: MatDialog,
+          useValue: mockDialog,
         },
       ],
       declarations: [ReviewApplicationComponent],

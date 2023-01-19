@@ -53,6 +53,15 @@ export class Application extends BaseEntity {
   })
   localGovernmentUuid: string | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Used to store comments when an Application is returned to the Applicant',
+    nullable: true,
+  })
+  returnedComment: string | null;
+
   @AutoMap()
   @ManyToOne(() => User)
   createdBy: User;
