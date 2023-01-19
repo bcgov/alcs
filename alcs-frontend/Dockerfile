@@ -39,7 +39,7 @@ COPY ./init.sh .
 COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN chmod -R go+rwx /etc/nginx
 
-# Copy dist folder fro build stage to nginx public folder
+# Copy dist folder from build stage to nginx public folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Dynamically update environment values
@@ -47,6 +47,9 @@ RUN chmod -R go+rwx /usr/share/nginx/html/assets
 
 # provide dynamic scp content-src
 ENV ENABLED_CONNECT_SRC=" 'self' http://localhost:* nrs.objectstore.gov.bc.ca"
+
+# set to true to enable maintenance mode
+ENV MAINTENANCE_MODE="false"
 
 # When the container starts, replace the settings.json with values from environment variables
 ENTRYPOINT [ "./init.sh" ]
