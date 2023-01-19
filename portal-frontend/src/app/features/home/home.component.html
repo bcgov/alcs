@@ -20,18 +20,13 @@
   <div class="navigation-wrapper">
     <mat-tab-group>
       <mat-tab label="Application">
-        <div class="warning-banner responsive-flex-wrapper">
-          <div class="icon">
-            <mat-icon>info</mat-icon>
-          </div>
-          <div class="description">
-            Create an Application if you are proposing to exclude, include, subdivide, conduct a non-farm use activity,
-            conduct a non-adhering residential use, conduct a transportation/utility/recreational trail use, or conduct
-            a soil or fill use. Non-adhering residential use applications have a fee of $750. All other applications
-            have a fee of $1,500 fee, except for inclusion of land (no fee). Application fees are split equally between
-            the local government and the ALC.
-          </div>
-        </div>
+        <app-warning-banner>
+          Create an Application if you are proposing to exclude, include, subdivide, conduct a non-farm use activity,
+          conduct a non-adhering residential use, conduct a transportation/utility/recreational trail use, or conduct a
+          soil or fill use. Non-adhering residential use applications have a fee of $750. All other applications have a
+          fee of $1,500 fee, except for inclusion of land (no fee). Application fees are split equally between the local
+          government and the ALC.
+        </app-warning-banner>
         <app-application-list></app-application-list>
       </mat-tab>
       <mat-tab label="Notice of Intent"> Notice of Intent </mat-tab>

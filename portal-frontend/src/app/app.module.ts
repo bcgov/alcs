@@ -25,6 +25,7 @@ import { ConfirmationDialogService } from './shared/confirmation-dialog/confirma
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
+import { SelectGovernmentComponent } from './features/edit-application/select-government/select-government.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { SharedModule } from './shared/shared.module';
     ParcelEntryComponent,
     ConfirmationDialogComponent,
     ViewApplicationComponent,
+    SelectGovernmentComponent,
   ],
   imports: [
     BrowserModule,
