@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   hasCommissioner = false;
   hasOtherRole = false;
   hasApplicationSpecialist = false;
+  hasAgrologist = false;
   userProfile: UserDto | undefined;
 
   constructor(
@@ -46,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }).length > 0;
         this.hasApplicationSpecialist =
           !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.APP_SPECIALIST);
+        this.hasAgrologist = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.AGROLOGIST);
       }
     });
   }
