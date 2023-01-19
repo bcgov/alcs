@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -68,5 +69,10 @@ export class ApplicationParcelController {
       ApplicationParcel,
       ApplicationParcelDto,
     );
+  }
+
+  @Delete('/:uuid')
+  async delete(@Param('uuid') uuid: string) {
+    return { uuid: await this.parcelService.delete(uuid) };
   }
 }

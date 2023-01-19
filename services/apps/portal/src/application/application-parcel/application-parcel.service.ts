@@ -47,6 +47,12 @@ export class ApplicationParcelService {
     return this.parcelRepository.save(parcel);
   }
 
+  async delete(uuid: string) {
+    const parcel = await this.getOneOrFail(uuid);
+    await this.parcelRepository.remove([parcel]);
+    return uuid;
+  }
+
   // async verifyAccess(uuid: string, user: User) {
   //   if (user.bceidBusinessGuid) {
   //     const localGovernment = await this.localGovernmentService.getByGuid(

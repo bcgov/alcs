@@ -31,6 +31,7 @@
         (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
+        (beforeFileUploadOpened)="beforeFileUploadOpened()"
       ></app-file-drag-drop>
     </div>
 
@@ -41,6 +42,14 @@
       </mat-checkbox>
       <button mat-stroked-button color="primary" (click)="onSave()">
         Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
+      </button>
+      <button
+        *ngIf="parcels.length > 1"
+        mat-stroked-button
+        color="accent"
+        (click)="onDelete(parcel.uuid, parcelInd + 1)"
+      >
+        Delete Parcel #{{ parcelInd + 1 }} Details
       </button>
     </div>
   </mat-expansion-panel>

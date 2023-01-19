@@ -30,7 +30,7 @@ export class ApplicationParcelDocument extends BaseEntity {
   @Column()
   type: string;
 
-  @ManyToOne(() => ApplicationParcel, { nullable: false })
+  @ManyToOne(() => ApplicationParcel, { nullable: false, onDelete: 'CASCADE' })
   applicationParcel: ApplicationParcel;
 
   @Column({

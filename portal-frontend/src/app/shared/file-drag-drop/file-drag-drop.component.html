@@ -21,7 +21,7 @@
     <div class="icon">
       <mat-icon inline="true">cloud_upload</mat-icon>
     </div>
-    <button type="button" (click)="fileUpload.click()" mat-flat-button color="accent">Choose file to Upload</button>
+    <button type="button" (click)="onFileUploadClicked()" mat-flat-button color="accent">Choose file to Upload</button>
     <div class="drag-text">or drag and drop them here</div>
   </div>
 </div>
@@ -29,7 +29,7 @@
   *ngIf="!uploadedFiles.length || allowMultiple"
   type="button"
   class="mobile-file-drag-drop"
-  (click)="fileUpload.click()"
+  (click)="onFileUploadClicked()"
   mat-flat-button
   color="accent"
 >

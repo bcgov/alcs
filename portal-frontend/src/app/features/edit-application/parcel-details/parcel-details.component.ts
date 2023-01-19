@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -10,6 +11,7 @@ import { ApplicationDocumentDto, ApplicationDto } from '../../../services/applic
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { DeleteParcelComponent } from './delete-parcel/delete-parcel.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
 @Component({
@@ -32,7 +34,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private router: Router,
     private applicationParcelService: ApplicationParcelService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private dialog: MatDialog
   ) {}
 
   ngOnDestroy(): void {
@@ -118,7 +121,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   }
 
   async attachFile(files: FileHandle[], documentType: APPLICATION_PARCEL_DOCUMENT, parcelUuid: string) {
-    if (this.fileId) {
+    if (parcelUuid) {
       const mappedFiles = files.map((file) => file.file);
       await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles, documentType);
       await this.loadParcels();
@@ -151,5 +154,27 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       default:
         return undefined;
     }
+  }
+
+  async onDelete(parcelUuid: string, parcelNumber: number) {
+    this.dialog
+      .open(DeleteParcelComponent, {
+        panelClass: 'no-padding',
+        disableClose: true,
+        data: {
+          parcelUuid,
+          parcelNumber,
+        },
+      })
+      .beforeClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.loadParcels();
+        }
+      });
+  }
+
+  async beforeFileUploadOpened() {
+    await this.saveProgress();
   }
 }

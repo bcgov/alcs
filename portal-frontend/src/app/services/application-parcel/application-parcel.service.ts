@@ -120,4 +120,18 @@ export class ApplicationParcelService {
       this.toastService.showErrorToast('Failed to delete document, please try again');
     }
   }
+
+  async delete(parcelUuid: string) {
+    try {
+      const result = await firstValueFrom(
+        this.httpClient.delete(`${environment.apiUrl}/application-parcel/${parcelUuid}`)
+      );
+      this.toastService.showSuccessToast('Parcel deleted');
+      return result;
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to delete Parcel, please try again');
+    }
+    return undefined;
+  }
 }
