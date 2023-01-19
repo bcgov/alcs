@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ApplicationParcelDocumentDto } from './application-parcel-document/application-parcel-document.dto';
 
 export class ApplicationParcelDto {
   @AutoMap()
@@ -34,6 +35,9 @@ export class ApplicationParcelDto {
 
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
+
+  @AutoMap()
+  documents: ApplicationParcelDocumentDto[];
 }
 
 export class ApplicationParcelCreateDto {
@@ -68,8 +72,7 @@ export class ApplicationParcelUpdateDto {
   isFarm?: boolean | null;
 
   @IsBoolean()
-  @IsOptional()
-  isConfirmedByApplicant?: boolean;
+  isConfirmedByApplicant: boolean;
 
   @IsString()
   @IsOptional()

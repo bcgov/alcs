@@ -27,19 +27,21 @@
       <label for="certificate-of-title-upload">Upload Certificate of Title</label>
       <app-file-drag-drop
         id="certificate-of-title-upload"
-        [uploadedFiles]="certificateOfTitleDocument"
-        (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE)"
+        [uploadedFiles]="parcel.documents"
+        (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
       ></app-file-drag-drop>
     </div>
 
     <div class="flex-center-wrap">
-      <mat-checkbox
+      <mat-checkbox [(ngModel)]="parcel.isConfirmedByApplicant"
         >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
         information can cause significant delays to processing time.
       </mat-checkbox>
-      <button mat-stroked-button color="primary">Save Parcel #{{ parcelInd + 1 }} Details & Owner Information</button>
+      <button mat-stroked-button color="primary" (click)="onSave()">
+        Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
+      </button>
     </div>
   </mat-expansion-panel>
 

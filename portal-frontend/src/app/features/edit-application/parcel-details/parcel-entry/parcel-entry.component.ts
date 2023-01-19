@@ -14,6 +14,7 @@ export interface ParcelEntryFormData {
   pid: string | undefined | null;
   parcelType: string | undefined | null;
   isFarm: string | undefined | null;
+  purchaseDate?: Date | null;
 }
 
 @Component({
@@ -63,6 +64,7 @@ export class ParcelEntryComponent implements OnInit {
       pin: this.parcel.pin,
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: this.formatBoolean(this.parcel.isFarm),
+      purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
     });
   }
 

@@ -78,6 +78,15 @@
         <mat-button-toggle value="true">Yes</mat-button-toggle>
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
+      <div>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="purchaseDate" formControlName="purchaseDate" />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+          <mat-datepicker #purchaseDate startView="year"></mat-datepicker>
+        </mat-form-field>
+      </div>
     </div>
   </form>
 </div>

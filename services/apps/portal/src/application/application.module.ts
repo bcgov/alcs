@@ -9,8 +9,11 @@ import { DocumentModule } from '../document/document.module';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
-import { ApplicationParcelController } from './application-parcel/application-parcel-controller';
+import { ApplicationParcelDocumentController } from './application-parcel/application-parcel-document/application-parcel-document.controller';
+import { ApplicationParcelDocument } from './application-parcel/application-parcel-document/application-parcel-document.entity';
+import { ApplicationParcelDocumentService } from './application-parcel/application-parcel-document/application-parcel-document.service';
 import { ApplicationParcelOwnershipType } from './application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
+import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -26,6 +29,7 @@ import { ApplicationService } from './application.service';
       ApplicationStatus,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
+      ApplicationParcelDocument,
     ]),
     AlcsModule,
     AuthorizationModule,
@@ -38,11 +42,13 @@ import { ApplicationService } from './application.service';
     ApplicationProfile,
     ApplicationParcelProfile,
     ApplicationParcelService,
+    ApplicationParcelDocumentService,
   ],
   controllers: [
     ApplicationController,
     ApplicationDocumentController,
     ApplicationParcelController,
+    ApplicationParcelDocumentController,
   ],
   exports: [ApplicationService],
 })

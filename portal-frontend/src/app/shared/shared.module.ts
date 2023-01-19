@@ -5,7 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -49,6 +50,8 @@ import { DATE_FORMATS } from './utils/date-format';
     MatStepperModule,
     FileDragDropComponent,
     FileSizePipe,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective],
 })

@@ -1,7 +1,8 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application.entity';
+import { ApplicationParcelDocument } from './application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
 
 @Entity()
@@ -69,7 +70,7 @@ export class ApplicationParcel extends Base {
   @Column({
     type: 'boolean',
     comment:
-      'The Parcels indication whether signed off entered data including the Certificate of Title',
+      'The Parcels indication whether applicant signed off provided data including the Certificate of Title',
     nullable: false,
     default: false,
   })
@@ -93,6 +94,13 @@ export class ApplicationParcel extends Base {
   @AutoMap()
   @ManyToOne(() => ApplicationParcelOwnershipType)
   ownershipType: ApplicationParcelOwnershipType;
+
+  @AutoMap()
+  @OneToMany(
+    () => ApplicationParcelDocument,
+    (appParcelDocument) => appParcelDocument.applicationParcel,
+  )
+  documents: ApplicationParcelDocument[];
 
   // TODO check if this works
   // setValue(propName: string, newVal) {

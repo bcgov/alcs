@@ -15,6 +15,7 @@ export class ApplicationParcelService {
   async fetchByApplicationFileId(fileId: string) {
     return this.parcelRepository.find({
       where: { application: { fileNumber: fileId } },
+      relations: { documents: { document: true } },
     });
   }
 
@@ -25,10 +26,14 @@ export class ApplicationParcelService {
     return this.parcelRepository.save(parcel);
   }
 
-  async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
-    const parcel = await this.parcelRepository.findOneOrFail({
+  async getOneOrFail(uuid: string) {
+    return this.parcelRepository.findOneOrFail({
       where: { uuid },
     });
+  }
+
+  async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
+    const parcel = await this.getOneOrFail(uuid);
 
     parcel.pid = updateDto.pid;
     parcel.pin = updateDto.pin;
@@ -37,7 +42,21 @@ export class ApplicationParcelService {
     parcel.isFarm = updateDto.isFarm;
     parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
     parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
+    parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
 
     return this.parcelRepository.save(parcel);
   }
+
+  // async verifyAccess(uuid: string, user: User) {
+  //   if (user.bceidBusinessGuid) {
+  //     const localGovernment = await this.localGovernmentService.getByGuid(
+  //       user.bceidBusinessGuid,
+  //     );
+  //     if (localGovernment) {
+  //       return await this.getForGovernmentByFileId(fileId, localGovernment);
+  //     }
+  //   }
+
+  //   return await this.getIfCreator(fileId, user);
+  // }
 }

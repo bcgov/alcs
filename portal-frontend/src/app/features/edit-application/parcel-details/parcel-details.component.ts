@@ -1,13 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
-import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import {
-  APPLICATION_DOCUMENT,
-  ApplicationDocumentDto,
-  ApplicationDto,
-} from '../../../services/application/application.dto';
+  APPLICATION_PARCEL_DOCUMENT,
+  ApplicationParcelDto,
+} from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
+import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
@@ -24,7 +23,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   certificateOfTitleDocument: ApplicationDocumentDto[] = [];
-  documentTypes = APPLICATION_DOCUMENT;
+  documentTypes = APPLICATION_PARCEL_DOCUMENT;
   private fileId!: string;
 
   parcels: ApplicationParcelDto[] = [];
@@ -45,9 +44,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.certificateOfTitleDocument = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.CERTIFICATE_OF_TILE
-        );
         this.loadParcels();
       }
     });
@@ -66,6 +62,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     if (parcel) {
       this.parcels.push({
         uuid: parcel!.uuid,
+        documents: [] as ApplicationDocumentDto[],
       } as ApplicationParcelDto);
     } else {
       this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
@@ -85,6 +82,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     parcel.mapAreaHectares = formData.mapArea;
     parcel.ownershipTypeCode = formData.parcelType;
     parcel.isFarm = this.parseStringToBoolean(formData.isFarm);
+    parcel.purchasedDate = formData.purchaseDate?.getTime();
   }
 
   async saveProgress() {
@@ -98,6 +96,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         purchasedDate: parcel.purchasedDate,
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
+        isConfirmedByApplicant: parcel.isConfirmedByApplicant,
       });
     }
   }
@@ -118,23 +117,23 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     this.$application.next(application);
   }
 
-  async attachFile(files: FileHandle[], documentType: APPLICATION_DOCUMENT) {
+  async attachFile(files: FileHandle[], documentType: APPLICATION_PARCEL_DOCUMENT, parcelUuid: string) {
     if (this.fileId) {
       const mappedFiles = files.map((file) => file.file);
-      await this.applicationService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      await this.loadApplication(this.fileId);
+      await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles, documentType);
+      await this.loadParcels();
     }
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
     if (this.fileId) {
-      await this.applicationService.deleteExternalFile($event.uuid);
-      await this.loadApplication(this.fileId);
+      await this.applicationParcelService.deleteExternalFile($event.uuid);
+      await this.loadParcels();
     }
   }
 
   async openFile(uuid: string) {
-    const res = await this.applicationService.openFile(uuid);
+    const res = await this.applicationParcelService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }

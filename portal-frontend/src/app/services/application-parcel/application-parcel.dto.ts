@@ -1,3 +1,5 @@
+import { ApplicationDocumentDto } from '../application/application.dto';
+
 export interface ParcelOwnerDto {
   type: string | undefined;
   firstName: string | undefined;
@@ -14,9 +16,15 @@ export interface ApplicationParcelUpdateDto {
   purchasedDate?: number | null;
   isFarm?: boolean | null;
   ownershipTypeCode?: string | null;
+  isConfirmedByApplicant: boolean;
 }
 
 export interface ApplicationParcelDto extends ApplicationParcelUpdateDto {
   uuid: string;
   owners: ParcelOwnerDto[];
+  documents: ApplicationDocumentDto[];
+}
+
+export enum APPLICATION_PARCEL_DOCUMENT {
+  CERTIFICATE_OF_TILE = 'certificateOfTitle',
 }

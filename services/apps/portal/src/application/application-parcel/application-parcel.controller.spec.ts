@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationParcelController } from './application-parcel-controller';
+import { ApplicationParcelController } from './application-parcel.controller';
 import { ApplicationParcelService } from './application-parcel.service';
 
 describe('ApplicationParcelController', () => {
