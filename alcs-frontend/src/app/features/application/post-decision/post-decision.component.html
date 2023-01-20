@@ -72,8 +72,8 @@
       <div>
         <ng-container *ngIf="!!reconsideration.resultingDecision">
           <div class="subheading2">Resulting Resolution</div>
-          #{{ reconsideration.resultingDecision?.resolutionNumber }}/{{
-            reconsideration.resultingDecision?.resolutionYear
+          #{{ reconsideration.resultingDecision.resolutionNumber }}/{{
+            reconsideration.resultingDecision.resolutionYear
           }}
         </ng-container>
       </div>
@@ -131,7 +131,7 @@
             (save)="onSaveModificationOutcome(modification.uuid, $event)"
           ></app-inline-review-outcome>
         </span>
-        <span *ngIf="modification.reviewOutcome.code !== 'PEN'">{{ modification.reviewOutcome?.label }}</span>
+        <span *ngIf="modification.reviewOutcome.code !== 'PEN'">{{ modification.reviewOutcome.label }}</span>
       </div>
       <div></div>
       <div>
@@ -141,7 +141,7 @@
       <div>
         <ng-container *ngIf="!!modification.resultingDecision">
           <div class="subheading2">Resulting Resolution</div>
-          #{{ modification.resultingDecision?.resolutionNumber }}/{{ modification.resultingDecision?.resolutionYear }}
+          #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
         </ng-container>
       </div>
     </div>

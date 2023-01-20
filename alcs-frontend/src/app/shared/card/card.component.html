@@ -10,7 +10,7 @@
   </div>
   <div class="card-content">
     <div class="upper-card">
-      <span class="ellipsis" 
+      <span class="ellipsis"
       [id]="cardData.id"
       [matTooltip]="cardData.titleTooltip"
       (mouseover) = "onMouseHover(cardData.id)"
@@ -38,7 +38,7 @@
       </div>
       <app-avatar-circle
         *ngIf="cardData.assignee"
-        [initials]="cardData.assignee?.initials || ''"
+        [initials]="cardData.assignee.initials || ''"
         [name]="cardData.assignee.prettyName"
       ></app-avatar-circle>
     </div>
