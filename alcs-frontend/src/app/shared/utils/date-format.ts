@@ -6,9 +6,9 @@ export const DATE_FORMATS = {
   },
   display: {
     dateInput: environment.dateFormat,
-    monthYearLabel: 'YYYY',
+    monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'YYYY',
+    monthYearA11yLabel: 'MMM YYYY',
     monthLabel: 'MMM',
     monthDayLabel: 'MMM-DD',
     popupHeaderDateLabel: 'YYYY-MMM-DD',
