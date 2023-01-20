@@ -9,7 +9,19 @@
 
     <app-parcel-entry (onFormGroupChange)="onParcelFormChange($event)" [parcel]="parcel"></app-parcel-entry>
 
-    <section>
+    <div class="section">
+      <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+      <app-file-drag-drop
+        id="certificate-of-title-upload"
+        [uploadedFiles]="parcel.documents"
+        (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        (beforeFileUploadOpened)="beforeFileUploadOpened()"
+      ></app-file-drag-drop>
+    </div>
+
+    <section class="container">
       <h6>Owner Information</h6>
       <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
       <div>
@@ -24,33 +36,23 @@
     </section>
 
     <div>
-      <label for="certificate-of-title-upload">Upload Certificate of Title</label>
-      <app-file-drag-drop
-        id="certificate-of-title-upload"
-        [uploadedFiles]="parcel.documents"
-        (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
-        (deleteFile)="deleteFile($event)"
-        (openFile)="openFile($event)"
-        (beforeFileUploadOpened)="beforeFileUploadOpened()"
-      ></app-file-drag-drop>
-    </div>
-
-    <div class="flex-center-wrap">
-      <mat-checkbox [(ngModel)]="parcel.isConfirmedByApplicant"
+      <mat-checkbox [(ngModel)]="parcel.isConfirmedByApplicant" class="container"
         >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
         information can cause significant delays to processing time.
       </mat-checkbox>
-      <button mat-stroked-button color="primary" (click)="onSave()">
-        Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
-      </button>
-      <button
-        *ngIf="parcels.length > 1"
-        mat-stroked-button
-        color="accent"
-        (click)="onDelete(parcel.uuid, parcelInd + 1)"
-      >
-        Delete Parcel #{{ parcelInd + 1 }} Details
-      </button>
+      <div class="flex-evenly-wrap">
+        <button mat-stroked-button color="primary" (click)="onSave()">
+          Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
+        </button>
+        <button
+          *ngIf="parcels.length > 1"
+          mat-stroked-button
+          color="accent"
+          (click)="onDelete(parcel.uuid, parcelInd + 1)"
+        >
+          Delete Parcel #{{ parcelInd + 1 }} Details
+        </button>
+      </div>
     </div>
   </mat-expansion-panel>
 
@@ -61,7 +63,6 @@
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <div></div>
       <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
         Next<span class="mobile-hidden"> Step</span>
       </button>

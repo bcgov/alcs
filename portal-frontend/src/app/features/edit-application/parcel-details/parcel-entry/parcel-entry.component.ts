@@ -84,7 +84,13 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
-    console.log('onChangeParcelType', $event);
+    const val = $event.value === 'CRWN';
+    if ($event.value === 'CRWN') {
+      this.purchaseDate.reset();
+      this.purchaseDate.disable();
+    } else {
+      this.purchaseDate.enable();
+    }
   }
 
   // TODO move to utils

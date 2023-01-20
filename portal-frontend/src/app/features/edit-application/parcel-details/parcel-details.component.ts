@@ -73,6 +73,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   }
 
   async onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
+    console.log('onParcelFormChange');
+
     const parcel = this.parcels.find((e) => e.uuid === formData.uuid);
     if (!parcel) {
       this.toastService.showErrorToast('Error updating the parcel. Please refresh page and try again.');
@@ -113,11 +115,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
-  }
-
-  async loadApplication(fileId: string) {
-    const application = await this.applicationService.getByFileId(fileId);
-    this.$application.next(application);
   }
 
   async attachFile(files: FileHandle[], documentType: APPLICATION_PARCEL_DOCUMENT, parcelUuid: string) {

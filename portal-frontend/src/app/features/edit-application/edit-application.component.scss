@@ -127,6 +127,10 @@
 }
 
 :host::ng-deep {
+  .mat-icon.mat-icon-inline {
+    line-height: initial;
+  }
+
   .mat-horizontal-content-container {
     padding: 0;
     min-height: 100%;
@@ -150,6 +154,21 @@
 
   .mat-step-label {
     display: none;
+  }
+
+  .section {
+    margin: rem(24) 0;
+  }
+
+  .date-picker {
+    ::ng-deep.mat-form-field-infix {
+      display: flex;
+      padding: rem(3) 0;
+    }
+  }
+
+  .mat-button-wrapper {
+    white-space: break-spaces;
   }
 
   @media screen and (min-width: $tabletBreakpoint) {
@@ -282,13 +301,14 @@
       }
     }
   }
+
   // parcel entry details
   .float-right {
     float: right;
   }
 
   .container {
-    margin: rem(20) 0 rem(40) 0;
+    margin: rem(20) 0 rem(20) 0;
   }
 
   .type {
@@ -331,6 +351,11 @@
   .search-buttons {
     display: flex;
     align-items: center;
+    justify-content: left;
+
+    button {
+      margin: 0 rem(16) 0 0 !important;
+    }
   }
 
   .full-width-input {
@@ -351,6 +376,12 @@
   }
 
   .flex-center-wrap {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .flex-evenly-wrap {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
