@@ -1,4 +1,8 @@
 <div>
+  <div class="step-description">
+    <h3>Identify Parcels Under Application</h3>
+    <p>Provide parcel identification and registered ownership information for each parcel under application.</p>
+  </div>
   <mat-expansion-panel
     [expanded]="parcelInd === parcels.length - 1"
     *ngFor="let parcel of parcels; let parcelInd = index"
@@ -7,10 +11,7 @@
       <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
     </mat-expansion-panel-header>
 
-    <app-parcel-entry
-      (onFormGroupChange)="onParcelFormChange($event)"
-      [parcel]="parcel"
-    ></app-parcel-entry>
+    <app-parcel-entry (onFormGroupChange)="onParcelFormChange($event)" [parcel]="parcel"></app-parcel-entry>
 
     <div>
       <div class="flex-evenly-wrap">

@@ -11,7 +11,7 @@
 </ng-template>
 
 <mat-stepper class="review-application" linear="true" #stepper>
-  <mat-step label="Parcel Details">
+  <mat-step label="Identify Parcels Under Application">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <app-parcel-details [$application]="$application"></app-parcel-details>
   </mat-step>
