@@ -9,7 +9,7 @@ import {
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
-import { DeleteParcelComponent } from './delete-parcel/delete-parcel.component';
+import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
 @Component({
@@ -128,7 +128,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   async onDelete(parcelUuid: string, parcelNumber: number) {
     this.dialog
-      .open(DeleteParcelComponent, {
+      .open(DeleteParcelDialogComponent, {
         panelClass: 'no-padding',
         disableClose: true,
         data: {

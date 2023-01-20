@@ -36,8 +36,6 @@ export class ParcelEntryComponent implements OnInit {
 
   @Input()
   parcel!: ApplicationParcelDto;
-  @Input()
-  fileId!: string;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null);
@@ -143,10 +141,8 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
-    if (this.fileId) {
-      await this.applicationParcelService.deleteExternalFile($event.uuid);
-      this.onFilesUpdated.emit();
-    }
+    await this.applicationParcelService.deleteExternalFile($event.uuid);
+    this.onFilesUpdated.emit();
   }
 
   async openFile(uuid: string) {

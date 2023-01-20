@@ -8,11 +8,11 @@ export enum ApplicationParcelDeleteStepsEnum {
 }
 
 @Component({
-  selector: 'app-delete-parcel',
-  templateUrl: './delete-parcel.component.html',
-  styleUrls: ['./delete-parcel.component.scss'],
+  selector: 'app-delete-parcel-dialog',
+  templateUrl: './delete-parcel-dialog.component.html',
+  styleUrls: ['./delete-parcel-dialog.component.scss'],
 })
-export class DeleteParcelComponent {
+export class DeleteParcelDialogComponent {
   parcelUuid!: string;
   parcelNumber!: string;
 
@@ -23,8 +23,8 @@ export class DeleteParcelComponent {
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
-    private dialogRef: MatDialogRef<DeleteParcelComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DeleteParcelComponent
+    private dialogRef: MatDialogRef<DeleteParcelDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DeleteParcelDialogComponent
   ) {
     this.parcelUuid = data.parcelUuid;
     this.parcelNumber = data.parcelNumber;
