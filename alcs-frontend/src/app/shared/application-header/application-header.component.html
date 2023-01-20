@@ -1,10 +1,12 @@
 <div class="header">
   <div *ngIf="_application" class="heading">
-    <div class="center">
+    <div class="title">
       <h5>{{ _application?.fileNumber }} ({{ _application?.applicant }})</h5>
-      <app-application-type-pill [type]="_application.type"></app-application-type-pill>
-      <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
-      <app-application-type-pill *ngIf="showModificationLabel" [type]="modificationLabel"></app-application-type-pill>
+      <div class="labels">
+        <app-application-type-pill [type]="_application.type"></app-application-type-pill>
+        <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
+        <app-application-type-pill *ngIf="showModificationLabel" [type]="modificationLabel"></app-application-type-pill>
+      </div>
     </div>
     <div *ngIf="showCardMenu" class="center">
       <button
@@ -44,8 +46,7 @@
     </div>
     <div *ngIf="!_application.hasOwnProperty('decisionDate')">
       <div class="subheading2">Business Days:</div>
-      <app-application-time-tracker [application]="_application">
-      </app-application-time-tracker>
+      <app-application-time-tracker [application]="_application"> </app-application-time-tracker>
     </div>
   </div>
 </div>

@@ -21,8 +21,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
 
   constructor(
     private applicationService: ApplicationService,
-    private dialog: MatDialog,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnDestroy(): void {
@@ -31,7 +31,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
+    this.activatedRoute.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
       const fileId = paramMap.get('fileId');
       if (fileId) {
         this.fileId = fileId;

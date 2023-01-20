@@ -8,23 +8,26 @@
   font-weight: bold;
 }
 
-.in-progress {
+.incomplete,
+.wrong-government {
   background-color: $accent-color-light;
   color: $accent-color-dark;
 }
 
-.submitted-to-alc {
+.submitted-to-alc,
+.submitted-to-lg {
   background-color: $primary-color-light;
   color: $primary-color-dark;
 }
 
-.submitted-to-lg,
+.in-progress,
 .in-review {
   background-color: $secondary-color-light;
   color: $secondary-color-dark;
 }
 
-.cancelled {
+.cancelled,
+.refused-to-forward {
   background-color: $grey-light;
   color: $grey-dark;
 }

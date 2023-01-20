@@ -27,7 +27,6 @@
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
     "@bcgov/bc-sans": "^1.0.1",
-    "@matheo/datepicker": "^13.0.0-beta.1",
     "@ng-matero/extensions": "^14.2.1",
     "@ng-select/ng-option-highlight": "^0.0.7",
     "angular-mentions": "^1.5.0",

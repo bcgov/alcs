@@ -1,0 +1,27 @@
+@import '../../../styles/colors';
+@import '../../../styles/typography';
+
+.warning-banner {
+  background-color: rgba($accent-color-light, 0.5);
+  padding: 1.6rem;
+  display: flex;
+  margin: 2.4rem 0;
+  align-items: center;
+
+  .description {
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    padding: 1.2rem;
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    .icon {
+      align-items: center;
+    }
+  }
+}

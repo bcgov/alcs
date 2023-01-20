@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,9 +25,10 @@ import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { DATE_FORMATS } from './utils/date-format';
+import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatAutocompleteModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -50,10 +52,12 @@ import { DATE_FORMATS } from './utils/date-format';
     MatStepperModule,
     FileDragDropComponent,
     FileSizePipe,
+    WarningBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
   ],
-  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective],
+  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective, WarningBannerComponent],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

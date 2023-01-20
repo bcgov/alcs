@@ -3,6 +3,7 @@ import { BaseCodeDto } from '../../shared/dto/base.dto';
 export interface LocalGovernmentDto {
   uuid: string;
   name: string;
+  hasGuid: boolean;
 }
 
 export interface ApplicationTypeDto {

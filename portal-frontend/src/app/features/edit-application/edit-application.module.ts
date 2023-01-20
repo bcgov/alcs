@@ -8,6 +8,7 @@ import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/dele
 import { OwnerEntryComponent } from './parcel-details/owner-entry/owner-entry.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
+import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     ChangeApplicationTypeDialogComponent,
     EditApplicationComponent,
     DeleteParcelDialogComponent,
+    SelectGovernmentComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
