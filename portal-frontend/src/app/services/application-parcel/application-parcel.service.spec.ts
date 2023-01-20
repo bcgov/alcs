@@ -3,11 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { ToastService } from '../toast/toast.service';
 
+import { DocumentService } from '../document/document.service';
 import { ApplicationParcelService } from './application-parcel.service';
 
 describe('ApplicationParcelService', () => {
   let service: ApplicationParcelService;
   let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(() => {
     mockHttpClient = createMock();
@@ -22,6 +24,10 @@ describe('ApplicationParcelService', () => {
         {
           provide: HttpClient,
           useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     });
