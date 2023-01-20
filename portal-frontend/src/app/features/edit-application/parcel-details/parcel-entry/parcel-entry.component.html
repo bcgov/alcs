@@ -22,16 +22,10 @@
       <label for="pid">Enter PID (and/or PIN for Crown Land) to auto-fill parcel details</label>
       <div>
         <mat-form-field class="full-width-input" appearance="outline">
-          <input
-            id="pid"
-            type="number"
-            matInput
-            placeholder="Enter PID (and/or PIN for Crown Land) to auto-fill parcel details"
-            formControlName="pidPin"
-          />
+          <input id="pid" type="number" matInput placeholder="Enter 9 digit PID" formControlName="pidPin" />
         </mat-form-field>
         <div class="search-buttons">
-          <button mat-stroked-button  color="primary" (click)="onSearch()">Search</button>
+          <button mat-stroked-button color="primary" (click)="onSearch()">Search</button>
           <button mat-stroked-button color="accent" (click)="onReset()">Reset</button>
         </div>
       </div>
