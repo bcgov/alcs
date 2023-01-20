@@ -8,8 +8,10 @@
     <div class="left">
       <h3 class="card-title">
         <span class="margin-right">{{ recon.application.fileNumber }} ({{ recon.application.applicant }})</span>
-        <app-application-type-pill [type]="recon.application.type"></app-application-type-pill>
-        <app-application-type-pill [type]="reconType"></app-application-type-pill>
+        <div class="labels">
+          <app-application-type-pill [type]="recon.application.type"></app-application-type-pill>
+          <app-application-type-pill [type]="reconType"></app-application-type-pill>
+        </div>
       </h3>
     </div>
     <div class="center">
@@ -35,11 +37,11 @@
       <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
         <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
           <span class="favourite-board-icon-container"
-          ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
           </span>
           <span>{{ board.title }}</span>
           <span *ngIf="recon.card.board.code === board.code"
-          ><mat-icon class="selected-board-icon">check</mat-icon></span
+            ><mat-icon class="selected-board-icon">check</mat-icon></span
           >
         </button>
       </mat-menu>

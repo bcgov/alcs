@@ -8,8 +8,10 @@
     <div class="left">
       <h3 class="card-title center">
         {{ modification.application.fileNumber }} ({{ modification.application.applicant }})
-        <app-application-type-pill [type]="modification.application.type"></app-application-type-pill>
-        <app-application-type-pill [type]="modificationType"></app-application-type-pill>
+        <div class="labels">
+          <app-application-type-pill [type]="modification.application.type"></app-application-type-pill>
+          <app-application-type-pill [type]="modificationType"></app-application-type-pill>
+        </div>
       </h3>
     </div>
     <div class="center">
