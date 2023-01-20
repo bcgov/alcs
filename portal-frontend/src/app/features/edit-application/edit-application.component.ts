@@ -33,7 +33,6 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
       const fileId = paramMap.get('fileId');
-      console.log('fileId', fileId);
       if (fileId) {
         this.fileId = fileId;
         this.loadApplication(fileId);

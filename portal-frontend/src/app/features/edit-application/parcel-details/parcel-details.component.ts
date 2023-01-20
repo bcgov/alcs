@@ -8,9 +8,7 @@ import {
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
-import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { DeleteParcelComponent } from './delete-parcel/delete-parcel.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -31,7 +29,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   parcels: ApplicationParcelDto[] = [];
 
   constructor(
-    private applicationService: ApplicationService,
     private router: Router,
     private applicationParcelService: ApplicationParcelService,
     private toastService: ToastService,
@@ -52,7 +49,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private async loadParcels() {
+  async loadParcels() {
     this.parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
     if (!this.parcels || this.parcels.length === 0) {
       await this.onAddParcel();
@@ -73,8 +70,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   }
 
   async onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
-    console.log('onParcelFormChange');
-
     const parcel = this.parcels.find((e) => e.uuid === formData.uuid);
     if (!parcel) {
       this.toastService.showErrorToast('Error updating the parcel. Please refresh page and try again.');
@@ -88,11 +83,11 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     parcel.ownershipTypeCode = formData.parcelType;
     parcel.isFarm = this.parseStringToBoolean(formData.isFarm);
     parcel.purchasedDate = formData.purchaseDate?.getTime();
+    parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
   }
 
   async saveProgress() {
     for (const parcel of this.parcels) {
-      console.log('saveProgress', parcel);
       await this.applicationParcelService.update(parcel.uuid, {
         pid: parcel.pid?.toString(),
         pin: parcel.pin?.toString(),
@@ -114,28 +109,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
-  async attachFile(files: FileHandle[], documentType: APPLICATION_PARCEL_DOCUMENT, parcelUuid: string) {
-    if (parcelUuid) {
-      const mappedFiles = files.map((file) => file.file);
-      await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles, documentType);
-      await this.loadParcels();
-    }
-  }
-
-  async deleteFile($event: ApplicationDocumentDto) {
-    if (this.fileId) {
-      await this.applicationParcelService.deleteExternalFile($event.uuid);
-      await this.loadParcels();
-    }
-  }
-
-  async openFile(uuid: string) {
-    const res = await this.applicationParcelService.openFile(uuid);
-    if (res) {
-      window.open(res.url, '_blank');
     }
   }
 
@@ -171,7 +144,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  async beforeFileUploadOpened() {
-    await this.saveProgress();
+  onFilesUpdated() {
+    this.loadParcels();
   }
 }

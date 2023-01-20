@@ -85,4 +85,34 @@
       </div>
     </div>
   </div>
+
+  <div class="section">
+    <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+    <app-file-drag-drop
+      id="certificate-of-title-upload"
+      [uploadedFiles]="parcel.documents"
+      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
+      (deleteFile)="deleteFile($event)"
+      (openFile)="openFile($event)"
+      (beforeFileUploadOpened)="beforeFileUploadOpened()"
+    ></app-file-drag-drop>
+  </div>
+
+  <section class="container">
+    <h6>Owner Information</h6>
+    <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
+    <div>
+      <mat-expansion-panel *ngFor="let owner of parcel.owners; let ownerInd = index">
+        <mat-expansion-panel-header>
+          <mat-panel-title> Owner #{{ ownerInd + 1 }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-owner-entry></app-owner-entry>
+      </mat-expansion-panel>
+    </div>
+    <button mat-stroked-button color="primary">Add another owner</button>
+  </section>
+  <mat-checkbox formControlName="isConfirmedByApplicant" class="container"
+    >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
+    information can cause significant delays to processing time.
+  </mat-checkbox>
 </form>

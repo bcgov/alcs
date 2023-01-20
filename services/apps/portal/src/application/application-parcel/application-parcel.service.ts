@@ -15,6 +15,7 @@ export class ApplicationParcelService {
   async fetchByApplicationFileId(fileId: string) {
     return this.parcelRepository.find({
       where: { application: { fileNumber: fileId } },
+      order: { auditCreatedAt: 'ASC' },
       relations: { documents: { document: true } },
     });
   }

@@ -2,8 +2,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
-import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
+import {
+  APPLICATION_PARCEL_DOCUMENT,
+  ApplicationParcelDto,
+} from '../../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
+import { ApplicationDocumentDto } from '../../../../services/application/application.dto';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -15,6 +21,7 @@ export interface ParcelEntryFormData {
   parcelType: string | undefined | null;
   isFarm: string | undefined | null;
   purchaseDate?: Date | null;
+  isConfirmedByApplicant: boolean;
 }
 
 @Component({
@@ -24,9 +31,13 @@ export interface ParcelEntryFormData {
 })
 export class ParcelEntryComponent implements OnInit {
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
+  @Output() private onFilesUpdated = new EventEmitter<void>();
+  @Output() private onSaveProgress = new EventEmitter<void>();
 
   @Input()
   parcel!: ApplicationParcelDto;
+  @Input()
+  fileId!: string;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null);
@@ -36,9 +47,7 @@ export class ParcelEntryComponent implements OnInit {
   parcelType = new FormControl<string | null>(null);
   isFarm = new FormControl<string | null>(null);
   purchaseDate = new FormControl<Date | null>(null);
-
-  constructor(private parcelService: ParcelService) {}
-
+  isConfirmedByApplicant = new FormControl<boolean>(false);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
     legalDescription: this.legalDescription,
@@ -48,14 +57,33 @@ export class ParcelEntryComponent implements OnInit {
     parcelType: this.parcelType,
     isFarm: this.isFarm,
     purchaseDate: this.purchaseDate,
+    isConfirmedByApplicant: this.isConfirmedByApplicant,
   });
+
+  documentTypes = APPLICATION_PARCEL_DOCUMENT;
+
+  constructor(private parcelService: ParcelService, private applicationParcelService: ApplicationParcelService) {}
 
   ngOnInit(): void {
     this.parcelForm.valueChanges.subscribe((formData) => {
-      return this.onFormGroupChange.emit({ uuid: this.parcel.uuid || 'aa', ...formData });
-    });
+      if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
+        this.parcel.isConfirmedByApplicant = false;
+        formData.isConfirmedByApplicant = false;
 
-    console.log('parcel-entry', this.parcel);
+        this.parcelForm.patchValue(
+          {
+            isConfirmedByApplicant: false,
+          },
+          { emitEvent: false }
+        );
+      }
+
+      return this.onFormGroupChange.emit({
+        ...formData,
+        uuid: this.parcel.uuid,
+        isConfirmedByApplicant: formData.isConfirmedByApplicant!,
+      });
+    });
 
     this.parcelForm.patchValue({
       legalDescription: this.parcel.legalDescription,
@@ -65,6 +93,7 @@ export class ParcelEntryComponent implements OnInit {
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: this.formatBoolean(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
+      isConfirmedByApplicant: this.parcel.isConfirmedByApplicant,
     });
   }
 
@@ -103,5 +132,31 @@ export class ParcelEntryComponent implements OnInit {
       default:
         return undefined;
     }
+  }
+
+  async attachFile(files: FileHandle[], documentType: APPLICATION_PARCEL_DOCUMENT, parcelUuid: string) {
+    if (parcelUuid) {
+      const mappedFiles = files.map((file) => file.file);
+      await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles, documentType);
+      this.onFilesUpdated.emit();
+    }
+  }
+
+  async deleteFile($event: ApplicationDocumentDto) {
+    if (this.fileId) {
+      await this.applicationParcelService.deleteExternalFile($event.uuid);
+      this.onFilesUpdated.emit();
+    }
+  }
+
+  async openFile(uuid: string) {
+    const res = await this.applicationParcelService.openFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
+    }
+  }
+
+  async beforeFileUploadOpened() {
+    this.onSaveProgress.emit();
   }
 }
