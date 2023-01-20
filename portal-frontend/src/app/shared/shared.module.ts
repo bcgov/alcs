@@ -23,6 +23,7 @@ import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { DATE_FORMATS } from './utils/date-format';
+import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
   imports: [CommonModule, MatIconModule, MatButtonModule],
@@ -48,8 +49,9 @@ import { DATE_FORMATS } from './utils/date-format';
     MatStepperModule,
     FileDragDropComponent,
     FileSizePipe,
+    WarningBannerComponent,
   ],
-  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective],
+  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective, WarningBannerComponent],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

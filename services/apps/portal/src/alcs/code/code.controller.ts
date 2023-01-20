@@ -1,8 +1,17 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
 import { ApplicationTypeService } from '../application-type/application-type.service';
-import { LocalGovernmentService } from '../local-government/local-government.service';
+import {
+  LocalGovernment,
+  LocalGovernmentService,
+} from '../local-government/local-government.service';
 import { SubmissionTypeService } from '../submission-type/submission-type.service';
+
+export interface LocalGovernmentDto {
+  uuid: string;
+  name: string;
+  hasGuid: boolean;
+}
 
 @Controller('code')
 @UseGuards(AuthGuard)
@@ -19,9 +28,19 @@ export class CodeController {
     const applicationTypes = await this.applicationTypeService.list();
     const submissionTypes = await this.submissionTypeService.list();
     return {
-      localGovernments,
+      localGovernments: this.mapLocalGovernments(localGovernments),
       applicationTypes,
       submissionTypes,
     };
+  }
+
+  private mapLocalGovernments(
+    governments: LocalGovernment[],
+  ): LocalGovernmentDto[] {
+    return governments.map((government) => ({
+      name: government.name,
+      uuid: government.uuid,
+      hasGuid: government.bceidBusinessGuid !== null,
+    }));
   }
 }
