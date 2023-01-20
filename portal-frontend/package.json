@@ -30,8 +30,8 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-builders/jest": "^14.1.0",
-    "@angular-devkit/build-angular": "^14.0.5",
+    "@angular-builders/jest": "^15.0.0",
+    "@angular-devkit/build-angular": "^15.1.2",
     "@angular/cli": "~14.0.5",
     "@angular/compiler-cli": "^14.0.0",
     "@golevelup/ts-jest": "^0.3.4",
