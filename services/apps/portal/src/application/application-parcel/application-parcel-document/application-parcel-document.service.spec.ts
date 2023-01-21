@@ -17,6 +17,7 @@ describe('ApplicationParcelDocumentService', () => {
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockRepository: DeepMocked<Repository<ApplicationParcelDocument>>;
   let mockApplicationService: DeepMocked<ApplicationParcelDocument>;
+  let mockApplicationParcelService: DeepMocked<ApplicationParcelDocumentService>;
 
   let mockApplicationParcel;
   let mockAppDocument;
@@ -25,6 +26,7 @@ describe('ApplicationParcelDocumentService', () => {
   beforeEach(async () => {
     mockDocumentService = createMock<DocumentService>();
     mockRepository = createMock<Repository<ApplicationParcelDocument>>();
+    mockApplicationParcelService = createMock();
 
     mockApplicationParcel = new ApplicationParcel({
       uuid,
@@ -47,6 +49,10 @@ describe('ApplicationParcelDocumentService', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockApplicationParcelService,
         },
         {
           provide: getRepositoryToken(ApplicationParcelDocument),

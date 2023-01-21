@@ -6,11 +6,11 @@ import { ClsService } from 'nestjs-cls';
 import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { AlcsDocumentService } from '../../../alcs/document-grpc/alcs-document.service';
-import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
 import { Document } from '../../../document/document.entity';
 import { User } from '../../../user/user.entity';
 import { ApplicationParcelService } from '../application-parcel.service';
 
+import { ApplicationParcelProfile } from '../../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationParcelDocumentController } from './application-parcel-document.controller';
 import { AttachExternalDocumentDto } from './application-parcel-document.dto';
 import { ApplicationParcelDocument } from './application-parcel-document.entity';
@@ -41,7 +41,7 @@ describe('ApplicationDocumentController', () => {
       ],
       controllers: [ApplicationParcelDocumentController],
       providers: [
-        ApplicationProfile,
+        ApplicationParcelProfile,
         {
           provide: ApplicationParcelDocumentService,
           useValue: appDocumentService,
