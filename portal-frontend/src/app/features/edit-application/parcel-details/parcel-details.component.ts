@@ -35,11 +35,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {}
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
@@ -47,6 +42,11 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         this.loadParcels();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   async loadParcels() {
@@ -86,7 +86,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
   }
 
-  async saveProgress() {
+  private async saveProgress() {
     for (const parcel of this.parcels) {
       await this.applicationParcelService.update(parcel.uuid, {
         pid: parcel.pid?.toString(),

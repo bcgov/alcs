@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { Document } from '../../../document/document.entity';
 
 import { DocumentService } from '../../../document/document.service';
-import { ApplicationParcel } from '../application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel.service';
 import { ApplicationParcelDocument } from './application-parcel-document.entity';
 import { ApplicationParcelDocumentService } from './application-parcel-document.service';
@@ -19,7 +18,6 @@ describe('ApplicationParcelDocumentService', () => {
   let mockApplicationService: DeepMocked<ApplicationParcelDocument>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelDocumentService>;
 
-  let mockApplicationParcel;
   let mockAppDocument;
   const uuid = '12345';
 
@@ -27,10 +25,6 @@ describe('ApplicationParcelDocumentService', () => {
     mockDocumentService = createMock<DocumentService>();
     mockRepository = createMock<Repository<ApplicationParcelDocument>>();
     mockApplicationParcelService = createMock();
-
-    mockApplicationParcel = new ApplicationParcel({
-      uuid,
-    });
 
     mockAppDocument = new ApplicationParcelDocument({
       uuid: 'document-uuid',

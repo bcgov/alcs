@@ -29,7 +29,7 @@ export class ApplicationParcelService {
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to load Application Review, please try again later');
+      this.toastService.showErrorToast('Failed to load Parcel, please try again later');
     }
     return undefined;
   }
@@ -94,7 +94,7 @@ export class ApplicationParcelService {
         this.toastService.showSuccessToast('Document uploaded');
       } catch (e) {
         console.error(e);
-        this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+        this.toastService.showErrorToast('Failed to attach document to Parcel, please try again');
       }
     }
   }
