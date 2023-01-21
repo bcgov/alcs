@@ -39,3 +39,8 @@ export interface UpdateApplicationReviewDto {
   isZoningConsistent?: boolean | null;
   isAuthorized?: boolean | null;
 }
+
+export interface ReturnApplicationDto {
+  reasonForReturn: 'incomplete' | 'wrongGovernment';
+  applicantComment: string;
+}

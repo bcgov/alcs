@@ -128,3 +128,11 @@ export class UpdateApplicationReviewDto {
   @IsBoolean()
   isAuthorized?: boolean | null;
 }
+
+export class ReturnApplicationDto {
+  @IsString()
+  reasonForReturn: 'incomplete' | 'wrongGovernment';
+
+  @IsString()
+  applicantComment: string;
+}

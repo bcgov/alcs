@@ -63,4 +63,5 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
 export enum CARD_SUBTASK_TYPE {
   GIS = 'GIS',
   AUDIT = 'AUDT',
+  AGROLOGIST = 'AGRO',
 }

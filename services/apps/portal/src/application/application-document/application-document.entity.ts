@@ -11,17 +11,19 @@ import {
 import { Document } from '../../document/document.entity';
 import { Application } from '../application.entity';
 
+export enum DOCUMENT_TYPE {
+  CERTIFICATE_OF_TITLE = 'certificateOfTitle',
+  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
+  STAFF_REPORT = 'reviewStaffReport',
+  REVIEW_OTHER = 'reviewOther',
+}
+
 export const DOCUMENT_TYPES = [
-  'certificateOfTitle',
-  'reviewResolutionDocument',
-  'reviewStaffReport',
-  'reviewOther',
-] as const;
-export type DOCUMENT_TYPE =
-  | 'certificateOfTitle'
-  | 'reviewResolutionDocument'
-  | 'reviewStaffReport'
-  | 'reviewOther';
+  DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+  DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+  DOCUMENT_TYPE.STAFF_REPORT,
+  DOCUMENT_TYPE.REVIEW_OTHER,
+];
 
 @Entity()
 export class ApplicationDocument extends BaseEntity {
