@@ -24,7 +24,7 @@ export class ApplicationParcelService {
 
   async fetchByFileId(applicationFileId: string) {
     try {
-      return firstValueFrom(
+      return await firstValueFrom(
         this.httpClient.get<ApplicationParcelDto[]>(`${this.serviceUrl}/application/${applicationFileId}`)
       );
     } catch (e) {
