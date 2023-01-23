@@ -15,7 +15,7 @@ export class ParcelService {
       return null;
     }
 
-    return await this.parcelLookupRepository.findOne({
+    return this.parcelLookupRepository.findOne({
       where: [{ pidNumber: pidPin }, { pin: pidPin }],
     });
   }

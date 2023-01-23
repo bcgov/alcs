@@ -13,6 +13,7 @@
 <mat-stepper class="review-application" linear="true" #stepper>
   <mat-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-parcel-details [$application]="$application"></app-parcel-details>
   </mat-step>
   <mat-step label="Other Parcels in the Community">
     <ng-container *ngTemplateOutlet="header"></ng-container>

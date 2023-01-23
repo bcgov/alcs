@@ -1,6 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -10,9 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
-import { ChangeApplicationTypeDialogComponent } from './features/edit-application/change-application-type-dialog/change-application-type-dialog.component';
-import { EditApplicationComponent } from './features/edit-application/edit-application.component';
-import { ParcelEntryComponent } from './features/edit-application/parcel-entry/parcel-entry.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
@@ -25,7 +21,6 @@ import { ConfirmationDialogService } from './shared/confirmation-dialog/confirma
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
-import { SelectGovernmentComponent } from './features/edit-application/select-government/select-government.component';
 
 @NgModule({
   declarations: [
@@ -35,22 +30,17 @@ import { SelectGovernmentComponent } from './features/edit-application/select-go
     LoginComponent,
     HomeComponent,
     AuthorizationComponent,
-    EditApplicationComponent,
     ApplicationListComponent,
     CreateApplicationDialogComponent,
-    ChangeApplicationTypeDialogComponent,
     LandingPageComponent,
-    ParcelEntryComponent,
     ConfirmationDialogComponent,
     ViewApplicationComponent,
-    SelectGovernmentComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
-    MatAutocompleteModule,
     MatSortModule,
     MatPaginatorModule,
     MatToolbarModule,

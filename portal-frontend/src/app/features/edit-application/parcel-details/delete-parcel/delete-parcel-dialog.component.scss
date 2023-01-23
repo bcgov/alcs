@@ -1,0 +1,75 @@
+@import '../../../../../styles/colors.scss';
+@import '../../../../../styles/functions';
+@import '../../../../../styles/typography';
+
+.margin-bottom-1 {
+  margin-bottom: rem(16);
+}
+
+.change-app-type-modal {
+  .warning-banner {
+    background-color: rgba($accent-color-light, 0.5);
+    padding: rem(16);
+
+    .display-none {
+      display: none !important;
+    }
+  }
+
+  .step-controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 rem(16);
+  }
+
+  .content {
+    margin: rem(16);
+
+    .step-header {
+      margin-bottom: rem(24);
+    }
+
+    .step-body {
+      margin-bottom: rem(32);
+    }
+
+    .step-controls {
+      padding: 0;
+    }
+
+    .warning-banner {
+      display: flex;
+
+      .icon {
+        display: flex;
+        justify-content: center;
+        margin-right: 1.2rem;
+      }
+    }
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    .warning-banner {
+      padding: 2rem 3rem;
+    }
+
+    .step-controls {
+      justify-content: flex-end;
+      padding: 0 rem(48);
+
+      button {
+        margin-left: rem(25) !important;
+      }
+    }
+
+    .content {
+      margin: rem(32) rem(48);
+      margin-bottom: rem(16);
+      padding: 0;
+
+      .warning-banner .icon {
+        align-items: center;
+      }
+    }
+  }
+}

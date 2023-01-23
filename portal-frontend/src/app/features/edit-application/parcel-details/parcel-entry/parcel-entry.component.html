@@ -1,0 +1,118 @@
+<form [formGroup]="parcelForm">
+  <div class="type">
+    <h6>Select ownership type:</h6>
+    <div class="warning">
+      The answer to the following question will change the rest of the application form. Do not change this answer once
+      selected.
+    </div>
+    <mat-button-toggle-group
+      class="input"
+      (change)="onChangeParcelType($event)"
+      id="parcelType"
+      formControlName="parcelType"
+    >
+      <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
+      <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <h5>Parcel Lookup</h5>
+  <div class="form-row">
+    <div class="full-row pmbc-search">
+      <label for="pid">Enter PID (and/or PIN for Crown Land) to auto-fill parcel details</label>
+      <div>
+        <mat-form-field class="full-width-input" appearance="outline">
+          <input id="pid" type="number" matInput placeholder="Enter 9 digit PID" formControlName="pidPin" />
+        </mat-form-field>
+        <div class="search-buttons">
+          <button mat-stroked-button color="primary" (click)="onSearch()">Search</button>
+          <button mat-stroked-button color="accent" (click)="onReset()">Reset</button>
+        </div>
+      </div>
+      <span class="float-right">Powered by PMBC!</span>
+    </div>
+
+    <div class="full-row">
+      <label for="legal-description">Legal Description</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input
+          id="legal-description"
+          matInput
+          placeholder="Enter legal description"
+          formControlName="legalDescription"
+        />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label for="map-area">Approx. Map Area (Hectares)</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input id="map-area" type="number" matInput placeholder="Enter parcel size" formControlName="mapArea" />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label for="pid">PID</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label for="pin">PIN</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label for="purchaseDate">Parcel Purchase Date (Fee Simple only)</label>
+      <mat-form-field class="full-width-input date-picker" appearance="outline">
+        <input matInput [matDatepicker]="purchaseDate" formControlName="purchaseDate" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+        <mat-datepicker #purchaseDate startView="year"></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="full-row">
+      <div>
+        <label for="isFarm">Farm classification</label>
+        <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+    <app-file-drag-drop
+      id="certificate-of-title-upload"
+      [uploadedFiles]="parcel.documents"
+      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
+      (deleteFile)="deleteFile($event)"
+      (openFile)="openFile($event)"
+      (beforeFileUploadOpened)="beforeFileUploadOpened()"
+    ></app-file-drag-drop>
+  </div>
+
+  <section class="container">
+    <h6>Owner Information</h6>
+    <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
+    <div>
+      <mat-expansion-panel *ngFor="let owner of parcel.owners; let ownerInd = index">
+        <mat-expansion-panel-header>
+          <mat-panel-title> Owner #{{ ownerInd + 1 }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-owner-entry></app-owner-entry>
+      </mat-expansion-panel>
+    </div>
+    <button mat-stroked-button color="primary">Add another owner</button>
+  </section>
+  <mat-checkbox formControlName="isConfirmedByApplicant" class="container"
+    >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
+    information can cause significant delays to processing time.
+  </mat-checkbox>
+</form>

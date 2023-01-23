@@ -2,9 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,7 +28,7 @@ import { DATE_FORMATS } from './utils/date-format';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatAutocompleteModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -43,12 +46,16 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatTooltipModule,
     MatRadioModule,
     MatTabsModule,
+    MatCheckboxModule,
     MatButtonToggleModule,
     MatExpansionModule,
     MatStepperModule,
     FileDragDropComponent,
     FileSizePipe,
     WarningBannerComponent,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
   ],
   declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective, WarningBannerComponent],
 })

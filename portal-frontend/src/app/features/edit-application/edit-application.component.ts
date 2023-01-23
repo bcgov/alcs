@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
@@ -11,37 +11,42 @@ import { ChangeApplicationTypeDialogComponent } from './change-application-type-
   templateUrl: './edit-application.component.html',
   styleUrls: ['./edit-application.component.scss'],
 })
-export class EditApplicationComponent implements OnInit {
+export class EditApplicationComponent implements OnInit, OnDestroy {
   fileId = '';
-  applicationType = '';
   documents: ApplicationDocumentDto[] = [];
 
-  application!: ApplicationDto;
+  $destroy = new Subject<void>();
   $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  application: ApplicationDto | undefined;
 
   constructor(
     private applicationService: ApplicationService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog
   ) {}
 
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe((params) => {
-      const fileId = params.get('fileId');
+    this.activatedRoute.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
+      const fileId = paramMap.get('fileId');
       if (fileId) {
         this.fileId = fileId;
-        this.loadExistingApplication(fileId);
+        this.loadApplication(fileId);
       }
+    });
+
+    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+      this.application = application;
     });
   }
 
-  private async loadExistingApplication(fileId: string) {
-    const application = await this.applicationService.getByFileId(fileId);
-    if (application) {
-      this.application = application;
-      this.$application.next(application);
-    }
+  private async loadApplication(fileId: string) {
+    this.application = await this.applicationService.getByFileId(fileId);
+    this.$application.next(this.application);
   }
 
   async onApplicationTypeChangeClicked() {
@@ -56,7 +61,7 @@ export class EditApplicationComponent implements OnInit {
       .beforeClosed()
       .subscribe((result) => {
         if (result) {
-          this.loadExistingApplication(this.fileId);
+          this.loadApplication(this.fileId);
         }
       });
   }
