@@ -104,10 +104,4 @@ export class ApplicationParcel extends Base {
     },
   )
   documents: ApplicationParcelDocument[];
-
-  // TODO check if this works
-  // setValue(propName: string, newVal) {
-  //   this[propName] = newVal !== undefined ? newVal : this[propName];
-  //   return this[propName];
-  // }
 }

@@ -9,6 +9,7 @@ import {
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
+import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -81,7 +82,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     parcel.legalDescription = formData.legalDescription;
     parcel.mapAreaHectares = formData.mapArea;
     parcel.ownershipTypeCode = formData.parcelType;
-    parcel.isFarm = this.parseStringToBoolean(formData.isFarm);
+    parcel.isFarm = parseStringToBoolean(formData.isFarm);
     parcel.purchasedDate = formData.purchaseDate?.getTime();
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
   }
@@ -112,20 +113,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // TODO move to utils
-  private parseStringToBoolean(val?: string | null) {
-    switch (val) {
-      case 'true':
-        return true;
-      case 'false':
-        return false;
-      case null:
-        return null;
-      default:
-        return undefined;
-    }
-  }
-
   async onDelete(parcelUuid: string, parcelNumber: number) {
     this.dialog
       .open(DeleteParcelDialogComponent, {
@@ -144,7 +131,13 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFilesUpdated() {
-    this.loadParcels();
+  async onFilesUpdated() {
+    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    for (const parcel of parcels) {
+      const existingParcel = this.parcels.find((e) => e.uuid === parcel.uuid);
+      if (existingParcel) {
+        existingParcel.documents = parcel.documents;
+      }
+    }
   }
 }

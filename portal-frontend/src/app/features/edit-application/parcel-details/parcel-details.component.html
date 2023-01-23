@@ -11,15 +11,16 @@
     <app-parcel-entry
       [parcel]="parcel"
       (onFormGroupChange)="onParcelFormChange($event)"
-      (onFilesUpdated)="loadParcels()"
+      (onFilesUpdated)="onFilesUpdated()"
     ></app-parcel-entry>
 
     <div>
-      <div class="flex-evenly-wrap">
-        <button mat-stroked-button color="primary" (click)="onSave()">
+      <div class="flex-evenly-wrap parcel-buttons-wrappers">
+        <button class="margin-top-1-half" mat-stroked-button color="primary" (click)="onSave()">
           Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
         </button>
         <button
+          class="margin-top-1-half"
           *ngIf="parcels.length > 1"
           mat-stroked-button
           color="accent"
