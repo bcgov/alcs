@@ -69,7 +69,7 @@
       <label for="purchaseDate">Parcel Purchase Date (Fee Simple only)</label>
       <mat-form-field class="full-width-input date-picker" appearance="outline">
         <input matInput [matDatepicker]="purchaseDate" formControlName="purchaseDate" />
-        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-hint>YYYY-MMM-DD</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDate"></mat-datepicker-toggle>
         <mat-datepicker #purchaseDate startView="year"></mat-datepicker>
       </mat-form-field>

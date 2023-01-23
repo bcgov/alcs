@@ -81,7 +81,7 @@ export class ApplicationParcel extends Base {
     comment: 'The application file id that parcel is linked to',
     nullable: false,
   })
-  applicationFileNumber?: string;
+  applicationFileNumber: string;
 
   @AutoMap()
   @ManyToOne(() => Application)
