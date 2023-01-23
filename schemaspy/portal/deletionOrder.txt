@@ -1,8 +1,11 @@
 parcel_lookup
 migrations
 application_review
+application_parcel_document
 application_document
+application_parcel
 document
 application
-user
 application_status
+application_parcel_ownership_type
+user

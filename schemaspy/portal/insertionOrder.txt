@@ -1,8 +1,11 @@
-application_status
 user
+application_parcel_ownership_type
+application_status
 application
 document
+application_parcel
 application_document
+application_parcel_document
 application_review
 migrations
 parcel_lookup
