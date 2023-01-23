@@ -36,7 +36,6 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
-  @AutoMap()
   documents: ApplicationParcelDocumentDto[];
 }
 
