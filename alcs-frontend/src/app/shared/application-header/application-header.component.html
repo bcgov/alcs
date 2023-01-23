@@ -1,7 +1,7 @@
 <div class="header">
   <div *ngIf="_application" class="heading">
     <div class="title">
-      <h5>{{ _application?.fileNumber }} ({{ _application?.applicant }})</h5>
+      <h5>{{ _application.fileNumber }} ({{ _application.applicant }})</h5>
       <div class="labels">
         <app-application-type-pill [type]="_application.type"></app-application-type-pill>
         <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
