@@ -50,7 +50,7 @@
     "@angular/cli": "~15.1.2",
     "@angular/compiler-cli": "^15.1.1",
     "@golevelup/ts-jest": "^0.3.4",
-    "@types/jest": "^29.2.3",
+    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "5.37.0",
     "@typescript-eslint/parser": "5.37.0",
     "eslint": "^8.23.1",
