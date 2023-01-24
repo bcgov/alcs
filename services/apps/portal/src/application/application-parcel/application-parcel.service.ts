@@ -53,17 +53,4 @@ export class ApplicationParcelService {
     await this.parcelRepository.remove([parcel]);
     return uuid;
   }
-
-  // async verifyAccess(uuid: string, user: User) {
-  //   if (user.bceidBusinessGuid) {
-  //     const localGovernment = await this.localGovernmentService.getByGuid(
-  //       user.bceidBusinessGuid,
-  //     );
-  //     if (localGovernment) {
-  //       return await this.getForGovernmentByFileId(fileId, localGovernment);
-  //     }
-  //   }
-
-  //   return await this.getIfCreator(fileId, user);
-  // }
 }

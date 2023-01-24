@@ -81,7 +81,7 @@ export class ApplicationParcel extends Base {
     comment: 'The application file id that parcel is linked to',
     nullable: false,
   })
-  applicationFileNumber?: string;
+  applicationFileNumber: string;
 
   @AutoMap()
   @ManyToOne(() => Application)
@@ -104,10 +104,4 @@ export class ApplicationParcel extends Base {
     },
   )
   documents: ApplicationParcelDocument[];
-
-  // TODO check if this works
-  // setValue(propName: string, newVal) {
-  //   this[propName] = newVal !== undefined ? newVal : this[propName];
-  //   return this[propName];
-  // }
 }

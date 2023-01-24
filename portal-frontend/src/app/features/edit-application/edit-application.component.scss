@@ -87,6 +87,10 @@
     white-space: break-spaces;
   }
 
+  .parcel-buttons-wrappers button {
+    margin-top: 1.2rem !important;
+  }
+
   @media screen and (min-width: $tabletBreakpoint) {
     .mat-step-header .mat-step-label.mat-step-label-active {
       display: inherit;

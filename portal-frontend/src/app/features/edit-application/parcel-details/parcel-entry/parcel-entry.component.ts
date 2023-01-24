@@ -10,6 +10,7 @@ import { ApplicationParcelService } from '../../../../services/application-parce
 import { ApplicationDocumentDto } from '../../../../services/application/application.dto';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -44,7 +45,7 @@ export class ParcelEntryComponent implements OnInit {
   pid = new FormControl<string | null>(null);
   parcelType = new FormControl<string | null>(null);
   isFarm = new FormControl<string | null>(null);
-  purchaseDate = new FormControl<Date | null>(null);
+  purchaseDate = new FormControl<any | null>(null);
   isConfirmedByApplicant = new FormControl<boolean>(false);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
@@ -80,6 +81,7 @@ export class ParcelEntryComponent implements OnInit {
         ...formData,
         uuid: this.parcel.uuid,
         isConfirmedByApplicant: formData.isConfirmedByApplicant!,
+        purchaseDate: new Date(formData.purchaseDate?.valueOf()),
       });
     });
 
@@ -89,7 +91,7 @@ export class ParcelEntryComponent implements OnInit {
       pid: this.parcel.pid,
       pin: this.parcel.pin,
       parcelType: this.parcel.ownershipTypeCode,
-      isFarm: this.formatBoolean(this.parcel.isFarm),
+      isFarm: formatBooleanToString(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
       isConfirmedByApplicant: this.parcel.isConfirmedByApplicant,
     });
@@ -117,18 +119,6 @@ export class ParcelEntryComponent implements OnInit {
       this.purchaseDate.disable();
     } else {
       this.purchaseDate.enable();
-    }
-  }
-
-  // TODO move to utils
-  private formatBoolean(val?: boolean | null) {
-    switch (val) {
-      case true:
-        return 'true';
-      case false:
-        return 'false';
-      default:
-        return undefined;
     }
   }
 

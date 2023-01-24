@@ -24,7 +24,7 @@ export class ApplicationParcelService {
 
   async fetchByFileId(applicationFileId: string) {
     try {
-      return firstValueFrom(
+      return await firstValueFrom(
         this.httpClient.get<ApplicationParcelDto[]>(`${this.serviceUrl}/application/${applicationFileId}`)
       );
     } catch (e) {
@@ -48,7 +48,7 @@ export class ApplicationParcelService {
 
   async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
     try {
-      return await firstValueFrom(
+      const result = await firstValueFrom(
         this.httpClient.put<ApplicationParcelDto>(`${this.serviceUrl}/${uuid}`, {
           ...updateDto,
           mapAreaHectares: updateDto.mapAreaHectares
@@ -56,11 +56,14 @@ export class ApplicationParcelService {
             : updateDto.mapAreaHectares,
         })
       );
+
+      this.toastService.showSuccessToast('Parcel saved');
+      return result;
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update Parcel, please try again later');
-      return undefined;
     }
+    return undefined;
   }
 
   async attachExternalFile(fileId: string, files: File[], documentType: APPLICATION_PARCEL_DOCUMENT) {

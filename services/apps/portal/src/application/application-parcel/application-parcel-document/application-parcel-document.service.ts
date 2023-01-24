@@ -29,6 +29,7 @@ export class ApplicationParcelDocumentService {
         },
         relations: {
           document: true,
+          applicationParcel: true,
         },
       });
     if (!parcelDocument) {

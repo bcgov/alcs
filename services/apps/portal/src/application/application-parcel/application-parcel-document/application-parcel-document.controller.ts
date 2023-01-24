@@ -18,6 +18,7 @@ import { firstValueFrom } from 'rxjs';
 import { AlcsDocumentService } from '../../../alcs/document-grpc/alcs-document.service';
 import { AuthGuard } from '../../../common/authorization/auth-guard.service';
 import { ApplicationDocumentDto } from '../../application-document/application-document.dto';
+import { ApplicationService } from '../../application.service';
 import { ApplicationParcelService } from '../application-parcel.service';
 import {
   ApplicationParcelDocumentDto,
@@ -36,8 +37,9 @@ import { ApplicationParcelDocumentService } from './application-parcel-document.
 export class ApplicationParcelDocumentController {
   constructor(
     private applicationParcelDocumentService: ApplicationParcelDocumentService,
-    private applicationParcelService: ApplicationParcelService,
     private alcsDocumentService: AlcsDocumentService,
+    private applicationParcelService: ApplicationParcelService,
+    private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -45,12 +47,9 @@ export class ApplicationParcelDocumentController {
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
     @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Req() req,
   ): Promise<ApplicationParcelDocumentDto[]> {
-    // TODO do we need this for applicant type documents
-    // await this.applicationService.verifyAccess(
-    //   document.applicationFileNumber,
-    //   req.user.entity,
-    // );
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
 
     if (!DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
@@ -75,11 +74,10 @@ export class ApplicationParcelDocumentController {
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationParcelDocumentService.get(fileUuid);
 
-    // TODO do we need this for applicant type documents
-    // await this.applicationService.verifyAccess(
-    //   document.applicationFileNumber,
-    //   req.user.entity,
-    // );
+    await this.applicationService.verifyAccess(
+      document.applicationParcel.applicationFileNumber,
+      req.user.entity,
+    );
 
     return await this.applicationParcelDocumentService.getInlineUrl(document);
   }
@@ -88,10 +86,10 @@ export class ApplicationParcelDocumentController {
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationParcelDocumentService.get(fileUuid);
 
-    // await this.applicationService.verifyAccess(
-    //   document.applicationFileNumber,
-    //   req.user.entity,
-    // );
+    await this.applicationService.verifyAccess(
+      document.applicationParcel.applicationFileNumber,
+      req.user.entity,
+    );
 
     await this.applicationParcelDocumentService.delete(document);
     return {};
@@ -99,12 +97,15 @@ export class ApplicationParcelDocumentController {
 
   @Post('/application/:uuid/attachExternal')
   async attachExternalDocument(
-    @Param('uuid') fileNumber: string,
+    @Param('uuid') parcelUuid: string,
     @Body() data: AttachExternalDocumentDto,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
-    // TODO do we need this for applicant type documents
-    // await this.applicationService.verifyAccess(fileNumber, req.user.entity);
+    const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
+    await this.applicationService.verifyAccess(
+      parcel.applicationFileNumber,
+      req.user.entity,
+    );
 
     const alcsDocument = await firstValueFrom(
       this.alcsDocumentService.createExternalDocument({
@@ -116,7 +117,7 @@ export class ApplicationParcelDocumentController {
       await this.applicationParcelDocumentService.createRecord(
         data.fileName,
         data.fileSize,
-        fileNumber,
+        parcelUuid,
         alcsDocument.alcsDocumentUuid,
         data.documentType as DOCUMENT_TYPE,
         req.user.entity,
