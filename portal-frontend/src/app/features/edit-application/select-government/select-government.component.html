@@ -25,15 +25,22 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <app-warning-banner class="full-row">
-      This Local/First Nation Government has not yet been set up with the ALC Portal to receive applications. To submit,
-      you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a
-      >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
-    </app-warning-banner>
   </div>
 </form>
-<button (click)="onSubmit()">Save</button>
+<app-warning-banner *ngIf="showWarning" class="full-row">
+  This Local/First Nation Government has not yet been set up with the ALC Portal to receive applications. To submit, you
+  will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a
+  >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+</app-warning-banner>
 <p>
   Please Note: If your Local or First Nation Government is not listed, please contact the ALC directly.
   <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a> / <a href="tel:236-468-3342">236-468-3342</a>
 </p>
+<div class="button-container">
+  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <div>
+    <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

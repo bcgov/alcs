@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -27,7 +28,11 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     localGovernment: this.localGovernment,
   });
 
-  constructor(private codeService: CodeService, private applicationService: ApplicationService) {}
+  constructor(
+    private codeService: CodeService,
+    private applicationService: ApplicationService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadGovernments();
@@ -75,7 +80,16 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async onSubmit() {
+  async onSaveExit() {
+    await this.save();
+    await this.router.navigateByUrl(`/application/${this.fileNumber}`);
+  }
+
+  async onSave() {
+    await this.save();
+  }
+
+  private async save() {
     const localGovernmentName = this.localGovernment.getRawValue();
     if (localGovernmentName) {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
