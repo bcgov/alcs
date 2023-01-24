@@ -1,4 +1,4 @@
-date=2023-01-24 20:48:08+0000
+date=2023-01-24 21:08:48+0000
 os=Linux 5.15.0-1031-azure
 schemaspy-version=6.1.1-SNAPSHOT
 schemaspy-build=6.1.1-SNAPSHOT.41 2023-01-02 09:45:20
