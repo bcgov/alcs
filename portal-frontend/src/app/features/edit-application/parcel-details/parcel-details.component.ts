@@ -29,6 +29,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   parcels: ApplicationParcelDto[] = [];
 
+  newParcelAdded = false;
+
   constructor(
     private router: Router,
     private applicationParcelService: ApplicationParcelService,
@@ -43,6 +45,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         this.loadParcels();
       }
     });
+    this.newParcelAdded = false;
   }
 
   ngOnDestroy(): void {
@@ -65,6 +68,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         uuid: parcel!.uuid,
         documents: [] as ApplicationDocumentDto[],
       } as ApplicationParcelDto);
+      this.newParcelAdded = true;
     } else {
       this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
     }

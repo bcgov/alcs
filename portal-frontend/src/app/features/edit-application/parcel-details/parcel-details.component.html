@@ -3,7 +3,10 @@
     <h3>Identify Parcels Under Application</h3>
     <p>Provide parcel identification and registered ownership information for each parcel under application.</p>
   </div>
-  <mat-expansion-panel *ngFor="let parcel of parcels; let parcelInd = index">
+  <mat-expansion-panel
+    *ngFor="let parcel of parcels; let parcelInd = index"
+    [expanded]="parcels.length === 1 || (newParcelAdded && parcelInd === parcels.length - 1)"
+  >
     <mat-expansion-panel-header>
       <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
     </mat-expansion-panel-header>
