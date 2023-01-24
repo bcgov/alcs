@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-warning-banner',
   templateUrl: './warning-banner.component.html',
-  styleUrls: ['./warning-banner.component.scss']
+  styleUrls: ['./warning-banner.component.scss'],
 })
-export class WarningBannerComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class WarningBannerComponent {
+  constructor() {}
 }
