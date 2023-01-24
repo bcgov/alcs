@@ -36,13 +36,4 @@ describe('ParcelService', () => {
     expect(mockRepo.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockRes);
   });
-
-  it('should return null when passed in 0', async () => {
-    const mockRes = {} as ParcelLookup;
-    mockRepo.findOne.mockResolvedValue(mockRes);
-
-    const res = await service.fetchByPidPin('0');
-    expect(mockRepo.findOne).toHaveBeenCalledTimes(0);
-    expect(res).toEqual(null);
-  });
 });

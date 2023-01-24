@@ -34,8 +34,8 @@ describe('ParcelController', () => {
   it('should lookup and return a mapped parcel', async () => {
     const mockRes = {
       pin: '12345',
-      legalDesc: 'LEGAL DESC',
-      gisAreaH: '0.612316',
+      legalDescription: 'LEGAL DESC',
+      gisAreaHa: '0.612316',
     } as ParcelLookup;
     mockParcelService.fetchByPidPin.mockResolvedValue(mockRes);
 

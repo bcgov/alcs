@@ -11,12 +11,8 @@ export class ParcelService {
   ) {}
 
   async fetchByPidPin(pidPin: string) {
-    if (pidPin === '0') {
-      return null;
-    }
-
     return this.parcelLookupRepository.findOne({
-      where: [{ pidNumber: pidPin }, { pin: pidPin }],
+      where: [{ pid: pidPin }, { pin: pidPin }],
     });
   }
 }
