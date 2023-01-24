@@ -87,6 +87,7 @@ describe('ApplicationParcelService', () => {
     await service.update(mockUuid, { pid: 'fake' } as ApplicationParcelUpdateDto);
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.put.mock.calls[0][0]).toContain('application-parcel');
     expect(mockHttpClient.put.mock.calls[0][0]).toContain(mockPid);
   });
