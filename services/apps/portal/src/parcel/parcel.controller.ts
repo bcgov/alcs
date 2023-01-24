@@ -16,9 +16,9 @@ export class ParcelController {
     const lookupResult = await this.parcelService.fetchByPidPin(params.pid);
     if (lookupResult) {
       return {
-        pin: lookupResult.pin !== '0' ? lookupResult.pin : undefined,
-        legalDescription: lookupResult.legalDesc,
-        mapArea: Number.parseFloat(lookupResult.gisAreaH).toFixed(2),
+        pin: lookupResult.pin,
+        legalDescription: lookupResult.legalDescription,
+        mapArea: Number.parseFloat(lookupResult.gisAreaHa).toFixed(2),
       };
     } else {
       throw new ServiceNotFoundException(

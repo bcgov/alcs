@@ -1,4 +1,4 @@
-import { IsNumberString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class ParcelLookupDto {
   legalDescription: string;
@@ -7,6 +7,6 @@ export class ParcelLookupDto {
 }
 
 export class SearchParcelDto {
-  @IsNumberString()
+  @IsString()
   pid: string;
 }
