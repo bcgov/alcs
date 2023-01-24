@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
+import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
 export class ApplicationDto {
@@ -20,10 +21,10 @@ export class ApplicationDto {
   localGovernmentUuid: string;
 
   @AutoMap()
-  documents: ApplicationDocumentDto[];
-
-  @AutoMap()
   status: ApplicationStatusDto;
+
+  documents: ApplicationDocumentDto[];
+  owners: ApplicationOwnerDto[];
 
   type: string;
 

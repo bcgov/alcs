@@ -1,6 +1,8 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationOwnerDto } from '../../application/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../application/application-owner/application-owner.entity';
 import { ApplicationParcelDocumentDto } from '../../application/application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationParcelDocument } from '../../application/application-parcel/application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelDto } from '../../application/application-parcel/application-parcel.dto';
@@ -34,6 +36,20 @@ export class ApplicationParcelProfile extends AutomapperProfile {
                 pd.documents,
                 ApplicationParcelDocument,
                 ApplicationParcelDocumentDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+        forMember(
+          (p) => p.owners,
+          mapFrom((pd) => {
+            if (pd.owners) {
+              return this.mapper.mapArray(
+                pd.owners,
+                ApplicationOwner,
+                ApplicationOwnerDto,
               );
             } else {
               return [];

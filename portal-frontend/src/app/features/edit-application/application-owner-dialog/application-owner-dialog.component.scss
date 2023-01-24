@@ -1,0 +1,7 @@
+@import '../../../../styles/typography';
+
+.actions {
+  button:not(:last-child) {
+    margin-right: rem(8) !important;
+  }
+}

@@ -19,10 +19,10 @@
   <h5>Parcel Lookup</h5>
   <div class="form-row">
     <div class="full-row pmbc-search">
-      <label for="pid">Enter PID (and/or PIN for Crown Land) to auto-fill parcel details</label>
+      <label for="lookup-pid">Enter PID (and/or PIN for Crown Land) to auto-fill parcel details</label>
       <div>
         <mat-form-field class="full-width-input" appearance="outline">
-          <input id="pid" matInput placeholder="Enter 9 digit PID" formControlName="pidPin" />
+          <input id="lookup-pid" matInput placeholder="Enter 9 digit PID" formControlName="pidPin" />
         </mat-form-field>
         <div class="search-buttons">
           <button mat-stroked-button color="primary" (click)="onSearch()">Search</button>
@@ -66,9 +66,9 @@
     </div>
 
     <div>
-      <label for="purchaseDate">Parcel Purchase Date (Fee Simple only)</label>
+      <label for="purchase-date">Parcel Purchase Date (Fee Simple only)</label>
       <mat-form-field class="full-width-input date-picker" appearance="outline">
-        <input matInput [matDatepicker]="purchaseDate" formControlName="purchaseDate" />
+        <input id="purchase-date" matInput [matDatepicker]="purchaseDate" formControlName="purchaseDate" />
         <mat-hint>YYYY-MMM-DD</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDate"></mat-datepicker-toggle>
         <mat-datepicker #purchaseDate startView="year"></mat-datepicker>
@@ -101,15 +101,44 @@
   <section class="container">
     <h6>Owner Information</h6>
     <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
+    <label for="owner-search">Add Owner to Parcel</label>
+    <mat-form-field class="full-width-input" appearance="outline">
+      <input
+        id="owner-search"
+        type="text"
+        aria-label="Text"
+        matInput
+        placeholder="Type owner name"
+        [matAutocomplete]="auto"
+        (input)="onTypeOwner($event)"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
+          <div class="owner-option">
+            <div>{{ option.displayName }}</div>
+            <button *ngIf="!option.isSelected" mat-flat-button color="primary">Add</button>
+            <button *ngIf="option.isSelected" mat-stroked-button color="primary">Added</button>
+          </div>
+        </mat-option>
+        <mat-option class="option" *ngIf="filteredOwners.length === 0" (click)="onAddNewOwner()">
+          <div class="owner-option">
+            <div>No owner matching search</div>
+            <button mat-flat-button color="primary">Add new owner</button>
+          </div>
+        </mat-option>
+        <mat-option class="option" *ngIf="owners.length > 0" (click)="onSeeAllOwners()">
+          <span class='link-text'>See all Owners</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button class="new-owner" (click)="onAddNewOwner()" mat-stroked-button color="primary">Add new owner</button>
     <div>
-      <mat-expansion-panel *ngFor="let owner of parcel.owners; let ownerInd = index">
-        <mat-expansion-panel-header>
-          <mat-panel-title> Owner #{{ ownerInd + 1 }}</mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-owner-entry></app-owner-entry>
-      </mat-expansion-panel>
+      <app-parcel-owners
+        [parcelUuid]="parcel.uuid"
+        [owners]="parcel.owners"
+        (onAppUpdated)="onAppUpdated.emit()"
+      ></app-parcel-owners>
     </div>
-    <button mat-stroked-button color="primary">Add another owner</button>
   </section>
   <mat-checkbox formControlName="isConfirmedByApplicant" class="container"
     >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched

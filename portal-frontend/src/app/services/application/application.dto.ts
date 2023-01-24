@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
 
 export enum APPLICATION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -35,11 +36,12 @@ export interface ApplicationDto {
   applicant: string;
   type: string;
   localGovernmentUuid: string;
-  documents: ApplicationDocumentDto[];
   status: ApplicationStatusDto;
   canEdit: boolean;
   canReview: boolean;
   canView: boolean;
+  documents: ApplicationDocumentDto[];
+  owners: ApplicationOwnerDto[];
 }
 
 export interface UpdateApplicationDto {

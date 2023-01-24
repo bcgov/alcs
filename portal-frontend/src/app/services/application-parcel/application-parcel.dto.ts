@@ -1,12 +1,5 @@
+import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
 import { ApplicationDocumentDto } from '../application/application.dto';
-
-export interface ParcelOwnerDto {
-  type: string | undefined;
-  firstName: string | undefined;
-  lastName: string | undefined;
-  phoneNumber: string | undefined;
-  email: string | undefined;
-}
 
 export interface ApplicationParcelUpdateDto {
   pid?: string | null;
@@ -21,7 +14,7 @@ export interface ApplicationParcelUpdateDto {
 
 export interface ApplicationParcelDto extends ApplicationParcelUpdateDto {
   uuid: string;
-  owners: ParcelOwnerDto[];
+  owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
 }
 

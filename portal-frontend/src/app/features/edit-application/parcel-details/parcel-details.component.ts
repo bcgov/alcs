@@ -2,12 +2,14 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import {
   APPLICATION_PARCEL_DOCUMENT,
   ApplicationParcelDto,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
@@ -25,14 +27,16 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   certificateOfTitleDocument: ApplicationDocumentDto[] = [];
   documentTypes = APPLICATION_PARCEL_DOCUMENT;
-  private fileId!: string;
+  fileId!: string;
 
   parcels: ApplicationParcelDto[] = [];
+  $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
 
   newParcelAdded = false;
 
   constructor(
     private router: Router,
+    private applicationService: ApplicationService,
     private applicationParcelService: ApplicationParcelService,
     private toastService: ToastService,
     private dialog: MatDialog
@@ -43,6 +47,9 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
         this.loadParcels();
+        if (application.owners) {
+          this.$owners.next(application.owners);
+        }
       }
     });
     this.newParcelAdded = false;
@@ -143,5 +150,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         existingParcel.documents = parcel.documents;
       }
     }
+  }
+
+  async onAppUpdated() {
+    const app = await this.applicationService.getByFileId(this.fileId);
+    this.$application.next(app);
   }
 }

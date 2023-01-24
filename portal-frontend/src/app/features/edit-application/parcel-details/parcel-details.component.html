@@ -13,8 +13,11 @@
 
     <app-parcel-entry
       [parcel]="parcel"
+      [$owners]='$owners'
+      [fileId]='fileId'
       (onFormGroupChange)="onParcelFormChange($event)"
       (onFilesUpdated)="onFilesUpdated()"
+      (onAppUpdated)='onAppUpdated()'
     ></app-parcel-entry>
 
     <div>

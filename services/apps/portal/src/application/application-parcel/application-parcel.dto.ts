@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
 import { ApplicationParcelDocumentDto } from './application-parcel-document/application-parcel-document.dto';
 
 export class ApplicationParcelDto {
@@ -37,6 +38,7 @@ export class ApplicationParcelDto {
   ownershipTypeCode?: string | null;
 
   documents: ApplicationParcelDocumentDto[];
+  owners: ApplicationOwnerDto[];
 }
 
 export class ApplicationParcelCreateDto {

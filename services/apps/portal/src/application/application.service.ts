@@ -290,6 +290,9 @@ export class ApplicationService {
         documents: {
           document: true,
         },
+        owners: {
+          type: true,
+        },
       },
     });
   }
