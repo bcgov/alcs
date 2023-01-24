@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../shared/shared.module';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { EditApplicationComponent } from './edit-application.component';
@@ -27,6 +28,6 @@ const routes: Routes = [
     DeleteParcelDialogComponent,
     SelectGovernmentComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgxMaskDirective, NgxMaskPipe],
 })
 export class EditApplicationModule {}
