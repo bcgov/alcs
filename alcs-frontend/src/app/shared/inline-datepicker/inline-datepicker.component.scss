@@ -42,4 +42,12 @@
     padding: 0 !important;
     margin: 0 !important;
   }
+
+  button mat-icon {
+    overflow: visible;
+  }
+
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    padding: 0 !important;
+  }
 }
