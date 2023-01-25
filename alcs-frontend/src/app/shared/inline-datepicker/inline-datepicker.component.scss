@@ -1,5 +1,9 @@
 @import '../../../styles/colors';
 
+.inline-date-picker-wrapper {
+  padding-top: 4px;
+}
+
 .editing {
   display: inline-block;
 }
@@ -49,5 +53,26 @@
 
   .mat-mdc-icon-button.mat-mdc-button-base {
     padding: 0 !important;
+  }
+
+  .mat-mdc-text-field-wrapper.mdc-text-field {
+    height: 40px !important;
+
+    .mat-mdc-form-field-flex {
+      .mdc-floating-label.mat-mdc-floating-label {
+        top: 18px;
+      }
+
+      .mdc-floating-label.mat-mdc-floating-label.mdc-floating-label--float-above {
+        top: 28px;
+      }
+
+      height: 40px !important;
+
+      .mat-mdc-form-field-infix {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+    }
   }
 }

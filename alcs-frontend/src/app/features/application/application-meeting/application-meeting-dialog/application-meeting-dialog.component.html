@@ -6,54 +6,54 @@
     <div class="flex-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested</mat-label>
-        <mtx-datetimepicker #meetingStartDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [mtxDatetimepicker]="meetingStartDate"
+          (click)="meetingStartDatePicker.open()"
+          [matDatepicker]="meetingStartDatePicker"
           formControlName="meetingStartDate"
-          required
-          (dateChange)="onChange()"
+          name="meetingStartDate"
         />
-        <mtx-datetimepicker-toggle [for]="meetingStartDate" matSuffix></mtx-datetimepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="meetingStartDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #meetingStartDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Conducted</mat-label>
-        <mtx-datetimepicker #meetingEndDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [mtxDatetimepicker]="meetingEndDate"
+          (click)="meetingEndDatePicker.open()"
+          [matDatepicker]="meetingEndDatePicker"
           formControlName="meetingEndDate"
-          [min]="form.get('meetingStartDate')?.value | startOfDay"
-          (dateChange)="onChange()"
+          name="meetingEndDate"
         />
-        <mtx-datetimepicker-toggle [for]="meetingEndDate" matSuffix></mtx-datetimepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="meetingEndDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #meetingEndDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
     </div>
     <div class="flex-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>Report Sent</mat-label>
-        <mtx-datetimepicker #reportStartDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [mtxDatetimepicker]="reportStartDate"
+          (click)="reportStartDatePicker.open()"
+          [matDatepicker]="reportStartDatePicker"
           formControlName="reportStartDate"
-          [min]="form.get('meetingEndDate')?.value | startOfDay"
-          (dateChange)="onChange()"
+          name="reportStartDate"
         />
-        <mtx-datetimepicker-toggle [for]="reportStartDate" matSuffix></mtx-datetimepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="reportStartDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #reportStartDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>Report Approved</mat-label>
-        <mtx-datetimepicker #reportEndDate type="date"></mtx-datetimepicker>
         <input
           matInput
-          [mtxDatetimepicker]="reportEndDate"
+          (click)="reportEndDatePicker.open()"
+          [matDatepicker]="reportEndDatePicker"
           formControlName="reportEndDate"
-          [min]="form.get('reportStartDate')?.value | startOfDay"
-          (dateChange)="onChange()"
+          name="reportEndDate"
         />
-        <mtx-datetimepicker-toggle [for]="reportEndDate" matSuffix></mtx-datetimepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="reportEndDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #reportEndDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
     </div>
     <div class="warning">
@@ -73,9 +73,7 @@
   <mat-dialog-actions align="end">
     <div class="button-container">
       <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
-      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">
-        Save
-      </button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
     </div>
   </mat-dialog-actions>
 </form>

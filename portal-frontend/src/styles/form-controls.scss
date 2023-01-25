@@ -32,15 +32,15 @@ label {
 }
 
 //This prevents the bottom of the text from being cut off
-.mat-form-field .mat-form-field-label-wrapper label {
+.mat-mdc-form-field .mat-form-field-label-wrapper label {
   line-height: 1.2;
 }
 
-.mat-form-field .mat-form-field-infix input {
+.mat-mdc-form-field .mat-mdc-form-field-infix input {
   line-height: 1.2;
 }
 
-.mat-form-field-appearance-outline .mat-form-field-infix {
+.mat-form-field-appearance-outline .mat-mdc-form-field-infix {
   padding: rem(6) 0;
 
   @media screen and (min-width: $tabletBreakpoint) {
@@ -59,6 +59,6 @@ input.mat-input-element::placeholder {
   opacity: 1;
 }
 
-input.mat-input-element:disabled::placeholder{
+input.mat-input-element:disabled::placeholder {
   color: $grey;
 }
