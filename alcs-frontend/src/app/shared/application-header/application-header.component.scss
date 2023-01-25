@@ -19,13 +19,18 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    line-height: 32px;
+
+    h5 {
+      margin-right: 8px !important;
+    }
   }
 
   .labels {
     display: flex;
     flex-wrap: wrap;
     margin-top: -8px;
-    margin-left: 8px;
+    margin-right: 8px;
 
     app-application-type-pill {
       margin-top: 8px;

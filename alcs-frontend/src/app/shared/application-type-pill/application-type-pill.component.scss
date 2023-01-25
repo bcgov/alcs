@@ -1,6 +1,7 @@
 .application-pill-wrapper {
   display: inline-block;
   height: 25px;
+  white-space: nowrap;
 
   .application-pill {
     margin-right: 12px;
