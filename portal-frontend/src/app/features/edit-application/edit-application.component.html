@@ -39,4 +39,8 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <p>Proposal (Exclusion)</p>
   </mat-step>
+  <mat-step label="Submit to ALCS (Note: this will be removed in final version)">
+    <p>Note this is only for testing purposes. The submission process will be changed in follow-up tickets.</p>
+    <button (click)="onSubmitToAlcs()">Submit to ALCS</button>
+  </mat-step>
 </mat-stepper>
