@@ -13,6 +13,14 @@
   ::ng-deep .mat-mdc-form-field-subscript-wrapper {
     position: absolute;
   }
+
+  ::ng-deep .mdc-text-field--outlined.mdc-text-field--focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+      border-color: #fff !important;
+    }
+  }
 }
 
 input {
@@ -48,11 +56,11 @@ input {
   top: 0;
 }
 
-:host ::ng-deep .mat-form-field-appearance-outline.mat-focused:hover .mat-form-field-outline,
-:host ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
-  color: $primary-color-light;
+:host ::ng-deep .mdc-form-field-appearance--outlined.mdc--focused:hover .mdc-form-field--outlined,
+:host ::ng-deep .mdc-form-field-appearance--outlined.mdc--focused .mdc-form-field--outlined {
+  color: $primary-color-light !important;
 }
 
-:host ::ng-deep .mat-form-field-appearance-outline:hover .mat-form-field-outline {
+:host ::ng-deep .mat-mdc-form-field-appearance-outline:hover .mat-mdc-form-field-outline {
   color: rgba($primary-color-light, 0.7);
 }
