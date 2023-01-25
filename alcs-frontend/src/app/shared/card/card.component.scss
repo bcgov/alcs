@@ -106,9 +106,13 @@ $date-ht: 48px;
   height: 110px;
 }
 
-mat-card.decision-date {
-  border-top: none;
-  height: calc($card-ht + $date-ht);
+mat-card {
+  padding: 16px;
+  
+  .decision-date {
+    border-top: none;
+    height: calc($card-ht + $date-ht);
+  }
 }
 
 .ellipsis {

@@ -116,3 +116,9 @@
 .mat-icon-button:hover {
   background-color: rgba($grey, 0.2);
 }
+
+::ng-deep .mdc-button {
+  font-weight: 700 !important;
+  line-height: 32px !important;
+  text-transform: uppercase;
+}
