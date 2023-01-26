@@ -51,6 +51,7 @@ export class FileDragDropComponent implements OnInit {
     }
     if (files.length > 0) {
       this.uploadFiles.emit(files);
+      this.fileUpload.nativeElement.value = '';
     }
   }
 }
