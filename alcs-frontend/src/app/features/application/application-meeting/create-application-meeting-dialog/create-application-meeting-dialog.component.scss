@@ -1,8 +1,10 @@
 @import '../../../../../styles/colors';
 
-.flex-container {
-  display: flex;
-  gap: 24px;
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  margin-bottom: 24px;
 }
 
 .flex-child {

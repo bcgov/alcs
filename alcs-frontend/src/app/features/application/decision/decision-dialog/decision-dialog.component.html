@@ -18,11 +18,11 @@
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
-      <div style="display: grid; grid-template-columns: 1fr 8px 2fr; grid-column-gap: 8px">
+      <div class="resolution-number-wrapper">
         <mat-form-field appearance="outline" class="date-picker">
           <mat-label>Resolution Number</mat-label>
           <input matInput formControlName="resolutionNumber" type="number" required />
-          <span matPrefix>#&nbsp;</span>
+          <span matPrefix>&nbsp;#&nbsp;</span>
         </mat-form-field>
         <div class="center resolution-separator">/</div>
         <ng-select

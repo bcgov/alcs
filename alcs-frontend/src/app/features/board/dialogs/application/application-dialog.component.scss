@@ -48,26 +48,24 @@
 .board-menu-item {
   display: grid;
   grid-template-columns: 22px 1fr 22px;
+  width: 100%;
 }
 
-.favourite-board-icon-container {
-  width: 22px;
-  display: inline-block;
+::ng-deep .mat-mdc-menu-item .mdc-list-item__primary-text {
+  width: 100%;
 }
 
 .favourite-board-icon {
-  width: 18px;
   height: 20px;
+  margin-top: 2px;
   font-size: 18px;
   color: $secondary-color-dark;
 }
 
 .selected-board-icon {
-  width: 18px;
   height: 20px;
+  margin-top: 2px;
   font-size: 18px;
-  margin-left: 8px;
-  margin-right: 4px;
   color: $primary-color;
 }
 
@@ -75,7 +73,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  width: 40px;
   height: 20px;
 }
 
