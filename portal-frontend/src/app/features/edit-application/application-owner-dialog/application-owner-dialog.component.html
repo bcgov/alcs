@@ -8,23 +8,23 @@
       <div class="full-row">
         <label for="type">Owner Type</label>
         <mat-button-toggle-group (change)="onChangeType($event)" class="input" id="type" formControlName="type">
-          <mat-button-toggle value="INDV">Individual</mat-button-toggle>
-          <mat-button-toggle value="ORGZ">Organization</mat-button-toggle>
+          <mat-button-toggle [value]="OWNER_TYPE.INDIVIDUAL">Individual</mat-button-toggle>
+          <mat-button-toggle [value]="OWNER_TYPE.ORGANIZATION">Organization</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <div *ngIf="type.getRawValue() === 'INDV'">
+      <div *ngIf="type.getRawValue() === OWNER_TYPE.INDIVIDUAL">
         <label for="firstName">First Name</label>
         <mat-form-field appearance="outline">
           <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
         </mat-form-field>
       </div>
-      <div *ngIf="type.getRawValue() === 'INDV'">
+      <div *ngIf="type.getRawValue() === OWNER_TYPE.INDIVIDUAL">
         <label for="lastName">Last Name</label>
         <mat-form-field appearance="outline">
           <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
         </mat-form-field>
       </div>
-      <div class="full-row" *ngIf="type.getRawValue() === 'ORGZ'">
+      <div class="full-row" *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">
         <label for="orgName">Organization Name</label>
         <mat-form-field appearance="outline">
           <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />

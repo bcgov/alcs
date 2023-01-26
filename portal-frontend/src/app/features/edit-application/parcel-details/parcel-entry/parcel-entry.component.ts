@@ -174,7 +174,6 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewOwner() {
-    debugger;
     const dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -210,15 +209,7 @@ export class ParcelEntryComponent implements OnInit {
           isSelected,
         };
       })
-      .sort((a, b) => {
-        if (a.displayName < b.displayName) {
-          return -1;
-        }
-        if (a.displayName > b.displayName) {
-          return 1;
-        }
-        return 0;
-      });
+      .sort(this.applicationOwnerService.sortOwners);
   }
 
   onTypeOwner($event: Event) {

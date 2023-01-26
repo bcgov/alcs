@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
+  APPLICATION_OWNER_TYPE,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
@@ -15,7 +16,8 @@ import { ApplicationOwnerService } from '../../../services/application-owner/app
   styleUrls: ['./application-owner-dialog.component.scss'],
 })
 export class ApplicationOwnerDialogComponent {
-  type = new FormControl<string | null>('INDV');
+  OWNER_TYPE = APPLICATION_OWNER_TYPE;
+  type = new FormControl<string | null>(APPLICATION_OWNER_TYPE.INDIVIDUAL);
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
@@ -60,7 +62,7 @@ export class ApplicationOwnerDialogComponent {
   }
 
   onChangeType($event: MatButtonToggleChange) {
-    if ($event.value === 'ORGZ') {
+    if ($event.value === APPLICATION_OWNER_TYPE.ORGANIZATION) {
       this.organizationName.setValidators([Validators.required]);
       this.firstName.setValidators([]);
       this.lastName.setValidators([]);
@@ -107,7 +109,6 @@ export class ApplicationOwnerDialogComponent {
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
     };
-    debugger;
     if (this.existingUuid) {
       await this.appOwnerService.update(this.existingUuid, updateDto);
       this.dialogRef.close(true);

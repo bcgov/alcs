@@ -1,5 +1,10 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 
+export enum APPLICATION_OWNER_TYPE {
+  INDIVIDUAL = 'INDV',
+  ORGANIZATION = 'ORGZ',
+}
+
 export interface ApplicationOwnerTypeDto extends BaseCodeDto {}
 
 export interface ApplicationOwnerDto {

@@ -15,15 +15,7 @@ export class ParcelOwnersComponent {
 
   @Input()
   public set owners(owners: ApplicationOwnerDto[]) {
-    this._owners = owners.sort((a, b) => {
-      if (a.displayName < b.displayName) {
-        return -1;
-      }
-      if (a.displayName > b.displayName) {
-        return 1;
-      }
-      return 0;
-    });
+    this._owners = owners.sort(this.appOwnerService.sortOwners);
   }
 
   @Input() parcelUuid?: string | undefined;
@@ -68,7 +60,6 @@ export class ParcelOwnersComponent {
         body: `This action will remove ${owner.displayName} and its usage from the entire application. Are you sure you want to remove this owner? `,
       })
       .subscribe(async (didConfirm) => {
-        debugger;
         if (didConfirm) {
           await this.appOwnerService.delete(owner.uuid);
           this.onAppUpdated.emit();

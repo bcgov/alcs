@@ -90,4 +90,14 @@ export class ApplicationOwnerService {
     }
     return undefined;
   }
+
+  sortOwners(a: ApplicationOwnerDto, b: ApplicationOwnerDto) {
+    if (a.displayName < b.displayName) {
+      return -1;
+    }
+    if (a.displayName > b.displayName) {
+      return 1;
+    }
+    return 0;
+  }
 }
