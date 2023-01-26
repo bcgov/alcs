@@ -6,6 +6,7 @@ import { ApplicationService } from '../../services/application/application.servi
 import { CodeService } from '../../services/code/code.service';
 
 import { MatDialogModule } from '@angular/material/dialog';
+import { ToastService } from '../../services/toast/toast.service';
 import { EditApplicationComponent } from './edit-application.component';
 
 describe('EditApplicationComponent', () => {
@@ -22,6 +23,10 @@ describe('EditApplicationComponent', () => {
         },
         {
           provide: CodeService,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],
