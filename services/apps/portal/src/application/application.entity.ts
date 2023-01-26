@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
+import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 
 @Entity()
@@ -78,10 +79,12 @@ export class Application extends BaseEntity {
   })
   typeCode: string;
 
-  @AutoMap()
   @OneToMany(
     () => ApplicationDocument,
     (appDocument) => appDocument.application,
   )
   documents: ApplicationDocument[];
+
+  @OneToMany(() => ApplicationOwner, (owner) => owner.application)
+  owners: ApplicationOwner[];
 }

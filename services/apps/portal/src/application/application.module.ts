@@ -3,12 +3,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlcsModule } from '../alcs/alcs.module';
 import { ApplicationGrpcModule } from '../alcs/application-grpc/application-grpc.module';
 import { AuthorizationModule } from '../common/authorization/authorization.module';
+import { ApplicationOwnerProfile } from '../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../common/automapper/application-parcel.automapper.profile';
 import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../document/document.module';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
+import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
+import { ApplicationOwnerController } from './application-owner/application-owner.controller';
+import { ApplicationOwner } from './application-owner/application-owner.entity';
+import { ApplicationOwnerService } from './application-owner/application-owner.service';
 import { ApplicationParcelDocumentController } from './application-parcel/application-parcel-document/application-parcel-document.controller';
 import { ApplicationParcelDocument } from './application-parcel/application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelDocumentService } from './application-parcel/application-parcel-document/application-parcel-document.service';
@@ -30,6 +35,8 @@ import { ApplicationService } from './application.service';
       ApplicationParcel,
       ApplicationParcelOwnershipType,
       ApplicationParcelDocument,
+      ApplicationOwner,
+      ApplicationOwnerType,
     ]),
     AlcsModule,
     AuthorizationModule,
@@ -43,12 +50,15 @@ import { ApplicationService } from './application.service';
     ApplicationParcelProfile,
     ApplicationParcelService,
     ApplicationParcelDocumentService,
+    ApplicationOwnerService,
+    ApplicationOwnerProfile,
   ],
   controllers: [
     ApplicationController,
     ApplicationDocumentController,
     ApplicationParcelController,
     ApplicationParcelDocumentController,
+    ApplicationOwnerController,
   ],
   exports: [ApplicationService, ApplicationDocumentService],
 })

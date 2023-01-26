@@ -7,6 +7,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ParcelDetailsComponent } from './parcel-details.component';
 
@@ -17,6 +18,7 @@ describe('ParcelDetailsComponent', () => {
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
   let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
   beforeEach(async () => {
@@ -24,6 +26,7 @@ describe('ParcelDetailsComponent', () => {
     mockApplicationParcelService = createMock();
     mockToastService = createMock();
     mockMatDialog = createMock();
+    mockApplicationService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelDetailsComponent],
@@ -35,6 +38,10 @@ describe('ParcelDetailsComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockApplicationParcelService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
         {
           provide: ToastService,

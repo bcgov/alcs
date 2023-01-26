@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-
+import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
+import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import {
   APPLICATION_PARCEL_DOCUMENT,
   ApplicationParcelDto,
@@ -11,6 +14,8 @@ import { ApplicationDocumentDto } from '../../../../services/application/applica
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
+import { ApplicationOwnerDialogComponent } from '../../application-owner-dialog/application-owner-dialog.component';
+import { ApplicationOwnersDialogComponent } from '../../application-owners-dialog/application-owners-dialog.component';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -26,7 +31,7 @@ export interface ParcelEntryFormData {
 }
 
 @Component({
-  selector: 'app-parcel-entry',
+  selector: 'app-parcel-entry[parcel][fileId]',
   templateUrl: './parcel-entry.component.html',
   styleUrls: ['./parcel-entry.component.scss'],
 })
@@ -34,9 +39,18 @@ export class ParcelEntryComponent implements OnInit {
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onFilesUpdated = new EventEmitter<void>();
   @Output() private onSaveProgress = new EventEmitter<void>();
+  @Output() onAppUpdated = new EventEmitter<void>();
 
   @Input()
   parcel!: ApplicationParcelDto;
+
+  @Input()
+  fileId!: string;
+
+  @Input()
+  $owners!: BehaviorSubject<ApplicationOwnerDto[]>;
+  owners: ApplicationOwnerDto[] = [];
+  filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null);
@@ -61,9 +75,23 @@ export class ParcelEntryComponent implements OnInit {
 
   documentTypes = APPLICATION_PARCEL_DOCUMENT;
 
-  constructor(private parcelService: ParcelService, private applicationParcelService: ApplicationParcelService) {}
+  constructor(
+    private parcelService: ParcelService,
+    private applicationParcelService: ApplicationParcelService,
+    private applicationOwnerService: ApplicationOwnerService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
+    this.setupForm();
+
+    this.$owners.subscribe((owners) => {
+      this.owners = owners;
+      this.filteredOwners = this.mapOwners(owners);
+    });
+  }
+
+  private setupForm() {
     this.parcelForm.valueChanges.subscribe((formData) => {
       if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
         this.parcel.isConfirmedByApplicant = false;
@@ -113,7 +141,6 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
-    const val = $event.value === 'CRWN';
     if ($event.value === 'CRWN') {
       this.purchaseDate.reset();
       this.purchaseDate.disable();
@@ -144,5 +171,67 @@ export class ParcelEntryComponent implements OnInit {
 
   async beforeFileUploadOpened() {
     this.onSaveProgress.emit();
+  }
+
+  onAddNewOwner() {
+    const dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
+      data: {
+        fileId: this.fileId,
+        parcelUuid: this.parcel.uuid,
+      },
+    });
+    dialog.beforeClosed().subscribe((isDirty) => {
+      if (isDirty) {
+        this.onAppUpdated.emit();
+      }
+    });
+  }
+
+  async onSelectOwner(owner: ApplicationOwnerDto, isSelected: boolean) {
+    const ownerUuid = owner.uuid;
+    if (ownerUuid) {
+      if (isSelected) {
+        await this.applicationOwnerService.removeFromParcel(ownerUuid, this.parcel.uuid);
+        this.onAppUpdated.emit();
+      } else {
+        await this.applicationOwnerService.linkToParcel(ownerUuid, this.parcel.uuid);
+        this.onAppUpdated.emit();
+      }
+    }
+  }
+
+  mapOwners(owners: ApplicationOwnerDto[]) {
+    return owners
+      .map((owner) => {
+        const isSelected = this.parcel.owners.some((parcelOwner) => parcelOwner.uuid === owner.uuid);
+        return {
+          ...owner,
+          isSelected,
+        };
+      })
+      .sort(this.applicationOwnerService.sortOwners);
+  }
+
+  onTypeOwner($event: Event) {
+    this.filteredOwners = this.mapOwners(this.owners).filter((option) => {
+      //@ts-ignore Im so done with angular forms
+      return option.displayName.toLowerCase().includes($event.target!.value!.toLowerCase());
+    });
+  }
+
+  onSeeAllOwners() {
+    this.dialog
+      .open(ApplicationOwnersDialogComponent, {
+        data: {
+          owners: this.owners,
+          fileId: this.fileId,
+        },
+      })
+      .beforeClosed()
+      .subscribe((isDirty) => {
+        if (isDirty) {
+          this.onAppUpdated.emit();
+        }
+      });
   }
 }

@@ -1,0 +1,17 @@
+@import '../../../../../styles/typography';
+@import '../../../../../styles/colors';
+
+.owner-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.new-owner {
+  margin: rem(8) 0 !important;
+}
+
+.link-text {
+  color: $link-color;
+  text-decoration: underline;
+}

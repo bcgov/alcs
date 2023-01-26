@@ -16,7 +16,12 @@ export class ApplicationParcelService {
     return this.parcelRepository.find({
       where: { application: { fileNumber: fileId } },
       order: { auditCreatedAt: 'ASC' },
-      relations: { documents: { document: true } },
+      relations: {
+        documents: { document: true },
+        owners: {
+          type: true,
+        },
+      },
     });
   }
 

@@ -1,12 +1,16 @@
+import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { ParcelService } from '../../../../services/parcel/parcel.service';
-
-import { HttpClient } from '@angular/common/http';
-import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
-import { ParcelEntryComponent } from './parcel-entry.component';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { BehaviorSubject } from 'rxjs';
+import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
+import { ParcelService } from '../../../../services/parcel/parcel.service';
+import { ParcelEntryComponent } from './parcel-entry.component';
 
 describe('ParcelEntryComponent', () => {
   let component: ParcelEntryComponent;
@@ -15,13 +19,16 @@ describe('ParcelEntryComponent', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockParcel = {} as ApplicationParcelDto;
+  let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockHttpClient = createMock();
     mockApplicationParcelService = createMock();
+    mockAppOwnerService = createMock();
 
     await TestBed.configureTestingModule({
+      imports: [MatAutocompleteModule],
       declarations: [ParcelEntryComponent],
       providers: [
         {
@@ -36,14 +43,23 @@ describe('ParcelEntryComponent', () => {
           provide: ApplicationParcelService,
           useValue: mockApplicationParcelService,
         },
+        {
+          provide: ApplicationOwnerService,
+          useValue: mockAppOwnerService,
+        },
+        {
+          provide: MatDialog,
+          useValue: {},
+        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ParcelEntryComponent);
     component = fixture.componentInstance;
+    component.$owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
     component.parcel = mockParcel;
-    
+
     fixture.detectChanges();
   });
 

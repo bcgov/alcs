@@ -20,7 +20,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   localGovernment = new FormControl<string | any>('');
   showWarning = false;
   selectGovernmentUuid = '';
-  fileNumber = '';
+  fileId = '';
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
 
@@ -40,7 +40,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.selectGovernmentUuid = application.localGovernmentUuid;
-        this.fileNumber = application.fileNumber;
+        this.fileId = application.fileNumber;
         this.populateLocalGovernment(application.localGovernmentUuid);
       }
     });
@@ -82,7 +82,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     await this.save();
-    await this.router.navigateByUrl(`/application/${this.fileNumber}`);
+    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSave() {
@@ -95,7 +95,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
 
       if (localGovernment) {
-        await this.applicationService.updatePending(this.fileNumber, {
+        await this.applicationService.updatePending(this.fileId, {
           localGovernmentUuid: localGovernment.uuid,
         });
       }

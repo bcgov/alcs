@@ -1,6 +1,15 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
+import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { Application } from '../application.entity';
 import { ApplicationParcelDocument } from './application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
@@ -94,6 +103,10 @@ export class ApplicationParcel extends Base {
   @AutoMap()
   @ManyToOne(() => ApplicationParcelOwnershipType)
   ownershipType: ApplicationParcelOwnershipType;
+
+  @ManyToMany(() => ApplicationOwner, (owner) => owner.parcels)
+  @JoinTable()
+  owners: ApplicationOwner[];
 
   @AutoMap()
   @OneToMany(

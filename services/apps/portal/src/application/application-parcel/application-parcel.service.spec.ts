@@ -58,7 +58,12 @@ describe('ApplicationParcelService', () => {
     expect(mockParcelRepo.find).toBeCalledWith({
       where: { application: { fileNumber: mockApplicationFileNumber } },
       order: { auditCreatedAt: 'ASC' },
-      relations: { documents: { document: true } },
+      relations: {
+        documents: { document: true },
+        owners: {
+          type: true,
+        },
+      },
     });
   });
 

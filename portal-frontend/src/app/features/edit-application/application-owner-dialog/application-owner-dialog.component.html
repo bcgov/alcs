@@ -1,0 +1,52 @@
+<div mat-dialog-title>
+  <h2 *ngIf="!isEdit">Add New Owner</h2>
+  <h2 *ngIf="isEdit">Edit Owner</h2>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-row">
+      <div class="full-row">
+        <label for="type">Owner Type</label>
+        <mat-button-toggle-group (change)="onChangeType($event)" class="input" id="type" formControlName="type">
+          <mat-button-toggle [value]="OWNER_TYPE.INDIVIDUAL">Individual</mat-button-toggle>
+          <mat-button-toggle [value]="OWNER_TYPE.ORGANIZATION">Organization</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div *ngIf="type.getRawValue() === OWNER_TYPE.INDIVIDUAL">
+        <label for="firstName">First Name</label>
+        <mat-form-field appearance="outline">
+          <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+        </mat-form-field>
+      </div>
+      <div *ngIf="type.getRawValue() === OWNER_TYPE.INDIVIDUAL">
+        <label for="lastName">Last Name</label>
+        <mat-form-field appearance="outline">
+          <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+        </mat-form-field>
+      </div>
+      <div class="full-row" *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">
+        <label for="orgName">Organization Name</label>
+        <mat-form-field appearance="outline">
+          <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="phoneNumber">Phone Number</label>
+        <mat-form-field appearance="outline">
+          <input id="phoneNumber" matInput placeholder="Enter Phone Number" formControlName="phoneNumber" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="firstName">Email</label>
+        <mat-form-field appearance="outline">
+          <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-stroked-button (click)="onClose()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="!isEdit" (click)="onCreate()">Add</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="isEdit" (click)="onSave()">Save</button>
+</div>
