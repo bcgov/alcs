@@ -5,13 +5,15 @@
   width: 32px;
   height: 32px;
   color: #fff;
-  margin-top: 4px;
+  top: -2px;
+  left: -4px;
+  position: inherit;
 }
 
 .unread-notifications::before {
   content: '';
   position: absolute;
-  top: 9px;
+  top: 0;
   background: $error-color;
   width: 8px;
   height: 8px;
@@ -20,74 +22,74 @@
   right: calc(50% - 12px);
 }
 
-.notifications-header {
-  padding: 8px 16px 0;
-}
+// .notifications-header {
+//   padding: 8px 16px 0;
+// }
 
-.notifications-header-menu {
-  min-width: 160px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px !important;
-  margin: 8px 0;
-}
+// .notifications-header-menu {
+//   min-width: 160px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   font-size: 12px !important;
+//   margin: 8px 0;
+// }
 
-.unread-button.mat-flat-button {
-  padding: 0;
-  margin: 0;
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  text-decoration: underline;
-  line-height: 16px;
-  letter-spacing: 0;
-}
+// .unread-button.mat-flat-button {
+//   padding: 0;
+//   margin: 0;
+//   font-size: 12px !important;
+//   font-weight: 400 !important;
+//   text-decoration: underline;
+//   line-height: 16px;
+//   letter-spacing: 0;
+// }
 
-.notification {
-  padding: 8px 16px;
-  width: 280px;
-  border-left: 4px solid transparent;
-  border-bottom: 1px solid #959595;
-  display: flex;
-  flex-direction: column;
-  border-radius: 0;
-  white-space: initial;
+// .notification {
+//   padding: 8px 16px;
+//   width: 280px;
+//   border-left: 4px solid transparent;
+//   border-bottom: 1px solid #959595;
+//   display: flex;
+//   flex-direction: column;
+//   border-radius: 0;
+//   white-space: initial;
 
-  div {
-    text-align: left;
-  }
+//   div {
+//     text-align: left;
+//   }
 
-  .header {
-    line-height: 16px;
-    font-size: 12px;
-    font-weight: 700;
-  }
+//   .header {
+//     line-height: 16px;
+//     font-size: 12px;
+//     font-weight: 700;
+//   }
 
-  .body {
-    line-height: 20px;
-    font-size: 12px;
-    margin: 4px 0;
-    font-weight: normal !important;
-  }
+//   .body {
+//     line-height: 20px;
+//     font-size: 12px;
+//     margin: 4px 0;
+//     font-weight: normal !important;
+//   }
 
-  .date {
-    font-size: 10px;
-    color: #999999;
-    line-height: 12px;
-  }
-}
+//   .date {
+//     font-size: 10px;
+//     color: #999999;
+//     line-height: 12px;
+//   }
+// }
 
-.notification.unread {
-  border-left: 4px solid $error-color;
-}
+// .notification.unread {
+//   border-left: 4px solid $error-color;
+// }
 
-.notification:last-child {
-  margin-bottom: -8px !important;
-}
+// .notification:last-child {
+//   margin-bottom: -8px !important;
+// }
 
-.no-notifications {
-  width: 280px;
-  padding: 8px 16px;
-  color: #999999;
-  font-style: italic;
-}
+// .no-notifications {
+//   width: 280px;
+//   padding: 8px 16px;
+//   color: #999999;
+//   font-style: italic;
+// }
