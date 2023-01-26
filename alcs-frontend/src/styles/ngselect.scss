@@ -64,3 +64,7 @@ ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
 .ng-select.ng-select-focused .ng-select-container:after {
   border-color: $primary-color;
 }
+
+.ng-select-container .ng-value-container .ng-value {
+  margin-top: 0;
+}
