@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -36,6 +36,7 @@ export class DecisionMeetingDialogComponent {
 
   async onSubmit() {
     if (this.model) {
+      let successMessage = 'Discussion';
       try {
         this.isLoading = true;
         if (this.model.uuid) {
@@ -44,17 +45,19 @@ export class DecisionMeetingDialogComponent {
             date: this.model.date,
             applicationFileNumber: this.data.fileNumber,
           });
+          successMessage += ' updated';
         } else {
           await this.decisionMeetingService.create({
             date: this.model.date,
             applicationFileNumber: this.data.fileNumber,
           });
+          successMessage += ' created';
         }
 
         await this.decisionMeetingService.fetch(this.data.fileNumber);
         this.applicationDetailService.loadApplication(this.data.fileNumber);
         this.dialogRef.close();
-        this.toastService.showSuccessToast('Discussion created');
+        this.toastService.showSuccessToast(successMessage);
       } finally {
         this.isLoading = false;
       }
