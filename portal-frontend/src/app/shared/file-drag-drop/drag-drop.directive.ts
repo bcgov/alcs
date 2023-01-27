@@ -12,7 +12,7 @@ export interface FileHandle {
 export class DragDropDirective {
   private backgroundColor = '#f7f7f7';
 
-  @Output() files: EventEmitter<FileHandle[]> = new EventEmitter();
+  @Output() files: EventEmitter<FileHandle> = new EventEmitter();
   @HostBinding('style.background') private background = this.backgroundColor;
 
   constructor(private sanitizer: DomSanitizer) {}
@@ -41,14 +41,10 @@ export class DragDropDirective {
       return;
     }
 
-    let files: FileHandle[] = [];
     for (let i = 0; i < dragEvent.dataTransfer.files.length; i++) {
       const file = dragEvent.dataTransfer.files[i];
       const url = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file));
-      files.push({ file, url });
-    }
-    if (files.length > 0) {
-      this.files.emit(files);
+      this.files.emit({ file, url });
     }
   }
 }

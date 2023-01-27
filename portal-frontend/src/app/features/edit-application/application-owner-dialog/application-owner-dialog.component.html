@@ -47,7 +47,7 @@
         <app-file-drag-drop
           [uploadedFiles]="files"
           (uploadFiles)="attachFile($event)"
-          (deleteFile)="removeFile($event)"
+          (deleteFile)="removeCorporateSummary()"
           (openFile)="openCorporateSummary()"
           id="fileUpload"
         ></app-file-drag-drop>

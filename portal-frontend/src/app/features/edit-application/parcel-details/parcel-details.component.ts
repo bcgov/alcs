@@ -3,10 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
-import {
-  APPLICATION_PARCEL_DOCUMENT,
-  ApplicationParcelDto,
-} from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -24,9 +21,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
 
   $destroy = new Subject<void>();
-
-  certificateOfTitleDocument: ApplicationDocumentDto[] = [];
-  documentTypes = APPLICATION_PARCEL_DOCUMENT;
   fileId!: string;
 
   parcels: ApplicationParcelDto[] = [];

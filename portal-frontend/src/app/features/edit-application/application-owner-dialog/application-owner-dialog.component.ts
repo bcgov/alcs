@@ -95,14 +95,7 @@ export class ApplicationOwnerDialogComponent {
       return;
     }
 
-    let documentUuid;
-    if (this.pendingFile) {
-      documentUuid = await this.appOwnerService.uploadCorporateSummary([this.pendingFile]);
-      if (!documentUuid) {
-        return;
-      }
-    }
-
+    const documentUuid = await this.uploadPendingFile(this.pendingFile);
     const createDto: ApplicationOwnerCreateDto = {
       organizationName: this.organizationName.getRawValue() || undefined,
       firstName: this.firstName.getRawValue() || undefined,
@@ -124,13 +117,7 @@ export class ApplicationOwnerDialogComponent {
   }
 
   async onSave() {
-    let documentUuid;
-    if (this.pendingFile) {
-      documentUuid = await this.appOwnerService.uploadCorporateSummary([this.pendingFile]);
-      if (!documentUuid) {
-        return;
-      }
-    }
+    const documentUuid = await this.uploadPendingFile(this.pendingFile);
     const updateDto: ApplicationOwnerUpdateDto = {
       organizationName: this.organizationName.getRawValue(),
       firstName: this.firstName.getRawValue(),
@@ -146,9 +133,8 @@ export class ApplicationOwnerDialogComponent {
     }
   }
 
-  async attachFile(files: FileHandle[]) {
-    const mappedFiles = files.map((file) => file.file);
-    this.pendingFile = mappedFiles[0];
+  async attachFile(fileHandle: FileHandle) {
+    this.pendingFile = fileHandle.file;
     this.corporateSummary.setValue('pending');
     this.files = [
       {
@@ -162,7 +148,7 @@ export class ApplicationOwnerDialogComponent {
     ];
   }
 
-  removeFile($event: ApplicationDocumentDto) {
+  removeCorporateSummary() {
     if (this.pendingFile) {
       this.pendingFile = undefined;
     }
@@ -180,5 +166,16 @@ export class ApplicationOwnerDialogComponent {
         window.open(res.url, '_blank');
       }
     }
+  }
+
+  private async uploadPendingFile(file?: File) {
+    let documentUuid;
+    if (file) {
+      documentUuid = await this.appOwnerService.uploadCorporateSummary(file);
+      if (!documentUuid) {
+        return;
+      }
+    }
+    return documentUuid;
   }
 }

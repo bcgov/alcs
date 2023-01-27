@@ -107,34 +107,18 @@ export class ApplicationOwnerService {
     return 0;
   }
 
-  async uploadCorporateSummary(files: File[]) {
-    if (files.length > 0) {
-      const file: File = files[0];
-
-      if (file.size > environment.maxFileSize) {
-        const niceSize = environment.maxFileSize / 1048576;
-        this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
-        return undefined;
-      }
-
-      try {
-        const fileKey = await this.documentService.uploadFileToStorage('owners', file, DOCUMENT.CORPORATE_SUMMARY);
-
-        const fileUuid = await firstValueFrom(
-          this.httpClient.post<{ uuid: string }>(`${this.serviceUrl}/attachExternal`, {
-            documentType: DOCUMENT.CORPORATE_SUMMARY,
-            mimeType: file.type,
-            fileName: file.name,
-            fileSize: file.size,
-            fileKey: fileKey,
-            source: 'Applicant',
-          })
-        );
-        return fileUuid.uuid;
-      } catch (e) {
-        console.error(e);
-        this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
-      }
+  async uploadCorporateSummary(file: File) {
+    try {
+      return await this.documentService.uploadFile(
+        'owners',
+        file,
+        DOCUMENT.CORPORATE_SUMMARY,
+        'Applicant',
+        `${this.serviceUrl}/attachExternal`
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
     }
     return undefined;
   }

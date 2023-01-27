@@ -9,7 +9,7 @@ import { FileHandle } from './drag-drop.directive';
   styleUrls: ['./file-drag-drop.component.scss'],
 })
 export class FileDragDropComponent implements OnInit {
-  @Output() uploadFiles: EventEmitter<FileHandle[]> = new EventEmitter();
+  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
   @Output() deleteFile: EventEmitter<ApplicationDocumentDto> = new EventEmitter();
   @Output() openFile: EventEmitter<string> = new EventEmitter();
   @Output() beforeFileUploadOpened: EventEmitter<void> = new EventEmitter();
@@ -27,7 +27,7 @@ export class FileDragDropComponent implements OnInit {
     this.deleteFile.emit(file);
   }
 
-  filesDropped($event: FileHandle[]) {
+  filesDropped($event: FileHandle) {
     this.uploadFiles.emit($event);
   }
 
@@ -43,14 +43,10 @@ export class FileDragDropComponent implements OnInit {
   fileSelected($event: Event) {
     const target = $event.target as HTMLInputElement;
     const selectedFiles = target.files as FileList;
-    let files: FileHandle[] = [];
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
       const url = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file));
-      files.push({ file, url });
-    }
-    if (files.length > 0) {
-      this.uploadFiles.emit(files);
+      this.uploadFiles.emit({ file, url });
       this.fileUpload.nativeElement.value = '';
     }
   }

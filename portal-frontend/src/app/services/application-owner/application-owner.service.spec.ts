@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
+import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 
 import { ApplicationOwnerService } from './application-owner.service';
@@ -10,12 +11,14 @@ describe('ApplicationOwnerService', () => {
   let service: ApplicationOwnerService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let fileId = '123';
 
   beforeEach(() => {
     mockHttpClient = createMock();
     mockToastService = createMock();
+    mockDocumentService = createMock();
 
     TestBed.configureTestingModule({
       providers: [
@@ -26,6 +29,10 @@ describe('ApplicationOwnerService', () => {
         {
           provide: ToastService,
           useValue: mockToastService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     });
