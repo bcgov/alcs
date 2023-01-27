@@ -2,10 +2,9 @@
 
 .close {
   color: $grey;
-  margin-top: -12px;
-  margin-right: -12px;
   display: flex;
   justify-content: right;
+  margin: -42px 0 0px;
 }
 
 .header-row {
@@ -23,32 +22,13 @@
   font-size: 11px;
   letter-spacing: 0.01em;
   font-weight: 700;
-  line-height: 18px;
+  line-height: 24px;
   vertical-align: middle;
-  border: 3px solid;
 }
 
 .card-title {
+  align-items: center;
   margin-right: 2rem !important;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
-.labels {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.icon {
-  margin-right: 4px;
-  height: 18px;
-  width: 18px;
-  font-size: 18px;
-}
-
-.inactive-timer {
-  opacity: 0.3;
 }
 
 .card-assignee {
@@ -68,26 +48,24 @@
 .board-menu-item {
   display: grid;
   grid-template-columns: 22px 1fr 22px;
+  width: 100%;
 }
 
-.favourite-board-icon-container {
-  width: 22px;
-  display: inline-block;
+::ng-deep .mat-mdc-menu-item .mdc-list-item__primary-text {
+  width: 100%;
 }
 
 .favourite-board-icon {
-  width: 18px;
   height: 20px;
+  margin-top: 2px;
   font-size: 18px;
   color: $secondary-color-dark;
 }
 
 .selected-board-icon {
-  width: 18px;
   height: 20px;
+  margin-top: 2px;
   font-size: 18px;
-  margin-left: 8px;
-  margin-right: 4px;
   color: $primary-color;
 }
 
@@ -95,7 +73,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  width: 40px;
   height: 20px;
 }
 
@@ -106,8 +83,8 @@
 .empty-priority {
   background-image: url('/assets/icons/priority_empty.svg');
 }
-
 .select-container {
+  padding-top: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 24px;
@@ -115,7 +92,7 @@
 }
 
 .subtasks-wrapper {
-  margin-top: 36px;
+  margin-top: 24px;
 }
 
 .card-comments-wrapper {

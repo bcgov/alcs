@@ -74,4 +74,36 @@
 
 .ng-select .ng-select-container.ng-appearance-outline:after {
   border-color: $grey;
+  height: calc(100% - 0.15em);
+}
+
+.ng-select .ng-select-container .ng-value-container {
+  border-top: 0.5em;
+  padding: 1em 0;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline {
+  overflow: visible;
+}
+
+.ng-select .ng-has-value .ng-placeholder {
+  margin-top: -2px;
+}
+
+.ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-arrow-wrapper {
+  bottom: 1.3em;
+}
+
+.ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-clear-wrapper {
+  bottom: 18px !important;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  margin-bottom: 16px;
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+.ng-dropdown-panel.ng-select-bottom {
+  top: calc(100% - 1em);
 }

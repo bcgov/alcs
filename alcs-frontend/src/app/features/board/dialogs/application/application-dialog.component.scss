@@ -4,7 +4,7 @@
   color: $grey;
   display: flex;
   justify-content: right;
-  margin: -42px 0 8px;
+  margin: -42px 0 0px;
 }
 
 .header-row {
@@ -83,8 +83,8 @@
 .empty-priority {
   background-image: url('/assets/icons/priority_empty.svg');
 }
-
 .select-container {
+  padding-top: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 24px;
