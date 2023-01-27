@@ -16,19 +16,12 @@
     margin-bottom: rem(24);
   }
 
-  .dialog-content-wrapper {
-    margin: rem(16);
+  .radio-option {
+    display: block !important;
   }
 
-  mat-radio-button {
-    display: block;
+  .dialog-content-wrapper {
     margin: rem(16);
-    margin-left: 0;
-
-    .mat-radio-label-content {
-      display: block;
-      white-space: normal;
-    }
   }
 
   .warning-banner {

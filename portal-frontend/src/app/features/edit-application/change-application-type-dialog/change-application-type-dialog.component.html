@@ -52,7 +52,7 @@
           color="primary"
           required
         >
-          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code">
+          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
             {{ appType.portalLabel }}
           </mat-radio-button>
         </mat-radio-group>

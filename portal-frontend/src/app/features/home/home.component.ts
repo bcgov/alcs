@@ -22,7 +22,11 @@ export class HomeComponent implements OnInit {
   }
 
   async onCreateApplication() {
-    this.dialog.open(CreateApplicationDialogComponent, { panelClass: 'no-padding', disableClose: true });
+    this.dialog.open(CreateApplicationDialogComponent, {
+      panelClass: 'no-padding',
+      disableClose: true,
+      autoFocus: false,
+    });
   }
 
   onLearnMoreClick() {

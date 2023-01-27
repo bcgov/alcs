@@ -56,6 +56,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
       .open(ChangeApplicationTypeDialogComponent, {
         panelClass: 'no-padding',
         disableClose: true,
+        autoFocus: false,
         data: {
           fileId: this.fileId,
         },

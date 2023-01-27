@@ -37,13 +37,8 @@
   .content {
     margin: rem(16);
 
-    ::ng-deep .mat-radio-button {
+    .radio-option {
       display: block;
-      margin: rem(16) 0;
-
-      ::ng-deep .mat-radio-label-content {
-        white-space: break-spaces;
-      }
     }
 
     .step-header {
