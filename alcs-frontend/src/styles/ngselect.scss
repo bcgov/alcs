@@ -1,47 +1,5 @@
-// // Not ng-select styles must be overridden in global css
+// Note: ng-select styles must be overridden in global css
 
-// .ng-select {
-//   bottom: auto;
-// }
-
-// .ng-select.subtask-assignee .ng-select-container {
-//   .ng-value-container {
-//     margin-top: 15px;
-
-//     .ng-value .ng-star-inserted {
-//       font-size: 1.1em !important;
-//     }
-
-//     .ng-placeholder {
-//       bottom: 10px;
-//     }
-//   }
-// }
-
-// .ng-appearance-outline {
-//   .ng-value {
-//     margin-top: 6px;
-//   }
-
-//   input {
-//     padding: 10px !important;
-//   }
-// }
-
-// //This only changes the padding of the placeholder when its not focused/selecting
-// ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
-//   .ng-placeholder {
-//     margin-top: 2px;
-//   }
-// }
-
-// .ng-select .ng-select-container.ng-appearance-outline {
-//   min-height: 56px;
-// }
-
-// .ng-select .ng-select-container .ng-value-container .ng-placeholder {
-//   color: rgba(0, 0, 0, 0.6) !important;
-// }
 .ng-select {
   padding-bottom: 0;
 }
