@@ -24,6 +24,7 @@ a {
 
 .icon {
   font-size: 8rem;
+  line-height: 8rem;
   color: $grey-dark;
 }
 
@@ -72,6 +73,7 @@ a {
 
     .file-name {
       display: flex;
+      align-items: center;
       justify-content: flex-start;
     }
   }

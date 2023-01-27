@@ -2,6 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Document } from '../../document/document.entity';
+import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
@@ -15,11 +17,13 @@ describe('ApplicationOwnerService', () => {
   let mockParcelService: DeepMocked<ApplicationParcelService>;
   let mockRepo: DeepMocked<Repository<ApplicationOwner>>;
   let mockTypeRepo: DeepMocked<Repository<ApplicationOwnerType>>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockRepo = createMock();
     mockTypeRepo = createMock();
+    mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,6 +39,10 @@ describe('ApplicationOwnerService', () => {
         {
           provide: getRepositoryToken(ApplicationOwnerType),
           useValue: mockTypeRepo,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compile();
@@ -132,6 +140,31 @@ describe('ApplicationOwnerService', () => {
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
   });
 
+  it('should delete the existing document when updating', async () => {
+    const owner = new ApplicationOwner({
+      firstName: 'Bruce',
+      lastName: 'Wayne',
+      corporateSummaryUuid: 'oldUuid',
+      corporateSummary: new Document(),
+    });
+    mockRepo.findOneOrFail.mockResolvedValue(owner);
+    mockRepo.save.mockResolvedValue(new ApplicationOwner());
+    mockDocumentService.delete.mockResolvedValue({} as any);
+
+    await service.update('', {
+      organizationName: '',
+      email: '',
+      phoneNumber: '',
+      typeCode: '',
+      corporateSummaryUuid: 'newUuid',
+    });
+
+    expect(owner.corporateSummaryUuid).toEqual('newUuid');
+    expect(mockDocumentService.delete).toHaveBeenCalledTimes(1);
+    expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepo.save).toHaveBeenCalledTimes(2);
+  });
+
   it('should call through for delete', async () => {
     mockRepo.delete.mockResolvedValue({} as any);
 
@@ -143,7 +176,7 @@ describe('ApplicationOwnerService', () => {
   it('should call through for verify', async () => {
     mockRepo.findOneOrFail.mockResolvedValue(new ApplicationOwner());
 
-    await service.verifyAccess(new User(), '');
+    await service.getByOwner(new User(), '');
 
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
   });

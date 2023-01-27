@@ -3,11 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import {
-  APPLICATION_DOCUMENT,
-  ApplicationDocumentDto,
-  ApplicationDto,
-} from '../../services/application/application.dto';
+import { DOCUMENT, ApplicationDocumentDto, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ChangeApplicationTypeDialogComponent } from '../edit-application/change-application-type-dialog/change-application-type-dialog.component';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';

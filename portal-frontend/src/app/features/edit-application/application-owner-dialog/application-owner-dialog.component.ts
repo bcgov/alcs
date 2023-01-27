@@ -9,6 +9,8 @@ import {
   ApplicationOwnerUpdateDto,
 } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application/application.dto';
+import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 
 @Component({
   selector: 'app-application-owner-dialog',
@@ -23,9 +25,11 @@ export class ApplicationOwnerDialogComponent {
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
   email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  corporateSummary = new FormControl<string | null>(null);
 
   isEdit = false;
   existingUuid: string | undefined;
+  files: ApplicationDocumentDto[] = [];
 
   form = new FormGroup({
     type: this.type,
@@ -34,7 +38,9 @@ export class ApplicationOwnerDialogComponent {
     organizationName: this.organizationName,
     phoneNumber: this.phoneNumber,
     email: this.email,
+    corporateSummary: this.corporateSummary,
   });
+  private pendingFile: File | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<ApplicationOwnerDialogComponent>,
@@ -58,21 +64,28 @@ export class ApplicationOwnerDialogComponent {
       this.phoneNumber.setValue(data.existingOwner.phoneNumber);
       this.email.setValue(data.existingOwner.email);
       this.existingUuid = data.existingOwner.uuid;
+      if (data.existingOwner.corporateSummary) {
+        this.files.push(data.existingOwner.corporateSummary);
+        this.corporateSummary.setValue(data.existingOwner.corporateSummary.uuid);
+      }
     }
   }
 
   onChangeType($event: MatButtonToggleChange) {
     if ($event.value === APPLICATION_OWNER_TYPE.ORGANIZATION) {
       this.organizationName.setValidators([Validators.required]);
+      this.corporateSummary.setValidators([Validators.required]);
       this.firstName.setValidators([]);
       this.lastName.setValidators([]);
       this.firstName.reset();
       this.lastName.reset();
     } else {
       this.organizationName.setValidators([]);
+      this.corporateSummary.setValidators([]);
       this.firstName.setValidators([Validators.required]);
       this.lastName.setValidators([Validators.required]);
       this.organizationName.reset();
+      this.corporateSummary.reset();
     }
   }
 
@@ -81,10 +94,20 @@ export class ApplicationOwnerDialogComponent {
       console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
       return;
     }
+
+    let documentUuid;
+    if (this.pendingFile) {
+      documentUuid = await this.appOwnerService.uploadCorporateSummary([this.pendingFile]);
+      if (!documentUuid) {
+        return;
+      }
+    }
+
     const createDto: ApplicationOwnerCreateDto = {
       organizationName: this.organizationName.getRawValue() || undefined,
       firstName: this.firstName.getRawValue() || undefined,
       lastName: this.lastName.getRawValue() || undefined,
+      corporateSummaryUuid: documentUuid,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
@@ -101,10 +124,18 @@ export class ApplicationOwnerDialogComponent {
   }
 
   async onSave() {
+    let documentUuid;
+    if (this.pendingFile) {
+      documentUuid = await this.appOwnerService.uploadCorporateSummary([this.pendingFile]);
+      if (!documentUuid) {
+        return;
+      }
+    }
     const updateDto: ApplicationOwnerUpdateDto = {
       organizationName: this.organizationName.getRawValue(),
       firstName: this.firstName.getRawValue(),
       lastName: this.lastName.getRawValue(),
+      corporateSummaryUuid: documentUuid,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
@@ -112,6 +143,42 @@ export class ApplicationOwnerDialogComponent {
     if (this.existingUuid) {
       await this.appOwnerService.update(this.existingUuid, updateDto);
       this.dialogRef.close(true);
+    }
+  }
+
+  async attachFile(files: FileHandle[]) {
+    const mappedFiles = files.map((file) => file.file);
+    this.pendingFile = mappedFiles[0];
+    this.corporateSummary.setValue('pending');
+    this.files = [
+      {
+        type: DOCUMENT.CORPORATE_SUMMARY,
+        fileName: this.pendingFile.name,
+        fileSize: this.pendingFile.size,
+        uuid: '',
+        uploadedAt: Date.now(),
+        uploadedBy: '',
+      },
+    ];
+  }
+
+  removeFile($event: ApplicationDocumentDto) {
+    if (this.pendingFile) {
+      this.pendingFile = undefined;
+    }
+    this.corporateSummary.setValue(null);
+    this.files = [];
+  }
+
+  async openCorporateSummary() {
+    if (this.pendingFile) {
+      const fileURL = URL.createObjectURL(this.pendingFile);
+      window.open(fileURL, '_blank');
+    } else if (this.existingUuid) {
+      const res = await this.appOwnerService.openCorporateSummary(this.existingUuid);
+      if (res) {
+        window.open(res.url, '_blank');
+      }
     }
   }
 }

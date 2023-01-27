@@ -26,6 +26,10 @@ export class DocumentService {
     return res;
   }
 
+  async create(document: Document) {
+    return this.documentRepository.save(document);
+  }
+
   getDownloadUrl(uuid: string) {
     return this.alcsDocumentService.getDownloadUrl({
       uuid,

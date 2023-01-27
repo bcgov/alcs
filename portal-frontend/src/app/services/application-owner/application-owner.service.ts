@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DOCUMENT } from '../application/application.dto';
+import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationOwnerCreateDto, ApplicationOwnerDto, ApplicationOwnerUpdateDto } from './application-owner.dto';
 
@@ -11,7 +13,11 @@ import { ApplicationOwnerCreateDto, ApplicationOwnerDto, ApplicationOwnerUpdateD
 export class ApplicationOwnerService {
   private serviceUrl = `${environment.apiUrl}/application-owner`;
 
-  constructor(private httpClient: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private toastService: ToastService,
+    private documentService: DocumentService
+  ) {}
 
   async fetchByFileId(applicationFileId: string) {
     try {
@@ -99,5 +105,49 @@ export class ApplicationOwnerService {
       return 1;
     }
     return 0;
+  }
+
+  async uploadCorporateSummary(files: File[]) {
+    if (files.length > 0) {
+      const file: File = files[0];
+
+      if (file.size > environment.maxFileSize) {
+        const niceSize = environment.maxFileSize / 1048576;
+        this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
+        return undefined;
+      }
+
+      try {
+        const fileKey = await this.documentService.uploadFileToStorage('owners', file, DOCUMENT.CORPORATE_SUMMARY);
+
+        const fileUuid = await firstValueFrom(
+          this.httpClient.post<{ uuid: string }>(`${this.serviceUrl}/attachExternal`, {
+            documentType: DOCUMENT.CORPORATE_SUMMARY,
+            mimeType: file.type,
+            fileName: file.name,
+            fileSize: file.size,
+            fileKey: fileKey,
+            source: 'Applicant',
+          })
+        );
+        return fileUuid.uuid;
+      } catch (e) {
+        console.error(e);
+        this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
+      }
+    }
+    return undefined;
+  }
+
+  async openCorporateSummary(ownerUuid: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/${ownerUuid}/corporateSummary`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to open the document, please try again');
+    }
+    return undefined;
   }
 }

@@ -33,13 +33,26 @@
       <div>
         <label for="phoneNumber">Phone Number</label>
         <mat-form-field appearance="outline">
-          <input id="phoneNumber" matInput placeholder="Enter Phone Number" formControlName="phoneNumber" />
+          <input id="phoneNumber" mask='(000) 000-0000' matInput placeholder="(555) 555-5555" formControlName="phoneNumber" />
         </mat-form-field>
       </div>
       <div>
         <label for="firstName">Email</label>
         <mat-form-field appearance="outline">
           <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+        </mat-form-field>
+      </div>
+      <div *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION" class="full-row">
+        <label for="fileUpload">Corporate Summary</label>
+        <app-file-drag-drop
+          [uploadedFiles]="files"
+          (uploadFiles)="attachFile($event)"
+          (deleteFile)="removeFile($event)"
+          (openFile)="openCorporateSummary()"
+          id="fileUpload"
+        ></app-file-drag-drop>
+        <mat-form-field style="display: none">
+          <input id="corporateSummary" matInput formControlName="corporateSummary" />
         </mat-form-field>
       </div>
     </div>

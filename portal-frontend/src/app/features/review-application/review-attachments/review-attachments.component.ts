@@ -2,11 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import {
-  APPLICATION_DOCUMENT,
-  ApplicationDocumentDto,
-  ApplicationDto,
-} from '../../../services/application/application.dto';
+import { DOCUMENT, ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 
@@ -20,7 +16,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
-  documentTypes = APPLICATION_DOCUMENT;
+  documentTypes = DOCUMENT;
 
   private fileId: string | undefined;
   resolutionDocument: ApplicationDocumentDto[] = [];
@@ -45,14 +41,10 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.resolutionDocument = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.RESOLUTION_DOCUMENT
+          (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
         );
-        this.staffReport = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.STAFF_REPORT
-        );
-        this.otherAttachments = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.REVIEW_OTHER
-        );
+        this.staffReport = application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
+        this.otherAttachments = application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
       }
     });
   }
@@ -68,7 +60,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     this.$application.next(application);
   }
 
-  async attachFile(files: FileHandle[], documentType: APPLICATION_DOCUMENT) {
+  async attachFile(files: FileHandle[], documentType: DOCUMENT) {
     if (this.fileId) {
       const mappedFiles = files.map((file) => file.file);
       await this.applicationService.attachExternalFile(this.fileId, mappedFiles, documentType);

@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { APPLICATION_DOCUMENT, ApplicationDto, UpdateApplicationDto } from './application.dto';
+import { DOCUMENT, ApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -87,7 +87,7 @@ export class ApplicationService {
     }
   }
 
-  async attachExternalFile(fileId: string, files: File[], documentType: APPLICATION_DOCUMENT) {
+  async attachExternalFile(fileId: string, files: File[], documentType: DOCUMENT) {
     if (files.length > 0) {
       const file: File = files[0];
 

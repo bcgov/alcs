@@ -5,11 +5,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import {
-  APPLICATION_DOCUMENT,
-  ApplicationDocumentDto,
-  ApplicationDto,
-} from '../../../services/application/application.dto';
+import { DOCUMENT, ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 @Component({
@@ -61,14 +57,10 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
         this.resolutionDocument = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.RESOLUTION_DOCUMENT
+          (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
         );
-        this.staffReport = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.STAFF_REPORT
-        );
-        this.otherAttachments = application.documents.filter(
-          (document) => document.type === APPLICATION_DOCUMENT.REVIEW_OTHER
-        );
+        this.staffReport = application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
+        this.otherAttachments = application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
       }
     });
   }

@@ -292,6 +292,7 @@ export class ApplicationService {
         },
         owners: {
           type: true,
+          corporateSummary: true,
         },
       },
     });

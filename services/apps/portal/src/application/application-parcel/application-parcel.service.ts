@@ -20,6 +20,7 @@ export class ApplicationParcelService {
         documents: { document: true },
         owners: {
           type: true,
+          corporateSummary: true,
         },
       },
     });
