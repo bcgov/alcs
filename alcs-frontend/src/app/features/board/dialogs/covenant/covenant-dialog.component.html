@@ -22,14 +22,16 @@
         <mat-icon>move_down</mat-icon>
       </button>
       <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
-        <button class="board-menu-item" (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
-          <span class="favourite-board-icon-container"
-            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
-          </span>
-          <span>{{ board.title }}</span>
-          <span *ngIf="covenant.card.board.code === board.code"
-            ><mat-icon class="selected-board-icon">check</mat-icon></span
-          >
+        <button (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
+          <div class="board-menu-item">
+            <span class="favourite-board-icon-container"
+              ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+            </span>
+            <span>{{ board.title }}</span>
+            <span *ngIf="covenant.card.board.code === board.code"
+              ><mat-icon class="selected-board-icon">check</mat-icon></span
+            >
+          </div>
         </button>
       </mat-menu>
       <button

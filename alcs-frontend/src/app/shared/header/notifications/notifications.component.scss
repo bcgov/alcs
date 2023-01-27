@@ -5,13 +5,15 @@
   width: 32px;
   height: 32px;
   color: #fff;
-  margin-top: 4px;
+  top: -2px;
+  left: -4px;
+  position: inherit;
 }
 
 .unread-notifications::before {
   content: '';
   position: absolute;
-  top: 9px;
+  top: 0;
   background: $error-color;
   width: 8px;
   height: 8px;
@@ -33,7 +35,7 @@
   margin: 8px 0;
 }
 
-.unread-button.mat-flat-button {
+.unread-button.mdc-button.mdc-button--unelevated {
   padding: 0;
   margin: 0;
   font-size: 12px !important;
@@ -44,8 +46,9 @@
 }
 
 .notification {
-  padding: 8px 16px;
   width: 280px;
+  padding: 8px 16px;
+  height: auto;
   border-left: 4px solid transparent;
   border-bottom: 1px solid #959595;
   display: flex;
@@ -55,6 +58,7 @@
 
   div {
     text-align: left;
+    white-space: break-spaces;
   }
 
   .header {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { Subject, combineLatestWith, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
@@ -85,6 +85,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
+        autoFocus: false,
         data: {
           fileNumber: this.fileNumber,
           existingDecision: reconsideration,
@@ -106,6 +107,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
+        autoFocus: false,
         data: {
           fileNumber: this.fileNumber,
           existingModification: modification,

@@ -3,7 +3,7 @@
 </div>
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <mat-dialog-content style="height: 100%">
-    <div class="flex-container">
+    <div class="grid-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>{{ data.meetingType.code === 'AM' ? 'Meeting' : 'Visit' }} Requested</mat-label>
         <input
@@ -30,7 +30,7 @@
         <mat-datepicker #meetingEndDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="flex-container">
+    <div class="grid-container">
       <mat-form-field appearance="outline" class="flex-child">
         <mat-label>Report Sent</mat-label>
         <input

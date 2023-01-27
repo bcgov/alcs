@@ -11,14 +11,17 @@
     <div *ngIf="showCardMenu" class="center">
       <button
         *ngIf="!_reconsiderations.length && !_modifications.length"
-        class="menu-item center"
+        class="menu-item"
         mat-flat-button
         color="accent"
         (click)="onGoToCard()"
       >
-        Go to card
-        <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+        <div class="center">
+          Go to card
+          <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+        </div>
       </button>
+
       <ng-container *ngIf="_reconsiderations.length || _modifications.length">
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾

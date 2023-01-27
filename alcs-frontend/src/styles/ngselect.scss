@@ -1,46 +1,7 @@
-// Not ng-select styles must be overridden in global css
+// Note: ng-select styles must be overridden in global css
 
 .ng-select {
-  bottom: auto;
-}
-
-.ng-select.subtask-assignee .ng-select-container {
-  .ng-value-container {
-    margin-top: 15px;
-
-    .ng-value .ng-star-inserted {
-      font-size: 1.1em !important;
-    }
-
-    .ng-placeholder {
-      bottom: 10px;
-    }
-  }
-}
-
-.ng-appearance-outline {
-  .ng-value {
-    margin-top: 6px;
-  }
-
-  input {
-    padding: 10px !important;
-  }
-}
-
-//This only changes the padding of the placeholder when its not focused/selecting
-ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
-  .ng-placeholder {
-    margin-top: 2px;
-  }
-}
-
-.ng-select .ng-select-container.ng-appearance-outline {
-  min-height: 56px;
-}
-
-.ng-select .ng-select-container .ng-value-container .ng-placeholder {
-  color: rgba(0, 0, 0, 0.6) !important;
+  padding-bottom: 0;
 }
 
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
@@ -65,6 +26,42 @@ ng-select:not(.ng-select-opened) .ng-appearance-outline:not(.ng-has-value) {
   border-color: $primary-color;
 }
 
-.ng-select-container .ng-value-container .ng-value {
-  margin-top: 0;
+.ng-select .ng-select-container {
+  border-color: $grey;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline:after {
+  border-color: $grey;
+  height: calc(100% - 0.15em);
+}
+
+.ng-select .ng-select-container .ng-value-container {
+  border-top: 0.5em;
+  padding: 1em 0;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline {
+  overflow: visible;
+}
+
+.ng-select .ng-has-value .ng-placeholder {
+  margin-top: -2px;
+}
+
+.ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-arrow-wrapper {
+  bottom: 1.3em;
+}
+
+.ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-clear-wrapper {
+  bottom: 18px !important;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  margin-bottom: 16px;
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+.ng-dropdown-panel.ng-select-bottom {
+  top: calc(100% - 0.5em);
 }

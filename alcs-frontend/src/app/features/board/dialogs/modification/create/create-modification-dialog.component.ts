@@ -135,7 +135,7 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         // modification details
-        submittedDate: formValues.submittedDate!.getTime(),
+        submittedDate: formValues.submittedDate!.valueOf(),
         boardCode: this.currentBoardCode,
         isTimeExtension: formValues.isTimeExtension === 'true',
         modifiesDecisionUuids: formValues.modifiesDecisions!,

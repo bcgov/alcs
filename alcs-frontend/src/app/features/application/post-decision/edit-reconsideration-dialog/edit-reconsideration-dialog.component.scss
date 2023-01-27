@@ -4,6 +4,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 24px;
+  row-gap: 24px;
 }
 
 label {
@@ -41,8 +42,4 @@ label {
 
 .toggle-label {
   color: rgba(0, 0, 0, 0.6);
-}
-
-.toggle-group {
-  margin-bottom: 24px;
 }

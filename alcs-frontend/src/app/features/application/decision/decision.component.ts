@@ -92,6 +92,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
+        autoFocus: false,
         data: {
           isFirstDecision: this.decisions.length === 0,
           minDate,
@@ -121,6 +122,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
         maxWidth: '900px',
         maxHeight: '80vh',
         width: '90%',
+        autoFocus:false,
         data: {
           isFirstDecision: decisionIndex === this.decisions.length - 1,
           minDate,
