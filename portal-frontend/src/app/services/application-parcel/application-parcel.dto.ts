@@ -17,7 +17,3 @@ export interface ApplicationParcelDto extends ApplicationParcelUpdateDto {
   owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
 }
-
-export enum APPLICATION_PARCEL_DOCUMENT {
-  CERTIFICATE_OF_TILE = 'certificateOfTitle',
-}

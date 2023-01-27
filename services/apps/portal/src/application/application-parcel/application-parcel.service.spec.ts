@@ -61,6 +61,7 @@ describe('ApplicationParcelService', () => {
       relations: {
         documents: { document: true },
         owners: {
+          corporateSummary: true,
           type: true,
         },
       },

@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { ApplicationDocumentDto } from '../application/application.dto';
 
 export enum APPLICATION_OWNER_TYPE {
   INDIVIDUAL = 'INDV',
@@ -16,6 +17,7 @@ export interface ApplicationOwnerDto {
   phoneNumber: string | null;
   email: string | null;
   type: ApplicationOwnerTypeDto;
+  corporateSummary: ApplicationDocumentDto;
 }
 
 export interface ApplicationOwnerUpdateDto {
@@ -25,6 +27,7 @@ export interface ApplicationOwnerUpdateDto {
   phoneNumber: string;
   email: string;
   typeCode: string;
+  corporateSummaryUuid?: string | null;
 }
 
 export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {

@@ -1,6 +1,14 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { Document } from '../../document/document.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { Application } from '../application.entity';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
@@ -48,6 +56,13 @@ export class ApplicationOwner extends Base {
     nullable: true,
   })
   email?: string | null;
+
+  @OneToOne(() => Document)
+  @JoinColumn()
+  corporateSummary: Document | null;
+
+  @Column()
+  corporateSummaryUuid: string | null;
 
   @AutoMap()
   @ManyToOne(() => ApplicationOwnerType, { nullable: false })

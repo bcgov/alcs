@@ -3,8 +3,13 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
+import { Document } from '../../document/document.entity';
+import { DocumentService } from '../../document/document.service';
+import { DOCUMENT_TYPE } from '../application-document/application-document.entity';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationOwnerController } from './application-owner.controller';
@@ -15,10 +20,14 @@ describe('ApplicationOwnerController', () => {
   let controller: ApplicationOwnerController;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
+  let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockAppOwnerService = createMock();
+    mockDocumentService = createMock();
+    mockAlcsDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -35,6 +44,14 @@ describe('ApplicationOwnerController', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockAppOwnerService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
+        },
+        {
+          provide: AlcsDocumentService,
+          useValue: mockAlcsDocumentService,
         },
         ApplicationOwnerProfile,
         ...mockKeyCloakProviders,
@@ -145,7 +162,7 @@ describe('ApplicationOwnerController', () => {
 
   it('should call through for update', async () => {
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
-    mockAppOwnerService.verifyAccess.mockResolvedValue();
+    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
 
     const res = await controller.update(
       '',
@@ -163,12 +180,12 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {
     mockAppOwnerService.delete.mockResolvedValue({} as any);
-    mockAppOwnerService.verifyAccess.mockResolvedValue();
+    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
 
     await controller.delete('', {
       user: {
@@ -177,12 +194,12 @@ describe('ApplicationOwnerController', () => {
     });
 
     expect(mockAppOwnerService.delete).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for attachToParcel', async () => {
     mockAppOwnerService.attachToParcel.mockResolvedValue({} as any);
-    mockAppOwnerService.verifyAccess.mockResolvedValue();
+    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
 
     await controller.linkToParcel('', '', {
       user: {
@@ -191,12 +208,12 @@ describe('ApplicationOwnerController', () => {
     });
 
     expect(mockAppOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for removeFromParcel', async () => {
     mockAppOwnerService.removeFromParcel.mockResolvedValue({} as any);
-    mockAppOwnerService.verifyAccess.mockResolvedValue();
+    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
 
     await controller.removeFromParcel('', '', {
       user: {
@@ -205,6 +222,52 @@ describe('ApplicationOwnerController', () => {
     });
 
     expect(mockAppOwnerService.removeFromParcel).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+  });
+
+  it('should upload the document to alcs then create it locally for upload', async () => {
+    mockAlcsDocumentService.createExternalDocument.mockReturnValue(
+      of({ alcsDocumentUuid: '' }),
+    );
+    mockDocumentService.create.mockResolvedValue({} as any);
+
+    await controller.attachExternalDocument(
+      {
+        documentType: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+        fileKey: '',
+        fileName: '',
+        fileSize: 0,
+        mimeType: '',
+        source: 'Applicant',
+      },
+      {
+        user: {
+          entity: {},
+        },
+      },
+    );
+
+    expect(
+      mockAlcsDocumentService.createExternalDocument,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
+  });
+
+  it('should handle opening of a document', async () => {
+    const mockResponse = { url: 'cats' };
+    mockAppOwnerService.getByOwner.mockResolvedValue(
+      new ApplicationOwner({ corporateSummary: new Document() }),
+    );
+    mockDocumentService.getDownloadUrl.mockReturnValue(of(mockResponse));
+
+    const res = await controller.openCorporateSummary('', {
+      user: {
+        entity: {},
+      },
+    });
+
+    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
+    expect(res.url).toEqual(mockResponse.url);
   });
 });

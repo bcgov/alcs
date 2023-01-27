@@ -16,6 +16,7 @@ export enum DOCUMENT_TYPE {
   RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
   STAFF_REPORT = 'reviewStaffReport',
   REVIEW_OTHER = 'reviewOther',
+  CORPORATE_SUMMARY = 'corporateSummary',
 }
 
 export const DOCUMENT_TYPES = [
@@ -23,6 +24,7 @@ export const DOCUMENT_TYPES = [
   DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
   DOCUMENT_TYPE.STAFF_REPORT,
   DOCUMENT_TYPE.REVIEW_OTHER,
+  DOCUMENT_TYPE.CORPORATE_SUMMARY,
 ];
 
 @Entity()

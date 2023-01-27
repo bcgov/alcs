@@ -5,12 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
-import {
-  APPLICATION_PARCEL_DOCUMENT,
-  ApplicationParcelDto,
-} from '../../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
-import { ApplicationDocumentDto } from '../../../../services/application/application.dto';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application/application.dto';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
@@ -73,7 +70,7 @@ export class ParcelEntryComponent implements OnInit {
     isConfirmedByApplicant: this.isConfirmedByApplicant,
   });
 
-  documentTypes = APPLICATION_PARCEL_DOCUMENT;
+  documentTypes = DOCUMENT;
 
   constructor(
     private parcelService: ParcelService,
@@ -149,10 +146,10 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async attachFile(files: FileHandle[], documentType: APPLICATION_PARCEL_DOCUMENT, parcelUuid: string) {
+  async attachFile(file: FileHandle, documentType: DOCUMENT, parcelUuid: string) {
     if (parcelUuid) {
-      const mappedFiles = files.map((file) => file.file);
-      await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles, documentType);
+      const mappedFiles = file.file;
+      await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles);
       this.onFilesUpdated.emit();
     }
   }

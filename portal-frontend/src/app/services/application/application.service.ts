@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { APPLICATION_DOCUMENT, ApplicationDto, UpdateApplicationDto } from './application.dto';
+import { DOCUMENT, ApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -87,37 +87,22 @@ export class ApplicationService {
     }
   }
 
-  async attachExternalFile(fileId: string, files: File[], documentType: APPLICATION_DOCUMENT) {
-    if (files.length > 0) {
-      const file: File = files[0];
-
-      if (file.size > environment.maxFileSize) {
-        const niceSize = environment.maxFileSize / 1048576;
-        this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
-        return;
-      }
-
-      try {
-        const fileKey = await this.documentService.uploadFileToStorage(fileId, file, documentType);
-
-        // create document metadata record in PORTAL.
-        // Document record will be created in ALCS, however the link between application and document will be in PORTAL till application submitted to ALCS
-        await firstValueFrom(
-          this.httpClient.post(`${environment.apiUrl}/application-document/application/${fileId}/attachExternal`, {
-            documentType: documentType,
-            mimeType: file.type,
-            fileName: file.name,
-            fileSize: file.size,
-            fileKey: fileKey,
-            source: 'Applicant',
-          })
-        );
-        this.toastService.showSuccessToast('Document uploaded');
-      } catch (e) {
-        console.error(e);
-        this.toastService.showErrorToast('Failed to attach document to Application, please try again');
-      }
+  async attachExternalFile(fileId: string, file: File, documentType: DOCUMENT) {
+    try {
+      const res = await this.documentService.uploadFile(
+        'owners',
+        file,
+        documentType,
+        'Applicant',
+        `${environment.apiUrl}/application-document/application/${fileId}/attachExternal`
+      );
+      this.toastService.showSuccessToast('Document uploaded');
+      return res;
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to attach document to Application, please try again');
     }
+    return undefined;
   }
 
   async openFile(fileUuid: string) {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
@@ -19,6 +20,7 @@ export class ApplicationOwnerService {
     @InjectRepository(ApplicationOwnerType)
     private typeRepository: Repository<ApplicationOwnerType>,
     private parcelService: ApplicationParcelService,
+    private documentService: DocumentService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -49,6 +51,7 @@ export class ApplicationOwnerService {
       organizationName: createDto.organizationName,
       email: createDto.email,
       phoneNumber: createDto.phoneNumber,
+      corporateSummaryUuid: createDto.corporateSummaryUuid,
       application,
       type,
       parcels: [parcel],
@@ -95,6 +98,9 @@ export class ApplicationOwnerService {
       where: {
         uuid,
       },
+      relations: {
+        corporateSummary: true,
+      },
     });
 
     if (updateDto.typeCode) {
@@ -104,6 +110,22 @@ export class ApplicationOwnerService {
         },
       });
     }
+
+    //If attaching new document and old one was defined, delete it
+    if (
+      existingOwner.corporateSummaryUuid !== updateDto.corporateSummaryUuid &&
+      existingOwner.corporateSummary
+    ) {
+      const oldSummary = existingOwner.corporateSummary;
+      existingOwner.corporateSummary = null;
+      await this.repository.save(existingOwner);
+      await this.documentService.delete(oldSummary);
+    }
+
+    existingOwner.corporateSummaryUuid =
+      updateDto.corporateSummaryUuid !== undefined
+        ? updateDto.corporateSummaryUuid
+        : existingOwner.corporateSummaryUuid;
 
     existingOwner.organizationName =
       updateDto.organizationName !== undefined
@@ -137,8 +159,8 @@ export class ApplicationOwnerService {
     });
   }
 
-  async verifyAccess(user: User, ownerUuid: string) {
-    await this.repository.findOneOrFail({
+  async getByOwner(user: User, ownerUuid: string) {
+    return await this.repository.findOneOrFail({
       where: {
         application: {
           createdBy: {
@@ -146,6 +168,9 @@ export class ApplicationOwnerService {
           },
         },
         uuid: ownerUuid,
+      },
+      relations: {
+        corporateSummary: true,
       },
     });
   }
