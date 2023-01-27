@@ -62,7 +62,6 @@ export class CommentsComponent implements OnInit {
   }
 
   async onSave(comment: CreateCommentDto) {
-    debugger;
     this.isSaving = true;
     comment.cardUuid = this.cardUuid;
 

@@ -49,7 +49,6 @@ export class CommentComponent implements OnInit {
   }
 
   onSave(comment: UpdateCommentDto) {
-    debugger;
     this.isEditing = false;
     this.edit.emit({
       uuid: comment.uuid,
