@@ -11,6 +11,7 @@ import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto
 export class CommentComponent implements OnInit {
   @Input() comment!: CommentDto;
   @Input() fileNumber!: string;
+  @Input() notificationTitle!: string;
 
   @Input()
   mentions: any[] = [];
@@ -48,11 +49,13 @@ export class CommentComponent implements OnInit {
   }
 
   onSave(comment: UpdateCommentDto) {
+    debugger;
     this.isEditing = false;
     this.edit.emit({
       uuid: comment.uuid,
       body: comment.body,
       mentions: comment.mentions,
+      notificationTitle: this.notificationTitle,
     });
   }
 

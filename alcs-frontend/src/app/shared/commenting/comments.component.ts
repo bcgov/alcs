@@ -13,6 +13,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 export class CommentsComponent implements OnInit {
   @Input() cardUuid: string = '';
   @Input() fileNumber: string = '';
+  @Input() notificationTitle: string = '';
 
   comments: CommentDto[] = [];
   isEditing = false;
@@ -61,6 +62,7 @@ export class CommentsComponent implements OnInit {
   }
 
   async onSave(comment: CreateCommentDto) {
+    debugger;
     this.isSaving = true;
     comment.cardUuid = this.cardUuid;
 

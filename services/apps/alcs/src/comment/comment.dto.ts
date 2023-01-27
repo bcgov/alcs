@@ -34,6 +34,10 @@ export class CreateCommentDto {
   @IsNotEmpty()
   body: string;
 
+  @IsString()
+  @IsNotEmpty()
+  notificationTitle: string;
+
   @IsArray()
   mentions: CommentMentionDto[];
 }
@@ -46,6 +50,10 @@ export class UpdateCommentDto {
   @IsString()
   @IsNotEmpty()
   body: string;
+
+  @IsString()
+  @IsNotEmpty()
+  notificationTitle: string;
 
   @IsArray()
   mentions: CommentMentionDto[];

@@ -30,6 +30,7 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   selectedRegion?: string;
   title?: string;
   reconType = RECON_TYPE_LABEL;
+  cardTitle = '';
 
   recon: ApplicationReconsiderationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];
@@ -77,6 +78,7 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
     this.selectedApplicationStatus = recon.card.status.code;
     this.selectedBoard = recon.card.board.code;
     this.selectedRegion = recon.application.region.code;
+    this.cardTitle = `${recon.application.fileNumber} (${recon.application.applicant})`;
   }
 
   filterAssigneeList(term: string, item: AssigneeDto) {

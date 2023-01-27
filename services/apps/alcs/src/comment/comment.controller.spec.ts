@@ -40,7 +40,7 @@ describe('CommentController', () => {
 
     comment = initCommentMock(user);
 
-    mockNotificationService.createForApplication.mockResolvedValue();
+    mockNotificationService.create.mockResolvedValue();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -92,6 +92,7 @@ describe('CommentController', () => {
         body: 'comment-body',
         mentions: comment.mentions,
         cardUuid: 'fake',
+        notificationTitle: '',
       },
       request,
     );
@@ -111,6 +112,7 @@ describe('CommentController', () => {
         body: 'new-body',
         uuid: 'uuid',
         mentions: comment.mentions,
+        notificationTitle: '',
       },
       request,
     );
@@ -131,6 +133,7 @@ describe('CommentController', () => {
           body: 'new-body',
           uuid: 'uuid',
           mentions: comment.mentions,
+          notificationTitle: '',
         },
         request,
       ),
@@ -155,6 +158,7 @@ describe('CommentController', () => {
           body: 'new-body',
           uuid: 'uuid',
           mentions: comment.mentions,
+          notificationTitle: '',
         },
         request,
       ),

@@ -29,6 +29,7 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
   selectedRegion?: string;
   title?: string;
   covenantType = COVENANT_TYPE_LABEL;
+  cardTitle = '';
 
   covenant: CovenantDto = this.data;
   isDirty = false;
@@ -75,6 +76,7 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
     this.selectedRegion = covenant.region.code;
     this.$users = this.userService.$assignableUsers;
     this.userService.fetchAssignableUsers();
+    this.cardTitle = `${covenant.fileNumber} (${covenant.applicant})`;
   }
 
   filterAssigneeList(term: string, item: AssigneeDto) {

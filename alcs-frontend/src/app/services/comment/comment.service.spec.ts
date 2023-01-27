@@ -59,7 +59,7 @@ describe('CommentService', () => {
       ])
     );
 
-    await service.createComment({ body: '', cardUuid: '', mentions: new Map() });
+    await service.createComment({ body: '', cardUuid: '', mentions: new Map(), notificationTitle: '' });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
@@ -74,7 +74,7 @@ describe('CommentService', () => {
       ])
     );
 
-    await service.updateComment({ body: '', mentions: new Map(), uuid: '' });
+    await service.updateComment({ body: '', mentions: new Map(), uuid: '', notificationTitle: '' });
 
     expect(httpClient.patch).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);

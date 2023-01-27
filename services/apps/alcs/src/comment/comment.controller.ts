@@ -51,6 +51,7 @@ export class CommentController {
       comment.cardUuid,
       comment.body,
       req.user.entity,
+      comment.notificationTitle,
       mappedMentions,
     );
 
@@ -73,6 +74,7 @@ export class CommentController {
       const updatedComment = await this.commentService.update(
         comment.uuid,
         comment.body,
+        comment.notificationTitle,
         await this.mapMentions(comment),
       );
       return this.autoMapper.map(updatedComment, Comment, CommentDto);

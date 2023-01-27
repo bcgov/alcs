@@ -29,6 +29,7 @@ export class ModificationDialogComponent implements OnInit, OnDestroy {
   selectedRegion?: string;
   title?: string;
   modificationType = MODIFICATION_TYPE_LABEL;
+  cardTitle = '';
 
   modification: ApplicationModificationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];
@@ -75,6 +76,7 @@ export class ModificationDialogComponent implements OnInit, OnDestroy {
     this.selectedApplicationStatus = modification.card.status.code;
     this.selectedBoard = modification.card.board.code;
     this.selectedRegion = modification.application.region.code;
+    this.cardTitle = `${modification.application.fileNumber} (${modification.application.applicant})`;
   }
 
   filterAssigneeList(term: string, item: AssigneeDto) {

@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
 import { LessThan, Repository } from 'typeorm';
-import { Application } from '../application/application.entity';
+import { Card } from '../card/card.entity';
 import { User } from '../user/user.entity';
 import { CreateNotificationServiceDto } from './notification.dto';
 import { Notification } from './notification.entity';
@@ -45,31 +45,6 @@ export class NotificationService {
     });
   }
 
-  async createForApplication(
-    actor: User,
-    receiverUuid: string,
-    body: string,
-    application: Application,
-  ) {
-    const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
-
-    if (!application.card) {
-      throw new Error(
-        'Cannot set notifications for applications without cards',
-      );
-    }
-
-    const notification = new Notification({
-      body,
-      title: `${application.fileNumber} (${application.applicant})`,
-      link: `${frontEnd}/board/${application.card.board.code}?card=${application.card.uuid}&type=${application.card.type.code}`,
-      targetType: 'application',
-      actor,
-      receiverUuid,
-    });
-    await this.notificationRepository.save(notification);
-  }
-
   async createNotificationForApplication(
     notificationDto: CreateNotificationServiceDto,
   ) {
@@ -106,5 +81,29 @@ export class NotificationService {
       createdAt: LessThan(olderThan),
       read,
     });
+  }
+
+  async create(
+    author: User,
+    receiverUuid: string,
+    body: string,
+    title: string,
+    card: Card,
+  ) {
+    const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
+
+    if (!card || !card.board) {
+      throw new Error('Cannot set notifications without proper card');
+    }
+
+    const notification = new Notification({
+      body,
+      title: title,
+      link: `${frontEnd}/board/${card.board.code}?card=${card.uuid}&type=${card.type.code}`,
+      targetType: 'application',
+      actor: author,
+      receiverUuid,
+    });
+    await this.notificationRepository.save(notification);
   }
 }
