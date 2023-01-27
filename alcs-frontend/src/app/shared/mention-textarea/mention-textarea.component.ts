@@ -10,6 +10,7 @@ import { UserService } from '../../services/user/user.service';
 export class MentionTextareaComponent implements OnInit {
   @Input() isNewComment = false;
   @Input() labelText = '';
+  @Input() notificationTitle = '';
   @Input() comment: CommentDto = {
     body: '',
     uuid: '',
@@ -57,12 +58,14 @@ export class MentionTextareaComponent implements OnInit {
       this.create.emit({
         body: this.comment.body,
         mentions: this.mentionList,
+        notificationTitle: this.notificationTitle,
       });
     } else {
       this.save.emit({
         uuid: this.comment.uuid,
         body: this.comment.body,
         mentions: this.mentionList,
+        notificationTitle: this.notificationTitle,
       });
     }
 

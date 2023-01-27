@@ -62,6 +62,20 @@ export class CardService {
     });
   }
 
+  getWithBoard(uuid: string) {
+    return this.cardRepository.findOne({
+      where: { uuid },
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        board: true,
+        subtasks: {
+          type: true,
+          assignee: true,
+        },
+      },
+    });
+  }
+
   async update(cardUuid, card: CardUpdateServiceDto): Promise<Card> {
     const existingCard = await this.cardRepository.findOne({
       where: { uuid: cardUuid },

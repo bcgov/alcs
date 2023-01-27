@@ -5,8 +5,7 @@ import {
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
+import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/user.entity';
@@ -24,7 +23,6 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
-    private applicationService: ApplicationService,
     private cardService: CardService,
     private commentMentionService: CommentMentionService,
     private notificationService: NotificationService,
@@ -55,9 +53,10 @@ export class CommentService {
     cardUuid: string,
     commentBody: string,
     author: User,
+    notificationTitle: string,
     mentions: CommentMention[],
   ) {
-    const card = await this.cardService.get(cardUuid);
+    const card = await this.cardService.getWithBoard(cardUuid);
     if (!card) {
       throw new NotFoundException('Unable to find card');
     }
@@ -69,11 +68,7 @@ export class CommentService {
     });
 
     const createComment = await this.commentRepository.save(comment);
-
-    const application = await this.applicationService.getByCard(
-      comment.cardUuid,
-    );
-    await this.processMentions(mentions, comment, application);
+    await this.processMentions(mentions, comment, notificationTitle, card);
 
     return createComment;
   }
@@ -94,7 +89,12 @@ export class CommentService {
     return;
   }
 
-  async update(uuid: string, body: string, mentions: CommentMention[]) {
+  async update(
+    uuid: string,
+    body: string,
+    notificationTitle: string,
+    mentions: CommentMention[],
+  ) {
     const comment = await this.commentRepository.findOne({
       where: { uuid },
       relations: {
@@ -112,15 +112,18 @@ export class CommentService {
       throw new ServiceValidationException('Comment body must be filled.');
     }
 
-    const application = await this.applicationService.getByCard(
-      comment.cardUuid,
-    );
-
     comment.edited = true;
     comment.body = body;
 
+    const card = await this.cardService.getWithBoard(comment.cardUuid);
+    if (!card) {
+      throw new ServiceNotFoundException(
+        `Failed to find card with uuid ${comment.cardUuid}`,
+      );
+    }
+
     await this.commentRepository.save(comment);
-    await this.processMentions(mentions, comment, application);
+    await this.processMentions(mentions, comment, notificationTitle, card);
 
     return;
   }
@@ -128,19 +131,19 @@ export class CommentService {
   private async processMentions(
     mentions: CommentMention[],
     comment: Comment,
-    application?: Application,
+    notificationTitle: string,
+    card: Card,
   ) {
     await this.commentMentionService.updateMentions(comment.uuid, mentions);
 
-    if (application) {
-      mentions.forEach((mention) => {
-        this.notificationService.createForApplication(
-          comment.author,
-          mention.userUuid,
-          `${comment.author.name} mentioned you in a comment`,
-          application,
-        );
-      });
-    }
+    mentions.forEach((mention) => {
+      this.notificationService.create(
+        comment.author,
+        mention.userUuid,
+        `${comment.author.name} mentioned you in a comment`,
+        notificationTitle,
+        card,
+      );
+    });
   }
 }

@@ -28,6 +28,7 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
   selectedRegion?: string;
   title?: string;
   planningType = PLANNING_TYPE_LABEL;
+  cardTitle = '';
 
   planningReview: PlanningReviewDto = this.data;
   isDirty = false;
@@ -50,6 +51,7 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
     this.selectedApplicationStatus = this.data.card.status.code;
     this.selectedBoard = this.data.card.board.code;
     this.selectedRegion = this.data.region.code;
+    this.cardTitle = `${this.data.fileNumber} (${this.data.type})`;
 
     this.$users = this.userService.$assignableUsers;
     this.userService.fetchAssignableUsers();

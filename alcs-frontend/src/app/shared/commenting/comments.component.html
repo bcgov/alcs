@@ -11,6 +11,7 @@
     [comment]="comment"
     (cancel)="onCancel()"
     [isNewComment]="true"
+    [notificationTitle]='notificationTitle'
     labelText="Add a comment"
   >
   </app-mention-textarea>
@@ -20,6 +21,7 @@
     (edit)="onEditComment($event)"
     (delete)="onDeleteComment($event)"
     [mentions]="comment.mentions"
+    [notificationTitle]="notificationTitle"
   ></app-comment>
 </div>
 

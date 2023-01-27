@@ -7,8 +7,6 @@ import {
   initCardMockEntity,
   initCommentMock,
 } from '../../test/mocks/mockEntities';
-import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { NotificationService } from '../notification/notification.service';
@@ -19,7 +17,6 @@ import { CommentMentionService } from './mention/comment-mention.service';
 
 describe('CommentService', () => {
   let service: CommentService;
-  let mockApplicationService: DeepMocked<ApplicationService>;
   let mockCommentRepository: DeepMocked<Repository<Comment>>;
   let mockCommentMentionService: DeepMocked<CommentMentionService>;
   let mockNotificationService: DeepMocked<NotificationService>;
@@ -29,7 +26,6 @@ describe('CommentService', () => {
 
   beforeEach(async () => {
     mockCommentRepository = createMock<Repository<Comment>>();
-    mockApplicationService = createMock<ApplicationService>();
     mockCommentMentionService = createMock<CommentMentionService>();
     mockNotificationService = createMock<NotificationService>();
     mockCardService = createMock<CardService>();
@@ -45,10 +41,6 @@ describe('CommentService', () => {
         {
           provide: getRepositoryToken(Comment),
           useValue: mockCommentRepository,
-        },
-        {
-          provide: ApplicationService,
-          useValue: mockApplicationService,
         },
         {
           provide: CommentMentionService,
@@ -99,15 +91,15 @@ describe('CommentService', () => {
       card: fakeCard,
       cardUuid: fakeCard.uuid,
     } as Comment;
-    mockCardService.get.mockResolvedValue(fakeCard as Card);
+    mockCardService.getWithBoard.mockResolvedValue(fakeCard as Card);
     mockCommentRepository.save.mockResolvedValue({} as Comment);
-    mockApplicationService.getByCard.mockResolvedValue({} as Application);
-    mockNotificationService.createForApplication.mockResolvedValue();
+    mockNotificationService.create.mockResolvedValue();
 
     await service.create(
       'file-number',
       'new-comment',
       fakeUser as User,
+      '',
       comment.mentions,
     );
 
@@ -117,24 +109,7 @@ describe('CommentService', () => {
     expect(savedData.card).toEqual(fakeComment.card);
     expect(savedData.body).toEqual('new-comment');
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
-    expect(mockNotificationService.createForApplication).toHaveBeenCalledTimes(
-      1,
-    );
-  });
-
-  it('throw an exception when saving a comment to a non-existing application', async () => {
-    mockCardService.get.mockResolvedValue(null);
-
-    await expect(
-      service.create(
-        'file-number',
-        'new-comment',
-        {} as User,
-        comment.mentions,
-      ),
-    ).rejects.toMatchObject(new Error(`Unable to find card`));
-
-    expect(mockNotificationService.createForApplication).not.toHaveBeenCalled();
+    expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call soft remove when deleting', async () => {
@@ -148,11 +123,12 @@ describe('CommentService', () => {
   });
 
   it('should set the edited flag when editing', async () => {
+    const fakeCard = initCardMockEntity();
+    mockCardService.getWithBoard.mockResolvedValue(fakeCard as Card);
     mockCommentRepository.findOne.mockResolvedValue(comment);
     mockCommentRepository.save.mockResolvedValue({} as Comment);
-    mockApplicationService.getByCard.mockResolvedValue({} as Application);
 
-    await service.update('comment-uuid', 'new-body', comment.mentions);
+    await service.update('comment-uuid', 'new-body', '', comment.mentions);
 
     expect(mockCommentRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockCommentRepository.save).toHaveBeenCalledTimes(1);
@@ -160,16 +136,14 @@ describe('CommentService', () => {
     expect(savedData.body).toEqual('new-body');
     expect(savedData.edited).toBeTruthy();
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
-    expect(mockNotificationService.createForApplication).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
   });
 
   it('throw an exception when updating a comment body with empty string', async () => {
     mockCommentRepository.findOne.mockResolvedValue(comment);
 
     await expect(
-      service.update('comment-uuid', '', comment.mentions),
+      service.update('comment-uuid', '', '', comment.mentions),
     ).rejects.toMatchObject(
       new ServiceValidationException('Comment body must be filled.'),
     );

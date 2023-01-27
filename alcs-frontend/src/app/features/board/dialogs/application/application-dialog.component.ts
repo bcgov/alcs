@@ -25,6 +25,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   selectedApplicationStatus = '';
   selectedBoard?: string;
   selectedRegion?: string;
+  cardTitle = '';
 
   application: ApplicationDto = this.data;
   boardStatuses: BoardStatusDto[] = [];
@@ -69,6 +70,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
     this.selectedApplicationStatus = application.card!.status.code;
     this.selectedBoard = application.card!.board.code;
     this.selectedRegion = application.region.code;
+    this.cardTitle = `${application.fileNumber} (${application.applicant})`;
   }
 
   filterAssigneeList(term: string, item: AssigneeDto) {

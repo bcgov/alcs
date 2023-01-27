@@ -310,7 +310,7 @@ describe('ApplicationController', () => {
     await controller.update('11', mockUpdate);
 
     expect(applicationService.update).toHaveBeenCalledTimes(1);
-    expect(notificationService.createForApplication).not.toHaveBeenCalled();
+    expect(notificationService.create).not.toHaveBeenCalled();
   });
 
   it('should throw service validation exceptions on update if card/application does not exist', async () => {
@@ -336,7 +336,7 @@ describe('ApplicationController', () => {
     ).rejects.toMatchObject(new Error(`Card ${cardUuid} not found`));
 
     expect(cardService.update).toBeCalledTimes(0);
-    expect(notificationService.createForApplication).toBeCalledTimes(0);
+    expect(notificationService.create).toBeCalledTimes(0);
   });
 
   it('should update card status if it changed', async () => {

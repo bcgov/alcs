@@ -7,7 +7,7 @@
   <div class="header-row">
     <div class="left">
       <h3 class="card-title">
-        <span class="margin-right">{{ covenant.fileNumber }} ({{ covenant.applicant }})</span>
+        <span class="margin-right">{{ cardTitle }}</span>
         <app-application-type-pill [type]="covenantType"></app-application-type-pill>
       </h3>
     </div>
@@ -94,6 +94,6 @@
     <app-subtasks [cardUuid]="covenant.card.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
-    <app-comments [cardUuid]="covenant.card.uuid"></app-comments>
+    <app-comments [cardUuid]="covenant.card.uuid" [notificationTitle]="cardTitle"></app-comments>
   </div>
 </mat-dialog-content>
