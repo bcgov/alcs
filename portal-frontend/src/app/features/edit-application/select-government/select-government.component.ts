@@ -124,6 +124,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     const lg = this.localGovernments.find((lg) => lg.uuid === governmentUuid);
     if (lg) {
       this.localGovernment.patchValue(lg.name);
+      this.showWarning = !lg.hasGuid;
     }
   }
 }
