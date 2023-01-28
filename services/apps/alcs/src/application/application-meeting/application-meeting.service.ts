@@ -77,10 +77,7 @@ export class ApplicationMeetingService {
       existingMeeting.description = updateDto.description;
     }
 
-    if (
-      updateDto.reportStartDate !== undefined ||
-      updateDto.reportEndDate !== undefined
-    ) {
+    if (updateDto.reportStartDate || updateDto.reportEndDate) {
       if (existingMeeting.reportPause) {
         if (updateDto.reportStartDate) {
           existingMeeting.reportPause.startDate = new Date(
