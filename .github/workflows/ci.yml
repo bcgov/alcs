@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  test-frontend:
+  test-alcs-frontend:
     defaults:
       run:
         working-directory: alcs-frontend
@@ -12,7 +12,7 @@ jobs:
       matrix:
         platform: [ubuntu-latest]
         node: ["18"]
-    name: Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
+    name: ALCS Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@master
@@ -20,6 +20,24 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci --legacy-peer-deps
+      - run: npm run build
+      - run: npm run test:ci
+  test-portal-frontend:
+    defaults:
+      run:
+        working-directory: portal-frontend
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest ]
+        node: [ "18" ]
+    name: Portal Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
       - run: npm run build
       - run: npm run test:ci
   test-api:
