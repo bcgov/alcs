@@ -70,12 +70,11 @@ export class ApplicationController {
             localGovernment,
           );
 
-        const mappedApp = await this.applicationService.mapToDetailedDTO(
+        return await this.applicationService.mapToDetailedDTO(
           application,
           req.user.entity,
           localGovernment,
         );
-        return mappedApp;
       }
     }
 
@@ -84,11 +83,10 @@ export class ApplicationController {
       user,
     );
 
-    const mappedApp = await this.applicationService.mapToDetailedDTO(
+    return await this.applicationService.mapToDetailedDTO(
       application,
       req.user.entity,
     );
-    return mappedApp;
   }
 
   @Post()

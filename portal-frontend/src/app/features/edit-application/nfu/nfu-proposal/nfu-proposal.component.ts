@@ -52,22 +52,23 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
 
-        this.hectares.setValue(application.nfuHectares);
-        this.purpose.setValue(application.nfuPurpose);
-        this.outsideLands.setValue(application.nfuOutsideLands);
-        this.agricultureSupport.setValue(application.nfuAgricultureSupport);
+        this.form.patchValue({
+          hectares: application.nfuHectares,
+          purpose: application.nfuPurpose,
+          outsideLands: application.nfuOutsideLands,
+          agricultureSupport: application.nfuAgricultureSupport,
+          totalFillPlacement: application.nfuTotalFillPlacement,
+          maxFillDepth: application.nfuMaxFillDepth,
+          fillVolume: application.nfuFillVolume,
+          projectDurationYears: application.nfuProjectDurationYears,
+          projectDurationMonths: application.nfuProjectDurationMonths,
+          fillTypeDescription: application.nfuFillTypeDescription,
+          fillOriginDescription: application.nfuFillOriginDescription,
+        });
 
         if (application.nfuWillImportFill !== null) {
           this.willImportFill.setValue(application.nfuWillImportFill ? 'true' : 'false');
         }
-
-        this.totalFillPlacement.setValue(application.nfuTotalFillPlacement);
-        this.maxFillDepth.setValue(application.nfuMaxFillDepth);
-        this.fillVolume.setValue(application.nfuFillVolume);
-        this.projectDurationYears.setValue(application.nfuProjectDurationYears);
-        this.projectDurationMonths.setValue(application.nfuProjectDurationMonths);
-        this.fillTypeDescription.setValue(application.nfuFillTypeDescription);
-        this.fillOriginDescription.setValue(application.nfuFillOriginDescription);
       }
     });
   }
