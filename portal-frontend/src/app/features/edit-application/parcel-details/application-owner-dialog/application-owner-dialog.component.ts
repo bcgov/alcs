@@ -7,10 +7,10 @@ import {
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
-} from '../../../services/application-owner/application-owner.dto';
-import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application/application.dto';
-import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+} from '../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application/application.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 
 @Component({
   selector: 'app-application-owner-dialog',

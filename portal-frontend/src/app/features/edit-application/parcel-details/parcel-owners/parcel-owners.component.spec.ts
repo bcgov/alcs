@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ParcelOwnersComponent } from './parcel-owners.component';
 

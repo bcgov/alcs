@@ -92,8 +92,8 @@ describe('ApplicationService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
-  it('should make a post request for update', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
+  it('should make a put request for update', async () => {
+    mockHttpClient.put.mockReturnValue(of({}));
     let mockFileId = 'fileId';
 
     await service.updatePending('fileId', {});
@@ -104,7 +104,7 @@ describe('ApplicationService', () => {
   });
 
   it('should show an error toast if updating an application fails', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
+    mockHttpClient.put.mockReturnValue(throwError(() => ({})));
 
     await service.updatePending('file-id', {});
 

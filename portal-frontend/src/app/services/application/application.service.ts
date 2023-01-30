@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { DOCUMENT, ApplicationDto, UpdateApplicationDto } from './application.dto';
+import { DOCUMENT, ApplicationDto, ApplicationUpdateDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +52,7 @@ export class ApplicationService {
     return undefined;
   }
 
-  async updatePending(fileId: string, updateDto: UpdateApplicationDto) {
+  async updatePending(fileId: string, updateDto: ApplicationUpdateDto) {
     try {
       const result = await firstValueFrom(
         this.httpClient.put<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto)
@@ -77,7 +77,7 @@ export class ApplicationService {
     return undefined;
   }
 
-  async submitToAlcs(fileId: string, updateDto: UpdateApplicationDto) {
+  async submitToAlcs(fileId: string, updateDto: ApplicationUpdateDto) {
     try {
       await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
       this.toastService.showSuccessToast('Application Submitted');
