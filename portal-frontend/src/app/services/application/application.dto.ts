@@ -60,7 +60,7 @@ export interface UpdateApplicationDto {
   applicant?: string;
   localGovernmentUuid?: string;
   typeCode?: string;
-
+  //Land use fields
   parcelsAgricultureDescription?: string | null;
   parcelsAgricultureImprovementDescription?: string | null;
   parcelsNonAgricultureUseDescription?: string | null;
