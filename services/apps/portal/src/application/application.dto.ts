@@ -1,8 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
+
+export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
 export class ApplicationDto {
   @AutoMap()
@@ -68,59 +76,48 @@ export class UpdateApplicationDto {
   @IsString()
   @IsOptional()
   applicant?: string;
-
   @IsUUID()
   @IsOptional()
   localGovernmentUuid?: string;
-
   @IsString()
   @IsOptional()
   typeCode?: string;
-
   @IsString()
   @IsOptional()
   returnedComment?: string;
-
   @IsString()
   @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   parcelsAgricultureDescription?: string;
-
   @IsString()
   @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   parcelsAgricultureImprovementDescription?: string;
-
   @IsString()
   @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   parcelsNonAgricultureUseDescription?: string;
-
   @IsString()
   @IsOptional()
   northLandUseType?: string;
-
   @IsString()
   @IsOptional()
   northLandUseTypeDescription?: string;
-
   @IsString()
   @IsOptional()
   eastLandUseType?: string;
-
   @IsString()
   @IsOptional()
   eastLandUseTypeDescription?: string;
-
   @IsString()
   @IsOptional()
   southLandUseType?: string;
-
   @IsString()
   @IsOptional()
   southLandUseTypeDescription?: string;
-
   @IsString()
   @IsOptional()
   westLandUseType?: string;
-
   @IsString()
   @IsOptional()
   westLandUseTypeDescription?: string;

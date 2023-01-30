@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -104,8 +105,7 @@ export class ApplicationController {
     };
   }
 
-  // TODO clean up this, switch to put
-  @Post('/:fileId')
+  @Put('/:fileId')
   async update(
     @Param('fileId') fileId: string,
     @Body() updateDto: UpdateApplicationDto,
@@ -113,24 +113,7 @@ export class ApplicationController {
   ) {
     await this.applicationService.verifyAccess(fileId, req.user.entity);
 
-    const application = await this.applicationService.update(fileId, {
-      applicant: updateDto.applicant,
-      localGovernmentUuid: updateDto.localGovernmentUuid,
-      typeCode: updateDto.typeCode,
-      parcelsAgricultureDescription: updateDto.parcelsAgricultureDescription,
-      parcelsAgricultureImprovementDescription:
-        updateDto.parcelsAgricultureImprovementDescription,
-      parcelsNonAgricultureUseDescription:
-        updateDto.parcelsNonAgricultureUseDescription,
-      northLandUseType: updateDto.northLandUseType,
-      northLandUseTypeDescription: updateDto.northLandUseTypeDescription,
-      eastLandUseType: updateDto.eastLandUseType,
-      eastLandUseTypeDescription: updateDto.eastLandUseTypeDescription,
-      southLandUseType: updateDto.southLandUseType,
-      southLandUseTypeDescription: updateDto.southLandUseTypeDescription,
-      westLandUseType: updateDto.westLandUseType,
-      westLandUseTypeDescription: updateDto.westLandUseTypeDescription,
-    });
+    const application = await this.applicationService.update(fileId, updateDto);
 
     const mappedApps = await this.applicationService.mapToDTOs(
       [application],

@@ -81,7 +81,6 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(mapper, ApplicationStatus, ApplicationStatusDto);
 
-      // TODO check if forMember needed since the applicationDto already includes it, probably yes
       createMap(
         mapper,
         Application,

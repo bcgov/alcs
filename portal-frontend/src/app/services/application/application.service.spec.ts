@@ -98,9 +98,9 @@ describe('ApplicationService', () => {
 
     await service.updatePending('fileId', {});
 
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('application');
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain(mockFileId);
+    expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.put.mock.calls[0][0]).toContain('application');
+    expect(mockHttpClient.put.mock.calls[0][0]).toContain(mockFileId);
   });
 
   it('should show an error toast if updating an application fails', async () => {
@@ -108,7 +108,7 @@ describe('ApplicationService', () => {
 
     await service.updatePending('file-id', {});
 
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 

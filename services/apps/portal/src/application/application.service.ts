@@ -92,50 +92,45 @@ export class ApplicationService {
     return alcsApplicationNumber.fileNumber;
   }
 
-  // TODO clean up this
   async update(fileNumber: string, updateDto: UpdateApplicationDto) {
-    const application = await this.getOrFail(fileNumber);
+    let application = await this.getOrFail(fileNumber);
 
-    application.applicant = updateDto.applicant || application.applicant;
-    application.localGovernmentUuid =
-      updateDto.localGovernmentUuid || application.localGovernmentUuid;
+    application.applicant = updateDto.applicant; // TODO is this still a thing?
     application.typeCode = updateDto.typeCode || application.typeCode;
-    application.returnedComment =
-      updateDto.returnedComment || application.returnedComment;
+    application.localGovernmentUuid = updateDto.localGovernmentUuid;
+    application.returnedComment = updateDto.returnedComment;
 
-    application.parcelsAgricultureDescription =
-      updateDto.parcelsAgricultureDescription ||
-      application.parcelsAgricultureDescription;
-    application.parcelsAgricultureImprovementDescription =
-      updateDto.parcelsAgricultureImprovementDescription ||
-      application.parcelsAgricultureImprovementDescription;
-    application.parcelsNonAgricultureUseDescription =
-      updateDto.parcelsNonAgricultureUseDescription ||
-      application.parcelsNonAgricultureUseDescription;
-    application.northLandUseType =
-      updateDto.northLandUseType || application.northLandUseType;
-    application.northLandUseTypeDescription =
-      updateDto.northLandUseTypeDescription ||
-      application.northLandUseTypeDescription;
-    application.eastLandUseType =
-      updateDto.eastLandUseType || application.eastLandUseType;
-    application.eastLandUseTypeDescription =
-      updateDto.eastLandUseTypeDescription ||
-      application.eastLandUseTypeDescription;
-    application.southLandUseType =
-      updateDto.southLandUseType || application.southLandUseType;
-    application.southLandUseTypeDescription =
-      updateDto.southLandUseTypeDescription ||
-      application.southLandUseTypeDescription;
-    application.westLandUseType =
-      updateDto.westLandUseType || application.westLandUseType;
-    application.westLandUseTypeDescription =
-      updateDto.westLandUseTypeDescription ||
-      application.westLandUseTypeDescription;
+    application = this.setLandUseFields(application, updateDto);
 
     await this.applicationRepository.save(application);
 
     return this.getOrFail(application.fileNumber);
+  }
+
+  private setLandUseFields(
+    application: Application,
+    updateDto: UpdateApplicationDto,
+  ) {
+    application.parcelsAgricultureDescription =
+      updateDto.parcelsAgricultureDescription;
+    application.parcelsAgricultureImprovementDescription =
+      updateDto.parcelsAgricultureImprovementDescription;
+    application.parcelsNonAgricultureUseDescription =
+      updateDto.parcelsNonAgricultureUseDescription;
+    application.northLandUseType = updateDto.northLandUseType;
+    application.northLandUseTypeDescription =
+      updateDto.northLandUseTypeDescription;
+    application.eastLandUseType = updateDto.eastLandUseType;
+    application.eastLandUseTypeDescription =
+      updateDto.eastLandUseTypeDescription;
+    application.southLandUseType = updateDto.southLandUseType;
+    application.southLandUseTypeDescription =
+      updateDto.southLandUseTypeDescription;
+    application.westLandUseType = updateDto.westLandUseType;
+    application.westLandUseTypeDescription =
+      updateDto.westLandUseTypeDescription;
+
+    return application;
   }
 
   async submitToLg(fileNumber: string) {

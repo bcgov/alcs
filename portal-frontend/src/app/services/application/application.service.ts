@@ -55,7 +55,7 @@ export class ApplicationService {
   async updatePending(fileId: string, updateDto: UpdateApplicationDto) {
     try {
       const result = await firstValueFrom(
-        this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto)
+        this.httpClient.put<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto)
       );
       this.toastService.showSuccessToast('Application Saved');
       return result;
