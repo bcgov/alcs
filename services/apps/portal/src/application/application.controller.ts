@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -73,12 +74,12 @@ export class ApplicationController {
             localGovernment,
           );
 
-        const mappedApps = await this.applicationService.mapToDTOs(
-          [application],
+        const mappedApp = await this.applicationService.mapToDetailedDTO(
+          application,
           req.user.entity,
           localGovernment,
         );
-        return mappedApps[0];
+        return mappedApp;
       }
     }
 
@@ -87,11 +88,11 @@ export class ApplicationController {
       user,
     );
 
-    const mappedApps = await this.applicationService.mapToDTOs(
-      [application],
+    const mappedApp = await this.applicationService.mapToDetailedDTO(
+      application,
       req.user.entity,
     );
-    return mappedApps[0];
+    return mappedApp;
   }
 
   @Post()
@@ -104,7 +105,7 @@ export class ApplicationController {
     };
   }
 
-  @Post('/:fileId')
+  @Put('/:fileId')
   async update(
     @Param('fileId') fileId: string,
     @Body() updateDto: UpdateApplicationDto,
@@ -112,11 +113,7 @@ export class ApplicationController {
   ) {
     await this.applicationService.verifyAccess(fileId, req.user.entity);
 
-    const application = await this.applicationService.update(fileId, {
-      applicant: updateDto.applicant,
-      localGovernmentUuid: updateDto.localGovernmentUuid,
-      typeCode: updateDto.typeCode,
-    });
+    const application = await this.applicationService.update(fileId, updateDto);
 
     const mappedApps = await this.applicationService.mapToDTOs(
       [application],

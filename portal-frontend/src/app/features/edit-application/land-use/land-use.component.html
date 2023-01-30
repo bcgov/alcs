@@ -1,0 +1,162 @@
+<section>
+  <h2>Land Use</h2>
+  <div>
+    <p>Describe the current land use of parcel(s) under application and adjacent parcels.</p>
+    <app-warning-banner>
+      Please consult the
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+        >'What the Commission Considers'</a
+      >
+      page of the ALC website for more information.
+    </app-warning-banner>
+  </div>
+
+  <form [formGroup]="landUseForm" class="land-use-form">
+    <h5>Land Use of Parcel(s) under Application</h5>
+    <div class="full-row">
+      <label for="parcelsAgricultureDescription">
+        Quantify and describe in detail all agriculture that currently takes place on the parcel(s).
+      </label>
+      <mat-form-field class="display-block" appearance="outline">
+        <textarea
+          #parcelsAgricultureDescription
+          id="parcelsAgricultureDescription"
+          matInput
+          name="questionText"
+          formControlName="parcelsAgricultureDescription"
+          rows="4"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - parcelsAgricultureDescription.textLength }}</span>
+    </div>
+    <div class="full-row">
+      <h6>
+        <label for="parcelsAgricultureImprovementDescription">
+          Quantify and describe in detail all agricultural improvements made to the parcel(s).
+        </label>
+      </h6>
+      <mat-form-field class="display-block" appearance="outline">
+        <textarea
+          #parcelsAgricultureImprovementDescription
+          id="parcelsAgricultureImprovementDescription"
+          matInput
+          name="questionText"
+          formControlName="parcelsAgricultureImprovementDescription"
+          rows="4"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - parcelsAgricultureImprovementDescription.textLength }}</span>
+    </div>
+    <div class="full-row">
+      <label for="parcelsNonAgricultureUseDescription">
+        Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
+      </label>
+      <mat-form-field class="display-block" appearance="outline">
+        <textarea
+          #parcelsNonAgricultureUseDescription
+          id="parcelsNonAgricultureUseDescription"
+          matInput
+          name="questionText"
+          formControlName="parcelsNonAgricultureUseDescription"
+          rows="4"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescription.textLength }}</span>
+    </div>
+
+    <div class="full-row">
+      <label for="northLandUseType">Identify the land uses surrounding the parcel(s) under application.</label>
+      <div class="land-use-type-wrapper">
+        <mat-form-field class="land-use-type">
+          <mat-select id="northLandUseType" placeholder="Main Land Use Type" formControlName="northLandUseType">
+            <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
+              enum.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <input
+            id="northLandUseTypeDescription"
+            placeholder="Specific Activity"
+            matInput
+            formControlName="northLandUseTypeDescription"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label for="eastLandUseType">Identify the land uses surrounding the parcel(s) under application.</label>
+      <div class="land-use-type-wrapper">
+        <mat-form-field class="land-use-type">
+          <mat-select id="eastLandUseType" placeholder="Main Land Use Type" formControlName="eastLandUseType">
+            <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
+              enum.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <input
+            id="eastLandUseTypeDescription"
+            placeholder="Specific Activity"
+            matInput
+            formControlName="eastLandUseTypeDescription"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label for="southLandUseType">Identify the land uses surrounding the parcel(s) under application.</label>
+      <div class="land-use-type-wrapper">
+        <mat-form-field class="land-use-type">
+          <mat-select id="southLandUseType" placeholder="Main Land Use Type" formControlName="southLandUseType">
+            <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
+              enum.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <input
+            id="southLandUseTypeDescription"
+            placeholder="Specific Activity"
+            matInput
+            formControlName="southLandUseTypeDescription"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label for="westLandUseType">Identify the land uses surrounding the parcel(s) under application.</label>
+      <div class="land-use-type-wrapper">
+        <mat-form-field class="land-use-type">
+          <mat-select id="westLandUseType" placeholder="Main Land Use Type" formControlName="westLandUseType">
+            <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
+              enum.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <input
+            id="westLandUseTypeDescription"
+            placeholder="Specific Activity"
+            matInput
+            formControlName="westLandUseTypeDescription"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
+    </div>
+  </div>
+</section>

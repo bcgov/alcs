@@ -12,6 +12,7 @@ import { ParcelDetailsComponent } from './parcel-details/parcel-details.componen
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-owners/parcel-owners.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { LandUseComponent } from './land-use/land-use.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
     ParcelOwnersComponent,
     ApplicationOwnersDialogComponent,
     ApplicationOwnerDialogComponent,
+    LandUseComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgxMaskDirective, NgxMaskPipe],
 })
