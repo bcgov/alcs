@@ -61,7 +61,7 @@ export class ApplicationOwner extends Base {
   @JoinColumn()
   corporateSummary: Document | null;
 
-  @Column()
+  @Column({ nullable: true })
   corporateSummaryUuid: string | null;
 
   @AutoMap()

@@ -12,11 +12,7 @@ import { ApplicationDocumentService } from './application-document/application-d
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationController } from './application.controller';
-import {
-  ApplicationDetailedDto,
-  ApplicationDto,
-  ApplicationSubmitToAlcsDto,
-} from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -255,15 +251,11 @@ describe('ApplicationController', () => {
       }),
     );
 
-    await controller.submitAsApplicant(
-      mockFileId,
-      {} as ApplicationSubmitToAlcsDto,
-      {
-        user: {
-          entity: new User(),
-        },
+    await controller.submitAsApplicant(mockFileId, {
+      user: {
+        entity: new User(),
       },
-    );
+    });
 
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
@@ -278,15 +270,11 @@ describe('ApplicationController', () => {
       }),
     );
 
-    await controller.submitAsApplicant(
-      mockFileId,
-      {} as ApplicationSubmitToAlcsDto,
-      {
-        user: {
-          entity: new User(),
-        },
+    await controller.submitAsApplicant(mockFileId, {
+      user: {
+        entity: new User(),
       },
-    );
+    });
 
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);

@@ -16,11 +16,7 @@ import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import {
-  ApplicationSubmitToAlcsDto,
-  CreateApplicationDto,
-  UpdateApplicationDto,
-} from './application.dto';
+import { ApplicationCreateDto, ApplicationUpdateDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
 @Controller('application')
@@ -74,12 +70,11 @@ export class ApplicationController {
             localGovernment,
           );
 
-        const mappedApp = await this.applicationService.mapToDetailedDTO(
+        return await this.applicationService.mapToDetailedDTO(
           application,
           req.user.entity,
           localGovernment,
         );
-        return mappedApp;
       }
     }
 
@@ -88,15 +83,14 @@ export class ApplicationController {
       user,
     );
 
-    const mappedApp = await this.applicationService.mapToDetailedDTO(
+    return await this.applicationService.mapToDetailedDTO(
       application,
       req.user.entity,
     );
-    return mappedApp;
   }
 
   @Post()
-  async create(@Req() req, @Body() body: CreateApplicationDto) {
+  async create(@Req() req, @Body() body: ApplicationCreateDto) {
     const { type } = body;
     const user = req.user.entity as User;
     const newFileNumber = await this.applicationService.create(type, user);
@@ -108,7 +102,7 @@ export class ApplicationController {
   @Put('/:fileId')
   async update(
     @Param('fileId') fileId: string,
-    @Body() updateDto: UpdateApplicationDto,
+    @Body() updateDto: ApplicationUpdateDto,
     @Req() req,
   ) {
     await this.applicationService.verifyAccess(fileId, req.user.entity);
@@ -141,18 +135,14 @@ export class ApplicationController {
   }
 
   @Post('/alcs/submit/:fileId')
-  async submitAsApplicant(
-    @Param('fileId') fileId: string,
-    @Body() data: ApplicationSubmitToAlcsDto,
-    @Req() req,
-  ) {
+  async submitAsApplicant(@Param('fileId') fileId: string, @Req() req) {
     const application = await this.applicationService.getIfCreator(
       fileId,
       req.user.entity,
     );
 
     if (application.typeCode === 'TURP') {
-      return await this.applicationService.submitToAlcs(fileId, data);
+      return await this.applicationService.submitToAlcs(fileId);
     } else {
       return await this.applicationService.submitToLg(fileId);
     }

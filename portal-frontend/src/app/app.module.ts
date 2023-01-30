@@ -21,8 +21,6 @@ import { ConfirmationDialogService } from './shared/confirmation-dialog/confirma
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
-import { ApplicationOwnerDialogComponent } from './features/edit-application/application-owner-dialog/application-owner-dialog.component';
-import { ParcelOwnersComponent } from './features/edit-application/parcel-owners/parcel-owners.component';
 
 @NgModule({
   declarations: [

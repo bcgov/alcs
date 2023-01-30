@@ -11,8 +11,8 @@ import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/applicati
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
-import { ApplicationOwnerDialogComponent } from '../../application-owner-dialog/application-owner-dialog.component';
-import { ApplicationOwnersDialogComponent } from '../../application-owners-dialog/application-owners-dialog.component';
+import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
+import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/application-owners-dialog.component';
 
 export interface ParcelEntryFormData {
   uuid: string;

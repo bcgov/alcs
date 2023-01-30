@@ -8,6 +8,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { In, Repository } from 'typeorm';
+import { UpdateApplicationDto } from '../../../alcs/src/application/application.dto';
 import {
   ApplicationGrpcResponse,
   ApplicationReviewGrpc,
@@ -25,8 +26,7 @@ import { ApplicationStatus } from './application-status/application-status.entit
 import {
   ApplicationDetailedDto,
   ApplicationDto,
-  ApplicationSubmitToAlcsDto,
-  UpdateApplicationDto,
+  ApplicationUpdateDto,
 } from './application.dto';
 import { Application } from './application.entity';
 
@@ -92,15 +92,16 @@ export class ApplicationService {
     return alcsApplicationNumber.fileNumber;
   }
 
-  async update(fileNumber: string, updateDto: UpdateApplicationDto) {
-    let application = await this.getOrFail(fileNumber);
+  async update(fileNumber: string, updateDto: ApplicationUpdateDto) {
+    const application = await this.getOrFail(fileNumber);
 
     application.applicant = updateDto.applicant; // TODO is this still a thing?
     application.typeCode = updateDto.typeCode || application.typeCode;
     application.localGovernmentUuid = updateDto.localGovernmentUuid;
     application.returnedComment = updateDto.returnedComment;
 
-    application = this.setLandUseFields(application, updateDto);
+    this.setLandUseFields(application, updateDto);
+    this.setNFUFields(application, updateDto);
 
     await this.applicationRepository.save(application);
 
@@ -109,7 +110,7 @@ export class ApplicationService {
 
   private setLandUseFields(
     application: Application,
-    updateDto: UpdateApplicationDto,
+    updateDto: ApplicationUpdateDto,
   ) {
     application.parcelsAgricultureDescription =
       updateDto.parcelsAgricultureDescription;
@@ -156,11 +157,8 @@ export class ApplicationService {
 
   async submitToAlcs(
     fileNumber: string,
-    data: ApplicationSubmitToAlcsDto,
     applicationReview?: CompletedApplicationReview,
   ) {
-    await this.update(fileNumber, data);
-
     const application = await this.applicationRepository.findOneOrFail({
       where: { fileNumber },
       relations: {
@@ -403,5 +401,37 @@ export class ApplicationService {
       application.fileNumber,
       APPLICATION_STATUS.CANCELLED,
     );
+  }
+
+  private setNFUFields(
+    application: Application,
+    updateDto: ApplicationUpdateDto,
+  ) {
+    application.nfuHectares = updateDto.nfuHectares || application.nfuHectares;
+    application.nfuPurpose = updateDto.nfuPurpose || application.nfuPurpose;
+    application.nfuOutsideLands =
+      updateDto.nfuOutsideLands || application.nfuOutsideLands;
+    application.nfuAgricultureSupport =
+      updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
+    application.nfuWillImportFill =
+      updateDto.nfuWillImportFill || application.nfuWillImportFill;
+    application.nfuTotalFillPlacement =
+      updateDto.nfuTotalFillPlacement || application.nfuTotalFillPlacement;
+    application.nfuMaxFillDepth =
+      updateDto.nfuMaxFillDepth || application.nfuMaxFillDepth;
+    application.nfuFillVolume =
+      updateDto.nfuFillVolume || application.nfuFillVolume;
+    application.nfuProjectDurationYears =
+      updateDto.nfuProjectDurationYears || application.nfuProjectDurationYears;
+    application.nfuProjectDurationMonths =
+      updateDto.nfuProjectDurationMonths ||
+      application.nfuProjectDurationMonths;
+    application.nfuFillTypeDescription =
+      updateDto.nfuFillTypeDescription || application.nfuFillTypeDescription;
+    application.nfuFillOriginDescription =
+      updateDto.nfuFillOriginDescription ||
+      application.nfuFillOriginDescription;
+
+    return application;
   }
 }

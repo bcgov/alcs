@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
+import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationOwnersDialogComponent } from './application-owners-dialog.component';
 
 describe('ApplicationOwnersDialogComponent', () => {

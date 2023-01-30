@@ -265,23 +265,14 @@ describe('ApplicationService', () => {
         throw new Error('failed');
       },
     );
-    mockRepository.findOne.mockResolvedValue(mockApplication);
-    mockRepository.save.mockResolvedValue(mockApplication);
     mockRepository.findOneOrFail.mockResolvedValue(mockApplication);
 
-    await expect(
-      service.submitToAlcs(fileNumber, {
-        applicant,
-        localGovernmentUuid,
-      }),
-    ).rejects.toMatchObject(
+    await expect(service.submitToAlcs(fileNumber)).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
     );
 
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
-    expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(2);
   });
 
   it('should call out to grpc service on submitToAlcs', async () => {
@@ -312,25 +303,18 @@ describe('ApplicationService', () => {
       of({ fileNumber, applicant } as ApplicationGrpcResponse),
     );
     mockRepository.update.mockResolvedValue({} as any);
-    mockRepository.findOne.mockResolvedValue(mockApplication);
-    mockRepository.save.mockResolvedValue(mockApplication);
     mockRepository.findOneOrFail.mockResolvedValue(mockApplication);
 
     mockStatusRepository.findOneOrFail.mockResolvedValue(
       new ApplicationStatus(),
     );
 
-    const res = await service.submitToAlcs(fileNumber, {
-      applicant,
-      localGovernmentUuid,
-    });
+    const res = await service.submitToAlcs(fileNumber);
 
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
     expect(res.applicant).toEqual(mockApplication.applicant);
     expect(res.fileNumber).toEqual(mockApplication.fileNumber);
-    expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(2);
   });
 
   it('should update fields if application exists', async () => {

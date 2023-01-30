@@ -54,9 +54,23 @@ export interface ApplicationDto {
   southLandUseTypeDescription?: string | null;
   westLandUseType?: string | null;
   westLandUseTypeDescription?: string | null;
+
+  //NFU Specific Fields
+  nfuHectares: number | null;
+  nfuPurpose: string | null;
+  nfuOutsideLands: string | null;
+  nfuAgricultureSupport: string | null;
+  nfuWillImportFill: boolean | null;
+  nfuTotalFillPlacement: number | null;
+  nfuMaxFillDepth: number | null;
+  nfuFillVolume: number | null;
+  nfuProjectDurationYears: number | null;
+  nfuProjectDurationMonths: number | null;
+  nfuFillTypeDescription: string | null;
+  nfuFillOriginDescription: string | null;
 }
 
-export interface UpdateApplicationDto {
+export interface ApplicationUpdateDto {
   applicant?: string;
   localGovernmentUuid?: string;
   typeCode?: string;
@@ -72,4 +86,18 @@ export interface UpdateApplicationDto {
   southLandUseTypeDescription?: string | null;
   westLandUseType?: string | null;
   westLandUseTypeDescription?: string | null;
+
+  //NFU Specific Fields
+  nfuHectares?: number | null;
+  nfuPurpose?: string | null;
+  nfuOutsideLands?: string | null;
+  nfuAgricultureSupport?: string | null;
+  nfuWillImportFill?: boolean | null;
+  nfuTotalFillPlacement?: number | null;
+  nfuMaxFillDepth?: number | null;
+  nfuFillVolume?: number | null;
+  nfuProjectDurationYears?: number | null;
+  nfuProjectDurationMonths?: number | null;
+  nfuFillTypeDescription?: string | null;
+  nfuFillOriginDescription?: string | null;
 }

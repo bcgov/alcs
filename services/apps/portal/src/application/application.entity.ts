@@ -186,4 +186,53 @@ export class Application extends BaseEntity {
 
   @OneToMany(() => ApplicationOwner, (owner) => owner.application)
   owners: ApplicationOwner[];
+
+  //NFU Specific Fields
+  @AutoMap(() => Number)
+  @Column({ type: 'text', nullable: true })
+  nfuHectares: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  nfuPurpose: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  nfuOutsideLands: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  nfuAgricultureSupport: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  nfuWillImportFill: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({ type: 'int', nullable: true })
+  nfuTotalFillPlacement: number | null;
+
+  @AutoMap(() => Number)
+  @Column({ type: 'int', nullable: true })
+  nfuMaxFillDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({ type: 'int', nullable: true })
+  nfuFillVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({ type: 'int4', nullable: true })
+  nfuProjectDurationYears: number | null;
+
+  @AutoMap(() => Number)
+  @Column({ type: 'int4', nullable: true })
+  nfuProjectDurationMonths: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  nfuFillTypeDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  nfuFillOriginDescription: string | null;
 }

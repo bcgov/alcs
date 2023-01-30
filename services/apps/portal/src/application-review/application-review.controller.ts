@@ -105,22 +105,15 @@ export class ApplicationReviewController {
       userLocalGovernment,
     );
 
-    const completedApplication = this.applicationReviewService.verifyComplete(
+    const completedReview = this.applicationReviewService.verifyComplete(
       application,
       applicationReview,
       userLocalGovernment.isFirstNation,
     );
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-      if (completedApplication.isAuthorized !== false) {
-        await this.applicationService.submitToAlcs(
-          fileNumber,
-          {
-            applicant: application.applicant!,
-            localGovernmentUuid: application.localGovernmentUuid!,
-          },
-          completedApplication,
-        );
+      if (completedReview.isAuthorized !== false) {
+        await this.applicationService.submitToAlcs(fileNumber, completedReview);
       } else {
         await this.applicationService.updateStatus(
           fileNumber,
