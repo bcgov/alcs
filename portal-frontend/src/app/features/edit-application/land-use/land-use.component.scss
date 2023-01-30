@@ -1,4 +1,6 @@
-@import '../../../../styles/functions.scss';
+@import '../../../../styles/functions';
+@import '../../../../styles/typography';
+
 .land-use-form {
   display: grid;
   grid-template-columns: 1fr;
@@ -7,9 +9,20 @@
   .land-use-type-wrapper {
     display: flex;
     gap: rem(24);
+    flex-wrap: wrap;
 
     .land-use-type {
-      width: 36%;
+      width: 100%;
+    }
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .land-use-type-wrapper {
+      flex-wrap: nowrap;
+
+      .land-use-type {
+        width: 64%;
+      }
     }
   }
 }
