@@ -12,7 +12,11 @@ import { ApplicationDocumentService } from './application-document/application-d
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationController } from './application.controller';
-import { ApplicationDto, ApplicationSubmitToAlcsDto } from './application.dto';
+import {
+  ApplicationDetailedDto,
+  ApplicationDto,
+  ApplicationSubmitToAlcsDto,
+} from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -157,7 +161,9 @@ describe('ApplicationController', () => {
   });
 
   it('should call out to service when fetching an application', async () => {
-    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
+    mockAppService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationDetailedDto,
+    );
 
     const application = await controller.getApplication(
       {
@@ -182,7 +188,9 @@ describe('ApplicationController', () => {
     });
     const mockApplication = new Application();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
-    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
+    mockAppService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationDetailedDto,
+    );
 
     const application = await controller.getApplication(
       {
