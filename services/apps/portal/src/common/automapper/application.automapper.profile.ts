@@ -7,7 +7,10 @@ import { ApplicationOwnerDto } from '../../application/application-owner/applica
 import { ApplicationOwner } from '../../application/application-owner/application-owner.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
-import { ApplicationDto } from '../../application/application.dto';
+import {
+  ApplicationDetailedDto,
+  ApplicationDto,
+} from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
 
 @Injectable()
@@ -77,6 +80,41 @@ export class ApplicationProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationStatus, ApplicationStatusDto);
+
+      // TODO check if forMember needed since the applicationDto already includes it, probably yes
+      createMap(
+        mapper,
+        Application,
+        ApplicationDetailedDto,
+        forMember(
+          (a) => a.documents,
+          mapFrom((ad) => {
+            if (ad.documents) {
+              return this.mapper.mapArray(
+                ad.documents,
+                ApplicationDocument,
+                ApplicationDocumentDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+        forMember(
+          (a) => a.owners,
+          mapFrom((ad) => {
+            if (ad.owners) {
+              return this.mapper.mapArray(
+                ad.owners,
+                ApplicationOwner,
+                ApplicationOwnerDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+      );
     };
   }
 }

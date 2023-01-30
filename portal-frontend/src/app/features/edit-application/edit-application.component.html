@@ -29,7 +29,7 @@
   </mat-step>
   <mat-step label="Land Use">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <p>Land Use</p>
+    <app-land-use [$application]="$application"></app-land-use>
   </mat-step>
   <mat-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>

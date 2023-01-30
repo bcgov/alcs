@@ -73,12 +73,12 @@ export class ApplicationController {
             localGovernment,
           );
 
-        const mappedApps = await this.applicationService.mapToDTOs(
-          [application],
+        const mappedApp = await this.applicationService.mapToDetailedDTO(
+          application,
           req.user.entity,
           localGovernment,
         );
-        return mappedApps[0];
+        return mappedApp;
       }
     }
 
@@ -87,11 +87,11 @@ export class ApplicationController {
       user,
     );
 
-    const mappedApps = await this.applicationService.mapToDTOs(
-      [application],
+    const mappedApp = await this.applicationService.mapToDetailedDTO(
+      application,
       req.user.entity,
     );
-    return mappedApps[0];
+    return mappedApp;
   }
 
   @Post()
@@ -104,6 +104,7 @@ export class ApplicationController {
     };
   }
 
+  // TODO clean up this, switch to put
   @Post('/:fileId')
   async update(
     @Param('fileId') fileId: string,
@@ -116,6 +117,19 @@ export class ApplicationController {
       applicant: updateDto.applicant,
       localGovernmentUuid: updateDto.localGovernmentUuid,
       typeCode: updateDto.typeCode,
+      parcelsAgricultureDescription: updateDto.parcelsAgricultureDescription,
+      parcelsAgricultureImprovementDescription:
+        updateDto.parcelsAgricultureImprovementDescription,
+      parcelsNonAgricultureUseDescription:
+        updateDto.parcelsNonAgricultureUseDescription,
+      northLandUseType: updateDto.northLandUseType,
+      northLandUseTypeDescription: updateDto.northLandUseTypeDescription,
+      eastLandUseType: updateDto.eastLandUseType,
+      eastLandUseTypeDescription: updateDto.eastLandUseTypeDescription,
+      southLandUseType: updateDto.southLandUseType,
+      southLandUseTypeDescription: updateDto.southLandUseTypeDescription,
+      westLandUseType: updateDto.westLandUseType,
+      westLandUseTypeDescription: updateDto.westLandUseTypeDescription,
     });
 
     const mappedApps = await this.applicationService.mapToDTOs(

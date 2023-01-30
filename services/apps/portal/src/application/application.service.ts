@@ -23,6 +23,7 @@ import { User } from '../user/user.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import {
+  ApplicationDetailedDto,
   ApplicationDto,
   ApplicationSubmitToAlcsDto,
   UpdateApplicationDto,
@@ -91,6 +92,7 @@ export class ApplicationService {
     return alcsApplicationNumber.fileNumber;
   }
 
+  // TODO clean up this
   async update(fileNumber: string, updateDto: UpdateApplicationDto) {
     const application = await this.getOrFail(fileNumber);
 
@@ -100,6 +102,36 @@ export class ApplicationService {
     application.typeCode = updateDto.typeCode || application.typeCode;
     application.returnedComment =
       updateDto.returnedComment || application.returnedComment;
+
+    application.parcelsAgricultureDescription =
+      updateDto.parcelsAgricultureDescription ||
+      application.parcelsAgricultureDescription;
+    application.parcelsAgricultureImprovementDescription =
+      updateDto.parcelsAgricultureImprovementDescription ||
+      application.parcelsAgricultureImprovementDescription;
+    application.parcelsNonAgricultureUseDescription =
+      updateDto.parcelsNonAgricultureUseDescription ||
+      application.parcelsNonAgricultureUseDescription;
+    application.northLandUseType =
+      updateDto.northLandUseType || application.northLandUseType;
+    application.northLandUseTypeDescription =
+      updateDto.northLandUseTypeDescription ||
+      application.northLandUseTypeDescription;
+    application.eastLandUseType =
+      updateDto.eastLandUseType || application.eastLandUseType;
+    application.eastLandUseTypeDescription =
+      updateDto.eastLandUseTypeDescription ||
+      application.eastLandUseTypeDescription;
+    application.southLandUseType =
+      updateDto.southLandUseType || application.southLandUseType;
+    application.southLandUseTypeDescription =
+      updateDto.southLandUseTypeDescription ||
+      application.southLandUseTypeDescription;
+    application.westLandUseType =
+      updateDto.westLandUseType || application.westLandUseType;
+    application.westLandUseTypeDescription =
+      updateDto.westLandUseTypeDescription ||
+      application.westLandUseTypeDescription;
 
     await this.applicationRepository.save(application);
 
@@ -344,6 +376,31 @@ export class ApplicationService {
         userGovernment &&
         userGovernment.uuid === app.localGovernmentUuid,
     }));
+  }
+
+  async mapToDetailedDTO(
+    application: Application,
+    user: User,
+    userGovernment?: LocalGovernment,
+  ) {
+    const types = await this.applicationTypeService.list();
+    return {
+      ...this.mapper.map(application, Application, ApplicationDetailedDto),
+      type: types.find((type) => type.code === application.typeCode)!.label,
+      canEdit: [
+        APPLICATION_STATUS.IN_PROGRESS,
+        APPLICATION_STATUS.INCOMPLETE,
+        APPLICATION_STATUS.WRONG_GOV,
+      ].includes(application.status.code as APPLICATION_STATUS),
+      canView: application.status.code !== APPLICATION_STATUS.CANCELLED,
+      canReview:
+        [
+          APPLICATION_STATUS.SUBMITTED_TO_LG,
+          APPLICATION_STATUS.IN_REVIEW,
+        ].includes(application.status.code as APPLICATION_STATUS) &&
+        userGovernment &&
+        userGovernment.uuid === application.localGovernmentUuid,
+    };
   }
 
   async cancel(application: Application) {

@@ -33,6 +33,31 @@ export class ApplicationDto {
   canView: boolean;
 }
 
+export class ApplicationDetailedDto extends ApplicationDto {
+  @AutoMap()
+  parcelsAgricultureDescription: string;
+  @AutoMap()
+  parcelsAgricultureImprovementDescription: string;
+  @AutoMap()
+  parcelsNonAgricultureUseDescription: string;
+  @AutoMap()
+  northLandUseType: string;
+  @AutoMap()
+  northLandUseTypeDescription: string;
+  @AutoMap()
+  eastLandUseType: string;
+  @AutoMap()
+  eastLandUseTypeDescription: string;
+  @AutoMap()
+  southLandUseType: string;
+  @AutoMap()
+  southLandUseTypeDescription: string;
+  @AutoMap()
+  westLandUseType: string;
+  @AutoMap()
+  westLandUseTypeDescription: string;
+}
+
 export class CreateApplicationDto {
   @IsString()
   @IsNotEmpty()
@@ -55,6 +80,50 @@ export class UpdateApplicationDto {
   @IsString()
   @IsOptional()
   returnedComment?: string;
+
+  @IsString()
+  @IsOptional()
+  parcelsAgricultureDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  parcelsAgricultureImprovementDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  parcelsNonAgricultureUseDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  northLandUseType?: string;
+
+  @IsString()
+  @IsOptional()
+  northLandUseTypeDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  eastLandUseType?: string;
+
+  @IsString()
+  @IsOptional()
+  eastLandUseTypeDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  southLandUseType?: string;
+
+  @IsString()
+  @IsOptional()
+  southLandUseTypeDescription?: string;
+
+  @IsString()
+  @IsOptional()
+  westLandUseType?: string;
+
+  @IsString()
+  @IsOptional()
+  westLandUseTypeDescription?: string;
 }
 
 export class ApplicationSubmitToAlcsDto {

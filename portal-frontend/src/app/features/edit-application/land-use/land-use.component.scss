@@ -1,0 +1,19 @@
+@import '../../../../styles/functions.scss';
+.land-use-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: rem(24);
+
+  .land-use-type-wrapper {
+    display: flex;
+    gap: rem(24);
+
+    .land-use-type {
+      width: 36%;
+    }
+  }
+}
+
+.display-block {
+  display: block;
+}

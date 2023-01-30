@@ -43,10 +43,33 @@ export interface ApplicationDto {
   canView: boolean;
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
+  parcelsAgricultureDescription?: string | null;
+  parcelsAgricultureImprovementDescription?: string | null;
+  parcelsNonAgricultureUseDescription?: string | null;
+  northLandUseType?: string | null;
+  northLandUseTypeDescription?: string | null;
+  eastLandUseType?: string | null;
+  eastLandUseTypeDescription?: string | null;
+  southLandUseType?: string | null;
+  southLandUseTypeDescription?: string | null;
+  westLandUseType?: string | null;
+  westLandUseTypeDescription?: string | null;
 }
 
 export interface UpdateApplicationDto {
   applicant?: string;
   localGovernmentUuid?: string;
   typeCode?: string;
+
+  parcelsAgricultureDescription?: string | null;
+  parcelsAgricultureImprovementDescription?: string | null;
+  parcelsNonAgricultureUseDescription?: string | null;
+  northLandUseType?: string | null;
+  northLandUseTypeDescription?: string | null;
+  eastLandUseType?: string | null;
+  eastLandUseTypeDescription?: string | null;
+  southLandUseType?: string | null;
+  southLandUseTypeDescription?: string | null;
+  westLandUseType?: string | null;
+  westLandUseTypeDescription?: string | null;
 }

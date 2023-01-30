@@ -63,6 +63,105 @@ export class Application extends BaseEntity {
   })
   returnedComment: string | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Quantify and describe in detail all agriculture that currently takes place on the parcel(s).',
+    nullable: true,
+  })
+  parcelsAgricultureDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Quantify and describe in detail all agricultural improvements made to the parcel(s).',
+    nullable: true,
+  })
+  parcelsAgricultureImprovementDescription: string | null; // TODO rename to
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Quantify and describe all non-agricultural uses that currently take place on the parcel(s).',
+    nullable: true,
+  })
+  parcelsNonAgricultureUseDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'The land uses surrounding the parcel(s) under application on the North.',
+    nullable: true,
+  })
+  northLandUseType: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Description of the land uses surrounding the parcel(s) under application on the North.',
+    nullable: true,
+  })
+  northLandUseTypeDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'The land uses surrounding the parcel(s) under application on the East.',
+    nullable: true,
+  })
+  eastLandUseType: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Description of the land uses surrounding the parcel(s) under application on the East.',
+    nullable: true,
+  })
+  eastLandUseTypeDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'The land uses surrounding the parcel(s) under application on the South.',
+    nullable: true,
+  })
+  southLandUseType: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Description of the land uses surrounding the parcel(s) under application on the South.',
+    nullable: true,
+  })
+  southLandUseTypeDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'The land uses surrounding the parcel(s) under application on the West.',
+    nullable: true,
+  })
+  westLandUseType: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Description of the land uses surrounding the parcel(s) under application on the West.',
+    nullable: true,
+  })
+  westLandUseTypeDescription: string | null;
+
   @AutoMap()
   @ManyToOne(() => User)
   createdBy: User;
