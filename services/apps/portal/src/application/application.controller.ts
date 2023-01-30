@@ -16,11 +16,7 @@ import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import {
-  ApplicationSubmitToAlcsDto,
-  ApplicationCreateDto,
-  ApplicationUpdateDto,
-} from './application.dto';
+import { ApplicationCreateDto, ApplicationUpdateDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
 @Controller('application')
@@ -141,11 +137,7 @@ export class ApplicationController {
   }
 
   @Post('/alcs/submit/:fileId')
-  async submitAsApplicant(
-    @Param('fileId') fileId: string,
-    @Body() data: ApplicationSubmitToAlcsDto,
-    @Req() req,
-  ) {
+  async submitAsApplicant(@Param('fileId') fileId: string, @Req() req) {
     const application = await this.applicationService.getIfCreator(
       fileId,
       req.user.entity,

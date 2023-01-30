@@ -229,5 +229,3 @@ export class ApplicationUpdateDto {
   @IsOptional()
   nfuFillOriginDescription?: string | null;
 }
-
-export class ApplicationSubmitToAlcsDto {}

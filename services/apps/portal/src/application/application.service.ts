@@ -26,7 +26,6 @@ import { ApplicationStatus } from './application-status/application-status.entit
 import {
   ApplicationDetailedDto,
   ApplicationDto,
-  ApplicationSubmitToAlcsDto,
   ApplicationUpdateDto,
 } from './application.dto';
 import { Application } from './application.entity';
