@@ -88,7 +88,6 @@ export class LandUseComponent implements OnInit, OnDestroy {
   }
 
   async saveProgress() {
-    console.log('Save progress', this.landUseForm.getRawValue());
     const formValues = this.landUseForm.getRawValue();
     this.applicationService.updatePending(this.fileId, {
       parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
@@ -107,7 +106,6 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async onSave() {
     await this.saveProgress();
-    // await this.applicationService.
   }
 
   async onSaveExit() {
