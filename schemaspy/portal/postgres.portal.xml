@@ -34,6 +34,18 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="south_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the South." size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="west_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the West." size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="west_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the West." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="20" name="nfu_hectares" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="nfu_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="nfu_outside_lands" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="nfu_agriculture_support" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="nfu_will_import_fill" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="25" name="nfu_total_fill_placement" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="26" name="nfu_max_fill_depth" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="27" name="nfu_fill_volume" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="28" name="nfu_project_duration_years" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="nfu_project_duration_months" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="30" name="nfu_fill_type_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="31" name="nfu_fill_origin_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="file_number" sequenceNumberInPK="1"/>
          <index name="PK_39c4f5ceb0f5a7a4c819d46a0d5" unique="true">
             <column ascending="true" name="file_number"/>
