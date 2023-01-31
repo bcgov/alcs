@@ -107,6 +107,22 @@ describe('ApplicationDocumentController', () => {
     expect(appDocumentService.delete).toHaveBeenCalledTimes(1);
   });
 
+  it('should call through to update documents', async () => {
+    appDocumentService.update.mockResolvedValue();
+
+    await controller.update(
+      'file-number',
+      {
+        user: {
+          entity: {},
+        },
+      },
+      [],
+    );
+
+    expect(appDocumentService.update).toHaveBeenCalledTimes(1);
+  });
+
   it('should call through for download', async () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getInlineUrl.mockResolvedValue({

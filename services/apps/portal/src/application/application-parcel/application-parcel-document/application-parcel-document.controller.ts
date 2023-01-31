@@ -100,7 +100,7 @@ export class ApplicationParcelDocumentController {
     @Param('uuid') parcelUuid: string,
     @Body() data: AttachExternalDocumentDto,
     @Req() req,
-  ): Promise<ApplicationDocumentDto> {
+  ): Promise<ApplicationParcelDocumentDto> {
     const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     await this.applicationService.verifyAccess(
       parcel.applicationFileNumber,

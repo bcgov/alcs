@@ -3,9 +3,11 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import { DOCUMENT, ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 @Component({
@@ -32,7 +34,8 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationReviewService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private applicationDocumentService: ApplicationDocumentService
   ) {}
 
   ngOnInit(): void {
@@ -77,7 +80,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    const res = await this.applicationService.openFile(uuid);
+    const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }

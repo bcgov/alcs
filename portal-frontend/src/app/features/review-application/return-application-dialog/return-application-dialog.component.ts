@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import { ApplicationTypeDto } from '../../../services/code/code.dto';
 
 export enum ReturnApplicationStepEnum {
   reason = 0,

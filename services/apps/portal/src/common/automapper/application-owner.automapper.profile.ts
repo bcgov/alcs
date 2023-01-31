@@ -36,6 +36,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
                 uuid: a.corporateSummary.uuid,
                 fileName: a.corporateSummary.fileName,
                 type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+                description: null,
                 fileSize: a.corporateSummary.fileSize,
                 uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
                 uploadedBy: a.corporateSummary.uploadedBy.displayName,

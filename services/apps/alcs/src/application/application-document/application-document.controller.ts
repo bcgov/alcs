@@ -43,7 +43,10 @@ export class ApplicationDocumentController {
       throw new BadRequestException('Request is not multipart');
     }
 
-    if (!DOCUMENT_TYPES.includes(documentType as DOCUMENT_TYPE)) {
+    if (
+      !DOCUMENT_TYPES.includes(documentType as DOCUMENT_TYPE) &&
+      documentType !== null
+    ) {
       throw new BadRequestException(
         `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
           ', ',

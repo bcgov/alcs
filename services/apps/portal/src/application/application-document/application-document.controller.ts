@@ -7,6 +7,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -19,6 +20,7 @@ import { AuthGuard } from '../../common/authorization/auth-guard.service';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationDocumentDto,
+  ApplicationDocumentUpdateDto,
   AttachExternalDocumentDto,
 } from './application-document.dto';
 import {
@@ -42,12 +44,12 @@ export class ApplicationDocumentController {
   @Get('/application/:fileNumber/:documentType')
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Param('documentType') documentType: DOCUMENT_TYPE | null,
     @Req() req,
   ): Promise<ApplicationDocumentDto[]> {
     await this.applicationService.verifyAccess(fileNumber, req.user.entity);
 
-    if (!DOCUMENT_TYPES.includes(documentType)) {
+    if (documentType !== null && !DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
         `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
           ', ',
@@ -76,6 +78,17 @@ export class ApplicationDocumentController {
     );
 
     return await this.applicationDocumentService.getInlineUrl(document);
+  }
+
+  @Patch('/application/:fileNumber')
+  async update(
+    @Param('fileNumber') fileNumber: string,
+    @Req() req,
+    @Body() body: ApplicationDocumentUpdateDto[],
+  ) {
+    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
+    await this.applicationDocumentService.update(body, fileNumber);
+    return;
   }
 
   @Delete('/:uuid')

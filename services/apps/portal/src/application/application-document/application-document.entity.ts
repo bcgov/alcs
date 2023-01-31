@@ -17,6 +17,9 @@ export enum DOCUMENT_TYPE {
   STAFF_REPORT = 'reviewStaffReport',
   REVIEW_OTHER = 'reviewOther',
   CORPORATE_SUMMARY = 'corporateSummary',
+  PROFESSIONAL_REPORT = 'Professional Report',
+  PHOTOGRAPH = 'Photograph',
+  OTHER = 'Other',
 }
 
 export const DOCUMENT_TYPES = [
@@ -25,6 +28,7 @@ export const DOCUMENT_TYPES = [
   DOCUMENT_TYPE.STAFF_REPORT,
   DOCUMENT_TYPE.REVIEW_OTHER,
   DOCUMENT_TYPE.CORPORATE_SUMMARY,
+  DOCUMENT_TYPE.OTHER,
 ];
 
 @Entity()
@@ -40,8 +44,13 @@ export class ApplicationDocument extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @Column()
-  type: string;
+  @AutoMap(() => String)
+  @Column({ type: 'varchar', nullable: true })
+  type: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  description: string | null;
 
   @ManyToOne(() => Application, { nullable: false })
   application: Application;
