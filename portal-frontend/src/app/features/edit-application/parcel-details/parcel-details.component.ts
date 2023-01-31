@@ -67,8 +67,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     if (parcel) {
       this.parcels.push({
         uuid: parcel!.uuid,
-        documents: [] as ApplicationDocumentDto[],
-      } as ApplicationParcelDto);
+        documents: [],
+        owners: [],
+        isConfirmedByApplicant: false,
+      });
       this.newParcelAdded = true;
     } else {
       this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
