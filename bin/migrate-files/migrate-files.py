@@ -39,7 +39,7 @@ if os.path.isfile('last-file.pickle'):
     with open('last-file.pickle', 'rb') as file:
         starting_document_id = pickle.load(file)
 
-print(f'Starting from: {starting_document_id}')
+print('Starting from:', starting_document_id)
 
 # Get total number of files
 
@@ -52,7 +52,7 @@ except cx_Oracle.Error as e:
     print(error.message)
 
 count = cursor.fetchone()[0]
-print('Count = %d\n' % count)
+print('Count =', count)
 
 # # Execute the SQL query to retrieve the BLOB data and key column
 cursor.execute(f"""
@@ -67,6 +67,7 @@ ORDER BY DOCUMENT_ID ASC
 BATCH_SIZE = 10
 
 # Track progress
+documents_processed = 0
 last_document_id = 0
 
 try:
@@ -85,12 +86,21 @@ try:
                         Callback=lambda bytes_transferred: pbar2.update(bytes_transferred),)
                 pbar.update(1)
                 last_document_id = document_id
-                raise Exception(f'Test pickle id {last_document_id}')
-finally:
+                documents_processed += 1
+except Exception as e:
+    print("Something went wrong:",e)
+    print("Processed", documents_processed,  "files")
+    
     # Set resume status in case of interuption
     with open('last-file.pickle', 'wb') as file:
         pickle.dump(last_document_id, file)
+    
+    cursor.close()
+    conn.close()
+    exit()
 
+# Display results
+print("Process complete: Successfully migrated", documents_processed, "files.")
 
 # Close the database cursor and connection
 cursor.close()
