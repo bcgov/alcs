@@ -1,28 +1,35 @@
 # Oracle document migration script
 
-This script retrieves files from an Oracle SQL database stored in a BLOB column and upload them to an Dell ECS S3 bucket.
+This is a Python script for uploading files from the OATS database to the Dell ECS object storage service.
+
+## Libraries Used
+
+os: used to interact with the file system
+dotenv: used to load environment variables from the .env file
+cx_Oracle: used to interact with the Oracle database
+boto3: used to interact with Amazon S3
+tqdm: used to show progress bars during the file upload process
+pickle: used to store the last uploaded document id, so the upload process can be resumed from where it left off.
+
+# Usage
 
 ## Prerequisites
 
-- cx_Oracle library: To connect to the Oracle database and retrieve the BLOB data.
-- boto3 library: To connect to the S3 bucket and upload the files.
-- python-dotenv: To load the environment variables from a .env file.
-- tqdm library: To display a progress bar when uploading the files.
+The following environment variables are required:
 
-## Usage
+DB_USERNAME: Oracle database username
+DB_PASSWORD: Oracle database password
+DB_DSN: Oracle database DSN
+ECS_HOSTNAME: Dell ECS S3 hostname
+ECS_BUCKET: Dell ECS bucket name
+ECS_ACCESS_KEY: Dell ECS access key
+ECS_SECRET_KEY: Dell ECS secret key
+These variables can be stored in the .env file.
 
-Create a .env file in the same directory of the script.
-Add the following environment variables to the .env file:
+## Running the Script
 
-```
-DB_USERNAME=
-DB_PASSWORD=
-DB_DSN=
-ECS_HOSTNAME=https://nrs.objectstore.gov.bc.ca/
-ECS_BUCKET=ckbdwh
-ECS_ACCESS_KEY=
-ECS_SECRET_KEY=
+To run the script, run the following command:
 
-```
+`python migrate-files.py`
 
-Run the script `python migrate-files.py`
+The script will start uploading files from the Oracle database to Amazon S3. The upload progress will be displayed in a progress bar. The script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption.
