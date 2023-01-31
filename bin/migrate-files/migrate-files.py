@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import cx_Oracle
 import boto3
 from tqdm import tqdm
+import pickle
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,6 +33,13 @@ s3 = boto3.client(
     endpoint_url=ecs_host,
 )
 
+starting_document_id = 0
+# Determine job resume status
+if os.path.isfile('last-file.pickle'):
+    with open('last-file.pickle', 'rb') as file:
+        starting_document_id = pickle.load(file)
+
+print(f'Starting from: {starting_document_id}')
 
 # Get total number of files
 
@@ -47,46 +55,57 @@ count = cursor.fetchone()[0]
 print('Count = %d\n' % count)
 
 # # Execute the SQL query to retrieve the BLOB data and key column
-cursor.execute("""
+cursor.execute(f"""
 SELECT DOCUMENT_ID, ALR_APPLICATION_ID, FILE_NAME, DOCUMENT_BLOB, DOCUMENT_CODE, DESCRIPTION, DOCUMENT_SOURCE_CODE, UPLOADED_DATE, WHEN_UPDATED, REVISION_COUNT, dbms_lob.getLength(DOCUMENT_BLOB) as LENGTH
 FROM OATS.OATS_DOCUMENTS
 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0
+AND DOCUMENT_ID > {starting_document_id}
+ORDER BY DOCUMENT_ID ASC
 """)
 
 # Set the batch size
-batch_size = 10 
+BATCH_SIZE = 10
 
-# Progress
-with tqdm(total=count, unit="file", desc="Uploading files to S3") as pbar:
-    while True:
-        # Fetch the next batch of BLOB data
-        data = cursor.fetchmany(batch_size)
-        if not data:
-            break
-        # Upload the batch to S3 with a progress bar
-        for document_id, application_id, filename, file, code, description, source, created, updated, revision, length in data:
+# Track progress
+last_document_id = 0
 
-            # f = open(f"out/{i}-{d}", "wb")
-            # f.write(file.read())
-            # f.close()
-            tqdm.write(f"{application_id}/{document_id}_{filename}")
+try:
+    with tqdm(total=count, unit="file", desc="Uploading files to S3") as pbar:
+        while True:
+            # Fetch the next batch of BLOB data
+            data = cursor.fetchmany(BATCH_SIZE)
+            if not data:
+                break
+            # Upload the batch to S3 with a progress bar
+            for document_id, application_id, filename, file, code, description, source, created, updated, revision, length in data:
 
-            # TODO: Metadata not currently supported
-            # metadata = {
-            #     'Code': code,
-            #     'Description': description,
-            #     'Document Source':source,
-            #     'Created': created.strftime("%Y-%m-%d %H:%M:%S"),
-            #     'Updated': updated.strftime("%Y-%m-%d %H:%M:%S"),
-            #     'Revision': str(revision)
-            #     }
+                # f = open(f"out/{i}-{d}", "wb")
+                # f.write(file.read())
+                # f.close()
+                tqdm.write(f"{application_id}/{document_id}_{filename}")
 
-            with tqdm(total=length, unit="B", unit_scale=True, desc=filename) as pbar2:
-                s3.upload_fileobj(file, ecs_bucket, f"migrate/{application_id}/{document_id}_{filename}",
-                    Callback=lambda bytes_transferred: pbar2.update(bytes_transferred),)
-            pbar.update(1)
-            
-        
+                # TODO: Metadata not currently supported
+                # metadata = {
+                #     'Code': code,
+                #     'Description': description,
+                #     'Document Source':source,
+                #     'Created': created.strftime("%Y-%m-%d %H:%M:%S"),
+                #     'Updated': updated.strftime("%Y-%m-%d %H:%M:%S"),
+                #     'Revision': str(revision)
+                #     }
+
+                with tqdm(total=length, unit="B", unit_scale=True, desc=filename) as pbar2:
+                    s3.upload_fileobj(file, ecs_bucket, f"migrate/{application_id}/{document_id}_{filename}",
+                        Callback=lambda bytes_transferred: pbar2.update(bytes_transferred),)
+                pbar.update(1)
+                last_document_id = document_id
+                raise Exception(f'Test pickle id {last_document_id}')
+finally:
+    # Set resume status in case of interuption
+    # Determine resume status
+    with open('last-file.pickle', 'wb') as file:
+        pickle.dump(last_document_id, file)
+
 
 # Close the database cursor and connection
 cursor.close()
