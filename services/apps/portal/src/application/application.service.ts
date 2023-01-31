@@ -197,7 +197,7 @@ export class ApplicationService {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
           fileNumber: fileNumber,
-          applicant: application.applicant!,
+          applicant: fileNumber,
           localGovernmentUuid: application.localGovernmentUuid!,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),

@@ -77,9 +77,9 @@ export class ApplicationService {
     return undefined;
   }
 
-  async submitToAlcs(fileId: string, updateDto: ApplicationUpdateDto) {
+  async submitToAlcs(fileId: string) {
     try {
-      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
+      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {}));
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
       console.error(e);
