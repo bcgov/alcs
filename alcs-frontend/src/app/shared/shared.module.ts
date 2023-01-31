@@ -1,13 +1,14 @@
-import { Platform } from '@angular/cdk/platform';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -22,8 +23,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDatepickerModule } from '@matheo/datepicker';
-import { DateAdapter as MatheoDateAdapter, MatNativeDateModule } from '@matheo/datepicker/core';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { DatetimeAdapter } from '@ng-matero/extensions/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
@@ -41,7 +40,6 @@ import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
-import { MatheoDatepickerFormatter } from './utils/matheo-datepicker-formatter';
 
 @NgModule({
   declarations: [
@@ -116,8 +114,8 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
-        { provide: MatheoDateAdapter, useClass: MatheoDatepickerFormatter, deps: [MAT_DATE_LOCALE, Platform] },
         { provide: DatetimeAdapter, useClass: ExtensionsDatepickerFormatter, deps: [MAT_DATE_LOCALE, DateAdapter] },
+        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
         { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
       ],
     };

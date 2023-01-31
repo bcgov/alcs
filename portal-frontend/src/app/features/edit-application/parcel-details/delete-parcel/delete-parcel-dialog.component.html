@@ -1,0 +1,47 @@
+<ng-template #startStepControls>
+  <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+  <button mat-flat-button color="primary" (click)="next()">continue</button>
+</ng-template>
+
+<ng-template #lastStepControls>
+  <button mat-stroked-button color="primary" (click)="back()">back</button>
+  <button mat-flat-button color="primary" (click)="onDelete()">confirm</button>
+</ng-template>
+
+<div class="change-app-type-modal">
+  <div class="content">
+    <div *ngIf="stepIdx === warningStep">
+      <div class="step-header">
+        <h4>Delete Parcel #{{ parcelNumber }}</h4>
+      </div>
+
+      <div class="step-body">
+        <div class="warning-banner responsive-flex-wrapper">
+          <div class="icon">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <div class="description">
+            <div>
+              <b>Warning:</b> All information relevant to this parcel, including information added in subsequent steps,
+              will be deleted.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-controls">
+        <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="stepIdx === confirmationStep">
+      <div class="step-header">
+        <h5>Are you sure you want to delete this? This action cannot be undone.</h5>
+      </div>
+
+      <div class="step-controls">
+        <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>

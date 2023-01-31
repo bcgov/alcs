@@ -40,13 +40,13 @@ export class adjustBoardStatuses1674082002832 implements MigrationInterface {
 
     //Increment Existing Soil Ranks
     await queryRunner.query(`
-        UPDATE "alcs"."board_status" SET "order" = "order" + 1 WHERE "board_uuid" = '76fb47cf-7695-4a6e-8c71-c25a255cbcae' AND "order" > 0
+        UPDATE "alcs"."board_status" SET "order" = "order" + 1 WHERE "board_uuid" = '76fb47cf-7695-4a6e-8c71-c25a255cbcae' AND "order" > 1
     `);
 
     //Link New Status to Soil/Fill
     await queryRunner.query(`
     INSERT INTO "alcs"."board_status" ("uuid", "audit_deleted_date_at", "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "order", "board_uuid", "status_code") VALUES
-      ('a842b9f3-3ca0-49a7-88ec-71883e837da6', NULL, NOW(), NULL, 'migration_seed', NULL, 1, '76fb47cf-7695-4a6e-8c71-c25a255cbcae', 'PROR');
+      ('a842b9f3-3ca0-49a7-88ec-71883e837da6', NULL, NOW(), NULL, 'migration_seed', NULL, 2, '76fb47cf-7695-4a6e-8c71-c25a255cbcae', 'PROR');
     `);
   }
 

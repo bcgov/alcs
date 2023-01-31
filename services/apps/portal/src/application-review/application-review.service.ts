@@ -133,7 +133,7 @@ export class ApplicationReviewService {
         ? updateDto.isAuthorized
         : applicationReview.isAuthorized;
 
-    return await this.applicationReviewRepository.save(applicationReview);
+    return this.applicationReviewRepository.save(applicationReview);
   }
 
   verifyComplete(

@@ -8,6 +8,7 @@ import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline
 import { SharedModule } from '../../shared/shared.module';
 import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { DATE_FORMATS } from '../../shared/utils/date-format';
+import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
@@ -25,7 +26,6 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
-import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 
 const routes: Routes = [
   {

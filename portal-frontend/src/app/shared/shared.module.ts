@@ -2,9 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,14 +21,14 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { DATE_FORMATS } from './utils/date-format';
+import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatAutocompleteModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -43,13 +46,18 @@ import { DATE_FORMATS } from './utils/date-format';
     MatTooltipModule,
     MatRadioModule,
     MatTabsModule,
+    MatCheckboxModule,
     MatButtonToggleModule,
     MatExpansionModule,
     MatStepperModule,
     FileDragDropComponent,
     FileSizePipe,
+    WarningBannerComponent,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
   ],
-  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective],
+  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective, WarningBannerComponent],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

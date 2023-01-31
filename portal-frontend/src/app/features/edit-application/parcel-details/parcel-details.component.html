@@ -1,0 +1,46 @@
+<div>
+  <div class="step-description">
+    <h3>Identify Parcels Under Application</h3>
+    <p>Provide parcel identification and registered ownership information for each parcel under application.</p>
+  </div>
+  <mat-expansion-panel *ngFor="let parcel of parcels; let parcelInd = index">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-parcel-entry
+      [parcel]="parcel"
+      (onFormGroupChange)="onParcelFormChange($event)"
+      (onFilesUpdated)="loadParcels()"
+    ></app-parcel-entry>
+
+    <div>
+      <div class="flex-evenly-wrap">
+        <button mat-stroked-button color="primary" (click)="onSave()">
+          Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
+        </button>
+        <button
+          *ngIf="parcels.length > 1"
+          mat-stroked-button
+          color="accent"
+          (click)="onDelete(parcel.uuid, parcelInd + 1)"
+        >
+          Delete Parcel #{{ parcelInd + 1 }} Details
+        </button>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <div>
+    <button mat-stroked-button color="primary" (click)="onAddParcel()">Add another parcel to the application</button>
+  </div>
+
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
+    </div>
+  </div>
+</div>

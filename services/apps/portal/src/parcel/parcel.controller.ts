@@ -1,11 +1,5 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { ParcelLookupDto, SearchParcelDto } from './parcel.dto';
 import { ParcelService } from './parcel.service';

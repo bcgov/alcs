@@ -1,6 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDatepicker } from '@matheo/datepicker';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatDatepicker } from '@angular/material/datepicker';
 import moment from 'moment';
 import { environment } from '../../../environments/environment';
 import { formatDateForApi } from '../utils/api-date-formatter';
@@ -17,12 +17,12 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
   @Output() save = new EventEmitter<number>();
   @ViewChild('datePicker') private datePicker!: MatDatepicker<any>;
 
-  form!: FormGroup;
+  date = new FormControl();
   minimum: Date | undefined;
   isEditing = false;
   formattedDate = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor() {}
 
   ngOnInit(): void {
     if (this.min) {
@@ -30,13 +30,7 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
     }
     if (this.selectedValue) {
       this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
-      this.form = this.fb.group({
-        date: new Date(this.selectedValue),
-      });
-    } else {
-      this.form = this.fb.group({
-        date: undefined,
-      });
+      this.date.setValue(moment(this.selectedValue));
     }
   }
 
@@ -48,18 +42,15 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
   }
 
   onSave() {
-    const selectedValue = this.form.get('date')!.value;
-    const finalValue = formatDateForApi(selectedValue);
+    const finalValue = formatDateForApi(this.date.getRawValue());
     this.save.emit(finalValue);
     this.isEditing = false;
   }
 
   ngOnChanges(): void {
-    if (this.selectedValue && this.form) {
+    if (this.selectedValue) {
       this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
-      this.form.patchValue({
-        date: new Date(this.selectedValue),
-      });
+      this.date.setValue(moment(this.selectedValue));
     }
   }
 }

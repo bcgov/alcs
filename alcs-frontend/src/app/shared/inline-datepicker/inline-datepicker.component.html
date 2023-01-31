@@ -14,18 +14,18 @@
       hidden: !isEditing
     }"
   >
-    <form [formGroup]="form">
+    <form>
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
         <input
           matInput
           (click)="datePicker.open()"
           [matDatepicker]="datePicker"
-          formControlName="date"
+          [formControl]="date"
           [min]="minimum | startOfDay"
         />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker type="date"> </mat-datepicker>
+        <mat-datepicker #datePicker> </mat-datepicker>
       </mat-form-field>
     </form>
     <div class="button-container">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApplicationDocumentDto } from '../../services/application/application.dto';
 import { FileHandle } from './drag-drop.directive';
@@ -12,9 +12,12 @@ export class FileDragDropComponent implements OnInit {
   @Output() uploadFiles: EventEmitter<FileHandle[]> = new EventEmitter();
   @Output() deleteFile: EventEmitter<ApplicationDocumentDto> = new EventEmitter();
   @Output() openFile: EventEmitter<string> = new EventEmitter();
+  @Output() beforeFileUploadOpened: EventEmitter<void> = new EventEmitter();
 
   @Input() allowMultiple = false;
   @Input() uploadedFiles: ApplicationDocumentDto[] = [];
+
+  @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
 
   constructor(private sanitizer: DomSanitizer) {}
 
@@ -30,6 +33,11 @@ export class FileDragDropComponent implements OnInit {
 
   fileOpened(uuid: string) {
     this.openFile.emit(uuid);
+  }
+
+  onFileUploadClicked() {
+    this.beforeFileUploadOpened.emit();
+    this.fileUpload.nativeElement.click();
   }
 
   fileSelected($event: Event) {
