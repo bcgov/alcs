@@ -2,6 +2,12 @@
 
 This is a Python script for uploading files from the OATS database to the Dell ECS object storage service.
 
+The files are uploaded in the format `/migrate/{application_id}/{document_id}_{filename}` where:
+
+- `application_id` is the associated OATS application ID
+- `document_id` is the primary key from the documents table
+- `filename` is the filename metadata from the documents table
+
 ## Libraries Used
 
 os: used to interact with the file system

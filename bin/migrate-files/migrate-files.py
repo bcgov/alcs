@@ -78,21 +78,7 @@ try:
                 break
             # Upload the batch to S3 with a progress bar
             for document_id, application_id, filename, file, code, description, source, created, updated, revision, length in data:
-
-                # f = open(f"out/{i}-{d}", "wb")
-                # f.write(file.read())
-                # f.close()
                 tqdm.write(f"{application_id}/{document_id}_{filename}")
-
-                # TODO: Metadata not currently supported
-                # metadata = {
-                #     'Code': code,
-                #     'Description': description,
-                #     'Document Source':source,
-                #     'Created': created.strftime("%Y-%m-%d %H:%M:%S"),
-                #     'Updated': updated.strftime("%Y-%m-%d %H:%M:%S"),
-                #     'Revision': str(revision)
-                #     }
 
                 with tqdm(total=length, unit="B", unit_scale=True, desc=filename) as pbar2:
                     s3.upload_fileobj(file, ecs_bucket, f"migrate/{application_id}/{document_id}_{filename}",
@@ -102,7 +88,6 @@ try:
                 raise Exception(f'Test pickle id {last_document_id}')
 finally:
     # Set resume status in case of interuption
-    # Determine resume status
     with open('last-file.pickle', 'wb') as file:
         pickle.dump(last_document_id, file)
 
