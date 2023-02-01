@@ -196,12 +196,12 @@ export class ApplicationService {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
           fileNumber: fileNumber,
-          applicant: application.applicant!,
+          applicant: fileNumber,
           localGovernmentUuid: application.localGovernmentUuid!,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),
           documents: application?.documents.map((d) => ({
-            type: d.type,
+            type: d.type!, //TODO: Do we verify this?
             documentUuid: d.document.alcsDocumentUuid,
           })),
           applicationReview: mappedReview,

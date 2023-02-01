@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
@@ -14,12 +15,14 @@ describe('ReviewSubmitComponent', () => {
   let fixture: ComponentFixture<ReviewSubmitFngComponent>;
   let mockAppReviewService: DeepMocked<ApplicationReviewService>;
   let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
+    mockAppDocumentService = createMock();
 
     mockAppService = createMock();
 
@@ -32,6 +35,10 @@ describe('ReviewSubmitComponent', () => {
         {
           provide: ApplicationService,
           useValue: mockAppService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocumentService,
         },
       ],
       declarations: [ReviewSubmitFngComponent],

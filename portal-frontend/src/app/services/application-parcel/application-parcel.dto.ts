@@ -1,5 +1,5 @@
+import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
-import { ApplicationDocumentDto } from '../application/application.dto';
 
 export interface ApplicationParcelUpdateDto {
   uuid: string;

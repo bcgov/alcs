@@ -32,6 +32,12 @@ body {
   min-width: rem(240);
 }
 
+a {
+  color: $link-color;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 * {
   box-sizing: border-box;
 }

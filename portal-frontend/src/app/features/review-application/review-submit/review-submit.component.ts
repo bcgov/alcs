@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import { DOCUMENT, ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 @Component({
@@ -36,7 +38,8 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationReviewService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private applicationDocumentService: ApplicationDocumentService
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -89,7 +92,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    const res = await this.applicationService.openFile(uuid);
+    const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }
@@ -97,107 +100,102 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
 
   private runValidation() {
     this.showErrors = true;
-
-    const contactInfoValid = this.validateContactInfo();
-    if (!contactInfoValid) {
-      if (this.contactInfoPanel) {
-        this.contactInfoPanel.open();
-      }
-    }
-
-    const ocpValid = this.validateOCP();
-    if (!ocpValid) {
-      if (this.ocpInfoPanel) {
-        this.ocpInfoPanel.open();
-      }
-    }
-
-    const zoningValid = this.validateZoning();
-    if (!zoningValid) {
-      if (this.zoningPanel) {
-        this.zoningPanel.open();
-      }
-    }
-
-    const authorizationValid = this.validateAuthorization();
-    if (!authorizationValid) {
-      if (this.authorizationInfoPanel) {
-        this.authorizationInfoPanel.open();
-      }
-    }
-
-    const attachmentsValid = this.validateAttachments();
-    if (!attachmentsValid) {
-      if (this.attachmentInfoPanel) {
-        this.attachmentInfoPanel.open();
-      }
-    }
-
-    const el = document.getElementsByClassName('no-data');
-    if (el && el.length > 0) {
-      el[0].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-
-    return contactInfoValid && ocpValid && zoningValid && authorizationValid && attachmentsValid;
-  }
-
-  private validateContactInfo() {
     if (this._applicationReview) {
       const review = this._applicationReview;
+      const contactInfoValid = this.validateContactInfo(review);
+      if (!contactInfoValid) {
+        if (this.contactInfoPanel) {
+          this.contactInfoPanel.open();
+        }
+      }
+
+      const ocpValid = this.validateOCP(review);
+      if (!ocpValid) {
+        if (this.ocpInfoPanel) {
+          this.ocpInfoPanel.open();
+        }
+      }
+
+      const zoningValid = this.validateZoning(review);
+      if (!zoningValid) {
+        if (this.zoningPanel) {
+          this.zoningPanel.open();
+        }
+      }
+
+      const authorizationValid = this.validateAuthorization(review);
+      if (!authorizationValid) {
+        if (this.authorizationInfoPanel) {
+          this.authorizationInfoPanel.open();
+        }
+      }
+
+      const attachmentsValid = this.validateAttachments(review);
+      if (!attachmentsValid) {
+        if (this.attachmentInfoPanel) {
+          this.attachmentInfoPanel.open();
+        }
+      }
+
+      const el = document.getElementsByClassName('no-data');
+      if (el && el.length > 0) {
+        el[0].scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+
+      return contactInfoValid && ocpValid && zoningValid && authorizationValid && attachmentsValid;
+    }
+    return false;
+  }
+
+  private validateContactInfo(review: ApplicationReviewDto) {
+    return (
+      review.localGovernmentFileNumber &&
+      review.firstName &&
+      review.lastName &&
+      review.position &&
+      review.department &&
+      review.position &&
+      review.email
+    );
+  }
+
+  private validateOCP(review: ApplicationReviewDto) {
+    return review.isOCPDesignation
+      ? review.OCPBylawName && review.OCPDesignation && review.OCPConsistent !== null
+      : review.isOCPDesignation !== null;
+  }
+
+  private validateZoning(review: ApplicationReviewDto) {
+    if (review.isSubjectToZoning) {
       return (
-        review.localGovernmentFileNumber &&
-        review.firstName &&
-        review.lastName &&
-        review.position &&
-        review.department &&
-        review.position &&
-        review.email
+        review.isZoningConsistent !== null &&
+        review.zoningDesignation &&
+        review.zoningMinimumLotSize &&
+        review.zoningBylawName
       );
     }
-    return false;
+    return review.isSubjectToZoning !== null;
   }
 
-  private validateOCP() {
-    if (this._applicationReview) {
-      const review = this._applicationReview;
-      return review.isOCPDesignation
-        ? review.OCPBylawName && review.OCPDesignation && review.isZoningConsistent !== null
-        : review.isOCPDesignation !== null;
+  private validateAuthorization(review: ApplicationReviewDto) {
+    debugger;
+    if (review.isSubjectToZoning === true || review.isOCPDesignation === true) {
+      return review.isAuthorized !== null;
     }
-    return false;
+    return true;
   }
 
-  private validateZoning() {
-    if (this._applicationReview) {
-      const review = this._applicationReview;
-      if (review.isSubjectToZoning) {
-        return (
-          review.isZoningConsistent !== null &&
-          review.zoningDesignation &&
-          review.zoningMinimumLotSize &&
-          review.zoningBylawName
-        );
+  private validateAttachments(review: ApplicationReviewDto) {
+    if (review.isSubjectToZoning === true || review.isOCPDesignation == true) {
+      if (review.isAuthorized === true) {
+        return this.resolutionDocument.length > 0 && this.staffReport.length > 0;
+      } else {
+        return this.resolutionDocument.length > 0;
       }
-      return review.isSubjectToZoning !== null;
     }
-    return false;
-  }
-
-  private validateAuthorization() {
-    if (this._applicationReview) {
-      const review = this._applicationReview;
-      if (review.isZoningConsistent !== null && review.isOCPDesignation) {
-        return this._applicationReview.isAuthorized !== null;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  private validateAttachments() {
-    return this.resolutionDocument.length > 0 && this.staffReport.length > 0;
+    return true;
   }
 }

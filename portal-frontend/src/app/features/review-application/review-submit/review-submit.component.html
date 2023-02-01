@@ -97,7 +97,7 @@
             <span *ngIf="_applicationReview.OCPConsistent !== null">{{
               _applicationReview.OCPConsistent ? 'Yes' : 'No'
             }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPConsistent === null"></app-no-data>
+            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.OCPConsistent === null"></app-no-data>
           </div>
         </div>
         <div class="edit-button">
@@ -155,7 +155,7 @@
             }}</span>
             <app-no-data
               [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isZoningConsistent === null"
+              *ngIf="_applicationReview.isZoningConsistent === null"
             ></app-no-data>
           </div>
         </div>
@@ -187,9 +187,9 @@
       </div>
     </section>
     <section>
-      <h4>4. Attachments</h4>
+      <h4>5. Attachments</h4>
       <div class="review-table">
-        <div>
+        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
           <div class="subheading2">Resolution Document</div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
@@ -198,13 +198,18 @@
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
-        <div>
-          <div class="subheading2">Staff Report</div>
+        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
+          <div class="subheading2">
+            Staff Report <span *ngIf="_applicationReview.isAuthorized === false">(optional)</span>
+          </div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
               document.fileName
             }}</a>
-            <app-no-data [showRequired]="showErrors" *ngIf="staffReport.length === 0"></app-no-data>
+            <app-no-data
+              [showRequired]="showErrors && _applicationReview.isAuthorized === true"
+              *ngIf="staffReport.length === 0"
+            ></app-no-data>
           </div>
         </div>
         <div class="full-width">
@@ -213,6 +218,7 @@
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
               document.fileName
             }}</a>
+            <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
         </div>
         <div class="edit-button">
@@ -321,7 +327,7 @@
             <span *ngIf="_applicationReview.OCPConsistent !== null">{{
               _applicationReview.OCPConsistent ? 'Yes' : 'No'
             }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPConsistent === null"></app-no-data>
+            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.OCPConsistent === null"></app-no-data>
           </div>
         </div>
         <div class="edit-button">
@@ -373,7 +379,7 @@
             }}</span>
             <app-no-data
               [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isZoningConsistent === null"
+              *ngIf="_applicationReview.isZoningConsistent === null"
             ></app-no-data>
           </div>
         </div>
@@ -408,10 +414,10 @@
     </mat-expansion-panel>
     <mat-expansion-panel #attachmentInfo>
       <mat-expansion-panel-header>
-        <h4>4. Attachments</h4>
+        <h4>5. Attachments</h4>
       </mat-expansion-panel-header>
       <div class="review-table">
-        <div>
+        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
           <div class="subheading2">Resolution Document</div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
@@ -420,13 +426,18 @@
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
-        <div>
-          <div class="subheading2">Staff Report</div>
+        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
+          <div class="subheading2">
+            Staff Report <span *ngIf="_applicationReview.isAuthorized === false">(optional)</span>
+          </div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
               document.fileName
             }}</a>
-            <app-no-data [showRequired]="showErrors" *ngIf="staffReport.length === 0"></app-no-data>
+            <app-no-data
+              [showRequired]="showErrors && _applicationReview.isAuthorized === true"
+              *ngIf="staffReport.length === 0"
+            ></app-no-data>
           </div>
         </div>
         <div class="full-width">
@@ -435,6 +446,7 @@
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
               document.fileName
             }}</a>
+            <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
         </div>
         <div class="edit-button">

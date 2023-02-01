@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 
 export enum APPLICATION_STATUS {
@@ -12,24 +13,7 @@ export enum APPLICATION_STATUS {
   CANCELLED = 'CANC',
 }
 
-export enum DOCUMENT {
-  CERTIFICATE_OF_TILE = 'certificateOfTitle',
-  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
-  STAFF_REPORT = 'reviewStaffReport',
-  REVIEW_OTHER = 'reviewOther',
-  CORPORATE_SUMMARY = 'corporateSummary',
-}
-
 export interface ApplicationStatusDto extends BaseCodeDto {}
-
-export interface ApplicationDocumentDto {
-  type: DOCUMENT;
-  uuid: string;
-  fileName: string;
-  fileSize: number;
-  uploadedBy: string;
-  uploadedAt: number;
-}
 
 export interface ApplicationDto {
   fileNumber: string;
@@ -74,6 +58,7 @@ export interface ApplicationUpdateDto {
   applicant?: string;
   localGovernmentUuid?: string;
   typeCode?: string;
+
   //Land use fields
   parcelsAgricultureDescription?: string | null;
   parcelsAgricultureImprovementDescription?: string | null;

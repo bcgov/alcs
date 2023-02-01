@@ -1,10 +1,14 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, ValidateIf } from 'class-validator';
+import { IsNull } from 'typeorm';
 import { DOCUMENT_TYPE } from './application-document.entity';
 
 export class ApplicationDocumentDto {
-  @AutoMap()
-  type: string;
+  @AutoMap(() => String)
+  type: string | null;
+
+  @AutoMap(() => String)
+  description: string | null;
 
   @AutoMap()
   uuid: string;
@@ -20,6 +24,12 @@ export class ApplicationDocumentDto {
 
   @AutoMap()
   uploadedAt: number;
+}
+
+export class ApplicationDocumentUpdateDto {
+  uuid: string;
+  type: DOCUMENT_TYPE | null;
+  description: string | null;
 }
 
 export class AttachExternalDocumentDto {
@@ -39,5 +49,6 @@ export class AttachExternalDocumentDto {
   source: 'Local_Government' | 'Applicant';
 
   @IsString()
-  documentType: DOCUMENT_TYPE;
+  @ValidateIf((object, value) => value !== null)
+  documentType: DOCUMENT_TYPE | null;
 }

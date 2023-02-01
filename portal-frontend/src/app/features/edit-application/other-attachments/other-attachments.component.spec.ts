@@ -1,37 +1,27 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
-import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
-import { ReviewSubmitComponent } from './review-submit.component';
+import { OtherAttachmentsComponent } from './other-attachments.component';
 
-describe('ReviewSubmitComponent', () => {
-  let component: ReviewSubmitComponent;
-  let fixture: ComponentFixture<ReviewSubmitComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationReviewService>;
+describe('OtherAttachmentsComponent', () => {
+  let component: OtherAttachmentsComponent;
+  let fixture: ComponentFixture<OtherAttachmentsComponent>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
-
-  let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  let mockRouter: DeepMocked<Router>;
 
   beforeEach(async () => {
-    mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
-
     mockAppService = createMock();
     mockAppDocumentService = createMock();
+    mockRouter = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
-        {
-          provide: ApplicationReviewService,
-          useValue: mockAppReviewService,
-        },
         {
           provide: ApplicationService,
           useValue: mockAppService,
@@ -40,15 +30,17 @@ describe('ReviewSubmitComponent', () => {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
         },
+        {
+          provide: Router,
+          useValue: mockRouter,
+        },
       ],
-      declarations: [ReviewSubmitComponent],
-      schemas: [NO_ERRORS_SCHEMA],
+      declarations: [OtherAttachmentsComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReviewSubmitComponent);
+    fixture = TestBed.createComponent(OtherAttachmentsComponent);
     component = fixture.componentInstance;
-
-    component.$application = applicationPipe;
+    component.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

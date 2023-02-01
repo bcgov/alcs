@@ -9,7 +9,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
@@ -45,9 +45,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
         this.loadParcels();
-        if (application.owners) {
-          this.$owners.next(application.owners);
-        }
+        this.$owners.next(application.owners);
       }
     });
     this.newParcelAdded = false;
@@ -73,8 +71,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       this.parcels.push({
         uuid: parcel!.uuid,
         parcelType: PARCEL_TYPE.APPLICATION,
-        documents: [] as ApplicationDocumentDto[],
-      } as ApplicationParcelDto);
+        documents: [],
+        owners: [],
+        isConfirmedByApplicant: false,
+      });
       this.newParcelAdded = true;
     } else {
       this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');

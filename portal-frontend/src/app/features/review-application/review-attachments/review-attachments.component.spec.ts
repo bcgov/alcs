@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
@@ -15,6 +16,7 @@ describe('ReviewAttachmentsComponent', () => {
   let fixture: ComponentFixture<ReviewAttachmentsComponent>;
   let mockAppReviewService: DeepMocked<ApplicationReviewService>;
   let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
@@ -22,6 +24,7 @@ describe('ReviewAttachmentsComponent', () => {
     mockAppReviewService = createMock();
     mockAppService = createMock();
     mockRouter = createMock();
+    mockAppDocumentService = createMock();
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -38,6 +41,10 @@ describe('ReviewAttachmentsComponent', () => {
         {
           provide: ApplicationService,
           useValue: mockAppService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocumentService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -29,6 +29,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
           fileSize: a.corporateSummary.fileSize,
           uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
           uploadedBy: a.corporateSummary.uploadedBy.displayName,
+          description: null,
         };
       }
       return undefined;

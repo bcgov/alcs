@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
+import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
@@ -76,11 +77,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     }
 
     if (this.application) {
-      await this.applicationService.submitToAlcs(this.fileId, {
-        applicant: `${this.application.type}_${this.application.fileNumber}`,
-        localGovernmentUuid: this.application.localGovernmentUuid,
-        typeCode: this.application.type,
-      });
+      await this.applicationService.submitToAlcs(this.fileId);
     }
   }
 }

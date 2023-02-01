@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import {
   APPLICATION_OWNER_TYPE,
   ApplicationOwnerCreateDto,
@@ -9,7 +10,6 @@ import {
   ApplicationOwnerUpdateDto,
 } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application/application.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 
 @Component({

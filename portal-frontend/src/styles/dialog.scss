@@ -2,6 +2,13 @@
   display: flex;
   position: absolute;
   z-index: 1000;
-  overflow: auto;
-  pointer-events: auto !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  overflow-y: scroll;
+  max-height: 100vh !important;
+}
+
+.cdk-global-scrollblock {
+  overflow-y: hidden;
 }

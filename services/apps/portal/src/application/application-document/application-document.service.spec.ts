@@ -139,4 +139,48 @@ describe('ApplicationDocumentService', () => {
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
+
+  it('should load and save each document in an update', async () => {
+    const mockAppDocument = new ApplicationDocument({
+      document: new Document({
+        alcsDocumentUuid: 'document-id',
+      }),
+    });
+    mockRepository.findOne.mockResolvedValue(mockAppDocument);
+    mockRepository.save.mockResolvedValue(mockAppDocument);
+
+    await service.update(
+      [
+        {
+          uuid: '',
+          type: DOCUMENT_TYPE.OTHER,
+          description: '',
+        },
+        {
+          uuid: '',
+          type: DOCUMENT_TYPE.OTHER,
+          description: '',
+        },
+      ],
+      '',
+    );
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call through for delete by type', async () => {
+    const mockAppDocument = new ApplicationDocument({
+      document: new Document({
+        alcsDocumentUuid: 'document-id',
+      }),
+    });
+    mockRepository.find.mockResolvedValue([mockAppDocument, mockAppDocument]);
+    mockDocumentService.delete.mockResolvedValue({} as any);
+
+    await service.deleteByType(DOCUMENT_TYPE.RESOLUTION_DOCUMENT, '');
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.delete).toHaveBeenCalledTimes(2);
+  });
 });

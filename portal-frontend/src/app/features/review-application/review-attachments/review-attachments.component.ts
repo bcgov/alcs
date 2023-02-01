@@ -1,8 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import { DOCUMENT, ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 
@@ -23,11 +25,14 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   staffReport: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
   isFirstNationGovernment = false;
+  isAuthorized = false;
+  showMandatoryUploads = false;
 
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationReviewService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private applicationDocumentService: ApplicationDocumentService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +40,9 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       if (applicationReview) {
         this.fileId = applicationReview.applicationFileNumber;
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        this.showMandatoryUploads =
+          applicationReview.isSubjectToZoning === true || applicationReview.isOCPDesignation === true;
+        this.isAuthorized = applicationReview.isAuthorized === true;
       }
     });
 
@@ -62,20 +70,20 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   async attachFile(fileHandle: FileHandle, documentType: DOCUMENT) {
     if (this.fileId) {
-      await this.applicationService.attachExternalFile(this.fileId, fileHandle.file, documentType);
+      await this.applicationDocumentService.attachExternalFile(this.fileId, fileHandle.file, documentType);
       await this.loadApplication(this.fileId);
     }
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
     if (this.fileId) {
-      await this.applicationService.deleteExternalFile($event.uuid);
+      await this.applicationDocumentService.deleteExternalFile($event.uuid);
       await this.loadApplication(this.fileId);
     }
   }
 
   async openFile(uuid: string) {
-    const res = await this.applicationService.openFile(uuid);
+    const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }

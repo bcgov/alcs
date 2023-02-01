@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { DOCUMENT, ApplicationDto, ApplicationUpdateDto } from './application.dto';
+import { ApplicationDto, ApplicationUpdateDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +11,7 @@ import { DOCUMENT, ApplicationDto, ApplicationUpdateDto } from './application.dt
 export class ApplicationService {
   private serviceUrl = `${environment.apiUrl}/application`;
 
-  constructor(
-    private httpClient: HttpClient,
-    private toastService: ToastService,
-    private documentService: DocumentService
-  ) {}
+  constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 
   async getApplications() {
     try {
@@ -77,53 +72,13 @@ export class ApplicationService {
     return undefined;
   }
 
-  async submitToAlcs(fileId: string, updateDto: ApplicationUpdateDto) {
+  async submitToAlcs(fileId: string) {
     try {
-      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, updateDto));
+      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {}));
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to submit Application, please try again');
-    }
-  }
-
-  async attachExternalFile(fileId: string, file: File, documentType: DOCUMENT) {
-    try {
-      const res = await this.documentService.uploadFile(
-        'owners',
-        file,
-        documentType,
-        'Applicant',
-        `${environment.apiUrl}/application-document/application/${fileId}/attachExternal`
-      );
-      this.toastService.showSuccessToast('Document uploaded');
-      return res;
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to attach document to Application, please try again');
-    }
-    return undefined;
-  }
-
-  async openFile(fileUuid: string) {
-    try {
-      return await firstValueFrom(
-        this.httpClient.get<{ url: string }>(`${environment.apiUrl}/application-document/${fileUuid}/open`)
-      );
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to open the document, please try again');
-    }
-    return undefined;
-  }
-
-  async deleteExternalFile(fileUuid: string) {
-    try {
-      await firstValueFrom(this.httpClient.delete(`${environment.apiUrl}/application-document/${fileUuid}`));
-      this.toastService.showSuccessToast('Document deleted');
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to delete document, please try again');
     }
   }
 }
