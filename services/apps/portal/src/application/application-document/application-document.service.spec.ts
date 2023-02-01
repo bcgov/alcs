@@ -168,4 +168,19 @@ describe('ApplicationDocumentService', () => {
     expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
     expect(mockRepository.save).toHaveBeenCalledTimes(2);
   });
+
+  it('should call through for delete by type', async () => {
+    const mockAppDocument = new ApplicationDocument({
+      document: new Document({
+        alcsDocumentUuid: 'document-id',
+      }),
+    });
+    mockRepository.find.mockResolvedValue([mockAppDocument, mockAppDocument]);
+    mockDocumentService.delete.mockResolvedValue({} as any);
+
+    await service.deleteByType(DOCUMENT_TYPE.RESOLUTION_DOCUMENT, '');
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.delete).toHaveBeenCalledTimes(2);
+  });
 });

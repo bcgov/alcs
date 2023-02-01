@@ -25,6 +25,8 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   staffReport: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
   isFirstNationGovernment = false;
+  isAuthorized = false;
+  showMandatoryUploads = false;
 
   constructor(
     private router: Router,
@@ -38,6 +40,9 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       if (applicationReview) {
         this.fileId = applicationReview.applicationFileNumber;
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        this.showMandatoryUploads =
+          applicationReview.isSubjectToZoning === true || applicationReview.isOCPDesignation === true;
+        this.isAuthorized = applicationReview.isAuthorized === true;
       }
     });
 

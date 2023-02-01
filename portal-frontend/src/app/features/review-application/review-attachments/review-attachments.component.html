@@ -6,7 +6,7 @@
       <button class="save-button" mat-flat-button color="primary">Save Progress</button>
     </div>
   </div>
-  <section>
+  <section *ngIf="showMandatoryUploads">
     <label for="resolution-document">Resolution Document</label>
     <app-file-drag-drop
       id="resolution-document"
@@ -16,8 +16,8 @@
       (openFile)="openFile($event)"
     ></app-file-drag-drop>
   </section>
-  <section *ngIf='!isFirstNationGovernment'>
-    <label for="staff-report">Staff Report</label>
+  <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
+    <label for="staff-report">Staff Report <span *ngIf='!isAuthorized'>(optional)</span></label>
     <app-file-drag-drop
       id="staff-report"
       [uploadedFiles]="staffReport"
