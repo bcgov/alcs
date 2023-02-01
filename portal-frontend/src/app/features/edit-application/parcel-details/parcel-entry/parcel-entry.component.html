@@ -86,7 +86,7 @@
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" *ngIf="enableCertificateOfTitleUpload">
     <label for="certificate-of-title-upload">Upload Certificate of Title</label>
     <app-file-drag-drop
       id="certificate-of-title-upload"
@@ -98,7 +98,7 @@
     ></app-file-drag-drop>
   </div>
 
-  <section class="container">
+  <section *ngIf="enableOwners" class="container">
     <h6>Owner Information</h6>
     <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
     <label for="owner-search">Add Owner to Parcel</label>
@@ -127,7 +127,7 @@
           </div>
         </mat-option>
         <mat-option class="option" *ngIf="owners.length > 0" (click)="onSeeAllOwners()">
-          <span class='link-text'>See all Owners</span>
+          <span class="link-text">See all Owners</span>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -140,7 +140,7 @@
       ></app-parcel-owners>
     </div>
   </section>
-  <mat-checkbox formControlName="isConfirmedByApplicant" class="container"
+  <mat-checkbox *ngIf="enableUserSignOff" formControlName="isConfirmedByApplicant" class="container"
     >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
     information can cause significant delays to processing time.
   </mat-checkbox>

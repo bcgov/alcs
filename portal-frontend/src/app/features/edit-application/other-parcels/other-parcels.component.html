@@ -1,0 +1,56 @@
+<section title="Other parcels">
+  <h2>Other Parcels in the Community</h2>
+  <p>
+    Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
+    application are located.
+  </p>
+  <form>
+    <mat-expansion-panel *ngFor="let owner of owners; let ownerInd = index" [expanded]="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title> {{ owner.displayName }}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <mat-expansion-panel *ngFor="let parcel of owner.parcels; let parcelInd = index" [expanded]="false">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details</mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-parcel-entry
+            [parcel]="parcel"
+            [fileId]="fileId"
+            [enableOwners]="false"
+            [enableCertificateOfTitleUpload]="false"
+            [enableUserSignOff]="false"
+            (onFormGroupChange)="onParcelFormChange($event)"
+            (onAppUpdated)="onAppUpdated()"
+          ></app-parcel-entry>
+          <div>
+            <div class="flex-evenly-wrap parcel-buttons-wrappers">
+              <button class="margin-top-1-half" mat-stroked-button color="primary" (click)="onSave()">
+                Save Parcel #{{ parcelInd + 1 }} Details
+              </button>
+              <button
+                class="margin-top-1-half"
+                mat-stroked-button
+                color="accent"
+                (click)="onDelete(parcel.uuid, parcelInd + 1)"
+              >
+                Delete Parcel #{{ parcelInd + 1 }} Details
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <div>
+          <button mat-stroked-button color="primary" (click)="onAddParcel(owner.uuid)">Add another parcel</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </form>
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
+    </div>
+  </div>
+</section>

@@ -69,10 +69,8 @@ export class ApplicationController {
             fileId,
             localGovernment,
           );
-
         return await this.applicationService.mapToDetailedDTO(
           application,
-          req.user.entity,
           localGovernment,
         );
       }
@@ -83,10 +81,7 @@ export class ApplicationController {
       user,
     );
 
-    return await this.applicationService.mapToDetailedDTO(
-      application,
-      req.user.entity,
-    );
+    return await this.applicationService.mapToDetailedDTO(application);
   }
 
   @Post()

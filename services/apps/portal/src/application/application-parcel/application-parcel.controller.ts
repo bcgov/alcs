@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
+import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationParcelCreateDto,
@@ -27,6 +28,7 @@ export class ApplicationParcelController {
     private parcelService: ApplicationParcelService,
     private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
+    private ownerService: ApplicationOwnerService,
   ) {}
 
   @Get('application/:fileId')
@@ -48,7 +50,19 @@ export class ApplicationParcelController {
     const application = await this.applicationService.getOrFail(
       createDto.applicationFileId,
     );
-    const parcel = await this.parcelService.create(application.fileNumber);
+    const parcel = await this.parcelService.create(
+      application.fileNumber,
+      createDto.parcelType,
+    );
+
+    try {
+      if (createDto.ownerUuid) {
+        this.ownerService.attachToParcel(createDto.ownerUuid, parcel.uuid);
+      }
+    } catch (e) {
+      this.delete(parcel.uuid);
+      throw e;
+    }
 
     return this.mapper.mapAsync(
       parcel,

@@ -14,6 +14,12 @@ export interface ApplicationParcelUpdateDto {
 
 export interface ApplicationParcelDto extends ApplicationParcelUpdateDto {
   uuid: string;
+  parcelType: string;
   owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
+}
+
+export enum PARCEL_TYPE {
+  APPLICATION = 'application',
+  OTHER = 'other',
 }

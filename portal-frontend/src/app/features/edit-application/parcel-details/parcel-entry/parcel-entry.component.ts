@@ -45,9 +45,16 @@ export class ParcelEntryComponent implements OnInit {
   fileId!: string;
 
   @Input()
-  $owners!: BehaviorSubject<ApplicationOwnerDto[]>;
+  $owners: BehaviorSubject<ApplicationOwnerDto[]> = new BehaviorSubject<ApplicationOwnerDto[]>([]);
   owners: ApplicationOwnerDto[] = [];
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
+
+  @Input()
+  enableOwners: boolean = true;
+  @Input()
+  enableCertificateOfTitleUpload: boolean = true;
+  @Input()
+  enableUserSignOff: boolean = true;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null);
@@ -90,6 +97,10 @@ export class ParcelEntryComponent implements OnInit {
 
   private setupForm() {
     this.parcelForm.valueChanges.subscribe((formData) => {
+      if (!this.parcelForm.dirty) {
+        return;
+      }
+
       if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
         this.parcel.isConfirmedByApplicant = false;
         formData.isConfirmedByApplicant = false;

@@ -26,10 +26,12 @@ export class ApplicationParcelService {
     });
   }
 
-  async create(applicationFileId: string) {
+  async create(applicationFileNumber: string, parcelType?: string) {
     const parcel = new ApplicationParcel({
-      applicationFileNumber: applicationFileId,
+      applicationFileNumber,
+      parcelType,
     });
+
     return this.parcelRepository.save(parcel);
   }
 

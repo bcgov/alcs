@@ -9,6 +9,8 @@ import {
   ApplicationOwnerTypeDto,
 } from '../../application/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../application/application-owner/application-owner.entity';
+import { ApplicationParcelDto } from '../../application/application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../../application/application-parcel/application-parcel.entity';
 
 @Injectable()
 export class ApplicationOwnerProfile extends AutomapperProfile {
@@ -42,6 +44,18 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
               };
             }
             return undefined;
+          }),
+        ),
+        forMember(
+          (ad) => ad.parcels,
+          mapFrom((a) => {
+            if (a.parcels) {
+              return this.mapper.mapArray(
+                a.parcels,
+                ApplicationParcel,
+                ApplicationParcelDto,
+              );
+            }
           }),
         ),
       );

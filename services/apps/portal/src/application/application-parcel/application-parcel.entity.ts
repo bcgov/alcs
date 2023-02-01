@@ -8,7 +8,6 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
-import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { Application } from '../application.entity';
 import { ApplicationParcelDocument } from './application-parcel-document/application-parcel-document.entity';
@@ -75,7 +74,7 @@ export class ApplicationParcel extends Base {
   })
   purchasedDate?: Date | null;
 
-  @AutoMap(() => String)
+  @AutoMap(() => Boolean)
   @Column({
     type: 'boolean',
     comment:
@@ -84,6 +83,16 @@ export class ApplicationParcel extends Base {
     default: false,
   })
   isConfirmedByApplicant: boolean;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'varchar',
+    comment:
+      'The Parcels type, "other" means parcels not related to application but related to the owner',
+    nullable: false,
+    default: 'application',
+  })
+  parcelType?: string;
 
   @AutoMap()
   @Column({

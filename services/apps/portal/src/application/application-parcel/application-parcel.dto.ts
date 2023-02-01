@@ -37,6 +37,9 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
+  @AutoMap(() => String)
+  parcelType: string;
+
   documents: ApplicationParcelDocumentDto[];
   owners: ApplicationOwnerDto[];
 }
@@ -45,6 +48,14 @@ export class ApplicationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
   applicationFileId: string;
+
+  @IsOptional()
+  @IsString()
+  parcelType: string;
+
+  @IsOptional()
+  @IsString()
+  ownerUuid: string;
 }
 
 export class ApplicationParcelUpdateDto {

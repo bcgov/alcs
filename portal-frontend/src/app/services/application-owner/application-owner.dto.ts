@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
 import { ApplicationDocumentDto } from '../application/application.dto';
 
 export enum APPLICATION_OWNER_TYPE {
@@ -18,6 +19,7 @@ export interface ApplicationOwnerDto {
   email: string | null;
   type: ApplicationOwnerTypeDto;
   corporateSummary: ApplicationDocumentDto;
+  parcels: ApplicationParcelDto[];
 }
 
 export interface ApplicationOwnerUpdateDto {
@@ -34,3 +36,16 @@ export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
   applicationFileId: string;
   parcelUuid: string;
 }
+
+// export interface ApplicationOwnerWithOtherParcelDto {
+//   uuid: string;
+//   displayName: string;
+//   firstName: string | null;
+//   lastName: string | null;
+//   organizationName: string | null;
+//   phoneNumber: string | null;
+//   email: string | null;
+//   type: ApplicationOwnerTypeDto;
+//   corporateSummary: ApplicationDocumentDto;
+//   parcels: ApplicationParcelDto[];
+// }
