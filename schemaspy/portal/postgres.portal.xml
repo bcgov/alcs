@@ -310,6 +310,9 @@
          <index name="PK_1671f67241727250919a9498855" unique="true">
             <column ascending="true" name="objectid"/>
          </index>
+         <index name="IDX_930d5ab7b370ca6f8ab246f932" unique="false">
+            <column ascending="true" name="pin"/>
+         </index>
          <index name="IDX_fa30a5bd1e389704da6e70e33b" unique="false">
             <column ascending="true" name="pid"/>
          </index>
