@@ -142,6 +142,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="ownership_type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_33f7b06b2c4e0e128d670526c66" implied="false" onDeleteCascade="false" schema="portal" table="application_parcel_ownership_type"/>
          </column>
+         <column autoUpdated="false" defaultValue="'application'::character varying" digits="0" id="15" name="parcel_type" nullable="false" remarks="The Parcels type, &quot;other&quot; means parcels not related to application but related to the owner" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_4c88659b418020abbb9b65fd4e0" unique="true">
             <column ascending="true" name="uuid"/>
