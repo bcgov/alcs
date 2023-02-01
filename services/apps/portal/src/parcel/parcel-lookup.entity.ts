@@ -14,6 +14,7 @@ export class ParcelLookup {
   @Column({ type: 'varchar', length: 128 })
   planNumber: number;
 
+  @Index()
   @Column({ type: 'varchar', length: 20, nullable: true })
   pin: string;
 
