@@ -2,8 +2,8 @@
 <div *ngIf="uploadedFiles">
   <div class="uploaded-file" *ngFor="let file of uploadedFiles">
     <div class="file-name">
-      <a (click)="fileOpened(file.uuid)">{{ file.fileName }}</a
-      >&ensp;({{ file.fileSize | filesize }})
+      <a (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
+      <div>&ensp;({{ file.fileSize | filesize }})</div>
     </div>
     <button mat-button aria-label="Remove File" (click)="_deleteFile(file)">
       <mat-icon>close</mat-icon>
