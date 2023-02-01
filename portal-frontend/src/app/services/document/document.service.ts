@@ -2,7 +2,7 @@ import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT } from '../application/application.dto';
+import { DOCUMENT } from '../application-document/application-document.dto';
 import { ToastService } from '../toast/toast.service';
 import { UploadDocumentUrlDto } from './document.dto';
 
@@ -17,13 +17,13 @@ export class DocumentService {
     this.httpClientNoAuth = new HttpClient(handler);
   }
 
-  async getUploadUrl(fileNumber: string, documentType: string) {
+  async getUploadUrl(fileNumber: string, documentType: string | null) {
     return await firstValueFrom(
       this.httpClient.get<UploadDocumentUrlDto>(`${this.serviceUrl}/getUploadUrl/${fileNumber}/${documentType}`)
     );
   }
 
-  private async uploadFileToStorage(fileId: string, file: File, documentType: string) {
+  private async uploadFileToStorage(fileId: string, file: File, documentType: string | null) {
     // get presigned url
     const { fileKey, uploadUrl } = await this.getUploadUrl(fileId, documentType);
 
@@ -39,7 +39,7 @@ export class DocumentService {
     return fileKey;
   }
 
-  async uploadFile(fileId: string, file: File, documentType: DOCUMENT, source: string, url: string) {
+  async uploadFile(fileId: string, file: File, documentType: DOCUMENT | null, source: string, url: string) {
     if (file.size > environment.maxFileSize) {
       const niceSize = environment.maxFileSize / 1048576;
       this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);

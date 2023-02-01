@@ -12,9 +12,9 @@ export class DocumentController {
   @Get('/getUploadUrl/:fileId/:documentType')
   getUploadUrl(
     @Param('fileId') fileId: string,
-    @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Param('documentType') documentType: DOCUMENT_TYPE | 'null',
   ) {
-    if (!DOCUMENT_TYPES.includes(documentType)) {
+    if (documentType !== 'null' && !DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
         `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
           ', ',

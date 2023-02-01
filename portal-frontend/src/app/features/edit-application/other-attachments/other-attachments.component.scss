@@ -1,0 +1,21 @@
+@import '../../../../styles/typography';
+
+section {
+  margin-top: rem(32);
+}
+
+.uploader {
+  margin-top: rem(24);
+}
+
+h4 {
+  margin-bottom: rem(8) !important;
+}
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.mat-mdc-table .mdc-data-table__row {
+  height: rem(75);
+}

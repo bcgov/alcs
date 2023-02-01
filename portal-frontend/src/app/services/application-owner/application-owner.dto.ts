@@ -1,5 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { ApplicationDocumentDto } from '../application/application.dto';
+import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 
 export enum APPLICATION_OWNER_TYPE {
   INDIVIDUAL = 'INDV',

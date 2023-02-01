@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApplicationDocumentDto } from '../../services/application/application.dto';
+import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { FileHandle } from './drag-drop.directive';
 
 @Component({

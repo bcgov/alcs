@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
@@ -26,6 +27,7 @@ describe('ParcelOwnersComponent', () => {
         },
       ],
       declarations: [ParcelOwnersComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ParcelOwnersComponent);

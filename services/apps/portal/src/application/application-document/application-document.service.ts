@@ -1,5 +1,9 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { Any, Repository } from 'typeorm';
@@ -7,6 +11,7 @@ import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application.service';
+import { ApplicationDocumentUpdateDto } from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -104,5 +109,31 @@ export class ApplicationDocumentService {
         application,
       }),
     );
+  }
+
+  async update(updates: ApplicationDocumentUpdateDto[], fileNumber: string) {
+    const results: ApplicationDocument[] = [];
+    for (const update of updates) {
+      const file = await this.applicationDocumentRepository.findOne({
+        where: {
+          uuid: update.uuid,
+          applicationFileNumber: fileNumber,
+        },
+        relations: {
+          document: true,
+        },
+      });
+      if (!file) {
+        throw new BadRequestException(
+          'Failed to find file linked to provided application',
+        );
+      }
+
+      file.type = update.type;
+      file.description = update.description;
+      const updatedFile = await this.applicationDocumentRepository.save(file);
+      results.push(updatedFile);
+    }
+    return results;
   }
 }

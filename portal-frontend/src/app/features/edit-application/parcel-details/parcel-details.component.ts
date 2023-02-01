@@ -2,10 +2,11 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
@@ -41,9 +42,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
         this.loadParcels();
-        if (application.owners) {
-          this.$owners.next(application.owners);
-        }
+        this.$owners.next(application.owners);
       }
     });
     this.newParcelAdded = false;
