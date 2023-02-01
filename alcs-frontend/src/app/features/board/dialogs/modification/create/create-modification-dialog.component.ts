@@ -148,7 +148,7 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
 
       await this.modificationService.create(modificationCreateDto);
       this.dialogRef.close(true);
-      this.toastService.showSuccessToast('Reconsideration card created');
+      this.toastService.showSuccessToast('Modification card created');
     } finally {
       this.isLoading = false;
     }
