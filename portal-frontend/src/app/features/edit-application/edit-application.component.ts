@@ -76,11 +76,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     }
 
     if (this.application) {
-      await this.applicationService.submitToAlcs(this.fileId, {
-        applicant: `${this.application.type}_${this.application.fileNumber}`,
-        localGovernmentUuid: this.application.localGovernmentUuid,
-        typeCode: this.application.type,
-      });
+      await this.applicationService.submitToAlcs(this.fileId);
     }
   }
 }
