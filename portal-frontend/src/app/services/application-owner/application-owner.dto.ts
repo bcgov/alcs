@@ -19,6 +19,9 @@ export interface ApplicationOwnerDto {
   email: string | null;
   type: ApplicationOwnerTypeDto;
   corporateSummary: ApplicationDocumentDto;
+}
+
+export interface ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
   parcels: ApplicationParcelDto[];
 }
 
@@ -36,16 +39,3 @@ export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
   applicationFileId: string;
   parcelUuid: string;
 }
-
-// export interface ApplicationOwnerWithOtherParcelDto {
-//   uuid: string;
-//   displayName: string;
-//   firstName: string | null;
-//   lastName: string | null;
-//   organizationName: string | null;
-//   phoneNumber: string | null;
-//   email: string | null;
-//   type: ApplicationOwnerTypeDto;
-//   corporateSummary: ApplicationDocumentDto;
-//   parcels: ApplicationParcelDto[];
-// }

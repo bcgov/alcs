@@ -71,15 +71,28 @@ export class ApplicationParcelController {
     );
   }
 
-  @Put('/:uuid')
-  async update(
-    @Param('uuid') uuid: string,
-    @Body() updateDto: ApplicationParcelUpdateDto,
-  ): Promise<ApplicationParcelDto> {
-    const newParcel = await this.parcelService.update(uuid, updateDto);
+  // @Put('/:uuid')
+  // async update(
+  //   @Param('uuid') uuid: string,
+  //   @Body() updateDto: ApplicationParcelUpdateDto,
+  // ): Promise<ApplicationParcelDto> {
+  //   const newParcel = await this.parcelService.update(uuid, updateDto);
 
-    return this.mapper.mapAsync(
-      newParcel,
+  //   return this.mapper.mapAsync(
+  //     newParcel,
+  //     ApplicationParcel,
+  //     ApplicationParcelDto,
+  //   );
+  // }
+
+  @Put('/')
+  async update(
+    @Body() updateDtos: ApplicationParcelUpdateDto[],
+  ): Promise<ApplicationParcelDto[]> {
+    const updatedParcels = await this.parcelService.update(updateDtos);
+
+    return this.mapper.mapArrayAsync(
+      updatedParcels,
       ApplicationParcel,
       ApplicationParcelDto,
     );

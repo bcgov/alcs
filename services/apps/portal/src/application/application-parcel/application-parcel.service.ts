@@ -41,19 +41,39 @@ export class ApplicationParcelService {
     });
   }
 
-  async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
-    const parcel = await this.getOneOrFail(uuid);
+  // async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
+  //   const parcel = await this.getOneOrFail(uuid);
 
-    parcel.pid = updateDto.pid;
-    parcel.pin = updateDto.pin;
-    parcel.legalDescription = updateDto.legalDescription;
-    parcel.mapAreaHectares = updateDto.mapAreaHectares;
-    parcel.isFarm = updateDto.isFarm;
-    parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
-    parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
-    parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+  //   parcel.pid = updateDto.pid;
+  //   parcel.pin = updateDto.pin;
+  //   parcel.legalDescription = updateDto.legalDescription;
+  //   parcel.mapAreaHectares = updateDto.mapAreaHectares;
+  //   parcel.isFarm = updateDto.isFarm;
+  //   parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
+  //   parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
+  //   parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
 
-    return this.parcelRepository.save(parcel);
+  //   return this.parcelRepository.save(parcel);
+  // }
+
+  async update(updateDtos: ApplicationParcelUpdateDto[]) {
+    const updatedParcels: ApplicationParcel[] = [];
+
+    for (const updateDto of updateDtos) {
+      const parcel = await this.getOneOrFail(updateDto.uuid);
+
+      parcel.pid = updateDto.pid;
+      parcel.pin = updateDto.pin;
+      parcel.legalDescription = updateDto.legalDescription;
+      parcel.mapAreaHectares = updateDto.mapAreaHectares;
+      parcel.isFarm = updateDto.isFarm;
+      parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
+      parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
+      parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+      updatedParcels.push(parcel);
+    }
+
+    return await this.parcelRepository.save(updatedParcels);
   }
 
   async delete(uuid: string) {

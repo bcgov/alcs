@@ -129,7 +129,7 @@ export class ParcelEntryComponent implements OnInit {
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: formatBooleanToString(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
-      isConfirmedByApplicant: this.parcel.isConfirmedByApplicant,
+      isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
   }
 

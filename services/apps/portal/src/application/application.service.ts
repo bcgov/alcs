@@ -285,6 +285,11 @@ export class ApplicationService {
       ],
       order: {
         updatedAt: 'DESC',
+        owners: {
+          parcels: {
+            purchasedDate: 'ASC',
+          },
+        },
       },
       relations: {
         documents: {
@@ -379,8 +384,13 @@ export class ApplicationService {
     userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationTypeService.list();
+    const mappedApp = this.mapper.map(
+      application,
+      Application,
+      ApplicationDetailedDto,
+    );
     return {
-      ...this.mapper.map(application, Application, ApplicationDetailedDto),
+      ...mappedApp,
       type: types.find((type) => type.code === application.typeCode)!.label,
       canEdit: [
         APPLICATION_STATUS.IN_PROGRESS,

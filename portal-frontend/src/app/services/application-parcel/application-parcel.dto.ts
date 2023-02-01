@@ -2,6 +2,7 @@ import { ApplicationOwnerDto } from '../application-owner/application-owner.dto'
 import { ApplicationDocumentDto } from '../application/application.dto';
 
 export interface ApplicationParcelUpdateDto {
+  uuid: string;
   pid?: string | null;
   pin?: string | null;
   legalDescription?: string | null;
@@ -13,10 +14,14 @@ export interface ApplicationParcelUpdateDto {
 }
 
 export interface ApplicationParcelDto extends ApplicationParcelUpdateDto {
-  uuid: string;
   parcelType: string;
   owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
+}
+
+export interface ApplicationParcelOtherDto extends ApplicationParcelUpdateDto {
+  parcelType: string;
+  ownerUuid: string;
 }
 
 export enum PARCEL_TYPE {

@@ -3,7 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
-import { ApplicationParcelDto, PARCEL_TYPE } from '../../../services/application-parcel/application-parcel.dto';
+import {
+  ApplicationParcelDto,
+  ApplicationParcelUpdateDto,
+  PARCEL_TYPE,
+} from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -95,8 +99,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   }
 
   private async saveProgress() {
+    const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
     for (const parcel of this.parcels) {
-      await this.applicationParcelService.update(parcel.uuid, {
+      parcelsToUpdate.push({
+        uuid: parcel.uuid,
         pid: parcel.pid?.toString(),
         pin: parcel.pin?.toString(),
         legalDescription: parcel.legalDescription,
@@ -107,6 +113,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         isConfirmedByApplicant: parcel.isConfirmedByApplicant,
       });
     }
+
+    await this.applicationParcelService.updateParcels(parcelsToUpdate);
   }
 
   async onSave() {

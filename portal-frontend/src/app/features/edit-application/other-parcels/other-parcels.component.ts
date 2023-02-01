@@ -2,8 +2,12 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
-import { ApplicationParcelDto, PARCEL_TYPE } from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationOwnerDetailedDto } from '../../../services/application-owner/application-owner.dto';
+import {
+  ApplicationParcelDto,
+  ApplicationParcelUpdateDto,
+  PARCEL_TYPE,
+} from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDocumentDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -20,14 +24,10 @@ import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry
 export class OtherParcelsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
   fileId: string = '';
-  owners: ApplicationOwnerDto[] = [];
-
-  // TODO get rid on unnecessary variables from entry
+  owners: ApplicationOwnerDetailedDto[] = [];
+  PARCEL_TYPE = PARCEL_TYPE;
 
   $destroy = new Subject<void>();
-
-  parcels: ApplicationParcelDto[] = [];
-  PARCEL_TYPE = PARCEL_TYPE;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -41,9 +41,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        // TODO sort owners and their parcels
-        this.owners = application.owners;
-        this.parcels = application.owners.flatMap((o) => o.parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER));
+        this.owners = application.owners.map((o) => ({
+          ...o,
+          parcels: o.parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER),
+        }));
       }
     });
   }
@@ -54,7 +55,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
-    const parcel = this.parcels.find((e) => e.uuid === formData.uuid);
+    const parcel = this.owners.flatMap((o) => o.parcels).find((e) => e.uuid === formData.uuid);
     if (!parcel) {
       this.toastService.showErrorToast('Error updating the parcel. Please refresh page and try again.');
       return;
@@ -70,20 +71,16 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
   }
 
-  onAppUpdated() {
-    console.log('onAppUpdated');
-  }
-
   private async reloadApplication() {
-    console.log('reloadApplication');
     const application = await this.applicationService.getByFileId(this.fileId);
     this.$application.next(application);
   }
 
   private async saveProgress() {
-    for (const parcel of this.parcels) {
-      console.log('saveProgress', parcel.uuid);
-      await this.applicationParcelService.update(parcel.uuid, {
+    const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
+    for (const parcel of this.owners.flatMap((o) => o.parcels)) {
+      parcelsToUpdate.push({
+        uuid: parcel.uuid,
         pid: parcel.pid?.toString(),
         pin: parcel.pin?.toString(),
         legalDescription: parcel.legalDescription,
@@ -91,9 +88,11 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         purchasedDate: parcel.purchasedDate,
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
-        isConfirmedByApplicant: parcel.isConfirmedByApplicant,
+        isConfirmedByApplicant: false,
       });
     }
+
+    await this.applicationParcelService.updateParcels(parcelsToUpdate);
   }
 
   async onSave() {
@@ -108,16 +107,15 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async onAddParcel(ownerId: string) {
-    console.log('onAddParcel', ownerId);
     const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER, ownerId);
 
     if (parcel) {
-      this.parcels.push({
+      const owner = this.owners.find((o) => o.uuid === ownerId);
+      owner?.parcels.push({
         uuid: parcel!.uuid,
         parcelType: PARCEL_TYPE.OTHER,
         documents: [] as ApplicationDocumentDto[],
       } as ApplicationParcelDto);
-      await this.reloadApplication();
     } else {
       this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
     }

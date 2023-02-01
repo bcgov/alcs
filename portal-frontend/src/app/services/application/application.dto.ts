@@ -1,5 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
+import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 
 export enum APPLICATION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -42,7 +42,7 @@ export interface ApplicationDto {
   canReview: boolean;
   canView: boolean;
   documents: ApplicationDocumentDto[];
-  owners: ApplicationOwnerDto[];
+  owners: ApplicationOwnerDetailedDto[];
   parcelsAgricultureDescription?: string | null;
   parcelsAgricultureImprovementDescription?: string | null;
   parcelsNonAgricultureUseDescription?: string | null;

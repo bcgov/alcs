@@ -5,6 +5,7 @@ import { ApplicationDocumentDto } from '../../application/application-document/a
 import { DOCUMENT_TYPE } from '../../application/application-document/application-document.entity';
 import { ApplicationOwnerType } from '../../application/application-owner/application-owner-type/application-owner-type.entity';
 import {
+  ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
   ApplicationOwnerTypeDto,
 } from '../../application/application-owner/application-owner.dto';
@@ -19,6 +20,20 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
   }
 
   override get profile() {
+    const mapCorporateSummary = (a): ApplicationDocumentDto | undefined => {
+      if (a.corporateSummary) {
+        return {
+          uuid: a.corporateSummary.uuid,
+          fileName: a.corporateSummary.fileName,
+          type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+          fileSize: a.corporateSummary.fileSize,
+          uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
+          uploadedBy: a.corporateSummary.uploadedBy.displayName,
+        };
+      }
+      return undefined;
+    };
+
     return (mapper) => {
       createMap(
         mapper,
@@ -32,19 +47,23 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.corporateSummary,
-          mapFrom((a): ApplicationDocumentDto | undefined => {
-            if (a.corporateSummary) {
-              return {
-                uuid: a.corporateSummary.uuid,
-                fileName: a.corporateSummary.fileName,
-                type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
-                fileSize: a.corporateSummary.fileSize,
-                uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
-                uploadedBy: a.corporateSummary.uploadedBy.displayName,
-              };
-            }
-            return undefined;
-          }),
+          mapFrom((a) => mapCorporateSummary(a)),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationOwner,
+        ApplicationOwnerDetailedDto,
+        forMember(
+          (pd) => pd.displayName,
+          mapFrom((p) =>
+            p.firstName ? `${p.firstName} ${p.lastName}` : p.organizationName,
+          ),
+        ),
+        forMember(
+          (ad) => ad.corporateSummary,
+          mapFrom((a) => mapCorporateSummary(a)),
         ),
         forMember(
           (ad) => ad.parcels,

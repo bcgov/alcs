@@ -3,7 +3,10 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../application/application-document/application-document.entity';
-import { ApplicationOwnerDto } from '../../application/application-owner/application-owner.dto';
+import {
+  ApplicationOwnerDetailedDto,
+  ApplicationOwnerDto,
+} from '../../application/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../application/application-owner/application-owner.entity';
 import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
 import { ApplicationStatus } from '../../application/application-status/application-status.entity';
@@ -106,7 +109,7 @@ export class ApplicationProfile extends AutomapperProfile {
               return this.mapper.mapArray(
                 ad.owners,
                 ApplicationOwner,
-                ApplicationOwnerDto,
+                ApplicationOwnerDetailedDto,
               );
             } else {
               return [];

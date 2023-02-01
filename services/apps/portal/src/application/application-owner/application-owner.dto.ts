@@ -31,8 +31,9 @@ export class ApplicationOwnerDto {
   type: ApplicationOwnerTypeDto;
 
   corporateSummary?: ApplicationDocumentDto;
+}
 
-  @AutoMap()
+export class ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
   parcels: ApplicationParcelDto[];
 }
 
