@@ -43,27 +43,7 @@ export class ApplicationParcelService {
     }
   }
 
-  // async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
-  //   try {
-  //     const result = await firstValueFrom(
-  //       this.httpClient.put<ApplicationParcelDto>(`${this.serviceUrl}/${uuid}`, {
-  //         ...updateDto,
-  //         mapAreaHectares: updateDto.mapAreaHectares
-  //           ? parseFloat(updateDto.mapAreaHectares)
-  //           : updateDto.mapAreaHectares,
-  //       })
-  //     );
-
-  //     this.toastService.showSuccessToast('Parcel saved');
-  //     return result;
-  //   } catch (e) {
-  //     console.error(e);
-  //     this.toastService.showErrorToast('Failed to update Parcel, please try again later');
-  //   }
-  //   return undefined;
-  // }
-
-  async updateParcels(updateDtos: ApplicationParcelUpdateDto[]) {
+  async update(updateDtos: ApplicationParcelUpdateDto[]) {
     try {
       const formattedDtos = updateDtos.map((e) => ({
         ...e,

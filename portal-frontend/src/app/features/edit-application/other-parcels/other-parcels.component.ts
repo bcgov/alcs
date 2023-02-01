@@ -92,7 +92,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       });
     }
 
-    await this.applicationParcelService.updateParcels(parcelsToUpdate);
+    await this.applicationParcelService.update(parcelsToUpdate);
   }
 
   async onSave() {
