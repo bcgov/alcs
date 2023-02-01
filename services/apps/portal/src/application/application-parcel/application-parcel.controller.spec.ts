@@ -1,9 +1,10 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
+import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationParcelController } from './application-parcel.controller';
@@ -15,10 +16,12 @@ describe('ApplicationParcelController', () => {
   let controller: ApplicationParcelController;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
 
   beforeEach(async () => {
     mockApplicationParcelService = createMock();
     mockApplicationService = createMock();
+    mockApplicationOwnerService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -36,6 +39,10 @@ describe('ApplicationParcelController', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: ApplicationOwnerService,
+          useValue: mockApplicationOwnerService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -66,31 +73,61 @@ describe('ApplicationParcelController', () => {
     mockApplicationParcelService.create.mockResolvedValue(
       {} as ApplicationParcel,
     );
+    mockApplicationOwnerService.attachToParcel.mockResolvedValue();
 
-    const parcel = await controller.create({ applicationFileId: 'fake' });
+    const parcel = await controller.create({
+      applicationFileId: 'fake',
+    });
 
     expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
     expect(mockApplicationParcelService.create).toBeCalledTimes(1);
+    expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(0);
     expect(parcel).toBeDefined();
   });
 
-  it('should call out to service when updating parcel', async () => {
-    const mockUpdateDto: ApplicationParcelUpdateDto = {
-      pid: 'mock_pid',
-      pin: 'mock_pin',
-      legalDescription: 'mock_legal',
-      mapAreaHectares: 2,
-      purchasedDate: 1,
-      isFarm: true,
-      isConfirmedByApplicant: true,
-      ownershipTypeCode: 'SMPL',
-    };
-
-    mockApplicationParcelService.update.mockResolvedValue(
+  it('should call out to service and revert newly created "other" parcel if failed to link it to and owner during creation process', async () => {
+    const mockError = new Error('mock error');
+    mockApplicationService.getOrFail.mockResolvedValue({} as Application);
+    mockApplicationParcelService.create.mockResolvedValue(
       {} as ApplicationParcel,
     );
+    mockApplicationOwnerService.attachToParcel.mockRejectedValue(mockError);
+    mockApplicationParcelService.delete.mockResolvedValue('fake');
 
-    const parcel = await controller.update('fake_uuid', mockUpdateDto);
+    await expect(
+      controller.create({
+        applicationFileId: 'fake',
+        ownerUuid: 'fake_uuid',
+        parcelType: 'other',
+      }),
+    ).rejects.toMatchObject(mockError);
+
+    expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
+    expect(mockApplicationParcelService.create).toBeCalledTimes(1);
+    expect(mockApplicationParcelService.delete).toBeCalledTimes(1);
+    expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(1);
+  });
+
+  it('should call out to service when updating parcel', async () => {
+    const mockUpdateDto: ApplicationParcelUpdateDto[] = [
+      {
+        uuid: 'fake_uuid',
+        pid: 'mock_pid',
+        pin: 'mock_pin',
+        legalDescription: 'mock_legal',
+        mapAreaHectares: 2,
+        purchasedDate: 1,
+        isFarm: true,
+        isConfirmedByApplicant: true,
+        ownershipTypeCode: 'SMPL',
+      },
+    ];
+
+    mockApplicationParcelService.update.mockResolvedValue([
+      {},
+    ] as ApplicationParcel[]);
+
+    const parcel = await controller.update(mockUpdateDto);
 
     expect(mockApplicationParcelService.update).toBeCalledTimes(1);
     expect(parcel).toBeDefined();

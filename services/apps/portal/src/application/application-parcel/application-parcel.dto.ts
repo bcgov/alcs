@@ -51,11 +51,11 @@ export class ApplicationParcelCreateDto {
 
   @IsOptional()
   @IsString()
-  parcelType: string;
+  parcelType?: string;
 
   @IsOptional()
   @IsString()
-  ownerUuid: string;
+  ownerUuid?: string;
 }
 
 export class ApplicationParcelUpdateDto {

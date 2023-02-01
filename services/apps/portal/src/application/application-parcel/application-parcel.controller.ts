@@ -57,10 +57,13 @@ export class ApplicationParcelController {
 
     try {
       if (createDto.ownerUuid) {
-        this.ownerService.attachToParcel(createDto.ownerUuid, parcel.uuid);
+        await this.ownerService.attachToParcel(
+          createDto.ownerUuid,
+          parcel.uuid,
+        );
       }
     } catch (e) {
-      this.delete(parcel.uuid);
+      await this.delete(parcel.uuid);
       throw e;
     }
 
@@ -70,20 +73,6 @@ export class ApplicationParcelController {
       ApplicationParcelDto,
     );
   }
-
-  // @Put('/:uuid')
-  // async update(
-  //   @Param('uuid') uuid: string,
-  //   @Body() updateDto: ApplicationParcelUpdateDto,
-  // ): Promise<ApplicationParcelDto> {
-  //   const newParcel = await this.parcelService.update(uuid, updateDto);
-
-  //   return this.mapper.mapAsync(
-  //     newParcel,
-  //     ApplicationParcel,
-  //     ApplicationParcelDto,
-  //   );
-  // }
 
   @Put('/')
   async update(
