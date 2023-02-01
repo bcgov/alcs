@@ -112,6 +112,7 @@ export class ApplicationDocumentService {
   }
 
   async update(updates: ApplicationDocumentUpdateDto[], fileNumber: string) {
+    const results: ApplicationDocument[] = [];
     for (const update of updates) {
       const file = await this.applicationDocumentRepository.findOne({
         where: {
@@ -130,7 +131,9 @@ export class ApplicationDocumentService {
 
       file.type = update.type;
       file.description = update.description;
-      await this.applicationDocumentRepository.save(file);
+      const updatedFile = await this.applicationDocumentRepository.save(file);
+      results.push(updatedFile);
     }
+    return results;
   }
 }

@@ -1,4 +1,4 @@
-@import "../../../../styles/typography";
+@import '../../../../styles/typography';
 
 section {
   margin-top: rem(32);
@@ -17,5 +17,5 @@ h4 {
 }
 
 .mat-mdc-table .mdc-data-table__row {
-  height: 75px;
+  height: rem(75);
 }

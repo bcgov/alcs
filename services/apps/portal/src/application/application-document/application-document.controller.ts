@@ -87,8 +87,12 @@ export class ApplicationDocumentController {
     @Body() body: ApplicationDocumentUpdateDto[],
   ) {
     await this.applicationService.verifyAccess(fileNumber, req.user.entity);
-    await this.applicationDocumentService.update(body, fileNumber);
-    return;
+    const res = await this.applicationDocumentService.update(body, fileNumber);
+    return this.mapper.mapArray(
+      res,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
   }
 
   @Delete('/:uuid')

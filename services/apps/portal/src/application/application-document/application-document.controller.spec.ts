@@ -108,7 +108,7 @@ describe('ApplicationDocumentController', () => {
   });
 
   it('should call through to update documents', async () => {
-    appDocumentService.update.mockResolvedValue();
+    appDocumentService.update.mockResolvedValue([]);
 
     await controller.update(
       'file-number',
