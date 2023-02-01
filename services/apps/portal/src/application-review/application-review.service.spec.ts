@@ -9,6 +9,7 @@ import {
   ApplicationDocument,
   DOCUMENT_TYPE,
 } from '../application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { Application } from '../application/application.entity';
 import { ApplicationReviewProfile } from '../common/automapper/application-review.automapper.profile';
 import { ApplicationReview } from './application-review.entity';
@@ -17,6 +18,7 @@ import { ApplicationReviewService } from './application-review.service';
 describe('ApplicationReviewService', () => {
   let service: ApplicationReviewService;
   let mockRepository: DeepMocked<Repository<ApplicationReview>>;
+  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   const mockLocalGovernment = {
     uuid: '',
@@ -26,6 +28,7 @@ describe('ApplicationReviewService', () => {
 
   beforeEach(async () => {
     mockRepository = createMock();
+    mockAppDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -34,12 +37,16 @@ describe('ApplicationReviewService', () => {
         }),
       ],
       providers: [
+        ApplicationReviewService,
         ApplicationReviewProfile,
         {
           provide: getRepositoryToken(ApplicationReview),
           useValue: mockRepository,
         },
-        ApplicationReviewService,
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocumentService,
+        },
       ],
     }).compile();
 
@@ -76,6 +83,21 @@ describe('ApplicationReviewService', () => {
     const res = await service.update('', mockLocalGovernment, {});
 
     expect(res).toBeDefined();
+  });
+
+  it('should delete the staff report and the resolution document when there is no ocp or zoning for update', async () => {
+    const appReview = new ApplicationReview({});
+    mockRepository.findOneOrFail.mockResolvedValue(appReview);
+    mockAppDocumentService.deleteByType.mockResolvedValue({} as any);
+    mockRepository.save.mockResolvedValue({} as any);
+
+    const res = await service.update('', mockLocalGovernment, {
+      isOCPDesignation: false,
+      isSubjectToZoning: false,
+    });
+
+    expect(res).toBeDefined();
+    expect(mockAppDocumentService.deleteByType).toHaveBeenCalledTimes(2);
   });
 
   it('should call remove for delete', async () => {
@@ -163,7 +185,10 @@ describe('ApplicationReviewService', () => {
       department: 'Gotham',
       phoneNumber: 'phoneNumber',
       email: 'email',
-      isOCPDesignation: false,
+      isOCPDesignation: true,
+      OCPDesignation: 'designation',
+      OCPConsistent: true,
+      OCPBylawName: 'bylaw',
       isSubjectToZoning: false,
       isAuthorized: true,
     });
@@ -183,7 +208,7 @@ describe('ApplicationReviewService', () => {
     );
   });
 
-  it('should return the completed review when its valid', () => {
+  it('should return the completed review when its authorized and has correct files', () => {
     const appReview = new ApplicationReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
@@ -206,7 +231,42 @@ describe('ApplicationReviewService', () => {
           type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
         new ApplicationDocument({
-          type: 'reviewStaffReport',
+          type: DOCUMENT_TYPE.STAFF_REPORT,
+        }),
+      ],
+    });
+
+    const completedReview = service.verifyComplete(
+      application,
+      appReview,
+      false,
+    );
+
+    expect(completedReview).toBeDefined();
+    expect(completedReview).toMatchObject(appReview);
+  });
+
+  it('should not require a staff report if the application was not authorized', () => {
+    const appReview = new ApplicationReview({
+      localGovernmentFileNumber: '123',
+      firstName: 'Bruce',
+      lastName: 'Wayne',
+      position: 'Not Batman',
+      department: 'Gotham',
+      phoneNumber: 'phoneNumber',
+      email: 'email',
+      isOCPDesignation: true,
+      OCPDesignation: 'designation',
+      OCPConsistent: true,
+      OCPBylawName: 'bylaw',
+      isSubjectToZoning: false,
+      isAuthorized: false,
+    });
+
+    const application = new Application({
+      documents: [
+        new ApplicationDocument({
+          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       ],
     });

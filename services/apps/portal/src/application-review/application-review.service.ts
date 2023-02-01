@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { Application } from '../application/application.entity';
 import {
   ApplicationReviewDto,
@@ -38,6 +39,7 @@ export class ApplicationReviewService {
   constructor(
     @InjectRepository(ApplicationReview)
     private applicationReviewRepository: Repository<ApplicationReview>,
+    private applicationDocumentService: ApplicationDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -92,6 +94,7 @@ export class ApplicationReviewService {
         : applicationReview.phoneNumber;
     applicationReview.email =
       updateDto.email !== undefined ? updateDto.email : applicationReview.email;
+
     applicationReview.isOCPDesignation =
       updateDto.isOCPDesignation !== undefined
         ? updateDto.isOCPDesignation
@@ -108,6 +111,7 @@ export class ApplicationReviewService {
       updateDto.OCPConsistent !== undefined
         ? updateDto.OCPConsistent
         : applicationReview.OCPConsistent;
+
     applicationReview.isSubjectToZoning =
       updateDto.isSubjectToZoning !== undefined
         ? updateDto.isSubjectToZoning
@@ -128,10 +132,27 @@ export class ApplicationReviewService {
       updateDto.isZoningConsistent !== undefined
         ? updateDto.isZoningConsistent
         : applicationReview.isZoningConsistent;
+
     applicationReview.isAuthorized =
       updateDto.isAuthorized !== undefined
         ? updateDto.isAuthorized
         : applicationReview.isAuthorized;
+
+    if (
+      applicationReview.isOCPDesignation == false &&
+      applicationReview.isSubjectToZoning == false
+    ) {
+      applicationReview.isAuthorized = null;
+      await this.applicationDocumentService.deleteByType(
+        DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        applicationReview.applicationFileNumber,
+      );
+
+      await this.applicationDocumentService.deleteByType(
+        DOCUMENT_TYPE.STAFF_REPORT,
+        applicationReview.applicationFileNumber,
+      );
+    }
 
     return this.applicationReviewRepository.save(applicationReview);
   }
@@ -196,18 +217,25 @@ export class ApplicationReviewService {
 
     //Verify Documents
     if (
-      !application.documents.some(
-        (doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-      )
+      applicationReview.isSubjectToZoning ||
+      applicationReview.isOCPDesignation
     ) {
-      throw new BaseServiceException('Review missing resolution document');
-    }
-
-    if (!isFirstNationGovernment) {
       if (
-        !application.documents.some((doc) => doc.type === 'reviewStaffReport')
+        !application.documents.some(
+          (doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        )
       ) {
-        throw new BaseServiceException('Review missing staff report document');
+        throw new BaseServiceException('Review missing resolution document');
+      }
+
+      if (!isFirstNationGovernment && applicationReview.isAuthorized) {
+        if (
+          !application.documents.some((doc) => doc.type === 'reviewStaffReport')
+        ) {
+          throw new BaseServiceException(
+            'Review missing staff report document',
+          );
+        }
       }
     }
     return applicationReview as CompletedApplicationReview;

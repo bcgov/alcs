@@ -136,4 +136,24 @@ export class ApplicationDocumentService {
     }
     return results;
   }
+
+  async deleteByType(
+    documentType: DOCUMENT_TYPE,
+    applicationFileNumber: string,
+  ) {
+    const documents = await this.applicationDocumentRepository.find({
+      where: {
+        applicationFileNumber,
+        type: documentType,
+      },
+      relations: {
+        document: true,
+      },
+    });
+    for (const document of documents) {
+      await this.documentService.delete(document.document);
+    }
+
+    return;
+  }
 }
