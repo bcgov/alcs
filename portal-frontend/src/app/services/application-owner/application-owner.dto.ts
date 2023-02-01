@@ -1,5 +1,6 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
+import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
 
 export enum APPLICATION_OWNER_TYPE {
   INDIVIDUAL = 'INDV',
@@ -18,6 +19,10 @@ export interface ApplicationOwnerDto {
   email: string | null;
   type: ApplicationOwnerTypeDto;
   corporateSummary: ApplicationDocumentDto;
+}
+
+export interface ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
+  parcels: ApplicationParcelDto[];
 }
 
 export interface ApplicationOwnerUpdateDto {

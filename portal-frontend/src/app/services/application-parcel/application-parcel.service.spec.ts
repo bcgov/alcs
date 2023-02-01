@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ToastService } from '../toast/toast.service';
 
 import { of, throwError } from 'rxjs';
@@ -82,20 +82,19 @@ describe('ApplicationParcelService', () => {
 
   it('should make a put request for update', async () => {
     mockHttpClient.put.mockReturnValue(of({}));
-    let mockPid = 'fake';
+    let mockUuid = 'fake';
 
-    await service.update(mockUuid, { pid: 'fake' } as ApplicationParcelUpdateDto);
+    await service.update([{ uuid: mockUuid }] as ApplicationParcelUpdateDto[]);
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
     expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.put.mock.calls[0][0]).toContain('application-parcel');
-    expect(mockHttpClient.put.mock.calls[0][0]).toContain(mockPid);
   });
 
   it('should show an error toast if updating a parcel fails', async () => {
     mockHttpClient.put.mockReturnValue(throwError(() => ({})));
 
-    await service.update(mockUuid, {} as ApplicationParcelUpdateDto);
+    await service.update([{}] as ApplicationParcelUpdateDto[]);
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);

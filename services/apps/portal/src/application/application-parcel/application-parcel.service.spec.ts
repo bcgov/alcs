@@ -1,4 +1,4 @@
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -93,28 +93,25 @@ describe('ApplicationParcelService', () => {
   });
 
   it('should successfully update parcel', async () => {
-    const updateParcelDto = {
-      pid: 'mock_pid',
-      pin: 'mock_pin',
-      legalDescription: 'mock_legalDescription',
-      mapAreaHectares: 1,
-      isFarm: true,
-      purchasedDate: 1,
-      isConfirmedByApplicant: true,
-      applicationFileNumber: mockApplicationFileNumber,
-      ownershipTypeCode: 'mock_ownershipTypeCode',
-    } as ApplicationParcelUpdateDto;
+    const updateParcelDto = [
+      {
+        uuid: mockUuid,
+        pid: 'mock_pid',
+        pin: 'mock_pin',
+        legalDescription: 'mock_legalDescription',
+        mapAreaHectares: 1,
+        isFarm: true,
+        purchasedDate: 1,
+        isConfirmedByApplicant: true,
+        ownershipTypeCode: 'mock_ownershipTypeCode',
+      },
+    ] as ApplicationParcelUpdateDto[];
 
     mockParcelRepo.findOneOrFail.mockResolvedValue(mockApplicationParcel);
-    mockParcelRepo.save.mockResolvedValue({
-      ...updateParcelDto,
-    } as ApplicationParcel);
+    mockParcelRepo.save.mockResolvedValue({} as ApplicationParcel);
 
-    const result = await service.update(mockUuid, updateParcelDto);
+    await service.update(updateParcelDto);
 
-    expect(result).toEqual({
-      ...updateParcelDto,
-    } as ApplicationParcel);
     expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
     expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
       where: { uuid: mockUuid },
@@ -123,25 +120,27 @@ describe('ApplicationParcelService', () => {
   });
 
   it('it should fail to update a parcel if the parcel does not exist. ', async () => {
-    const updateParcelDto = {
-      pid: 'mock_pid',
-      pin: 'mock_pin',
-      legalDescription: 'mock_legalDescription',
-      mapAreaHectares: 1,
-      isFarm: true,
-      purchasedDate: 1,
-      isConfirmedByApplicant: true,
-      applicationFileNumber: mockApplicationFileNumber,
-      ownershipTypeCode: 'mock_ownershipTypeCode',
-    } as ApplicationParcelUpdateDto;
+    const updateParcelDto = [
+      {
+        uuid: mockUuid,
+        pid: 'mock_pid',
+        pin: 'mock_pin',
+        legalDescription: 'mock_legalDescription',
+        mapAreaHectares: 1,
+        isFarm: true,
+        purchasedDate: 1,
+        isConfirmedByApplicant: true,
+        ownershipTypeCode: 'mock_ownershipTypeCode',
+      },
+    ] as ApplicationParcelUpdateDto[];
     const mockError = new Error('Parcel does not exist.');
 
     mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
     mockParcelRepo.save.mockResolvedValue({} as ApplicationParcel);
 
-    await expect(
-      service.update(mockUuid, updateParcelDto),
-    ).rejects.toMatchObject(mockError);
+    await expect(service.update(updateParcelDto)).rejects.toMatchObject(
+      mockError,
+    );
     expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
     expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
       where: { uuid: mockUuid },

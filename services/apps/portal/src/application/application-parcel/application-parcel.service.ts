@@ -26,10 +26,12 @@ export class ApplicationParcelService {
     });
   }
 
-  async create(applicationFileId: string) {
+  async create(applicationFileNumber: string, parcelType?: string) {
     const parcel = new ApplicationParcel({
-      applicationFileNumber: applicationFileId,
+      applicationFileNumber,
+      parcelType,
     });
+
     return this.parcelRepository.save(parcel);
   }
 
@@ -39,19 +41,24 @@ export class ApplicationParcelService {
     });
   }
 
-  async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
-    const parcel = await this.getOneOrFail(uuid);
+  async update(updateDtos: ApplicationParcelUpdateDto[]) {
+    const updatedParcels: ApplicationParcel[] = [];
 
-    parcel.pid = updateDto.pid;
-    parcel.pin = updateDto.pin;
-    parcel.legalDescription = updateDto.legalDescription;
-    parcel.mapAreaHectares = updateDto.mapAreaHectares;
-    parcel.isFarm = updateDto.isFarm;
-    parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
-    parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
-    parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+    for (const updateDto of updateDtos) {
+      const parcel = await this.getOneOrFail(updateDto.uuid);
 
-    return this.parcelRepository.save(parcel);
+      parcel.pid = updateDto.pid;
+      parcel.pin = updateDto.pin;
+      parcel.legalDescription = updateDto.legalDescription;
+      parcel.mapAreaHectares = updateDto.mapAreaHectares;
+      parcel.isFarm = updateDto.isFarm;
+      parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
+      parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
+      parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+      updatedParcels.push(parcel);
+    }
+
+    return await this.parcelRepository.save(updatedParcels);
   }
 
   async delete(uuid: string) {

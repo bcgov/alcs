@@ -17,7 +17,7 @@
   </mat-step>
   <mat-step label="Other Parcels in the Community">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <p>Other Parcels in the Community</p>
+    <app-other-parcels [$application]="$application"></app-other-parcels>
   </mat-step>
   <mat-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>

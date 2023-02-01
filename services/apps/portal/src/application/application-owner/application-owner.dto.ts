@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
+import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
 
 export class ApplicationOwnerTypeDto extends BaseCodeDto {}
 
@@ -30,6 +31,10 @@ export class ApplicationOwnerDto {
   type: ApplicationOwnerTypeDto;
 
   corporateSummary?: ApplicationDocumentDto;
+}
+
+export class ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
+  parcels: ApplicationParcelDto[];
 }
 
 export class ApplicationOwnerUpdateDto {

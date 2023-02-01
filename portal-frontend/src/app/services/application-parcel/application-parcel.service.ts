@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { DOCUMENT } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationParcelDto, ApplicationParcelUpdateDto } from './application-parcel.dto';
+import { ApplicationParcelDto, ApplicationParcelUpdateDto, PARCEL_TYPE } from './application-parcel.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -31,10 +31,10 @@ export class ApplicationParcelService {
     return undefined;
   }
 
-  async create(applicationFileId: string) {
+  async create(applicationFileId: string, parcelType?: PARCEL_TYPE, ownerUuid?: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.post<ApplicationParcelDto>(`${this.serviceUrl}`, { applicationFileId })
+        this.httpClient.post<ApplicationParcelDto>(`${this.serviceUrl}`, { applicationFileId, parcelType, ownerUuid })
       );
     } catch (e) {
       console.error(e);
@@ -43,15 +43,15 @@ export class ApplicationParcelService {
     }
   }
 
-  async update(uuid: string, updateDto: ApplicationParcelUpdateDto) {
+  async update(updateDtos: ApplicationParcelUpdateDto[]) {
     try {
+      const formattedDtos = updateDtos.map((e) => ({
+        ...e,
+        mapAreaHectares: e.mapAreaHectares ? parseFloat(e.mapAreaHectares) : e.mapAreaHectares,
+      }));
+
       const result = await firstValueFrom(
-        this.httpClient.put<ApplicationParcelDto>(`${this.serviceUrl}/${uuid}`, {
-          ...updateDto,
-          mapAreaHectares: updateDto.mapAreaHectares
-            ? parseFloat(updateDto.mapAreaHectares)
-            : updateDto.mapAreaHectares,
-        })
+        this.httpClient.put<ApplicationParcelDto>(`${this.serviceUrl}`, formattedDtos)
       );
 
       this.toastService.showSuccessToast('Parcel saved');

@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
+import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 import { ApplicationParcelDocumentDto } from './application-parcel-document/application-parcel-document.dto';
 
 export class ApplicationParcelDto {
@@ -37,17 +37,31 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
+  @AutoMap(() => String)
+  parcelType: string;
+
   documents: ApplicationParcelDocumentDto[];
-  owners: ApplicationOwnerDto[];
+  owners: ApplicationOwnerDetailedDto[];
 }
 
 export class ApplicationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
   applicationFileId: string;
+
+  @IsOptional()
+  @IsString()
+  parcelType?: string;
+
+  @IsOptional()
+  @IsString()
+  ownerUuid?: string;
 }
 
 export class ApplicationParcelUpdateDto {
+  @IsString()
+  uuid: string;
+
   @IsString()
   @IsOptional()
   pid?: string | null;

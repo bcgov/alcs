@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../../common/authorization/auth-guard.service';
+import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationParcelCreateDto,
@@ -27,6 +28,7 @@ export class ApplicationParcelController {
     private parcelService: ApplicationParcelService,
     private applicationService: ApplicationService,
     @InjectMapper() private mapper: Mapper,
+    private ownerService: ApplicationOwnerService,
   ) {}
 
   @Get('application/:fileId')
@@ -48,7 +50,22 @@ export class ApplicationParcelController {
     const application = await this.applicationService.getOrFail(
       createDto.applicationFileId,
     );
-    const parcel = await this.parcelService.create(application.fileNumber);
+    const parcel = await this.parcelService.create(
+      application.fileNumber,
+      createDto.parcelType,
+    );
+
+    try {
+      if (createDto.ownerUuid) {
+        await this.ownerService.attachToParcel(
+          createDto.ownerUuid,
+          parcel.uuid,
+        );
+      }
+    } catch (e) {
+      await this.delete(parcel.uuid);
+      throw e;
+    }
 
     return this.mapper.mapAsync(
       parcel,
@@ -57,15 +74,14 @@ export class ApplicationParcelController {
     );
   }
 
-  @Put('/:uuid')
+  @Put('/')
   async update(
-    @Param('uuid') uuid: string,
-    @Body() updateDto: ApplicationParcelUpdateDto,
-  ): Promise<ApplicationParcelDto> {
-    const newParcel = await this.parcelService.update(uuid, updateDto);
+    @Body() updateDtos: ApplicationParcelUpdateDto[],
+  ): Promise<ApplicationParcelDto[]> {
+    const updatedParcels = await this.parcelService.update(updateDtos);
 
-    return this.mapper.mapAsync(
-      newParcel,
+    return this.mapper.mapArrayAsync(
+      updatedParcels,
       ApplicationParcel,
       ApplicationParcelDto,
     );

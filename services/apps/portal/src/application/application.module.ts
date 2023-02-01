@@ -60,6 +60,10 @@ import { ApplicationService } from './application.service';
     ApplicationParcelDocumentController,
     ApplicationOwnerController,
   ],
-  exports: [ApplicationService, ApplicationDocumentService],
+  exports: [
+    ApplicationService,
+    ApplicationDocumentService,
+    ApplicationOwnerService,
+  ],
 })
 export class ApplicationModule {}

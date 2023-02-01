@@ -8,7 +8,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { In, Repository } from 'typeorm';
-import { UpdateApplicationDto } from '../../../alcs/src/application/application.dto';
 import {
   ApplicationGrpcResponse,
   ApplicationReviewGrpc,
@@ -286,10 +285,18 @@ export class ApplicationService {
       ],
       order: {
         updatedAt: 'DESC',
+        owners: {
+          parcels: {
+            purchasedDate: 'ASC',
+          },
+        },
       },
       relations: {
         documents: {
           document: true,
+        },
+        owners: {
+          parcels: true,
         },
       },
     });
@@ -318,6 +325,7 @@ export class ApplicationService {
         owners: {
           type: true,
           corporateSummary: true,
+          parcels: true,
         },
       },
     });
@@ -373,12 +381,16 @@ export class ApplicationService {
 
   async mapToDetailedDTO(
     application: Application,
-    user: User,
     userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationTypeService.list();
+    const mappedApp = this.mapper.map(
+      application,
+      Application,
+      ApplicationDetailedDto,
+    );
     return {
-      ...this.mapper.map(application, Application, ApplicationDetailedDto),
+      ...mappedApp,
       type: types.find((type) => type.code === application.typeCode)!.label,
       canEdit: [
         APPLICATION_STATUS.IN_PROGRESS,
