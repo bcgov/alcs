@@ -298,7 +298,7 @@ export class ApplicationService {
         owners: {
           type: true,
           corporateSummary: true,
-            parcels: true,
+          parcels: true,
         },
       },
     });
