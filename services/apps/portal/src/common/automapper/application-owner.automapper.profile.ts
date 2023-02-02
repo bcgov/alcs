@@ -43,7 +43,9 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         forMember(
           (pd) => pd.displayName,
           mapFrom((p) =>
-            p.firstName ? `${p.firstName} ${p.lastName}` : p.organizationName,
+            p.organizationName
+              ? p.organizationName
+              : `${p.firstName} ${p.lastName}`,
           ),
         ),
         forMember(
@@ -59,7 +61,9 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         forMember(
           (pd) => pd.displayName,
           mapFrom((p) =>
-            p.firstName ? `${p.firstName} ${p.lastName}` : p.organizationName,
+            p.organizationName
+              ? p.organizationName
+              : `${p.firstName} ${p.lastName}`,
           ),
         ),
         forMember(

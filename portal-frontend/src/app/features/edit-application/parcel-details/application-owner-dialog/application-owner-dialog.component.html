@@ -12,34 +12,10 @@
           <mat-button-toggle [value]="OWNER_TYPE.ORGANIZATION">Organization</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <div *ngIf="type.getRawValue() === OWNER_TYPE.INDIVIDUAL">
-        <label for="firstName">First Name</label>
-        <mat-form-field appearance="outline">
-          <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
-        </mat-form-field>
-      </div>
-      <div *ngIf="type.getRawValue() === OWNER_TYPE.INDIVIDUAL">
-        <label for="lastName">Last Name</label>
-        <mat-form-field appearance="outline">
-          <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
-        </mat-form-field>
-      </div>
       <div class="full-row" *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">
         <label for="orgName">Organization Name</label>
         <mat-form-field appearance="outline">
           <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
-        </mat-form-field>
-      </div>
-      <div>
-        <label for="phoneNumber">Phone Number</label>
-        <mat-form-field appearance="outline">
-          <input id="phoneNumber" mask='(000) 000-0000' matInput placeholder="(555) 555-5555" formControlName="phoneNumber" />
-        </mat-form-field>
-      </div>
-      <div>
-        <label for="firstName">Email</label>
-        <mat-form-field appearance="outline">
-          <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
         </mat-form-field>
       </div>
       <div *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION" class="full-row">
@@ -53,6 +29,31 @@
         ></app-file-drag-drop>
         <mat-form-field style="display: none">
           <input id="corporateSummary" matInput formControlName="corporateSummary" />
+        </mat-form-field>
+      </div>
+      <h4 class='full-row' *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">Organization Contact Info</h4>
+      <div>
+        <label for="firstName">First Name</label>
+        <mat-form-field appearance="outline">
+          <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="lastName">Last Name</label>
+        <mat-form-field appearance="outline">
+          <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="phoneNumber">Phone Number</label>
+        <mat-form-field appearance="outline">
+          <input id="phoneNumber" mask='(000) 000-0000' matInput placeholder="(555) 555-5555" formControlName="phoneNumber" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="firstName">Email</label>
+        <mat-form-field appearance="outline">
+          <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
         </mat-form-field>
       </div>
     </div>
