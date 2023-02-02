@@ -2,6 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel.service';
@@ -9,6 +10,7 @@ import { ApplicationParcelService } from './application-parcel.service';
 describe('ApplicationParcelService', () => {
   let service: ApplicationParcelService;
   let mockParcelRepo: DeepMocked<Repository<ApplicationParcel>>;
+  let mockOwnerService: DeepMocked<ApplicationOwnerService>;
 
   const mockApplicationFileNumber = 'mock_applicationFileNumber';
   const mockUuid = 'mock_uuid';
@@ -29,12 +31,17 @@ describe('ApplicationParcelService', () => {
 
   beforeEach(async () => {
     mockParcelRepo = createMock();
+    mockOwnerService = createMock();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationParcelService,
         {
           provide: getRepositoryToken(ApplicationParcel),
           useValue: mockParcelRepo,
+        },
+        {
+          provide: ApplicationOwnerService,
+          useValue: mockOwnerService,
         },
       ],
     }).compile();

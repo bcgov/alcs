@@ -65,9 +65,8 @@ describe('ApplicationOwnerService', () => {
     mockHttpClient.post.mockReturnValue(of({}));
 
     await service.create({
-      applicationFileId: '',
+      applicationFileNumber: '',
       email: '',
-      parcelUuid: '',
       phoneNumber: '',
       typeCode: '',
     });
@@ -80,9 +79,8 @@ describe('ApplicationOwnerService', () => {
     mockHttpClient.post.mockReturnValue(throwError(() => ({})));
 
     await service.create({
-      applicationFileId: '',
+      applicationFileNumber: '',
       email: '',
-      parcelUuid: '',
       phoneNumber: '',
       typeCode: '',
     });

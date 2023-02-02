@@ -25,6 +25,7 @@ export interface ParcelEntryFormData {
   isFarm: string | undefined | null;
   purchaseDate?: Date | null;
   isConfirmedByApplicant: boolean;
+  owners: ApplicationOwnerDto[];
 }
 
 @Component({
@@ -36,7 +37,7 @@ export class ParcelEntryComponent implements OnInit {
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onFilesUpdated = new EventEmitter<void>();
   @Output() private onSaveProgress = new EventEmitter<void>();
-  @Output() onAppUpdated = new EventEmitter<void>();
+  @Output() onOwnersUpdated = new EventEmitter<void>();
 
   @Input()
   parcel!: ApplicationParcelDto;
@@ -92,6 +93,14 @@ export class ParcelEntryComponent implements OnInit {
     this.$owners.subscribe((owners) => {
       this.owners = owners;
       this.filteredOwners = this.mapOwners(owners);
+      this.parcel.owners = this.parcel.owners.map((owner) => {
+        const updatedOwner = owners.find((updatedOwner) => updatedOwner.uuid === owner.uuid)!;
+        if (!updatedOwner) {
+          console.warn('Failed to find user in array');
+          return owner;
+        }
+        return updatedOwner;
+      });
     });
   }
 
@@ -188,24 +197,44 @@ export class ParcelEntryComponent implements OnInit {
         parcelUuid: this.parcel.uuid,
       },
     });
-    dialog.beforeClosed().subscribe((isDirty) => {
-      if (isDirty) {
-        this.onAppUpdated.emit();
+    dialog.beforeClosed().subscribe((createdDto) => {
+      if (createdDto) {
+        this.onOwnersUpdated.emit();
+        const updatedArray = [...this.parcel.owners, createdDto];
+        this.parcel.owners = updatedArray;
+        this.onFormGroupChange.emit({
+          uuid: this.parcel.uuid,
+          owners: updatedArray,
+        });
       }
     });
   }
 
   async onSelectOwner(owner: ApplicationOwnerDto, isSelected: boolean) {
-    const ownerUuid = owner.uuid;
-    if (ownerUuid) {
-      if (isSelected) {
-        await this.applicationOwnerService.removeFromParcel(ownerUuid, this.parcel.uuid);
-        this.onAppUpdated.emit();
-      } else {
-        await this.applicationOwnerService.linkToParcel(ownerUuid, this.parcel.uuid);
-        this.onAppUpdated.emit();
-      }
+    if (isSelected) {
+      const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== owner.uuid);
+      this.parcel.owners = updatedArray;
+      this.onFormGroupChange.emit({
+        uuid: this.parcel.uuid,
+        owners: updatedArray,
+      });
+    } else {
+      const updatedArray = [...this.parcel.owners, owner];
+      this.parcel.owners = updatedArray;
+      this.onFormGroupChange.emit({
+        uuid: this.parcel.uuid,
+        owners: updatedArray,
+      });
     }
+  }
+
+  async onOwnerRemoved(uuid: string) {
+    const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== uuid);
+    this.parcel.owners = updatedArray;
+    this.onFormGroupChange.emit({
+      uuid: this.parcel.uuid,
+      owners: updatedArray,
+    });
   }
 
   mapOwners(owners: ApplicationOwnerDto[]) {
@@ -221,9 +250,9 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onTypeOwner($event: Event) {
+    const element = $event.target as HTMLInputElement;
     this.filteredOwners = this.mapOwners(this.owners).filter((option) => {
-      //@ts-ignore Im so done with angular forms
-      return option.displayName.toLowerCase().includes($event.target!.value!.toLowerCase());
+      return option.displayName.toLowerCase().includes(element.value.toLowerCase());
     });
   }
 
@@ -238,7 +267,7 @@ export class ParcelEntryComponent implements OnInit {
       .beforeClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
-          this.onAppUpdated.emit();
+          this.onOwnersUpdated.emit();
         }
       });
   }

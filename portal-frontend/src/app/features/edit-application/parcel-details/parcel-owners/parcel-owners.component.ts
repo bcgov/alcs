@@ -11,7 +11,8 @@ import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/app
   styleUrls: ['./parcel-owners.component.scss'],
 })
 export class ParcelOwnersComponent {
-  @Output() onAppUpdated = new EventEmitter<void>();
+  @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Output() onOwnerRemoved = new EventEmitter<string>();
 
   @Input()
   public set owners(owners: ApplicationOwnerDto[]) {
@@ -38,20 +39,15 @@ export class ParcelOwnersComponent {
         },
       })
       .beforeClosed()
-      .subscribe((isDirty) => {
-        if (isDirty) {
-          this.onAppUpdated.emit();
+      .subscribe((updatedUuid) => {
+        if (updatedUuid) {
+          this.onOwnersUpdated.emit();
         }
       });
   }
 
   async onRemove(uuid: string) {
-    if (this.parcelUuid) {
-      await this.appOwnerService.removeFromParcel(uuid, this.parcelUuid);
-      this.onAppUpdated.emit();
-    } else {
-      console.error('Parcel Component is misconfigured');
-    }
+    this.onOwnerRemoved.emit(uuid);
   }
 
   async onDelete(owner: ApplicationOwnerDto) {
@@ -62,7 +58,7 @@ export class ParcelOwnersComponent {
       .subscribe(async (didConfirm) => {
         if (didConfirm) {
           await this.appOwnerService.delete(owner.uuid);
-          this.onAppUpdated.emit();
+          this.onOwnersUpdated.emit();
         }
       });
   }

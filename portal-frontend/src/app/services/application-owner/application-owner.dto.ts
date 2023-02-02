@@ -36,6 +36,5 @@ export interface ApplicationOwnerUpdateDto {
 }
 
 export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
-  applicationFileId: string;
-  parcelUuid: string;
+  applicationFileNumber: string;
 }
