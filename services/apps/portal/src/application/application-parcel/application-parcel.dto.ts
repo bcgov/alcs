@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
@@ -92,4 +93,7 @@ export class ApplicationParcelUpdateDto {
   @IsString()
   @IsOptional()
   ownershipTypeCode?: string | null;
+
+  @IsArray()
+  ownerUuids: string[] | null;
 }

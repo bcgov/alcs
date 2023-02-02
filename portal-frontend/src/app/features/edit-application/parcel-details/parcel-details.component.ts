@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
@@ -10,7 +11,6 @@ import {
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
@@ -34,8 +34,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private applicationService: ApplicationService,
     private applicationParcelService: ApplicationParcelService,
+    private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
     private dialog: MatDialog
   ) {}
@@ -96,6 +96,9 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     parcel.isFarm = parseStringToBoolean(formData.isFarm);
     parcel.purchasedDate = formData.purchaseDate?.getTime();
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    if (formData.owners) {
+      parcel.owners = formData.owners;
+    }
   }
 
   private async saveProgress() {
@@ -111,6 +114,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
         isConfirmedByApplicant: parcel.isConfirmedByApplicant,
+        ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
     }
 
@@ -156,8 +160,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onAppUpdated() {
-    const app = await this.applicationService.getByFileId(this.fileId);
-    this.$application.next(app);
+  async onOwnersUpdated() {
+    const owners = await this.applicationOwnerService.fetchByFileId(this.fileId);
+    if (owners) {
+      this.$owners.next(owners);
+    }
   }
 }

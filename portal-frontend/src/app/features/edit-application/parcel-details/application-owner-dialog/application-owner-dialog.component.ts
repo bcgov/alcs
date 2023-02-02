@@ -104,16 +104,15 @@ export class ApplicationOwnerDialogComponent {
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
-      applicationFileId: this.data.fileId,
-      parcelUuid: this.data.parcelUuid!,
+      applicationFileNumber: this.data.fileId,
     };
 
-    await this.appOwnerService.create(createDto);
-    this.dialogRef.close(true);
+    const res = await this.appOwnerService.create(createDto);
+    this.dialogRef.close(res);
   }
 
   async onClose() {
-    this.dialogRef.close(false);
+    this.dialogRef.close();
   }
 
   async onSave() {
@@ -128,8 +127,8 @@ export class ApplicationOwnerDialogComponent {
       typeCode: this.type.getRawValue()!,
     };
     if (this.existingUuid) {
-      await this.appOwnerService.update(this.existingUuid, updateDto);
-      this.dialogRef.close(true);
+      const res = await this.appOwnerService.update(this.existingUuid, updateDto);
+      this.dialogRef.close(res);
     }
   }
 

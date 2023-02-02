@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';
 
@@ -10,6 +11,8 @@ export class ApplicationParcelService {
   constructor(
     @InjectRepository(ApplicationParcel)
     private parcelRepository: Repository<ApplicationParcel>,
+    @Inject(forwardRef(() => ApplicationOwnerService))
+    private applicationOwnerService: ApplicationOwnerService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -55,6 +58,13 @@ export class ApplicationParcelService {
       parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
       parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
       parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+
+      if (updateDto.ownerUuids) {
+        parcel.owners = await this.applicationOwnerService.getMany(
+          updateDto.ownerUuids,
+        );
+      }
+
       updatedParcels.push(parcel);
     }
 

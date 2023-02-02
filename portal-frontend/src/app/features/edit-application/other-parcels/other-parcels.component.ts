@@ -90,6 +90,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
         isConfirmedByApplicant: false,
+        ownerUuids: null,
       });
     }
 

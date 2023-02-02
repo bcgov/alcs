@@ -120,6 +120,7 @@ describe('ApplicationParcelController', () => {
         isFarm: true,
         isConfirmedByApplicant: true,
         ownershipTypeCode: 'SMPL',
+        ownerUuids: null,
       },
     ];
 

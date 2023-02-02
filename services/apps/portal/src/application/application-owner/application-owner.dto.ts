@@ -66,8 +66,5 @@ export class ApplicationOwnerUpdateDto {
 
 export class ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
   @IsString()
-  applicationFileId: string;
-
-  @IsUUID()
-  parcelUuid: string;
+  applicationFileNumber: string;
 }

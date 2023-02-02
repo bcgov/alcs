@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -16,9 +17,9 @@ describe('ParcelDetailsComponent', () => {
   let fixture: ComponentFixture<ParcelDetailsComponent>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
+  let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
   let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
   beforeEach(async () => {
@@ -26,7 +27,7 @@ describe('ParcelDetailsComponent', () => {
     mockApplicationParcelService = createMock();
     mockToastService = createMock();
     mockMatDialog = createMock();
-    mockApplicationService = createMock();
+    mockApplicationOwnerService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelDetailsComponent],
@@ -40,8 +41,8 @@ describe('ParcelDetailsComponent', () => {
           useValue: mockApplicationParcelService,
         },
         {
-          provide: ApplicationService,
-          useValue: mockApplicationService,
+          provide: ApplicationOwnerService,
+          useValue: mockApplicationOwnerService,
         },
         {
           provide: ToastService,

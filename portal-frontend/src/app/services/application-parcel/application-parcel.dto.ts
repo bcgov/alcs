@@ -11,15 +11,16 @@ export interface ApplicationParcelUpdateDto {
   isFarm?: boolean | null;
   ownershipTypeCode?: string | null;
   isConfirmedByApplicant: boolean;
+  ownerUuids: string[] | null;
 }
 
-export interface ApplicationParcelDto extends ApplicationParcelUpdateDto {
+export interface ApplicationParcelDto extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
   parcelType: string;
   owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
 }
 
-export interface ApplicationParcelOtherDto extends ApplicationParcelUpdateDto {
+export interface ApplicationParcelOtherDto extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
   parcelType: string;
   ownerUuid: string;
 }
