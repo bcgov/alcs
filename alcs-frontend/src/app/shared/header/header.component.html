@@ -61,6 +61,9 @@
             <strong>{{ userProfile.idirUserName }}{{ userProfile.bceidUserName }}</strong>
           </div>
           <hr />
+          <div *ngIf="isAdmin" class="avatar-menu-items">
+            <button (click)="onAdmin()">Admin</button>
+          </div>
           <div class="avatar-menu-items">
             <button (click)="onLogout()">Log Out</button>
           </div>
