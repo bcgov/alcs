@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgSelectConfig } from '@ng-select/ng-select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AdminModule } from './features/admin/admin.module';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
@@ -37,7 +38,14 @@ import { SharedModule } from './shared/shared.module';
     NotificationsComponent,
     SearchBarComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, MomentDateModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule.forRoot(),
+    AppRoutingModule,
+    MomentDateModule,
+    AdminModule,
+  ],
   providers: [
     AuthenticationService,
     ToastService,
