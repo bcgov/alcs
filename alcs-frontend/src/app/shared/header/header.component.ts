@@ -25,6 +25,7 @@ export class HeaderComponent implements OnInit {
   sortedBoards: BoardWithFavourite[] = [];
   notifications: NotificationDto[] = [];
   isCommissioner = false;
+  isAdmin = false;
 
   constructor(
     private authService: AuthenticationService,
@@ -45,6 +46,8 @@ export class HeaderComponent implements OnInit {
           currentUser.client_roles && currentUser.client_roles.length === 1
             ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
             : false;
+
+        this.isAdmin = currentUser.client_roles ? currentUser.client_roles.includes(ROLES.ADMIN) : false;
 
         if (this.hasRoles) {
           this.applicationService.setup();
@@ -97,5 +100,9 @@ export class HeaderComponent implements OnInit {
 
   onLogout() {
     this.authService.logout();
+  }
+
+  onAdmin() {
+    this.router.navigateByUrl('/admin');
   }
 }
