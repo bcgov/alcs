@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Any, Repository } from 'typeorm';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
@@ -19,8 +19,9 @@ export class ApplicationOwnerService {
     private repository: Repository<ApplicationOwner>,
     @InjectRepository(ApplicationOwnerType)
     private typeRepository: Repository<ApplicationOwnerType>,
-    private parcelService: ApplicationParcelService,
     private documentService: DocumentService,
+    @Inject(forwardRef(() => ApplicationParcelService))
+    private applicationParcelService: ApplicationParcelService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -43,8 +44,6 @@ export class ApplicationOwnerService {
       },
     });
 
-    const parcel = await this.parcelService.getOneOrFail(createDto.parcelUuid);
-
     const newOwner = new ApplicationOwner({
       firstName: createDto.firstName,
       lastName: createDto.lastName,
@@ -54,7 +53,6 @@ export class ApplicationOwnerService {
       corporateSummaryUuid: createDto.corporateSummaryUuid,
       application,
       type,
-      parcels: [parcel],
     });
 
     return await this.repository.save(newOwner);
@@ -70,7 +68,7 @@ export class ApplicationOwnerService {
       },
     });
 
-    const parcel = await this.parcelService.getOneOrFail(parcelUuid);
+    const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
     await this.repository.save(existingOwner);
@@ -171,6 +169,14 @@ export class ApplicationOwnerService {
       },
       relations: {
         corporateSummary: true,
+      },
+    });
+  }
+
+  async getMany(ownerUuids: string[]) {
+    return await this.repository.find({
+      where: {
+        uuid: Any(ownerUuids),
       },
     });
   }

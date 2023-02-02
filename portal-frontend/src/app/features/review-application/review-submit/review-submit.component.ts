@@ -181,7 +181,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   }
 
   private validateAuthorization(review: ApplicationReviewDto) {
-    debugger;
     if (review.isSubjectToZoning === true || review.isOCPDesignation === true) {
       return review.isAuthorized !== null;
     }

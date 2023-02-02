@@ -101,9 +101,8 @@ describe('ApplicationOwnerController', () => {
       {
         firstName: 'B',
         lastName: 'W',
-        applicationFileId: '',
+        applicationFileNumber: '',
         email: '',
-        parcelUuid: '',
         phoneNumber: '',
         typeCode: 'INDV',
       },
@@ -123,9 +122,8 @@ describe('ApplicationOwnerController', () => {
     const promise = controller.create(
       {
         lastName: 'W',
-        applicationFileId: '',
+        applicationFileNumber: '',
         email: '',
-        parcelUuid: '',
         phoneNumber: '',
         typeCode: 'INDV',
       },
@@ -143,9 +141,8 @@ describe('ApplicationOwnerController', () => {
   it('should throw an exception when creating an organization an org name', async () => {
     const promise = controller.create(
       {
-        applicationFileId: '',
+        applicationFileNumber: '',
         email: '',
-        parcelUuid: '',
         phoneNumber: '',
         typeCode: 'ORGZ',
       },

@@ -136,7 +136,8 @@
       <app-parcel-owners
         [parcelUuid]="parcel.uuid"
         [owners]="parcel.owners"
-        (onAppUpdated)="onAppUpdated.emit()"
+        (onOwnersUpdated)="onOwnersUpdated.emit()"
+        (onOwnerRemoved)='onOwnerRemoved($event)'
       ></app-parcel-owners>
     </div>
   </section>

@@ -296,7 +296,9 @@ export class ApplicationService {
           document: true,
         },
         owners: {
-          parcels: true,
+          type: true,
+          corporateSummary: true,
+            parcels: true,
         },
       },
     });

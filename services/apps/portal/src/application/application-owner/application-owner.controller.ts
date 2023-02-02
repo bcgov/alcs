@@ -60,7 +60,7 @@ export class ApplicationOwnerController {
     this.verifyDto(createDto);
 
     const application = await this.applicationService.verifyAccess(
-      createDto.applicationFileId,
+      createDto.applicationFileNumber,
       req.user.entity,
     );
     const owner = await this.ownerService.create(createDto, application);

@@ -62,16 +62,14 @@ describe('ApplicationOwnerService', () => {
     expect(mockRepo.find).toHaveBeenCalledTimes(1);
   });
 
-  it('should load the type/parcel and then call save for create', async () => {
+  it('should load the type and then call save for create', async () => {
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
     mockTypeRepo.findOneOrFail.mockResolvedValue(new ApplicationOwnerType());
-    mockParcelService.getOneOrFail.mockResolvedValue(new ApplicationParcel());
 
     await service.create(
       {
-        applicationFileId: '',
+        applicationFileNumber: '',
         email: '',
-        parcelUuid: '',
         phoneNumber: '',
         typeCode: '',
       },
@@ -80,7 +78,6 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
     expect(mockTypeRepo.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockParcelService.getOneOrFail).toHaveBeenCalledTimes(1);
   });
 
   it('should load the type/parcel and then call save for attachToParcel', async () => {
@@ -179,5 +176,13 @@ describe('ApplicationOwnerService', () => {
     await service.getByOwner(new User(), '');
 
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for getMany', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+
+    await service.getMany([]);
+
+    expect(mockRepo.find).toHaveBeenCalledTimes(1);
   });
 });
