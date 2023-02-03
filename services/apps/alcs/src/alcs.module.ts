@@ -30,6 +30,7 @@ import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
+import { StatHolidayModule } from './stat-holiday/stat-holiday.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 
@@ -78,6 +79,7 @@ import { UserService } from './user/user.service';
     CommissionerModule,
     ImportModule,
     DecisionModule,
+    StatHolidayModule,
   ],
   controllers: [AlcsController, LogoutController],
   providers: [
