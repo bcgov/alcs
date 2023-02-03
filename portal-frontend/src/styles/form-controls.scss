@@ -12,17 +12,6 @@
   color: rgba(0, 0, 0, 0.42);
 }
 
-label {
-  font-weight: 700;
-  font-size: rem(13) !important;
-
-  @media screen and (min-width: $tabletBreakpoint) {
-    & {
-      font-size: rem(16);
-    }
-  }
-}
-
 .mat-form-field {
   margin-top: rem(8);
 }
@@ -50,6 +39,10 @@ label {
 
 .mat-mdc-dialog-container .mdc-dialog__content {
   color: inherit !important;
+  line-height: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-infix {
@@ -76,6 +69,17 @@ input.mat-input-element:disabled::placeholder {
 }
 
 form {
+  label {
+    font-weight: 700;
+    font-size: rem(13) !important;
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      & {
+        font-size: rem(16);
+      }
+    }
+  }
+
   .form-row {
     margin-top: rem(16);
     display: grid;
