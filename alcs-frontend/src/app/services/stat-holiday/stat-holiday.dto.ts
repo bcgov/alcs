@@ -1,11 +1,12 @@
 export interface StatHolidayDto {
+  uuid: string;
   name: string;
-  date: Date;
+  day: Date;
 }
 
 export interface StatHolidayCreateDto {
   name: string;
-  date: number;
+  day: number;
 }
 
 export interface StatHolidayUpdateDto extends StatHolidayCreateDto {}

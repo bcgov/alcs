@@ -1,0 +1,13 @@
+.holiday-dialog {
+  padding: 24px;
+  form {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    row-gap: 24px;
+    column-gap: 24px;
+
+    .holiday-name-input {
+      width: 100%;
+    }
+  }
+}
