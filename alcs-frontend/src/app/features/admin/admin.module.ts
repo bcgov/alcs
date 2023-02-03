@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
 import { StatHolidayComponent } from './stat-holiday/stat-holiday.component';
+import { HolidayDialogComponent } from './stat-holiday/holiday-dialog/holiday-dialog.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [AdminComponent, StatHolidayComponent],
+  declarations: [AdminComponent, StatHolidayComponent, HolidayDialogComponent],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
 })
 export class AdminModule {}

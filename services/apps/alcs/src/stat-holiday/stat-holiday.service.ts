@@ -15,13 +15,10 @@ export class StatHolidayService {
       undefined;
 
     if (search) {
-      console.log('search', search);
       searchExpression = {
         day: Between(new Date(search, 0), new Date(search, 12)),
       };
     }
-
-    console.log('paging', itemsPerPage, pageNumber * itemsPerPage, search);
 
     return await this.holidayRepository.findAndCount({
       where: searchExpression,
