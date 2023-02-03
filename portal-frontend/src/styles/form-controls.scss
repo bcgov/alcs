@@ -14,7 +14,7 @@
 
 label {
   font-weight: 700;
-  font-size: rem(13);
+  font-size: rem(13) !important;
 
   @media screen and (min-width: $tabletBreakpoint) {
     & {
