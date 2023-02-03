@@ -2,8 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ToastService } from '../toast/toast.service';
 import { StatHolidayCreateDto, StatHolidayDto } from './stat-holiday.dto';
-import { ToastService } from './toast/toast.service';
+
+export interface PaginatedHolidayResponse {
+  data: StatHolidayDto[];
+  total: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -13,13 +18,16 @@ export class StatHolidayService {
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  public $statHolidays = new BehaviorSubject<StatHolidayDto[]>([]);
+  public $statHolidays = new BehaviorSubject<PaginatedHolidayResponse>({ data: [], total: 0 });
 
-  async fetch() {
+  async fetch(pageNumber: number, itemsPerPage: number, search?: number) {
+    const searchQuery = search ? `?search=${search}` : '';
     try {
-      const statHolidays = await firstValueFrom(this.http.get<StatHolidayDto[]>(`${this.url}/`));
+      const result = await firstValueFrom(
+        this.http.get<PaginatedHolidayResponse>(`${this.url}/${pageNumber}/${itemsPerPage}${searchQuery}`)
+      );
 
-      this.$statHolidays.next(statHolidays);
+      this.$statHolidays.next(result);
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch stat holidays');

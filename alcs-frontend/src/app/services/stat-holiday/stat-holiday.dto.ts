@@ -1,5 +1,11 @@
-export interface StatHolidayDto {}
+export interface StatHolidayDto {
+  name: string;
+  date: Date;
+}
 
-export interface StatHolidayCreateDto {}
+export interface StatHolidayCreateDto {
+  name: string;
+  date: number;
+}
 
-export interface StatHolidayUpdateDto {}
+export interface StatHolidayUpdateDto extends StatHolidayCreateDto {}
