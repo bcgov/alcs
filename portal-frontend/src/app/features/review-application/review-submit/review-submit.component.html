@@ -71,10 +71,7 @@
             <span *ngIf="_applicationReview.isOCPDesignation !== null">{{
               _applicationReview.isOCPDesignation ? 'Yes' : 'No'
             }}</span>
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isOCPDesignation === null"
-            ></app-no-data>
+            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isOCPDesignation === null"></app-no-data>
           </div>
         </div>
         <div *ngIf="_applicationReview.isOCPDesignation">
@@ -116,7 +113,7 @@
             }}</span>
             <app-no-data
               [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isSubjectToZoning === null"
+              *ngIf="_applicationReview.isSubjectToZoning === null"
             ></app-no-data>
           </div>
         </div>
@@ -215,9 +212,9 @@
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
-              document.fileName
-            }}</a>
+            <div class="document" *ngFor="let document of otherAttachments">
+              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+            </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
         </div>
@@ -301,10 +298,7 @@
             <span *ngIf="_applicationReview.isOCPDesignation !== null">{{
               _applicationReview.isOCPDesignation ? 'Yes' : 'No'
             }}</span>
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isOCPDesignation === null"
-            ></app-no-data>
+            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isOCPDesignation === null"></app-no-data>
           </div>
         </div>
         <div *ngIf="_applicationReview.isOCPDesignation">
@@ -346,7 +340,7 @@
             }}</span>
             <app-no-data
               [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isSubjectToZoning === null"
+              *ngIf="_applicationReview.isSubjectToZoning === null"
             ></app-no-data>
           </div>
         </div>
@@ -393,7 +387,23 @@
         <h4>4. Resolution</h4>
       </mat-expansion-panel-header>
       <div class="review-table">
-        <div *ngIf="!_applicationReview.isOCPDesignation && !_applicationReview.isSubjectToZoning" class="full-width">
+        <div
+          class="full-width"
+          *ngIf="
+            !_applicationReview.isFirstNationGovernment &&
+            (_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null)
+          "
+        >
+          Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
+        </div>
+        <div
+          class="full-width"
+          *ngIf="
+            !_applicationReview.isFirstNationGovernment &&
+            _applicationReview.isOCPDesignation === false &&
+            _applicationReview.isSubjectToZoning === false
+          "
+        >
           By indicating that the parcel(s) is not subject to Local Government OCP or Zoning, no authorizing resolution
           is required as per S. 25 (3) or S. 29 (4) of the ALC Act. The only option available to you is to forward this
           application on to the ALC.
@@ -402,7 +412,7 @@
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Yes' : 'No'
+              _applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
             }}</span>
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
@@ -443,9 +453,9 @@
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
-              document.fileName
-            }}</a>
+            <div class="document" *ngFor="let document of otherAttachments">
+              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+            </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
         </div>
