@@ -49,7 +49,9 @@
 </div>
 <div *ngIf="application && application.canEdit" class="action-bar">
   <button [routerLink]="'/application/' + application.fileNumber + '/edit'" mat-button>
-    <span class="subheading2">Continue Application</span>
-    <mat-icon>keyboard_double_arrow_right</mat-icon>
+    <div>
+      <span class="subheading2">Continue Application </span>
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </div>
   </button>
 </div>

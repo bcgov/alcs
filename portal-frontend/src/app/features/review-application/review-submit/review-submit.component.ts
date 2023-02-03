@@ -163,9 +163,12 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   }
 
   private validateOCP(review: ApplicationReviewDto) {
-    return review.isOCPDesignation
-      ? review.OCPBylawName && review.OCPDesignation && review.OCPConsistent !== null
-      : review.isOCPDesignation !== null;
+    if (review.isOCPDesignation) {
+      return review.isOCPDesignation
+        ? review.OCPBylawName && review.OCPDesignation && review.OCPConsistent !== null
+        : true;
+    }
+    return review.isOCPDesignation !== null;
   }
 
   private validateZoning(review: ApplicationReviewDto) {
