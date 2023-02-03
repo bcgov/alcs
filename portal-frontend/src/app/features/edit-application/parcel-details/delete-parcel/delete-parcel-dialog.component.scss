@@ -6,70 +6,21 @@
   margin-bottom: rem(16);
 }
 
-.change-app-type-modal {
-  .warning-banner {
-    background-color: rgba($accent-color-light, 0.5);
-    padding: rem(16);
+.step-controls {
+  display: flex;
+  justify-content: space-between;
+}
 
-    .display-none {
-      display: none !important;
-    }
-  }
+.confirm-content {
+  margin: rem(24) 0;
+}
 
+@media screen and (min-width: $desktopBreakpoint) {
   .step-controls {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 rem(16);
-  }
+    justify-content: flex-end;
 
-  .content {
-    margin: rem(16);
-
-    .step-header {
-      margin-bottom: rem(24);
-    }
-
-    .step-body {
-      margin-bottom: rem(32);
-    }
-
-    .step-controls {
-      padding: 0;
-    }
-
-    .warning-banner {
-      display: flex;
-
-      .icon {
-        display: flex;
-        justify-content: center;
-        margin-right: 1.2rem;
-      }
-    }
-  }
-
-  @media screen and (min-width: $desktopBreakpoint) {
-    .warning-banner {
-      padding: 2rem 3rem;
-    }
-
-    .step-controls {
-      justify-content: flex-end;
-      padding: 0 rem(48);
-
-      button {
-        margin-left: rem(25) !important;
-      }
-    }
-
-    .content {
-      margin: rem(32) rem(48);
-      margin-bottom: rem(16);
-      padding: 0;
-
-      .warning-banner .icon {
-        align-items: center;
-      }
+    button {
+      margin-left: rem(25) !important;
     }
   }
 }

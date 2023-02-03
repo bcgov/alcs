@@ -8,6 +8,7 @@
 
 .change-app-type-modal {
   .warning-banner {
+    margin-top: rem(8);
     background-color: rgba($accent-color-light, 0.5);
     padding: rem(16);
 
@@ -27,47 +28,10 @@
   .step-controls {
     display: flex;
     justify-content: space-between;
-    padding: 0 rem(16);
   }
 
   .app-type-step-extension {
     margin-bottom: rem(16);
-  }
-
-  .content {
-    margin: rem(16);
-
-    .radio-option {
-      display: block;
-    }
-
-    .step-header {
-      margin-bottom: rem(24);
-    }
-
-    .step-body {
-      margin-bottom: rem(32);
-    }
-
-    .step-controls {
-      padding: 0;
-    }
-
-    .warning-banner {
-      display: flex;
-
-      .description {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .icon {
-        display: flex;
-        justify-content: center;
-        margin-right: 1.2rem;
-      }
-    }
   }
 
   @media screen and (min-width: $desktopBreakpoint) {
@@ -81,20 +45,9 @@
 
     .step-controls {
       justify-content: flex-end;
-      padding: 0 rem(48);
 
       button {
         margin-left: rem(25) !important;
-      }
-    }
-
-    .content {
-      margin: rem(32) rem(48);
-      margin-bottom: rem(16);
-      padding: 0;
-
-      .warning-banner .icon {
-        align-items: center;
       }
     }
   }

@@ -3,12 +3,3 @@
   position: absolute;
   z-index: 1000;
 }
-
-.mat-mdc-dialog-container .mdc-dialog__surface {
-  overflow-y: scroll;
-  max-height: 100vh !important;
-}
-
-.cdk-global-scrollblock {
-  overflow-y: hidden;
-}

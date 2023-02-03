@@ -6,83 +6,77 @@
   height: auto;
 }
 
-.create-new-app-modal {
-  line-height: rem(24);
-  max-height: rem(650);
+#radio-label {
+  display: block;
+  line-height: rem(36);
+  margin-bottom: rem(24);
+}
 
-  #radio-label {
+.radio-option {
+  display: block !important;
+}
+
+.dialog-content-wrapper {
+  margin: rem(16);
+}
+
+.warning-banner {
+  padding: rem(16);
+  background-color: rgba($accent-color-light, 0.5);
+  margin: rem(16) 0;
+
+  .read-more-btn {
+    padding-top: rem(8);
+
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    color: $accent-color-dark;
+  }
+
+  .display-none {
+    display: none !important;
+  }
+}
+
+.dialog-controls-wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    width: rem(116);
+  }
+}
+
+.sub-type-label,
+.app-type-label {
+  display: none;
+}
+
+@media screen and (min-width: $tabletBreakpoint) {
+  .sub-type-label,
+  .app-type-label {
     display: block;
-    line-height: rem(36);
-    margin-bottom: rem(24);
-  }
-
-  .radio-option {
-    display: block !important;
-  }
-
-  .dialog-content-wrapper {
-    margin: rem(16);
+    margin-bottom: 0.5rem;
   }
 
   .warning-banner {
-    padding: rem(16);
-    background-color: rgba($accent-color-light, 0.5);
-    margin-bottom: rem(16);
+    padding: 1rem 2rem;
 
-    .read-more-btn {
-      padding-top: rem(8);
-
-      cursor: pointer;
-      display: flex;
-      justify-content: flex-end;
-      color: $accent-color-dark;
+    .ellipsis-3 {
+      display: block;
     }
+  }
 
-    .display-none {
-      display: none !important;
-    }
+  .dialog-content-wrapper {
+    margin: 2rem 3rem;
   }
 
   .dialog-controls-wrapper {
-    padding: 0 rem(16) rem(16) rem(16);
-    display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     button {
-      width: rem(116);
-    }
-  }
-
-  .sub-type-label,
-  .app-type-label {
-    display: none;
-  }
-
-  @media screen and (min-width: $tabletBreakpoint) {
-    .sub-type-label,
-    .app-type-label {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    .warning-banner {
-      padding: 2rem 3rem;
-
-      .ellipsis-3 {
-        display: block;
-      }
-    }
-
-    .dialog-content-wrapper {
-      margin: 2rem 3rem;
-    }
-
-    .dialog-controls-wrapper {
-      justify-content: flex-end;
-
-      button {
-        margin-left: 1rem !important;
-      }
+      margin-left: 1rem !important;
     }
   }
 }
