@@ -57,7 +57,7 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/microservices": "^9.2.1",
     "@nestjs/platform-fastify": "^9.2.1",
-    "@nestjs/swagger": "^6.1.4",
+    "@nestjs/swagger": "^6.0.3",
     "@nestjs/typeorm": "^9.0.0",
     "bull": "^4.8.5",
     "class-transformer": "^0.5.1",
