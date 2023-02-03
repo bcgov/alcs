@@ -13,60 +13,36 @@
   <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
 </ng-template>
 
-<div class="change-app-type-modal">
-  <div class="content">
-    <div *ngIf="stepIdx === warningStep">
-      <div class="step-header">
-        <h4>Change Application Type</h4>
-      </div>
-
-      <div class="step-body">
-        <div class="warning-banner responsive-flex-wrapper">
-          <div class="icon">
-            <mat-icon>warning</mat-icon>
-          </div>
-          <div class="description">
-            <div>
-              <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
-              continue?
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step-controls">
-        <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
-      </div>
+<div mat-dialog-title>
+  <h4>Change Application Type</h4>
+</div>
+<div mat-dialog-content class='change-app-type-modal'>
+  <div *ngIf="stepIdx === warningStep">
+    <div class="step-body">
+      <app-warning-banner>
+        <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
+        continue?
+      </app-warning-banner>
     </div>
 
-    <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
-      <div class="step-header">
-        <h4>Change Application Type</h4>
-      </div>
-
-      <div>
-        <mat-radio-group
-          class="app-type-radio-group"
-          aria-labelledby="radio-label"
-          (change)="onAppTypeSelected($event)"
-          color="primary"
-          required
-        >
-          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
-            {{ appType.portalLabel }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
     </div>
+  </div>
 
-    <div *ngIf="stepIdx === confirmationStep">
-      <div class="step-header">
-        <h5>Are you sure you want to change your application type?</h5>
-      </div>
-
-      <div class="step-controls">
-        <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
-      </div>
+  <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
+    <div>
+      <mat-radio-group
+        class="app-type-radio-group"
+        aria-labelledby="radio-label"
+        (change)="onAppTypeSelected($event)"
+        color="primary"
+        required
+      >
+        <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
+          {{ appType.portalLabel }}
+        </mat-radio-button>
+      </mat-radio-group>
     </div>
   </div>
 
@@ -92,6 +68,16 @@
 
     <div class="step-controls">
       <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="stepIdx === confirmationStep">
+    <div class="step-header">
+      <h5>Are you sure you want to change your application type?</h5>
+    </div>
+
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
     </div>
   </div>
 </div>

@@ -1,36 +1,27 @@
-<div class="create-new-app-modal">
-  <div class="dialog-content-wrapper">
-    <label id="radio-label">
-      <h4>Create New</h4>
-    </label>
+<div mat-dialog-title>
+  <h4>Create New</h4>
+</div>
 
-    <div class="steps">
-      <div [ngClass]="{ 'step-submission-type': true, 'display-none': currentStepIndex !== 0 }">
-        <mat-radio-group (change)="onSubmissionTypeSelected($event)" color="primary">
-          <mat-radio-button
-            *ngFor="let subType of submissionTypes"
-            [value]="subType.code"
-            class="radio-option"
-            required
-          >
-            {{ subType.label }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div [ngClass]="{ 'step-application-type': true, 'display-none': currentStepIndex !== 1 }">
-        <mat-radio-group
-          class="app-type-radio-group"
-          aria-labelledby="radio-label"
-          (change)="onAppTypeSelected($event)"
-          color="primary"
-          required
-        >
-          <mat-radio-button *ngFor="let appType of applicationTypes" class="radio-option" [value]="appType.code">
-            {{ appType.portalLabel }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-    </div>
+<div mat-dialog-content class="steps">
+  <div [ngClass]="{ 'step-submission-type': true, 'display-none': currentStepIndex !== 0 }">
+    <mat-radio-group (change)="onSubmissionTypeSelected($event)" color="primary">
+      <mat-radio-button *ngFor="let subType of submissionTypes" [value]="subType.code" class="radio-option" required>
+        {{ subType.label }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div [ngClass]="{ 'step-application-type': true, 'display-none': currentStepIndex !== 1 }">
+    <mat-radio-group
+      class="app-type-radio-group"
+      aria-labelledby="radio-label"
+      (change)="onAppTypeSelected($event)"
+      color="primary"
+      required
+    >
+      <mat-radio-button *ngFor="let appType of applicationTypes" class="radio-option" [value]="appType.code">
+        {{ appType.portalLabel }}
+      </mat-radio-button>
+    </mat-radio-group>
   </div>
 
   <div id="warningBanner" class="warning-banner">
