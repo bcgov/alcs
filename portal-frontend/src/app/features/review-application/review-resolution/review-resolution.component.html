@@ -21,7 +21,7 @@
         class="full-row"
         *ngIf="
           ((this.isOCPDesignation === true || this.isSubjectToZoning === true) &&
-            (this.isOCPDesignation !== null && this.isSubjectToZoning !== null)) ||
+            this.isOCPDesignation !== null && this.isSubjectToZoning !== null) ||
           this.isFirstNationGovernment
         "
       >

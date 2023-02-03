@@ -16,6 +16,8 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
+  APPLICATION_STATUS = APPLICATION_STATUS;
+
   constructor(
     private applicationService: ApplicationService,
     private applicationReviewService: ApplicationReviewService,

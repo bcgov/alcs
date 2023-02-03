@@ -41,7 +41,9 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
         this.fileId = applicationReview.applicationFileNumber;
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
         this.showMandatoryUploads =
-          applicationReview.isSubjectToZoning === true || applicationReview.isOCPDesignation === true;
+          applicationReview.isSubjectToZoning === true ||
+          applicationReview.isOCPDesignation === true ||
+          applicationReview.isFirstNationGovernment;
         this.isAuthorized = applicationReview.isAuthorized === true;
       }
     });
