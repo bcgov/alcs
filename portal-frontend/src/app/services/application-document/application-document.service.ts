@@ -59,7 +59,6 @@ export class ApplicationDocumentService {
   async update(fileNumber: string | undefined, updateDtos: ApplicationDocumentUpdateDto[]) {
     try {
       await firstValueFrom(this.httpClient.patch<void>(`${this.serviceUrl}/application/${fileNumber}`, updateDtos));
-      this.toastService.showSuccessToast('Application updated');
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update documents, please try again');

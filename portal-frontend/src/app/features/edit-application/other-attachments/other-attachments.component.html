@@ -50,7 +50,7 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <th mat-header-cell *matHeaderCellDef>Action</th>
         <td mat-cell class="actions" *matCellDef="let element">
           <button (click)="onRemoveFile(element.uuid)" mat-stroked-button color="accent">Remove</button>
         </td>
@@ -67,6 +67,9 @@
 <div class="button-container">
   <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
   <div>
+    <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
     <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
       Next<span class="mobile-hidden"> Step</span>
     </button>

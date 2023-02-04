@@ -38,6 +38,9 @@
 <div class="button-container">
   <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
   <div>
+    <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
     <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
       Next<span class="mobile-hidden"> Step</span>
     </button>
