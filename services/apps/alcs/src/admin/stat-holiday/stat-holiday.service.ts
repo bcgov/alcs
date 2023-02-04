@@ -11,7 +11,7 @@ export class StatHolidayService {
     private holidayRepository: Repository<HolidayEntity>,
   ) {}
 
-  async fetch(pageNumber: number, itemsPerPage: number, search?: number) {
+  async fetch(pageIndex: number, itemsPerPage: number, search?: number) {
     let searchExpression: FindOptionsWhere<HolidayEntity> | undefined =
       undefined;
 
@@ -26,7 +26,7 @@ export class StatHolidayService {
         where: searchExpression,
         order: { day: 'DESC' },
         take: itemsPerPage,
-        skip: pageNumber * itemsPerPage,
+        skip: pageIndex * itemsPerPage,
       })) || [[], 0]
     );
   }

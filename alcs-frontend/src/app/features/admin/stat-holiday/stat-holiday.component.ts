@@ -16,7 +16,7 @@ export class StatHolidayComponent implements OnDestroy, AfterViewInit {
   destroy = new Subject<void>();
 
   public $statHolidays = new BehaviorSubject<StatHolidayDto[]>([]);
-  pageNumber = 0;
+  pageIndex = 0;
   itemsPerPage = 20;
   search?: number = undefined;
   holidays: StatHolidayDto[] = [];
@@ -46,14 +46,14 @@ export class StatHolidayComponent implements OnDestroy, AfterViewInit {
   }
 
   onPageChange($event: PageEvent) {
-    this.pageNumber = $event.pageIndex;
+    this.pageIndex = $event.pageIndex;
     this.itemsPerPage = $event.pageSize;
 
     this.fetch();
   }
 
   fetch() {
-    this.holidayService.fetch(this.pageNumber, this.itemsPerPage, this.search);
+    this.holidayService.fetch(this.pageIndex, this.itemsPerPage, this.search);
   }
 
   async onCreate() {

@@ -20,11 +20,11 @@ export class StatHolidayService {
 
   public $statHolidays = new BehaviorSubject<PaginatedHolidayResponse>({ data: [], total: 0 });
 
-  async fetch(pageNumber: number, itemsPerPage: number, search?: number) {
+  async fetch(pageIndex: number, itemsPerPage: number, search?: number) {
     const searchQuery = search ? `?search=${search}` : '';
     try {
       const result = await firstValueFrom(
-        this.http.get<PaginatedHolidayResponse>(`${this.url}/${pageNumber}/${itemsPerPage}${searchQuery}`)
+        this.http.get<PaginatedHolidayResponse>(`${this.url}/${pageIndex}/${itemsPerPage}${searchQuery}`)
       );
 
       this.$statHolidays.next(result);

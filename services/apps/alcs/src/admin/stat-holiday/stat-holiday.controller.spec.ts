@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { StatHolidayController } from './stat-holiday.controller';
 import { HolidayUpdateDto } from './stat-holiday.dto';
 import { HolidayEntity } from './stat-holiday.entity';

@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { AUTH_ROLE } from '../common/authorization/roles';
-import { RolesGuard } from '../common/authorization/roles-guard.service';
-import { UserRoles } from '../common/authorization/roles.decorator';
+import { AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
+import { UserRoles } from '../../common/authorization/roles.decorator';
 import { HolidayCreateDto, HolidayUpdateDto } from './stat-holiday.dto';
 import { StatHolidayService } from './stat-holiday.service';
 
@@ -25,15 +25,15 @@ export class StatHolidayController {
     private holidayService: StatHolidayService, // @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
-  @Get('/:pageNumber/:itemsPerPage')
+  @Get('/:pageIndex/:itemsPerPage')
   @UserRoles(AUTH_ROLE.ADMIN)
   async fetch(
-    @Param('pageNumber') pageNumber: number,
+    @Param('pageIndex') pageIndex: number,
     @Param('itemsPerPage') itemsPerPage: number,
     @Query('search') search?: number,
   ) {
     const result = await this.holidayService.fetch(
-      pageNumber,
+      pageIndex,
       itemsPerPage,
       search,
     );
