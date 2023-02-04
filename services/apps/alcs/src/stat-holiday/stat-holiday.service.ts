@@ -21,12 +21,14 @@ export class StatHolidayService {
       };
     }
 
-    return await this.holidayRepository.findAndCount({
-      where: searchExpression,
-      order: { day: 'DESC' },
-      take: itemsPerPage,
-      skip: pageNumber * itemsPerPage,
-    });
+    return (
+      (await this.holidayRepository.findAndCount({
+        where: searchExpression,
+        order: { day: 'DESC' },
+        take: itemsPerPage,
+        skip: pageNumber * itemsPerPage,
+      })) || [[], 0]
+    );
   }
 
   async getOneOrFail(uuid: string) {
