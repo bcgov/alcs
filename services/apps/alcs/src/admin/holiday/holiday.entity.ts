@@ -1,4 +1,3 @@
-import { AutoMap } from '@automapper/classes';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -10,18 +9,21 @@ export class HolidayEntity extends BaseEntity {
     }
   }
 
-  @AutoMap({})
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid', {
+    comment: 'Unique identifier that is safe to share.',
+  })
   uuid: string;
 
-  @AutoMap({})
-  @Column()
+  @Column({
+    comment: 'Unique name of the stat holiday.',
+  })
   name: string;
 
-  @AutoMap()
   @Column({
     type: 'date',
     unique: true,
+    comment:
+      'Unique date that is considered as a holiday and will be skipped in the business days calculation process.',
   })
   day: Date;
 }
