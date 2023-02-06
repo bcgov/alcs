@@ -3,24 +3,24 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { StatHolidayController } from './stat-holiday.controller';
-import { HolidayUpdateDto } from './stat-holiday.dto';
-import { HolidayEntity } from './stat-holiday.entity';
-import { StatHolidayService } from './stat-holiday.service';
+import { HolidayController } from './holiday.controller';
+import { HolidayUpdateDto } from './holiday.dto';
+import { HolidayEntity } from './holiday.entity';
+import { HolidayService } from './holiday.service';
 
-describe('StatHolidayController', () => {
-  let controller: StatHolidayController;
-  let mockStatHolidayService: DeepMocked<StatHolidayService>;
+describe('HolidayController', () => {
+  let controller: HolidayController;
+  let mockHolidayService: DeepMocked<HolidayService>;
 
   beforeEach(async () => {
-    mockStatHolidayService = createMock();
+    mockHolidayService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [StatHolidayController],
+      controllers: [HolidayController],
       providers: [
         {
-          provide: StatHolidayService,
-          useValue: mockStatHolidayService,
+          provide: HolidayService,
+          useValue: mockHolidayService,
         },
         {
           provide: ClsService,
@@ -31,7 +31,7 @@ describe('StatHolidayController', () => {
       imports: [ConfigModule],
     }).compile();
 
-    controller = module.get<StatHolidayController>(StatHolidayController);
+    controller = module.get<HolidayController>(HolidayController);
   });
 
   it('should be defined', () => {
@@ -39,38 +39,38 @@ describe('StatHolidayController', () => {
   });
 
   it('should call out to service when fetching applications', async () => {
-    mockStatHolidayService.fetch.mockResolvedValue([[], 0]);
+    mockHolidayService.fetch.mockResolvedValue([[], 0]);
 
     const holidays = await controller.fetch(0, 1);
 
     expect(holidays).toBeDefined();
-    expect(mockStatHolidayService.fetch).toHaveBeenCalledTimes(1);
+    expect(mockHolidayService.fetch).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when updating holiday', async () => {
-    mockStatHolidayService.update.mockResolvedValue({} as HolidayEntity);
+    mockHolidayService.update.mockResolvedValue({} as HolidayEntity);
 
     const holiday = await controller.update('fake', {} as HolidayUpdateDto);
 
     expect(holiday).toBeDefined();
-    expect(mockStatHolidayService.update).toHaveBeenCalledTimes(1);
+    expect(mockHolidayService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating holiday', async () => {
-    mockStatHolidayService.create.mockResolvedValue({} as HolidayEntity);
+    mockHolidayService.create.mockResolvedValue({} as HolidayEntity);
 
     const holiday = await controller.create({} as HolidayUpdateDto);
 
     expect(holiday).toBeDefined();
-    expect(mockStatHolidayService.create).toHaveBeenCalledTimes(1);
+    expect(mockHolidayService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when deleting holiday', async () => {
-    mockStatHolidayService.delete.mockResolvedValue({} as HolidayEntity);
+    mockHolidayService.delete.mockResolvedValue({} as HolidayEntity);
 
     const holiday = await controller.delete('fake');
 
     expect(holiday).toBeDefined();
-    expect(mockStatHolidayService.delete).toHaveBeenCalledTimes(1);
+    expect(mockHolidayService.delete).toHaveBeenCalledTimes(1);
   });
 });

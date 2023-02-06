@@ -4,15 +4,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { PaginatedHolidayResponse, StatHolidayService } from '../../../services/stat-holiday/stat-holiday.service';
+import { HolidayService, PaginatedHolidayResponse } from '../../../services/stat-holiday/holiday.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { StatHolidayComponent } from './stat-holiday.component';
+import { HolidayComponent } from './holiday.component';
 
-describe('StatHolidayComponent', () => {
-  let component: StatHolidayComponent;
-  let fixture: ComponentFixture<StatHolidayComponent>;
-  let mockHolidayService: DeepMocked<StatHolidayService>;
+describe('HolidayComponent', () => {
+  let component: HolidayComponent;
+  let fixture: ComponentFixture<HolidayComponent>;
+  let mockHolidayService: DeepMocked<HolidayService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockConfirmationDialogService: DeepMocked<ConfirmationDialogService>;
 
@@ -23,10 +23,10 @@ describe('StatHolidayComponent', () => {
     mockHolidayService.$statHolidays = new BehaviorSubject<PaginatedHolidayResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-      declarations: [StatHolidayComponent],
+      declarations: [HolidayComponent],
       providers: [
         {
-          provide: StatHolidayService,
+          provide: HolidayService,
           useValue: mockHolidayService,
         },
         {
@@ -42,7 +42,7 @@ describe('StatHolidayComponent', () => {
       imports: [HttpClientTestingModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StatHolidayComponent);
+    fixture = TestBed.createComponent(HolidayComponent);
     component = fixture.componentInstance;
 
     fixture.detectChanges();

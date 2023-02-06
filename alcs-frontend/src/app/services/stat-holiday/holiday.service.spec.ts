@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
-import { StatHolidayService } from './stat-holiday.service';
+import { HolidayService } from './holiday.service';
 
-describe('StatHolidayService', () => {
-  let service: StatHolidayService;
+describe('HolidayService', () => {
+  let service: HolidayService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
@@ -26,7 +26,7 @@ describe('StatHolidayService', () => {
         },
       ],
     });
-    service = TestBed.inject(StatHolidayService);
+    service = TestBed.inject(HolidayService);
   });
 
   it('should be created', () => {

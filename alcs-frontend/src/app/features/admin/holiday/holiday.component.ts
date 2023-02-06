@@ -2,29 +2,29 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { StatHolidayDto } from '../../../services/stat-holiday/stat-holiday.dto';
-import { StatHolidayService } from '../../../services/stat-holiday/stat-holiday.service';
+import { HolidayDto } from '../../../services/stat-holiday/holiday.dto';
+import { HolidayService } from '../../../services/stat-holiday/holiday.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { HolidayDialogComponent } from './holiday-dialog/holiday-dialog.component';
 
 @Component({
-  selector: 'app-stat-holiday',
-  templateUrl: './stat-holiday.component.html',
-  styleUrls: ['./stat-holiday.component.scss'],
+  selector: 'app-holiday',
+  templateUrl: './holiday.component.html',
+  styleUrls: ['./holiday.component.scss'],
 })
-export class StatHolidayComponent implements OnDestroy, AfterViewInit {
+export class HolidayComponent implements OnDestroy, AfterViewInit {
   destroy = new Subject<void>();
 
-  public $statHolidays = new BehaviorSubject<StatHolidayDto[]>([]);
+  public $statHolidays = new BehaviorSubject<HolidayDto[]>([]);
   pageIndex = 0;
   itemsPerPage = 20;
   search?: number = undefined;
-  holidays: StatHolidayDto[] = [];
+  holidays: HolidayDto[] = [];
   total: number = 0;
   displayedColumns: string[] = ['name', 'day', 'actions'];
 
   constructor(
-    private holidayService: StatHolidayService,
+    private holidayService: HolidayService,
     public dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
@@ -70,7 +70,7 @@ export class StatHolidayComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-  async onEdit(holiday: StatHolidayDto) {
+  async onEdit(holiday: HolidayDto) {
     const dialog = this.dialog.open(HolidayDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
@@ -86,7 +86,7 @@ export class StatHolidayComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-  async onDelete(holiday: StatHolidayDto) {
+  async onDelete(holiday: HolidayDto) {
     this.confirmationDialogService
       .openDialog({
         body: `Are you sure you want to delete ${holiday.name} ${holiday.day}?`,

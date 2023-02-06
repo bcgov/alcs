@@ -14,15 +14,15 @@ import * as config from 'config';
 import { AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { HolidayCreateDto, HolidayUpdateDto } from './stat-holiday.dto';
-import { StatHolidayService } from './stat-holiday.service';
+import { HolidayCreateDto, HolidayUpdateDto } from './holiday.dto';
+import { HolidayService } from './holiday.service';
 
 @Controller('stat-holiday')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
-export class StatHolidayController {
+export class HolidayController {
   constructor(
-    private holidayService: StatHolidayService, // @Inject(CONFIG_TOKEN) private config: config.IConfig,
+    private holidayService: HolidayService, // @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
   @Get('/:pageIndex/:itemsPerPage')

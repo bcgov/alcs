@@ -4,11 +4,11 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HolidayEntity } from './stat-holiday.entity';
-import { StatHolidayService } from './stat-holiday.service';
+import { HolidayEntity } from './holiday.entity';
+import { HolidayService } from './holiday.service';
 
-describe('StatHolidayService', () => {
-  let service: StatHolidayService;
+describe('HolidayService', () => {
+  let service: HolidayService;
   let mockRepository: DeepMocked<Repository<HolidayEntity>>;
 
   const holiday = new HolidayEntity({
@@ -27,7 +27,7 @@ describe('StatHolidayService', () => {
         }),
       ],
       providers: [
-        StatHolidayService,
+        HolidayService,
         {
           provide: getRepositoryToken(HolidayEntity),
           useValue: mockRepository,
@@ -35,7 +35,7 @@ describe('StatHolidayService', () => {
       ],
     }).compile();
 
-    service = module.get<StatHolidayService>(StatHolidayService);
+    service = module.get<HolidayService>(HolidayService);
   });
 
   it('should be defined', () => {

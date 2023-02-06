@@ -4,8 +4,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
-import { StatHolidayComponent } from './stat-holiday/stat-holiday.component';
-import { HolidayDialogComponent } from './stat-holiday/holiday-dialog/holiday-dialog.component';
+import { HolidayDialogComponent } from './holiday/holiday-dialog/holiday-dialog.component';
+import { HolidayComponent } from './holiday/holiday.component';
 
 const routes: Routes = [
   {
@@ -15,7 +15,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [AdminComponent, StatHolidayComponent, HolidayDialogComponent],
+  declarations: [AdminComponent, HolidayComponent, HolidayDialogComponent],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
 })
 export class AdminModule {}

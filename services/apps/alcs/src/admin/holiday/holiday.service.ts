@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
-import { HolidayCreateDto, HolidayUpdateDto } from './stat-holiday.dto';
-import { HolidayEntity } from './stat-holiday.entity';
+import { HolidayCreateDto, HolidayUpdateDto } from './holiday.dto';
+import { HolidayEntity } from './holiday.entity';
 
 @Injectable()
-export class StatHolidayService {
+export class HolidayService {
   constructor(
     @InjectRepository(HolidayEntity)
     private holidayRepository: Repository<HolidayEntity>,
