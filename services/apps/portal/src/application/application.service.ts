@@ -107,6 +107,13 @@ export class ApplicationService {
     return this.getOrFail(application.fileNumber);
   }
 
+  async setPrimaryContact(fileNumber: string, primaryContactUuid: string) {
+    const application = await this.getOrFail(fileNumber);
+    application.primaryContactOwnerUuid = primaryContactUuid;
+    await this.applicationRepository.save(application);
+    return this.getOrFail(application.fileNumber);
+  }
+
   private setLandUseFields(
     application: Application,
     updateDto: ApplicationUpdateDto,

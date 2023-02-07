@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { CodeService } from '../../../services/code/code.service';
 
@@ -31,7 +31,7 @@ describe('SelectGovernmentComponent', () => {
 
     fixture = TestBed.createComponent(SelectGovernmentComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 export enum MainLandUseTypeOptions {
@@ -23,7 +23,7 @@ export enum MainLandUseTypeOptions {
   styleUrls: ['./land-use.component.scss'],
 })
 export class LandUseComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   fileId: string = '';
 
   MainLandUseTypeOptions = MainLandUseTypeOptions;
@@ -71,7 +71,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  populateFormValues(application: ApplicationDto) {
+  populateFormValues(application: ApplicationDetailedDto) {
     this.landUseForm.patchValue({
       parcelsAgricultureDescription: application.parcelsAgricultureDescription,
       parcelsAgricultureImprovementDescription: application.parcelsAgricultureImprovementDescription,

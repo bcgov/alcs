@@ -22,7 +22,9 @@ import { ApplicationService } from '../application.service';
 import {
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
+  APPLICATION_OWNER,
   ApplicationOwnerUpdateDto,
+  SetPrimaryContactDto,
 } from './application-owner.dto';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
@@ -88,8 +90,8 @@ export class ApplicationOwnerController {
 
   @Delete('/:uuid')
   async delete(@Param('uuid') uuid: string, @Req() req) {
-    await this.ownerService.getByOwner(req.user.entity, uuid);
-    return { uuid: await this.ownerService.delete(uuid) };
+    const owner = await this.ownerService.getByOwner(req.user.entity, uuid);
+    return { uuid: await this.ownerService.delete(owner) };
   }
 
   @Post('/:uuid/link/:parcelUuid')
@@ -115,13 +117,19 @@ export class ApplicationOwnerController {
   private verifyDto(
     dto: ApplicationOwnerUpdateDto | ApplicationOwnerCreateDto,
   ) {
-    if (dto.typeCode === 'INDV' && (!dto.firstName || !dto.lastName)) {
+    if (
+      dto.typeCode === APPLICATION_OWNER.INDIVIDUAL &&
+      (!dto.firstName || !dto.lastName)
+    ) {
       throw new BadRequestException(
         'Individuals require both first and last name',
       );
     }
 
-    if (dto.typeCode === 'ORGZ' && !dto.organizationName) {
+    if (
+      dto.typeCode === APPLICATION_OWNER.ORGANIZATION &&
+      !dto.organizationName
+    ) {
       throw new BadRequestException(
         'Organizations must have an organizationName',
       );
@@ -151,6 +159,59 @@ export class ApplicationOwnerController {
     return {
       uuid: savedDocument.uuid,
     };
+  }
+
+  @Post('setPrimaryContact')
+  async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
+    const application = await this.applicationService.verifyAccess(
+      data.fileNumber,
+      req.user.entity,
+    );
+
+    //Create Owner
+    if (!data.ownerUuid) {
+      const agentOwner = await this.ownerService.create(
+        {
+          email: data.agentEmail,
+          typeCode: APPLICATION_OWNER.AGENT,
+          lastName: data.agentLastName,
+          firstName: data.agentFirstName,
+          phoneNumber: data.agentPhoneNumber,
+          organizationName: data.agentOrganization,
+          applicationFileNumber: data.fileNumber,
+        },
+        application,
+      );
+      await this.ownerService.setPrimaryContact(
+        application.fileNumber,
+        agentOwner,
+      );
+    } else if (data.ownerUuid) {
+      const primaryContactOwner = await this.ownerService.getByOwner(
+        req.user.entity,
+        data.ownerUuid,
+      );
+
+      if (primaryContactOwner.type.code === APPLICATION_OWNER.AGENT) {
+        //Update Fields for existing agent
+        await this.ownerService.update(primaryContactOwner.uuid, {
+          email: data.agentEmail,
+          typeCode: APPLICATION_OWNER.AGENT,
+          lastName: data.agentLastName,
+          firstName: data.agentFirstName,
+          phoneNumber: data.agentPhoneNumber,
+          organizationName: data.agentOrganization,
+        });
+      } else {
+        //Delete Agents if we aren't using one
+        await this.ownerService.deleteAgents(application);
+      }
+
+      await this.ownerService.setPrimaryContact(
+        application.fileNumber,
+        primaryContactOwner,
+      );
+    }
   }
 
   @Get(':uuid/corporateSummary')

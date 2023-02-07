@@ -3,14 +3,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
-import { ApplicationOwnerDetailedDto } from '../../../services/application-owner/application-owner.dto';
+import {
+  APPLICATION_OWNER,
+  ApplicationOwnerDetailedDto,
+} from '../../../services/application-owner/application-owner.dto';
 import {
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
@@ -23,7 +26,7 @@ import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry
   styleUrls: ['./other-parcels.component.scss'],
 })
 export class OtherParcelsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   fileId: string = '';
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
@@ -42,7 +45,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.owners = application.owners.map((o) => ({
+        const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+        this.owners = nonAgentOwners.map((o) => ({
           ...o,
           parcels: o.parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER),
         }));

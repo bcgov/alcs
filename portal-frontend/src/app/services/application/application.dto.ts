@@ -27,6 +27,11 @@ export interface ApplicationDto {
   canView: boolean;
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDetailedDto[];
+}
+
+export interface ApplicationDetailedDto extends ApplicationDto {
+  primaryContactOwnerUuid?: string;
+
   parcelsAgricultureDescription?: string | null;
   parcelsAgricultureImprovementDescription?: string | null;
   parcelsNonAgricultureUseDescription?: string | null;
@@ -58,6 +63,7 @@ export interface ApplicationUpdateDto {
   applicant?: string;
   localGovernmentUuid?: string;
   typeCode?: string;
+  primaryContactOwnerUuid?: string;
 
   //Land use fields
   parcelsAgricultureDescription?: string | null;

@@ -20,6 +20,7 @@ export enum DOCUMENT_TYPE {
   PROFESSIONAL_REPORT = 'Professional Report',
   PHOTOGRAPH = 'Photograph',
   OTHER = 'Other',
+  AUTHORIZATION_LETTER = 'authorizationLetter',
 }
 
 export const DOCUMENT_TYPES = [
@@ -29,6 +30,7 @@ export const DOCUMENT_TYPES = [
   DOCUMENT_TYPE.REVIEW_OTHER,
   DOCUMENT_TYPE.CORPORATE_SUMMARY,
   DOCUMENT_TYPE.OTHER,
+  DOCUMENT_TYPE.AUTHORIZATION_LETTER,
 ];
 
 @Entity()

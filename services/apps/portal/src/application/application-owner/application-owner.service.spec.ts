@@ -8,6 +8,7 @@ import { User } from '../../user/user.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
@@ -18,12 +19,14 @@ describe('ApplicationOwnerService', () => {
   let mockRepo: DeepMocked<Repository<ApplicationOwner>>;
   let mockTypeRepo: DeepMocked<Repository<ApplicationOwnerType>>;
   let mockDocumentService: DeepMocked<DocumentService>;
+  let mockApplicationservice: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockRepo = createMock();
     mockTypeRepo = createMock();
     mockDocumentService = createMock();
+    mockApplicationservice = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -43,6 +46,10 @@ describe('ApplicationOwnerService', () => {
         {
           provide: DocumentService,
           useValue: mockDocumentService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationservice,
         },
       ],
     }).compile();
@@ -163,11 +170,11 @@ describe('ApplicationOwnerService', () => {
   });
 
   it('should call through for delete', async () => {
-    mockRepo.delete.mockResolvedValue({} as any);
+    mockRepo.remove.mockResolvedValue({} as any);
 
-    await service.delete('');
+    await service.delete(new ApplicationOwner());
 
-    expect(mockRepo.delete).toHaveBeenCalledTimes(1);
+    expect(mockRepo.remove).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for verify', async () => {
