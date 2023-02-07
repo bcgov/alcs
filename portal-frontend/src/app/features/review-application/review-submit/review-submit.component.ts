@@ -8,7 +8,6 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -38,7 +37,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationReviewService,
-    private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 

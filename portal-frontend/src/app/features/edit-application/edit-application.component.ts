@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
@@ -21,6 +22,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
   application: ApplicationDto | undefined;
 
+  // TODO remove
+  @ViewChild('stepper') private myStepper!: MatStepper;
+
   constructor(
     private applicationService: ApplicationService,
     private activatedRoute: ActivatedRoute,
@@ -38,7 +42,19 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
       const fileId = paramMap.get('fileId');
       if (fileId) {
         this.fileId = fileId;
-        this.loadApplication(fileId);
+        this.loadApplication(fileId).then(() =>
+          // TODO remove then from above
+          setTimeout(() => {
+            // or do some API calls/ Async events
+            this.myStepper.next();
+            this.myStepper.next();
+            this.myStepper.next();
+            this.myStepper.next();
+            this.myStepper.next();
+            this.myStepper.next();
+            this.myStepper.next();
+          }, 1)
+        );
       }
     });
 

@@ -17,27 +17,39 @@
         <div>
           <label for="pid">PID</label>
           <div #pid>{{ parcel.pid }}</div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.mapAreaHectares"></app-no-data>
         </div>
         <div>
           <label for="legalDescription">Legal Description</label>
           <div #legalDescription>{{ parcel.legalDescription }}</div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.mapAreaHectares"></app-no-data>
         </div>
         <div>
           <label for="area">Area</label>
           <div #area>{{ parcel.mapAreaHectares }}</div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.mapAreaHectares"></app-no-data>
         </div>
         <div>
           <label for="pin">PIN</label>
           <div #pin>{{ parcel.pin }}</div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.pin"></app-no-data>
         </div>
         <div>
           <label for="purchaseDate">Purchase Date</label>
           <div #purchaseDate>{{ parcel.purchasedDate }}</div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.purchasedDate"></app-no-data>
         </div>
         <div>
           <label for="farmClassification">Farm Classification</label>
           <div #farmClassification>{{ parcel.isFarmText }}</div>
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.isFarmText"></app-no-data>
+        </div>
+        <div>
+          <label for="farmClassification">Certificate of Title:</label>
+          <div class="file-name" *ngFor="let file of parcel.documents">
+            <a (click)="onOpenFile(file.uuid)">{{ file.fileName }}</a>
+          </div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!parcel.validation?.isCertificateValid"></app-no-data>
         </div>
       </div>
       <br />
@@ -45,33 +57,28 @@
       <div *ngFor="let owner of parcel.owners">
         <div>
           <label for="ownerType">Owner Type</label>
-          <div #ownerType>{{ owner.type?.description }}</div>
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+          <div #ownerType>{{ owner.type.description }}</div>
+          <app-no-data [showRequired]="isValidate" *ngIf="!owner.type.description"></app-no-data>
         </div>
         <div>
           <label for="firstName">First Name</label>
           <div #firstName>{{ owner.firstName }}</div>
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+          <app-no-data [showRequired]="isValidate" *ngIf="!owner.firstName"></app-no-data>
         </div>
         <div>
           <label for="lastName">Last Name</label>
           <div #lastName>{{ owner.lastName }}</div>
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+          <app-no-data [showRequired]="isValidate" *ngIf="!owner.lastName"></app-no-data>
         </div>
         <div>
           <label for="phoneNumber">Phone</label>
           <div #phoneNumber>{{ owner.phoneNumber }}</div>
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+          <app-no-data [showRequired]="isValidate" *ngIf="!owner.phoneNumber"></app-no-data>
         </div>
         <div>
           <label for="email">Email</label>
           <div #email>{{ owner.email }}</div>
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
-        </div>
-        <div>
-          <label for="farmClassification">Certificate of Title:</label>
-          <!-- <div #farmClassification>{{ parcel.isFarmText }}</div> -->
-          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+          <app-no-data [showRequired]="isValidate" *ngIf="!owner.email"></app-no-data>
         </div>
         <br />
       </div>

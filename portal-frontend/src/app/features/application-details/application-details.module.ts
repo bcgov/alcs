@@ -6,7 +6,7 @@ import { ParcelComponent } from './parcel/parcel.component';
 
 @NgModule({
   declarations: [ParcelComponent, ApplicationDetailsComponent],
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule,],
   exports: [ApplicationDetailsComponent],
 })
 export class ApplicationDetailsModule {}

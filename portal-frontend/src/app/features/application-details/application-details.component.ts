@@ -11,4 +11,15 @@ export class ApplicationDetailsComponent {
   $destroy = new Subject<void>();
 
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() isValidate: boolean = true;
+  isParcelDetailsValid = false;
+
+  parcelValidation(isParcelDetailsValid: boolean) {
+    this.isParcelDetailsValid = isParcelDetailsValid;
+    console.log('ApplicationDetailsComponent', this.isParcelDetailsValid);
+  }
+
+  private runValidation() {
+    console.log('ApplicationDetailsComponent runValidation');
+  }
 }
