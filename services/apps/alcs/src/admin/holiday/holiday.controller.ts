@@ -21,9 +21,7 @@ import { HolidayService } from './holiday.service';
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class HolidayController {
-  constructor(
-    private holidayService: HolidayService, // @Inject(CONFIG_TOKEN) private config: config.IConfig,
-  ) {}
+  constructor(private holidayService: HolidayService) {}
 
   @Get('/:pageIndex/:itemsPerPage')
   @UserRoles(AUTH_ROLE.ADMIN)
