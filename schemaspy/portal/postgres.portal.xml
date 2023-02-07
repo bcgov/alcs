@@ -46,6 +46,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="nfu_project_duration_months" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="30" name="nfu_fill_type_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="31" name="nfu_fill_origin_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="32" name="primary_contact_owner_uuid" nullable="true" remarks="Stores Uuid of Owner Selected as Primary Contact" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="file_number" sequenceNumberInPK="1"/>
          <index name="PK_39c4f5ceb0f5a7a4c819d46a0d5" unique="true">
             <column ascending="true" name="file_number"/>
