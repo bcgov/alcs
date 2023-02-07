@@ -1,0 +1,51 @@
+<div class="holiday-container">
+  <div class="holiday-search">
+    <div class="search-control">
+      <mat-form-field>
+        <mat-label>Enter year</mat-label>
+        <input matInput placeholder="Ex. 2023" type="number" [(ngModel)]="search" />
+      </mat-form-field>
+    </div>
+    <div class="search-control">
+      <button mat-flat-button color="primary" (click)="fetch()">Search</button>
+    </div>
+    <div class="search-control">
+      <button mat-flat-button color="primary" (click)="onCreate()">Create</button>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="holidays">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="day">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let row">{{ row.day | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button class="edit-btn" mat-flat-button (click)="onEdit(row)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button class="delete-btn" mat-flat-button (click)="onDelete(row)">
+          <mat-icon>delete-outlined</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  </table>
+
+  <mat-paginator
+    [length]="total"
+    [pageSize]="20"
+    [pageSizeOptions]="[20, 50, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page of holidays"
+  ></mat-paginator>
+</div>

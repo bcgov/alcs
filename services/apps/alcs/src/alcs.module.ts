@@ -9,6 +9,8 @@ import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
+import { AdminModule } from './admin/admin.module';
+
 import { AlcsController } from './alcs.controller';
 import { AlcsService } from './alcs.service';
 import { ApplicationGrpcModule } from './application-grpc/application-grpc.module';
@@ -78,6 +80,7 @@ import { UserService } from './user/user.service';
     CommissionerModule,
     ImportModule,
     DecisionModule,
+    AdminModule,
   ],
   controllers: [AlcsController, LogoutController],
   providers: [
