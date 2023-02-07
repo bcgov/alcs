@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
@@ -15,7 +15,7 @@ import { CodeService } from '../../../services/code/code.service';
 })
 export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
   localGovernment = new FormControl<string | any>('');
   showWarning = false;

@@ -121,9 +121,6 @@ export class ApplicationParcel extends Base {
   @OneToMany(
     () => ApplicationParcelDocument,
     (appParcelDocument) => appParcelDocument.applicationParcel,
-    {
-      onDelete: 'CASCADE',
-    },
   )
   documents: ApplicationParcelDocument[];
 }

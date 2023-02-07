@@ -15,6 +15,7 @@ export class FileDragDropComponent implements OnInit {
   @Output() beforeFileUploadOpened: EventEmitter<void> = new EventEmitter();
 
   @Input() allowMultiple = false;
+  @Input() disabled = false;
   @Input() uploadedFiles: ApplicationDocumentDto[] = [];
 
   @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;

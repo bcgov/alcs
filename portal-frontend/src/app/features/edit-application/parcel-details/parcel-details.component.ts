@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
@@ -10,7 +10,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
@@ -22,7 +22,7 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   styleUrls: ['./parcel-details.component.scss'],
 })
 export class ParcelDetailsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
   $destroy = new Subject<void>();
   fileId!: string;
@@ -45,7 +45,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
         this.loadParcels();
-        this.$owners.next(application.owners);
+        const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+        this.$owners.next(nonAgentOwners);
       }
     });
     this.newParcelAdded = false;
@@ -163,7 +164,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   async onOwnersUpdated() {
     const owners = await this.applicationOwnerService.fetchByFileId(this.fileId);
     if (owners) {
-      this.$owners.next(owners);
+      const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+      this.$owners.next(nonAgentOwners);
     }
   }
 }

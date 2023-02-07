@@ -4,6 +4,12 @@ import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
 
+export enum APPLICATION_OWNER {
+  INDIVIDUAL = 'INDV',
+  ORGANIZATION = 'ORGZ',
+  AGENT = 'AGEN',
+}
+
 export class ApplicationOwnerTypeDto extends BaseCodeDto {}
 
 export class ApplicationOwnerDto {
@@ -51,10 +57,12 @@ export class ApplicationOwnerUpdateDto {
   organizationName?: string;
 
   @IsString()
-  phoneNumber: string;
+  @IsOptional()
+  phoneNumber?: string;
 
   @IsEmail()
-  email: string;
+  @IsOptional()
+  email?: string;
 
   @IsString()
   typeCode: string;
@@ -67,4 +75,33 @@ export class ApplicationOwnerUpdateDto {
 export class ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
   @IsString()
   applicationFileNumber: string;
+}
+
+export class SetPrimaryContactDto {
+  @IsString()
+  @IsOptional()
+  agentFirstName?: string;
+
+  @IsString()
+  @IsOptional()
+  agentLastName?: string;
+
+  @IsString()
+  @IsOptional()
+  agentOrganization?: string;
+
+  @IsString()
+  @IsOptional()
+  agentPhoneNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  agentEmail?: string;
+
+  @IsUUID()
+  @IsOptional()
+  ownerUuid?: string;
+
+  @IsString()
+  fileNumber: string;
 }

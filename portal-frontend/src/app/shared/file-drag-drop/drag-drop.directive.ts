@@ -1,4 +1,4 @@
-import { Directive, HostBinding, HostListener, Output, EventEmitter } from '@angular/core';
+import { Directive, HostBinding, HostListener, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 export interface FileHandle {
@@ -12,6 +12,7 @@ export interface FileHandle {
 export class DragDropDirective {
   private backgroundColor = '#f7f7f7';
 
+  @Input() disabled = false;
   @Output() files: EventEmitter<FileHandle> = new EventEmitter();
   @HostBinding('style.background') private background = this.backgroundColor;
 
@@ -19,9 +20,11 @@ export class DragDropDirective {
 
   @HostListener('dragover', ['$event'])
   public onDragOver(evt: DragEvent) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    this.background = '#aaaaaa';
+    if (!this.disabled) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      this.background = '#aaaaaa';
+    }
   }
 
   @HostListener('dragleave', ['$event'])
@@ -33,18 +36,20 @@ export class DragDropDirective {
 
   @HostListener('drop', ['$event'])
   public onDrop(dragEvent: DragEvent) {
-    dragEvent.preventDefault();
-    dragEvent.stopPropagation();
-    this.background = this.backgroundColor;
+    if (!this.disabled) {
+      dragEvent.preventDefault();
+      dragEvent.stopPropagation();
+      this.background = this.backgroundColor;
 
-    if (!dragEvent.dataTransfer) {
-      return;
-    }
+      if (!dragEvent.dataTransfer) {
+        return;
+      }
 
-    for (let i = 0; i < dragEvent.dataTransfer.files.length; i++) {
-      const file = dragEvent.dataTransfer.files[i];
-      const url = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file));
-      this.files.emit({ file, url });
+      for (let i = 0; i < dragEvent.dataTransfer.files.length; i++) {
+        const file = dragEvent.dataTransfer.files[i];
+        const url = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file));
+        this.files.emit({ file, url });
+      }
     }
   }
 }

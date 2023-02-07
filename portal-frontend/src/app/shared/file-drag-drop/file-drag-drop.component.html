@@ -5,7 +5,7 @@
       <a (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
       <div>&ensp;({{ file.fileSize | filesize }})</div>
     </div>
-    <button mat-button aria-label="Remove File" (click)="_deleteFile(file)">
+    <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
       <mat-icon>close</mat-icon>
       REMOVE
     </button>
@@ -15,17 +15,21 @@
   *ngIf="!uploadedFiles.length || allowMultiple"
   class="desktop-file-drag-drop"
   dragDropFile
+  [disabled]='disabled'
   (files)="filesDropped($event)"
 >
   <div class="content">
     <div class="icon">
       <mat-icon inline="true">cloud_upload</mat-icon>
     </div>
-    <button type="button" (click)="onFileUploadClicked()" mat-flat-button color="accent">Choose file to Upload</button>
+    <button [disabled]="disabled" type="button" (click)="onFileUploadClicked()" mat-flat-button color="accent">
+      Choose file to Upload
+    </button>
     <div class="drag-text">or drag and drop them here</div>
   </div>
 </div>
 <button
+  [disabled]="disabled"
   *ngIf="!uploadedFiles.length || allowMultiple"
   type="button"
   class="mobile-file-drag-drop"

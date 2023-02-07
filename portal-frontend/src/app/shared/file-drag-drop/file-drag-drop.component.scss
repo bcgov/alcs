@@ -12,6 +12,10 @@
   display: none;
 }
 
+.desktop-file-drag-drop[ng-reflect-disabled="true"] {
+  background-color: #cbc9c9 !important;
+}
+
 .mobile-file-drag-drop {
   width: 100%;
 }

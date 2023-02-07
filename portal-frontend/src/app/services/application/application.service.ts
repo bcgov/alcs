@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationDto, ApplicationUpdateDto } from './application.dto';
+import { ApplicationDetailedDto, ApplicationDto, ApplicationUpdateDto } from './application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class ApplicationService {
 
   async getByFileId(fileId: string) {
     try {
-      return await firstValueFrom(this.httpClient.get<ApplicationDto>(`${this.serviceUrl}/${fileId}`));
+      return await firstValueFrom(this.httpClient.get<ApplicationDetailedDto>(`${this.serviceUrl}/${fileId}`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to load Application, please try again later');
@@ -50,7 +50,7 @@ export class ApplicationService {
   async updatePending(fileId: string, updateDto: ApplicationUpdateDto) {
     try {
       const result = await firstValueFrom(
-        this.httpClient.put<ApplicationDto>(`${this.serviceUrl}/${fileId}`, updateDto)
+        this.httpClient.put<ApplicationDetailedDto>(`${this.serviceUrl}/${fileId}`, updateDto)
       );
       this.toastService.showSuccessToast('Application Saved');
       return result;

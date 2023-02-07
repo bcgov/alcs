@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
-import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
@@ -18,8 +18,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   documents: ApplicationDocumentDto[] = [];
 
   $destroy = new Subject<void>();
-  $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
-  application: ApplicationDto | undefined;
+  $application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+  application: ApplicationDetailedDto | undefined;
 
   constructor(
     private applicationService: ApplicationService,

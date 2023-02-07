@@ -1,14 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ParcelDetailsComponent } from './parcel-details.component';
 
@@ -20,7 +18,7 @@ describe('ParcelDetailsComponent', () => {
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
-  let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockHttpClient = createMock();

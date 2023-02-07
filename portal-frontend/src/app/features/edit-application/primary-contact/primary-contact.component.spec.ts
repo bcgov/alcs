@@ -1,25 +1,24 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
-import { OtherAttachmentsComponent } from './other-attachments.component';
+import { PrimaryContactComponent } from './primary-contact.component';
 
-describe('OtherAttachmentsComponent', () => {
-  let component: OtherAttachmentsComponent;
-  let fixture: ComponentFixture<OtherAttachmentsComponent>;
+describe('PrimaryContactComponent', () => {
+  let component: PrimaryContactComponent;
+  let fixture: ComponentFixture<PrimaryContactComponent>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockRouter: DeepMocked<Router>;
+  let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
 
   beforeEach(async () => {
     mockAppService = createMock();
     mockAppDocumentService = createMock();
-    mockRouter = createMock();
+    mockAppOwnerService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -32,15 +31,14 @@ describe('OtherAttachmentsComponent', () => {
           useValue: mockAppDocumentService,
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+          provide: ApplicationOwnerService,
+          useValue: mockAppOwnerService,
         },
       ],
-      declarations: [OtherAttachmentsComponent],
-      schemas: [NO_ERRORS_SCHEMA],
+      declarations: [PrimaryContactComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(OtherAttachmentsComponent);
+    fixture = TestBed.createComponent(PrimaryContactComponent);
     component = fixture.componentInstance;
     component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
     fixture.detectChanges();

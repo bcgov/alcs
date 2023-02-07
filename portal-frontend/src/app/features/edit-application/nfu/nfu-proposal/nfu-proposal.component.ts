@@ -3,7 +3,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDto, ApplicationUpdateDto } from '../../../../services/application/application.dto';
+import {
+  ApplicationDetailedDto,
+  ApplicationDto,
+  ApplicationUpdateDto,
+} from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 
@@ -14,7 +18,7 @@ import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 })
 export class NfuProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
   hectares = new FormControl<number | null>(null);
   purpose = new FormControl<string | null>(null);

@@ -223,6 +223,10 @@ describe('ApplicationController', () => {
   });
 
   it('should call out to service for update and map', async () => {
+    mockAppService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationDetailedDto,
+    );
+
     await controller.update(
       'file-id',
       {
@@ -237,7 +241,7 @@ describe('ApplicationController', () => {
     );
 
     expect(mockAppService.verifyAccess).toHaveBeenCalledTimes(1);
-    expect(mockAppService.mapToDTOs).toHaveBeenCalledTimes(1);
+    expect(mockAppService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service on submitAlcs if application type is TURP', async () => {

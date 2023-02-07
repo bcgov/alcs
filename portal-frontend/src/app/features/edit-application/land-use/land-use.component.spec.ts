@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 import { LandUseComponent } from './land-use.component';
@@ -15,7 +15,7 @@ describe('LandUseComponent', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockRouter: DeepMocked<Router>;
-  let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockAppService = createMock();
