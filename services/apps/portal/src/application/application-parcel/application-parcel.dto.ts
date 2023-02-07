@@ -7,8 +7,11 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 import { ApplicationParcelDocumentDto } from './application-parcel-document/application-parcel-document.dto';
+
+export class ApplicationParcelOwnershipTypeDto extends BaseCodeDto {}
 
 export class ApplicationParcelDto {
   @AutoMap()
@@ -37,6 +40,9 @@ export class ApplicationParcelDto {
 
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
+
+  @AutoMap(() => String)
+  ownershipType?: ApplicationParcelOwnershipTypeDto;
 
   @AutoMap(() => String)
   parcelType: string;

@@ -20,6 +20,7 @@ export class ApplicationParcelService {
       where: { application: { fileNumber: fileId } },
       order: { auditCreatedAt: 'ASC' },
       relations: {
+        ownershipType: true,
         documents: { document: true },
         owners: {
           type: true,

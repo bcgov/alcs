@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../shared/shared.module';
+import { ApplicationDetailsModule } from '../application-details/application-details.module';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { EditApplicationComponent } from './edit-application.component';
 import { LandUseComponent } from './land-use/land-use.component';
@@ -15,6 +16,7 @@ import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/dele
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
+import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 const routes: Routes = [
@@ -39,7 +41,15 @@ const routes: Routes = [
     NfuProposalComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,
+    ReviewAndSubmitComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgxMaskDirective, NgxMaskPipe],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule.forChild(routes),
+    NgxMaskDirective,
+    NgxMaskPipe,
+    ApplicationDetailsModule,
+  ],
 })
 export class EditApplicationModule {}

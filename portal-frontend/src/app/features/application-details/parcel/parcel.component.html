@@ -1,0 +1,80 @@
+<!-- TODO remove all <br /> -->
+<section title="parcels">
+  <mat-expansion-panel [expanded]="true" *ngFor="let parcel of parcels; let parcelInd = index">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="flex-space-between-wrap">
+        <div>Parcel #{{ parcelInd + 1 }} Details & Owner Information</div>
+        <button mat-stroked-button color="primary">Edit Parcel</button>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>
+      <h5>Parcel Info</h5>
+      <div>
+        <div>
+          <label for="ownershipType">Ownership Type</label>
+          <div #ownershipType>{{ parcel.ownershipType?.description }}</div>
+        </div>
+        <div>
+          <label for="pid">PID</label>
+          <div #pid>{{ parcel.pid }}</div>
+        </div>
+        <div>
+          <label for="legalDescription">Legal Description</label>
+          <div #legalDescription>{{ parcel.legalDescription }}</div>
+        </div>
+        <div>
+          <label for="area">Area</label>
+          <div #area>{{ parcel.mapAreaHectares }}</div>
+        </div>
+        <div>
+          <label for="pin">PIN</label>
+          <div #pin>{{ parcel.pin }}</div>
+        </div>
+        <div>
+          <label for="purchaseDate">Purchase Date</label>
+          <div #purchaseDate>{{ parcel.purchasedDate }}</div>
+        </div>
+        <div>
+          <label for="farmClassification">Farm Classification</label>
+          <div #farmClassification>{{ parcel.isFarmText }}</div>
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+      </div>
+      <br />
+      <h5>Owners Info</h5>
+      <div *ngFor="let owner of parcel.owners">
+        <div>
+          <label for="ownerType">Owner Type</label>
+          <div #ownerType>{{ owner.type?.description }}</div>
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+        <div>
+          <label for="firstName">First Name</label>
+          <div #firstName>{{ owner.firstName }}</div>
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <div #lastName>{{ owner.lastName }}</div>
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+        <div>
+          <label for="phoneNumber">Phone</label>
+          <div #phoneNumber>{{ owner.phoneNumber }}</div>
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <div #email>{{ owner.email }}</div>
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+        <div>
+          <label for="farmClassification">Certificate of Title:</label>
+          <!-- <div #farmClassification>{{ parcel.isFarmText }}</div> -->
+          <!-- TODO add errors everywhere <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data> -->
+        </div>
+        <br />
+      </div>
+    </div>
+  </mat-expansion-panel>
+</section>

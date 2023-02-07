@@ -5,7 +5,11 @@ import { ApplicationOwnerDto } from '../../application/application-owner/applica
 import { ApplicationOwner } from '../../application/application-owner/application-owner.entity';
 import { ApplicationParcelDocumentDto } from '../../application/application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationParcelDocument } from '../../application/application-parcel/application-parcel-document/application-parcel-document.entity';
-import { ApplicationParcelDto } from '../../application/application-parcel/application-parcel.dto';
+import { ApplicationParcelOwnershipType } from '../../application/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
+import {
+  ApplicationParcelDto,
+  ApplicationParcelOwnershipTypeDto,
+} from '../../application/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../../application/application-parcel/application-parcel.entity';
 
 @Injectable()
@@ -56,6 +60,20 @@ export class ApplicationParcelProfile extends AutomapperProfile {
             }
           }),
         ),
+        forMember(
+          (p) => p.ownershipType,
+          mapFrom((pd) => {
+            if (pd.ownershipType) {
+              return this.mapper.map(
+                pd.ownershipType,
+                ApplicationParcelOwnershipType,
+                ApplicationParcelOwnershipTypeDto,
+              );
+            } else {
+              return undefined;
+            }
+          }),
+        ),
       );
 
       createMap(
@@ -80,6 +98,12 @@ export class ApplicationParcelProfile extends AutomapperProfile {
             return ad.document.fileSize;
           }),
         ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationParcelOwnershipType,
+        ApplicationParcelOwnershipTypeDto,
       );
     };
   }
