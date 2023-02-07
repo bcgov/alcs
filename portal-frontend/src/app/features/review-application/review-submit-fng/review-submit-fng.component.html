@@ -3,7 +3,7 @@
   <div class="description">
     <div>Complete First Nation government review and submit to ALC</div>
   </div>
-  <div *ngIf="_applicationReview" class="mobile-hidden">
+  <div *ngIf="_applicationReview && !isMobile">
     <section>
       <h4>1. Contact Information</h4>
       <div class="review-table">
@@ -106,7 +106,7 @@
       </div>
     </section>
   </div>
-  <div *ngIf="_applicationReview" class="tablet-hidden">
+  <div *ngIf="_applicationReview && isMobile">
     <mat-expansion-panel #contactInfo>
       <mat-expansion-panel-header>
         <h4>1. Contact Information</h4>
@@ -205,9 +205,10 @@
         <div>
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of otherAttachments">{{
-              document.fileName
-            }}</a>
+            <div *ngFor="let document of otherAttachments">
+              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+            </div>
+            <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
         </div>
         <div class="edit-button">
