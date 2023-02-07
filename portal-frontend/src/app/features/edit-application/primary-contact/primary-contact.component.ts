@@ -57,7 +57,7 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       if (application) {
         this.fileId = application.fileNumber;
         this.owners = application.owners;
-        this.nonAgentOwners = application.owners.filter((owner) => owner.type.code !== 'AGEN');
+        this.nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
         this.selectedOwnerUuid = application.primaryContactOwnerUuid;
 
         const selectedOwner = application.owners.find((owner) => owner.uuid === this.selectedOwnerUuid);
