@@ -17,7 +17,7 @@
     ></app-file-drag-drop>
   </section>
   <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
-    <label for="staff-report">Staff Report <span *ngIf='!isAuthorized'>(optional)</span></label>
+    <label for="staff-report">Staff Report <span *ngIf="isAuthorized === false">(optional)</span></label>
     <app-file-drag-drop
       id="staff-report"
       [uploadedFiles]="staffReport"

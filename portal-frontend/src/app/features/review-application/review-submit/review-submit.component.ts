@@ -137,7 +137,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
         }
       }
 
-      const el = document.getElementsByClassName('no-data');
+      const el = document.getElementsByClassName('error');
       if (el && el.length > 0) {
         el[0].scrollIntoView({
           behavior: 'smooth',
