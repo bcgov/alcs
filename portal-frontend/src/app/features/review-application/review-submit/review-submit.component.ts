@@ -9,6 +9,7 @@ import { ApplicationReviewDto } from '../../../services/application-review/appli
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -44,11 +45,11 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
-    this.isMobile = window.innerWidth < 480;
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   ngOnInit(): void {
-    this.isMobile = window.innerWidth < 480;
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
       if (applicationReview) {
