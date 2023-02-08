@@ -6,6 +6,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
 import { HolidayDialogComponent } from './holiday/holiday-dialog/holiday-dialog.component';
 import { HolidayComponent } from './holiday/holiday.component';
+import { LocalGovernmentDialogComponent } from './local-government/dialog/local-government-dialog.component';
+import { LocalGovernmentComponent } from './local-government/local-government.component';
 
 const routes: Routes = [
   {
@@ -15,7 +17,13 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [AdminComponent, HolidayComponent, HolidayDialogComponent],
+  declarations: [
+    AdminComponent,
+    HolidayComponent,
+    HolidayDialogComponent,
+    LocalGovernmentComponent,
+    LocalGovernmentDialogComponent,
+  ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
 })
 export class AdminModule {}
