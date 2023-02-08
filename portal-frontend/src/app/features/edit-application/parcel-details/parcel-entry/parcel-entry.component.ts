@@ -104,44 +104,6 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  private setupForm() {
-    this.parcelForm.valueChanges.subscribe((formData) => {
-      if (!this.parcelForm.dirty) {
-        return;
-      }
-
-      if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
-        this.parcel.isConfirmedByApplicant = false;
-        formData.isConfirmedByApplicant = false;
-
-        this.parcelForm.patchValue(
-          {
-            isConfirmedByApplicant: false,
-          },
-          { emitEvent: false }
-        );
-      }
-
-      return this.onFormGroupChange.emit({
-        ...formData,
-        uuid: this.parcel.uuid,
-        isConfirmedByApplicant: formData.isConfirmedByApplicant!,
-        purchaseDate: new Date(formData.purchaseDate?.valueOf()),
-      });
-    });
-
-    this.parcelForm.patchValue({
-      legalDescription: this.parcel.legalDescription,
-      mapArea: this.parcel.mapAreaHectares,
-      pid: this.parcel.pid,
-      pin: this.parcel.pin,
-      parcelType: this.parcel.ownershipTypeCode,
-      isFarm: formatBooleanToString(this.parcel.isFarm),
-      purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
-      isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
-    });
-  }
-
   async onSearch() {
     const result = await this.parcelService.getByPidPin(this.pidPin.getRawValue()!);
     if (result) {
@@ -201,11 +163,7 @@ export class ParcelEntryComponent implements OnInit {
       if (createdDto) {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
-        this.parcel.owners = updatedArray;
-        this.onFormGroupChange.emit({
-          uuid: this.parcel.uuid,
-          owners: updatedArray,
-        });
+        this.updateParcelOwners(updatedArray);
       }
     });
   }
@@ -213,28 +171,16 @@ export class ParcelEntryComponent implements OnInit {
   async onSelectOwner(owner: ApplicationOwnerDto, isSelected: boolean) {
     if (isSelected) {
       const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== owner.uuid);
-      this.parcel.owners = updatedArray;
-      this.onFormGroupChange.emit({
-        uuid: this.parcel.uuid,
-        owners: updatedArray,
-      });
+      this.updateParcelOwners(updatedArray);
     } else {
-      const updatedArray = [...this.parcel.owners, owner];
-      this.parcel.owners = updatedArray;
-      this.onFormGroupChange.emit({
-        uuid: this.parcel.uuid,
-        owners: updatedArray,
-      });
+      const selectedOwners = [...this.parcel.owners, owner];
+      this.updateParcelOwners(selectedOwners);
     }
   }
 
   async onOwnerRemoved(uuid: string) {
     const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== uuid);
-    this.parcel.owners = updatedArray;
-    this.onFormGroupChange.emit({
-      uuid: this.parcel.uuid,
-      owners: updatedArray,
-    });
+    this.updateParcelOwners(updatedArray);
   }
 
   mapOwners(owners: ApplicationOwnerDto[]) {
@@ -270,5 +216,52 @@ export class ParcelEntryComponent implements OnInit {
           this.onOwnersUpdated.emit();
         }
       });
+  }
+
+  private setupForm() {
+    this.parcelForm.valueChanges.subscribe((formData) => {
+      if (!this.parcelForm.dirty) {
+        return;
+      }
+
+      if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
+        this.parcel.isConfirmedByApplicant = false;
+        formData.isConfirmedByApplicant = false;
+
+        this.parcelForm.patchValue(
+          {
+            isConfirmedByApplicant: false,
+          },
+          { emitEvent: false }
+        );
+      }
+
+      return this.onFormGroupChange.emit({
+        ...formData,
+        uuid: this.parcel.uuid,
+        isConfirmedByApplicant: formData.isConfirmedByApplicant!,
+        purchaseDate: new Date(formData.purchaseDate?.valueOf()),
+      });
+    });
+
+    this.parcelForm.patchValue({
+      legalDescription: this.parcel.legalDescription,
+      mapArea: this.parcel.mapAreaHectares,
+      pid: this.parcel.pid,
+      pin: this.parcel.pin,
+      parcelType: this.parcel.ownershipTypeCode,
+      isFarm: formatBooleanToString(this.parcel.isFarm),
+      purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
+      isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
+    });
+  }
+
+  private updateParcelOwners(updatedArray: ApplicationOwnerDto[]) {
+    this.parcel.owners = updatedArray;
+    this.filteredOwners = this.mapOwners(this.owners);
+    this.onFormGroupChange.emit({
+      uuid: this.parcel.uuid,
+      owners: updatedArray,
+    });
   }
 }
