@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { HolidayService } from '../../../../services/stat-holiday/holiday.service';
 
 export class HolidayForm {
@@ -21,7 +21,7 @@ export class HolidayDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: HolidayForm,
     private dialogRef: MatDialogRef<HolidayDialogComponent>,
-    public holidayService: HolidayService
+    private holidayService: HolidayService
   ) {
     this.model = { ...data, day: data.day ? moment(data.day).tz('Canada/Pacific').toDate() : undefined };
     this.title = this.model.uuid ? 'Edit' : 'Create';

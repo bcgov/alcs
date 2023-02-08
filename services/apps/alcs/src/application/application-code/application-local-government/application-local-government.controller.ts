@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -13,10 +11,7 @@ import { ApplicationLocalGovernmentService } from './application-local-governmen
 @Controller('application-local-government')
 @UseGuards(RolesGuard)
 export class ApplicationLocalGovernmentController {
-  constructor(
-    private codeService: ApplicationLocalGovernmentService,
-    @InjectMapper() private applicationMapper: Mapper,
-  ) {}
+  constructor(private codeService: ApplicationLocalGovernmentService) {}
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
