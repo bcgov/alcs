@@ -6,37 +6,43 @@
       <button class="save-button" mat-flat-button color="primary">Save Progress</button>
     </div>
   </div>
-  <section *ngIf="showMandatoryUploads">
-    <label for="resolution-document">Resolution Document</label>
-    <app-file-drag-drop
-      id="resolution-document"
-      [uploadedFiles]="resolutionDocument"
-      (uploadFiles)="attachFile($event, documentTypes.RESOLUTION_DOCUMENT)"
-      (deleteFile)="deleteFile($event)"
-      (openFile)="openFile($event)"
-    ></app-file-drag-drop>
-  </section>
-  <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
-    <label for="staff-report">Staff Report <span *ngIf="isAuthorized === false">(optional)</span></label>
-    <app-file-drag-drop
-      id="staff-report"
-      [uploadedFiles]="staffReport"
-      (uploadFiles)="attachFile($event, documentTypes.STAFF_REPORT)"
-      (deleteFile)="deleteFile($event)"
-      (openFile)="openFile($event)"
-    ></app-file-drag-drop>
-  </section>
-  <section>
-    <label for="other-document">Other Attachments (optional)</label>
-    <app-file-drag-drop
-      id="other-document"
-      [uploadedFiles]="otherAttachments"
-      (uploadFiles)="attachFile($event, documentTypes.REVIEW_OTHER)"
-      (deleteFile)="deleteFile($event)"
-      (openFile)="openFile($event)"
-      [allowMultiple]="true"
-    ></app-file-drag-drop>
-  </section>
+  <div *ngIf="!hasCompletedPreviousSteps">
+    Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue with
+    this step.
+  </div>
+  <div *ngIf="hasCompletedPreviousSteps">
+    <section *ngIf="showMandatoryUploads">
+      <label for="resolution-document">Resolution Document</label>
+      <app-file-drag-drop
+        id="resolution-document"
+        [uploadedFiles]="resolutionDocument"
+        (uploadFiles)="attachFile($event, documentTypes.RESOLUTION_DOCUMENT)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+      ></app-file-drag-drop>
+    </section>
+    <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
+      <label for="staff-report">Staff Report <span *ngIf="isAuthorized === false">(optional)</span></label>
+      <app-file-drag-drop
+        id="staff-report"
+        [uploadedFiles]="staffReport"
+        (uploadFiles)="attachFile($event, documentTypes.STAFF_REPORT)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+      ></app-file-drag-drop>
+    </section>
+    <section>
+      <label for="other-document">Other Attachments (optional)</label>
+      <app-file-drag-drop
+        id="other-document"
+        [uploadedFiles]="otherAttachments"
+        (uploadFiles)="attachFile($event, documentTypes.REVIEW_OTHER)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [allowMultiple]="true"
+      ></app-file-drag-drop>
+    </section>
+  </div>
   <div class="button-container">
     <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>

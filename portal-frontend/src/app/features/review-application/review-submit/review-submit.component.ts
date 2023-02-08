@@ -30,6 +30,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   _applicationReview: ApplicationReviewDto | undefined;
   showErrors = false;
   isMobile = false;
+  hasCompletedStepsBeforeDocuments = false;
 
   resolutionDocument: ApplicationDocumentDto[] = [];
   staffReport: ApplicationDocumentDto[] = [];
@@ -54,6 +55,11 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
       if (applicationReview) {
         this._applicationReview = applicationReview;
+
+        this.hasCompletedStepsBeforeDocuments =
+          applicationReview.isAuthorized !== null &&
+          applicationReview.isOCPDesignation !== null &&
+          applicationReview.isSubjectToZoning !== null;
       }
     });
 
