@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
@@ -39,32 +39,27 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
-      const fileId = paramMap.get('fileId');
-      if (fileId) {
-        this.fileId = fileId;
-        this.loadApplication(fileId).then(() => {
-          this.activatedRoute.params.pipe(takeUntil(this.$destroy)).subscribe((params) => {
-            const stepIndex = params['stepInd'];
-            if (stepIndex) {
-              // navigation on steps is not working
-              this.stepper.next();
-            }
-          });
+    combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(([queryParamMap, paramMap]) => {
+        const fileId = paramMap.get('fileId');
+        if (fileId) {
+          this.loadApplication(fileId);
 
-          this.activatedRoute.queryParamMap.pipe(takeUntil(this.$destroy)).subscribe((params) => {
-            const parcelUuid = params.get('parcelUuid');
-            if (parcelUuid) {
-              this.parcelDetailsComponent.openParcel(parcelUuid);
-            }
-          });
-        });
-      }
-    });
+          const stepInd = paramMap.get('stepInd');
+          const parcelUuid = queryParamMap.get('parcelUuid');
 
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      this.application = application;
-    });
+          if (stepInd) {
+            // setTimeout is required for stepper to work properly
+            setTimeout(() => {
+              this.stepper.selectedIndex = stepInd;
+              if (parcelUuid) {
+                this.parcelDetailsComponent.openParcel(parcelUuid);
+              }
+            });
+          }
+        }
+      });
   }
 
   private async loadApplication(fileId: string) {
