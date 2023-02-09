@@ -1,13 +1,26 @@
 <section title="parcels">
   <mat-expansion-panel [expanded]="true">
-    <mat-expansion-panel-header>
+    <mat-expansion-panel-header class="custom-mat-expansion-panel-header">
+      <!-- <mat-panel-title>
+        <div>
+          {{ pageTitle }}
+          <app-validation-error *ngIf="!parcelSectionIsValid" text="Some fields are missing"></app-validation-error>
+          <app-completed *ngIf="parcelSectionIsValid"></app-completed>
+          <button mat-stroked-button type="button" color="primary" (click)="onEditParcelsClick($event)">
+            Edit Parcels
+          </button>
+        </div>
+      </mat-panel-title> -->
+
       <mat-panel-title class="flex-space-between-wrap">
         <h3 class="flex-item">
           {{ pageTitle }}
           <app-validation-error *ngIf="!parcelSectionIsValid" text="Some fields are missing"></app-validation-error>
           <app-completed *ngIf="parcelSectionIsValid"></app-completed>
         </h3>
-        <button mat-stroked-button type="button" color="primary" (click)="onEditParcelsClick($event)">Edit Parcels</button>
+        <button mat-stroked-button type="button" color="primary" (click)="onEditParcelsClick($event)">
+          Edit Parcels
+        </button>
       </mat-panel-title>
     </mat-expansion-panel-header>
 
@@ -127,7 +140,7 @@
             <td mat-cell *matCellDef="let owner">
               {{ owner.email }}
               <app-no-data [showRequired]="isValidate" *ngIf="!owner.email"></app-no-data>
-              <app-validation-error *ngIf="!owner.validation?.isEmailInvalid" text="Email is invalid" />
+              <app-validation-error *ngIf="owner.validation?.isEmailInvalid" text="Email is invalid" />
             </td>
           </ng-container>
 

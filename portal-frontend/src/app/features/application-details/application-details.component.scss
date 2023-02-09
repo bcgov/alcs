@@ -1,17 +1,13 @@
 @import '../../../styles/functions.scss';
 @import '../../../styles/colors.scss';
+@import '../../../styles/typography.scss';
 
 :host::ng-deep {
   .view-grid-item {
     display: grid;
-    grid-template-columns: 0.5fr 2fr;
+    grid-template-columns: minmax(rem(100), 0.5fr) 1fr;
     column-gap: rem(16);
     margin-bottom: rem(12);
-  }
-
-  .flex-item {
-    display: flex;
-    gap: rem(16);
   }
 
   .details-wrapper {
@@ -37,6 +33,17 @@
 
     .error {
       justify-content: center;
+    }
+  }
+
+  .custom-mat-expansion-panel-header {
+    height: fit-content;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .flex-item {
+      display: flex;
+      gap: rem(16);
     }
   }
 }

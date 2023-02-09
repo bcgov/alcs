@@ -226,6 +226,7 @@ export class ParcelComponent {
       validation.isEmailRequired = true;
     } else {
       validation.isEmailInvalid = this.validateEmail(owner.email);
+      console.log(owner.email, validation.isEmailInvalid);
     }
 
     if (owner.type?.code === APPLICATION_OWNER_TYPE.ORGANIZATION) {
@@ -233,17 +234,19 @@ export class ParcelComponent {
     }
 
     validation.isInvalid = this.isInvalid(validation);
+
+    console.log('owner', validation.isInvalid);
     return validation;
   }
 
   private validateEmail(email: string) {
     const re = new RegExp(emailRegex);
-    return re.test(email);
+    return !re.test(email);
   }
 
   private isInvalid(validationObj: ApplicationParcelOwnerBasicValidation | ApplicationParcelBasicValidation) {
     for (const prop in validationObj) {
-      if (prop) {
+      if (validationObj[prop as keyof typeof validationObj]) {
         return true;
       }
     }
