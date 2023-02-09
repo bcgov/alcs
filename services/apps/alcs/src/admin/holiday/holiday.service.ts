@@ -59,4 +59,11 @@ export class HolidayService {
 
     return await this.holidayRepository.remove(holiday);
   }
+
+  async fetchAllYears() {
+    const res = (await this.holidayRepository.query(
+      'SELECT DISTINCT EXTRACT(YEAR FROM day) as year FROM alcs.holiday_entity ORDER BY year DESC;',
+    )) as { year: string }[];
+    return res.map((res) => res.year);
+  }
 }

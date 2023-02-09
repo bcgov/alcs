@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { HolidayDto } from '../../../services/stat-holiday/holiday.dto';
 import { HolidayService } from '../../../services/stat-holiday/holiday.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -12,16 +12,16 @@ import { HolidayDialogComponent } from './holiday-dialog/holiday-dialog.componen
   templateUrl: './holiday.component.html',
   styleUrls: ['./holiday.component.scss'],
 })
-export class HolidayComponent implements OnDestroy, AfterViewInit {
+export class HolidayComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
 
-  public $statHolidays = new BehaviorSubject<HolidayDto[]>([]);
   pageIndex = 0;
   itemsPerPage = 20;
-  search?: number = undefined;
   holidays: HolidayDto[] = [];
   total: number = 0;
   displayedColumns: string[] = ['name', 'day', 'actions'];
+  selectedYear = 'allYears';
+  years: string[] = [];
 
   constructor(
     private holidayService: HolidayService,
@@ -29,8 +29,9 @@ export class HolidayComponent implements OnDestroy, AfterViewInit {
     private confirmationDialogService: ConfirmationDialogService
   ) {}
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.fetch();
+    this.loadFilterValues();
 
     this.holidayService.$statHolidays
       .pipe(takeUntil(this.destroy))
@@ -52,8 +53,15 @@ export class HolidayComponent implements OnDestroy, AfterViewInit {
     this.fetch();
   }
 
-  fetch() {
-    this.holidayService.fetch(this.pageIndex, this.itemsPerPage, this.search);
+  async fetch() {
+    await this.holidayService.fetch(this.pageIndex, this.itemsPerPage, undefined);
+  }
+
+  async loadFilterValues() {
+    const filterValues = await this.holidayService.loadFilterValues();
+    if (filterValues) {
+      this.years = filterValues.years;
+    }
   }
 
   async onCreate() {
@@ -97,5 +105,13 @@ export class HolidayComponent implements OnDestroy, AfterViewInit {
           await this.fetch();
         }
       });
+  }
+
+  onChangeFilter($event: any) {
+    if ($event === 'allYears') {
+      this.holidayService.fetch(this.pageIndex, this.itemsPerPage, undefined);
+    } else {
+      this.holidayService.fetch(this.pageIndex, this.itemsPerPage, parseInt($event));
+    }
   }
 }

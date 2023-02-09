@@ -1,15 +1,18 @@
 <div class="holiday-container">
+  <h3>Stat Holidays</h3>
   <div class="holiday-search">
-    <div class="search-control">
-      <mat-form-field>
-        <mat-label>Enter year</mat-label>
-        <input matInput placeholder="Ex. 2023" type="number" [(ngModel)]="search" />
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <mat-select [(ngModel)]="selectedYear" (valueChange)="onChangeFilter($event)">
+          <mat-option value="allYears"> All Years </mat-option>
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
-    <div class="search-control">
-      <button mat-flat-button color="primary" (click)="fetch()">Search</button>
-    </div>
-    <div class="search-control">
+    <div class="right">
       <button mat-flat-button color="primary" (click)="onCreate()">Create</button>
     </div>
   </div>

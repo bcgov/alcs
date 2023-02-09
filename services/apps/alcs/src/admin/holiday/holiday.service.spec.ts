@@ -133,4 +133,14 @@ describe('HolidayService', () => {
     });
     expect(result).toBeDefined();
   });
+
+  it('should call query for fetchYears', async () => {
+    mockRepository.query.mockResolvedValue([{ year: '2020' }]);
+
+    const result = await service.fetchAllYears();
+
+    expect(result.length).toEqual(1);
+    expect(result[0]).toEqual('2020');
+    expect(mockRepository.query).toBeCalledTimes(1);
+  });
 });

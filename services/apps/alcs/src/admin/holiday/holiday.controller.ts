@@ -38,6 +38,15 @@ export class HolidayController {
     return { data: result[0], total: result[1] };
   }
 
+  @Get('/filters')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async getFilterValues() {
+    const years = await this.holidayService.fetchAllYears();
+    return {
+      years,
+    };
+  }
+
   @Put('/:uuid')
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(
