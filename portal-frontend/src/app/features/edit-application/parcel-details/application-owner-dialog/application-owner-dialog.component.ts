@@ -4,7 +4,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import {
-  APPLICATION_OWNER_TYPE,
+  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
@@ -18,8 +18,8 @@ import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directiv
   styleUrls: ['./application-owner-dialog.component.scss'],
 })
 export class ApplicationOwnerDialogComponent {
-  OWNER_TYPE = APPLICATION_OWNER_TYPE;
-  type = new FormControl<string | null>(APPLICATION_OWNER_TYPE.INDIVIDUAL);
+  OWNER_TYPE = APPLICATION_OWNER;
+  type = new FormControl<string | null>(APPLICATION_OWNER.INDIVIDUAL);
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
@@ -72,7 +72,7 @@ export class ApplicationOwnerDialogComponent {
   }
 
   onChangeType($event: MatButtonToggleChange) {
-    if ($event.value === APPLICATION_OWNER_TYPE.ORGANIZATION) {
+    if ($event.value === APPLICATION_OWNER.ORGANIZATION) {
       this.organizationName.setValidators([Validators.required]);
       this.corporateSummary.setValidators([Validators.required]);
       this.firstName.setValidators([]);

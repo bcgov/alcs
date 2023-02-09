@@ -21,7 +21,7 @@
   </mat-step>
   <mat-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <p>Primary Contact</p>
+    <app-primary-contact [$application]="$application"></app-primary-contact>
   </mat-step>
   <mat-step label="Government">
     <ng-container *ngTemplateOutlet="header"></ng-container>

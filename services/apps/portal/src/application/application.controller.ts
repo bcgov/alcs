@@ -104,8 +104,8 @@ export class ApplicationController {
 
     const application = await this.applicationService.update(fileId, updateDto);
 
-    const mappedApps = await this.applicationService.mapToDTOs(
-      [application],
+    const mappedApps = await this.applicationService.mapToDetailedDTO(
+      application,
       req.user.entity,
     );
     return mappedApps[0];

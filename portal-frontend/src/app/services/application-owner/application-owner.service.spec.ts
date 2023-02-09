@@ -168,4 +168,22 @@ describe('ApplicationOwnerService', () => {
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
+
+  it('should make a post request for setPrimaryContact', async () => {
+    mockHttpClient.post.mockReturnValue(of({}));
+
+    await service.setPrimaryContact({ fileNumber: '' });
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.post.mock.calls[0][0]).toContain('application-owner');
+  });
+
+  it('should show an error toast if setPrimaryContact', async () => {
+    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
+
+    await service.setPrimaryContact({ fileNumber: '' });
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
 });

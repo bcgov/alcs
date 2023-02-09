@@ -89,4 +89,33 @@ describe('ApplicationLocalGovernmentService', () => {
       },
     });
   });
+
+  it('should call repository on create', async () => {
+    mockRepository.save.mockResolvedValue({} as ApplicationLocalGovernment);
+
+    await service.create({
+      name: 'name',
+      bceidBusinessGuid: null,
+      isFirstNation: false,
+    });
+
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRedis.set).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call repository on update', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(
+      new ApplicationLocalGovernment(),
+    );
+    mockRepository.save.mockResolvedValue({} as ApplicationLocalGovernment);
+
+    await service.update('', {
+      name: 'name',
+      bceidBusinessGuid: null,
+      isFirstNation: false,
+    });
+
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRedis.set).toHaveBeenCalledTimes(2);
+  });
 });

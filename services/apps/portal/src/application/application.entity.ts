@@ -174,6 +174,13 @@ export class Application extends BaseEntity {
   statusCode: string;
 
   @Column({
+    type: 'text',
+    nullable: true,
+    comment: 'Stores Uuid of Owner Selected as Primary Contact',
+  })
+  primaryContactOwnerUuid?: string | null;
+
+  @Column({
     comment: 'Application Type Code from ALCS System',
   })
   typeCode: string;

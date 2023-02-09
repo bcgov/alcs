@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { StatHolidayComponent } from './stat-holiday/stat-holiday.component';
+import { HolidayComponent } from './holiday/holiday.component';
+import { LocalGovernmentComponent } from './local-government/local-government.component';
 
 export const childRoutes = [
   {
     path: '',
-    menuTitle: 'Stat Holiday',
+    menuTitle: 'Stat Holidays',
     icon: 'calendar_month',
-    component: StatHolidayComponent,
+    component: HolidayComponent,
+  },
+  {
+    path: 'lg',
+    menuTitle: 'L/FNG Governments',
+    icon: 'gavel',
+    component: LocalGovernmentComponent,
   },
 ];
 

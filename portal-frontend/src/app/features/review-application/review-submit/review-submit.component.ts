@@ -8,6 +8,8 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationService } from '../../../services/application/application.service';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -28,6 +30,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   _applicationReview: ApplicationReviewDto | undefined;
   showErrors = false;
   isMobile = false;
+  hasCompletedStepsBeforeDocuments = false;
 
   resolutionDocument: ApplicationDocumentDto[] = [];
   staffReport: ApplicationDocumentDto[] = [];
@@ -42,15 +45,20 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
-    this.isMobile = window.innerWidth < 480;
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   ngOnInit(): void {
-    this.isMobile = window.innerWidth < 480;
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
       if (applicationReview) {
         this._applicationReview = applicationReview;
+
+        this.hasCompletedStepsBeforeDocuments =
+          applicationReview.isAuthorized !== null &&
+          applicationReview.isOCPDesignation !== null &&
+          applicationReview.isSubjectToZoning !== null;
       }
     });
 
@@ -135,7 +143,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
         }
       }
 
-      const el = document.getElementsByClassName('no-data');
+      const el = document.getElementsByClassName('error');
       if (el && el.length > 0) {
         el[0].scrollIntoView({
           behavior: 'smooth',

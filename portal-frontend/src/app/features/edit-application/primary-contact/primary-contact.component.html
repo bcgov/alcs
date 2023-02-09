@@ -1,0 +1,103 @@
+<h2>Primary Contact</h2>
+<section>
+  <p>Select from the listed parcel owners or identify a third party agent</p>
+  <div class="contacts">
+    <ng-container *ngFor="let owner of nonAgentOwners">
+      <h5>{{ owner.displayName }}</h5>
+      <button
+        (click)="onSelectOwner(owner.uuid)"
+        *ngIf="owner.uuid !== selectedOwnerUuid"
+        color="primary"
+        mat-stroked-button
+      >
+        Make Primary Contact
+      </button>
+      <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
+    </ng-container>
+    <h5>Third Party Agent</h5>
+    <button *ngIf="!selectedThirdPartyAgent" color="primary" (click)="onSelectAgent()" mat-stroked-button>
+      Make Primary Contact
+    </button>
+    <div class="selected" *ngIf="selectedThirdPartyAgent"><mat-icon>check</mat-icon>Primary Contact</div>
+  </div>
+  <div class="agent-form" *ngIf="selectedThirdPartyAgent">
+    <h4>Agent Contact Information</h4>
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div>
+          <label for="firstName">First Name</label>
+          <mat-form-field appearance="outline">
+            <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <mat-form-field appearance="outline">
+            <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+          </mat-form-field>
+        </div>
+        <div class="full-row">
+          <label for="orgName">Organization Name (Optional)</label>
+          <mat-form-field appearance="outline">
+            <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="phoneNumber">Phone Number</label>
+          <mat-form-field appearance="outline">
+            <input
+              id="phoneNumber"
+              mask="(000) 000-0000"
+              matInput
+              placeholder="(555) 555-5555"
+              formControlName="phoneNumber"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="firstName">Email</label>
+          <mat-form-field appearance="outline">
+            <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+<section>
+  <h4>Authorization Letters</h4>
+  <div class="uploader">
+    <app-file-drag-drop
+      [allowMultiple]="true"
+      [disabled]="!needsAuthorizationLetter"
+      [uploadedFiles]="files"
+      (uploadFiles)="onAttachFile($event)"
+      (deleteFile)="onRemoveFile($event)"
+    ></app-file-drag-drop>
+  </div>
+  <div>
+    An authorization letter must be provided if:
+    <ol>
+      <li>the parcel under application is owned by more than one person;</li>
+      <li>the parcel(s) is owned by an organization; or</li>
+      <li>the parcel(s) is owned by a corporation (private, Crown, local government, First Nations); or</li>
+      <li>the application is being submitted by a third-party agent on behalf of the land owner(s)</li>
+    </ol>
+    <p>
+      The authorization letter must be signed by all individual land owners and the majority of directors in
+      organization land owners listed in Step 1. Please consult the Supporting Documentation page of ALC website for
+      further instruction and an Authorization Letter template.
+    </p>
+  </div>
+</section>
+<div class="button-container">
+  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <div>
+    <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

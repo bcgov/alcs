@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -19,7 +19,7 @@ describe('OtherParcelsComponent', () => {
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockMatDialog: DeepMocked<MatDialog>;
-  let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockApplicationService = createMock();

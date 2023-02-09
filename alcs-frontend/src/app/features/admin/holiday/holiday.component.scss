@@ -1,0 +1,13 @@
+.holiday-container {
+  .holiday-search {
+    display: flex;
+    justify-content: space-between;
+  }
+  .edit-btn {
+    color: green;
+  }
+
+  .delete-btn {
+    color: red;
+  }
+}

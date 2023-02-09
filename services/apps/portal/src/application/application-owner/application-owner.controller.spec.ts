@@ -12,7 +12,9 @@ import { DocumentService } from '../../document/document.service';
 import { DOCUMENT_TYPE } from '../application-document/application-document.entity';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
+import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner.controller';
+import { APPLICATION_OWNER } from './application-owner.dto';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
 
@@ -266,5 +268,76 @@ describe('ApplicationOwnerController', () => {
     expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(mockResponse.url);
+  });
+
+  it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
+    mockAppOwnerService.create.mockResolvedValue(new ApplicationOwner());
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+
+    await controller.setPrimaryContact(
+      { fileNumber: '' },
+      {
+        user: {
+          entity: {},
+        },
+      },
+    );
+
+    expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set the owner and delete agents when using a non-agent owner', async () => {
+    mockAppOwnerService.getByOwner.mockResolvedValue(
+      new ApplicationOwner({
+        type: new ApplicationOwnerType({
+          code: APPLICATION_OWNER.INDIVIDUAL,
+        }),
+      }),
+    );
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue(new Application());
+    mockAppOwnerService.deleteAgents.mockResolvedValue({} as any);
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+
+    await controller.setPrimaryContact(
+      { fileNumber: '', ownerUuid: 'fake-uuid' },
+      {
+        user: {
+          entity: {},
+        },
+      },
+    );
+
+    expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.deleteAgents).toHaveBeenCalledTimes(1);
+  });
+
+  it('should update the agent owner when calling set primary contact', async () => {
+    mockAppOwnerService.getByOwner.mockResolvedValue(
+      new ApplicationOwner({
+        type: new ApplicationOwnerType({
+          code: APPLICATION_OWNER.AGENT,
+        }),
+      }),
+    );
+    mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+
+    await controller.setPrimaryContact(
+      { fileNumber: '', ownerUuid: 'fake-uuid' },
+      {
+        user: {
+          entity: {},
+        },
+      },
+    );
+
+    expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
   });
 });

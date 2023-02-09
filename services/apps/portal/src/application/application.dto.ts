@@ -41,6 +41,31 @@ export class ApplicationDto {
   canEdit: boolean;
   canReview: boolean;
   canView: boolean;
+}
+
+export class ApplicationDetailedDto extends ApplicationDto {
+  @AutoMap()
+  parcelsAgricultureDescription: string;
+  @AutoMap()
+  parcelsAgricultureImprovementDescription: string;
+  @AutoMap()
+  parcelsNonAgricultureUseDescription: string;
+  @AutoMap()
+  northLandUseType: string;
+  @AutoMap()
+  northLandUseTypeDescription: string;
+  @AutoMap()
+  eastLandUseType: string;
+  @AutoMap()
+  eastLandUseTypeDescription: string;
+  @AutoMap()
+  southLandUseType: string;
+  @AutoMap()
+  southLandUseTypeDescription: string;
+  @AutoMap()
+  westLandUseType: string;
+  @AutoMap()
+  westLandUseTypeDescription: string;
 
   //NFU Specific Fields
   @AutoMap(() => Number)
@@ -78,31 +103,9 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   nfuFillOriginDescription?: string | null;
-}
 
-export class ApplicationDetailedDto extends ApplicationDto {
-  @AutoMap()
-  parcelsAgricultureDescription: string;
-  @AutoMap()
-  parcelsAgricultureImprovementDescription: string;
-  @AutoMap()
-  parcelsNonAgricultureUseDescription: string;
-  @AutoMap()
-  northLandUseType: string;
-  @AutoMap()
-  northLandUseTypeDescription: string;
-  @AutoMap()
-  eastLandUseType: string;
-  @AutoMap()
-  eastLandUseTypeDescription: string;
-  @AutoMap()
-  southLandUseType: string;
-  @AutoMap()
-  southLandUseTypeDescription: string;
-  @AutoMap()
-  westLandUseType: string;
-  @AutoMap()
-  westLandUseTypeDescription: string;
+  @AutoMap(() => String)
+  primaryContactOwnerUuid?: string | null;
 }
 
 export class ApplicationCreateDto {

@@ -1,0 +1,46 @@
+<div mat-dialog-title>
+  <h4>{{ title }} Holiday</h4>
+</div>
+<div mat-dialog-content class="holiday-dialog">
+  <form (ngSubmit)="onSubmit()" #holidayForm="ngForm">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          (click)="date.open()"
+          [matDatepicker]="date"
+          [(ngModel)]="model.day"
+          name="date"
+          id="date"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+        <mat-datepicker #date type="date"> </mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field class="holiday-name-input" appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput id="name" [(ngModel)]="model.name" name="name" />
+      </mat-form-field>
+    </div>
+  </form>
+
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button
+        [loading]="isLoading"
+        (click)="onSubmit()"
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="!holidayForm.form.valid"
+      >
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

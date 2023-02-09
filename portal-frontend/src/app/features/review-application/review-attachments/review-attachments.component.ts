@@ -27,6 +27,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   isFirstNationGovernment = false;
   isAuthorized = false;
   showMandatoryUploads = false;
+  hasCompletedPreviousSteps = false;
 
   constructor(
     private router: Router,
@@ -45,6 +46,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
           applicationReview.isOCPDesignation === true ||
           applicationReview.isFirstNationGovernment;
         this.isAuthorized = applicationReview.isAuthorized === true;
+        this.hasCompletedPreviousSteps =
+          applicationReview.isFirstNationGovernment ||
+          (applicationReview.isAuthorized !== null &&
+            applicationReview.isOCPDesignation !== null &&
+            applicationReview.isSubjectToZoning !== null);
       }
     });
 

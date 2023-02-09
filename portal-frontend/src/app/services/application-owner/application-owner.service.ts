@@ -5,7 +5,12 @@ import { environment } from '../../../environments/environment';
 import { DOCUMENT } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationOwnerCreateDto, ApplicationOwnerDto, ApplicationOwnerUpdateDto } from './application-owner.dto';
+import {
+  ApplicationOwnerCreateDto,
+  ApplicationOwnerDto,
+  ApplicationOwnerUpdateDto,
+  SetPrimaryContactDto,
+} from './application-owner.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -53,6 +58,20 @@ export class ApplicationOwnerService {
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update Owner, please try again later');
+      return undefined;
+    }
+  }
+
+  async setPrimaryContact(updateDto: SetPrimaryContactDto) {
+    try {
+      const res = await firstValueFrom(
+        this.httpClient.post<ApplicationOwnerDto>(`${this.serviceUrl}/setPrimaryContact`, updateDto)
+      );
+      this.toastService.showSuccessToast('Primary Contact Updated');
+      return res;
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to update Primary Contact, please try again later');
       return undefined;
     }
   }

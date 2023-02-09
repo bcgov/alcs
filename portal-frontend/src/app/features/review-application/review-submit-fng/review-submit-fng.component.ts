@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { ApplicationReviewDto } from '../../../services/application-review/appli
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-review-submit-fng[stepper]',
@@ -26,6 +27,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   _applicationReview: ApplicationReviewDto | undefined;
   showErrors = false;
+  isMobile = false;
 
   resolutionDocument: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
@@ -38,7 +40,14 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
   ngOnInit(): void {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
       if (applicationReview) {
         this._applicationReview = applicationReview;
@@ -110,13 +119,15 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
       }
     }
 
-    const el = document.getElementsByClassName('no-data');
-    if (el && el.length > 0) {
-      el[0].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
+    setTimeout(() => {
+      const el = document.getElementsByClassName('error');
+      if (el && el.length > 0) {
+        el[0].scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 5);
 
     return contactInfoValid && resolutionValid && attachmentsValid;
   }

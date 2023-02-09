@@ -7,7 +7,7 @@ import {
   DOCUMENT,
 } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 
@@ -17,7 +17,7 @@ import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
   styleUrls: ['./other-attachments.component.scss'],
 })
 export class OtherAttachmentsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   $destroy = new Subject<void>();
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];

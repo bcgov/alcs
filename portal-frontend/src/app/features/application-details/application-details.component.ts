@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
-import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../services/application/application.dto';
 
 @Component({
   selector: 'app-application-details',
@@ -11,7 +11,7 @@ import { ApplicationDto } from '../../services/application/application.dto';
 export class ApplicationDetailsComponent {
   $destroy = new Subject<void>();
 
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   @Input() isValidate: boolean = true;
   isParcelDetailsValid = false;
   parcelType = PARCEL_TYPE;

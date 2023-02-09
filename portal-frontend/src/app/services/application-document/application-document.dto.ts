@@ -7,6 +7,7 @@ export enum DOCUMENT {
   PROFESSIONAL_REPORT = 'Professional Report',
   PHOTOGRAPH = 'Photograph',
   OTHER = 'Other',
+  AUTHORIZATION_LETTER = 'authorizationLetter',
 }
 
 export interface ApplicationDocumentDto {

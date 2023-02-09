@@ -5,8 +5,10 @@ import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import {
+  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerUpdateDto,
 } from './application-owner.dto';
@@ -22,6 +24,7 @@ export class ApplicationOwnerService {
     private documentService: DocumentService,
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
+    private applicationService: ApplicationService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -151,10 +154,15 @@ export class ApplicationOwnerService {
     return await this.repository.save(existingOwner);
   }
 
-  async delete(uuid: string) {
-    return await this.repository.delete({
-      uuid,
-    });
+  async delete(owner: ApplicationOwner) {
+    return await this.repository.remove(owner);
+  }
+
+  async setPrimaryContact(fileNumber: string, owner: ApplicationOwner) {
+    return await this.applicationService.setPrimaryContact(
+      fileNumber,
+      owner.uuid,
+    );
   }
 
   async getByOwner(user: User, ownerUuid: string) {
@@ -168,6 +176,7 @@ export class ApplicationOwnerService {
         uuid: ownerUuid,
       },
       relations: {
+        type: true,
         corporateSummary: true,
       },
     });
@@ -179,5 +188,19 @@ export class ApplicationOwnerService {
         uuid: Any(ownerUuids),
       },
     });
+  }
+
+  async deleteAgents(application: Application) {
+    const agentOwners = await this.repository.find({
+      where: {
+        application: {
+          fileNumber: application.fileNumber,
+        },
+        type: {
+          code: APPLICATION_OWNER.AGENT,
+        },
+      },
+    });
+    return await this.repository.remove(agentOwners);
   }
 }

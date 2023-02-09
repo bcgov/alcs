@@ -11,9 +11,9 @@
     Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
   </div>
   <div *ngIf="!isFirstNationGovernment && this.isOCPDesignation === false && this.isSubjectToZoning === false">
-    By indicating that the parcel(s) is not subject to Local Government OCP or Zoning, no authorizing resolution is
-    required as per S. 25 (3) or S. 29 (4) of the ALC Act. The only option available to you is to forward this
-    application on to the ALC.
+    By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
+    <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>. The only option
+    available to you is to forward this application on to the ALC.
   </div>
   <form [formGroup]="resolutionForm">
     <div class="form-row">
@@ -21,7 +21,8 @@
         class="full-row"
         *ngIf="
           ((this.isOCPDesignation === true || this.isSubjectToZoning === true) &&
-            this.isOCPDesignation !== null && this.isSubjectToZoning !== null) ||
+            this.isOCPDesignation !== null &&
+            this.isSubjectToZoning !== null) ||
           this.isFirstNationGovernment
         "
       >

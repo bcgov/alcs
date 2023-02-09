@@ -16,6 +16,7 @@ import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/dele
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
+import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
@@ -45,6 +46,7 @@ const routes: Routes = [
     NfuProposalComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,
+    PrimaryContactComponent,
     ReviewAndSubmitComponent,
   ],
   imports: [

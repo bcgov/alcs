@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
-import { APPLICATION_OWNER_TYPE, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
@@ -10,7 +10,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper';
 
@@ -65,7 +65,7 @@ export class ParcelComponent {
 
   @Output() isParcelDetailsValid: EventEmitter<boolean> = new EventEmitter(false);
 
-  @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   @Input() isValidate: boolean = false;
   @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
 
@@ -229,7 +229,7 @@ export class ParcelComponent {
       console.log(owner.email, validation.isEmailInvalid);
     }
 
-    if (owner.type?.code === APPLICATION_OWNER_TYPE.ORGANIZATION) {
+    if (owner.type?.code === APPLICATION_OWNER.ORGANIZATION) {
       validation.isCorporateSummaryRequired = !owner.corporateSummary?.uuid;
     }
 

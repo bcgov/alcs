@@ -10,87 +10,80 @@
   <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
 </ng-template>
 
-<div class="return-application-modal">
-  <div class="content">
-    <div *ngIf="stepIdx === reasonStep">
-      <div class="step-header">
-        <h4><label for="reason">Reason for Return</label></h4>
-      </div>
-
-      <div class="step-body">
-        <div id="reason">
-          <button
-            class="reason-selector"
-            (click)="setToggle(true)"
-            [ngClass]="{ selected: isWrongGovernment }"
-            mat-stroked-button
-          >
-            <div class="button-content">
-              Wrong L/FN Government
-              <div class="selected-text" *ngIf="isWrongGovernment">Selected</div>
-            </div>
-          </button>
-          <button
-            class="reason-selector"
-            (click)="setToggle(false)"
-            [ngClass]="{ selected: isIncompleteApplication }"
-            mat-stroked-button
-          >
-            <div class="button-content">
-              Incomplete Application
-              <div class="selected-text" *ngIf="isIncompleteApplication">Selected</div>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <div class="step-controls">
-        <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+<div mat-dialog-title>
+  <h4>Reason for Return</h4>
+</div>
+<div mat-dialog-content class="return-application-modal">
+  <div *ngIf="stepIdx === reasonStep">
+    <div class="step-body">
+      <div id="reason">
         <button
-          mat-flat-button
-          color="primary"
-          [disabled]="!isWrongGovernment && !isIncompleteApplication"
-          (click)="next()"
+          class="reason-selector"
+          (click)="setToggle(true)"
+          [ngClass]="{ selected: isWrongGovernment }"
+          mat-stroked-button
         >
-          next
+          <div class="button-content">
+            Wrong L/FN Government
+            <div class="selected-text" *ngIf="isWrongGovernment">Selected</div>
+          </div>
+        </button>
+        <button
+          class="reason-selector"
+          (click)="setToggle(false)"
+          [ngClass]="{ selected: isIncompleteApplication }"
+          mat-stroked-button
+        >
+          <div class="button-content">
+            Incomplete Application
+            <div class="selected-text" *ngIf="isIncompleteApplication">Selected</div>
+          </div>
         </button>
       </div>
     </div>
 
-    <div *ngIf="stepIdx === commentStep">
-      <div class="step-header">
-        <h4>Reason for Return</h4>
-      </div>
+    <div class="step-controls">
+      <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!isWrongGovernment && !isIncompleteApplication"
+        (click)="next()"
+      >
+        next
+      </button>
+    </div>
+  </div>
 
-      <div class="step-body">
-        <h6><label for="comment">Comment for Applicant</label></h6>
-        <div>
-          <textarea
-            [(ngModel)]='applicantComment'
-            #comment
-            maxlength="4000"
-            id="comment"
-            matInput
-            class="comment-input"
-            placeholder="Type comment"
-          ></textarea>
-        </div>
-        <span class='subtext'>Characters left: {{ 4000 - comment.textLength }}</span>
+  <div *ngIf="stepIdx === commentStep">
+    <div class="step-body">
+      <h6><label for="comment">Comment for Applicant</label></h6>
+      <div>
+        <textarea
+          [(ngModel)]="applicantComment"
+          #comment
+          maxlength="4000"
+          id="comment"
+          matInput
+          class="comment-input"
+          placeholder="Type comment"
+        ></textarea>
       </div>
-
-      <div class="step-controls">
-        <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
-      </div>
+      <span class="subtext">Characters left: {{ 4000 - comment.textLength }}</span>
     </div>
 
-    <div *ngIf="stepIdx === confirmationStep">
-      <div class="step-header">
-        <h5>Are you sure you want to return this application?</h5>
-      </div>
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
+    </div>
+  </div>
 
-      <div class="step-controls">
-        <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
-      </div>
+  <div *ngIf="stepIdx === confirmationStep">
+    <div class="step-header">
+      <h5>Are you sure you want to return this application?</h5>
+    </div>
+
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
     </div>
   </div>
 </div>

@@ -1,0 +1,54 @@
+<div class="holiday-container">
+  <h3>Stat Holidays</h3>
+  <div class="holiday-search">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <mat-select [(ngModel)]="selectedYear" (valueChange)="onChangeFilter($event)">
+          <mat-option value="allYears"> All Years </mat-option>
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="right">
+      <button mat-flat-button color="primary" (click)="onCreate()">Create</button>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="holidays">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="day">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let row">{{ row.day | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button class="edit-btn" mat-flat-button (click)="onEdit(row)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button class="delete-btn" mat-flat-button (click)="onDelete(row)">
+          <mat-icon>delete-outlined</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  </table>
+
+  <mat-paginator
+    [length]="total"
+    [pageSize]="20"
+    [pageSizeOptions]="[20, 50, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page of holidays"
+  ></mat-paginator>
+</div>

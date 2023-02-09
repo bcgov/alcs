@@ -164,28 +164,46 @@
     <section>
       <h4>4. Resolution</h4>
       <div class="review-table">
-        <div *ngIf="!_applicationReview.isOCPDesignation && !_applicationReview.isSubjectToZoning" class="full-width">
-          By indicating that the parcel(s) is not subject to Local Government OCP or Zoning, no authorizing resolution
-          is required as per S. 25 (3) or S. 29 (4) of the ALC Act. The only option available to you is to forward this
-          application on to the ALC.
+        <div
+          class="full-width"
+          *ngIf="_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null"
+        >
+          Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning" class="full-width">
+        <div
+          class="full-width"
+          *ngIf="_applicationReview.isOCPDesignation === false && _applicationReview.isSubjectToZoning === false"
+        >
+          By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
+          <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
+          The only option available to you is to forward this application on to the ALC.
+        </div>
+        <div
+          *ngIf="_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true"
+          class="full-width"
+        >
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Yes' : 'No'
+              _applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
             }}</span>
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
-        <div class="edit-button">
+        <div *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null" class="edit-button">
           <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
         </div>
       </div>
     </section>
     <section>
       <h4>5. Attachments</h4>
-      <div class="review-table">
+      <div *ngIf="!this.hasCompletedStepsBeforeDocuments" class="review-table">
+        <div class="full-width">
+          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
+          with this step.
+        </div>
+      </div>
+      <div *ngIf="this.hasCompletedStepsBeforeDocuments" class="review-table">
         <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
           <div class="subheading2">Resolution Document</div>
           <div>
@@ -389,26 +407,22 @@
       <div class="review-table">
         <div
           class="full-width"
-          *ngIf="
-            !_applicationReview.isFirstNationGovernment &&
-            (_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null)
-          "
+          *ngIf="_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null"
         >
           Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
         </div>
         <div
           class="full-width"
-          *ngIf="
-            !_applicationReview.isFirstNationGovernment &&
-            _applicationReview.isOCPDesignation === false &&
-            _applicationReview.isSubjectToZoning === false
-          "
+          *ngIf="_applicationReview.isOCPDesignation === false && _applicationReview.isSubjectToZoning === false"
         >
-          By indicating that the parcel(s) is not subject to Local Government OCP or Zoning, no authorizing resolution
-          is required as per S. 25 (3) or S. 29 (4) of the ALC Act. The only option available to you is to forward this
-          application on to the ALC.
+          By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
+          <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
+          The only option available to you is to forward this application on to the ALC.
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning" class="full-width">
+        <div
+          *ngIf="_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true"
+          class="full-width"
+        >
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
@@ -417,7 +431,7 @@
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
-        <div class="edit-button">
+        <div *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null" class="edit-button">
           <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
         </div>
       </div>
@@ -426,7 +440,13 @@
       <mat-expansion-panel-header>
         <h4>5. Attachments</h4>
       </mat-expansion-panel-header>
-      <div class="review-table">
+      <div *ngIf="!this.hasCompletedStepsBeforeDocuments" class="review-table">
+        <div class="full-width">
+          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
+          with this step.
+        </div>
+      </div>
+      <div *ngIf="this.hasCompletedStepsBeforeDocuments" class="review-table">
         <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
           <div class="subheading2">Resolution Document</div>
           <div>

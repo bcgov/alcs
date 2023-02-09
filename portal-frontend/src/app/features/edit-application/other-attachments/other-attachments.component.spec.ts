@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 import { OtherAttachmentsComponent } from './other-attachments.component';
@@ -42,7 +42,7 @@ describe('OtherAttachmentsComponent', () => {
 
     fixture = TestBed.createComponent(OtherAttachmentsComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 
