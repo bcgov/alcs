@@ -1,0 +1,42 @@
+@import '../../../styles/functions.scss';
+@import '../../../styles/colors.scss';
+
+:host::ng-deep {
+  .view-grid-item {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr;
+    column-gap: rem(16);
+    margin-bottom: rem(12);
+  }
+
+  .flex-item {
+    display: flex;
+    gap: rem(16);
+  }
+
+  .details-wrapper {
+    margin-top: rem(24);
+    margin-bottom: rem(24);
+
+    .title {
+      margin-bottom: rem(16) !important;
+    }
+  }
+
+  h3 .subtext {
+    margin: 0.5rem 0 !important;
+  }
+
+  label {
+    font-weight: 600;
+  }
+
+  .no-data-text {
+    text-align: center;
+    color: $grey;
+
+    .error {
+      justify-content: center;
+    }
+  }
+}

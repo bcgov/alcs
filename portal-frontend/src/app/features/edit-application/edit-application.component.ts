@@ -8,6 +8,7 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
+import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 
 @Component({
   selector: 'app-create-application',
@@ -22,8 +23,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
   application: ApplicationDto | undefined;
 
-  // TODO remove
-  @ViewChild('stepper') private myStepper!: MatStepper;
+  @ViewChild('stepper') public stepper!: MatStepper;
+  @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
 
   constructor(
     private applicationService: ApplicationService,
@@ -42,19 +43,22 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
       const fileId = paramMap.get('fileId');
       if (fileId) {
         this.fileId = fileId;
-        this.loadApplication(fileId).then(() =>
-          // TODO remove then from above
-          setTimeout(() => {
-            // or do some API calls/ Async events
-            this.myStepper.next();
-            this.myStepper.next();
-            this.myStepper.next();
-            this.myStepper.next();
-            this.myStepper.next();
-            this.myStepper.next();
-            this.myStepper.next();
-          }, 1)
-        );
+        this.loadApplication(fileId).then(() => {
+          this.activatedRoute.params.pipe(takeUntil(this.$destroy)).subscribe((params) => {
+            const stepIndex = params['stepInd'];
+            if (stepIndex) {
+              // navigation on steps is not working
+              this.stepper.next();
+            }
+          });
+
+          this.activatedRoute.queryParamMap.pipe(takeUntil(this.$destroy)).subscribe((params) => {
+            const parcelUuid = params.get('parcelUuid');
+            if (parcelUuid) {
+              this.parcelDetailsComponent.openParcel(parcelUuid);
+            }
+          });
+        });
       }
     });
 

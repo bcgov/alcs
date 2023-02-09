@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class NoDataComponent {
   @Input() showRequired = false;
+  @Input() text?: string | null;
 
   constructor() {}
 }

@@ -24,6 +24,10 @@ const routes: Routes = [
     path: '',
     component: EditApplicationComponent,
   },
+  {
+    path: ':stepInd',
+    component: EditApplicationComponent,
+  },
 ];
 
 @NgModule({

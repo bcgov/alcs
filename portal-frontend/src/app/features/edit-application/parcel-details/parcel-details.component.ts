@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
@@ -37,7 +37,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +49,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         this.$owners.next(application.owners);
       }
     });
+
     this.newParcelAdded = false;
   }
 
@@ -165,5 +167,11 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     if (owners) {
       this.$owners.next(owners);
     }
+  }
+
+  expandedParcel: string = '';
+
+  openParcel(index: string) {
+    this.expandedParcel = index;
   }
 }

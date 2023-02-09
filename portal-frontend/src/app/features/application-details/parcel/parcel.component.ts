@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
-import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER_TYPE, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
@@ -12,23 +14,31 @@ import { ApplicationDto } from '../../../services/application/application.dto';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper';
 
+export const emailRegex = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 export class ApplicationParcelBasicValidation {
-  isTypeValid: boolean = true;
-  isPidValid: boolean = true;
-  isPinValid: boolean = true;
-  isLegalDescriptionValid: boolean = true;
-  isMapAreaHectaresValid: boolean = true;
-  isPurchasedDateValid: boolean = true;
-  isFarmValid: boolean = true;
-  isCertificateValid: boolean = true;
+  // indicates general validity check state, including owner related information
+  isInvalid: boolean = false;
+
+  isTypeRequired: boolean = false;
+  isPidRequired: boolean = false;
+  isPinRequired: boolean = false;
+  isLegalDescriptionRequired: boolean = false;
+  isMapAreaHectaresRequired: boolean = false;
+  isPurchasedDateRequired: boolean = false;
+  isFarmRequired: boolean = false;
+  isCertificateRequired: boolean = false;
 }
 
 export class ApplicationParcelOwnerBasicValidation {
-  isTypeValid: boolean = true;
-  isFirstNameValid: boolean = true;
-  isLastNameValid: boolean = true;
-  isPhoneNumberValid: boolean = true;
-  isEmailValid: boolean = true;
+  isInvalid: boolean = false;
+  isTypeRequired: boolean = false;
+  isFirstNameRequired: boolean = false;
+  isLastNameRequired: boolean = false;
+  isPhoneNumberRequired: boolean = false;
+  isPhoneNumberInvalid: boolean = false;
+  isEmailRequired: boolean = false;
+  isEmailInvalid: boolean = false;
+  isCorporateSummaryRequired: boolean = false;
 }
 
 interface OwnerWithValidation extends ApplicationOwnerDto {
@@ -56,7 +66,7 @@ export class ParcelComponent {
   @Output() isParcelDetailsValid: EventEmitter<boolean> = new EventEmitter(false);
 
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
-  @Input() isValidate: boolean = true;
+  @Input() isValidate: boolean = false;
 
   fileId: string = '';
 
@@ -65,7 +75,15 @@ export class ParcelComponent {
   parcels: ApplicationParcelExtended[] = [];
   showErrors = true;
 
-  constructor(private applicationParcelService: ApplicationParcelService) {}
+  parcelSectionIsValid = true;
+
+  ownerTableDisplayColumns = ['ownerType', 'fullName', 'phone', 'email', 'corporateSummary'];
+
+  constructor(
+    private applicationParcelService: ApplicationParcelService,
+    private ownerService: ApplicationOwnerService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.showErrors = this.isValidate;
@@ -95,8 +113,12 @@ export class ParcelComponent {
       if (this.parcels) {
         this.parcels.forEach((p) => {
           p.validation = this.validateParcelBasic(p);
+
           p.owners.forEach((o) => {
             o.validation = this.validateOwner(o);
+            if (o.validation.isInvalid || p.validation?.isInvalid) {
+              this.parcelSectionIsValid = false;
+            }
           });
         });
 
@@ -114,37 +136,58 @@ export class ParcelComponent {
     }
   }
 
+  async onOpenCorporateSummaryFile(uuid: string) {
+    const res = await this.ownerService.openCorporateSummary(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
+    }
+  }
+
   private validateParcelBasic(parcel: ApplicationParcelDto) {
     const validation = new ApplicationParcelBasicValidation();
 
     if (!parcel.ownershipType) {
-      validation.isTypeValid = false;
+      validation.isTypeRequired = true;
+
+      if (!parcel.pid && !parcel.pin) {
+        validation.isPidRequired = true;
+        validation.isPinRequired = true;
+      }
+
+      if (!parcel.purchasedDate) {
+        validation.isPurchasedDateRequired = true;
+      }
     }
 
-    if (!parcel.pid && !parcel.pin) {
-      validation.isPidValid = false;
-      validation.isPinValid = false;
+    if (!parcel.pid && parcel.ownershipType?.code === 'SMPL') {
+      validation.isPidRequired = true;
+    }
+
+    if (!parcel.pin && parcel.ownershipType?.code === 'CRWN') {
+      validation.isPinRequired = true;
     }
 
     if (!parcel.legalDescription) {
-      validation.isLegalDescriptionValid = false;
+      validation.isLegalDescriptionRequired = true;
     }
 
     if (!parcel.mapAreaHectares) {
-      validation.isMapAreaHectaresValid = false;
+      validation.isMapAreaHectaresRequired = true;
     }
 
-    if (!parcel.purchasedDate) {
-      validation.isPurchasedDateValid = false;
+    if (!parcel.purchasedDate && parcel.ownershipType?.code === 'SMPL') {
+      validation.isPurchasedDateRequired = true;
     }
 
     if (!parcel.isFarm) {
-      validation.isFarmValid = false;
+      validation.isFarmRequired = true;
     }
 
     if (!parcel.documents || (parcel.documents && parcel.documents.length <= 0)) {
-      validation.isCertificateValid = false;
+      validation.isCertificateRequired = true;
     }
+
+    validation.isInvalid = this.isInvalid(validation);
 
     return validation;
   }
@@ -152,25 +195,58 @@ export class ParcelComponent {
   private validateOwner(owner: OwnerWithValidation) {
     const validation = new ApplicationParcelOwnerBasicValidation();
     if (!owner.type) {
-      validation.isTypeValid = false;
+      validation.isTypeRequired = true;
     }
 
     if (!owner.firstName) {
-      validation.isFirstNameValid = false;
+      validation.isFirstNameRequired = true;
     }
 
     if (!owner.lastName) {
-      validation.isLastNameValid = false;
+      validation.isLastNameRequired = true;
     }
 
     if (!owner.phoneNumber) {
-      validation.isPhoneNumberValid = false;
+      validation.isPhoneNumberRequired = true;
+    } else {
+      validation.isPhoneNumberInvalid = owner.phoneNumber.length !== 10;
     }
 
     if (!owner.email) {
-      validation.isEmailValid = false;
+      validation.isEmailRequired = true;
+    } else {
+      validation.isEmailInvalid = this.validateEmail(owner.email);
     }
 
+    if (owner.type?.code === APPLICATION_OWNER_TYPE.ORGANIZATION) {
+      validation.isCorporateSummaryRequired = !owner.corporateSummary?.uuid;
+    }
+
+    validation.isInvalid = this.isInvalid(validation);
     return validation;
+  }
+
+  private validateEmail(email: string) {
+    const re = new RegExp(emailRegex);
+    return re.test(email);
+  }
+
+  private isInvalid(validationObj: ApplicationParcelOwnerBasicValidation | ApplicationParcelBasicValidation) {
+    for (const prop in validationObj) {
+      if (prop) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  onEditParcelsClick($event: any) {
+    $event.stopPropagation();
+    this.router.navigateByUrl(`application/${this.fileId}/edit/0`);
+  }
+
+  onEditParcelClick(uuid: string) {
+    this.router.navigateByUrl(`application/${this.fileId}/edit/0?parcelUuid=${uuid}`);
   }
 }

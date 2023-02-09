@@ -5,7 +5,10 @@
   </div>
   <mat-expansion-panel
     *ngFor="let parcel of parcels; let parcelInd = index"
-    [expanded]="parcels.length === 1 || (newParcelAdded && parcelInd === parcels.length - 1)"
+    [expanded]="
+      parcels.length === 1 || (newParcelAdded && parcelInd === parcels.length - 1) || parcel.uuid === expandedParcel
+    "
+    (opened)="openParcel(parcel.uuid)"
   >
     <mat-expansion-panel-header>
       <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
@@ -13,11 +16,11 @@
 
     <app-parcel-entry
       [parcel]="parcel"
-      [$owners]='$owners'
-      [fileId]='fileId'
+      [$owners]="$owners"
+      [fileId]="fileId"
       (onFormGroupChange)="onParcelFormChange($event)"
       (onFilesUpdated)="onFilesUpdated()"
-      (onOwnersUpdated)='onOwnersUpdated()'
+      (onOwnersUpdated)="onOwnersUpdated()"
     ></app-parcel-entry>
 
     <div>

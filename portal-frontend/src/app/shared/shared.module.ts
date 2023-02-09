@@ -24,11 +24,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { provideNgxMask } from 'ngx-mask';
+import { CompletedComponent } from './completed/completed.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { DATE_FORMATS } from './utils/date-format';
+import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
@@ -71,8 +73,18 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatAutocompleteModule,
     MatSelectModule,
     NoDataComponent,
+    ValidationErrorComponent,
+    CompletedComponent,
   ],
-  declarations: [FileDragDropComponent, FileSizePipe, DragDropDirective, WarningBannerComponent, NoDataComponent],
+  declarations: [
+    FileDragDropComponent,
+    FileSizePipe,
+    DragDropDirective,
+    WarningBannerComponent,
+    NoDataComponent,
+    ValidationErrorComponent,
+    CompletedComponent,
+  ],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
