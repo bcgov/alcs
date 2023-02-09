@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
+import { Component, Input } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
 import { ApplicationDto } from '../../services/application/application.dto';
 
 @Component({
@@ -14,6 +14,7 @@ export class ApplicationDetailsComponent {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
   @Input() isValidate: boolean = true;
   isParcelDetailsValid = false;
+  parcelType = PARCEL_TYPE;
 
   parcelValidation(isParcelDetailsValid: boolean) {
     this.isParcelDetailsValid = isParcelDetailsValid;

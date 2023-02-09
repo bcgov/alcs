@@ -3,11 +3,11 @@
     <mat-expansion-panel-header>
       <mat-panel-title class="flex-space-between-wrap">
         <h3 class="flex-item">
-          1. Identify Parcel(s) Under Application
+          {{ pageTitle }}
           <app-validation-error *ngIf="!parcelSectionIsValid" text="Some fields are missing"></app-validation-error>
           <app-completed *ngIf="parcelSectionIsValid"></app-completed>
         </h3>
-        <button mat-stroked-button color="primary" (click)="onEditParcelsClick($event)">Edit Parcel</button>
+        <button mat-stroked-button type="button" color="primary" (click)="onEditParcelsClick($event)">Edit Parcels</button>
       </mat-panel-title>
     </mat-expansion-panel-header>
 
@@ -74,7 +74,7 @@
             <app-no-data [showRequired]="isValidate" *ngIf="!parcel.isFarmText"></app-no-data>
           </div>
         </div>
-        <div class="view-grid-item">
+        <div class="view-grid-item" *ngIf="showCertificateOfTitle">
           <label>Certificate of Title:</label>
           <div class="file-name" *ngFor="let file of parcel.documents">
             <a (click)="onOpenFile(file.uuid)">{{ file.fileName }}</a>

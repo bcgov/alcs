@@ -67,14 +67,17 @@ export class ParcelComponent {
 
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
   @Input() isValidate: boolean = false;
+  @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
+
+  pageTitle: string = '1. Identify Parcel(s) Under Application';
+  showCertificateOfTitle: boolean = true;
+  navigationStepInd = 0;
 
   fileId: string = '';
 
   parcelsWithOwners: any[] = [];
-
   parcels: ApplicationParcelExtended[] = [];
   showErrors = true;
-
   parcelSectionIsValid = true;
 
   ownerTableDisplayColumns = ['ownerType', 'fullName', 'phone', 'email', 'corporateSummary'];
@@ -93,6 +96,12 @@ export class ParcelComponent {
         this.loadParcels().then(async () => await this.validateParcelDetails());
       }
     });
+
+    if (this.parcelType === PARCEL_TYPE.OTHER) {
+      this.pageTitle = '2. Other Parcels in the Community';
+      this.showCertificateOfTitle = false;
+      this.navigationStepInd = 1;
+    }
   }
 
   ngOnDestroy(): void {
@@ -103,7 +112,7 @@ export class ParcelComponent {
   async loadParcels() {
     const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
     this.parcels = parcels
-      .filter((p) => p.parcelType === PARCEL_TYPE.APPLICATION)
+      .filter((p) => p.parcelType === this.parcelType)
       .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
     console.log('loadParcels', parcels);
   }
@@ -183,10 +192,11 @@ export class ParcelComponent {
       validation.isFarmRequired = true;
     }
 
-    if (!parcel.documents || (parcel.documents && parcel.documents.length <= 0)) {
+    if (this.showCertificateOfTitle && (!parcel.documents || (parcel.documents && parcel.documents.length <= 0))) {
       validation.isCertificateRequired = true;
     }
 
+    // TODO replace this with checking if there at least one error object on the page?
     validation.isInvalid = this.isInvalid(validation);
 
     return validation;
@@ -243,10 +253,10 @@ export class ParcelComponent {
 
   onEditParcelsClick($event: any) {
     $event.stopPropagation();
-    this.router.navigateByUrl(`application/${this.fileId}/edit/0`);
+    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}`);
   }
 
   onEditParcelClick(uuid: string) {
-    this.router.navigateByUrl(`application/${this.fileId}/edit/0?parcelUuid=${uuid}`);
+    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}`);
   }
 }
