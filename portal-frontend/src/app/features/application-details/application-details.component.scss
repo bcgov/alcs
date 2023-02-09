@@ -40,6 +40,11 @@
     height: fit-content;
   }
 
+  .table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+
   @media screen and (min-width: $tabletBreakpoint) {
     .flex-item {
       display: flex;
