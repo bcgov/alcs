@@ -63,4 +63,14 @@ export class HolidayService {
     }
     return;
   }
+
+  async loadFilterValues() {
+    try {
+      return await firstValueFrom(this.http.get<{ years: string[] }>(`${this.url}/filters`));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load filter values');
+      console.log(e);
+    }
+    return;
+  }
 }
