@@ -41,7 +41,6 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
-  @AutoMap(() => String)
   ownershipType?: ApplicationParcelOwnershipTypeDto;
 
   @AutoMap(() => String)

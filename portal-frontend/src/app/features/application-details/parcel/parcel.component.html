@@ -4,7 +4,7 @@
       <mat-panel-title class="flex-space-between-wrap">
         <h3 class="flex-item">
           {{ pageTitle }}
-          <app-validation-error *ngIf="!parcelSectionIsValid" text="Some fields are missing"></app-validation-error>
+          <app-validation-error *ngIf="!parcelSectionIsValid">Some fields are missing</app-validation-error>
           <app-completed *ngIf="parcelSectionIsValid"></app-completed>
         </h3>
         <button mat-stroked-button type="button" color="primary" (click)="onEditParcelsClick($event)">
@@ -121,7 +121,9 @@
               <td mat-cell *matCellDef="let owner">
                 {{ owner.phoneNumber }}
                 <app-no-data [showRequired]="isValidate" *ngIf="!owner.phoneNumber"></app-no-data>
-                <app-validation-error *ngIf="owner.validation?.isPhoneNumberInvalid" text="Phone is invalid" />
+                <app-validation-error *ngIf="owner.validation?.isPhoneNumberInvalid">
+                  Phone is invalid
+                </app-validation-error>
               </td>
             </ng-container>
 
@@ -130,7 +132,7 @@
               <td mat-cell *matCellDef="let owner">
                 {{ owner.email }}
                 <app-no-data [showRequired]="isValidate" *ngIf="!owner.email"></app-no-data>
-                <app-validation-error *ngIf="owner.validation?.isEmailInvalid" text="Email is invalid" />
+                <app-validation-error *ngIf="owner.validation?.isEmailInvalid"> Email is invalid</app-validation-error>
               </td>
             </ng-container>
 
