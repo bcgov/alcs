@@ -10,7 +10,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper';
 
@@ -239,6 +239,7 @@ export class ParcelComponent {
     return validation;
   }
 
+  // TODO move to validation utils
   private validateEmail(email: string) {
     const re = new RegExp(emailRegex);
     return !re.test(email);
