@@ -71,6 +71,7 @@ describe('ApplicationParcelService', () => {
           corporateSummary: true,
           type: true,
         },
+        ownershipType: true,
       },
     });
   });

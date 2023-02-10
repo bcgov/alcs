@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
@@ -10,7 +10,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
@@ -37,8 +37,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
-    private dialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
