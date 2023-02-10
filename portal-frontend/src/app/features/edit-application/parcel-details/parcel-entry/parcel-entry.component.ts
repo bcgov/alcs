@@ -79,6 +79,7 @@ export class ParcelEntryComponent implements OnInit {
   });
 
   documentTypes = DOCUMENT;
+  maxPurchasedDate = new Date();
 
   constructor(
     private parcelService: ParcelService,
@@ -106,17 +107,27 @@ export class ParcelEntryComponent implements OnInit {
 
   async onSearch() {
     const result = await this.parcelService.getByPidPin(this.pidPin.getRawValue()!);
+    this.onReset();
     if (result) {
       this.legalDescription.setValue(result.legalDescription);
       this.mapArea.setValue(result.mapArea);
+
       if (result.pin) {
         this.pin.setValue(result.pin);
+      }
+
+      if (result.pid) {
+        this.pid.setValue(result.pid);
       }
     }
   }
 
   onReset() {
-    this.parcelForm.reset();
+    this.parcelForm.controls.pidPin.reset();
+    this.parcelForm.controls.pid.reset();
+    this.parcelForm.controls.pin.reset();
+    this.parcelForm.controls.legalDescription.reset();
+    this.parcelForm.controls.mapArea.reset();
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
