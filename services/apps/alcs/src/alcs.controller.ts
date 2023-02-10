@@ -9,7 +9,7 @@ import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 export class AlcsController {
   constructor(private appService: AlcsService) {}
 
-  @Get()
+  @Get(['', 'health'])
   @Public()
   async getHealthStatus(): Promise<HealthCheckDto> {
     return await this.appService.getHealthStatus();
