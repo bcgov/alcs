@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
-import { ApplicationDetailedDto, ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../services/application/application.dto';
 
 @Component({
   selector: 'app-application-details',
@@ -18,10 +18,5 @@ export class ApplicationDetailsComponent {
 
   parcelValidation(isParcelDetailsValid: boolean) {
     this.isParcelDetailsValid = isParcelDetailsValid;
-    console.log('ApplicationDetailsComponent', this.isParcelDetailsValid);
-  }
-
-  private runValidation() {
-    console.log('ApplicationDetailsComponent runValidation');
   }
 }

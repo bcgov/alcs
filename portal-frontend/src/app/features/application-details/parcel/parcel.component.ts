@@ -114,7 +114,6 @@ export class ParcelComponent {
     this.parcels = parcels
       .filter((p) => p.parcelType === this.parcelType)
       .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
-    console.log('loadParcels', parcels);
   }
 
   private async validateParcelDetails() {
@@ -130,8 +129,6 @@ export class ParcelComponent {
             }
           });
         });
-
-        console.log('validateParcelDetails', this.parcels);
       }
     }
 
@@ -226,7 +223,6 @@ export class ParcelComponent {
       validation.isEmailRequired = true;
     } else {
       validation.isEmailInvalid = this.validateEmail(owner.email);
-      console.log(owner.email, validation.isEmailInvalid);
     }
 
     if (owner.type?.code === APPLICATION_OWNER.ORGANIZATION) {
@@ -235,7 +231,6 @@ export class ParcelComponent {
 
     validation.isInvalid = this.isInvalid(validation);
 
-    console.log('owner', validation.isInvalid);
     return validation;
   }
 
