@@ -17,7 +17,7 @@ export class ParcelController {
     if (lookupResult) {
       return {
         pin: lookupResult.pin,
-        pid: lookupResult.pid?.padStart(9, '0'),
+        pid: lookupResult.pid,
         legalDescription: lookupResult.legalDescription,
         mapArea: Number.parseFloat(lookupResult.gisAreaHa).toFixed(2),
       };
