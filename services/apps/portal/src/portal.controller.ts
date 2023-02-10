@@ -8,7 +8,7 @@ import { PortalService } from './portal.service';
 export class PortalController {
   constructor(private readonly portalService: PortalService) {}
 
-  @Get()
+  @Get(['', 'health'])
   @Public()
   async getHealthStatus(): Promise<HealthCheckDto> {
     return await this.portalService.getHealthStatus();
