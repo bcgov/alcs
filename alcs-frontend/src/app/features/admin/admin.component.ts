@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
 
@@ -15,6 +16,12 @@ export const childRoutes = [
     menuTitle: 'L/FNG Governments',
     icon: 'gavel',
     component: LocalGovernmentComponent,
+  },
+  {
+    path: 'ceo',
+    menuTitle: 'CEO Criterion',
+    icon: 'psychology',
+    component: CeoCriterionComponent,
   },
 ];
 
