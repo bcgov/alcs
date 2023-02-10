@@ -6,7 +6,7 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { UserGuids, UserService } from '../../user/user.service';
-import { Base } from './base.entity';
+import { Auditable } from './audit.entity';
 
 export const SYSTEM_ID = 'alcs-api';
 
@@ -21,7 +21,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
   }
 
   listenTo() {
-    return Base;
+    return Auditable;
   }
 
   async beforeInsert(event: UpdateEvent<any>) {
