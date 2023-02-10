@@ -1,0 +1,54 @@
+@import '../../../styles/functions.scss';
+@import '../../../styles/colors.scss';
+@import '../../../styles/typography.scss';
+
+:host::ng-deep {
+  .view-grid-item {
+    display: grid;
+    grid-template-columns: minmax(rem(100), 0.5fr) 1fr;
+    column-gap: rem(16);
+    margin-bottom: rem(12);
+  }
+
+  .details-wrapper {
+    margin-top: rem(24);
+    margin-bottom: rem(24);
+
+    .title {
+      margin-bottom: rem(16) !important;
+    }
+  }
+
+  h3 .subtext {
+    margin: 0.5rem 0 !important;
+  }
+
+  label {
+    font-weight: 600;
+  }
+
+  .no-data-text {
+    text-align: center;
+    color: $grey;
+
+    .error {
+      justify-content: center;
+    }
+  }
+
+  .custom-mat-expansion-panel-header {
+    height: fit-content;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .flex-item {
+      display: flex;
+      gap: rem(16);
+    }
+  }
+}

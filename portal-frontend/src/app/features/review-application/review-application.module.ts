@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NoDataComponent } from '../../shared/no-data/no-data.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 import { ReviewApplicationComponent } from './review-application.component';
@@ -31,7 +30,6 @@ const routes: Routes = [
     ReviewSubmitComponent,
     ReviewSubmitFngComponent,
     ReturnApplicationDialogComponent,
-    NoDataComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })

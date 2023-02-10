@@ -40,7 +40,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationReviewService,
-    private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 

@@ -1,12 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDetailedDto, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
+import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 
 @Component({
   selector: 'app-create-application',
@@ -21,6 +23,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   $application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
   application: ApplicationDetailedDto | undefined;
 
+  @ViewChild('stepper') public stepper!: MatStepper;
+  @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
+
   constructor(
     private applicationService: ApplicationService,
     private activatedRoute: ActivatedRoute,
@@ -34,17 +39,27 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
-      const fileId = paramMap.get('fileId');
-      if (fileId) {
-        this.fileId = fileId;
-        this.loadApplication(fileId);
-      }
-    });
+    combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(([queryParamMap, paramMap]) => {
+        const fileId = paramMap.get('fileId');
+        if (fileId) {
+          this.loadApplication(fileId);
 
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      this.application = application;
-    });
+          const stepInd = paramMap.get('stepInd');
+          const parcelUuid = queryParamMap.get('parcelUuid');
+
+          if (stepInd) {
+            // setTimeout is required for stepper to work properly
+            setTimeout(() => {
+              this.stepper.selectedIndex = stepInd;
+              if (parcelUuid) {
+                this.parcelDetailsComponent.openParcel(parcelUuid);
+              }
+            });
+          }
+        }
+      });
   }
 
   private async loadApplication(fileId: string) {

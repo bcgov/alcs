@@ -10,7 +10,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
@@ -49,6 +49,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
         this.$owners.next(nonAgentOwners);
       }
     });
+
     this.newParcelAdded = false;
   }
 
@@ -167,5 +168,11 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
       const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.$owners.next(nonAgentOwners);
     }
+  }
+
+  expandedParcel: string = '';
+
+  openParcel(index: string) {
+    this.expandedParcel = index;
   }
 }

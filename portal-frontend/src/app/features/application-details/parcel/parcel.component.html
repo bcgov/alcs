@@ -1,0 +1,156 @@
+<section title="parcels">
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header class="custom-mat-expansion-panel-header">
+      <mat-panel-title class="flex-space-between-wrap">
+        <h3 class="flex-item">
+          {{ pageTitle }}
+          <app-validation-error *ngIf="!parcelSectionIsValid">Some fields are missing</app-validation-error>
+          <app-completed *ngIf="parcelSectionIsValid"></app-completed>
+        </h3>
+        <button mat-stroked-button type="button" color="primary" (click)="onEditParcelsClick($event)">
+          Edit Parcels
+        </button>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div *ngFor="let parcel of parcels; let parcelInd = index">
+      <div class="flex-space-between-wrap">
+        <h4>Parcel #{{ parcelInd + 1 }}</h4>
+        <button mat-stroked-button color="primary" (click)="onEditParcelClick(parcel.uuid)">
+          Edit Parcel #{{ parcelInd + 1 }}
+        </button>
+      </div>
+
+      <div class="details-wrapper">
+        <h5 class="title">Parcel Info</h5>
+        <div class="view-grid-item">
+          <label for="ownershipType">Ownership Type</label>
+          <div #ownershipType>
+            {{ parcel.ownershipType?.description }}
+            <app-no-data [showRequired]="isValidate" *ngIf="parcel.validation?.isTypeRequired"></app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item">
+          <label for="pid">PID</label>
+          <div #pid>
+            {{ parcel.pid }}
+            <app-no-data [showRequired]="parcel.validation?.isPidRequired || false" *ngIf="!parcel.pid"></app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item">
+          <label for="legalDescription">Legal Description</label>
+          <div #legalDescription>
+            {{ parcel.legalDescription }}
+            <app-no-data [showRequired]="isValidate" *ngIf="!parcel.legalDescription"></app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item">
+          <label for="area">Area</label>
+          <div #area>
+            {{ parcel.mapAreaHectares }}
+            <app-no-data [showRequired]="isValidate" *ngIf="!parcel.mapAreaHectares"></app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item">
+          <label for="pin">PIN</label>
+          <div #pin>
+            {{ parcel.pin }}
+            <app-no-data [showRequired]="parcel.validation?.isPinRequired || false" *ngIf="!parcel.pin"></app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item">
+          <label for="purchaseDate">Purchase Date</label>
+          <div #purchaseDate>
+            {{ parcel.purchasedDate }}
+            <app-no-data
+              [showRequired]="parcel.validation?.isPurchasedDateRequired || false"
+              *ngIf="!parcel.purchasedDate"
+            >
+            </app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item">
+          <label for="farmClassification">Farm Classification</label>
+          <div #farmClassification>
+            {{ parcel.isFarmText }}
+            <app-no-data [showRequired]="isValidate" *ngIf="!parcel.isFarmText"></app-no-data>
+          </div>
+        </div>
+        <div class="view-grid-item" *ngIf="showCertificateOfTitle">
+          <label>Certificate of Title:</label>
+          <div class="file-name" *ngFor="let file of parcel.documents">
+            <a (click)="onOpenFile(file.uuid)">{{ file.fileName }}</a>
+            <app-no-data [showRequired]="isValidate" *ngIf="parcel.validation?.isCertificateRequired"></app-no-data>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-wrapper">
+        <h5 class="title">Owners Info</h5>
+
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="parcel.owners">
+            <tr mat-header-row *matHeaderRowDef="ownerTableDisplayColumns"></tr>
+            <tr mat-row *matRowDef="let owner; columns: ownerTableDisplayColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="5">
+                <app-no-data class="no-data-text" [showRequired]="isValidate"></app-no-data>
+              </td>
+            </tr>
+
+            <ng-container matColumnDef="ownerType">
+              <th mat-header-cell *matHeaderCellDef>Owner Type</th>
+              <td mat-cell *matCellDef="let owner">
+                {{ owner.type.description }}
+                <app-no-data [showRequired]="isValidate" *ngIf="!owner.type.description"></app-no-data>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fullName">
+              <th mat-header-cell *matHeaderCellDef>Full Name/ Organization</th>
+              <td mat-cell *matCellDef="let owner">
+                {{ owner.displayName }}
+                <app-no-data [showRequired]="isValidate" *ngIf="!owner.displayName"></app-no-data>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef>Phone</th>
+              <td mat-cell *matCellDef="let owner">
+                {{ owner.phoneNumber }}
+                <app-no-data [showRequired]="isValidate" *ngIf="!owner.phoneNumber"></app-no-data>
+                <app-validation-error *ngIf="owner.validation?.isPhoneNumberInvalid">
+                  Phone is invalid
+                </app-validation-error>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let owner">
+                {{ owner.email }}
+                <app-no-data [showRequired]="isValidate" *ngIf="!owner.email"></app-no-data>
+                <app-validation-error *ngIf="owner.validation?.isEmailInvalid"> Email is invalid</app-validation-error>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="corporateSummary">
+              <th mat-header-cell *matHeaderCellDef>Corporate Summary</th>
+              <td mat-cell *matCellDef="let owner">
+                <a (click)="onOpenCorporateSummaryFile(owner.corporateSummary?.uuid)">{{
+                  owner.corporateSummary?.fileName
+                }}</a>
+                <app-no-data
+                  [showRequired]="owner.validation?.isCorporateSummaryRequired"
+                  *ngIf="!owner.corporateSummary?.uuid"
+                ></app-no-data>
+              </td>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</section>

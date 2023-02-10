@@ -1,0 +1,18 @@
+@import '../../../styles/colors';
+@import '../../../styles/typography';
+
+.error {
+  margin-top: rem(4);
+  color: $error-color;
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    margin-right: rem(4);
+    font-size: rem(14);
+    width: rem(14);
+    height: rem(14);
+    min-width: rem(14);
+    min-height: rem(14);
+  }
+}

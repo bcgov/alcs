@@ -1,0 +1,13 @@
+<section title="application details">
+  <app-parcel
+    [$application]="$application"
+    [isValidate]="isValidate"
+    (isParcelDetailsValid)="parcelValidation($event)"
+  ></app-parcel>
+  <app-parcel
+    [$application]="$application"
+    [isValidate]="isValidate"
+    [parcelType]="parcelType.OTHER"
+    (isParcelDetailsValid)="parcelValidation($event)"
+  ></app-parcel>
+</section>

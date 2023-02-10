@@ -40,7 +40,7 @@ export class ApplicationReviewService {
     @InjectRepository(ApplicationReview)
     private applicationReviewRepository: Repository<ApplicationReview>,
     private applicationDocumentService: ApplicationDocumentService,
-    @InjectMapper() private mapper: Mapper,
+    @InjectMapper('') private mapper: Mapper,
   ) {}
 
   get(fileNumber: string, localGovernment: LocalGovernment) {

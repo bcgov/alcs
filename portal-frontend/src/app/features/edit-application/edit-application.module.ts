@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../shared/shared.module';
+import { ApplicationDetailsModule } from '../application-details/application-details.module';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { EditApplicationComponent } from './edit-application.component';
 import { LandUseComponent } from './land-use/land-use.component';
@@ -16,11 +17,16 @@ import { ParcelDetailsComponent } from './parcel-details/parcel-details.componen
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: EditApplicationComponent,
+  },
+  {
+    path: ':stepInd',
     component: EditApplicationComponent,
   },
 ];
@@ -41,7 +47,15 @@ const routes: Routes = [
     OtherParcelsComponent,
     OtherAttachmentsComponent,
     PrimaryContactComponent,
+    ReviewAndSubmitComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgxMaskDirective, NgxMaskPipe],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule.forChild(routes),
+    NgxMaskDirective,
+    NgxMaskPipe,
+    ApplicationDetailsModule,
+  ],
 })
 export class EditApplicationModule {}

@@ -1,3 +1,4 @@
+import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
 
@@ -16,6 +17,7 @@ export interface ApplicationParcelUpdateDto {
 
 export interface ApplicationParcelDto extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
   parcelType: string;
+  ownershipType?: BaseCodeDto;
   owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
 }
