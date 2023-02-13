@@ -8,6 +8,12 @@
   color: $error-color;
 }
 
+:host::ng-deep {
+  .mat-mdc-icon-button .mat-mdc-button-touch-target {
+    width: 47px;
+  }
+}
+
 .flex-container {
   display: flex;
   flex-direction: row;
