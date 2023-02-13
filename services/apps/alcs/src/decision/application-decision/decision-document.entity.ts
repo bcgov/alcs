@@ -8,11 +8,12 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Auditable } from '../../common/entities/audit.entity';
 import { Document } from '../../document/document.entity';
 import { ApplicationDecision } from './application-decision.entity';
 
 @Entity()
-export class DecisionDocument extends BaseEntity {
+export class DecisionDocument extends Auditable {
   constructor(data?: Partial<DecisionDocument>) {
     super();
     if (data) {
@@ -30,7 +31,9 @@ export class DecisionDocument extends BaseEntity {
   @Column()
   decisionUuid: string;
 
-  @OneToOne(() => Document)
+  @OneToOne(() => Document, {
+    cascade: true,
+  })
   @JoinColumn()
   document: Document;
 }
