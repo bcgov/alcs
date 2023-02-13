@@ -98,7 +98,7 @@ async function bootstrap() {
     AlcsModule,
     new FastifyAdapter(),
     {
-      bufferLogs: true,
+      bufferLogs: false,
     },
   );
   app.useLogger(app.get(Logger));
