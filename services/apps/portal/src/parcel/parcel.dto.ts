@@ -4,6 +4,7 @@ export class ParcelLookupDto {
   legalDescription: string;
   mapArea: string;
   pin: string | undefined;
+  pid: string | undefined;
 }
 
 export class SearchParcelDto {

@@ -68,7 +68,13 @@
     <div>
       <label for="purchase-date">Parcel Purchase Date (Fee Simple only)</label>
       <mat-form-field class="full-width-input date-picker" appearance="outline">
-        <input id="purchase-date" matInput [matDatepicker]="purchaseDate" formControlName="purchaseDate" />
+        <input
+          id="purchase-date"
+          matInput
+          [matDatepicker]="purchaseDate"
+          formControlName="purchaseDate"
+          [max]="maxPurchasedDate"
+        />
         <mat-hint>YYYY-MMM-DD</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDate"></mat-datepicker-toggle>
         <mat-datepicker #purchaseDate startView="year"></mat-datepicker>
@@ -137,7 +143,7 @@
         [parcelUuid]="parcel.uuid"
         [owners]="parcel.owners"
         (onOwnersUpdated)="onOwnersUpdated.emit()"
-        (onOwnerRemoved)='onOwnerRemoved($event)'
+        (onOwnerRemoved)="onOwnerRemoved($event)"
       ></app-parcel-owners>
     </div>
   </section>

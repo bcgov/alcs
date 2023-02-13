@@ -11,6 +11,7 @@ export class ParcelService {
   ) {}
 
   async fetchByPidPin(pidPin: string) {
+    pidPin = pidPin.replace(/-/g, '');
     const paddedPin = pidPin.padStart(9, '0');
     return this.parcelLookupRepository.findOne({
       where: [{ pid: pidPin }, { pin: pidPin }, { pid: paddedPin }],
