@@ -399,7 +399,7 @@ export class ApplicationDecisionService {
       decisionDocumentUuid,
     );
 
-    await this.documentService.softRemove(decisionDocument.document);
+    await this.decisionDocumentRepository.softRemove(decisionDocument);
     return decisionDocument;
   }
 

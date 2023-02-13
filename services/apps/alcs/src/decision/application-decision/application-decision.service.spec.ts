@@ -401,10 +401,12 @@ describe('ApplicationDecisionService', () => {
     });
 
     it('should call the repository to delete documents', async () => {
-      mockDocumentService.softRemove.mockResolvedValue({} as any);
+      mockDecisionDocumentRepository.softRemove.mockResolvedValue({} as any);
 
       await service.deleteDocument('fake-uuid');
-      expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
+      expect(mockDecisionDocumentRepository.softRemove).toHaveBeenCalledTimes(
+        1,
+      );
     });
 
     it('should throw an exception when document not found for deletion', async () => {
