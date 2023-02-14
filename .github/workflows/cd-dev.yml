@@ -22,7 +22,8 @@ jobs:
           fetch-depth: 0
       - name: Git Diff
         run: |
-          DIFF=$(git log --left-right --graph --cherry-pick --oneline main..develop)
+          git fetch origin main:refs/remotes/origin/main
+          DIFF=$(git log --left-right --graph --cherry-pick --oneline origin/main..develop)
           echo "git_diff=$DIFF" >> $GITHUB_ENV
       - name: Pull request
         uses: repo-sync/pull-request@v2
