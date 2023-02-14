@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ApplicationService } from '../../services/application/application.service';
 import { ApplicationTypeDto, SubmissionTypeDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 
 export enum ApplicationCreateDialogStepsEnum {
   submissionType = 0,
@@ -35,7 +36,8 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private codeService: CodeService,
     private applicationService: ApplicationService,
-    private router: Router
+    private router: Router,
+    private overlaySpinner: OverlaySpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +60,9 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   }
 
   async onSubmit() {
+    this.overlaySpinner.showSpinner();
     const res = await this.applicationService.create(this.selectedAppType!.code);
+    this.overlaySpinner.hideSpinner();
     if (res) {
       await this.router.navigateByUrl(`/application/${res.fileId}`);
       this.dialogRef.close(true);

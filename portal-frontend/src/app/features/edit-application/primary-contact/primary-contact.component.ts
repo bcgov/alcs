@@ -89,10 +89,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onRemoveFile(uuid: any) {
+  async onRemoveFile(document: ApplicationDocumentDto) {
     if (this.fileId) {
       await this.onSave();
-      await this.applicationDocumentService.deleteExternalFile(uuid);
+      await this.applicationDocumentService.deleteExternalFile(document.uuid);
       const updatedApp = await this.applicationService.getByFileId(this.fileId);
       this.$application.next(updatedApp);
     }
@@ -114,7 +114,6 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
 
   private async save() {
     if (this.fileId) {
-      debugger;
       let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
         (owner) => owner.uuid === this.selectedOwnerUuid
       );
