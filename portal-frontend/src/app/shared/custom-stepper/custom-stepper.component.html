@@ -1,0 +1,19 @@
+<section class="example-container">
+  <header class="header">
+    <ol class="stepper">
+      <ng-container *ngFor="let step of steps; let i = index">
+        <li (click)="selectedIndex = i" [ngClass]="{ activeClass: selectedIndex === i, step: true }">
+          <div>
+            <ng-container *ngIf="step.stepLabel; else showLabelText" [ngTemplateOutlet]="step.stepLabel.template">
+            </ng-container>
+            <ng-template #showLabelText>
+              {{ step.label }}
+            </ng-template>
+          </div>
+        </li>
+      </ng-container>
+    </ol>
+  </header>
+
+  <div [ngTemplateOutlet]="selected ? selected.content : null"></div>
+</section>

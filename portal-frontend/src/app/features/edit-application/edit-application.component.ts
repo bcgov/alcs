@@ -1,14 +1,26 @@
+import { CdkStepper } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
-import { ApplicationDetailedDto, ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
+
+export enum EditApplicationSteps {
+  AppParcel = 0,
+  OtherParcel = 1,
+  PrimaryContact = 2,
+  Government = 3,
+  LandUse = 4,
+  Proposal = 5,
+  Attachments = 6,
+  ReviewAndSubmit = 7,
+}
 
 @Component({
   selector: 'app-create-application',
@@ -25,6 +37,10 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
 
   @ViewChild('stepper') public stepper!: MatStepper;
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
+
+  @ViewChild('cdkStepper')
+  public cdkStepper!: CdkStepper;
+  editAppSteps = EditApplicationSteps;
 
   constructor(
     private applicationService: ApplicationService,

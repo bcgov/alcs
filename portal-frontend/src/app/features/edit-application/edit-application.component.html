@@ -10,14 +10,22 @@
   </div>
 </ng-template>
 
-<mat-stepper class="review-application" linear="true" #stepper>
+<!-- <mat-stepper labelPosition="bottom" class="review-application" linear="false" #stepper>
   <mat-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-parcel-details [$application]="$application"></app-parcel-details>
+    <ng-template matStepContent>
+      <ng-container *ngIf="stepper.selectedIndex === 0">
+        <app-parcel-details [$application]="$application"></app-parcel-details>
+      </ng-container>
+    </ng-template>
   </mat-step>
   <mat-step label="Other Parcels in the Community">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-other-parcels [$application]="$application"></app-other-parcels>
+    <ng-template matStepContent>
+      <ng-container *ngIf="stepper.selectedIndex === 1">
+        <app-other-parcels [$application]="$application"></app-other-parcels>
+      </ng-container>
+    </ng-template>
   </mat-step>
   <mat-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -47,4 +55,57 @@
     <p>Note this is only for testing purposes. The submission process will be changed in follow-up tickets.</p>
     <button (click)="onSubmitToAlcs()">Submit to ALCS</button>
   </mat-step>
-</mat-stepper>
+</mat-stepper> -->
+
+<app-custom-stepper #cdkStepper>
+  <cdk-step label="1">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
+      <app-parcel-details [$application]="$application"></app-parcel-details>
+    </div>
+  </cdk-step>
+  <cdk-step label="2">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
+      <app-other-parcels [$application]="$application"></app-other-parcels>
+    </div>
+  </cdk-step>
+  <cdk-step label="3">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
+      <app-primary-contact [$application]="$application"></app-primary-contact>
+    </div>
+  </cdk-step>
+  <cdk-step label="4">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
+      <app-select-government [$application]="$application"></app-select-government>
+    </div>
+  </cdk-step>
+  <cdk-step label="5">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
+      <app-land-use [$application]="$application"></app-land-use>
+    </div>
+  </cdk-step>
+  <cdk-step label="6">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Proposal">
+      <app-nfu-proposal [$application]="$application"></app-nfu-proposal>
+    </div>
+  </cdk-step>
+  <cdk-step label="7">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
+      <app-other-attachments [$application]="$application"></app-other-attachments>
+    </div>
+  </cdk-step>
+  <cdk-step label="8">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
+      <app-review-and-submit [$application]="$application"></app-review-and-submit>
+    </div>
+  </cdk-step>
+  <cdk-step label="9">
+    <p>Note this is only for testing purposes. The submission process will be changed in follow-up tickets.</p>
+    <button (click)="onSubmitToAlcs()">Submit to ALCS</button>
+  </cdk-step>
+</app-custom-stepper>
