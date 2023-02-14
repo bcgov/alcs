@@ -4,11 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import {
-  APPLICATION_OWNER,
-  ApplicationOwnerDetailedDto,
-  ApplicationOwnerDto,
-} from '../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
@@ -58,9 +54,9 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.fileId = application.fileNumber;
         this.owners = application.owners;
         this.nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
-        this.selectedOwnerUuid = application.primaryContactOwnerUuid;
+        this.files = application.documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
 
-        const selectedOwner = application.owners.find((owner) => owner.uuid === this.selectedOwnerUuid);
+        const selectedOwner = application.owners.find((owner) => owner.uuid === application.primaryContactOwnerUuid);
         if (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) {
           this.selectedThirdPartyAgent = true;
           this.form.patchValue({
@@ -70,11 +66,14 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
             phoneNumber: selectedOwner.phoneNumber,
             email: selectedOwner.email,
           });
-        }
-
-        this.files = application.documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
-        if (this.nonAgentOwners.length > 1 && application.primaryContactOwnerUuid) {
-          this.needsAuthorizationLetter = true;
+        } else if (selectedOwner) {
+          this.onSelectOwner(selectedOwner.uuid);
+        } else {
+          this.firstName.disable();
+          this.lastName.disable();
+          this.organizationName.disable();
+          this.email.disable();
+          this.phoneNumber.disable();
         }
       }
     });
@@ -146,6 +145,20 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     }));
     const hasSelectedAgent = (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) || uuid == 'agent';
     this.selectedThirdPartyAgent = hasSelectedAgent;
+    if (hasSelectedAgent) {
+      this.firstName.enable();
+      this.lastName.enable();
+      this.organizationName.enable();
+      this.email.enable();
+      this.phoneNumber.enable();
+    } else {
+      this.form.reset();
+      this.firstName.disable();
+      this.lastName.disable();
+      this.organizationName.disable();
+      this.email.disable();
+      this.phoneNumber.disable();
+    }
     this.needsAuthorizationLetter = this.nonAgentOwners.length > 1 || hasSelectedAgent;
   }
 
