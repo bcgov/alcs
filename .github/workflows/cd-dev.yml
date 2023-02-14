@@ -1,0 +1,27 @@
+name: CD
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+  deploy-dev:
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: dev
+    secrets: inherit
+  create-deployment-pr:
+    name: Create Deployment PR
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with: 
+          branch: main
+
