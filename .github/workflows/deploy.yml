@@ -39,7 +39,7 @@ jobs:
         
         import alcs-api
         import alcs-frontend
-        import alcs-
+        import alcs-migrate
         import alcs-portal-api
         import alcs-portal-frontend
         import alcs-portal-migrate
