@@ -1,3 +1,4 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -75,6 +76,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NoDataComponent,
     ValidationErrorComponent,
     CompletedComponent,
+    OverlayModule,
   ],
   declarations: [
     FileDragDropComponent,
