@@ -21,10 +21,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Git Diff
+        id: git-diff
         run: |
           git fetch origin main:refs/remotes/origin/main
-          DIFF=$(git log --oneline origin/main..develop | sed -e 's/>//g')
-          echo "git_diff=$DIFF" >> $GITHUB_ENV
+          DIFF=$(git log --left-right --graph --cherry-pick --oneline origin/main..develop)
+          echo "git_diff=$DIFF" >> $GITHUB_OUTPUT
       - name: Pull request
         uses: repo-sync/pull-request@v2
         with:
@@ -32,4 +33,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_label: "deploy, automated pr"
           pr_title: "Deployment PR"
-          pr_body: "${{ env.git_diff }}"
+          pr_body: "${{ steps.git-diff.outputs.git_diff }}"
