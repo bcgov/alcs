@@ -106,6 +106,7 @@ export class ApplicationService {
       localGovernmentUuid: application.localGovernmentUuid,
       typeCode: application.typeCode,
       region,
+      statusHistory: application.statusHistory,
     });
 
     newApplication.card = new Card();

@@ -140,25 +140,20 @@ export class ApplicationService {
     return application;
   }
 
-  async submitToLg(fileNumber: string) {
-    await this.updateStatus(fileNumber, APPLICATION_STATUS.SUBMITTED_TO_LG);
+  async submitToLg(application: Application) {
+    await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_LG);
   }
 
-  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
+  async updateStatus(application: Application, statusCode: APPLICATION_STATUS) {
     const status = await this.applicationStatusRepository.findOneOrFail({
       where: {
         code: statusCode,
       },
     });
 
-    return await this.applicationRepository.update(
-      {
-        fileNumber,
-      },
-      {
-        status,
-      },
-    );
+    application.status = status;
+    //Use save to trigger subscriber
+    await this.applicationRepository.save(application);
   }
 
   async submitToAlcs(
@@ -211,11 +206,15 @@ export class ApplicationService {
             type: d.type!, //TODO: Do we verify this?
             documentUuid: d.document.alcsDocumentUuid,
           })),
+          statusHistory: application.statusHistory.map((history) => ({
+            ...history,
+            time: history.time.toString(10),
+          })),
           applicationReview: mappedReview,
         }),
       );
 
-      await this.updateStatus(fileNumber, APPLICATION_STATUS.SUBMITTED_TO_ALC);
+      await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
       this.logger.error(
         `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
@@ -418,10 +417,7 @@ export class ApplicationService {
   }
 
   async cancel(application: Application) {
-    await this.updateStatus(
-      application.fileNumber,
-      APPLICATION_STATUS.CANCELLED,
-    );
+    await this.updateStatus(application, APPLICATION_STATUS.CANCELLED);
   }
 
   private setNFUFields(

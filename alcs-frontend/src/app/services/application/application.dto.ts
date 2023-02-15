@@ -3,6 +3,13 @@ import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
+export interface StatusHistory {
+  type: 'status_change';
+  label: string;
+  description: string;
+  time: number;
+}
+
 export interface CreateApplicationDto {
   fileNumber: string;
   applicant: string;
@@ -35,6 +42,7 @@ export interface ApplicationDto {
   paused: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
+  statusHistory: StatusHistory[];
 }
 
 export interface UpdateApplicationDto {

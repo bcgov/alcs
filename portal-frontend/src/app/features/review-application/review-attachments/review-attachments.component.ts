@@ -50,7 +50,10 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
           applicationReview.isFirstNationGovernment ||
           (applicationReview.isAuthorized !== null &&
             applicationReview.isOCPDesignation !== null &&
-            applicationReview.isSubjectToZoning !== null);
+            applicationReview.isSubjectToZoning !== null) ||
+          (applicationReview.isAuthorized === null &&
+            applicationReview.isOCPDesignation === false &&
+            applicationReview.isSubjectToZoning === false);
       }
     });
 

@@ -1,6 +1,6 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
@@ -11,10 +11,7 @@ import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { AlcsApplicationProfile } from '../common/automapper/grpc/application.automapper.profile';
 import { ApplicationGrpcController } from './alcs-application.controller';
-import {
-  ApplicationCreateGrpcRequest,
-  ApplicationGrpcResponse,
-} from './alcs-application.message.interface';
+import { ApplicationCreateGrpcRequest } from './alcs-application.message.interface';
 
 describe('ApplicationGrpcController', () => {
   let controller: ApplicationGrpcController;
@@ -76,7 +73,15 @@ describe('ApplicationGrpcController', () => {
       [],
     );
 
-    const res = await controller.create({} as ApplicationCreateGrpcRequest);
+    const res = await controller.create({
+      applicant: '',
+      dateSubmittedToAlc: '',
+      documents: [],
+      fileNumber: '',
+      localGovernmentUuid: '',
+      typeCode: '',
+      statusHistory: [],
+    });
 
     expect(mockApplicationService.create).toBeCalledTimes(1);
     expect(mockLocalGovernmentService.getByUuid).toBeCalledTimes(1);
@@ -86,7 +91,7 @@ describe('ApplicationGrpcController', () => {
     expect(res).toEqual({
       typeCode: mockTypeCode,
       fileNumber: mockFileNumber,
-    } as ApplicationGrpcResponse);
+    });
   });
 
   it('should call through to service on generateNumber', async () => {

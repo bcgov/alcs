@@ -81,7 +81,7 @@ export class ApplicationReviewController {
     );
 
     await this.applicationService.updateStatus(
-      fileNumber,
+      application,
       APPLICATION_STATUS.IN_REVIEW,
     );
 
@@ -116,7 +116,7 @@ export class ApplicationReviewController {
         await this.applicationService.submitToAlcs(fileNumber, completedReview);
       } else {
         await this.applicationService.updateStatus(
-          fileNumber,
+          application,
           APPLICATION_STATUS.REFUSED_TO_FORWARD,
         );
       }
@@ -163,12 +163,12 @@ export class ApplicationReviewController {
 
       if (returnDto.reasonForReturn === 'incomplete') {
         await this.applicationService.updateStatus(
-          fileNumber,
+          application,
           APPLICATION_STATUS.INCOMPLETE,
         );
       } else {
         await this.applicationService.updateStatus(
-          fileNumber,
+          application,
           APPLICATION_STATUS.WRONG_GOV,
         );
       }
