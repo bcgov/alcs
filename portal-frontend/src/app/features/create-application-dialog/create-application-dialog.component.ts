@@ -60,9 +60,7 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   }
 
   async onSubmit() {
-    this.overlaySpinner.showSpinner();
     const res = await this.applicationService.create(this.selectedAppType!.code);
-    this.overlaySpinner.hideSpinner();
     if (res) {
       await this.router.navigateByUrl(`/application/${res.fileId}`);
       this.dialogRef.close(true);
