@@ -1,18 +1,32 @@
 <section class="example-container">
   <header class="header">
-    <ol class="stepper">
-      <ng-container *ngFor="let step of steps; let i = index">
-        <li (click)="selectedIndex = i" [ngClass]="{ activeClass: selectedIndex === i, step: true }">
-          <div>
-            <ng-container *ngIf="step.stepLabel; else showLabelText" [ngTemplateOutlet]="step.stepLabel.template">
-            </ng-container>
-            <ng-template #showLabelText>
-              {{ step.label }}
-            </ng-template>
+    <div class="stepper-wrapper">
+      <button class="stepper-controls" mat-flat-button (click)="navigateToStep(selectedIndex - 1)">
+        <mat-icon>arrow_back_ios</mat-icon>
+      </button>
+      <div class="steps-wrapper">
+        <div class="step-wrapper" *ngFor="let step of steps; let i = index">
+          <div class="step" (click)="selectedIndex = i">
+            <div [ngClass]="{ active: selectedIndex === i, 'step-number': true }">
+              <div>{{ i + 1 }}</div>
+            </div>
+
+            <div class="step-label">
+              <ng-container
+                *ngIf="step.stepLabel; else showLabelText"
+                [ngTemplateOutlet]="step.stepLabel.template"
+              ></ng-container>
+              <ng-template #showLabelText>
+                <span *ngIf="step.label">{{ step.label }}</span>
+              </ng-template>
+            </div>
           </div>
-        </li>
-      </ng-container>
-    </ol>
+        </div>
+      </div>
+      <button class="stepper-controls" mat-flat-button (click)="navigateToStep(selectedIndex + 1)">
+        <mat-icon>arrow_forward_ios</mat-icon>
+      </button>
+    </div>
   </header>
 
   <div [ngTemplateOutlet]="selected ? selected.content : null"></div>

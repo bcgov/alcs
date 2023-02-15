@@ -1,61 +1,84 @@
 @import '../../../styles/colors.scss';
+@import '../../../styles/functions.scss';
+@import '../../../styles/typography.scss';
 
 :host {
-  --circle-size: clamp(1rem, 2.5vw, 1.5rem);
-  --spacing: clamp(0.25rem, 1vw, 0.5rem);
-}
+  $size: rem(64);
+  $half-size: rem(32);
+  $quatre-size: rem(16);
 
-.stepper {
-  display: flex;
-  counter-reset: li; /* Initiate a counter */
-  margin-left: 0; /* Remove the default left margin */
-  padding-left: 0; /* Remove the default left padding */
-
-  .step.activeClass {
-    &:before {
-      color: white;
-      background-color: $primary-color;
-      // opacity: 0.5;
-      margin: 0 auto 1rem;
-    }
-  }
-
-  .step {
+  .stepper-wrapper {
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    text-align: center;
+    width: 100%;
 
-    &:hover {
-      background-color: rgb(245, 245, 245);
-      border-radius: 4px;
+    .stepper-controls {
+      width: $size;
+      height: $size;
+
+      @media screen and (min-width: $tabletBreakpoint) {
+        display: none;
+      }
     }
 
-    &:before {
-      --size: 3rem;
-      content: counter(li);
-      counter-increment: li;
-      display: block;
-      width: var(--circle-size);
-      height: var(--circle-size);
-      border-radius: 50%;
-      border: 1px solid $primary-color-dark;
-      color: $primary-color-dark;
-      // background-color: red;
-      // opacity: 0.5;
-      margin: 0 auto 1rem;
-    }
+    .steps-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: space-around;
 
-    &:not(:last-child) {
-      &:after {
-        content: '';
-        position: relative;
-        top: calc(var(--circle-size) / 2);
-        width: calc(100% - var(--circle-size));
-        left: calc(50% + calc(var(--circle-size) / 2));
-        height: 2px;
-        background-color: $primary-color-dark;
-        order: -1;
+      .step-wrapper {
+        text-align: center;
+        flex: 1;
+
+        &:not(:last-child) {
+          .step {
+            &:after {
+              content: '';
+              height: 2px;
+              max-height: 2px;
+              min-height: 2px;
+              background-color: $primary-color-dark;
+              order: -1;
+              position: absolute;
+              display: flex;
+              left: calc(50% + $quatre-size);
+              width: calc(100% - $half-size);
+              top: $quatre-size;
+            }
+          }
+        }
+
+        .active {
+          background-color: $primary-color;
+          color: white;
+        }
+
+        .step {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          border-radius: 15%;
+          flex: 1;
+          width: 100%;
+          min-width: rem(92);
+          position: relative;
+
+          &:hover {
+            background-color: rgba($color: $primary-color, $alpha: 0.4);
+            cursor: pointer;
+          }
+
+          .step-number {
+            border: 1px solid $primary-color-dark;
+            border-radius: 50%;
+            width: $half-size;
+            height: $half-size;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
       }
     }
   }

@@ -58,47 +58,47 @@
 </mat-stepper> -->
 
 <app-custom-stepper #cdkStepper>
-  <cdk-step label="1">
+  <cdk-step label="Parcel Details">
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
       <app-parcel-details [$application]="$application"></app-parcel-details>
     </div>
   </cdk-step>
-  <cdk-step label="2">
+  <cdk-step label="Other Parcels in the Community">
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
       <app-other-parcels [$application]="$application"></app-other-parcels>
     </div>
   </cdk-step>
-  <cdk-step label="3">
+  <cdk-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
       <app-primary-contact [$application]="$application"></app-primary-contact>
     </div>
   </cdk-step>
-  <cdk-step label="4">
+  <cdk-step label="Government">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
       <app-select-government [$application]="$application"></app-select-government>
     </div>
   </cdk-step>
-  <cdk-step label="5">
+  <cdk-step label="Land Use">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
       <app-land-use [$application]="$application"></app-land-use>
     </div>
   </cdk-step>
-  <cdk-step label="6">
+  <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Proposal">
       <app-nfu-proposal [$application]="$application"></app-nfu-proposal>
     </div>
   </cdk-step>
-  <cdk-step label="7">
+  <cdk-step label="Upload Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
       <app-other-attachments [$application]="$application"></app-other-attachments>
     </div>
   </cdk-step>
-  <cdk-step label="8">
+  <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
       <app-review-and-submit [$application]="$application"></app-review-and-submit>
