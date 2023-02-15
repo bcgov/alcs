@@ -34,5 +34,4 @@ jobs:
           destination_branch: "main"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_label: "deploy, automated pr"
-          pr_title: "Deployment PR"
-          pr_body: "${{ steps.git-diff.outputs.git_diff }}"
+          pr_title: "Deployment PR - ${{ github.run_number }}"
