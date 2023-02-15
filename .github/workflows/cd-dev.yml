@@ -1,0 +1,38 @@
+name: Development CD
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+  deploy-dev:
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: dev
+    secrets: inherit
+  create-deployment-pr:
+    name: Create Deployment PR
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Git Diff
+        id: git-diff
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          DIFF=$(git log --left-right --graph --cherry-pick --oneline origin/main..develop)
+          echo "git_diff<<EOF" >> $GITHUB_OUTPUT
+          echo "$DIFF" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "main"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_label: "deploy, automated pr"
+          pr_title: "Deployment PR"
+          pr_body: "${{ steps.git-diff.outputs.git_diff }}"
