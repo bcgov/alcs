@@ -2,6 +2,7 @@ import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DOCUMENT } from '../application-document/application-document.dto';
 import { ToastService } from '../toast/toast.service';
 import { UploadDocumentUrlDto } from './document.dto';
@@ -13,7 +14,12 @@ export class DocumentService {
   private serviceUrl = `${environment.apiUrl}/document`;
   private httpClientNoAuth: HttpClient | null = null;
 
-  constructor(private httpClient: HttpClient, handler: HttpBackend, private toastService: ToastService) {
+  constructor(
+    private httpClient: HttpClient,
+    handler: HttpBackend,
+    private toastService: ToastService,
+    private overlayService: OverlaySpinnerService
+  ) {
     this.httpClientNoAuth = new HttpClient(handler);
   }
 
@@ -46,18 +52,23 @@ export class DocumentService {
       return undefined;
     }
 
-    const fileKey = await this.uploadFileToStorage(fileId, file, documentType);
+    try {
+      this.overlayService.showSpinner();
+      const fileKey = await this.uploadFileToStorage(fileId, file, documentType);
 
-    const fileUuid = await firstValueFrom(
-      this.httpClient.post<{ uuid: string }>(url, {
-        documentType: documentType,
-        mimeType: file.type,
-        fileName: file.name,
-        fileSize: file.size,
-        fileKey: fileKey,
-        source,
-      })
-    );
-    return fileUuid.uuid;
+      const fileUuid = await firstValueFrom(
+        this.httpClient.post<{ uuid: string }>(url, {
+          documentType: documentType,
+          mimeType: file.type,
+          fileName: file.name,
+          fileSize: file.size,
+          fileKey: fileKey,
+          source,
+        })
+      );
+      return fileUuid.uuid;
+    } finally {
+      this.overlayService.hideSpinner();
+    }
   }
 }

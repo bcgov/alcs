@@ -1,6 +1,14 @@
 @import '../../../../styles/typography';
 @import '../../../../styles/colors';
 
+h4 {
+  margin-bottom: rem(24) !important;
+}
+
+h6 {
+  margin: rem(32) 0 rem(16) !important;
+}
+
 section {
   margin-bottom: rem(32);
 }
