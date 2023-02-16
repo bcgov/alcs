@@ -43,7 +43,11 @@ export class ApplicationGrpcController implements AlcsApplicationService {
       ...data,
       regionCode: localGovernment?.preferredRegion.code,
       dateSubmittedToAlc: new Date(Number(data.dateSubmittedToAlc)),
-    } as CreateApplicationServiceDto);
+      statusHistory: data.statusHistory.map((history) => ({
+        ...history,
+        time: parseInt(history.time, 10),
+      })),
+    });
 
     await this.applicationDocumentService.attachExternalDocuments(
       application.fileNumber,

@@ -123,6 +123,14 @@ export class OverviewComponent implements OnInit {
       mappedEvents.push(...events);
     }
 
+    for (const event of application.statusHistory) {
+      mappedEvents.push({
+        name: event.label,
+        startDate: new Date(event.time),
+        isFulfilled: true,
+      });
+    }
+
     for (const [index, decision] of decisions.entries()) {
       if (decision.auditDate) {
         mappedEvents.push({

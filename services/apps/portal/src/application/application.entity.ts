@@ -14,6 +14,13 @@ import { ApplicationDocument } from './application-document/application-document
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 
+export class StatusHistory {
+  type: 'status_change';
+  label: string;
+  description: string;
+  time: number;
+}
+
 @Entity()
 export class Application extends BaseEntity {
   constructor(data?: Partial<Application>) {
@@ -184,6 +191,15 @@ export class Application extends BaseEntity {
     comment: 'Application Type Code from ALCS System',
   })
   typeCode: string;
+
+  @AutoMap(() => StatusHistory)
+  @Column({
+    comment: 'JSONB Column containing the status history of the Application',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  statusHistory: StatusHistory[];
 
   @OneToMany(
     () => ApplicationDocument,

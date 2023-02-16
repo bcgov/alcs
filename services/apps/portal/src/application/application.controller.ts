@@ -139,7 +139,7 @@ export class ApplicationController {
     if (application.typeCode === 'TURP') {
       return await this.applicationService.submitToAlcs(fileId);
     } else {
-      return await this.applicationService.submitToLg(fileId);
+      return await this.applicationService.submitToLg(application);
     }
   }
 }

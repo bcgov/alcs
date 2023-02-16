@@ -13,6 +13,7 @@ import { ApplicationRegionDto } from '../code/application-code/application-regio
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationDecisionMeetingDto } from '../decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
+import { StatusHistory } from './application.entity';
 
 export class CreateApplicationDto {
   @IsNotEmpty()
@@ -147,6 +148,9 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
+  @AutoMap(() => [StatusHistory])
+  statusHistory?: StatusHistory[];
+
   @AutoMap()
   @Type(() => CardDto)
   card?: CardDto;
@@ -173,4 +177,5 @@ export class CreateApplicationServiceDto {
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
   localGovernmentUuid: string;
+  statusHistory?: StatusHistory[];
 }

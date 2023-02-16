@@ -13,7 +13,7 @@ message ApplicationGrpcResponse {
 
   string applicant = 2;
 
-  int32 dateSubmittedToAlc = 3;
+  string dateSubmittedToAlc = 3;
 
   string regionCode = 4;
 
@@ -36,6 +36,8 @@ message ApplicationCreateGrpcRequest {
   repeated ApplicationDocumentGrpcRequest documents = 6;
 
   optional ApplicationReviewGrpc applicationReview = 7;
+
+  repeated StatusHistoryGrpc statusHistory = 8;
 }
 
 message ApplicationDocumentGrpcRequest {
@@ -61,6 +63,13 @@ message ApplicationReviewGrpc {
   optional string zoningMinimumLotSize = 15;
   optional bool isZoningConsistent = 16;
   bool isAuthorized = 17;
+}
+
+message StatusHistoryGrpc {
+  string type = 1;
+  string label = 2;
+  string description = 3;
+  string time = 4;
 }
 
 message ApplicationFileNumberGenerateGrpcRequest {}
