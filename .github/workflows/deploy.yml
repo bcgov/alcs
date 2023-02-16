@@ -34,8 +34,7 @@ jobs:
       run: |
         import() { \
           echo "Importing $1" ; \
-          oc import-image $1:latest -n ${{secrets.LICENSE_PLATE}}-tools ; \
-          oc tag $1:latest $1:${{ github.sha }} -n ${{secrets.LICENSE_PLATE}}-tools ; }
+          oc import-image ghcr.io/bcgov/$1 -n ${{secrets.LICENSE_PLATE}}-tools ;}
         
         import alcs-api
         import alcs-frontend
