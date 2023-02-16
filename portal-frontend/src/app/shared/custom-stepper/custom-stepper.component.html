@@ -6,7 +6,7 @@
       </button>
       <div #stepsWrapper id="stepsWrapper" class="steps-wrapper">
         <div class="step-wrapper" *ngFor="let step of steps; let i = index" tabindex="i">
-          <div class="step" (click)="selectedIndex = i" id="step_{{ i }}">
+          <div class="step" (click)="selectedIndex = i">
             <div [ngClass]="{ active: selectedIndex === i, 'step-number': true }">
               <div>{{ i + 1 }}</div>
             </div>
