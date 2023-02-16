@@ -1,4 +1,3 @@
-import { CdkStepper } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
@@ -35,11 +34,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   $application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
   application: ApplicationDetailedDto | undefined;
 
-  @ViewChild('stepper') public stepper!: MatStepper;
+  @ViewChild('cdkStepper') public stepper!: MatStepper;
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
 
-  @ViewChild('cdkStepper')
-  public cdkStepper!: CdkStepper;
   editAppSteps = EditApplicationSteps;
 
   constructor(
@@ -66,7 +63,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
           const parcelUuid = queryParamMap.get('parcelUuid');
 
           if (stepInd) {
-            // setTimeout is required for stepper to work properly
+            // setTimeout is required for stepper to be initialized
             setTimeout(() => {
               this.stepper.selectedIndex = stepInd;
               if (parcelUuid) {
