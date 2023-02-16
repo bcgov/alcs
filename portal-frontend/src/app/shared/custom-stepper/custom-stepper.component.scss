@@ -7,24 +7,43 @@
   $half-size: rem(32);
   $quatre-size: rem(16);
 
+  .display-none {
+    display: none !important;
+  }
+
   .stepper-wrapper {
     display: flex;
     width: 100%;
 
     .stepper-controls {
-      width: $size;
-      height: $size;
+      min-width: rem(34);
+      max-height: rem(34);
+      width: rem(34);
+      height: rem(34);
+      background-color: white;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: rem(4);
+      padding: 0 !important;
+      cursor: pointer;
 
-      @media screen and (min-width: $tabletBreakpoint) {
-        display: none;
+      &:hover {
+        background-color: rgba(238, 237, 237, 0.5);
+      }
+
+      &:active {
+        background-color: rgba(238, 237, 237, 1);
       }
     }
 
     .steps-wrapper {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       width: 100%;
-      justify-content: space-around;
+      overflow: hidden;
+      scroll-behavior: smooth;
 
       .step-wrapper {
         text-align: center;
@@ -34,9 +53,9 @@
           .step {
             &:after {
               content: '';
-              height: 2px;
-              max-height: 2px;
-              min-height: 2px;
+              height: rem(1);
+              max-height: rem(1);
+              min-height: rem(1);
               background-color: $primary-color-dark;
               order: -1;
               position: absolute;
@@ -61,11 +80,15 @@
           border-radius: 15%;
           flex: 1;
           width: 100%;
-          min-width: rem(92);
+          min-width: rem(140);
           position: relative;
 
+          .step-label {
+            width: rem(110);
+            display: inline-block;
+          }
+
           &:hover {
-            background-color: rgba($color: $primary-color, $alpha: 0.4);
             cursor: pointer;
           }
 
@@ -79,6 +102,24 @@
             justify-content: center;
           }
         }
+      }
+    }
+  }
+
+  .steps-wrapper-desktop {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .stepper-controls-hide {
+    display: none;
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    .stepper-wrapper {
+      .steps-wrapper-desktop {
+        flex-wrap: wrap;
+        justify-content: space-around;
       }
     }
   }

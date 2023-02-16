@@ -1,16 +1,15 @@
 <section class="example-container">
   <header class="header">
     <div class="stepper-wrapper">
-      <button class="stepper-controls" mat-flat-button (click)="navigateToStep(selectedIndex - 1)">
+      <button class="stepper-controls" (click)="scrollLeft()">
         <mat-icon>arrow_back_ios</mat-icon>
       </button>
-      <div class="steps-wrapper">
-        <div class="step-wrapper" *ngFor="let step of steps; let i = index">
-          <div class="step" (click)="selectedIndex = i">
+      <div #stepsWrapper id="stepsWrapper" class="steps-wrapper">
+        <div class="step-wrapper" *ngFor="let step of steps; let i = index" tabindex="i">
+          <div class="step" (click)="selectedIndex = i" id="step_{{ i }}">
             <div [ngClass]="{ active: selectedIndex === i, 'step-number': true }">
               <div>{{ i + 1 }}</div>
             </div>
-
             <div class="step-label">
               <ng-container
                 *ngIf="step.stepLabel; else showLabelText"
@@ -23,7 +22,7 @@
           </div>
         </div>
       </div>
-      <button class="stepper-controls" mat-flat-button (click)="navigateToStep(selectedIndex + 1)">
+      <button class="stepper-controls" (click)="scrollRight()">
         <mat-icon>arrow_forward_ios</mat-icon>
       </button>
     </div>
