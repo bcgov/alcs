@@ -1,10 +1,16 @@
 <section title="Other parcels">
   <h2>Other Parcels in the Community</h2>
-  <p>
-    Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
-    application are located.
-  </p>
-  <form>
+  <div>
+    <p>
+      Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
+      application are located and owned by the following owners:
+    </p>
+
+    <ul *ngFor="let owner of owners">
+      <li>{{ owner.displayName }}</li>
+    </ul>
+  </div>
+  <!-- <form>
     <mat-expansion-panel *ngFor="let owner of owners; let ownerInd = index" [expanded]="false">
       <mat-expansion-panel-header>
         <mat-panel-title> {{ owner.displayName }}</mat-panel-title>
@@ -43,7 +49,7 @@
         </div>
       </div>
     </mat-expansion-panel>
-  </form>
+  </form>-->
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
