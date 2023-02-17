@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
@@ -75,7 +75,8 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
+    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
