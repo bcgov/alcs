@@ -438,11 +438,11 @@ export class ApplicationService {
       updateDto.nfuMaxFillDepth || application.nfuMaxFillDepth;
     application.nfuFillVolume =
       updateDto.nfuFillVolume || application.nfuFillVolume;
-    application.nfuProjectDurationYears =
-      updateDto.nfuProjectDurationYears || application.nfuProjectDurationYears;
-    application.nfuProjectDurationMonths =
-      updateDto.nfuProjectDurationMonths ||
-      application.nfuProjectDurationMonths;
+    application.nfuProjectDurationUnit =
+      updateDto.nfuProjectDurationUnit || application.nfuProjectDurationUnit;
+    application.nfuProjectDurationAmount =
+      updateDto.nfuProjectDurationAmount ||
+      application.nfuProjectDurationAmount;
     application.nfuFillTypeDescription =
       updateDto.nfuFillTypeDescription || application.nfuFillTypeDescription;
     application.nfuFillOriginDescription =

@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { ColumnNumericTransformer } from '../utils/column-numeric-transform';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -212,7 +213,13 @@ export class Application extends BaseEntity {
 
   //NFU Specific Fields
   @AutoMap(() => Number)
-  @Column({ type: 'text', nullable: true })
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   nfuHectares: number | null;
 
   @AutoMap(() => String)
@@ -232,24 +239,48 @@ export class Application extends BaseEntity {
   nfuWillImportFill: boolean | null;
 
   @AutoMap(() => Number)
-  @Column({ type: 'int', nullable: true })
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   nfuTotalFillPlacement: number | null;
 
   @AutoMap(() => Number)
-  @Column({ type: 'int', nullable: true })
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   nfuMaxFillDepth: number | null;
 
   @AutoMap(() => Number)
-  @Column({ type: 'int', nullable: true })
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   nfuFillVolume: number | null;
 
   @AutoMap(() => Number)
-  @Column({ type: 'int4', nullable: true })
-  nfuProjectDurationYears: number | null;
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  nfuProjectDurationAmount: number | null;
 
-  @AutoMap(() => Number)
-  @Column({ type: 'int4', nullable: true })
-  nfuProjectDurationMonths: number | null;
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  nfuProjectDurationUnit: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
