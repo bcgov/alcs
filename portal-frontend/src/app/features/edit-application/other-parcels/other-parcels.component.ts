@@ -1,11 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import {
   APPLICATION_OWNER,
   ApplicationOwnerDetailedDto,
+  ApplicationOwnerDto,
 } from '../../../services/application-owner/application-owner.dto';
 import {
   ApplicationParcelDto,
@@ -20,6 +21,7 @@ import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
 
+const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
 @Component({
   selector: 'app-other-parcels',
   templateUrl: './other-parcels.component.html',
@@ -32,6 +34,16 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   PARCEL_TYPE = PARCEL_TYPE;
 
   $destroy = new Subject<void>();
+
+  // TODO  UPDATES remove this comment
+  isOtherParcels = new FormControl<string | null>(null);
+
+  otherParcelsForm = new FormGroup({
+    isOwnOtherParcels: this.isOtherParcels,
+  });
+
+  otherParcels: ApplicationParcelDto[] = [];
+  $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -50,6 +62,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
           ...o,
           parcels: o.parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER),
         }));
+        this.$owners.next(nonAgentOwners);
+
+        this.setupOtherParcelsData(application);
+        this.setupOtherParcelsForm(application);
       }
     });
   }
@@ -113,19 +129,48 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onAddParcel(ownerId: string) {
-    const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER, ownerId);
+  async onAddParcel() {
+    // const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER, ownerId);
+
+    // if (parcel) {
+    //   const owner = this.owners.find((o) => o.uuid === ownerId);
+    //   owner?.parcels.push({
+    //     uuid: parcel!.uuid,
+    //     parcelType: PARCEL_TYPE.OTHER,
+    //     documents: [] as ApplicationDocumentDto[],
+    //   } as ApplicationParcelDto);
+    // } else {
+    //   this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
+    // }
+    const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
 
     if (parcel) {
-      const owner = this.owners.find((o) => o.uuid === ownerId);
-      owner?.parcels.push({
+      // TODO MOVE this to parcel on update
+      const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
+      if (placeHolderParcel) {
+        this.otherParcels.splice(this.otherParcels.indexOf(placeHolderParcel));
+      }
+
+      this.otherParcels.push({
         uuid: parcel!.uuid,
         parcelType: PARCEL_TYPE.OTHER,
-        documents: [] as ApplicationDocumentDto[],
-      } as ApplicationParcelDto);
+        documents: [],
+        owners: [],
+        isConfirmedByApplicant: false,
+      });
     } else {
-      this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
+      this.toastService.showErrorToast('Error adding new parcel. Please refresh the page and try again.');
     }
+  }
+
+  addPlaceHolderParcel() {
+    this.otherParcels.push({
+      uuid: PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL,
+      parcelType: PARCEL_TYPE.OTHER,
+      documents: [],
+      owners: [],
+      isConfirmedByApplicant: false,
+    });
   }
 
   async onDelete(parcelUuid: string, parcelNumber: number) {
@@ -144,5 +189,21 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
           await this.reloadApplication();
         }
       });
+  }
+
+  // TODO  UPDATES remove this comment
+  setupOtherParcelsForm(application: ApplicationDetailedDto) {
+    this.otherParcelsForm.patchValue({
+      // isOtherParcels: this.application.isOtherParcels?,
+      isOwnOtherParcels: null,
+    });
+  }
+
+  async setupOtherParcelsData(application: ApplicationDetailedDto) {
+    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    this.otherParcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER);
+    if (!this.otherParcels || this.otherParcels.length === 0) {
+      this.addPlaceHolderParcel();
+    }
   }
 }
