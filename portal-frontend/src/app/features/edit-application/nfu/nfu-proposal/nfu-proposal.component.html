@@ -1,8 +1,11 @@
-<h2>Proposal</h2>
-<p>
-  Considerations are subject to
-  <a> Section 6 of the ALC Act. </a>
-</p>
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a> Section 6 of the ALC Act. </a>
+  </p>
+  <p>All fields are required unless stated optional.</p>
+</div>
 <app-warning-banner>
   Please consult the '
   <a href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/">
@@ -161,7 +164,14 @@
           <mat-hint class="subtext">Enter volume in cubic meters (m<sup>3</sup>) without a comma</mat-hint>
         </div>
         <mat-form-field appearance="outline">
-          <input min="0.01" id="fillVolume" type="number" matInput formControlName="fillVolume" placeholder="25000" />
+          <input
+            min="0.01"
+            id="fillVolume"
+            type="number"
+            matInput
+            formControlName="fillVolume"
+            placeholder="Type volume"
+          />
         </mat-form-field>
       </div>
     </div>

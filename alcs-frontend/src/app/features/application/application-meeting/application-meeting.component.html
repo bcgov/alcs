@@ -29,7 +29,7 @@
           class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingStartDate | startOfDay"
-          (save)="onSaveMeetingEndDate(element.uuid, $event)"
+          (save)="onSaveMeetingEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
       </ng-container>
     </td>
@@ -44,7 +44,7 @@
           class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingEndDate | startOfDay"
-          (save)="onSaveReportStartDate(element.uuid, $event)"
+          (save)="onSaveReportStartDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
       </ng-container>
     </td>
@@ -59,7 +59,7 @@
           class="date-picker"
           [selectedValue]="undefined"
           [min]="element.reportStartDate | startOfDay"
-          (save)="onSaveReportEndDate(element.uuid, $event)"
+          (save)="onSaveReportEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
       </ng-container>
     </td>
@@ -71,7 +71,7 @@
       <button mat-icon-button class="action-btn" (click)="onEdit(element.uuid)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid)">
+      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid, element.meetingType.label)">
         <mat-icon>delete</mat-icon>
       </button>
     </td>
@@ -120,7 +120,7 @@
           class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingStartDate | startOfDay"
-          (save)="onSaveMeetingEndDate(element.uuid, $event)"
+          (save)="onSaveMeetingEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
       </ng-container>
     </td>
@@ -135,7 +135,7 @@
           class="date-picker"
           [selectedValue]="undefined"
           [min]="element.meetingEndDate | startOfDay"
-          (save)="onSaveReportStartDate(element.uuid, $event)"
+          (save)="onSaveReportStartDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
       </ng-container>
     </td>
@@ -150,7 +150,7 @@
           class="date-picker"
           [selectedValue]="undefined"
           [min]="element.reportStartDate | startOfDay"
-          (save)="onSaveReportEndDate(element.uuid, $event)"
+          (save)="onSaveReportEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
       </ng-container>
     </td>
@@ -162,7 +162,7 @@
       <button mat-icon-button class="action-btn" (click)="onEdit(element.uuid)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid)">
+      <button mat-icon-button class="action-btn delete" (click)="onDelete(element.uuid, element.meetingType.label)">
         <mat-icon>delete</mat-icon>
       </button>
     </td>
