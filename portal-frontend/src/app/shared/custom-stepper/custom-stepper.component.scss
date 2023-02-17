@@ -5,7 +5,7 @@
 :host {
   $size: rem(64);
   $half-size: rem(32);
-  $quatre-size: rem(16);
+  $quarter-size: rem(16);
 
   .display-none {
     display: none !important;
@@ -60,9 +60,9 @@
               order: -1;
               position: absolute;
               display: flex;
-              left: calc(50% + $quatre-size);
+              left: calc(50% + $quarter-size);
               width: calc(100% - $half-size);
-              top: $quatre-size;
+              top: $quarter-size;
             }
           }
         }
