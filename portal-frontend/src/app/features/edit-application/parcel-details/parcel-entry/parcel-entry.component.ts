@@ -119,6 +119,14 @@ export class ParcelEntryComponent implements OnInit {
       if (result.pid) {
         this.pid.setValue(result.pid);
       }
+
+      this.onFormGroupChange.emit({
+        uuid: this.parcel.uuid,
+        legalDescription: this.legalDescription.getRawValue(),
+        mapArea: this.mapArea.getRawValue(),
+        pin: this.pin.getRawValue(),
+        pid: this.pid.getRawValue(),
+      });
     }
   }
 

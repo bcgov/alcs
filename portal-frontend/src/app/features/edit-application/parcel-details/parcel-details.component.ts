@@ -53,7 +53,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     this.newParcelAdded = false;
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
+    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
 export enum MainLandUseTypeOptions {
@@ -66,7 +66,8 @@ export class LandUseComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
+    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }

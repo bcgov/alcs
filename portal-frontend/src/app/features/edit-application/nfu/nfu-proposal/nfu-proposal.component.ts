@@ -3,11 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import {
-  ApplicationDetailedDto,
-  ApplicationDto,
-  ApplicationUpdateDto,
-} from '../../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 
@@ -77,7 +73,8 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
+    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }

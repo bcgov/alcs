@@ -13,7 +13,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
@@ -54,7 +54,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
+    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
