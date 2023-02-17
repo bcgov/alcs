@@ -52,29 +52,8 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.owners = application.owners;
-        this.nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
         this.files = application.documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
-
-        const selectedOwner = application.owners.find((owner) => owner.uuid === application.primaryContactOwnerUuid);
-        if (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) {
-          this.selectedThirdPartyAgent = true;
-          this.form.patchValue({
-            firstName: selectedOwner.firstName,
-            lastName: selectedOwner.lastName,
-            organizationName: selectedOwner.organizationName,
-            phoneNumber: selectedOwner.phoneNumber,
-            email: selectedOwner.email,
-          });
-        } else if (selectedOwner) {
-          this.onSelectOwner(selectedOwner.uuid);
-        } else {
-          this.firstName.disable();
-          this.lastName.disable();
-          this.organizationName.disable();
-          this.email.disable();
-          this.phoneNumber.disable();
-        }
+        this.loadOwners(application.fileNumber, application.primaryContactOwnerUuid);
       }
     });
   }
@@ -165,5 +144,32 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
 
   onSelectAgent() {
     this.onSelectOwner('agent');
+  }
+
+  private async loadOwners(fileNumber: string, primaryContactOwnerUuid?: string) {
+    const owners = await this.applicationOwnerService.fetchByFileId(fileNumber);
+    if (owners) {
+      const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
+      this.nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+      this.owners = owners;
+      if (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) {
+        this.selectedThirdPartyAgent = true;
+        this.form.patchValue({
+          firstName: selectedOwner.firstName,
+          lastName: selectedOwner.lastName,
+          organizationName: selectedOwner.organizationName,
+          phoneNumber: selectedOwner.phoneNumber,
+          email: selectedOwner.email,
+        });
+      } else if (selectedOwner) {
+        this.onSelectOwner(selectedOwner.uuid);
+      } else {
+        this.firstName.disable();
+        this.lastName.disable();
+        this.organizationName.disable();
+        this.email.disable();
+        this.phoneNumber.disable();
+      }
+    }
   }
 }
