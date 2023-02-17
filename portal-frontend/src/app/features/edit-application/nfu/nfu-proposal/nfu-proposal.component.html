@@ -15,7 +15,14 @@
     <div class="full-row">
       <label for="hectares">How many hectares are proposed for non-farm use? (hectares)</label>
       <mat-form-field appearance="outline">
-        <input id="hectares" type="number" matInput formControlName="hectares" placeholder="Type size in hectares" />
+        <input
+          id="hectares"
+          type="number"
+          min="0.01"
+          matInput
+          formControlName="hectares"
+          placeholder="Type size in hectares"
+        />
       </mat-form-field>
     </div>
     <div class="full-row">
@@ -71,87 +78,20 @@
         Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought
         onto the property, including gravel for construction.
       </label>
-      <mat-button-toggle-group (change)='onChangeFill($event)' class="input" id="will-import-fill" formControlName="willImportFill">
+      <mat-button-toggle-group
+        (change)="onChangeFill($event)"
+        class="input"
+        id="will-import-fill"
+        formControlName="willImportFill"
+      >
         <mat-button-toggle value="true">Yes</mat-button-toggle>
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </div>
   <section>
-    <h3>Proposal Dimensions</h3>
+    <h3>Soil & Fill Components</h3>
     <div class="form-row">
-      <div>
-        <label for="totalFillPlacement">Total fill placement area (ha)</label>
-        <div>
-          <mat-hint class="subtext">Enter area in hectares (ha) (Note: 0.01 ha is 100 m<sup>2</sup>)</mat-hint>
-        </div>
-        <mat-form-field appearance="outline">
-          <input
-            id="totalFillPlacement"
-            type="number"
-            matInput
-            formControlName="totalFillPlacement"
-            placeholder="Type fill depth"
-          />
-        </mat-form-field>
-      </div>
-      <div>
-        <label for="maxFillDepth">Maximum depth of material to be placed as fill</label>
-        <div>
-          <mat-hint class="subtext">Enter depth in meters (m)<sup>&nbsp;</sup></mat-hint>
-        </div>
-        <mat-form-field appearance="outline">
-          <input
-            id="maxFillDepth"
-            type="number"
-            matInput
-            formControlName="maxFillDepth"
-            placeholder="Type placement area"
-          />
-        </mat-form-field>
-      </div>
-      <div>
-        <label for="fillVolume">Volume of material to be placed as fill</label>
-        <div>
-          <mat-hint class="subtext">Enter volume in cubic meters (m<sup>3</sup>) without a comma</mat-hint>
-        </div>
-        <mat-form-field appearance="outline">
-          <input id="fillVolume" type="number" matInput formControlName="fillVolume" placeholder="25000" />
-        </mat-form-field>
-      </div>
-    </div>
-  </section>
-  <section>
-    <h3>Project Duration</h3>
-    <div class="subtext">
-      Estimated duration of the project. Both the Years and Months fields must be entered. If your project is less than
-      1 year, enter 0 in the Years field.
-    </div>
-    <div class="form-row">
-      <div>
-        <label for="projectDurationYears">Years</label>
-        <mat-form-field appearance="outline">
-          <input
-            id="projectDurationYears"
-            type="number"
-            matInput
-            formControlName="projectDurationYears"
-            placeholder="Type years"
-          />
-        </mat-form-field>
-      </div>
-      <div>
-        <label for="projectDurationMonths">Months</label>
-        <mat-form-field appearance="outline">
-          <input
-            id="projectDurationMonths"
-            type="number"
-            matInput
-            formControlName="projectDurationMonths"
-            placeholder="Type months"
-          />
-        </mat-form-field>
-      </div>
       <div class="full-row">
         <label for="fillTypeDescription">Describe the type and amount of fill proposed to be placed.</label>
         <mat-form-field appearance="outline">
@@ -179,6 +119,82 @@
           ></textarea>
         </mat-form-field>
         <span class="subtext">Characters left: {{ 4000 - fillOriginDescription.textLength }}</span>
+      </div>
+      <div class="full-row">
+        <h4>Project Dimensions</h4>
+      </div>
+      <div>
+        <label for="totalFillPlacement">Total fill placement area (ha)</label>
+        <div>
+          <mat-hint class="subtext">Enter area in hectares (ha) (Note: 0.01 ha is 100 m<sup>2</sup>)</mat-hint>
+        </div>
+        <mat-form-field appearance="outline">
+          <input
+            id="totalFillPlacement"
+            type="number"
+            min="0.01"
+            matInput
+            formControlName="totalFillPlacement"
+            placeholder="Type fill depth"
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="maxFillDepth">Maximum depth of material to be placed as fill</label>
+        <div>
+          <mat-hint class="subtext">Enter depth in meters (m)<sup>&nbsp;</sup></mat-hint>
+        </div>
+        <mat-form-field appearance="outline">
+          <input
+            id="maxFillDepth"
+            type="number"
+            min="0.01"
+            matInput
+            formControlName="maxFillDepth"
+            placeholder="Type placement area"
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="fillVolume">Volume of material to be placed as fill</label>
+        <div>
+          <mat-hint class="subtext">Enter volume in cubic meters (m<sup>3</sup>) without a comma</mat-hint>
+        </div>
+        <mat-form-field appearance="outline">
+          <input min="0.01" id="fillVolume" type="number" matInput formControlName="fillVolume" placeholder="25000" />
+        </mat-form-field>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h4>Project Duration</h4>
+    <div class="subtext">
+      Estimated duration of the project. Both the Years and Months fields must be entered. If your project is less than
+      1 year, enter 0 in the Years field.
+    </div>
+    <div class="form-row">
+      <div>
+        <label for="projectDurationAmount">Length</label>
+        <mat-form-field appearance="outline">
+          <input
+            id="projectDurationAmount"
+            type="number"
+            min="0.01"
+            matInput
+            formControlName="projectDurationAmount"
+            placeholder="Type length as a decimal number"
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="projectDurationUnit">Unit</label>
+        <mat-form-field appearance="outline">
+          <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">
+            <mat-option value="days">Days</mat-option>
+            <mat-option value="months">Months</mat-option>
+            <mat-option value="years">Years</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
   </section>
