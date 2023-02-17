@@ -71,6 +71,9 @@ export class ApplicationOwner extends Base {
   @ManyToOne(() => Application, { nullable: false })
   application: Application;
 
+  @Column()
+  applicationFileNumber: string;
+
   @ManyToMany(() => ApplicationParcel, (appParcel) => appParcel.owners)
   parcels: ApplicationParcel[];
 }
