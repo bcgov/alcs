@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationDocumentUpdateDto, DOCUMENT } from './application-document.dto';
@@ -15,7 +16,8 @@ export class ApplicationDocumentService {
   constructor(
     private httpClient: HttpClient,
     private toastService: ToastService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private overlayService: OverlaySpinnerService
   ) {}
 
   async attachExternalFile(fileNumber: string, file: File, documentType: DOCUMENT | null) {
@@ -48,11 +50,14 @@ export class ApplicationDocumentService {
 
   async deleteExternalFile(fileUuid: string) {
     try {
+      this.overlayService.showSpinner();
       await firstValueFrom(this.httpClient.delete(`${this.serviceUrl}/${fileUuid}`));
       this.toastService.showSuccessToast('Document deleted');
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to delete document, please try again');
+    } finally {
+      this.overlayService.hideSpinner();
     }
   }
 

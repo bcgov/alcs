@@ -8,6 +8,7 @@ import { ApplicationDocumentDto } from '../../services/application-document/appl
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 
@@ -44,7 +45,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private overlayService: OverlaySpinnerService
   ) {}
 
   ngOnDestroy(): void {
@@ -77,8 +79,11 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   }
 
   private async loadApplication(fileId: string) {
+    this.overlayService.showSpinner();
     this.application = await this.applicationService.getByFileId(fileId);
+    this.fileId = fileId;
     this.$application.next(this.application);
+    this.overlayService.hideSpinner();
   }
 
   async onApplicationTypeChangeClicked() {

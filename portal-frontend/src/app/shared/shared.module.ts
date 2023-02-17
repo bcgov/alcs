@@ -1,3 +1,4 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -77,6 +78,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NoDataComponent,
     ValidationErrorComponent,
     CompletedComponent,
+    OverlayModule,
     CustomStepperComponent,
     CdkStepperModule,
   ],

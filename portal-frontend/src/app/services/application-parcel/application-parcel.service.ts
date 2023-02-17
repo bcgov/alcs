@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DOCUMENT } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
@@ -16,7 +17,8 @@ export class ApplicationParcelService {
   constructor(
     private httpClient: HttpClient,
     private toastService: ToastService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private overlayService: OverlaySpinnerService
   ) {}
 
   async fetchByFileId(applicationFileId: string) {
@@ -45,6 +47,7 @@ export class ApplicationParcelService {
 
   async update(updateDtos: ApplicationParcelUpdateDto[]) {
     try {
+      this.overlayService.showSpinner();
       const formattedDtos = updateDtos.map((e) => ({
         ...e,
         mapAreaHectares: e.mapAreaHectares ? parseFloat(e.mapAreaHectares) : e.mapAreaHectares,
@@ -59,6 +62,8 @@ export class ApplicationParcelService {
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update Parcel, please try again later');
+    } finally {
+      this.overlayService.hideSpinner();
     }
     return undefined;
   }
@@ -95,16 +100,20 @@ export class ApplicationParcelService {
 
   async deleteExternalFile(fileUuid: string) {
     try {
+      this.overlayService.showSpinner();
       await firstValueFrom(this.httpClient.delete(`${environment.apiUrl}/application-parcel-document/${fileUuid}`));
       this.toastService.showSuccessToast('Document deleted');
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to delete document, please try again');
+    } finally {
+      this.overlayService.hideSpinner();
     }
   }
 
   async delete(parcelUuid: string) {
     try {
+      this.overlayService.showSpinner();
       const result = await firstValueFrom(
         this.httpClient.delete(`${environment.apiUrl}/application-parcel/${parcelUuid}`)
       );
@@ -113,6 +122,8 @@ export class ApplicationParcelService {
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to delete Parcel, please try again');
+    } finally {
+      this.overlayService.hideSpinner();
     }
     return undefined;
   }

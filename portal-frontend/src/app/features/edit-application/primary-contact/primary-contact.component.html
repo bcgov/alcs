@@ -14,13 +14,13 @@
       </button>
       <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
     </ng-container>
-    <h5>Third Party Agent</h5>
+    <h5>Third Party Agent on behalf of Owner(s)</h5>
     <button *ngIf="!selectedThirdPartyAgent" color="primary" (click)="onSelectAgent()" mat-stroked-button>
       Make Primary Contact
     </button>
     <div class="selected" *ngIf="selectedThirdPartyAgent"><mat-icon>check</mat-icon>Primary Contact</div>
   </div>
-  <div class="agent-form" *ngIf="selectedThirdPartyAgent">
+  <div class="agent-form">
     <h4>Agent Contact Information</h4>
     <form [formGroup]="form">
       <div class="form-row">
@@ -65,16 +65,7 @@
   </div>
 </section>
 <section>
-  <h4>Authorization Letters</h4>
-  <div class="uploader">
-    <app-file-drag-drop
-      [allowMultiple]="true"
-      [disabled]="!needsAuthorizationLetter"
-      [uploadedFiles]="files"
-      (uploadFiles)="onAttachFile($event)"
-      (deleteFile)="onRemoveFile($event)"
-    ></app-file-drag-drop>
-  </div>
+  <h4>Primary Contact Authorization Letters</h4>
   <div>
     An authorization letter must be provided if:
     <ol>
@@ -88,6 +79,15 @@
       organization land owners listed in Step 1. Please consult the Supporting Documentation page of ALC website for
       further instruction and an Authorization Letter template.
     </p>
+  </div>
+  <h6>Authorization Letters</h6>
+  <div class="uploader">
+    <app-file-drag-drop
+      [allowMultiple]="true"
+      [uploadedFiles]="files"
+      (uploadFiles)="onAttachFile($event)"
+      (deleteFile)="onRemoveFile($event)"
+    ></app-file-drag-drop>
   </div>
 </section>
 <div class="button-container">
