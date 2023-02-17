@@ -1,3 +1,4 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
@@ -107,5 +108,11 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     if (this.application) {
       await this.applicationService.submitToAlcs(this.fileId);
     }
+  }
+
+  // scrolls to step if step selected programmatically
+  onStepChange($event: StepperSelectionEvent) {
+    const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
+    el?.scrollIntoView({ behavior: 'smooth' });
   }
 }
