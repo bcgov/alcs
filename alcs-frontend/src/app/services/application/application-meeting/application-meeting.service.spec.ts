@@ -72,7 +72,7 @@ describe('ApplicationMeetingService', () => {
       ])
     );
 
-    await service.update('1', {});
+    await service.update('1', 'type', {});
 
     expect(httpClient.patch).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
@@ -85,7 +85,7 @@ describe('ApplicationMeetingService', () => {
       })
     );
 
-    await service.update('1', {});
+    await service.update('1', 'type', {});
 
     expect(httpClient.patch).toHaveBeenCalledTimes(1);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
@@ -142,7 +142,7 @@ describe('ApplicationMeetingService', () => {
       ])
     );
 
-    await service.delete('1');
+    await service.delete('1', 'type');
 
     expect(httpClient.delete).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
@@ -155,7 +155,7 @@ describe('ApplicationMeetingService', () => {
       })
     );
 
-    await service.delete('1');
+    await service.delete('1', 'type');
 
     expect(httpClient.delete).toHaveBeenCalledTimes(1);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);

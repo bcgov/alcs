@@ -59,7 +59,7 @@ export class InfoRequestDialogComponent {
     try {
       this.isLoading = true;
       if (this.model.uuid) {
-        await this.meetingService.update(this.model.uuid, {
+        await this.meetingService.update(this.model.uuid, this.data.meetingType.label, {
           meetingStartDate: this.model.startDate,
           meetingEndDate: this.model.endDate,
           description: this.getDescription(),

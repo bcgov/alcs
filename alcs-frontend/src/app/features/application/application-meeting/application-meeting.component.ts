@@ -109,39 +109,39 @@ export class ApplicationMeetingComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onDelete(uuid: string) {
+  async onDelete(uuid: string, typeLabel: string) {
     const answer = this.confirmationDialogService.openDialog({
       body: 'Are you sure you want to delete meeting?',
     });
     answer.subscribe((answer) => {
       if (answer) {
-        this.meetingService.delete(uuid).then(() => {
+        this.meetingService.delete(uuid, typeLabel).then(() => {
           this.applicationDetailService.loadApplication(this.fileNumber);
         });
       }
     });
   }
 
-  async onSaveMeetingEndDate(uuid: any, meetingEndDate: number) {
-    await this.updateMeeting(uuid, {
+  async onSaveMeetingEndDate(uuid: any, typeLabel: string, meetingEndDate: number) {
+    await this.updateMeeting(uuid, typeLabel, {
       meetingEndDate: new Date(meetingEndDate),
     });
   }
 
-  async onSaveReportStartDate(uuid: any, reportStartDate: number) {
-    await this.updateMeeting(uuid, {
+  async onSaveReportStartDate(uuid: any, typeLabel: string, reportStartDate: number) {
+    await this.updateMeeting(uuid, typeLabel, {
       reportStartDate: new Date(reportStartDate),
     });
   }
 
-  async onSaveReportEndDate(uuid: any, reportEndDate: number) {
-    await this.updateMeeting(uuid, {
+  async onSaveReportEndDate(uuid: any, typeLabel: string, reportEndDate: number) {
+    await this.updateMeeting(uuid, typeLabel, {
       reportEndDate: new Date(reportEndDate),
     });
   }
 
-  async updateMeeting(uuid: any, updates: UpdateApplicationMeetingDto) {
-    await this.meetingService.update(uuid, updates);
+  async updateMeeting(uuid: any, typeLabel: string, updates: UpdateApplicationMeetingDto) {
+    await this.meetingService.update(uuid, typeLabel, updates);
     await this.applicationDetailService.loadApplication(this.fileNumber);
   }
 }

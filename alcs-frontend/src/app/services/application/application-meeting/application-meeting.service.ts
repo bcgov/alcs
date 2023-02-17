@@ -31,7 +31,7 @@ export class ApplicationMeetingService {
     this.$meetings.next(meetings);
   }
 
-  async update(uuid: string, meeting: UpdateApplicationMeetingDto) {
+  async update(uuid: string, typeLabel: string, meeting: UpdateApplicationMeetingDto) {
     try {
       await firstValueFrom(
         this.http.patch<ApplicationMeetingDto>(`${this.url}/${uuid}`, {
@@ -46,9 +46,9 @@ export class ApplicationMeetingService {
           reportEndDate: meeting.reportEndDate ? formatDateForApi(meeting.reportEndDate) : meeting.reportEndDate,
         })
       );
-      this.toastService.showSuccessToast('Meeting updated');
+      this.toastService.showSuccessToast(`${typeLabel} updated`);
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update meeting');
+      this.toastService.showErrorToast(`Failed to update ${typeLabel}`);
     }
   }
 
@@ -61,7 +61,7 @@ export class ApplicationMeetingService {
           meetingEndDate: meeting.meetingEndDate ? formatDateForApi(meeting.meetingEndDate) : undefined,
         })
       );
-      this.toastService.showSuccessToast('Meeting created');
+      this.toastService.showSuccessToast(`${typeLabel} created`);
     } catch (e) {
       this.toastService.showErrorToast(`Failed to create ${typeLabel}`);
     }
@@ -71,12 +71,12 @@ export class ApplicationMeetingService {
     return firstValueFrom(this.http.get<ApplicationMeetingDto>(`${this.url}/meeting/${uuid}`));
   }
 
-  async delete(uuid: string) {
+  async delete(uuid: string, typeLabel: string) {
     try {
       await firstValueFrom(this.http.delete<ApplicationMeetingDto>(`${this.url}/${uuid}`));
-      this.toastService.showSuccessToast('Meeting deleted');
+      this.toastService.showSuccessToast(`${typeLabel} deleted`);
     } catch (err) {
-      this.toastService.showErrorToast('Failed to delete meeting');
+      this.toastService.showErrorToast(`Failed to delete ${typeLabel}`);
     }
   }
 }
