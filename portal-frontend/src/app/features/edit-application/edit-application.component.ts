@@ -115,8 +115,11 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     }
   }
 
-  // scrolls to step if step selected programmatically
   onStepChange($event: StepperSelectionEvent) {
+    // reload application every time step changes
+    this.applicationService.getByFileId(this.fileId);
+
+    // scrolls to step if step selected programmatically
     const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
     el?.scrollIntoView({ behavior: 'smooth' });
   }
