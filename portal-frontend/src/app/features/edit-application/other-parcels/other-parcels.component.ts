@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -14,9 +15,10 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
@@ -36,14 +38,16 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   // TODO  UPDATES remove this comment
-  isOtherParcels = new FormControl<string | null>(null);
+  hasOtherParcelsInCommunity = new FormControl<string | null>(null);
 
   otherParcelsForm = new FormGroup({
-    isOwnOtherParcels: this.isOtherParcels,
+    hasOtherParcelsInCommunity: this.hasOtherParcelsInCommunity,
   });
 
   otherParcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
+  application?: ApplicationDetailedDto;
+  formDisabled = true;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -56,6 +60,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
+        this.application = application;
         this.fileId = application.fileNumber;
         const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
         this.owners = nonAgentOwners.map((o) => ({
@@ -64,8 +69,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         }));
         this.$owners.next(nonAgentOwners);
 
-        this.setupOtherParcelsData(application);
-        this.setupOtherParcelsForm(application);
+        this.setupOtherParcelsData();
+        this.setupOtherParcelsForm();
       }
     });
   }
@@ -130,18 +135,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async onAddParcel() {
-    // const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER, ownerId);
-
-    // if (parcel) {
-    //   const owner = this.owners.find((o) => o.uuid === ownerId);
-    //   owner?.parcels.push({
-    //     uuid: parcel!.uuid,
-    //     parcelType: PARCEL_TYPE.OTHER,
-    //     documents: [] as ApplicationDocumentDto[],
-    //   } as ApplicationParcelDto);
-    // } else {
-    //   this.toastService.showErrorToast('Error adding new parcel. Please refresh page and try again.');
-    // }
     const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
 
     if (parcel) {
@@ -192,18 +185,36 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   // TODO  UPDATES remove this comment
-  setupOtherParcelsForm(application: ApplicationDetailedDto) {
-    this.otherParcelsForm.patchValue({
-      // isOtherParcels: this.application.isOtherParcels?,
-      isOwnOtherParcels: null,
-    });
+  setupOtherParcelsForm() {
+    console.log(
+      'this.application?.hasOtherParcelsInCommunity',
+      this.application?.hasOtherParcelsInCommunity,
+      formatBooleanToString(this.application?.hasOtherParcelsInCommunity)
+    );
+    if (this.application) {
+      this.formDisabled = !this.application.hasOtherParcelsInCommunity ?? true;
+
+      this.otherParcelsForm.patchValue({
+        hasOtherParcelsInCommunity: formatBooleanToString(this.application.hasOtherParcelsInCommunity),
+      });
+    }
   }
 
-  async setupOtherParcelsData(application: ApplicationDetailedDto) {
+  async setupOtherParcelsData() {
     const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
     this.otherParcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER);
     if (!this.otherParcels || this.otherParcels.length === 0) {
       this.addPlaceHolderParcel();
     }
+  }
+
+  async onHasOtherParcelsInCommunityChange($event: MatButtonToggleChange) {
+    this.formDisabled = !parseStringToBoolean($event.value) ?? true;
+
+    await this.applicationService.updatePending(this.fileId, {
+      ...this.application,
+      hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
+    } as ApplicationUpdateDto);
+    await this.applicationService.getByFileId(this.fileId);
   }
 }

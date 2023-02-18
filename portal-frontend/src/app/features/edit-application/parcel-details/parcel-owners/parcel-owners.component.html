@@ -11,7 +11,7 @@
 
   <ng-container matColumnDef="phone">
     <th mat-header-cell *matHeaderCellDef>Phone</th>
-    <td mat-cell *matCellDef="let element">{{ element.phoneNumber | mask: '(000) 000-0000' }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.phoneNumber | mask : '(000) 000-0000' }}</td>
   </ng-container>
 
   <ng-container matColumnDef="email">
@@ -27,9 +27,19 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef>Actions</th>
     <td mat-cell class="actions" *matCellDef="let element">
-      <button (click)="onEdit(element)" mat-flat-button color="primary">Edit</button>
-      <button *ngIf="parcelUuid" (click)="onRemove(element.uuid)" mat-stroked-button color="accent">Remove</button>
-      <button *ngIf="!parcelUuid" (click)="onDelete(element)" mat-stroked-button color="warn">Delete</button>
+      <button [disabled]="_disabled" (click)="onEdit(element)" mat-flat-button color="primary">Edit</button>
+      <button
+        [disabled]="_disabled"
+        *ngIf="parcelUuid"
+        (click)="onRemove(element.uuid)"
+        mat-stroked-button
+        color="accent"
+      >
+        Remove
+      </button>
+      <button [disabled]="_disabled" *ngIf="!parcelUuid" (click)="onDelete(element)" mat-stroked-button color="warn">
+        Delete
+      </button>
     </td>
   </ng-container>
 

@@ -19,10 +19,17 @@ export class ParcelOwnersComponent {
     this._owners = owners.sort(this.appOwnerService.sortOwners);
   }
 
+  @Input()
+  public set disabled(disabled: boolean) {
+    this._disabled = disabled;
+  }
+
   @Input() parcelUuid?: string | undefined;
 
   _owners: ApplicationOwnerDto[] = [];
   displayedColumns = ['position', 'displayName', 'phone', 'email', 'type', 'actions'];
+
+  _disabled: boolean = false;
 
   constructor(
     private dialog: MatDialog,

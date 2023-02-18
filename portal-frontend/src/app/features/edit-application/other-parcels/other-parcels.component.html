@@ -11,30 +11,18 @@
     </ul>
 
     <form [formGroup]="otherParcelsForm">
-      <!-- <div class="type">
-        <h6>Select ownership type:</h6>
-        <div class="warning">
-          The answer to the following question will change the rest of the application form. Do not change this answer once
-          selected.
-        </div>
-        <mat-button-toggle-group
-          class="input"
-          (change)="onChangeParcelType($event)"
-          id="parcelType"
-          formControlName="parcelType"
-        >
-          <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
-          <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div> -->
-
       <div class="full-row">
         <div>
-          <div for="isOwnOtherParcels">
+          <div for="hasOtherParcelsInCommunity">
             Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR)
             within the <b>community</b> where the application parcel(s) is located?
           </div>
-          <mat-button-toggle-group class="input" id="isOwnOtherParcels" formControlName="isOwnOtherParcels">
+          <mat-button-toggle-group
+            class="input"
+            id="hasOtherParcelsInCommunity"
+            formControlName="hasOtherParcelsInCommunity"
+            (change)="onHasOtherParcelsInCommunityChange($event)"
+          >
             <mat-button-toggle value="true">Yes</mat-button-toggle>
             <mat-button-toggle value="false">No</mat-button-toggle>
           </mat-button-toggle-group>
@@ -42,7 +30,10 @@
       </div>
 
       <div class="full-row">
-        <mat-expansion-panel *ngFor="let parcel of otherParcels; let parcelInd = index" [expanded]="false">
+        <mat-expansion-panel
+          *ngFor="let parcel of otherParcels; let parcelInd = index"
+          [expanded]="otherParcels.length < 2"
+        >
           <mat-expansion-panel-header>
             <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details</mat-panel-title>
           </mat-expansion-panel-header>
@@ -53,15 +44,24 @@
             [enableOwners]="true"
             [enableCertificateOfTitleUpload]="false"
             [enableUserSignOff]="false"
+            [enableAddNewOwner]="false"
+            [disabled]="formDisabled"
             (onFormGroupChange)="onParcelFormChange($event)"
           ></app-parcel-entry>
           <div>
             <div class="flex-evenly-wrap parcel-buttons-wrappers">
-              <button class="margin-top-1-half" mat-stroked-button color="primary" (click)="onSave()">
+              <button
+                class="margin-top-1-half"
+                mat-stroked-button
+                color="primary"
+                (click)="onSave()"
+                [disabled]="formDisabled"
+              >
                 Save Parcel #{{ parcelInd + 1 }} Details
               </button>
               <button
                 class="margin-top-1-half"
+                *ngIf="otherParcels.length > 1"
                 mat-stroked-button
                 color="accent"
                 (click)="onDelete(parcel.uuid, parcelInd + 1)"
@@ -72,51 +72,14 @@
           </div>
         </mat-expansion-panel>
         <div>
-          <button mat-stroked-button color="primary" (click)="onAddParcel()">Add another parcel</button>
+          <button mat-stroked-button color="primary" [disabled]="formDisabled" (click)="onAddParcel()">
+            Add another parcel
+          </button>
         </div>
       </div>
     </form>
   </div>
-  <!-- <form>
-    <mat-expansion-panel *ngFor="let owner of owners; let ownerInd = index" [expanded]="false">
-      <mat-expansion-panel-header>
-        <mat-panel-title> {{ owner.displayName }}</mat-panel-title>
-      </mat-expansion-panel-header>
-      <div>
-        <mat-expansion-panel *ngFor="let parcel of owner.parcels; let parcelInd = index" [expanded]="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details</mat-panel-title>
-          </mat-expansion-panel-header>
-          <app-parcel-entry
-            [parcel]="parcel"
-            [fileId]="fileId"
-            [enableOwners]="false"
-            [enableCertificateOfTitleUpload]="false"
-            [enableUserSignOff]="false"
-            (onFormGroupChange)="onParcelFormChange($event)"
-          ></app-parcel-entry>
-          <div>
-            <div class="flex-evenly-wrap parcel-buttons-wrappers">
-              <button class="margin-top-1-half" mat-stroked-button color="primary" (click)="onSave()">
-                Save Parcel #{{ parcelInd + 1 }} Details
-              </button>
-              <button
-                class="margin-top-1-half"
-                mat-stroked-button
-                color="accent"
-                (click)="onDelete(parcel.uuid, parcelInd + 1)"
-              >
-                Delete Parcel #{{ parcelInd + 1 }} Details
-              </button>
-            </div>
-          </div>
-        </mat-expansion-panel>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onAddParcel(owner.uuid)">Add another parcel</button>
-        </div>
-      </div>
-    </mat-expansion-panel>
-  </form>-->
+
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>

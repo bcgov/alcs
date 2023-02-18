@@ -117,6 +117,7 @@
         placeholder="Type owner name"
         [matAutocomplete]="auto"
         (input)="onTypeOwner($event)"
+        [disabled]="_disabled"
       />
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
@@ -126,7 +127,7 @@
             <button *ngIf="option.isSelected" mat-stroked-button color="primary">Added</button>
           </div>
         </mat-option>
-        <mat-option class="option" *ngIf="filteredOwners.length === 0" (click)="onAddNewOwner()">
+        <mat-option class="option" *ngIf="filteredOwners.length === 0 && enableAddNewOwner" (click)="onAddNewOwner()">
           <div class="owner-option">
             <div>No owner matching search</div>
             <button mat-flat-button color="primary">Add new owner</button>
@@ -137,13 +138,23 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <button class="new-owner" (click)="onAddNewOwner()" mat-stroked-button color="primary">Add new owner</button>
+    <button
+      class="new-owner"
+      *ngIf="enableAddNewOwner"
+      (click)="onAddNewOwner()"
+      mat-stroked-button
+      color="primary"
+      [disabled]="_disabled"
+    >
+      Add new owner
+    </button>
     <div>
       <app-parcel-owners
         [parcelUuid]="parcel.uuid"
         [owners]="parcel.owners"
         (onOwnersUpdated)="onOwnersUpdated.emit()"
         (onOwnerRemoved)="onOwnerRemoved($event)"
+        [disabled]="_disabled"
       ></app-parcel-owners>
     </div>
   </section>
