@@ -208,6 +208,28 @@ describe('ApplicationOwnerService', () => {
     mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
     const owners = [
       new ApplicationOwner({
+        firstName: 'A',
+        lastName: 'A',
+      }),
+    ];
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners,
+      }),
+    ]);
+
+    await service.updateApplicationApplicant('');
+
+    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
+    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+      'A A',
+    );
+  });
+
+  it('should call update for the application with the first parcels name', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    const owners = [
+      new ApplicationOwner({
         firstName: 'B',
         lastName: 'B',
       }),
@@ -230,7 +252,7 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A A',
+      'A A et al.',
     );
   });
 
@@ -263,7 +285,7 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A A',
+      'A A et al.',
     );
   });
 });

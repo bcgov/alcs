@@ -221,6 +221,10 @@ export class ApplicationOwnerService {
       a.auditCreatedAt > b.auditCreatedAt ? a : b,
     );
 
+    const ownerCount = parcels.reduce((count, parcel) => {
+      return count + parcel.owners.length;
+    }, 0);
+
     if (firstParcel) {
       const firstOwner = firstParcel.owners.sort((a, b) => {
         const mappedA = a.organizationName ?? a.firstName ?? '';
@@ -228,9 +232,13 @@ export class ApplicationOwnerService {
         return mappedA > mappedB ? 1 : -1;
       })[0];
       if (firstOwner) {
-        const applicantName = firstOwner.organizationName
+        let applicantName = firstOwner.organizationName
           ? firstOwner.organizationName
           : `${firstOwner.firstName} ${firstOwner.lastName}`;
+        if (ownerCount > 1) {
+          applicantName += ' et al.';
+        }
+
         await this.applicationService.update(fileId, {
           applicant: applicantName || '',
         });
