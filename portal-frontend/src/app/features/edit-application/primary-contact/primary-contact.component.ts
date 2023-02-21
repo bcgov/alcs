@@ -21,7 +21,7 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
   nonAgentOwners: ApplicationOwnerDto[] = [];
   owners: ApplicationOwnerDto[] = [];
   private fileId: string | undefined;
-  files: ApplicationDocumentDto[] = [];
+  files: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
   selectedThirdPartyAgent = false;
@@ -83,7 +83,6 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
   }
 
   async onSaveExit() {
-    await this.save();
     await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
@@ -140,6 +139,12 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       this.phoneNumber.disable();
     }
     this.needsAuthorizationLetter = this.nonAgentOwners.length > 1 || hasSelectedAgent;
+    this.files = this.files.map((file) => ({
+      ...file,
+      errorMessage: this.needsAuthorizationLetter
+        ? undefined
+        : 'Authorization Letter not required. Please remove this file.',
+    }));
   }
 
   onSelectAgent() {
@@ -153,6 +158,7 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       this.nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.owners = owners;
       if (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) {
+        this.selectedOwnerUuid = selectedOwner.uuid;
         this.selectedThirdPartyAgent = true;
         this.form.patchValue({
           firstName: selectedOwner.firstName,

@@ -1,21 +1,31 @@
 <input type="file" class="file-input" (change)="fileSelected($event)" #fileUpload />
 <div *ngIf="uploadedFiles">
-  <div class="uploaded-file" *ngFor="let file of uploadedFiles">
-    <div class="file-name">
-      <a (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
-      <div>&ensp;({{ file.fileSize | filesize }})</div>
+  <ng-container *ngFor="let file of uploadedFiles">
+    <div
+      class="uploaded-file"
+      [ngClass]="{
+        error: !!file.errorMessage
+      }"
+    >
+      <div class="file-name">
+        <a (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
+        <div>&ensp;({{ file.fileSize | filesize }})</div>
+      </div>
+      <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
+        <mat-icon>close</mat-icon>
+        REMOVE
+      </button>
     </div>
-    <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
-      <mat-icon>close</mat-icon>
-      REMOVE
-    </button>
-  </div>
+    <div class='error-message' *ngIf="!!file.errorMessage">
+      <mat-icon>warning</mat-icon> {{ file.errorMessage }}
+    </div>
+  </ng-container>
 </div>
 <div
   *ngIf="!uploadedFiles.length || allowMultiple"
   class="desktop-file-drag-drop"
   dragDropFile
-  [disabled]='disabled'
+  [disabled]="disabled"
   (files)="filesDropped($event)"
 >
   <div class="content">
