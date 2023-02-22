@@ -2,7 +2,7 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RedisClientType } from 'redis';
-import { Between, FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { HolidayEntity } from '../../../admin/holiday/holiday.entity';
 import {
   LocalGovernmentCreateDto,
@@ -29,6 +29,9 @@ export class ApplicationLocalGovernmentService {
         name: true,
         bceidBusinessGuid: true,
         isFirstNation: true,
+      },
+      where: {
+        isActive: true,
       },
     });
 
@@ -80,6 +83,7 @@ export class ApplicationLocalGovernmentService {
     localGovernment.name = updateDto.name;
     localGovernment.bceidBusinessGuid = updateDto.bceidBusinessGuid;
     localGovernment.isFirstNation = updateDto.isFirstNation;
+    localGovernment.isActive = updateDto.isActive;
 
     await this.repository.save(localGovernment);
     await this.loadGovernmentsToRedis();
@@ -90,6 +94,7 @@ export class ApplicationLocalGovernmentService {
     newGovernment.name = createDto.name;
     newGovernment.bceidBusinessGuid = createDto.bceidBusinessGuid;
     newGovernment.isFirstNation = createDto.isFirstNation;
+    newGovernment.isActive = createDto.isActive;
 
     await this.repository.save(newGovernment);
     await this.loadGovernmentsToRedis();

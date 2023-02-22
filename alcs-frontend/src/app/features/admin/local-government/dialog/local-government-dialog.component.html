@@ -24,6 +24,14 @@
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
+
+    <div>
+      <mat-label>Status</mat-label>
+      <mat-button-toggle-group id="isActive" [(ngModel)]="model.isActive" name="isActive">
+        <mat-button-toggle value="true">Active</mat-button-toggle>
+        <mat-button-toggle value="false">Inactive</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
   </form>
 
   <mat-dialog-actions align="end">

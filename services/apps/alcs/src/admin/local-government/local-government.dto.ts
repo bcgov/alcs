@@ -9,6 +9,9 @@ export class LocalGovernmentUpdateDto {
 
   @IsBoolean()
   isFirstNation: boolean;
+
+  @IsBoolean()
+  isActive: boolean;
 }
 
 export class LocalGovernmentCreateDto extends LocalGovernmentUpdateDto {}

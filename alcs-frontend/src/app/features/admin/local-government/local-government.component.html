@@ -34,11 +34,25 @@
     <ng-container matColumnDef="isFirstNation">
       <th mat-header-cell *matHeaderCellDef>This is a First Nation Government</th>
       <td mat-cell *matCellDef="let row">
-        <div class="center" *ngIf="row.isFirstNation">
+        <div class="left" *ngIf="row.isFirstNation">
           <mat-icon color="primary">check</mat-icon>
           Yes
         </div>
-        <div class="center" *ngIf="!row.isFirstNation">-</div>
+        <div class="left" *ngIf="!row.isFirstNation">-</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isActive">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row">
+        <div class="left" *ngIf="row.isActive">
+          <mat-icon color="primary">check_circle_outline</mat-icon>
+          Active
+        </div>
+        <div class="left" *ngIf="!row.isActive">
+          <mat-icon color="warn">not_interested</mat-icon>
+          Inactive
+        </div>
       </td>
     </ng-container>
 
