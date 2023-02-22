@@ -1,6 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationReviewGrpc } from '../../application-grpc/alcs-application.message.interface';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
@@ -11,7 +12,10 @@ import {
 } from '../../application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../application/application-paused.entity';
-import { ApplicationDto } from '../../application/application.dto';
+import {
+  ApplicationDto,
+  ApplicationReviewDto,
+} from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
 import { CardDto } from '../../card/card.dto';
 import { Card } from '../../card/card.entity';
@@ -41,6 +45,8 @@ export class ApplicationProfile extends AutomapperProfile {
         ApplicationLocalGovernment,
         ApplicationLocalGovernmentDto,
       );
+
+      createMap(mapper, ApplicationReviewGrpc, ApplicationReviewDto);
 
       createMap(
         mapper,

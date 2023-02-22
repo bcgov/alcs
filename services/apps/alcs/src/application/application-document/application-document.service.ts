@@ -64,7 +64,7 @@ export class ApplicationDocumentService {
     return document;
   }
 
-  async list(fileNumber: string, documentType: DOCUMENT_TYPE) {
+  async list(fileNumber: string, documentType?: DOCUMENT_TYPE) {
     return this.applicationDocumentRepository.find({
       where: {
         type: documentType,

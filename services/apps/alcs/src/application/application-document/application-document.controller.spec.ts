@@ -8,7 +8,10 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { ApplicationDocumentController } from './application-document.controller';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentController', () => {
@@ -120,7 +123,7 @@ describe('ApplicationDocumentController', () => {
       }),
     ).rejects.toMatchObject(
       new BadRequestException(
-        'Invalid document type specified, must be one of decisionDocument, reviewDocument, certificateOfTitle',
+        'Invalid document type specified, must be one of decisionDocument, reviewDocument',
       ),
     );
   });
@@ -130,7 +133,7 @@ describe('ApplicationDocumentController', () => {
 
     const res = await controller.listDocuments(
       'fake-number',
-      'decisionDocument',
+      DOCUMENT_TYPE.DECISION_DOCUMENT,
     );
 
     expect(res[0].mimeType).toEqual(mockDocument.document.mimeType);

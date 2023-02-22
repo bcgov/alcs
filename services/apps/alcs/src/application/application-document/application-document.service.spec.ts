@@ -1,16 +1,19 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { ApplicationService } from '../application.service';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentService', () => {
@@ -75,7 +78,7 @@ describe('ApplicationDocumentService', () => {
       fileNumber,
       mockFile as MultipartFile,
       mockUser as User,
-      'decisionDocument',
+      DOCUMENT_TYPE.DECISION_DOCUMENT,
     );
 
     expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
@@ -152,7 +155,7 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.list(fileNumber, 'decisionDocument');
+    const res = await service.list(fileNumber, DOCUMENT_TYPE.DECISION_DOCUMENT);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);
@@ -166,7 +169,10 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.listAll([fileNumber], 'decisionDocument');
+    const res = await service.listAll(
+      [fileNumber],
+      DOCUMENT_TYPE.DECISION_DOCUMENT,
+    );
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);

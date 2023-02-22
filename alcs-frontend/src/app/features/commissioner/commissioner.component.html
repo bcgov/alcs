@@ -5,7 +5,7 @@
       <app-document
         *ngIf="fileNumber"
         [fileNumber]="fileNumber"
-        documentType="reviewDocument"
+        [documentType]="DOCUMENT_TYPE.REVIEW_DOCUMENT"
         title="Evidentiary Record"
         [readOnly]="true"
       ></app-document>

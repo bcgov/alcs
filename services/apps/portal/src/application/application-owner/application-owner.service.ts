@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
+import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
@@ -217,9 +218,9 @@ export class ApplicationOwnerService {
     const parcels =
       await this.applicationParcelService.fetchByApplicationFileId(fileId);
 
-    const firstParcel = parcels.reduce((a, b) =>
-      a.auditCreatedAt > b.auditCreatedAt ? a : b,
-    );
+    const firstParcel = parcels
+      .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
+      .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
 
     const ownerCount = parcels.reduce((count, parcel) => {
       return count + parcel.owners.length;

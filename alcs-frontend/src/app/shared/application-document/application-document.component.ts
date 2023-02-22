@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
   styleUrls: ['./application-document.component.scss'],
 })
 export class ApplicationDocumentComponent {
-  @Input() documentType: DOCUMENT_TYPE = 'decisionDocument';
+  @Input() documentType: DOCUMENT_TYPE = DOCUMENT_TYPE.DECISION_DOCUMENT;
   @Input() title = '';
   @Input() readOnly = false;
 

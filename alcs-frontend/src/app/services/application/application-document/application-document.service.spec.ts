@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationDocumentService } from './application-document.service';
+import { ApplicationDocumentService, DOCUMENT_TYPE } from './application-document.service';
 
 describe('ApplicationDocumentService', () => {
   let service: ApplicationDocumentService;
@@ -43,7 +43,7 @@ describe('ApplicationDocumentService', () => {
       ])
     );
 
-    const res = await service.list('1', 'decisionDocument');
+    const res = await service.list('1', DOCUMENT_TYPE.DECISION_DOCUMENT);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
@@ -68,9 +68,25 @@ describe('ApplicationDocumentService', () => {
     const file = createMock<File>();
     Object.defineProperty(file, 'size', { value: environment.maxFileSize + 1 });
 
-    await service.upload('', 'decisionDocument', file);
+    await service.upload('', DOCUMENT_TYPE.DECISION_DOCUMENT, file);
 
     expect(toastService.showWarningToast).toHaveBeenCalledTimes(1);
     expect(httpClient.post).toHaveBeenCalledTimes(0);
+  });
+
+  it('should make a get call for list review documents', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          uuid: '1',
+        },
+      ])
+    );
+
+    const res = await service.getReviewDocuments('1');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].uuid).toEqual('1');
   });
 });

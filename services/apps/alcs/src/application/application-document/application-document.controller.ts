@@ -43,12 +43,17 @@ export class ApplicationDocumentController {
       throw new BadRequestException('Request is not multipart');
     }
 
+    const uploadableDocumentTypes = [
+      DOCUMENT_TYPE.DECISION_DOCUMENT,
+      DOCUMENT_TYPE.REVIEW_DOCUMENT,
+    ];
+
     if (
-      !DOCUMENT_TYPES.includes(documentType as DOCUMENT_TYPE) &&
+      !uploadableDocumentTypes.includes(documentType as DOCUMENT_TYPE) &&
       documentType !== null
     ) {
       throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
+        `Invalid document type specified, must be one of ${uploadableDocumentTypes.join(
           ', ',
         )}`,
       );
@@ -63,6 +68,30 @@ export class ApplicationDocumentController {
     );
     return this.mapper.map(
       savedDocument,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
+
+  @Get('/application/:fileNumber/reviewDocuments')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listReviewDocuments(
+    @Param('fileNumber') fileNumber: string,
+  ): Promise<ApplicationDocumentDto[]> {
+    const documents = await this.applicationDocumentService.list(fileNumber);
+
+    const reviewTypes = [
+      DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      DOCUMENT_TYPE.STAFF_REPORT,
+      DOCUMENT_TYPE.REVIEW_OTHER,
+    ];
+
+    const reviewDocuments = documents.filter((doc) =>
+      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    );
+
+    return this.mapper.mapArray(
+      reviewDocuments,
       ApplicationDocument,
       ApplicationDocumentDto,
     );
