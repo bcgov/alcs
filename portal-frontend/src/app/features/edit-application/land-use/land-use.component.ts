@@ -111,7 +111,6 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }

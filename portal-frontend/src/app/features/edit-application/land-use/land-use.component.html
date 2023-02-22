@@ -28,7 +28,7 @@
             name="questionText"
             formControlName="parcelsAgricultureDescription"
             rows="4"
-            maxlength='4000'
+            maxlength="4000"
           ></textarea>
         </mat-form-field>
         <span class="subtext">Characters left: {{ 4000 - parcelsAgricultureDescriptionText.textLength }}</span>
@@ -57,7 +57,7 @@
             name="questionText"
             formControlName="parcelsAgricultureImprovementDescription"
             rows="4"
-            maxlength='4000'
+            maxlength="4000"
           ></textarea>
         </mat-form-field>
         <span class="subtext"
@@ -86,7 +86,7 @@
             name="questionText"
             formControlName="parcelsNonAgricultureUseDescription"
             rows="4"
-            maxlength='4000'
+            maxlength="4000"
           ></textarea>
         </mat-form-field>
         <span class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescriptionText.textLength }}</span>
@@ -108,7 +108,7 @@
         <label for="northLandUseType">North</label>
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
-            <mat-form-field appearance='outline'>
+            <mat-form-field appearance="outline">
               <mat-select id="northLandUseType" placeholder="Main Land Use Type" formControlName="northLandUseType">
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
@@ -150,7 +150,7 @@
         <label for="eastLandUseType">East</label>
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
-            <mat-form-field appearance='outline'>
+            <mat-form-field appearance="outline">
               <mat-select id="eastLandUseType" placeholder="Main Land Use Type" formControlName="eastLandUseType">
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
@@ -192,7 +192,7 @@
         <label for="southLandUseType">South</label>
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
-            <mat-form-field appearance='outline'>
+            <mat-form-field appearance="outline">
               <mat-select id="southLandUseType" placeholder="Main Land Use Type" formControlName="southLandUseType">
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
@@ -234,7 +234,7 @@
         <label for="westLandUseType">West</label>
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
-            <mat-form-field appearance='outline'>
+            <mat-form-field appearance="outline">
               <mat-select id="westLandUseType" placeholder="Main Land Use Type" formControlName="westLandUseType">
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
@@ -277,12 +277,10 @@
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button matStepperPrevious color="primary">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
+      <button mat-flat-button matStepperNext color="primary">Next<span class="mobile-hidden"> Step</span></button>
     </div>
   </div>
 </section>

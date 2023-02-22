@@ -82,7 +82,6 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   }
 
   async onSaveExit() {
-    await this.save();
     await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 

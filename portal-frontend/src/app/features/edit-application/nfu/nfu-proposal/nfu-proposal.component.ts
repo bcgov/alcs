@@ -80,7 +80,6 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   }
 
   async onSaveExit() {
-    await this.save();
     await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 

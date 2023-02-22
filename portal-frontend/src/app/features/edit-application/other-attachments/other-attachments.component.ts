@@ -57,7 +57,6 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.onSave();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
