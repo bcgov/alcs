@@ -200,13 +200,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   setupOtherParcelsForm() {
-    // TODO remove this
-    console.log(
-      'this.application?.hasOtherParcelsInCommunity',
-      this.application?.hasOtherParcelsInCommunity,
-      formatBooleanToString(this.application?.hasOtherParcelsInCommunity)
-    );
-
     if (this.application) {
       this.formDisabled = !this.application.hasOtherParcelsInCommunity ?? true;
 
