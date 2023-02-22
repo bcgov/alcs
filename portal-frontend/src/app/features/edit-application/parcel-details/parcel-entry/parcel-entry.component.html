@@ -25,8 +25,8 @@
           <input id="lookup-pid" matInput placeholder="Enter 9 digit PID" formControlName="pidPin" />
         </mat-form-field>
         <div class="search-buttons">
-          <button mat-stroked-button color="primary" (click)="onSearch()">Search</button>
-          <button mat-stroked-button color="accent" (click)="onReset()">Reset</button>
+          <button mat-stroked-button color="primary" (click)="onSearch()" [disabled]="_disabled">Search</button>
+          <button mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">Reset</button>
         </div>
       </div>
       <span class="float-right">Powered by PMBC!</span>
