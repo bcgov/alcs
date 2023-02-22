@@ -109,17 +109,16 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
 
     // replace placeholder uuid with the real one before saving
-    const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
-    if (placeHolderParcel && parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
-      const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
-      if (parcel) {
-        placeHolderParcel.uuid = parcel.uuid;
-      }
-    }
+    await this.replacePlaceholderParcel();
 
     // delete all OTHER parcels if user answered 'NO' on 'Is there other parcels in the community'
     if (!parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
-      await this.applicationParcelService.deleteMany(this.otherParcels.map((e) => e.uuid));
+      if (this.otherParcels.some((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL)) {
+        await this.applicationParcelService.deleteMany(
+          this.otherParcels.filter((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL).map((e) => e.uuid)
+        );
+      }
+
       return;
     }
 
