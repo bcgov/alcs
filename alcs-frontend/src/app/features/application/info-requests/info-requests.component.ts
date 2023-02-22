@@ -70,8 +70,6 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
   async onEdit(uuid: string) {
     const meeting = await this.meetingService.fetchOne(uuid);
 
-    debugger;
-
     if (meeting) {
       const dialog = this.dialog.open(InfoRequestDialogComponent, {
         minWidth: '600px',

@@ -27,13 +27,17 @@
           placeholder="Type size in hectares"
         />
       </mat-form-field>
+      <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hectares.errors?.['required']">This field is required</div>
+      </div>
     </div>
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="purpose"
-          #purpose
+          #purposeText
           maxlength="4000"
           id="purpose"
           matInput
@@ -41,7 +45,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purpose.textLength }}</span>
+      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
     </div>
     <div class="full-row">
       <label for="outside-lands">
@@ -51,14 +59,18 @@
       <mat-form-field appearance="outline">
         <textarea
           formControlName="outsideLands"
-          #outsideLands
+          #outsideLandsText
           maxlength="4000"
           id="outside-lands"
           matInput
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - outsideLands.textLength }}</span>
+      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
+      <div *ngIf="outsideLands.invalid && (outsideLands.dirty || outsideLands.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="outsideLands.errors?.['required']">This field is required</div>
+      </div>
     </div>
     <div class="full-row">
       <label for="agriculture-support">
@@ -67,14 +79,21 @@
       <mat-form-field appearance="outline">
         <textarea
           formControlName="agricultureSupport"
-          #agricultureSupport
+          #agricultureSupportText
           maxlength="4000"
           id="agriculture-support"
           matInput
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - agricultureSupport.textLength }}</span>
+      <span class="subtext">Characters left: {{ 4000 - agricultureSupportText.textLength }}</span>
+      <div
+        *ngIf="agricultureSupport.invalid && (agricultureSupport.dirty || agricultureSupport.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="agricultureSupport.errors?.['required']">This field is required</div>
+      </div>
     </div>
     <div class="full-row">
       <label for="will-import-fill">
@@ -100,28 +119,42 @@
         <mat-form-field appearance="outline">
           <textarea
             formControlName="fillTypeDescription"
-            #fillTypeDescription
+            #fillTypeDescriptionText
             maxlength="4000"
             id="fillTypeDescription"
             matInput
             placeholder="Type comment"
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - fillTypeDescription.textLength }}</span>
+        <span class="subtext">Characters left: {{ 4000 - fillTypeDescriptionText.textLength }}</span>
+        <div
+          *ngIf="fillTypeDescription.invalid && (fillTypeDescription.dirty || fillTypeDescription.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillTypeDescription.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="full-row">
         <label for="fillOriginDescription">Briefly describe the origin and quality of fill.</label>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="fillOriginDescription"
-            #fillOriginDescription
+            #fillOriginDescriptionText
             maxlength="4000"
             id="fillOriginDescription"
             matInput
             placeholder="Type comment"
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - fillOriginDescription.textLength }}</span>
+        <span class="subtext">Characters left: {{ 4000 - fillOriginDescriptionText.textLength }}</span>
+        <div
+          *ngIf="fillOriginDescription.invalid && (fillOriginDescription.dirty || fillOriginDescription.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillOriginDescription.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="full-row">
         <h4>Project Dimensions</h4>
@@ -141,6 +174,13 @@
             placeholder="Type fill depth"
           />
         </mat-form-field>
+        <div
+          *ngIf="totalFillPlacement.invalid && (totalFillPlacement.dirty || totalFillPlacement.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="totalFillPlacement.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="maxFillDepth">Maximum depth of material to be placed as fill</label>
@@ -157,6 +197,10 @@
             placeholder="Type placement area"
           />
         </mat-form-field>
+        <div *ngIf="maxFillDepth.invalid && (maxFillDepth.dirty || maxFillDepth.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="maxFillDepth.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="fillVolume">Volume of material to be placed as fill</label>
@@ -173,6 +217,10 @@
             placeholder="Type volume"
           />
         </mat-form-field>
+        <div *ngIf="fillVolume.invalid && (fillVolume.dirty || fillVolume.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillVolume.errors?.['required']">This field is required</div>
+        </div>
       </div>
     </div>
   </section>
@@ -195,6 +243,13 @@
             placeholder="Type length as a decimal number"
           />
         </mat-form-field>
+        <div
+          *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="projectDurationUnit">Unit</label>
@@ -205,6 +260,13 @@
             <mat-option value="years">Years</mat-option>
           </mat-select>
         </mat-form-field>
+        <div
+          *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+        </div>
       </div>
     </div>
   </section>
