@@ -217,9 +217,9 @@ export class ApplicationOwnerService {
     const parcels =
       await this.applicationParcelService.fetchByApplicationFileId(fileId);
 
-    const firstParcel = parcels.reduce((a, b) =>
-      a.auditCreatedAt > b.auditCreatedAt ? a : b,
-    );
+    const firstParcel = parcels
+      .filter((parcel) => parcel.parcelType === 'application')
+      .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
 
     const ownerCount = parcels.reduce((count, parcel) => {
       return count + parcel.owners.length;
