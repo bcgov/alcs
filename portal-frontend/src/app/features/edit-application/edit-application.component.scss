@@ -212,6 +212,15 @@
     padding: rem(16);
   }
 
+  .field-error {
+    color: $error-color;
+    font-size: rem(15);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: rem(4);
+  }
+
   .form-row {
     margin-top: rem(16);
     display: grid;
@@ -249,7 +258,6 @@
   }
 
   .full-width-input {
-    margin-top: rem(5);
     width: 100%;
   }
 
