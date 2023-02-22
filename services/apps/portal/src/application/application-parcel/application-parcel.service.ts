@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
@@ -76,6 +77,13 @@ export class ApplicationParcelService {
     const parcels = await this.parcelRepository.find({
       where: { uuid: In(uuids) },
     });
+
+    if (parcels.length === 0) {
+      throw new ServiceValidationException(
+        `Unable to find parcels with provided uuids: ${uuids}.`,
+      );
+    }
+
     return await this.parcelRepository.remove(parcels);
   }
 }

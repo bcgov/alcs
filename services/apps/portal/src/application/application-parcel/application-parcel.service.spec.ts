@@ -1,7 +1,8 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';
@@ -157,28 +158,34 @@ describe('ApplicationParcelService', () => {
   });
 
   it('should successfully delete a parcel', async () => {
-    mockParcelRepo.findOneOrFail.mockResolvedValue(mockApplicationParcel);
+    mockParcelRepo.find.mockResolvedValue([mockApplicationParcel]);
     mockParcelRepo.remove.mockResolvedValue({} as ApplicationParcel);
 
-    const result = await service.delete(mockUuid);
+    const result = await service.deleteMany([mockUuid]);
 
-    expect(result).toEqual(mockApplicationParcel.uuid);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
-      where: { uuid: mockUuid },
+    expect(result).toBeDefined();
+    expect(mockParcelRepo.find).toBeCalledTimes(1);
+    expect(mockParcelRepo.find).toBeCalledWith({
+      where: { uuid: In([mockUuid]) },
     });
     expect(mockParcelRepo.remove).toBeCalledWith([mockApplicationParcel]);
     expect(mockParcelRepo.remove).toBeCalledTimes(1);
   });
 
   it('should not call remove if the parcel does not exist', async () => {
-    mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
+    const exception = new ServiceValidationException(
+      `Unable to find parcels with provided uuids: ${mockUuid}.`,
+    );
+
+    mockParcelRepo.find.mockResolvedValue([]);
     mockParcelRepo.remove.mockResolvedValue({} as ApplicationParcel);
 
-    await expect(service.delete(mockUuid)).rejects.toMatchObject(mockError);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
-      where: { uuid: mockUuid },
+    await expect(service.deleteMany([mockUuid])).rejects.toMatchObject(
+      exception,
+    );
+    expect(mockParcelRepo.find).toBeCalledTimes(1);
+    expect(mockParcelRepo.find).toBeCalledWith({
+      where: { uuid: In([mockUuid]) },
     });
     expect(mockParcelRepo.remove).toBeCalledTimes(0);
   });
