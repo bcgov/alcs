@@ -63,16 +63,18 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   }
 
   onBlur() {
-    //Blur will fire below optionSelected
+    //Blur will fire before onChange above, so use setTimeout to delay it
     setTimeout(() => {
+      debugger;
       const localGovernmentName = this.localGovernment.getRawValue();
       if (localGovernmentName) {
         const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
         if (!localGovernment) {
           this.localGovernment.setValue(null);
+          console.log('Clearing Local Government field');
         }
       }
-    }, 100);
+    }, 500);
   }
 
   async ngOnDestroy() {
