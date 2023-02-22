@@ -37,7 +37,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
-  // TODO  UPDATES remove this comment
   hasOtherParcelsInCommunity = new FormControl<string | null>(null);
 
   otherParcelsForm = new FormGroup({
@@ -48,6 +47,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
   application?: ApplicationDetailedDto;
   formDisabled = true;
+  newParcelAdded = false;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -73,6 +73,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         this.setupOtherParcelsForm();
       }
     });
+
+    this.newParcelAdded = false;
   }
 
   async ngOnDestroy() {
@@ -81,8 +83,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
-    const parcel = this.owners.flatMap((o) => o.parcels).find((e) => e.uuid === formData.uuid);
+  async onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
+    const parcel = this.otherParcels.find((e) => e.uuid === formData.uuid);
     if (!parcel) {
       this.toastService.showErrorToast('Error updating the parcel. Please refresh page and try again.');
       return;
@@ -105,7 +107,23 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   private async saveProgress() {
     const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
-    for (const parcel of this.owners.flatMap((o) => o.parcels)) {
+
+    // replace placeholder uuid with the real one before saving
+    const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
+    if (placeHolderParcel && parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
+      const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
+      if (parcel) {
+        placeHolderParcel.uuid = parcel.uuid;
+      }
+    }
+
+    // delete all OTHER parcels if user answered 'NO' on 'Is there other parcels in the community'
+    if (!parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
+      await this.applicationParcelService.deleteMany(this.otherParcels.map((e) => e.uuid));
+      return;
+    }
+
+    for (const parcel of this.otherParcels) {
       parcelsToUpdate.push({
         uuid: parcel.uuid,
         pid: parcel.pid?.toString(),
@@ -129,7 +147,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -138,11 +155,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
 
     if (parcel) {
-      // TODO MOVE this to parcel on update
-      const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
-      if (placeHolderParcel) {
-        this.otherParcels.splice(this.otherParcels.indexOf(placeHolderParcel));
-      }
+      await this.replacePlaceholderParcel();
 
       this.otherParcels.push({
         uuid: parcel!.uuid,
@@ -151,6 +164,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         owners: [],
         isConfirmedByApplicant: false,
       });
+
+      this.newParcelAdded = true;
     } else {
       this.toastService.showErrorToast('Error adding new parcel. Please refresh the page and try again.');
     }
@@ -184,13 +199,14 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       });
   }
 
-  // TODO  UPDATES remove this comment
   setupOtherParcelsForm() {
+    // TODO remove this
     console.log(
       'this.application?.hasOtherParcelsInCommunity',
       this.application?.hasOtherParcelsInCommunity,
       formatBooleanToString(this.application?.hasOtherParcelsInCommunity)
     );
+
     if (this.application) {
       this.formDisabled = !this.application.hasOtherParcelsInCommunity ?? true;
 
@@ -216,5 +232,16 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
     } as ApplicationUpdateDto);
     await this.applicationService.getByFileId(this.fileId);
+  }
+
+  async replacePlaceholderParcel() {
+    const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
+
+    if (placeHolderParcel && parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
+      const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
+      if (parcel) {
+        placeHolderParcel.uuid = parcel.uuid;
+      }
+    }
   }
 }

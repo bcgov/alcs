@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
@@ -72,9 +72,10 @@ export class ApplicationParcelService {
     return await this.parcelRepository.save(updatedParcels);
   }
 
-  async delete(uuid: string) {
-    const parcel = await this.getOneOrFail(uuid);
-    await this.parcelRepository.remove([parcel]);
-    return uuid;
+  async deleteMany(uuids: string[]) {
+    const parcels = await this.parcelRepository.find({
+      where: { uuid: In(uuids) },
+    });
+    return await this.parcelRepository.remove(parcels);
   }
 }
