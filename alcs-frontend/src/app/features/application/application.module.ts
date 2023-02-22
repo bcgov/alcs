@@ -18,6 +18,7 @@ import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
+import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
@@ -64,6 +65,7 @@ const routes: Routes = [
     EditReconsiderationDialogComponent,
     EditModificationDialogComponent,
     ApplicantInfoComponent,
+    LfngInfoComponent,
   ],
   imports: [
     SharedModule.forRoot(),

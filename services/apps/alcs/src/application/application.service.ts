@@ -107,6 +107,7 @@ export class ApplicationService {
       typeCode: application.typeCode,
       region,
       statusHistory: application.statusHistory,
+      applicationReview: application.applicationReview,
     });
 
     newApplication.card = new Card();

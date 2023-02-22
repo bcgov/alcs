@@ -81,7 +81,12 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   async attachFile(fileHandle: FileHandle, documentType: DOCUMENT) {
     if (this.fileId) {
-      await this.applicationDocumentService.attachExternalFile(this.fileId, fileHandle.file, documentType);
+      await this.applicationDocumentService.attachExternalFile(
+        this.fileId,
+        fileHandle.file,
+        documentType,
+        'Local Government'
+      );
       await this.loadApplication(this.fileId);
     }
   }

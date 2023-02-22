@@ -6,7 +6,24 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDocumentDto } from './application-document.dto';
 
-export type DOCUMENT_TYPE = 'decisionDocument' | 'reviewDocument' | 'certificateOfTitle';
+export enum DOCUMENT_TYPE {
+  //ALCS
+  DECISION_DOCUMENT = 'decisionDocument',
+  REVIEW_DOCUMENT = 'reviewDocument',
+  CERTIFICATE_OF_TITLE = 'certificateOfTitle',
+
+  //Government Review
+  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
+  STAFF_REPORT = 'reviewStaffReport',
+  REVIEW_OTHER = 'reviewOther',
+
+  //Applicant Uploaded
+  CORPORATE_SUMMARY = 'corporateSummary',
+  PROFESSIONAL_REPORT = 'Professional Report',
+  PHOTOGRAPH = 'Photograph',
+  OTHER = 'Other',
+  AUTHORIZATION_LETTER = 'authorizationLetter',
+}
 
 @Injectable({
   providedIn: 'root',
@@ -49,5 +66,11 @@ export class ApplicationDocumentService {
     } else {
       downloadFileFromUrl(data.url, fileName);
     }
+  }
+
+  async getReviewDocuments(fileNumber: string) {
+    return firstValueFrom(
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/reviewDocuments`)
+    );
   }
 }

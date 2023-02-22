@@ -3,9 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Logger } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
-import { ApplicationDocumentCreateDto } from '../application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
-import { CreateApplicationServiceDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import {
@@ -51,7 +49,7 @@ export class ApplicationGrpcController implements AlcsApplicationService {
 
     await this.applicationDocumentService.attachExternalDocuments(
       application.fileNumber,
-      data.documents as ApplicationDocumentCreateDto[],
+      data.documents,
     );
 
     return this.mapper.mapAsync(
