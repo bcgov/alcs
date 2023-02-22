@@ -17,6 +17,13 @@
         <mat-form-field appearance="outline">
           <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
         </mat-form-field>
+        <div
+          *ngIf="organizationName.invalid && (organizationName.dirty || organizationName.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="organizationName.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION" class="full-row">
         <label for="fileUpload">Corporate Summary</label>
@@ -31,30 +38,54 @@
           <input id="corporateSummary" matInput formControlName="corporateSummary" />
         </mat-form-field>
       </div>
-      <h4 class='full-row' *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">Organization Contact Info</h4>
+      <h4 class="full-row" *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">Organization Contact Info</h4>
       <div>
         <label for="firstName">First Name</label>
         <mat-form-field appearance="outline">
           <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
         </mat-form-field>
+        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="firstName.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="lastName">Last Name</label>
         <mat-form-field appearance="outline">
           <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
         </mat-form-field>
+        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="lastName.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="phoneNumber">Phone Number</label>
         <mat-form-field appearance="outline">
-          <input id="phoneNumber" mask='(000) 000-0000' matInput placeholder="(555) 555-5555" formControlName="phoneNumber" />
+          <input
+            id="phoneNumber"
+            mask="(000) 000-0000"
+            matInput
+            placeholder="(555) 555-5555"
+            formControlName="phoneNumber"
+          />
         </mat-form-field>
+        <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
+          <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
+        </div>
       </div>
       <div>
         <label for="firstName">Email</label>
         <mat-form-field appearance="outline">
           <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
         </mat-form-field>
+        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="email.errors?.['required']">This field is required</div>
+          <div *ngIf="email.errors?.['email']">Invalid format</div>
+        </div>
       </div>
     </div>
   </form>

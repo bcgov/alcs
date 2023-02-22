@@ -1,3 +1,4 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
@@ -74,6 +75,8 @@ export class ApplicationOwnerService {
     const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
+    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+
     await this.repository.save(existingOwner);
   }
 
@@ -90,6 +93,8 @@ export class ApplicationOwnerService {
     existingOwner.parcels = existingOwner.parcels.filter(
       (parcel) => parcel.uuid !== parcelUuid,
     );
+
+    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
 
     await this.repository.save(existingOwner);
   }
@@ -151,11 +156,15 @@ export class ApplicationOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
+    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+
     return await this.repository.save(existingOwner);
   }
 
   async delete(owner: ApplicationOwner) {
-    return await this.repository.remove(owner);
+    const res = await this.repository.remove(owner);
+    await this.updateApplicationApplicant(owner.applicationFileNumber);
+    return res;
   }
 
   async setPrimaryContact(fileNumber: string, owner: ApplicationOwner) {
@@ -202,5 +211,38 @@ export class ApplicationOwnerService {
       },
     });
     return await this.repository.remove(agentOwners);
+  }
+
+  async updateApplicationApplicant(fileId: string) {
+    const parcels =
+      await this.applicationParcelService.fetchByApplicationFileId(fileId);
+
+    const firstParcel = parcels.reduce((a, b) =>
+      a.auditCreatedAt > b.auditCreatedAt ? a : b,
+    );
+
+    const ownerCount = parcels.reduce((count, parcel) => {
+      return count + parcel.owners.length;
+    }, 0);
+
+    if (firstParcel) {
+      const firstOwner = firstParcel.owners.sort((a, b) => {
+        const mappedA = a.organizationName ?? a.firstName ?? '';
+        const mappedB = b.organizationName ?? b.firstName ?? '';
+        return mappedA > mappedB ? 1 : -1;
+      })[0];
+      if (firstOwner) {
+        let applicantName = firstOwner.organizationName
+          ? firstOwner.organizationName
+          : `${firstOwner.firstName} ${firstOwner.lastName}`;
+        if (ownerCount > 1) {
+          applicantName += ' et al.';
+        }
+
+        await this.applicationService.update(fileId, {
+          applicant: applicantName || '',
+        });
+      }
+    }
   }
 }

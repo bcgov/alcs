@@ -42,6 +42,10 @@
           formControlName="legalDescription"
         />
       </mat-form-field>
+      <div *ngIf="legalDescription.invalid && (legalDescription.dirty || legalDescription.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="legalDescription.errors?.['required']">This field is required</div>
+      </div>
     </div>
 
     <div>
@@ -49,17 +53,26 @@
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="map-area" type="number" matInput placeholder="Enter parcel size" formControlName="mapArea" />
       </mat-form-field>
+      <div *ngIf="mapArea.invalid && (mapArea.dirty || mapArea.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="mapArea.errors?.['required']">This field is required</div>
+      </div>
     </div>
 
     <div>
       <label for="pid">PID</label>
       <mat-form-field class="full-width-input" appearance="outline">
-        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" mask="000-000-000" />
+        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength='11' mask="000-000-000" />
       </mat-form-field>
+      <div *ngIf="pid.invalid && (pid.dirty || pid.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="pid.errors?.['required']">This field is required</div>
+        <div *ngIf="pid.errors?.['mask']">Invalid format</div>
+      </div>
     </div>
 
     <div>
-      <label for="pin">PIN</label>
+      <label for="pin">PIN (optional)</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
       </mat-form-field>
@@ -71,14 +84,18 @@
         <input
           id="purchase-date"
           matInput
-          [matDatepicker]="purchaseDate"
+          [matDatepicker]="purchaseDatePicker"
           formControlName="purchaseDate"
           [max]="maxPurchasedDate"
+          placeholder="YYYY-MMM-DD"
         />
-        <mat-hint>YYYY-MMM-DD</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-        <mat-datepicker #purchaseDate startView="year"></mat-datepicker>
+        <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #purchaseDatePicker startView="year"></mat-datepicker>
       </mat-form-field>
+      <div *ngIf="purchaseDate.invalid && (purchaseDate.dirty || purchaseDate.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purchaseDate.errors?.['required']">This field is required</div>
+      </div>
     </div>
 
     <div class="full-row">

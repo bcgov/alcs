@@ -49,6 +49,7 @@ export class ApplicationParcelService {
   async update(updateDtos: ApplicationParcelUpdateDto[]) {
     const updatedParcels: ApplicationParcel[] = [];
 
+    let hasOwnerUpdate = false;
     for (const updateDto of updateDtos) {
       const parcel = await this.getOneOrFail(updateDto.uuid);
 
@@ -62,6 +63,7 @@ export class ApplicationParcelService {
       parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
 
       if (updateDto.ownerUuids) {
+        hasOwnerUpdate = true;
         parcel.owners = await this.applicationOwnerService.getMany(
           updateDto.ownerUuids,
         );
@@ -70,7 +72,15 @@ export class ApplicationParcelService {
       updatedParcels.push(parcel);
     }
 
-    return await this.parcelRepository.save(updatedParcels);
+    const res = await this.parcelRepository.save(updatedParcels);
+
+    if (hasOwnerUpdate) {
+      const firstParcel = updatedParcels[0];
+      await this.applicationOwnerService.updateApplicationApplicant(
+        firstParcel.applicationFileNumber,
+      );
+    }
+    return res;
   }
 
   async deleteMany(uuids: string[]) {
@@ -84,6 +94,11 @@ export class ApplicationParcelService {
       );
     }
 
-    return await this.parcelRepository.remove(parcels);
+    const result = await this.parcelRepository.remove(parcels);
+    await this.applicationOwnerService.updateApplicationApplicant(
+      parcels[0].applicationFileNumber,
+    );
+
+    return result;
   }
 }

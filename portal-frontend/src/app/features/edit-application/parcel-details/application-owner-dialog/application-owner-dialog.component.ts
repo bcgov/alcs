@@ -75,15 +75,9 @@ export class ApplicationOwnerDialogComponent {
     if ($event.value === APPLICATION_OWNER.ORGANIZATION) {
       this.organizationName.setValidators([Validators.required]);
       this.corporateSummary.setValidators([Validators.required]);
-      this.firstName.setValidators([]);
-      this.lastName.setValidators([]);
-      this.firstName.reset();
-      this.lastName.reset();
     } else {
       this.organizationName.setValidators([]);
       this.corporateSummary.setValidators([]);
-      this.firstName.setValidators([Validators.required]);
-      this.lastName.setValidators([Validators.required]);
       this.organizationName.reset();
       this.corporateSummary.reset();
     }

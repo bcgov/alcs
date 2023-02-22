@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
@@ -30,17 +30,17 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
-  parcelsAgricultureDescription = new FormControl<string>('');
-  parcelsAgricultureImprovementDescription = new FormControl<string>('');
-  parcelsNonAgricultureUseDescription = new FormControl<string>('');
-  northLandUseType = new FormControl<string>('');
-  northLandUseTypeDescription = new FormControl<string>('');
-  eastLandUseType = new FormControl<string>('');
-  eastLandUseTypeDescription = new FormControl<string>('');
-  southLandUseType = new FormControl<string>('');
-  southLandUseTypeDescription = new FormControl<string>('');
-  westLandUseType = new FormControl<string>('');
-  westLandUseTypeDescription = new FormControl<string>('');
+  parcelsAgricultureDescription = new FormControl<string>('', [Validators.required]);
+  parcelsAgricultureImprovementDescription = new FormControl<string>('', [Validators.required]);
+  parcelsNonAgricultureUseDescription = new FormControl<string>('', [Validators.required]);
+  northLandUseType = new FormControl<string>('', [Validators.required]);
+  northLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
+  eastLandUseType = new FormControl<string>('', [Validators.required]);
+  eastLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
+  southLandUseType = new FormControl<string>('', [Validators.required]);
+  southLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
+  westLandUseType = new FormControl<string>('', [Validators.required]);
+  westLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
   landUseForm = new FormGroup({
     parcelsAgricultureDescription: this.parcelsAgricultureDescription,
     parcelsAgricultureImprovementDescription: this.parcelsAgricultureImprovementDescription,

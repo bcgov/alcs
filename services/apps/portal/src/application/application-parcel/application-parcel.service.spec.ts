@@ -128,6 +128,39 @@ describe('ApplicationParcelService', () => {
     expect(mockParcelRepo.save).toBeCalledTimes(1);
   });
 
+  it('should update the applicant if the parcel has owners', async () => {
+    const updateParcelDto = [
+      {
+        uuid: mockUuid,
+        pid: 'mock_pid',
+        pin: 'mock_pin',
+        legalDescription: 'mock_legalDescription',
+        mapAreaHectares: 1,
+        isFarm: true,
+        purchasedDate: 1,
+        isConfirmedByApplicant: true,
+        ownershipTypeCode: 'mock_ownershipTypeCode',
+        ownerUuids: ['cats'],
+      },
+    ] as ApplicationParcelUpdateDto[];
+
+    mockParcelRepo.findOneOrFail.mockResolvedValue(mockApplicationParcel);
+    mockParcelRepo.save.mockResolvedValue({} as ApplicationParcel);
+    mockOwnerService.updateApplicationApplicant.mockResolvedValue();
+    mockOwnerService.getMany.mockResolvedValue([]);
+
+    await service.update(updateParcelDto);
+
+    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+      where: { uuid: mockUuid },
+    });
+    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockOwnerService.updateApplicationApplicant).toHaveBeenCalledTimes(
+      1,
+    );
+  });
+
   it('it should fail to update a parcel if the parcel does not exist. ', async () => {
     const updateParcelDto = [
       {
@@ -157,9 +190,10 @@ describe('ApplicationParcelService', () => {
     expect(mockParcelRepo.save).toBeCalledTimes(0);
   });
 
-  it('should successfully delete a parcel', async () => {
-    mockParcelRepo.find.mockResolvedValue([mockApplicationParcel]);
+  it('should successfully delete a parcel and update applicant', async () => {
+    mockParcelRepo.findOneOrFail.mockResolvedValue([mockApplicationParcel]);
     mockParcelRepo.remove.mockResolvedValue({} as ApplicationParcel);
+    mockOwnerService.updateApplicationApplicant.mockResolvedValue();
 
     const result = await service.deleteMany([mockUuid]);
 
@@ -170,6 +204,9 @@ describe('ApplicationParcelService', () => {
     });
     expect(mockParcelRepo.remove).toBeCalledWith([mockApplicationParcel]);
     expect(mockParcelRepo.remove).toBeCalledTimes(1);
+    expect(mockOwnerService.updateApplicationApplicant).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should not call remove if the parcel does not exist', async () => {

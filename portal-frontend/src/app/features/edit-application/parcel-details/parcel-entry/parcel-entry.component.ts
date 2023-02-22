@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
@@ -69,13 +69,13 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   pidPin = new FormControl<string>('');
-  legalDescription = new FormControl<string | null>(null);
-  mapArea = new FormControl<string | null>(null);
+  legalDescription = new FormControl<string | null>(null, [Validators.required]);
+  mapArea = new FormControl<string | null>(null, [Validators.required]);
+  pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
-  pid = new FormControl<string | null>(null);
   parcelType = new FormControl<string | null>(null);
   isFarm = new FormControl<string | null>(null);
-  purchaseDate = new FormControl<any | null>(null);
+  purchaseDate = new FormControl<any | null>(null, [Validators.required]);
   isConfirmedByApplicant = new FormControl<boolean>(false);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
