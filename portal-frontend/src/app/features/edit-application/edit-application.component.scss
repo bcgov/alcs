@@ -290,4 +290,9 @@
     justify-content: space-between;
     flex-wrap: wrap;
   }
+
+  .other-parcels-form {
+    display: grid;
+    row-gap: rem(24);
+  }
 }

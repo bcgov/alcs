@@ -63,7 +63,7 @@ export class ApplicationParcelController {
         );
       }
     } catch (e) {
-      await this.delete(parcel.uuid);
+      await this.delete([parcel.uuid]);
       throw e;
     }
 
@@ -87,8 +87,13 @@ export class ApplicationParcelController {
     );
   }
 
-  @Delete('/:uuid')
-  async delete(@Param('uuid') uuid: string) {
-    return { uuid: await this.parcelService.delete(uuid) };
+  @Delete()
+  async delete(@Body() uuids: string[]) {
+    const deletedParcels = await this.parcelService.deleteMany(uuids);
+    return this.mapper.mapArrayAsync(
+      deletedParcels,
+      ApplicationParcel,
+      ApplicationParcelDto,
+    );
   }
 }

@@ -289,4 +289,13 @@ export class Application extends BaseEntity {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   nfuFillOriginDescription: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'boolean',
+    comment:
+      'Indicates whether application owners have other parcels in the community.',
+    nullable: true,
+  })
+  hasOtherParcelsInCommunity?: boolean | null;
 }

@@ -56,6 +56,17 @@ export class ParcelEntryComponent implements OnInit {
   enableCertificateOfTitleUpload: boolean = true;
   @Input()
   enableUserSignOff: boolean = true;
+  @Input()
+  enableAddNewOwner: boolean = true;
+
+  @Input()
+  _disabled: boolean = false;
+
+  @Input()
+  public set disabled(disabled: boolean) {
+    this._disabled = disabled;
+    this.onFormDisabled();
+  }
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
@@ -282,5 +293,13 @@ export class ParcelEntryComponent implements OnInit {
       uuid: this.parcel.uuid,
       owners: updatedArray,
     });
+  }
+
+  private onFormDisabled() {
+    if (this._disabled) {
+      this.parcelForm.disable();
+    } else {
+      this.parcelForm.enable();
+    }
   }
 }

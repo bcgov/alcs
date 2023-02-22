@@ -98,6 +98,8 @@ export class ApplicationService {
     application.typeCode = updateDto.typeCode || application.typeCode;
     application.localGovernmentUuid = updateDto.localGovernmentUuid;
     application.returnedComment = updateDto.returnedComment;
+    application.hasOtherParcelsInCommunity =
+      updateDto.hasOtherParcelsInCommunity;
 
     this.setLandUseFields(application, updateDto);
     this.setNFUFields(application, updateDto);
