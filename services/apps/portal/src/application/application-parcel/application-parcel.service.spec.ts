@@ -191,7 +191,7 @@ describe('ApplicationParcelService', () => {
   });
 
   it('should successfully delete a parcel and update applicant', async () => {
-    mockParcelRepo.findOneOrFail.mockResolvedValue([mockApplicationParcel]);
+    mockParcelRepo.find.mockResolvedValue([mockApplicationParcel]);
     mockParcelRepo.remove.mockResolvedValue({} as ApplicationParcel);
     mockOwnerService.updateApplicationApplicant.mockResolvedValue();
 
