@@ -55,6 +55,10 @@ a {
   flex-wrap: wrap;
   margin-bottom: rem(8);
 
+  &.error {
+    border: 2px solid $error-color;
+  }
+
   .file-name {
     display: flex;
     justify-content: space-between;
@@ -63,6 +67,16 @@ a {
 
   button {
     margin-top: rem(6);
+  }
+}
+
+.error-message {
+  color: $error-color;
+  display: flex;
+  margin-bottom: rem(16);
+
+  .mat-icon {
+    margin-right: rem(4);
   }
 }
 
