@@ -97,6 +97,9 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     parcel.isFarm = parseStringToBoolean(formData.isFarm);
     parcel.purchasedDate = formData.purchaseDate?.getTime();
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    if (formData.owners) {
+      parcel.owners = formData.owners;
+    }
   }
 
   private async reloadApplication() {
@@ -132,7 +135,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
         isConfirmedByApplicant: false,
-        ownerUuids: null,
+        ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
     }
 
