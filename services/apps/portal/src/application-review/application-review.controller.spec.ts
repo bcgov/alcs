@@ -30,6 +30,7 @@ describe('ApplicationReviewController', () => {
 
   const mockLG = {
     isFirstNation: false,
+    isActive: true,
     bceidBusinessGuid: '',
     name: '',
     uuid: '',
