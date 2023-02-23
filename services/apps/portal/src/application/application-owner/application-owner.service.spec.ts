@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
+import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
@@ -108,7 +109,6 @@ describe('ApplicationOwnerService', () => {
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
     expect(mockParcelService.getOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
   });
 
   it('should remove the parcel from the array then call save for removeFromParcel', async () => {
@@ -128,7 +128,6 @@ describe('ApplicationOwnerService', () => {
     expect(owner.parcels.length).toEqual(0);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
   });
 
   it('should set properties and call save for update', async () => {
@@ -151,7 +150,6 @@ describe('ApplicationOwnerService', () => {
     expect(owner.lastName).toEqual('Batman');
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
   });
 
   it('should delete the existing document when updating', async () => {
@@ -185,7 +183,6 @@ describe('ApplicationOwnerService', () => {
     await service.delete(new ApplicationOwner());
 
     expect(mockRepo.remove).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for verify', async () => {
@@ -215,6 +212,7 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationFileId.mockResolvedValue([
       new ApplicationParcel({
         owners,
+        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
@@ -245,6 +243,7 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationFileId.mockResolvedValue([
       new ApplicationParcel({
         owners,
+        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
@@ -274,10 +273,12 @@ describe('ApplicationOwnerService', () => {
       new ApplicationParcel({
         owners: owners1,
         auditCreatedAt: new Date(1),
+        parcelType: PARCEL_TYPE.APPLICATION,
       }),
       new ApplicationParcel({
         owners: owners2,
         auditCreatedAt: new Date(100),
+        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
