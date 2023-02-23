@@ -218,31 +218,37 @@ export class ApplicationOwnerService {
     const parcels =
       await this.applicationParcelService.fetchByApplicationFileId(fileId);
 
-    const firstParcel = parcels
-      .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-      .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
+    const applicationParcels = parcels.filter(
+      (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
+    );
 
-    const ownerCount = parcels.reduce((count, parcel) => {
-      return count + parcel.owners.length;
-    }, 0);
+    if (applicationParcels.length > 0) {
+      const firstParcel = parcels
+        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
+        .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
 
-    if (firstParcel) {
-      const firstOwner = firstParcel.owners.sort((a, b) => {
-        const mappedA = a.organizationName ?? a.firstName ?? '';
-        const mappedB = b.organizationName ?? b.firstName ?? '';
-        return mappedA > mappedB ? 1 : -1;
-      })[0];
-      if (firstOwner) {
-        let applicantName = firstOwner.organizationName
-          ? firstOwner.organizationName
-          : `${firstOwner.firstName} ${firstOwner.lastName}`;
-        if (ownerCount > 1) {
-          applicantName += ' et al.';
+      const ownerCount = parcels.reduce((count, parcel) => {
+        return count + parcel.owners.length;
+      }, 0);
+
+      if (firstParcel) {
+        const firstOwner = firstParcel.owners.sort((a, b) => {
+          const mappedA = a.organizationName ?? a.firstName ?? '';
+          const mappedB = b.organizationName ?? b.firstName ?? '';
+          return mappedA > mappedB ? 1 : -1;
+        })[0];
+        if (firstOwner) {
+          let applicantName = firstOwner.organizationName
+            ? firstOwner.organizationName
+            : `${firstOwner.firstName} ${firstOwner.lastName}`;
+          if (ownerCount > 1) {
+            applicantName += ' et al.';
+          }
+
+          await this.applicationService.update(fileId, {
+            applicant: applicantName || '',
+          });
         }
-
-        await this.applicationService.update(fileId, {
-          applicant: applicantName || '',
-        });
       }
     }
   }
