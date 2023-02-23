@@ -232,10 +232,24 @@ export class ApplicationOwnerService {
       }, 0);
 
       if (firstParcel) {
-        const firstOwner = firstParcel.owners.sort((a, b) => {
+        //Filter to only alphabetic
+        const alphabetOwners = firstParcel.owners.filter((owner) =>
+          isNaN(
+            parseInt(
+              (owner.organizationName ?? owner.firstName ?? '').charAt(0),
+            ),
+          ),
+        );
+
+        //If no alphabetic use them all
+        if (alphabetOwners.length === 0) {
+          alphabetOwners.push(...firstParcel.owners);
+        }
+
+        const firstOwner = alphabetOwners.sort((a, b) => {
           const mappedA = a.organizationName ?? a.firstName ?? '';
           const mappedB = b.organizationName ?? b.firstName ?? '';
-          return mappedA > mappedB ? 1 : -1;
+          return mappedA.localeCompare(mappedB);
         })[0];
         if (firstOwner) {
           let applicantName = firstOwner.organizationName
