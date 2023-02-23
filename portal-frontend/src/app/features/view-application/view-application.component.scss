@@ -6,6 +6,44 @@
   margin-top: rem(24);
 }
 
+.absolute {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.banner {
+  background-color: $secondary-color;
+  width: 100%;
+  color: #fff;
+  padding: rem(16) rem(24);
+  margin-bottom: rem(32);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding: rem(12) rem(36) !important;
+  }
+
+  // TODO: this is just a placeholder and will be addressed later
+  @media screen and (min-width: $desktopBreakpoint) {
+    padding: rem(18) rem(80) !important;
+  }
+
+  .banner-status {
+    margin: rem(16) 0;
+    display: grid;
+    grid-template-columns:  1fr;
+
+    div {
+      margin-top: rem(16);
+    }
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      grid-template-columns:  1fr 1fr;
+      margin-bottom: 0;
+    }
+  }
+}
+
 .buttons {
   display: flex;
   justify-content: space-between;

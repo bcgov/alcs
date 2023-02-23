@@ -1,3 +1,33 @@
+<div aria-hidden="true" class="banner absolute">
+  <div>
+    <h4 *ngIf="application">Application ID: {{ application.fileNumber }}</h4>
+  </div>
+  <div class="banner-status">
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Application Status</div>
+      <span *ngIf="application">{{ application.status.label }}</span>
+    </div>
+  </div>
+</div>
+<div class="banner">
+  <div>
+    <h4 *ngIf="application">Application ID: {{ application.fileNumber }}</h4>
+  </div>
+  <div class="banner-status">
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="application">{{ application.updatedAt | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Application Status</div>
+      <span *ngIf="application">{{ application.status.label }}</span>
+    </div>
+  </div>
+</div>
 <div class="buttons" *ngIf="application">
   <div>
     <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">

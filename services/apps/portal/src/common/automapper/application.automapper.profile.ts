@@ -29,6 +29,15 @@ export class ApplicationProfile extends AutomapperProfile {
         Application,
         ApplicationDto,
         forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            if (ad.statusHistory.length > 0) {
+              return ad.statusHistory[0].time;
+            }
+            return Date.now();
+          }),
+        ),
+        forMember(
           (a) => a.documents,
           mapFrom((ad) => {
             if (ad.documents) {
@@ -88,6 +97,16 @@ export class ApplicationProfile extends AutomapperProfile {
         mapper,
         Application,
         ApplicationDetailedDto,
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            if (ad.statusHistory.length > 0) {
+              return ad.statusHistory[0].time;
+            }
+            //For older applications before status history was created
+            return Date.now();
+          }),
+        ),
         forMember(
           (a) => a.documents,
           mapFrom((ad) => {
