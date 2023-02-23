@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CanDeactivateEditApplicationGuard } from './can-deactivate-edit-application.guard';
+import { CanDeactivateGuard } from './can-deactivate.guard';
 
 describe('CanDeactivateEditApplicationGuard', () => {
-  let guard: CanDeactivateEditApplicationGuard;
+  let guard: CanDeactivateGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(CanDeactivateEditApplicationGuard);
+    guard = TestBed.inject(CanDeactivateGuard);
   });
 
   it('should be created', () => {
