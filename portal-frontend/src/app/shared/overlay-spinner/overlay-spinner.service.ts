@@ -12,11 +12,15 @@ export class OverlaySpinnerService {
   constructor(private overlay: Overlay) {}
 
   showSpinner() {
-    const portal = new ComponentPortal(MatProgressSpinner);
-    const spinner = this.spinnerRef.attach(portal);
-    spinner.instance.mode = 'indeterminate';
-    //Steal focus to prevent spamming the button
-    spinner.location.nativeElement.focus();
+    try {
+      const portal = new ComponentPortal(MatProgressSpinner);
+      const spinner = this.spinnerRef.attach(portal);
+      spinner.instance.mode = 'indeterminate';
+      //Steal focus to prevent spamming the button
+      spinner.location.nativeElement.focus();
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   hideSpinner() {
