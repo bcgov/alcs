@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { DOCUMENT_TYPE } from 'src/app/services/application/application-document/application-document.service';
 import { environment } from '../../../environments/environment';
+import { DOCUMENT_TYPE } from '../../services/application/application-document/application-document.service';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { CommissionerService } from '../../services/commissioner/commissioner.service';
 
@@ -15,7 +15,6 @@ import { CommissionerService } from '../../services/commissioner/commissioner.se
 export class CommissionerComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
-
   application: CommissionerApplicationDto | undefined;
   fileNumber: string | undefined;
 
