@@ -102,3 +102,8 @@ export class ApplicationParcelUpdateDto {
   @IsArray()
   ownerUuids: string[] | null;
 }
+
+export enum PARCEL_TYPE {
+  APPLICATION = 'application',
+  OTHER = 'other',
+}

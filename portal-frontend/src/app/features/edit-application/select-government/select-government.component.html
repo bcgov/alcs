@@ -1,8 +1,11 @@
-<h2>Government</h2>
-<p>
-  Please indicate the local government in which the parcel(s) under application is located. If the property is located
-  within the Islands Trust, please select 'Islands Trust' and not a specific island.
-</p>
+<div class="step-description">
+  <h2>Government</h2>
+  <p>
+    Please indicate the local government in which the parcel(s) under application is located. If the property is located
+    within the Islands Trust, please select 'Islands Trust' and not a specific island.
+  </p>
+  <p>All fields are required unless stated optional.</p>
+</div>
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
@@ -23,6 +26,10 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+      <div *ngIf="localGovernment.invalid && (localGovernment.dirty || localGovernment.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="localGovernment.errors?.['required']">This field is required</div>
+      </div>
     </div>
   </div>
 </form>
@@ -38,11 +45,9 @@
 <div class="button-container">
   <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
   <div>
-    <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+    <button mat-stroked-button matStepperPrevious color="primary">
       Previous<span class="mobile-hidden"> Step</span>
     </button>
-    <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
-      Next<span class="mobile-hidden"> Step</span>
-    </button>
+    <button mat-flat-button matStepperNext color="primary">Next<span class="mobile-hidden"> Step</span></button>
   </div>
 </div>

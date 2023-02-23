@@ -17,6 +17,7 @@ import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationCreateDto, ApplicationUpdateDto } from './application.dto';
+import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
 @Controller('application')
@@ -136,10 +137,26 @@ export class ApplicationController {
       req.user.entity,
     );
 
+    await this.verifyApplication(application);
+
     if (application.typeCode === 'TURP') {
       return await this.applicationService.submitToAlcs(fileId);
     } else {
       return await this.applicationService.submitToLg(application);
+    }
+  }
+
+  async verifyApplication(application: Application) {
+    const localGovernments = await this.localGovernmentService.get();
+    const matchingLg = localGovernments.find(
+      (lg) => lg.uuid === application.localGovernmentUuid,
+    );
+    if (
+      !application.localGovernmentUuid ||
+      !matchingLg ||
+      !matchingLg.bceidBusinessGuid
+    ) {
+      throw new BadRequestException('Invalid Local Government');
     }
   }
 }

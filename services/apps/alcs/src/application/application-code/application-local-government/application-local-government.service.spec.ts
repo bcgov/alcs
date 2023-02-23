@@ -97,6 +97,7 @@ describe('ApplicationLocalGovernmentService', () => {
       name: 'name',
       bceidBusinessGuid: null,
       isFirstNation: false,
+      isActive: true,
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -113,6 +114,7 @@ describe('ApplicationLocalGovernmentService', () => {
       name: 'name',
       bceidBusinessGuid: null,
       isFirstNation: false,
+      isActive: true,
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);

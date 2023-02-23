@@ -33,6 +33,9 @@ export class ApplicationDto {
   @AutoMap()
   status: ApplicationStatusDto;
 
+  @AutoMap(() => Boolean)
+  hasOtherParcelsInCommunity?: boolean | null;
+
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
 
@@ -177,6 +180,10 @@ export class ApplicationUpdateDto {
   @IsString()
   @IsOptional()
   westLandUseTypeDescription?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  hasOtherParcelsInCommunity?: boolean | null;
 
   //NFU Specific Fields
   @IsNumber()

@@ -92,7 +92,7 @@ describe('ApplicationParcelController', () => {
       {} as ApplicationParcel,
     );
     mockApplicationOwnerService.attachToParcel.mockRejectedValue(mockError);
-    mockApplicationParcelService.delete.mockResolvedValue('fake');
+    mockApplicationParcelService.deleteMany.mockResolvedValue([]);
 
     await expect(
       controller.create({
@@ -104,7 +104,7 @@ describe('ApplicationParcelController', () => {
 
     expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
     expect(mockApplicationParcelService.create).toBeCalledTimes(1);
-    expect(mockApplicationParcelService.delete).toBeCalledTimes(1);
+    expect(mockApplicationParcelService.deleteMany).toBeCalledTimes(1);
     expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(1);
   });
 
@@ -136,11 +136,11 @@ describe('ApplicationParcelController', () => {
 
   it('should call out to service when deleting parcel', async () => {
     const fakeUuid = 'fake_uuid';
-    mockApplicationParcelService.delete.mockResolvedValue(fakeUuid);
+    mockApplicationParcelService.deleteMany.mockResolvedValue([]);
 
-    const result = await controller.delete(fakeUuid);
+    const result = await controller.delete([fakeUuid]);
 
-    expect(mockApplicationParcelService.delete).toBeCalledTimes(1);
-    expect(result).toEqual({ uuid: fakeUuid });
+    expect(mockApplicationParcelService.deleteMany).toBeCalledTimes(1);
+    expect(result).toBeDefined();
   });
 });

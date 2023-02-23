@@ -27,6 +27,7 @@ export interface ApplicationDto {
   canView: boolean;
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDetailedDto[];
+  hasOtherParcelsInCommunity?: boolean | null;
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {
@@ -64,6 +65,7 @@ export interface ApplicationUpdateDto {
   localGovernmentUuid?: string;
   typeCode?: string;
   primaryContactOwnerUuid?: string;
+  hasOtherParcelsInCommunity?: boolean | null;
 
   //Land use fields
   parcelsAgricultureDescription?: string | null;

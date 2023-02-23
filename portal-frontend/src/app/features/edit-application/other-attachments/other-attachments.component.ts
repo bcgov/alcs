@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -27,6 +28,8 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
 
   private isDirty = false;
 
+  form = new FormGroup({} as any);
+
   constructor(
     private router: Router,
     private applicationService: ApplicationService,
@@ -37,16 +40,23 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.otherFiles = application.documents.sort((a, b) => {
-          return a.uploadedAt - b.uploadedAt;
-        });
+        this.otherFiles = application.documents
+          .filter((file) => (file.type ? this.selectableTypes.includes(file.type) : true))
+          .sort((a, b) => {
+            return a.uploadedAt - b.uploadedAt;
+          });
+        const newForm = new FormGroup({});
+        for (const file of this.otherFiles) {
+          newForm.addControl(`${file.uuid}-type`, new FormControl(file.type, [Validators.required]));
+          newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
+        }
+        this.form = newForm;
       }
     });
   }
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.onSave();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }

@@ -20,13 +20,13 @@ export class ApplicationDocumentService {
     private overlayService: OverlaySpinnerService
   ) {}
 
-  async attachExternalFile(fileNumber: string, file: File, documentType: DOCUMENT | null) {
+  async attachExternalFile(fileNumber: string, file: File, documentType: DOCUMENT | null, source = 'Applicant') {
     try {
       const res = await this.documentService.uploadFile(
         fileNumber,
         file,
         documentType,
-        'Applicant',
+        source,
         `${this.serviceUrl}/application/${fileNumber}/attachExternal`
       );
       this.toastService.showSuccessToast('Document uploaded');

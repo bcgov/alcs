@@ -98,6 +98,8 @@ export class ApplicationService {
     application.typeCode = updateDto.typeCode || application.typeCode;
     application.localGovernmentUuid = updateDto.localGovernmentUuid;
     application.returnedComment = updateDto.returnedComment;
+    application.hasOtherParcelsInCommunity =
+      updateDto.hasOtherParcelsInCommunity;
 
     this.setLandUseFields(application, updateDto);
     this.setNFUFields(application, updateDto);
@@ -198,7 +200,7 @@ export class ApplicationService {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
           fileNumber: fileNumber,
-          applicant: fileNumber,
+          applicant: application.applicant || fileNumber,
           localGovernmentUuid: application.localGovernmentUuid!,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),

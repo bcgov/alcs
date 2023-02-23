@@ -65,7 +65,7 @@ export class ApplicationMeetingDialogComponent {
           reportEndDate: formValues.reportEndDate ? formValues.reportEndDate : null,
           description: '',
         };
-        await this.meetingService.update(this.uuid, data);
+        await this.meetingService.update(this.uuid, this.meetingType.label, data);
       } finally {
         this.isLoading = false;
       }

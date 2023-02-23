@@ -21,7 +21,7 @@ export class LocalGovernmentComponent implements OnDestroy, OnInit {
   search?: number = undefined;
   holidays: HolidayDto[] = [];
   total: number = 0;
-  displayedColumns: string[] = ['name', 'bceidBusinessGuid', 'isFirstNation', 'actions'];
+  displayedColumns: string[] = ['name', 'bceidBusinessGuid', 'isFirstNation', 'isActive', 'actions'];
 
   constructor(
     private adminLgService: AdminLocalGovernmentService,

@@ -1,7 +1,8 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';
@@ -127,6 +128,39 @@ describe('ApplicationParcelService', () => {
     expect(mockParcelRepo.save).toBeCalledTimes(1);
   });
 
+  it('should update the applicant if the parcel has owners', async () => {
+    const updateParcelDto = [
+      {
+        uuid: mockUuid,
+        pid: 'mock_pid',
+        pin: 'mock_pin',
+        legalDescription: 'mock_legalDescription',
+        mapAreaHectares: 1,
+        isFarm: true,
+        purchasedDate: 1,
+        isConfirmedByApplicant: true,
+        ownershipTypeCode: 'mock_ownershipTypeCode',
+        ownerUuids: ['cats'],
+      },
+    ] as ApplicationParcelUpdateDto[];
+
+    mockParcelRepo.findOneOrFail.mockResolvedValue(mockApplicationParcel);
+    mockParcelRepo.save.mockResolvedValue({} as ApplicationParcel);
+    mockOwnerService.updateApplicationApplicant.mockResolvedValue();
+    mockOwnerService.getMany.mockResolvedValue([]);
+
+    await service.update(updateParcelDto);
+
+    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+      where: { uuid: mockUuid },
+    });
+    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockOwnerService.updateApplicationApplicant).toHaveBeenCalledTimes(
+      1,
+    );
+  });
+
   it('it should fail to update a parcel if the parcel does not exist. ', async () => {
     const updateParcelDto = [
       {
@@ -156,29 +190,39 @@ describe('ApplicationParcelService', () => {
     expect(mockParcelRepo.save).toBeCalledTimes(0);
   });
 
-  it('should successfully delete a parcel', async () => {
-    mockParcelRepo.findOneOrFail.mockResolvedValue(mockApplicationParcel);
+  it('should successfully delete a parcel and update applicant', async () => {
+    mockParcelRepo.find.mockResolvedValue([mockApplicationParcel]);
     mockParcelRepo.remove.mockResolvedValue({} as ApplicationParcel);
+    mockOwnerService.updateApplicationApplicant.mockResolvedValue();
 
-    const result = await service.delete(mockUuid);
+    const result = await service.deleteMany([mockUuid]);
 
-    expect(result).toEqual(mockApplicationParcel.uuid);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
-      where: { uuid: mockUuid },
+    expect(result).toBeDefined();
+    expect(mockParcelRepo.find).toBeCalledTimes(1);
+    expect(mockParcelRepo.find).toBeCalledWith({
+      where: { uuid: In([mockUuid]) },
     });
     expect(mockParcelRepo.remove).toBeCalledWith([mockApplicationParcel]);
     expect(mockParcelRepo.remove).toBeCalledTimes(1);
+    expect(mockOwnerService.updateApplicationApplicant).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should not call remove if the parcel does not exist', async () => {
-    mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
+    const exception = new ServiceValidationException(
+      `Unable to find parcels with provided uuids: ${mockUuid}.`,
+    );
+
+    mockParcelRepo.find.mockResolvedValue([]);
     mockParcelRepo.remove.mockResolvedValue({} as ApplicationParcel);
 
-    await expect(service.delete(mockUuid)).rejects.toMatchObject(mockError);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
-      where: { uuid: mockUuid },
+    await expect(service.deleteMany([mockUuid])).rejects.toMatchObject(
+      exception,
+    );
+    expect(mockParcelRepo.find).toBeCalledTimes(1);
+    expect(mockParcelRepo.find).toBeCalledWith({
+      where: { uuid: In([mockUuid]) },
     });
     expect(mockParcelRepo.remove).toBeCalledTimes(0);
   });

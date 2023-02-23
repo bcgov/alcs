@@ -14,6 +14,7 @@ import { ApplicationMeetingComponent } from './application-meeting/application-m
 import { DecisionComponent } from './decision/decision.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { IntakeComponent } from './intake/intake.component';
+import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ReviewComponent } from './review/review.component';
@@ -30,6 +31,12 @@ export const childRoutes = [
     menuTitle: 'Applicant Info',
     icon: 'persons',
     component: ApplicantInfoComponent,
+  },
+  {
+    path: 'lfng-info',
+    menuTitle: 'L/FNG Info',
+    icon: 'account_balance',
+    component: LfngInfoComponent,
   },
   {
     path: 'intake',

@@ -23,6 +23,26 @@ export interface ApplicationDecisionMeetingDto {
   date: Date;
 }
 
+export interface ApplicationReviewDto {
+  localGovernmentFileNumber: string;
+  firstName: string;
+  lastName: string;
+  position: string;
+  department: string;
+  phoneNumber: string;
+  email: string;
+  isOCPDesignation: boolean | null;
+  OCPBylawName: string | null;
+  OCPDesignation: string | null;
+  OCPConsistent: boolean | null;
+  isSubjectToZoning: boolean | null;
+  zoningBylawName: string | null;
+  zoningDesignation: string | null;
+  zoningMinimumLotSize: string | null;
+  isZoningConsistent: boolean | null;
+  isAuthorized: boolean | null;
+}
+
 export interface ApplicationDto {
   fileNumber: string;
   applicant: string;
@@ -43,6 +63,7 @@ export interface ApplicationDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
   statusHistory: StatusHistory[];
+  applicationReview?: ApplicationReviewDto;
 }
 
 export interface UpdateApplicationDto {

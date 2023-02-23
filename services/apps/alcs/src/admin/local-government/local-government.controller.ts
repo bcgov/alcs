@@ -46,6 +46,7 @@ export class LocalGovernmentController {
       uuid: government.uuid,
       bceidBusinessGuid: government.bceidBusinessGuid,
       isFirstNation: government.isFirstNation,
+      isActive: government.isActive,
     }));
 
     return { data: mappedGovernments, total: result[1] };

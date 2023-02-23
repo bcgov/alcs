@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
@@ -17,7 +17,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
-  localGovernment = new FormControl<string | any>('');
+  localGovernment = new FormControl<string | any>('', [Validators.required]);
   showWarning = false;
   selectGovernmentUuid = '';
   fileId = '';
@@ -63,16 +63,18 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   }
 
   onBlur() {
-    //Blur will fire below optionSelected
+    //Blur will fire before onChange above, so use setTimeout to delay it
     setTimeout(() => {
+      debugger;
       const localGovernmentName = this.localGovernment.getRawValue();
       if (localGovernmentName) {
         const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
         if (!localGovernment) {
           this.localGovernment.setValue(null);
+          console.log('Clearing Local Government field');
         }
       }
-    }, 100);
+    }, 500);
   }
 
   async ngOnDestroy() {
@@ -81,7 +83,6 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   }
 
   async onSaveExit() {
-    await this.save();
     await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 

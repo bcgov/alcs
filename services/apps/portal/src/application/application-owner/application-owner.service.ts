@@ -1,8 +1,10 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
+import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
 import { ApplicationService } from '../application.service';
@@ -74,6 +76,8 @@ export class ApplicationOwnerService {
     const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
+    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+
     await this.repository.save(existingOwner);
   }
 
@@ -90,6 +94,8 @@ export class ApplicationOwnerService {
     existingOwner.parcels = existingOwner.parcels.filter(
       (parcel) => parcel.uuid !== parcelUuid,
     );
+
+    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
 
     await this.repository.save(existingOwner);
   }
@@ -151,11 +157,15 @@ export class ApplicationOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
+    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+
     return await this.repository.save(existingOwner);
   }
 
   async delete(owner: ApplicationOwner) {
-    return await this.repository.remove(owner);
+    const res = await this.repository.remove(owner);
+    await this.updateApplicationApplicant(owner.applicationFileNumber);
+    return res;
   }
 
   async setPrimaryContact(fileNumber: string, owner: ApplicationOwner) {
@@ -202,5 +212,58 @@ export class ApplicationOwnerService {
       },
     });
     return await this.repository.remove(agentOwners);
+  }
+
+  async updateApplicationApplicant(fileId: string) {
+    const parcels =
+      await this.applicationParcelService.fetchByApplicationFileId(fileId);
+
+    const applicationParcels = parcels.filter(
+      (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
+    );
+
+    if (applicationParcels.length > 0) {
+      const firstParcel = parcels
+        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
+        .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
+
+      const ownerCount = applicationParcels.reduce((count, parcel) => {
+        return count + parcel.owners.length;
+      }, 0);
+
+      if (firstParcel) {
+        //Filter to only alphabetic
+        const alphabetOwners = firstParcel.owners.filter((owner) =>
+          isNaN(
+            parseInt(
+              (owner.organizationName ?? owner.firstName ?? '').charAt(0),
+            ),
+          ),
+        );
+
+        //If no alphabetic use them all
+        if (alphabetOwners.length === 0) {
+          alphabetOwners.push(...firstParcel.owners);
+        }
+
+        const firstOwner = alphabetOwners.sort((a, b) => {
+          const mappedA = a.organizationName ?? a.firstName ?? '';
+          const mappedB = b.organizationName ?? b.firstName ?? '';
+          return mappedA.localeCompare(mappedB);
+        })[0];
+        if (firstOwner) {
+          let applicantName = firstOwner.organizationName
+            ? firstOwner.organizationName
+            : `${firstOwner.firstName} ${firstOwner.lastName}`;
+          if (ownerCount > 1) {
+            applicantName += ' et al.';
+          }
+
+          await this.applicationService.update(fileId, {
+            applicant: applicantName || '',
+          });
+        }
+      }
+    }
   }
 }

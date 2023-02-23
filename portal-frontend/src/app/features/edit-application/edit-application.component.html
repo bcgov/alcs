@@ -10,7 +10,7 @@
   </div>
 </ng-template>
 
-<app-custom-stepper class="edit-application" #cdkStepper (selectionChange)="onStepChange($event)">
+<app-custom-stepper class='edit-application' #cdkStepper (selectionChange)="onStepChange($event)">
   <cdk-step label="Parcel Details">
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel || previousStep === editAppSteps.AppParcel">
       <app-parcel-details [$application]="$application"></app-parcel-details>

@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
+import { ApplicationReviewGrpc } from '../application-grpc/alcs-application.message.interface';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -128,7 +129,7 @@ export class Application extends Base {
   })
   localGovernmentUuid: string;
 
-  @AutoMap(() => StatusHistory)
+  @AutoMap(() => [StatusHistory])
   @Column({
     comment:
       'JSONB Column containing the status history of the Application from the Portal',
@@ -137,6 +138,15 @@ export class Application extends Base {
     default: () => `'[]'`,
   })
   statusHistory: StatusHistory[];
+
+  @AutoMap(() => ApplicationReviewGrpc)
+  @Column({
+    comment:
+      'JSONB Column containing the government / first nation government review from the Portal',
+    type: 'jsonb',
+    nullable: true,
+  })
+  applicationReview: ApplicationReviewGrpc;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

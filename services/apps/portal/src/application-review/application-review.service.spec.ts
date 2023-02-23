@@ -24,6 +24,7 @@ describe('ApplicationReviewService', () => {
     uuid: '',
     name: '',
     isFirstNation: false,
+    isActive: true,
   };
 
   beforeEach(async () => {
@@ -352,6 +353,7 @@ describe('ApplicationReviewService', () => {
       uuid: '',
       name: '',
       isFirstNation: true,
+      isActive: true,
     });
 
     expect(res.isFirstNationGovernment).toBeTruthy();

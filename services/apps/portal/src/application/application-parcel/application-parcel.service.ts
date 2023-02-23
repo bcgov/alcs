@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
@@ -48,6 +49,7 @@ export class ApplicationParcelService {
   async update(updateDtos: ApplicationParcelUpdateDto[]) {
     const updatedParcels: ApplicationParcel[] = [];
 
+    let hasOwnerUpdate = false;
     for (const updateDto of updateDtos) {
       const parcel = await this.getOneOrFail(updateDto.uuid);
 
@@ -61,6 +63,7 @@ export class ApplicationParcelService {
       parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
 
       if (updateDto.ownerUuids) {
+        hasOwnerUpdate = true;
         parcel.owners = await this.applicationOwnerService.getMany(
           updateDto.ownerUuids,
         );
@@ -69,12 +72,33 @@ export class ApplicationParcelService {
       updatedParcels.push(parcel);
     }
 
-    return await this.parcelRepository.save(updatedParcels);
+    const res = await this.parcelRepository.save(updatedParcels);
+
+    if (hasOwnerUpdate) {
+      const firstParcel = updatedParcels[0];
+      await this.applicationOwnerService.updateApplicationApplicant(
+        firstParcel.applicationFileNumber,
+      );
+    }
+    return res;
   }
 
-  async delete(uuid: string) {
-    const parcel = await this.getOneOrFail(uuid);
-    await this.parcelRepository.remove([parcel]);
-    return uuid;
+  async deleteMany(uuids: string[]) {
+    const parcels = await this.parcelRepository.find({
+      where: { uuid: In(uuids) },
+    });
+
+    if (parcels.length === 0) {
+      throw new ServiceValidationException(
+        `Unable to find parcels with provided uuids: ${uuids}.`,
+      );
+    }
+
+    const result = await this.parcelRepository.remove(parcels);
+    await this.applicationOwnerService.updateApplicationApplicant(
+      parcels[0].applicationFileNumber,
+    );
+
+    return result;
   }
 }

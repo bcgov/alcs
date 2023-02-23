@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -16,18 +16,18 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
-  hectares = new FormControl<string | null>(null);
-  purpose = new FormControl<string | null>(null);
-  outsideLands = new FormControl<string | null>(null);
-  agricultureSupport = new FormControl<string | null>(null);
-  willImportFill = new FormControl<string | null>(null);
-  totalFillPlacement = new FormControl<string | null>(null);
-  maxFillDepth = new FormControl<string | null>(null);
-  fillVolume = new FormControl<string | null>(null);
-  projectDurationAmount = new FormControl<string | null>(null);
-  projectDurationUnit = new FormControl<string | null>(null);
-  fillTypeDescription = new FormControl<string | null>(null);
-  fillOriginDescription = new FormControl<string | null>(null);
+  hectares = new FormControl<string | null>(null, [Validators.required]);
+  purpose = new FormControl<string | null>(null, [Validators.required]);
+  outsideLands = new FormControl<string | null>(null, [Validators.required]);
+  agricultureSupport = new FormControl<string | null>(null, [Validators.required]);
+  willImportFill = new FormControl<string | null>(null, [Validators.required]);
+  totalFillPlacement = new FormControl<string | null>(null, [Validators.required]);
+  maxFillDepth = new FormControl<string | null>(null, [Validators.required]);
+  fillVolume = new FormControl<string | null>(null, [Validators.required]);
+  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
+  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  fillTypeDescription = new FormControl<string | null>(null, [Validators.required]);
+  fillOriginDescription = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
     hectares: this.hectares,
@@ -79,7 +79,6 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   }
 
   async onSaveExit() {
-    await this.save();
     await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 

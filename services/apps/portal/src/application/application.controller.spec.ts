@@ -24,6 +24,7 @@ describe('ApplicationController', () => {
 
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
+  const bceidBusinessGuid = 'business-guid';
 
   beforeEach(async () => {
     mockAppService = createMock();
@@ -69,6 +70,15 @@ describe('ApplicationController', () => {
     mockAppService.verifyAccess.mockResolvedValue(new Application());
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
+    mockLgService.get.mockResolvedValue([
+      {
+        uuid: localGovernmentUuid,
+        bceidBusinessGuid,
+        name: 'fake-name',
+        isFirstNation: false,
+        isActive: true,
+      },
+    ]);
   });
 
   it('should be defined', () => {
@@ -89,15 +99,6 @@ describe('ApplicationController', () => {
   });
 
   it('should fetch by bceid if user has same guid as a local government', async () => {
-    const bceidBusinessGuid = 'business-guid';
-    mockLgService.get.mockResolvedValue([
-      {
-        uuid: '',
-        bceidBusinessGuid,
-        name: 'fake-name',
-        isFirstNation: false,
-      },
-    ]);
     mockAppService.getForGovernment.mockResolvedValue([]);
 
     const applications = await controller.getApplications({
@@ -181,6 +182,7 @@ describe('ApplicationController', () => {
       bceidBusinessGuid,
       name: 'fake-name',
       isFirstNation: false,
+      isActive: true,
     });
     const mockApplication = new Application();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
@@ -252,6 +254,7 @@ describe('ApplicationController', () => {
     mockAppService.getIfCreator.mockResolvedValue(
       new Application({
         typeCode: 'TURP',
+        localGovernmentUuid,
       }),
     );
 
@@ -271,6 +274,7 @@ describe('ApplicationController', () => {
     mockAppService.getIfCreator.mockResolvedValue(
       new Application({
         typeCode: 'NOT-TURP',
+        localGovernmentUuid,
       }),
     );
 
@@ -282,5 +286,44 @@ describe('ApplicationController', () => {
 
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an exception if application has no local government', async () => {
+    const mockFileId = 'file-id';
+    mockAppService.getIfCreator.mockResolvedValue(
+      new Application({
+        typeCode: 'NOT-TURP',
+      }),
+    );
+
+    const promise = controller.submitAsApplicant(mockFileId, {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    await expect(promise).rejects.toMatchObject(
+      new BadRequestException('Invalid Local Government'),
+    );
+  });
+
+  it('should throw an exception if application has an invalid government', async () => {
+    const mockFileId = 'file-id';
+    mockAppService.getIfCreator.mockResolvedValue(
+      new Application({
+        typeCode: 'NOT-TURP',
+        localGovernmentUuid: 'invalid-uuid',
+      }),
+    );
+
+    const promise = controller.submitAsApplicant(mockFileId, {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    await expect(promise).rejects.toMatchObject(
+      new BadRequestException('Invalid Local Government'),
+    );
   });
 });
