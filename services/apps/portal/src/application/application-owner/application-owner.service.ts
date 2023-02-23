@@ -227,7 +227,7 @@ export class ApplicationOwnerService {
         .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
         .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
 
-      const ownerCount = parcels.reduce((count, parcel) => {
+      const ownerCount = applicationParcels.reduce((count, parcel) => {
         return count + parcel.owners.length;
       }, 0);
 
