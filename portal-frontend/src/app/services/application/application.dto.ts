@@ -17,7 +17,9 @@ export interface ApplicationStatusDto extends BaseCodeDto {}
 
 export interface ApplicationDto {
   fileNumber: string;
-  createdAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  lastStatusUpdate: number;
   applicant: string;
   type: string;
   localGovernmentUuid: string;

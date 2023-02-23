@@ -225,6 +225,7 @@ describe('ApplicationService', () => {
         code: 'status-code',
         label: '',
       }),
+      statusHistory: [],
     });
     mockRepository.findOne.mockResolvedValue(application);
 
