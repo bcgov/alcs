@@ -1,6 +1,17 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { CdkStepper } from '@angular/cdk/stepper';
-import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -12,6 +23,8 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 export class CustomStepperComponent extends CdkStepper implements OnInit, OnDestroy {
   @Input()
   activeClass = 'active';
+
+  @Output() beforeSwitchStep = new EventEmitter<number>();
 
   @ViewChild('stepsWrapper') stepper!: ElementRef;
 
@@ -51,7 +64,13 @@ export class CustomStepperComponent extends CdkStepper implements OnInit, OnDest
     this.destroy.complete();
   }
 
-  navigateToStep(index: number): void {
+  async navigateToStep(index: number, forceSwitch: boolean = false) {
+    if (!forceSwitch) {
+      this.beforeSwitchStep.emit(index);
+      return;
+    }
+
+    console.log('navigate');
     this.selectedIndex = index;
   }
 

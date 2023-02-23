@@ -8,6 +8,7 @@ import { ApplicationDocumentDto } from '../../services/application-document/appl
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { LandUseComponent } from './land-use/land-use.component';
@@ -46,6 +47,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   previousStep = 0;
 
   @ViewChild('cdkStepper') public stepper!: MatStepper;
+  @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
   @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherAttachmentsComponent;
@@ -129,22 +131,14 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     }
   }
 
-  // TODO cleanup
+  // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    console.log('canDeactivate start saving');
     await this.saveApplication(this.stepper.selectedIndex);
 
-    console.log('canDeactivate finish');
     return of(true);
   }
 
   async onStepChange($event: StepperSelectionEvent) {
-    // reload application every time step changes
-    this.previousStep = $event.previouslySelectedIndex;
-    this.$application.next(await this.applicationService.getByFileId(this.fileId));
-
-    await this.saveApplication(this.previousStep);
-
     // scrolls to step if step selected programmatically
     const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
     el?.scrollIntoView({ behavior: 'smooth' });
@@ -153,36 +147,42 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   async saveApplication(step: number) {
     switch (step) {
       case EditApplicationSteps.AppParcel:
-        console.log('save parcel details');
         await this.parcelDetailsComponent.onSave();
         break;
       case EditApplicationSteps.OtherParcel:
-        console.log('save other parcels');
         await this.otherParcelsComponent.onSave();
         break;
       case EditApplicationSteps.PrimaryContact:
-        console.log('save PrimaryContact');
         await this.primaryContactComponent.onSave();
         break;
       case EditApplicationSteps.Government:
-        console.log('save Government');
         await this.selectGovernmentComponent.onSave();
         break;
       case EditApplicationSteps.LandUse:
-        console.log('save LandUse');
         await this.landUseComponent.onSave();
         break;
       case EditApplicationSteps.Proposal:
-        console.log('save Proposal');
         await this.nfuProposalComponent.onSave();
         break;
       case EditApplicationSteps.Attachments:
-        console.log('save Attachments');
         await this.otherAttachmentsComponent.onSave();
         break;
+      case EditApplicationSteps.ReviewAndSubmit:
+        return;
       default:
-        console.log('save default');
         this.toastService.showErrorToast('Error updating application.');
     }
+  }
+
+  // save user changes before navigating away
+  async onBeforeSwitchStep(index: number) {
+    // save changes before switching to next step
+    await this.saveApplication(this.stepper.selectedIndex);
+
+    // reload application once update complete
+    this.$application.next(await this.applicationService.getByFileId(this.fileId));
+
+    // manually switch to the next step
+    this.customStepper.navigateToStep(index, true);
   }
 }

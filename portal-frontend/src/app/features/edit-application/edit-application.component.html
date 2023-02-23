@@ -10,14 +10,19 @@
   </div>
 </ng-template>
 
-<app-custom-stepper class='edit-application' #cdkStepper (selectionChange)="onStepChange($event)">
+<app-custom-stepper
+  class="edit-application"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+>
   <cdk-step label="Parcel Details">
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel || previousStep === editAppSteps.AppParcel">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
       <app-parcel-details [$application]="$application"></app-parcel-details>
     </div>
   </cdk-step>
   <cdk-step label="Other Parcels in the Community">
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel || previousStep === editAppSteps.OtherParcel">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
       <app-other-parcels [$application]="$application"></app-other-parcels>
     </div>
   </cdk-step>

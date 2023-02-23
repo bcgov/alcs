@@ -89,7 +89,8 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async saveProgress() {
     const formValues = this.landUseForm.getRawValue();
-    this.applicationService.updatePending(this.fileId, {
+    console.log('from land use save', formValues);
+    await this.applicationService.updatePending(this.fileId, {
       parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
       parcelsAgricultureImprovementDescription: formValues.parcelsAgricultureImprovementDescription,
       parcelsNonAgricultureUseDescription: formValues.parcelsNonAgricultureUseDescription,
