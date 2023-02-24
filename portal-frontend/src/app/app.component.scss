@@ -7,7 +7,7 @@
 }
 
 .site-layout {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 
@@ -17,7 +17,6 @@
 
   div.main-content {
     flex-grow: 1;
-    overflow: auto;
     margin: rem(8) rem(24);
 
     @media screen and (min-width: $tabletBreakpoint) {

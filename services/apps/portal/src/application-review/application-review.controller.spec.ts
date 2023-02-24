@@ -10,6 +10,7 @@ import {
 } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { APPLICATION_STATUS } from '../application/application-status/application-status.dto';
+import { ApplicationStatus } from '../application/application-status/application-status.entity';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { User } from '../user/user.entity';
@@ -85,7 +86,7 @@ describe('ApplicationReviewController', () => {
 
   it('should check users local government and return the file for get', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
 
     const res = await controller.get(fileNumber, {
       user: {
@@ -98,9 +99,59 @@ describe('ApplicationReviewController', () => {
     expect(mockAppReviewService.mapToDto).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw an exception for get if user is not local government', async () => {
+  it('should fallback to load by owner if user has no government', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(null);
+    mockLGService.get.mockResolvedValue([
+      {
+        bceidBusinessGuid: '',
+        uuid: 'uuid',
+        name: '',
+        isFirstNation: false,
+        isActive: true,
+      },
+    ]);
+
+    const reviewWithApp = new ApplicationReview({
+      ...applicationReview,
+      application: new Application({
+        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        localGovernmentUuid: 'uuid',
+      }),
+    });
+
+    mockAppReviewService.getForOwner.mockResolvedValue(reviewWithApp);
+
+    const res = await controller.get(fileNumber, {
+      user: {
+        entity: new User({}),
+      },
+    });
+    expect(res).toBeDefined();
+  });
+
+  it('should throw an exception when user loads review that is not complete', async () => {
+    mockLGService.getByGuid.mockResolvedValue(mockLG);
+    mockAppReviewService.getForGovernment.mockResolvedValue(null);
+    mockLGService.get.mockResolvedValue([
+      {
+        bceidBusinessGuid: '',
+        uuid: 'uuid',
+        name: '',
+        isFirstNation: false,
+        isActive: true,
+      },
+    ]);
+
+    const reviewWithApp = new ApplicationReview({
+      ...applicationReview,
+      application: new Application({
+        statusCode: APPLICATION_STATUS.IN_REVIEW,
+        localGovernmentUuid: 'uuid',
+      }),
+    });
+
+    mockAppReviewService.getForOwner.mockResolvedValue(reviewWithApp);
 
     const promise = controller.get(fileNumber, {
       user: {
@@ -108,7 +159,7 @@ describe('ApplicationReviewController', () => {
       },
     });
     await expect(promise).rejects.toMatchObject(
-      new NotFoundException('User not part of any local government'),
+      new Error('Failed to load review'),
     );
   });
 
@@ -165,7 +216,7 @@ describe('ApplicationReviewController', () => {
     mockAppReviewService.verifyComplete.mockReturnValue(
       applicationReview as CompletedApplicationReview,
     );
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
 
     const promise = controller.finish(fileNumber, {
       user: {
@@ -200,7 +251,7 @@ describe('ApplicationReviewController', () => {
       ...applicationReview,
       isAuthorized: true,
     } as CompletedApplicationReview);
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
 
     await controller.finish(fileNumber, {
       user: {
@@ -212,7 +263,7 @@ describe('ApplicationReviewController', () => {
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.get).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
   });
@@ -227,7 +278,7 @@ describe('ApplicationReviewController', () => {
       ...applicationReview,
       isAuthorized: false,
     } as CompletedApplicationReview);
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
 
     await controller.finish(fileNumber, {
       user: {
@@ -239,7 +290,7 @@ describe('ApplicationReviewController', () => {
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.get).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(0);
     expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
@@ -264,8 +315,7 @@ describe('ApplicationReviewController', () => {
       }),
     );
     mockAppService.updateStatus.mockResolvedValue({} as any);
-    mockAppService.update.mockResolvedValue({} as any);
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppReviewService.delete.mockResolvedValue();
     mockAppDocService.delete.mockResolvedValue({} as any);
 
@@ -286,9 +336,8 @@ describe('ApplicationReviewController', () => {
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.get).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
-    expect(mockAppService.update).toHaveBeenCalledTimes(1);
     expect(mockAppDocService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
@@ -301,7 +350,7 @@ describe('ApplicationReviewController', () => {
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
       new Application({ statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC }),
     );
-    mockAppReviewService.get.mockResolvedValue(applicationReview);
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
 
     const promise = controller.return(
       fileNumber,
@@ -323,6 +372,6 @@ describe('ApplicationReviewController', () => {
     );
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.get).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,4 +1,7 @@
-import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceNotFoundException,
+} from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -8,6 +11,7 @@ import { LocalGovernment } from '../alcs/local-government/local-government.servi
 import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { Application } from '../application/application.entity';
+import { User } from '../user/user.entity';
 import {
   ApplicationReviewDto,
   UpdateApplicationReviewDto,
@@ -43,13 +47,29 @@ export class ApplicationReviewService {
     @InjectMapper('') private mapper: Mapper,
   ) {}
 
-  get(fileNumber: string, localGovernment: LocalGovernment) {
-    return this.applicationReviewRepository.findOneOrFail({
+  getForGovernment(fileNumber: string, localGovernment: LocalGovernment) {
+    return this.applicationReviewRepository.findOne({
       where: {
         application: {
           fileNumber,
           localGovernmentUuid: localGovernment.uuid,
         },
+      },
+    });
+  }
+
+  getForOwner(fileNumber: string, user: User) {
+    return this.applicationReviewRepository.findOneOrFail({
+      where: {
+        application: {
+          fileNumber,
+          createdBy: {
+            uuid: user.uuid,
+          },
+        },
+      },
+      relations: {
+        application: true,
       },
     });
   }
@@ -66,7 +86,14 @@ export class ApplicationReviewService {
     localGovernment: LocalGovernment,
     updateDto: UpdateApplicationReviewDto,
   ) {
-    const applicationReview = await this.get(fileNumber, localGovernment);
+    const applicationReview = await this.getForGovernment(
+      fileNumber,
+      localGovernment,
+    );
+
+    if (!applicationReview) {
+      throw new ServiceNotFoundException('Failed to load applicaiton review');
+    }
 
     applicationReview.localGovernmentFileNumber =
       updateDto.localGovernmentFileNumber ??
