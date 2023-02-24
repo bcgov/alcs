@@ -70,7 +70,6 @@ export class CustomStepperComponent extends CdkStepper implements OnInit, OnDest
       return;
     }
 
-    console.log('navigate');
     this.selectedIndex = index;
   }
 

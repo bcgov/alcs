@@ -225,7 +225,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       ...this.application,
       hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
     } as ApplicationUpdateDto);
-    await this.applicationService.getByFileId(this.fileId);
+    await this.reloadApplication();
   }
 
   async replacePlaceholderParcel() {
