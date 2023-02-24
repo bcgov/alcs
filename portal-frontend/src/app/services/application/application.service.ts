@@ -20,7 +20,6 @@ export class ApplicationService {
 
   async getApplications() {
     try {
-      console.log('get applications');
       return await firstValueFrom(this.httpClient.get<ApplicationDto[]>(`${this.serviceUrl}`));
     } catch (e) {
       console.error(e);

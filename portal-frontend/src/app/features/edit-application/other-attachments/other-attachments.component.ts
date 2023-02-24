@@ -91,7 +91,6 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
 
   async onSave() {
     if (this.isDirty) {
-      console.log('save from other parcels');
       const updateDtos: ApplicationDocumentUpdateDto[] = this.otherFiles.map((file) => ({
         uuid: file.uuid,
         description: file.description,
