@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -9,6 +9,7 @@ import { ApplicationOwnerService } from '../../../services/application-owner/app
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
   selector: 'app-primary-contact',
@@ -17,7 +18,10 @@ import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = EditApplicationSteps.PrimaryContact;
   $destroy = new Subject<void>();
+
   nonAgentOwners: ApplicationOwnerDto[] = [];
   owners: ApplicationOwnerDto[] = [];
   private fileId: string | undefined;
@@ -77,7 +81,6 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -177,5 +180,9 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.phoneNumber.disable();
       }
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

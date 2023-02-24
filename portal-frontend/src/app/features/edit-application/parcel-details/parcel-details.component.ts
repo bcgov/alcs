@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -13,6 +13,7 @@ import { ApplicationParcelService } from '../../../services/application-parcel/a
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
+import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -23,7 +24,8 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 })
 export class ParcelDetailsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
-
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = EditApplicationSteps.AppParcel;
   $destroy = new Subject<void>();
   fileId!: string;
 
@@ -54,7 +56,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -174,5 +175,9 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   openParcel(index: string) {
     this.expandedParcel = index;
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

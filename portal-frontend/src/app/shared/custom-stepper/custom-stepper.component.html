@@ -5,8 +5,8 @@
         <mat-icon>arrow_back_ios</mat-icon>
       </button>
       <div #stepsWrapper id="stepsWrapper" class="steps-wrapper">
-        <div class="step-wrapper" id="stepWrapper_{{i}}" *ngFor="let step of steps; let i = index" tabindex="i">
-          <div class="step" (click)="selectedIndex = i">
+        <div class="step-wrapper" id="stepWrapper_{{ i }}" *ngFor="let step of steps; let i = index" tabindex="i">
+          <div class="step" (click)="navigateToStep(i)">
             <div [ngClass]="{ active: selectedIndex === i, 'step-number': true }">
               <div>{{ i + 1 }}</div>
             </div>

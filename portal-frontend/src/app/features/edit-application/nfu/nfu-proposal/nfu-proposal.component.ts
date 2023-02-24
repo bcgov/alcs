@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
+import { EditApplicationSteps } from '../../edit-application.component';
 
 @Component({
   selector: 'app-nfu-proposal',
@@ -14,7 +15,9 @@ import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 })
 export class NfuProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.Proposal;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -74,7 +77,6 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -149,5 +151,9 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
       this.fillTypeDescription.setValue(null);
       this.fillOriginDescription.setValue(null);
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

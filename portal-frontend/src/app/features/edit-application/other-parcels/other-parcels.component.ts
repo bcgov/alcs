@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +20,7 @@ import { ApplicationService } from '../../../services/application/application.se
 import { ToastService } from '../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
+import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
 
@@ -31,11 +32,13 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
 })
 export class OtherParcelsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = EditApplicationSteps.OtherParcel;
+  $destroy = new Subject<void>();
+
   fileId: string = '';
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
-
-  $destroy = new Subject<void>();
 
   hasOtherParcelsInCommunity = new FormControl<string | null>(null);
 
@@ -78,7 +81,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -98,6 +100,9 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     parcel.isFarm = parseStringToBoolean(formData.isFarm);
     parcel.purchasedDate = formData.purchaseDate?.getTime();
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    if (formData.owners) {
+      parcel.owners = formData.owners;
+    }
   }
 
   private async reloadApplication() {
@@ -133,7 +138,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
         isConfirmedByApplicant: false,
-        ownerUuids: null,
+        ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
     }
 
@@ -223,7 +228,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       ...this.application,
       hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
     } as ApplicationUpdateDto);
-    await this.applicationService.getByFileId(this.fileId);
+    await this.reloadApplication();
   }
 
   async replacePlaceholderParcel() {
@@ -235,5 +240,9 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         placeHolderParcel.uuid = parcel.uuid;
       }
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

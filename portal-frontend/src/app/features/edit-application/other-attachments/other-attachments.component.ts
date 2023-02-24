@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -11,6 +11,7 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
   selector: 'app-other-attachments',
@@ -19,7 +20,9 @@ import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 })
 export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
   $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.Attachments;
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];
   selectableTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
@@ -80,7 +83,6 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    await this.onSave();
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -122,5 +124,9 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
       }
       return file;
     });
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

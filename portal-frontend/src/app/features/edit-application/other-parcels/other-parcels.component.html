@@ -85,10 +85,12 @@
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button (click)="onNavigateToStep(currentStep - 1)" color="primary">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button mat-flat-button matStepperNext color="primary">Next<span class="mobile-hidden"> Step</span></button>
+      <button mat-flat-button (click)="onNavigateToStep(currentStep + 1)" color="primary">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
     </div>
   </div>
 </section>
