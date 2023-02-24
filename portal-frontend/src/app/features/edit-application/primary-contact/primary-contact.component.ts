@@ -9,13 +9,15 @@ import { ApplicationOwnerService } from '../../../services/application-owner/app
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { BaseStepComponent } from '../base-step/base-step.component';
+import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
   selector: 'app-primary-contact',
   templateUrl: './primary-contact.component.html',
   styleUrls: ['./primary-contact.component.scss'],
 })
-export class PrimaryContactComponent implements OnInit, OnDestroy {
+export class PrimaryContactComponent extends BaseStepComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   $destroy = new Subject<void>();
   nonAgentOwners: ApplicationOwnerDto[] = [];
@@ -46,7 +48,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService
-  ) {}
+  ) {
+    super();
+    this.currentStep = EditApplicationSteps.PrimaryContact;
+  }
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {

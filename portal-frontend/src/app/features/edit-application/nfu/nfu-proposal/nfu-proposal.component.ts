@@ -6,13 +6,15 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
+import { BaseStepComponent } from '../../base-step/base-step.component';
+import { EditApplicationSteps } from '../../edit-application.component';
 
 @Component({
   selector: 'app-nfu-proposal',
   templateUrl: './nfu-proposal.component.html',
   styleUrls: ['./nfu-proposal.component.scss'],
 })
-export class NfuProposalComponent implements OnInit, OnDestroy {
+export class NfuProposalComponent extends BaseStepComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
@@ -45,7 +47,10 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private router: Router, private applicationService: ApplicationService) {}
+  constructor(private router: Router, private applicationService: ApplicationService) {
+    super();
+    this.currentStep = EditApplicationSteps.Proposal;
+  }
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {

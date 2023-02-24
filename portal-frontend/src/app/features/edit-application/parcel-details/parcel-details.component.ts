@@ -13,6 +13,8 @@ import { ApplicationParcelService } from '../../../services/application-parcel/a
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
+import { BaseStepComponent } from '../base-step/base-step.component';
+import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -21,7 +23,7 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   templateUrl: './parcel-details.component.html',
   styleUrls: ['./parcel-details.component.scss'],
 })
-export class ParcelDetailsComponent implements OnInit, OnDestroy {
+export class ParcelDetailsComponent extends BaseStepComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
   $destroy = new Subject<void>();
@@ -38,7 +40,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    super();
+    this.currentStep = EditApplicationSteps.AppParcel;
+  }
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { BaseStepComponent } from '../base-step/base-step.component';
+import { EditApplicationSteps } from '../edit-application.component';
 
 export enum MainLandUseTypeOptions {
   AgriculturalFarm = 'Agricultural/Farm',
@@ -22,7 +24,7 @@ export enum MainLandUseTypeOptions {
   templateUrl: './land-use.component.html',
   styleUrls: ['./land-use.component.scss'],
 })
-export class LandUseComponent implements OnInit, OnDestroy {
+export class LandUseComponent extends BaseStepComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   fileId: string = '';
 
@@ -55,7 +57,10 @@ export class LandUseComponent implements OnInit, OnDestroy {
     westLandUseTypeDescription: this.westLandUseTypeDescription,
   });
 
-  constructor(private router: Router, private applicationService: ApplicationService) {}
+  constructor(private router: Router, private applicationService: ApplicationService) {
+    super();
+    this.currentStep = EditApplicationSteps.LandUse;
+  }
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {

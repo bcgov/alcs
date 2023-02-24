@@ -7,13 +7,15 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 import { ApplicationService } from '../../../services/application/application.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
+import { BaseStepComponent } from '../base-step/base-step.component';
+import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
   selector: 'app-select-government',
   templateUrl: './select-government.component.html',
   styleUrls: ['./select-government.component.scss'],
 })
-export class SelectGovernmentComponent implements OnInit, OnDestroy {
+export class SelectGovernmentComponent extends BaseStepComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
 
@@ -32,7 +34,10 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     private codeService: CodeService,
     private applicationService: ApplicationService,
     private router: Router
-  ) {}
+  ) {
+    super();
+    this.currentStep = EditApplicationSteps.Government;
+  }
 
   ngOnInit(): void {
     this.loadGovernments();
