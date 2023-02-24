@@ -1,10 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { BaseStepComponent } from '../base-step/base-step.component';
 import { EditApplicationSteps } from '../edit-application.component';
 
 export enum MainLandUseTypeOptions {
@@ -24,13 +23,15 @@ export enum MainLandUseTypeOptions {
   templateUrl: './land-use.component.html',
   styleUrls: ['./land-use.component.scss'],
 })
-export class LandUseComponent extends BaseStepComponent implements OnInit, OnDestroy {
+export class LandUseComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.LandUse;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
+
   fileId: string = '';
 
   MainLandUseTypeOptions = MainLandUseTypeOptions;
-
-  $destroy = new Subject<void>();
 
   parcelsAgricultureDescription = new FormControl<string>('', [Validators.required]);
   parcelsAgricultureImprovementDescription = new FormControl<string>('', [Validators.required]);
@@ -57,10 +58,7 @@ export class LandUseComponent extends BaseStepComponent implements OnInit, OnDes
     westLandUseTypeDescription: this.westLandUseTypeDescription,
   });
 
-  constructor(private router: Router, private applicationService: ApplicationService) {
-    super();
-    this.currentStep = EditApplicationSteps.LandUse;
-  }
+  constructor(private router: Router, private applicationService: ApplicationService) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -117,5 +115,9 @@ export class LandUseComponent extends BaseStepComponent implements OnInit, OnDes
     if (this.fileId) {
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

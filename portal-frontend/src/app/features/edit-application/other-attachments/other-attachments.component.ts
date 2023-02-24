@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -11,7 +11,6 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
-import { BaseStepComponent } from '../base-step/base-step.component';
 import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
@@ -19,9 +18,11 @@ import { EditApplicationSteps } from '../edit-application.component';
   templateUrl: './other-attachments.component.html',
   styleUrls: ['./other-attachments.component.scss'],
 })
-export class OtherAttachmentsComponent extends BaseStepComponent implements OnInit, OnDestroy {
+export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
   $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.Attachments;
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];
   selectableTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
@@ -36,10 +37,7 @@ export class OtherAttachmentsComponent extends BaseStepComponent implements OnIn
     private router: Router,
     private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService
-  ) {
-    super();
-    this.currentStep = EditApplicationSteps.Attachments;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -126,5 +124,9 @@ export class OtherAttachmentsComponent extends BaseStepComponent implements OnIn
       }
       return file;
     });
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

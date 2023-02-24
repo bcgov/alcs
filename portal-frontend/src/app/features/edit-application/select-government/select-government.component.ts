@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
@@ -7,7 +7,6 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 import { ApplicationService } from '../../../services/application/application.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
-import { BaseStepComponent } from '../base-step/base-step.component';
 import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
@@ -15,9 +14,11 @@ import { EditApplicationSteps } from '../edit-application.component';
   templateUrl: './select-government.component.html',
   styleUrls: ['./select-government.component.scss'],
 })
-export class SelectGovernmentComponent extends BaseStepComponent implements OnInit, OnDestroy {
+export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.Government;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
 
   localGovernment = new FormControl<string | any>('', [Validators.required]);
   showWarning = false;
@@ -34,10 +35,7 @@ export class SelectGovernmentComponent extends BaseStepComponent implements OnIn
     private codeService: CodeService,
     private applicationService: ApplicationService,
     private router: Router
-  ) {
-    super();
-    this.currentStep = EditApplicationSteps.Government;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadGovernments();
@@ -132,5 +130,9 @@ export class SelectGovernmentComponent extends BaseStepComponent implements OnIn
       this.localGovernment.patchValue(lg.name);
       this.showWarning = !lg.hasGuid;
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

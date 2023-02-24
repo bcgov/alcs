@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -9,7 +9,6 @@ import { ApplicationOwnerService } from '../../../services/application-owner/app
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
-import { BaseStepComponent } from '../base-step/base-step.component';
 import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
@@ -17,9 +16,12 @@ import { EditApplicationSteps } from '../edit-application.component';
   templateUrl: './primary-contact.component.html',
   styleUrls: ['./primary-contact.component.scss'],
 })
-export class PrimaryContactComponent extends BaseStepComponent implements OnInit, OnDestroy {
+export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = EditApplicationSteps.PrimaryContact;
   $destroy = new Subject<void>();
+
   nonAgentOwners: ApplicationOwnerDto[] = [];
   owners: ApplicationOwnerDto[] = [];
   private fileId: string | undefined;
@@ -48,10 +50,7 @@ export class PrimaryContactComponent extends BaseStepComponent implements OnInit
     private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService
-  ) {
-    super();
-    this.currentStep = EditApplicationSteps.PrimaryContact;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -181,5 +180,9 @@ export class PrimaryContactComponent extends BaseStepComponent implements OnInit
         this.phoneNumber.disable();
       }
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

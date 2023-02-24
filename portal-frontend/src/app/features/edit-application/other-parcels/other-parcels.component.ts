@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,7 +20,6 @@ import { ApplicationService } from '../../../services/application/application.se
 import { ToastService } from '../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
-import { BaseStepComponent } from '../base-step/base-step.component';
 import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
@@ -31,14 +30,15 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
   templateUrl: './other-parcels.component.html',
   styleUrls: ['./other-parcels.component.scss'],
 })
-export class OtherParcelsComponent extends BaseStepComponent implements OnInit, OnDestroy {
+export class OtherParcelsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = EditApplicationSteps.OtherParcel;
+  $destroy = new Subject<void>();
 
   fileId: string = '';
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
-
-  $destroy = new Subject<void>();
 
   hasOtherParcelsInCommunity = new FormControl<string | null>(null);
 
@@ -58,10 +58,7 @@ export class OtherParcelsComponent extends BaseStepComponent implements OnInit, 
     private toastService: ToastService,
     private dialog: MatDialog,
     private router: Router
-  ) {
-    super();
-    this.currentStep = EditApplicationSteps.OtherParcel;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -243,5 +240,9 @@ export class OtherParcelsComponent extends BaseStepComponent implements OnInit, 
         placeHolderParcel.uuid = parcel.uuid;
       }
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }
