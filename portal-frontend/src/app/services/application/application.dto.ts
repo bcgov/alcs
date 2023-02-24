@@ -30,6 +30,7 @@ export interface ApplicationDto {
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
+  returnedComment?: string;
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {
