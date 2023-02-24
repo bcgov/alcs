@@ -2,9 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
-  selector: 'app-base-step',
-  templateUrl: './base-step.component.html',
-  styleUrls: ['./base-step.component.scss'],
+  template: '<span>base step</span>',
 })
 export class BaseStepComponent {
   @Output() navigateToStep = new EventEmitter<number>();

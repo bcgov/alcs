@@ -20,7 +20,6 @@ import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-own
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
-import { BaseStepComponent } from './base-step/base-step.component';
 
 const routes: Routes = [
   {
@@ -52,7 +51,6 @@ const routes: Routes = [
     OtherAttachmentsComponent,
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
-    BaseStepComponent,
   ],
   imports: [
     CommonModule,
