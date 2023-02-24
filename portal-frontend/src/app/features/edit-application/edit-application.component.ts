@@ -1,7 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
@@ -46,7 +45,6 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   editAppSteps = EditApplicationSteps;
   previousStep = 0;
 
-  @ViewChild('cdkStepper') public stepper!: MatStepper;
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
@@ -76,20 +74,21 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
       .subscribe(([queryParamMap, paramMap]) => {
         const fileId = paramMap.get('fileId');
         if (fileId) {
-          this.loadApplication(fileId);
+          this.loadApplication(fileId).then(() => {
+            const stepInd = paramMap.get('stepInd');
+            const parcelUuid = queryParamMap.get('parcelUuid');
 
-          const stepInd = paramMap.get('stepInd');
-          const parcelUuid = queryParamMap.get('parcelUuid');
+            if (stepInd) {
+              // setTimeout is required for stepper to be initialized
+              setTimeout(() => {
+                this.customStepper.navigateToStep(parseInt(stepInd), true);
 
-          if (stepInd) {
-            // setTimeout is required for stepper to be initialized
-            setTimeout(() => {
-              this.stepper.selectedIndex = stepInd;
-              if (parcelUuid) {
-                this.parcelDetailsComponent.openParcel(parcelUuid);
-              }
-            });
-          }
+                if (parcelUuid) {
+                  this.parcelDetailsComponent.openParcel(parcelUuid);
+                }
+              });
+            }
+          });
         }
       });
   }
@@ -133,7 +132,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    await this.saveApplication(this.stepper.selectedIndex);
+    await this.saveApplication(this.customStepper.selectedIndex);
 
     return of(true);
   }
@@ -177,7 +176,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
   // save user changes before navigating away
   async onBeforeSwitchStep(index: number) {
     // save changes before switching to next step
-    await this.saveApplication(this.stepper.selectedIndex);
+    await this.saveApplication(this.customStepper.selectedIndex);
 
     // reload application once update complete
     this.$application.next(await this.applicationService.getByFileId(this.fileId));

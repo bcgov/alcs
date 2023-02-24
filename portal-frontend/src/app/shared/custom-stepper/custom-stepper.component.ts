@@ -64,7 +64,7 @@ export class CustomStepperComponent extends CdkStepper implements OnInit, OnDest
     this.destroy.complete();
   }
 
-  async navigateToStep(index: number, forceSwitch: boolean = false) {
+  navigateToStep(index: number, forceSwitch: boolean = false) {
     if (!forceSwitch) {
       this.beforeSwitchStep.emit(index);
       return;
