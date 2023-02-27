@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -22,9 +22,10 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   templateUrl: './parcel-details.component.html',
   styleUrls: ['./parcel-details.component.scss'],
 })
-export class ParcelDetailsComponent implements OnInit, OnDestroy {
+export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   @Output() navigateToStep = new EventEmitter<number>();
+  @Output() componentInitialized = new EventEmitter<boolean>();
   currentStep = EditApplicationSteps.AppParcel;
   $destroy = new Subject<void>();
   fileId!: string;
@@ -58,6 +59,10 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
   async ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout((_) => this.componentInitialized.emit(true));
   }
 
   async loadParcels() {
