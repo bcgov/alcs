@@ -22,6 +22,7 @@
       <app-parcel-details
         [$application]="$application"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (componentInitialized)="onParcelDetailsInitialized()"
       ></app-parcel-details>
     </div>
   </cdk-step>

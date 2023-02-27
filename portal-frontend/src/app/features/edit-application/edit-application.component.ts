@@ -1,7 +1,7 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
@@ -34,7 +34,7 @@ export enum EditApplicationSteps {
   templateUrl: './edit-application.component.html',
   styleUrls: ['./edit-application.component.scss'],
 })
-export class EditApplicationComponent implements OnInit, OnDestroy {
+export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewInit {
   fileId = '';
   documents: ApplicationDocumentDto[] = [];
 
@@ -44,6 +44,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
 
   editAppSteps = EditApplicationSteps;
   previousStep = 0;
+  expandedParcelUuid?: string;
+
+  showValidationErrors = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -60,15 +63,15 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
-    private overlayService: OverlaySpinnerService
+    private overlayService: OverlaySpinnerService,
+    private router: Router
   ) {}
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
+  ngOnInit(): void {
+    this.expandedParcelUuid = undefined;
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
@@ -84,13 +87,18 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
                 this.customStepper.navigateToStep(parseInt(stepInd), true);
 
                 if (parcelUuid) {
-                  this.parcelDetailsComponent.openParcel(parcelUuid);
+                  this.expandedParcelUuid = parcelUuid;
                 }
               });
             }
           });
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   private async loadApplication(fileId: string) {
@@ -173,15 +181,17 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
     }
   }
 
-  // save user changes before navigating away
   async onBeforeSwitchStep(index: number) {
-    // save changes before switching to next step
-    await this.saveApplication(this.customStepper.selectedIndex);
+    // navigation to url will cause step change based on the index (index starts from 0)
+    // The save will be triggered using canDeactivate guard
+    this.showValidationErrors = this.customStepper.selectedIndex === EditApplicationSteps.ReviewAndSubmit;
+    this.router.navigateByUrl(`application/${this.fileId}/edit/${index}`);
+  }
 
-    // reload application once update complete
-    this.$application.next(await this.applicationService.getByFileId(this.fileId));
-
-    // manually switch to the next step
-    this.customStepper.navigateToStep(index, true);
+  onParcelDetailsInitialized() {
+    if (this.expandedParcelUuid && this.parcelDetailsComponent) {
+      this.parcelDetailsComponent.openParcel(this.expandedParcelUuid);
+      this.expandedParcelUuid = undefined;
+    }
   }
 }
