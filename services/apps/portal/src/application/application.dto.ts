@@ -36,6 +36,11 @@ export class ApplicationDto {
   @AutoMap(() => Boolean)
   hasOtherParcelsInCommunity?: boolean | null;
 
+  @AutoMap(() => String)
+  returnedComment: string | null;
+
+  lastStatusUpdate: number;
+
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
 
