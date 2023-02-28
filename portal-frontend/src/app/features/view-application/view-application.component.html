@@ -132,6 +132,12 @@
             </button>
           </div>
           <div
+            *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.IN_PROGRESS"
+            class="warning"
+          >
+            This section will update after the application is submitted.
+          </div>
+          <div
             *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC"
             class="warning"
           >

@@ -433,7 +433,9 @@ export class ApplicationService {
     application.nfuAgricultureSupport =
       updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
     application.nfuWillImportFill =
-      updateDto.nfuWillImportFill || application.nfuWillImportFill;
+      updateDto.nfuWillImportFill !== undefined
+        ? updateDto.nfuWillImportFill
+        : application.nfuWillImportFill;
     application.nfuTotalFillPlacement =
       updateDto.nfuTotalFillPlacement || application.nfuTotalFillPlacement;
     application.nfuMaxFillDepth =

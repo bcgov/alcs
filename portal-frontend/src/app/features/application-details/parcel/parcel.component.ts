@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
-import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
@@ -29,29 +29,13 @@ export class ApplicationParcelBasicValidation {
   isCertificateRequired: boolean = false;
 }
 
-export class ApplicationParcelOwnerBasicValidation {
-  isInvalid: boolean = false;
-  isTypeRequired: boolean = false;
-  isFirstNameRequired: boolean = false;
-  isLastNameRequired: boolean = false;
-  isPhoneNumberRequired: boolean = false;
-  isPhoneNumberInvalid: boolean = false;
-  isEmailRequired: boolean = false;
-  isEmailInvalid: boolean = false;
-  isCorporateSummaryRequired: boolean = false;
-}
-
-interface OwnerWithValidation extends ApplicationOwnerDto {
-  validation?: ApplicationParcelOwnerBasicValidation;
-}
-
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
   parcelType: string;
   isFarmText?: string;
   ownershipType?: BaseCodeDto;
   validation?: ApplicationParcelBasicValidation;
   documents: ApplicationDocumentDto[];
-  owners: OwnerWithValidation[];
+  owners: ApplicationOwnerDto[];
 }
 
 @Component({
@@ -74,13 +58,8 @@ export class ParcelComponent {
   navigationStepInd = 0;
 
   fileId: string = '';
-
-  parcelsWithOwners: any[] = [];
   parcels: ApplicationParcelExtended[] = [];
   showErrors = true;
-  parcelSectionIsValid = true;
-
-  ownerTableDisplayColumns = ['ownerType', 'fullName', 'phone', 'email', 'corporateSummary'];
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -121,13 +100,6 @@ export class ParcelComponent {
       if (this.parcels) {
         this.parcels.forEach((p) => {
           p.validation = this.validateParcelBasic(p);
-
-          p.owners.forEach((o) => {
-            o.validation = this.validateOwner(o);
-            if (o.validation.isInvalid || p.validation?.isInvalid) {
-              this.parcelSectionIsValid = false;
-            }
-          });
         });
       }
     }
@@ -199,48 +171,7 @@ export class ParcelComponent {
     return validation;
   }
 
-  private validateOwner(owner: OwnerWithValidation) {
-    const validation = new ApplicationParcelOwnerBasicValidation();
-    if (!owner.type) {
-      validation.isTypeRequired = true;
-    }
-
-    if (!owner.firstName) {
-      validation.isFirstNameRequired = true;
-    }
-
-    if (!owner.lastName) {
-      validation.isLastNameRequired = true;
-    }
-
-    if (!owner.phoneNumber) {
-      validation.isPhoneNumberRequired = true;
-    } else {
-      validation.isPhoneNumberInvalid = owner.phoneNumber.length !== 10;
-    }
-
-    if (!owner.email) {
-      validation.isEmailRequired = true;
-    } else {
-      validation.isEmailInvalid = this.validateEmail(owner.email);
-    }
-
-    if (owner.type?.code === APPLICATION_OWNER.ORGANIZATION) {
-      validation.isCorporateSummaryRequired = !owner.corporateSummary?.uuid;
-    }
-
-    validation.isInvalid = this.isInvalid(validation);
-
-    return validation;
-  }
-
-  // TODO move to validation utils
-  private validateEmail(email: string) {
-    const re = new RegExp(emailRegex);
-    return !re.test(email);
-  }
-
-  private isInvalid(validationObj: ApplicationParcelOwnerBasicValidation | ApplicationParcelBasicValidation) {
+  private isInvalid(validationObj: ApplicationParcelBasicValidation) {
     for (const prop in validationObj) {
       if (validationObj[prop as keyof typeof validationObj]) {
         return true;

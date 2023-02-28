@@ -43,7 +43,6 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   application: ApplicationDetailedDto | undefined;
 
   editAppSteps = EditApplicationSteps;
-  previousStep = 0;
   expandedParcelUuid?: string;
 
   showValidationErrors = false;
@@ -125,17 +124,6 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
           this.loadApplication(this.fileId);
         }
       });
-  }
-
-  async onSubmitToAlcs() {
-    if (!this.application?.localGovernmentUuid) {
-      this.toastService.showErrorToast('Please set local government first.');
-      return;
-    }
-
-    if (this.application) {
-      await this.applicationService.submitToAlcs(this.fileId);
-    }
   }
 
   // this gets fired whenever applicant navigates away from edit page
