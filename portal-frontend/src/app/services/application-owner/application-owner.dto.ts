@@ -19,7 +19,7 @@ export interface ApplicationOwnerDto {
   phoneNumber: string | null;
   email: string | null;
   type: ApplicationOwnerTypeDto;
-  corporateSummary: ApplicationDocumentDto;
+  corporateSummary?: ApplicationDocumentDto;
 }
 
 export interface ApplicationOwnerDetailedDto extends ApplicationOwnerDto {

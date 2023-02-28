@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CompletedComponent } from './completed.component';
+import { NfuDetailsComponent } from './nfu-details.component';
 
-describe('CompletedComponent', () => {
-  let component: CompletedComponent;
-  let fixture: ComponentFixture<CompletedComponent>;
+describe('NfuDetailsComponent', () => {
+  let component: NfuDetailsComponent;
+  let fixture: ComponentFixture<NfuDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CompletedComponent ]
+      declarations: [ NfuDetailsComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CompletedComponent);
+    fixture = TestBed.createComponent(NfuDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

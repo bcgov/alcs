@@ -26,7 +26,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { provideNgxMask } from 'ngx-mask';
-import { CompletedComponent } from './completed/completed.component';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
@@ -77,7 +76,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatSelectModule,
     NoDataComponent,
     ValidationErrorComponent,
-    CompletedComponent,
     OverlayModule,
     CustomStepperComponent,
     CdkStepperModule,
@@ -89,7 +87,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     NoDataComponent,
     ValidationErrorComponent,
-    CompletedComponent,
     CustomStepperComponent,
   ],
 })

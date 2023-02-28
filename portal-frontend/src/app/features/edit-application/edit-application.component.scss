@@ -106,18 +106,18 @@
   }
 
   .mobile-hidden {
-    display: none;
+    display: none !important;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: contents;
+      display: initial !important;;
     }
   }
 
   .tablet-hidden {
-    display: contents;
+    display: initial !important;;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: none;
+      display: none !important;
     }
   }
 
