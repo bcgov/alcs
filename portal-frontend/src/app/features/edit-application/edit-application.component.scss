@@ -298,9 +298,10 @@
     row-gap: rem(24);
   }
 
-  .owner-table {
+  .owner-table-wrapper {
     display: block;
     overflow: auto;
+    width: 100%;
   }
 
   .land-use-form {

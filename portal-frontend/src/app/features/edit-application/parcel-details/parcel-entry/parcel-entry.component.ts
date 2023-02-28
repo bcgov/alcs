@@ -131,13 +131,7 @@ export class ParcelEntryComponent implements OnInit {
         this.pid.setValue(result.pid);
       }
 
-      this.onFormGroupChange.emit({
-        uuid: this.parcel.uuid,
-        legalDescription: this.legalDescription.getRawValue(),
-        mapArea: this.mapArea.getRawValue(),
-        pin: this.pin.getRawValue(),
-        pid: this.pid.getRawValue(),
-      });
+      this.emitFormChangeOnSearchActions();
     }
   }
 
@@ -147,6 +141,18 @@ export class ParcelEntryComponent implements OnInit {
     this.parcelForm.controls.pin.reset();
     this.parcelForm.controls.legalDescription.reset();
     this.parcelForm.controls.mapArea.reset();
+
+    this.emitFormChangeOnSearchActions();
+  }
+
+  private emitFormChangeOnSearchActions() {
+    this.onFormGroupChange.emit({
+      uuid: this.parcel.uuid,
+      legalDescription: this.legalDescription.getRawValue(),
+      mapArea: this.mapArea.getRawValue(),
+      pin: this.pin.getRawValue(),
+      pid: this.pid.getRawValue(),
+    });
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
