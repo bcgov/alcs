@@ -9,26 +9,25 @@
         <li *ngFor="let owner of owners">{{ owner.displayName }}</li>
       </ul>
     </div>
+  </div>
 
-    <p>All fields are required unless stated optional.</p>
+  <p>All fields are required unless stated optional.</p>
 
-    <form [formGroup]="otherParcelsForm" class="other-parcels-form">
+  <form [formGroup]="otherParcelsForm" class="other-parcels-form">
       <div class="full-row">
-        <div>
-          <div for="hasOtherParcelsInCommunity">
-            Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR)
-            within the <b>community</b> where the application parcel(s) is located?
-          </div>
-          <mat-button-toggle-group
-            class="input"
-            id="hasOtherParcelsInCommunity"
-            formControlName="hasOtherParcelsInCommunity"
-            (change)="onHasOtherParcelsInCommunityChange($event)"
-          >
-            <mat-button-toggle value="true">Yes</mat-button-toggle>
-            <mat-button-toggle value="false">No</mat-button-toggle>
-          </mat-button-toggle-group>
+        <div for="hasOtherParcelsInCommunity">
+          Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within
+          the <b>community</b> where the application parcel(s) is located?
         </div>
+        <mat-button-toggle-group
+          class="input"
+          id="hasOtherParcelsInCommunity"
+          formControlName="hasOtherParcelsInCommunity"
+          (change)="onHasOtherParcelsInCommunityChange($event)"
+        >
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
       </div>
 
       <div class="full-row">
@@ -79,18 +78,17 @@
           </button>
         </div>
       </div>
-    </form>
-  </div>
-
-  <div class="button-container">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <div>
-      <button mat-stroked-button (click)="onNavigateToStep(currentStep - 1)" color="primary">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button mat-flat-button (click)="onNavigateToStep(currentStep + 1)" color="primary">
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
-    </div>
-  </div>
+  </form>
 </section>
+
+<div class="button-container">
+  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <div>
+    <button mat-stroked-button (click)="onNavigateToStep(currentStep - 1)" color="primary">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button (click)="onNavigateToStep(currentStep + 1)" color="primary">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>
