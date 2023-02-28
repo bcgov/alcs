@@ -292,7 +292,46 @@
   }
 
   .other-parcels-form {
-    display: grid;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     row-gap: rem(24);
+  }
+
+  .owner-table-wrapper {
+    display: block;
+    overflow: auto;
+    width: 100%;
+  }
+
+  .land-use-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: rem(24);
+
+    .land-use-type-wrapper {
+      display: flex;
+      gap: rem(24);
+      flex-wrap: wrap;
+      width: 100%;
+
+      .land-use-type {
+        width: 100%;
+      }
+    }
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      .land-use-type-wrapper {
+        flex-wrap: nowrap;
+
+        .land-use-type {
+          width: 64%;
+        }
+      }
+    }
+  }
+
+  .display-block {
+    display: block;
   }
 }

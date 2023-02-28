@@ -115,8 +115,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
     for (const parcel of this.parcels) {
       parcelsToUpdate.push({
         uuid: parcel.uuid,
-        pid: parcel.pid?.toString(),
-        pin: parcel.pin?.toString(),
+        pid: parcel.pid?.toString() || null,
+        pin: parcel.pin?.toString() || null,
         legalDescription: parcel.legalDescription,
         isFarm: parcel.isFarm,
         purchasedDate: parcel.purchasedDate,
