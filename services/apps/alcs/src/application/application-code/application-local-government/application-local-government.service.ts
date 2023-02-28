@@ -84,6 +84,7 @@ export class ApplicationLocalGovernmentService {
     localGovernment.bceidBusinessGuid = updateDto.bceidBusinessGuid;
     localGovernment.isFirstNation = updateDto.isFirstNation;
     localGovernment.isActive = updateDto.isActive;
+    localGovernment.preferredRegionCode = updateDto.preferredRegionCode;
 
     await this.repository.save(localGovernment);
     await this.loadGovernmentsToRedis();
@@ -95,6 +96,7 @@ export class ApplicationLocalGovernmentService {
     newGovernment.bceidBusinessGuid = createDto.bceidBusinessGuid;
     newGovernment.isFirstNation = createDto.isFirstNation;
     newGovernment.isActive = createDto.isActive;
+    newGovernment.preferredRegionCode = createDto.preferredRegionCode;
 
     await this.repository.save(newGovernment);
     await this.loadGovernmentsToRedis();
