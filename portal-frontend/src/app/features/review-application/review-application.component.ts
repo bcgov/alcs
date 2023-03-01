@@ -49,6 +49,7 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   isFirstNationGovernment = true;
   reviewAppSteps = ReviewApplicationSteps;
   reviewAppFngSteps = ReviewApplicationFngSteps;
+  doNotSaveAppReview = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -103,6 +104,7 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   onReturnApplication() {
+    this.doNotSaveAppReview = true;
     this.dialog
       .open(ReturnApplicationDialogComponent, {
         panelClass: 'no-padding',
@@ -164,6 +166,10 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
+    if (this.doNotSaveAppReview) {
+      return of(true);
+    }
+
     await this.saveApplicationReview(this.customStepper.selectedIndex);
 
     return of(true);

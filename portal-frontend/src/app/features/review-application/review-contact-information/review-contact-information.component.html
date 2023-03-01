@@ -56,7 +56,7 @@
       </div>
     </form>
     <div class="button-container">
-      <button mat-stroked-button color="accent">Save and Exit</button>
+      <button mat-stroked-button color="accent" (click)="onExit()">Save and Exit</button>
       <div>
         <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
           Next<span class="mobile-hidden"> Step</span>

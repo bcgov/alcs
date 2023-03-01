@@ -49,9 +49,8 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onSaveExit() {
+  async onExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
