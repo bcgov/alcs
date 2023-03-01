@@ -1,8 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-resolution',
@@ -11,6 +12,8 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 })
 export class ReviewResolutionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationSteps.Resolution;
 
   isAuthorized = new FormControl<string | null>(null);
 
@@ -69,5 +72,9 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

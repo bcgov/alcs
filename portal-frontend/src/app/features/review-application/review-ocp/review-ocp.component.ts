@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-ocp',
@@ -12,6 +13,8 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 })
 export class ReviewOcpComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationSteps.OCP;
 
   isOCPDesignation = new FormControl<string | null>(null);
   OCPBylawName = new FormControl<string | null>('');
@@ -102,5 +105,9 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
       this.OCPDesignation.disable();
       this.isOCPConsistent.disable();
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

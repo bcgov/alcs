@@ -3,7 +3,7 @@
   <div class="description">
     <div>Provide information about applicable Official Community Plan (OCP)</div>
     <div>
-      <button class='save-button' (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
+      <button class="save-button" (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
     </div>
   </div>
   <form [formGroup]="ocpForm">
@@ -48,10 +48,10 @@
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
         Next<span class="mobile-hidden"> Step</span>
       </button>
     </div>

@@ -12,8 +12,8 @@
   </div>
   <div *ngIf="!isFirstNationGovernment && this.isOCPDesignation === false && this.isSubjectToZoning === false">
     By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
-    <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>. The only option
-    available to you is to forward this application on to the ALC.
+    <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>. The
+    only option available to you is to forward this application on to the ALC.
   </div>
   <form [formGroup]="resolutionForm">
     <div class="form-row">
@@ -37,10 +37,10 @@
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
         Next<span class="mobile-hidden"> Step</span>
       </button>
     </div>

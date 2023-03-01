@@ -60,28 +60,45 @@
 >
   <cdk-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === 0">
-      <app-review-contact-information></app-review-contact-information>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.ContactInformation">
+      <app-review-contact-information (navigateToStep)="onBeforeSwitchStep($event)"></app-review-contact-information>
     </div>
   </cdk-step>
   <cdk-step label="Plans & Bylaws: OCP">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-ocp></app-review-ocp>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.OCP">
+      <app-review-ocp (navigateToStep)="onBeforeSwitchStep($event)"></app-review-ocp>
+    </div>
   </cdk-step>
   <cdk-step label="Plans & Bylaws: Zoning">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-zoning></app-review-zoning>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Zoning">
+      <app-review-zoning (navigateToStep)="onBeforeSwitchStep($event)"></app-review-zoning>
+    </div>
   </cdk-step>
   <cdk-step label="Resolution">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-resolution></app-review-resolution>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Resolution">
+      <app-review-resolution (navigateToStep)="onBeforeSwitchStep($event)"></app-review-resolution>
+    </div>
   </cdk-step>
   <cdk-step label="Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-attachments [$application]="$application"></app-review-attachments>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Attachments">
+      <app-review-attachments
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-review-attachments>
+    </div>
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-submit [$application]="$application" [stepper]="cdkStepper"></app-review-submit>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.ReviewAndSubmit">
+      <app-review-submit
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [stepper]="cdkStepper"
+      ></app-review-submit>
+    </div>
   </cdk-step>
 </app-custom-stepper>

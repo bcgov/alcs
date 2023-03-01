@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CanDeactivateGuard } from '../../shared/guard/can-deactivate.guard';
 import { SharedModule } from '../../shared/shared.module';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 import { ReviewApplicationComponent } from './review-application.component';
@@ -16,6 +17,12 @@ const routes: Routes = [
   {
     path: '',
     component: ReviewApplicationComponent,
+    canDeactivate: [CanDeactivateGuard],
+  },
+  {
+    path: ':stepInd',
+    component: ReviewApplicationComponent,
+    canDeactivate: [CanDeactivateGuard],
   },
 ];
 
