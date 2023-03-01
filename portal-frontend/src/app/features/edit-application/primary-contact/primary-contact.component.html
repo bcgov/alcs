@@ -11,6 +11,7 @@
         (click)="onSelectOwner(owner.uuid)"
         *ngIf="owner.uuid !== selectedOwnerUuid"
         color="primary"
+        [ngClass]="{ 'mat-error': !selectedOwnerUuid && showValidationErrors }"
         mat-stroked-button
       >
         Make Primary Contact
@@ -18,11 +19,22 @@
       <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
     </ng-container>
     <h5>Third Party Agent on behalf of Owner(s)</h5>
-    <button *ngIf="!selectedThirdPartyAgent" color="primary" (click)="onSelectAgent()" mat-stroked-button>
+    <button
+      *ngIf="!selectedThirdPartyAgent"
+      color="primary"
+      (click)="onSelectAgent()"
+      [ngClass]="{ 'mat-error': !selectedOwnerUuid && showValidationErrors }"
+      mat-stroked-button
+    >
       Make Primary Contact
     </button>
     <div class="selected" *ngIf="selectedThirdPartyAgent"><mat-icon>check</mat-icon>Primary Contact</div>
+    <div><!--this is required for correct responsive view --></div>
+    <app-validation-error *ngIf="!selectedOwnerUuid && showValidationErrors"
+      >Please select a primary contact</app-validation-error
+    >
   </div>
+
   <div class="agent-form">
     <h4>Agent Contact Information</h4>
     <form [formGroup]="form">

@@ -41,6 +41,7 @@
       <app-primary-contact
         [$application]="$application"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        [showValidationErrors]="showValidationErrors"
       ></app-primary-contact>
     </div>
   </cdk-step>

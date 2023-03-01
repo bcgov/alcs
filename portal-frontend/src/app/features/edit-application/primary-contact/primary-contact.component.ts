@@ -18,6 +18,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showValidationErrors: boolean = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
   $destroy = new Subject<void>();
