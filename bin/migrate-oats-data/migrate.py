@@ -1,29 +1,33 @@
-import os
-import psycopg2
+import sys, logging, argparse
 from dotenv import load_dotenv
-from tqdm import tqdm
-
 from applications import process_applications
 
-# Load environment variables from .env file
-load_dotenv()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="OATS ETL utility")
+    parser.add_argument(
+        "action",
+        choices=["import", "clean"],
+        default="import",
+        help="Action to perform (default: import)",
+    )
 
-# Load the database connection secrets from environment variables
-db_username = os.getenv("DB_USERNAME")
-db_password = os.getenv("DB_PASSWORD")
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT")
-db_database = os.getenv("DB_DATABASE")
+    # Print help message if user specifies --help or -h flag
+    if "-h" in sys.argv or "--help" in sys.argv:
+        parser.print_help()
+        sys.exit(0)
+    # Parse command line arguments
+    args = parser.parse_args()
 
-conn = psycopg2.connect(
-    host=db_host,
-    port=db_port,
-    database=db_database,
-    user=db_username,
-    password=db_password,
-)
+    # Setup
+    logging.basicConfig(level=logging.INFO)
 
-try:
-    process_applications(conn)
-finally:
-    conn.close()
+    # Call function corresponding to selected action using match statement
+    match args.action:
+        case "import":
+            print("Beginning import")
+            process_applications()
+            # import_function(conn_pool)
+        case "clean":
+
+            print("Beginning import")
+            # clean_function(conn_pool)

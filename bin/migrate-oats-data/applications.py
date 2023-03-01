@@ -1,4 +1,8 @@
-def process_applications(conn):
+from db import inject_conn_pool
+
+
+@inject_conn_pool
+def process_applications(conn=None):
     """
     Processes ALR (Agricultural Land Reserve) applications by performing the following steps:
         - Retrieves metadata about the applications from the oats.oats_alr_applications table.
@@ -21,9 +25,9 @@ def process_applications(conn):
     count = cursor.fetchone()[0]
     print("Number of applications: ", count)
 
-    with open("sql/insert-application.sql", "r", encoding="utf-8") as sql_file:
-        application_sql = sql_file.read()
+    # with open("sql/insert-application.sql", "r", encoding="utf-8") as sql_file:
+    #     application_sql = sql_file.read()
 
-    cursor.execute(application_sql)
+    # cursor.execute(application_sql)
 
     cursor.close()
