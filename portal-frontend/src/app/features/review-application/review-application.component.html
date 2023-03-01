@@ -5,7 +5,7 @@
   </div>
 </ng-template>
 
-<mat-stepper *ngIf="!isFirstNationGovernment" class="review-application" linear="true" #stepper>
+<!-- <mat-stepper *ngIf="!isFirstNationGovernment" class="review-application" linear="true" #stepper>
   <mat-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <app-review-contact-information></app-review-contact-information>
@@ -49,4 +49,39 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <app-review-submit-fng [$application]="$application" [stepper]="stepper"></app-review-submit-fng>
   </mat-step>
-</mat-stepper>
+</mat-stepper> -->
+
+<app-custom-stepper
+  class="review-application"
+  *ngIf="!isFirstNationGovernment"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+>
+  <cdk-step label="Contact Information">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === 0">
+      <app-review-contact-information></app-review-contact-information>
+    </div>
+  </cdk-step>
+  <cdk-step label="Plans & Bylaws: OCP">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-ocp></app-review-ocp>
+  </cdk-step>
+  <cdk-step label="Plans & Bylaws: Zoning">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-zoning></app-review-zoning>
+  </cdk-step>
+  <cdk-step label="Resolution">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-resolution></app-review-resolution>
+  </cdk-step>
+  <cdk-step label="Attachments">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-attachments [$application]="$application"></app-review-attachments>
+  </cdk-step>
+  <cdk-step label="Review & Submit">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <app-review-submit [$application]="$application" [stepper]="cdkStepper"></app-review-submit>
+  </cdk-step>
+</app-custom-stepper>
