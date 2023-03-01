@@ -109,10 +109,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
           agentPhoneNumber: this.phoneNumber.getRawValue() ?? '',
           ownerUuid: selectedOwner?.uuid,
         });
-      } else {
+      } else if (selectedOwner) {
         await this.applicationOwnerService.setPrimaryContact({
           fileNumber: this.fileId,
-          ownerUuid: selectedOwner?.uuid,
+          ownerUuid: selectedOwner.uuid,
         });
       }
     }
