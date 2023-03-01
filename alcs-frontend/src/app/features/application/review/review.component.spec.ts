@@ -2,10 +2,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { AppModule } from '../../../app.module';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
-import { SharedModule } from '../../../shared/shared.module';
 
 import { ReviewComponent } from './review.component';
 

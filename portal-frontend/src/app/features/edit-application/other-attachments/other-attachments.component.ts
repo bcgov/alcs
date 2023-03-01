@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -10,6 +11,7 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
   selector: 'app-other-attachments',
@@ -18,7 +20,9 @@ import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 })
 export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
   $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.Attachments;
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];
   selectableTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
@@ -26,6 +30,8 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   fileId: string | undefined;
 
   private isDirty = false;
+
+  form = new FormGroup({} as any);
 
   constructor(
     private router: Router,
@@ -37,16 +43,23 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.otherFiles = application.documents.sort((a, b) => {
-          return a.uploadedAt - b.uploadedAt;
-        });
+        this.otherFiles = application.documents
+          .filter((file) => (file.type ? this.selectableTypes.includes(file.type) : true))
+          .sort((a, b) => {
+            return a.uploadedAt - b.uploadedAt;
+          });
+        const newForm = new FormGroup({});
+        for (const file of this.otherFiles) {
+          newForm.addControl(`${file.uuid}-type`, new FormControl(file.type, [Validators.required]));
+          newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
+        }
+        this.form = newForm;
       }
     });
   }
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.onSave();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -69,7 +82,7 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -111,5 +124,9 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
       }
       return file;
     });
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

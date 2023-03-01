@@ -1,4 +1,7 @@
-import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceNotFoundException,
+} from '@app/common/exceptions/base.exception';
 import {
   Body,
   Controller,
@@ -35,15 +38,46 @@ export class ApplicationReviewController {
   @Get('/:fileNumber')
   async get(@Param('fileNumber') fileNumber: string, @Req() req) {
     const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+    if (userLocalGovernment) {
+      const applicationReview =
+        await this.applicationReviewService.getForGovernment(
+          fileNumber,
+          userLocalGovernment,
+        );
 
-    const applicationReview = await this.applicationReviewService.get(
+      if (applicationReview) {
+        return this.applicationReviewService.mapToDto(
+          applicationReview,
+          userLocalGovernment,
+        );
+      }
+    }
+
+    const applicationReview = await this.applicationReviewService.getForOwner(
       fileNumber,
-      userLocalGovernment,
+      req.user.entity,
     );
+
+    if (
+      ![
+        APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        APPLICATION_STATUS.REFUSED_TO_FORWARD,
+      ].includes(applicationReview.application.statusCode as APPLICATION_STATUS)
+    ) {
+      throw new NotFoundException('Failed to load review');
+    }
+
+    const localGovernments = await this.localGovernmentService.get();
+    const matchingGovernment = localGovernments.find(
+      (lg) => lg.uuid === applicationReview.application.localGovernmentUuid,
+    );
+    if (!matchingGovernment) {
+      throw new BaseServiceException('Failed to load Local Government');
+    }
 
     return this.applicationReviewService.mapToDto(
       applicationReview,
-      userLocalGovernment,
+      matchingGovernment,
     );
   }
 
@@ -53,7 +87,9 @@ export class ApplicationReviewController {
     @Req() req,
     @Body() updateDto: UpdateApplicationReviewDto,
   ) {
-    const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+    const userLocalGovernment = await this.getUserGovernmentOrFail(
+      req.user.entity,
+    );
 
     const applicationReview = await this.applicationReviewService.update(
       fileNumber,
@@ -69,7 +105,9 @@ export class ApplicationReviewController {
 
   @Post('/:fileNumber/start')
   async create(@Param('fileNumber') fileNumber: string, @Req() req) {
-    const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+    const userLocalGovernment = await this.getUserGovernmentOrFail(
+      req.user.entity,
+    );
 
     const application = await this.applicationService.getForGovernmentByFileId(
       fileNumber,
@@ -81,7 +119,7 @@ export class ApplicationReviewController {
     );
 
     await this.applicationService.updateStatus(
-      fileNumber,
+      application,
       APPLICATION_STATUS.IN_REVIEW,
     );
 
@@ -93,17 +131,24 @@ export class ApplicationReviewController {
 
   @Post('/:fileNumber/finish')
   async finish(@Param('fileNumber') fileNumber: string, @Req() req) {
-    const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+    const userLocalGovernment = await this.getUserGovernmentOrFail(
+      req.user.entity,
+    );
 
     const application = await this.applicationService.getForGovernmentByFileId(
       fileNumber,
       userLocalGovernment,
     );
 
-    const applicationReview = await this.applicationReviewService.get(
-      application.fileNumber,
-      userLocalGovernment,
-    );
+    const applicationReview =
+      await this.applicationReviewService.getForGovernment(
+        application.fileNumber,
+        userLocalGovernment,
+      );
+
+    if (!applicationReview) {
+      throw new ServiceNotFoundException('Failed to load applicaiton review');
+    }
 
     const completedReview = this.applicationReviewService.verifyComplete(
       application,
@@ -116,7 +161,7 @@ export class ApplicationReviewController {
         await this.applicationService.submitToAlcs(fileNumber, completedReview);
       } else {
         await this.applicationService.updateStatus(
-          fileNumber,
+          application,
           APPLICATION_STATUS.REFUSED_TO_FORWARD,
         );
       }
@@ -131,23 +176,26 @@ export class ApplicationReviewController {
     @Req() req,
     @Body() returnDto: ReturnApplicationDto,
   ) {
-    const userLocalGovernment = await this.getUserGovernment(req.user.entity);
+    const userLocalGovernment = await this.getUserGovernmentOrFail(
+      req.user.entity,
+    );
 
     const application = await this.applicationService.getForGovernmentByFileId(
       fileNumber,
       userLocalGovernment,
     );
 
-    const applicationReview = await this.applicationReviewService.get(
-      application.fileNumber,
-      userLocalGovernment,
-    );
+    const applicationReview =
+      await this.applicationReviewService.getForGovernment(
+        application.fileNumber,
+        userLocalGovernment,
+      );
+
+    if (!applicationReview) {
+      throw new ServiceNotFoundException('Failed to load applicaiton review');
+    }
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-      await this.applicationService.update(application.fileNumber, {
-        returnedComment: returnDto.applicantComment,
-      });
-
       const documentsToDelete = application.documents.filter((document) =>
         [
           DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
@@ -161,20 +209,29 @@ export class ApplicationReviewController {
 
       await this.applicationReviewService.delete(applicationReview);
 
+      application.returnedComment = returnDto.applicantComment;
       if (returnDto.reasonForReturn === 'incomplete') {
         await this.applicationService.updateStatus(
-          fileNumber,
+          application,
           APPLICATION_STATUS.INCOMPLETE,
         );
       } else {
         await this.applicationService.updateStatus(
-          fileNumber,
+          application,
           APPLICATION_STATUS.WRONG_GOV,
         );
       }
     } else {
       throw new BaseServiceException('Application not in correct status');
     }
+  }
+
+  private async getUserGovernmentOrFail(user: User) {
+    const userGovernment = await this.getUserGovernment(user);
+    if (!userGovernment) {
+      throw new NotFoundException('User not part of any local government');
+    }
+    return userGovernment;
   }
 
   private async getUserGovernment(user: User) {
@@ -186,6 +243,6 @@ export class ApplicationReviewController {
         return localGovernment;
       }
     }
-    throw new NotFoundException('User not part of any local government');
+    return undefined;
   }
 }

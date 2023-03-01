@@ -1,12 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
+import { EditApplicationSteps } from '../edit-application.component';
 
 @Component({
   selector: 'app-select-government',
@@ -15,9 +16,11 @@ import { CodeService } from '../../../services/code/code.service';
 })
 export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.Government;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
 
-  localGovernment = new FormControl<string | any>('');
+  localGovernment = new FormControl<string | any>('', [Validators.required]);
   showWarning = false;
   selectGovernmentUuid = '';
   fileId = '';
@@ -63,25 +66,25 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   }
 
   onBlur() {
-    //Blur will fire below optionSelected
+    //Blur will fire before onChange above, so use setTimeout to delay it
     setTimeout(() => {
       const localGovernmentName = this.localGovernment.getRawValue();
       if (localGovernmentName) {
         const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
         if (!localGovernment) {
           this.localGovernment.setValue(null);
+          console.log('Clearing Local Government field');
         }
       }
-    }, 100);
+    }, 500);
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
   }
 
   async onSaveExit() {
-    await this.save();
     await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
@@ -126,5 +129,9 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       this.localGovernment.patchValue(lg.name);
       this.showWarning = !lg.hasGuid;
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

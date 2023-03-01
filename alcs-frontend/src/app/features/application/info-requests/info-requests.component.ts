@@ -2,7 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
+import {
+  ApplicationMeetingDto,
+  ApplicationMeetingTypeDto,
+} from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -47,14 +50,14 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  async onCreate(meetingTypeCode: string) {
+  async onCreate(meetingType: ApplicationMeetingTypeDto) {
     const dialog = this.dialog.open(InfoRequestDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
       data: {
         fileNumber: this.fileNumber,
-        meetingType: { code: meetingTypeCode, reason: REASON_TYPE.DEFAULT },
+        meetingType: { ...meetingType, reason: REASON_TYPE.DEFAULT },
       },
     });
     dialog.beforeClosed().subscribe((result) => {
@@ -77,7 +80,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
           uuid: meeting.uuid,
           startDate: meeting.meetingStartDate,
           endDate: meeting.meetingEndDate ?? null,
-          meetingType: { code: meeting.meetingType.code },
+          meetingType: meeting.meetingType,
           reason:
             meeting.description === REASON_TYPE.DEFAULT || !meeting.description
               ? REASON_TYPE.DEFAULT
@@ -101,7 +104,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
     });
     answer.subscribe((answer) => {
       if (answer) {
-        this.meetingService.delete(uuid).then(() => {
+        this.meetingService.delete(uuid, 'Information Request').then(() => {
           this.applicationDetailService.loadApplication(this.fileNumber);
         });
       }
@@ -111,7 +114,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
   async onSaveEndDate(uuid: any, endDate: number) {
     const matchingMeeting = this.infoRequests.find((request) => request.uuid === uuid);
     if (matchingMeeting) {
-      await this.meetingService.update(uuid, {
+      await this.meetingService.update(uuid, 'Information Request', {
         meetingStartDate: new Date(matchingMeeting.meetingStartDate),
         meetingEndDate: new Date(endDate),
         description: matchingMeeting.description,

@@ -33,6 +33,14 @@ export class ApplicationDto {
   @AutoMap()
   status: ApplicationStatusDto;
 
+  @AutoMap(() => Boolean)
+  hasOtherParcelsInCommunity?: boolean | null;
+
+  @AutoMap(() => String)
+  returnedComment: string | null;
+
+  lastStatusUpdate: number;
+
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
 
@@ -93,10 +101,10 @@ export class ApplicationDetailedDto extends ApplicationDto {
   nfuFillVolume?: number | null;
 
   @AutoMap(() => Number)
-  nfuProjectDurationYears?: number | null;
+  nfuProjectDurationAmount?: number | null;
 
-  @AutoMap(() => Number)
-  nfuProjectDurationMonths?: number | null;
+  @AutoMap(() => String)
+  nfuProjectDurationUnit?: string | null;
 
   @AutoMap(() => String)
   nfuFillTypeDescription?: string | null;
@@ -178,6 +186,10 @@ export class ApplicationUpdateDto {
   @IsOptional()
   westLandUseTypeDescription?: string;
 
+  @IsBoolean()
+  @IsOptional()
+  hasOtherParcelsInCommunity?: boolean | null;
+
   //NFU Specific Fields
   @IsNumber()
   @IsOptional()
@@ -216,11 +228,11 @@ export class ApplicationUpdateDto {
 
   @IsNumber()
   @IsOptional()
-  nfuProjectDurationYears?: number | null;
+  nfuProjectDurationAmount?: number | null;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  nfuProjectDurationMonths?: number | null;
+  nfuProjectDurationUnit?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)

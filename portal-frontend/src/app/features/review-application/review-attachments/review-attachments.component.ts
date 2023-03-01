@@ -50,7 +50,10 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
           applicationReview.isFirstNationGovernment ||
           (applicationReview.isAuthorized !== null &&
             applicationReview.isOCPDesignation !== null &&
-            applicationReview.isSubjectToZoning !== null);
+            applicationReview.isSubjectToZoning !== null) ||
+          (applicationReview.isAuthorized === null &&
+            applicationReview.isOCPDesignation === false &&
+            applicationReview.isSubjectToZoning === false);
       }
     });
 
@@ -78,7 +81,12 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   async attachFile(fileHandle: FileHandle, documentType: DOCUMENT) {
     if (this.fileId) {
-      await this.applicationDocumentService.attachExternalFile(this.fileId, fileHandle.file, documentType);
+      await this.applicationDocumentService.attachExternalFile(
+        this.fileId,
+        fileHandle.file,
+        documentType,
+        'Local Government'
+      );
       await this.loadApplication(this.fileId);
     }
   }

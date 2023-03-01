@@ -17,7 +17,9 @@ export interface ApplicationStatusDto extends BaseCodeDto {}
 
 export interface ApplicationDto {
   fileNumber: string;
-  createdAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  lastStatusUpdate: number;
   applicant: string;
   type: string;
   localGovernmentUuid: string;
@@ -27,6 +29,8 @@ export interface ApplicationDto {
   canView: boolean;
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDetailedDto[];
+  hasOtherParcelsInCommunity?: boolean | null;
+  returnedComment?: string;
 }
 
 export interface ApplicationDetailedDto extends ApplicationDto {
@@ -53,8 +57,8 @@ export interface ApplicationDetailedDto extends ApplicationDto {
   nfuTotalFillPlacement: number | null;
   nfuMaxFillDepth: number | null;
   nfuFillVolume: number | null;
-  nfuProjectDurationYears: number | null;
-  nfuProjectDurationMonths: number | null;
+  nfuProjectDurationAmount: number | null;
+  nfuProjectDurationUnit: string | null;
   nfuFillTypeDescription: string | null;
   nfuFillOriginDescription: string | null;
 }
@@ -64,6 +68,7 @@ export interface ApplicationUpdateDto {
   localGovernmentUuid?: string;
   typeCode?: string;
   primaryContactOwnerUuid?: string;
+  hasOtherParcelsInCommunity?: boolean | null;
 
   //Land use fields
   parcelsAgricultureDescription?: string | null;
@@ -87,8 +92,8 @@ export interface ApplicationUpdateDto {
   nfuTotalFillPlacement?: number | null;
   nfuMaxFillDepth?: number | null;
   nfuFillVolume?: number | null;
-  nfuProjectDurationYears?: number | null;
-  nfuProjectDurationMonths?: number | null;
+  nfuProjectDurationAmount?: number | null;
+  nfuProjectDurationUnit?: string | null;
   nfuFillTypeDescription?: string | null;
   nfuFillOriginDescription?: string | null;
 }

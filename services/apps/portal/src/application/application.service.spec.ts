@@ -1,7 +1,7 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Observable, of } from 'rxjs';
@@ -158,6 +158,7 @@ describe('ApplicationService', () => {
       uuid: '',
       name: '',
       isFirstNation: false,
+      isActive: true,
     });
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
@@ -170,14 +171,12 @@ describe('ApplicationService', () => {
     });
     mockStatusRepository.findOneOrFail.mockResolvedValue(cancelStatus);
 
-    mockRepository.update.mockResolvedValue({} as any);
+    mockRepository.save.mockResolvedValue({} as any);
 
     await service.cancel(application);
     expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.update).toHaveBeenCalledTimes(1);
-    expect(mockRepository.update.mock.calls[0][1].status!).toEqual(
-      cancelStatus,
-    );
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save.mock.calls[0][0].status).toEqual(cancelStatus);
   });
 
   it('should throw an exception if it fails to load cancelled status', async () => {
@@ -198,17 +197,12 @@ describe('ApplicationService', () => {
     });
 
     mockStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
-    mockRepository.update.mockResolvedValue({} as any);
+    mockRepository.save.mockResolvedValue({} as any);
 
-    await service.submitToLg('fileNumber');
+    await service.submitToLg(new Application());
     expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.update).toHaveBeenCalledTimes(1);
-    expect(mockRepository.update.mock.calls[0][0]).toEqual({
-      fileNumber: 'fileNumber',
-    });
-    expect(mockRepository.update.mock.calls[0][1]).toEqual({
-      status: mockStatus,
-    });
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save.mock.calls[0][0].status).toEqual(mockStatus);
   });
 
   it('should use application type service for mapping DTOs', async () => {
@@ -231,6 +225,7 @@ describe('ApplicationService', () => {
         code: 'status-code',
         label: '',
       }),
+      statusHistory: [],
     });
     mockRepository.findOne.mockResolvedValue(application);
 
@@ -258,6 +253,7 @@ describe('ApplicationService', () => {
           }),
         }),
       ],
+      statusHistory: [],
     });
 
     mockAlcsApplicationService.create.mockImplementation(
@@ -289,6 +285,7 @@ describe('ApplicationService', () => {
         code: 'status-code',
         label: '',
       }),
+      statusHistory: [],
       documents: [
         new ApplicationDocument({
           type: 'fake',
@@ -302,7 +299,7 @@ describe('ApplicationService', () => {
     mockAlcsApplicationService.create.mockReturnValue(
       of({ fileNumber, applicant } as ApplicationGrpcResponse),
     );
-    mockRepository.update.mockResolvedValue({} as any);
+    mockRepository.save.mockResolvedValue({} as any);
     mockRepository.findOneOrFail.mockResolvedValue(mockApplication);
 
     mockStatusRepository.findOneOrFail.mockResolvedValue(
@@ -315,6 +312,7 @@ describe('ApplicationService', () => {
     expect(res.applicant).toEqual(mockApplication.applicant);
     expect(res.fileNumber).toEqual(mockApplication.fileNumber);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if application exists', async () => {

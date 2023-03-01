@@ -56,9 +56,12 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
         this._applicationReview = applicationReview;
 
         this.hasCompletedStepsBeforeDocuments =
-          applicationReview.isAuthorized !== null &&
-          applicationReview.isOCPDesignation !== null &&
-          applicationReview.isSubjectToZoning !== null;
+          (applicationReview.isAuthorized !== null &&
+            applicationReview.isOCPDesignation !== null &&
+            applicationReview.isSubjectToZoning !== null) ||
+          (applicationReview.isAuthorized === null &&
+            applicationReview.isOCPDesignation === false &&
+            applicationReview.isSubjectToZoning === false);
       }
     });
 

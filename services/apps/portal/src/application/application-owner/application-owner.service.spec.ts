@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
+import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
@@ -55,6 +56,13 @@ describe('ApplicationOwnerService', () => {
     }).compile();
 
     service = module.get<ApplicationOwnerService>(ApplicationOwnerService);
+
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners: [new ApplicationOwner()],
+      }),
+    ]);
+    mockApplicationservice.update.mockResolvedValue(new Application());
   });
 
   it('should be defined', () => {
@@ -191,5 +199,125 @@ describe('ApplicationOwnerService', () => {
     await service.getMany([]);
 
     expect(mockRepo.find).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call update for the application with the first parcels name', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    const owners = [
+      new ApplicationOwner({
+        firstName: 'A',
+        lastName: 'A',
+      }),
+    ];
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners,
+        parcelType: PARCEL_TYPE.APPLICATION,
+      }),
+    ]);
+
+    await service.updateApplicationApplicant('');
+
+    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
+    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+      'A A',
+    );
+  });
+
+  it('should call update for the application with the first parcels name', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    const owners = [
+      new ApplicationOwner({
+        firstName: 'B',
+        lastName: 'B',
+      }),
+      new ApplicationOwner({
+        firstName: 'A',
+        lastName: 'A',
+      }),
+      new ApplicationOwner({
+        firstName: '1',
+        lastName: '1',
+      }),
+      new ApplicationOwner({
+        firstName: 'C',
+        lastName: 'C',
+      }),
+    ];
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners,
+        parcelType: PARCEL_TYPE.APPLICATION,
+      }),
+    ]);
+
+    await service.updateApplicationApplicant('');
+
+    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
+    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+      'A A et al.',
+    );
+  });
+
+  it('should call update for the application with the number owners name', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    const owners = [
+      new ApplicationOwner({
+        firstName: '1',
+        lastName: '1',
+      }),
+      new ApplicationOwner({
+        firstName: '2',
+        lastName: '2',
+      }),
+    ];
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners,
+        parcelType: PARCEL_TYPE.APPLICATION,
+      }),
+    ]);
+
+    await service.updateApplicationApplicant('');
+
+    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
+    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+      '1 1 et al.',
+    );
+  });
+
+  it('should use the first created parcel to set the application applicants name', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    const owners1 = [
+      new ApplicationOwner({
+        firstName: 'C',
+        lastName: 'C',
+      }),
+    ];
+    const owners2 = [
+      new ApplicationOwner({
+        firstName: 'A',
+        lastName: 'A',
+      }),
+    ];
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners: owners1,
+        auditCreatedAt: new Date(1),
+        parcelType: PARCEL_TYPE.APPLICATION,
+      }),
+      new ApplicationParcel({
+        owners: owners2,
+        auditCreatedAt: new Date(100),
+        parcelType: PARCEL_TYPE.APPLICATION,
+      }),
+    ]);
+
+    await service.updateApplicationApplicant('');
+
+    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
+    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+      'A A et al.',
+    );
   });
 });

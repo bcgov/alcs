@@ -1,0 +1,143 @@
+<h3>L/FNG Info</h3>
+<section>
+  <div *ngIf="!applicationReview" class="warning">
+    Application not subjected to Local/First Nation Government Review.
+  </div>
+  <ng-container *ngIf="applicationReview">
+    <h4>Government File & Contact</h4>
+    <div class="review-table">
+      <div class="full-row">
+        <div class="subheading2">Local Government File Number</div>
+        <div>{{ applicationReview.localGovernmentFileNumber }}</div>
+      </div>
+      <div>
+        <div class="subheading2">First Name</div>
+        <div>{{ applicationReview.firstName }}</div>
+      </div>
+      <div>
+        <div class="subheading2">Last Name</div>
+        <div>{{ applicationReview.lastName }}</div>
+      </div>
+      <div>
+        <div class="subheading2">Position</div>
+        <div>{{ applicationReview.position }}</div>
+      </div>
+      <div>
+        <div class="subheading2">Department</div>
+        <div>{{ applicationReview.department }}</div>
+      </div>
+      <div>
+        <div class="subheading2">Phone Number</div>
+        <div>
+          <a [href]="'tel:' + applicationReview.phoneNumber">{{ applicationReview.phoneNumber }}</a>
+        </div>
+      </div>
+      <div>
+        <div class="subheading2">Email</div>
+        <div>
+          <a [href]="'mailto:' + applicationReview.email">{{ applicationReview.email }}</a>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="applicationReview.isOCPDesignation !== undefined">
+      <h4>Plans & Bylaws: OCP</h4>
+      <div class="review-table">
+        <div class="full-row">
+          <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
+          <div>{{ applicationReview.isOCPDesignation ? 'Yes' : 'No' }}</div>
+        </div>
+        <ng-container *ngIf="applicationReview.isOCPDesignation">
+          <div class="full-row">
+            <hr />
+          </div>
+          <div>
+            <div class="subheading2">Zoning Bylaw Name</div>
+            <div>{{ applicationReview.zoningBylawName }}</div>
+          </div>
+          <div>
+            <div class="subheading2">Zoning Designation</div>
+            <div>{{ applicationReview.zoningDesignation }}</div>
+          </div>
+          <div>
+            <div class="subheading2">Minimum Lot Size (hectares)</div>
+            <div>{{ applicationReview.zoningMinimumLotSize }}</div>
+          </div>
+          <div>
+            <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+            <div>{{ applicationReview.isZoningConsistent ? 'Yes' : 'No' }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="applicationReview.isSubjectToZoning !== undefined">
+      <h4>Plans & Bylaws: Zoning</h4>
+      <div class="review-table">
+        <div class="full-row">
+          <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
+          <div>{{ applicationReview.isSubjectToZoning ? 'Yes' : 'No' }}</div>
+        </div>
+        <ng-container *ngIf="applicationReview.isSubjectToZoning">
+          <div class="full-row">
+            <hr />
+          </div>
+          <div>
+            <div class="subheading2">Zoning Bylaw Name</div>
+            <div>{{ applicationReview.zoningBylawName }}</div>
+          </div>
+          <div>
+            <div class="subheading2">Zoning Designation</div>
+            <div>{{ applicationReview.zoningDesignation }}</div>
+          </div>
+          <div>
+            <div class="subheading2">Minimum Lot Size (hectares)</div>
+            <div>{{ applicationReview.zoningMinimumLotSize }}</div>
+          </div>
+          <div>
+            <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+            <div>{{ applicationReview.isZoningConsistent ? 'Yes' : 'No' }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <h4>Resolution</h4>
+    <div class="review-table">
+      <div class="full-row">
+        <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+        <div *ngIf="applicationReview.isAuthorized === null">Not subject to Authorization</div>
+        <div *ngIf="applicationReview.isAuthorized !== null">
+          {{ applicationReview.isAuthorized ? 'Authorized' : 'Refused to Authorize' }}
+        </div>
+      </div>
+    </div>
+
+    <h4>Attachments</h4>
+    <div class="review-table">
+      <div>
+        <div class="subheading2">Resolution Document</div>
+        <div>
+          <a *ngIf="resolutionDocument" (click)="openDocument(resolutionDocument.uuid, resolutionDocument.fileName)">{{
+            resolutionDocument.fileName
+          }}</a>
+        </div>
+      </div>
+      <div *ngIf="staffReport">
+        <div class="subheading2">Staff Report</div>
+        <div>
+          <a (click)="openDocument(staffReport.uuid, staffReport.fileName)">{{ staffReport.fileName }}</a>
+        </div>
+      </div>
+      <div>
+        <div class="subheading2">Other Attachments</div>
+        <div>
+          <span *ngIf="otherAttachments.length === 0">No Attachments</span>
+          <div *ngFor="let attachment of otherAttachments">
+            <a (click)="openDocument(attachment.uuid, attachment.fileName)">{{ attachment.fileName }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

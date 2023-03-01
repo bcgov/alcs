@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -13,6 +13,7 @@ import { ApplicationParcelService } from '../../../services/application-parcel/a
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
+import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -21,9 +22,11 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   templateUrl: './parcel-details.component.html',
   styleUrls: ['./parcel-details.component.scss'],
 })
-export class ParcelDetailsComponent implements OnInit, OnDestroy {
+export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
-
+  @Output() navigateToStep = new EventEmitter<number>();
+  @Output() componentInitialized = new EventEmitter<boolean>();
+  currentStep = EditApplicationSteps.AppParcel;
   $destroy = new Subject<void>();
   fileId!: string;
 
@@ -53,9 +56,13 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     this.newParcelAdded = false;
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout((_) => this.componentInitialized.emit(true));
   }
 
   async loadParcels() {
@@ -108,8 +115,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
     for (const parcel of this.parcels) {
       parcelsToUpdate.push({
         uuid: parcel.uuid,
-        pid: parcel.pid?.toString(),
-        pin: parcel.pin?.toString(),
+        pid: parcel.pid?.toString() || null,
+        pin: parcel.pin?.toString() || null,
         legalDescription: parcel.legalDescription,
         isFarm: parcel.isFarm,
         purchasedDate: parcel.purchasedDate,
@@ -129,7 +136,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -174,5 +180,9 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy {
 
   openParcel(index: string) {
     this.expandedParcel = index;
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

@@ -8,19 +8,26 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 })
 export class OverlaySpinnerService {
   private spinnerRef: OverlayRef = this.createSpinner();
+  private spinnerIsVisible = false;
 
   constructor(private overlay: Overlay) {}
 
   showSpinner() {
-    const portal = new ComponentPortal(MatProgressSpinner);
-    const spinner = this.spinnerRef.attach(portal);
-    spinner.instance.mode = 'indeterminate';
-    //Steal focus to prevent spamming the button
-    spinner.location.nativeElement.focus();
+    if (!this.spinnerIsVisible) {
+      this.spinnerIsVisible = true;
+      const portal = new ComponentPortal(MatProgressSpinner);
+      const spinner = this.spinnerRef.attach(portal);
+      spinner.instance.mode = 'indeterminate';
+      //Steal focus to prevent spamming the button
+      spinner.location.nativeElement.focus();
+    }
   }
 
   hideSpinner() {
-    this.spinnerRef.detach();
+    if (this.spinnerIsVisible) {
+      this.spinnerIsVisible = false;
+      this.spinnerRef.detach();
+    }
   }
 
   private createSpinner() {

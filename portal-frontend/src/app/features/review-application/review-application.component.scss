@@ -64,7 +64,7 @@
     display: none;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: contents;
+      display: initial
     }
   }
 

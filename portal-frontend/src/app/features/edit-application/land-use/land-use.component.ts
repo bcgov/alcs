@@ -1,9 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
+import { EditApplicationSteps } from '../edit-application.component';
 
 export enum MainLandUseTypeOptions {
   AgriculturalFarm = 'Agricultural/Farm',
@@ -23,24 +24,26 @@ export enum MainLandUseTypeOptions {
   styleUrls: ['./land-use.component.scss'],
 })
 export class LandUseComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
+  currentStep = EditApplicationSteps.LandUse;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Output() navigateToStep = new EventEmitter<number>();
+
   fileId: string = '';
 
   MainLandUseTypeOptions = MainLandUseTypeOptions;
 
-  $destroy = new Subject<void>();
-
-  parcelsAgricultureDescription = new FormControl<string>('');
-  parcelsAgricultureImprovementDescription = new FormControl<string>('');
-  parcelsNonAgricultureUseDescription = new FormControl<string>('');
-  northLandUseType = new FormControl<string>('');
-  northLandUseTypeDescription = new FormControl<string>('');
-  eastLandUseType = new FormControl<string>('');
-  eastLandUseTypeDescription = new FormControl<string>('');
-  southLandUseType = new FormControl<string>('');
-  southLandUseTypeDescription = new FormControl<string>('');
-  westLandUseType = new FormControl<string>('');
-  westLandUseTypeDescription = new FormControl<string>('');
+  parcelsAgricultureDescription = new FormControl<string>('', [Validators.required]);
+  parcelsAgricultureImprovementDescription = new FormControl<string>('', [Validators.required]);
+  parcelsNonAgricultureUseDescription = new FormControl<string>('', [Validators.required]);
+  northLandUseType = new FormControl<string>('', [Validators.required]);
+  northLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
+  eastLandUseType = new FormControl<string>('', [Validators.required]);
+  eastLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
+  southLandUseType = new FormControl<string>('', [Validators.required]);
+  southLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
+  westLandUseType = new FormControl<string>('', [Validators.required]);
+  westLandUseTypeDescription = new FormControl<string>('', [Validators.required]);
   landUseForm = new FormGroup({
     parcelsAgricultureDescription: this.parcelsAgricultureDescription,
     parcelsAgricultureImprovementDescription: this.parcelsAgricultureImprovementDescription,
@@ -66,7 +69,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -89,7 +92,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async saveProgress() {
     const formValues = this.landUseForm.getRawValue();
-    this.applicationService.updatePending(this.fileId, {
+    await this.applicationService.updatePending(this.fileId, {
       parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
       parcelsAgricultureImprovementDescription: formValues.parcelsAgricultureImprovementDescription,
       parcelsNonAgricultureUseDescription: formValues.parcelsNonAgricultureUseDescription,
@@ -110,8 +113,11 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

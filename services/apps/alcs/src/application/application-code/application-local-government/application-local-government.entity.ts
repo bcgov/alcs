@@ -16,6 +16,12 @@ export class ApplicationLocalGovernment extends Base {
   @Column({ default: false })
   isFirstNation: boolean;
 
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ type: 'text' })
+  preferredRegionCode: string;
+
   @ManyToOne(() => ApplicationRegion, {
     nullable: false,
   })

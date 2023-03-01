@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
@@ -56,15 +56,26 @@ export class ParcelEntryComponent implements OnInit {
   enableCertificateOfTitleUpload: boolean = true;
   @Input()
   enableUserSignOff: boolean = true;
+  @Input()
+  enableAddNewOwner: boolean = true;
+
+  @Input()
+  _disabled: boolean = false;
+
+  @Input()
+  public set disabled(disabled: boolean) {
+    this._disabled = disabled;
+    this.onFormDisabled();
+  }
 
   pidPin = new FormControl<string>('');
-  legalDescription = new FormControl<string | null>(null);
-  mapArea = new FormControl<string | null>(null);
+  legalDescription = new FormControl<string | null>(null, [Validators.required]);
+  mapArea = new FormControl<string | null>(null, [Validators.required]);
+  pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
-  pid = new FormControl<string | null>(null);
   parcelType = new FormControl<string | null>(null);
   isFarm = new FormControl<string | null>(null);
-  purchaseDate = new FormControl<any | null>(null);
+  purchaseDate = new FormControl<any | null>(null, [Validators.required]);
   isConfirmedByApplicant = new FormControl<boolean>(false);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
@@ -119,6 +130,8 @@ export class ParcelEntryComponent implements OnInit {
       if (result.pid) {
         this.pid.setValue(result.pid);
       }
+
+      this.emitFormChangeOnSearchActions();
     }
   }
 
@@ -128,6 +141,18 @@ export class ParcelEntryComponent implements OnInit {
     this.parcelForm.controls.pin.reset();
     this.parcelForm.controls.legalDescription.reset();
     this.parcelForm.controls.mapArea.reset();
+
+    this.emitFormChangeOnSearchActions();
+  }
+
+  private emitFormChangeOnSearchActions() {
+    this.onFormGroupChange.emit({
+      uuid: this.parcel.uuid,
+      legalDescription: this.legalDescription.getRawValue(),
+      mapArea: this.mapArea.getRawValue(),
+      pin: this.pin.getRawValue(),
+      pid: this.pid.getRawValue(),
+    });
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
@@ -274,5 +299,13 @@ export class ParcelEntryComponent implements OnInit {
       uuid: this.parcel.uuid,
       owners: updatedArray,
     });
+  }
+
+  private onFormDisabled() {
+    if (this._disabled) {
+      this.parcelForm.disable();
+    } else {
+      this.parcelForm.enable();
+    }
   }
 }

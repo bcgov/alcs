@@ -3,7 +3,10 @@
     <h3>Information Request</h3>
   </div>
   <div class="pull-right">
-    <button mat-flat-button color="primary" class="pull-right" (click)="onCreate('IR')">+ New Request</button>
+    <button mat-flat-button color="primary" class="pull-right" (click)="onCreate({
+    code: 'IR',
+    label: 'Info Request'
+    })">+ New Request</button>
   </div>
 </div>
 

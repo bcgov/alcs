@@ -44,6 +44,7 @@ describe('HolidayService', () => {
       name: 'mock',
       isFirstNation: false,
       bceidBusinessGuid: null,
+      isActive: true,
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -60,6 +61,7 @@ describe('HolidayService', () => {
       name: 'mock',
       isFirstNation: false,
       bceidBusinessGuid: null,
+      isActive: true,
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -77,6 +79,7 @@ describe('HolidayService', () => {
       name: 'mock',
       isFirstNation: false,
       bceidBusinessGuid: null,
+      isActive: true,
     });
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
@@ -93,6 +96,7 @@ describe('HolidayService', () => {
       name: 'mock',
       isFirstNation: false,
       bceidBusinessGuid: null,
+      isActive: true,
     });
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);

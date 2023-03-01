@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LandUseComponent } from './land-use.component';
 
 describe('LandUseComponent', () => {

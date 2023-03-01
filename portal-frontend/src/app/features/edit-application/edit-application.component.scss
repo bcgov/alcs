@@ -106,18 +106,18 @@
   }
 
   .mobile-hidden {
-    display: none;
+    display: none !important;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: contents;
+      display: initial !important;;
     }
   }
 
   .tablet-hidden {
-    display: contents;
+    display: initial !important;;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: none;
+      display: none !important;
     }
   }
 
@@ -129,7 +129,7 @@
     background-color: $primary-color-light;
   }
 
-  .review-application {
+  .edit-application {
     .description {
       margin-top: rem(12);
       margin-bottom: rem(20);
@@ -212,6 +212,15 @@
     padding: rem(16);
   }
 
+  .field-error {
+    color: $error-color;
+    font-size: rem(15);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: rem(4);
+  }
+
   .form-row {
     margin-top: rem(16);
     display: grid;
@@ -249,7 +258,6 @@
   }
 
   .full-width-input {
-    margin-top: rem(5);
     width: 100%;
   }
 
@@ -276,10 +284,54 @@
     justify-content: space-evenly;
     flex-wrap: wrap;
   }
-  
+
   .flex-space-between-wrap {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+  }
+
+  .other-parcels-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(24);
+  }
+
+  .owner-table-wrapper {
+    display: block;
+    overflow: auto;
+    width: 100%;
+  }
+
+  .land-use-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: rem(24);
+
+    .land-use-type-wrapper {
+      display: flex;
+      gap: rem(24);
+      flex-wrap: wrap;
+      width: 100%;
+
+      .land-use-type {
+        width: 100%;
+      }
+    }
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      .land-use-type-wrapper {
+        flex-wrap: nowrap;
+
+        .land-use-type {
+          width: 64%;
+        }
+      }
+    }
+  }
+
+  .display-block {
+    display: block;
   }
 }

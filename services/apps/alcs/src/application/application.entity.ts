@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
+import { ApplicationReviewGrpc } from '../application-grpc/alcs-application.message.interface';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -19,6 +20,13 @@ import { ApplicationLocalGovernment } from './application-code/application-local
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
+
+export class StatusHistory {
+  type: 'status_change';
+  label: string;
+  description: string;
+  time: number;
+}
 
 export const APPLICATION_FILE_NUMBER_SEQUENCE = 'alcs.alcs_file_number_seq';
 
@@ -120,6 +128,25 @@ export class Application extends Base {
     type: 'uuid',
   })
   localGovernmentUuid: string;
+
+  @AutoMap(() => [StatusHistory])
+  @Column({
+    comment:
+      'JSONB Column containing the status history of the Application from the Portal',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  statusHistory: StatusHistory[];
+
+  @AutoMap(() => ApplicationReviewGrpc)
+  @Column({
+    comment:
+      'JSONB Column containing the government / first nation government review from the Portal',
+    type: 'jsonb',
+    nullable: true,
+  })
+  applicationReview: ApplicationReviewGrpc;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

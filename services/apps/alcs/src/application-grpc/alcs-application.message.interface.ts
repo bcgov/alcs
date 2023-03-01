@@ -30,6 +30,7 @@ export class ApplicationCreateGrpcRequest {
   localGovernmentUuid: string;
   documents: ApplicationDocumentGrpc[];
   applicationReview?: ApplicationReviewGrpc;
+  statusHistory: StatusHistoryGrpc[];
 }
 
 export class ApplicationDocumentGrpc {
@@ -38,23 +39,63 @@ export class ApplicationDocumentGrpc {
 }
 
 export class ApplicationReviewGrpc {
+  @AutoMap()
   localGovernmentFileNumber: string;
+
+  @AutoMap()
   firstName: string;
+
+  @AutoMap()
   lastName: string;
+
+  @AutoMap()
   position: string;
+
+  @AutoMap()
   department: string;
+
+  @AutoMap()
   phoneNumber: string;
+
+  @AutoMap()
   email: string;
+
+  @AutoMap(() => Boolean)
   isOCPDesignation: boolean | null;
+
+  @AutoMap(() => String)
   OCPBylawName: string | null;
+
+  @AutoMap(() => String)
   OCPDesignation: string | null;
+
+  @AutoMap(() => Boolean)
   OCPConsistent: boolean | null;
+
+  @AutoMap(() => Boolean)
   isSubjectToZoning: boolean | null;
+
+  @AutoMap(() => String)
   zoningBylawName: string | null;
+
+  @AutoMap(() => String)
   zoningDesignation: string | null;
+
+  @AutoMap(() => String)
   zoningMinimumLotSize: string | null;
+
+  @AutoMap(() => Boolean)
   isZoningConsistent: boolean | null;
+
+  @AutoMap(() => Boolean)
   isAuthorized: boolean | null;
+}
+
+export class StatusHistoryGrpc {
+  type: 'status_change';
+  label: string;
+  description: string;
+  time: string;
 }
 
 // Protobuf does not allow method without parameters so the only way is to specify interface without properties

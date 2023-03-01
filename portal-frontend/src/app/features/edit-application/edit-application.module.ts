@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { CanDeactivateGuard } from '../../shared/guard/can-deactivate.guard';
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicationDetailsModule } from '../application-details/application-details.module';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
@@ -24,10 +25,12 @@ const routes: Routes = [
   {
     path: '',
     component: EditApplicationComponent,
+    canDeactivate: [CanDeactivateGuard],
   },
   {
     path: ':stepInd',
     component: EditApplicationComponent,
+    canDeactivate: [CanDeactivateGuard],
   },
 ];
 

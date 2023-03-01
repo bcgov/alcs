@@ -8,11 +8,66 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
+import { ApplicationReviewGrpc } from '../application-grpc/alcs-application.message.interface';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationDecisionMeetingDto } from '../decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
+import { StatusHistory } from './application.entity';
+
+export class ApplicationReviewDto {
+  @AutoMap()
+  localGovernmentFileNumber: string;
+
+  @AutoMap()
+  firstName: string;
+
+  @AutoMap()
+  lastName: string;
+
+  @AutoMap()
+  position: string;
+
+  @AutoMap()
+  department: string;
+
+  @AutoMap()
+  phoneNumber: string;
+
+  @AutoMap()
+  email: string;
+
+  @AutoMap(() => Boolean)
+  isOCPDesignation: boolean | null;
+
+  @AutoMap(() => String)
+  OCPBylawName: string | null;
+
+  @AutoMap(() => String)
+  OCPDesignation: string | null;
+
+  @AutoMap(() => Boolean)
+  OCPConsistent: boolean | null;
+
+  @AutoMap(() => Boolean)
+  isSubjectToZoning: boolean | null;
+
+  @AutoMap(() => String)
+  zoningBylawName: string | null;
+
+  @AutoMap(() => String)
+  zoningDesignation: string | null;
+
+  @AutoMap(() => String)
+  zoningMinimumLotSize: string | null;
+
+  @AutoMap(() => Boolean)
+  isZoningConsistent: boolean | null;
+
+  @AutoMap(() => Boolean)
+  isAuthorized: boolean | null;
+}
 
 export class CreateApplicationDto {
   @IsNotEmpty()
@@ -147,9 +202,16 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
+  @AutoMap(() => [StatusHistory])
+  statusHistory?: StatusHistory[];
+
   @AutoMap()
   @Type(() => CardDto)
   card?: CardDto;
+
+  @AutoMap()
+  @Type(() => ApplicationReviewDto)
+  applicationReview?: ApplicationReviewDto;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -173,4 +235,6 @@ export class CreateApplicationServiceDto {
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
   localGovernmentUuid: string;
+  statusHistory?: StatusHistory[];
+  applicationReview?: ApplicationReviewGrpc;
 }

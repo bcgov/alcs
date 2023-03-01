@@ -24,6 +24,7 @@ describe('ApplicationReviewService', () => {
     uuid: '',
     name: '',
     isFirstNation: false,
+    isActive: true,
   };
 
   beforeEach(async () => {
@@ -59,9 +60,9 @@ describe('ApplicationReviewService', () => {
 
   it('should call through for get', async () => {
     const appReview = new ApplicationReview();
-    mockRepository.findOneOrFail.mockResolvedValue(appReview);
+    mockRepository.findOne.mockResolvedValue(appReview);
 
-    const res = await service.get('', mockLocalGovernment);
+    const res = await service.getForGovernment('', mockLocalGovernment);
 
     expect(res).toBe(appReview);
   });
@@ -77,7 +78,7 @@ describe('ApplicationReviewService', () => {
 
   it('should call save for update', async () => {
     const appReview = new ApplicationReview();
-    mockRepository.findOneOrFail.mockResolvedValue(appReview);
+    mockRepository.findOne.mockResolvedValue(appReview);
     mockRepository.save.mockResolvedValue({} as any);
 
     const res = await service.update('', mockLocalGovernment, {});
@@ -87,7 +88,7 @@ describe('ApplicationReviewService', () => {
 
   it('should delete the staff report and the resolution document when there is no ocp or zoning for update', async () => {
     const appReview = new ApplicationReview({});
-    mockRepository.findOneOrFail.mockResolvedValue(appReview);
+    mockRepository.findOne.mockResolvedValue(appReview);
     mockAppDocumentService.deleteByType.mockResolvedValue({} as any);
     mockRepository.save.mockResolvedValue({} as any);
 
@@ -352,6 +353,7 @@ describe('ApplicationReviewService', () => {
       uuid: '',
       name: '',
       isFirstNation: true,
+      isActive: true,
     });
 
     expect(res.isFirstNationGovernment).toBeTruthy();

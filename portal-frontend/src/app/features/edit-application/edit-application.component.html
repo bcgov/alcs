@@ -10,41 +10,74 @@
   </div>
 </ng-template>
 
-<mat-stepper class="review-application" linear="true" #stepper>
-  <mat-step label="Parcel Details">
+<app-custom-stepper
+  class="edit-application"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+>
+  <cdk-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-parcel-details [$application]="$application"></app-parcel-details>
-  </mat-step>
-  <mat-step label="Other Parcels in the Community">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
+      <app-parcel-details
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (componentInitialized)="onParcelDetailsInitialized()"
+      ></app-parcel-details>
+    </div>
+  </cdk-step>
+  <cdk-step label="Other Parcels in the Community">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-other-parcels [$application]="$application"></app-other-parcels>
-  </mat-step>
-  <mat-step label="Primary Contact">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
+      <app-other-parcels
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-other-parcels>
+    </div>
+  </cdk-step>
+  <cdk-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-primary-contact [$application]="$application"></app-primary-contact>
-  </mat-step>
-  <mat-step label="Government">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
+      <app-primary-contact
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-primary-contact>
+    </div>
+  </cdk-step>
+  <cdk-step label="Government">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-select-government [$application]="$application"></app-select-government>
-  </mat-step>
-  <mat-step label="Land Use">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
+      <app-select-government
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-select-government>
+    </div>
+  </cdk-step>
+  <cdk-step label="Land Use">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-land-use [$application]="$application"></app-land-use>
-  </mat-step>
-  <mat-step label="Proposal">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
+      <app-land-use [$application]="$application" (navigateToStep)="onBeforeSwitchStep($event)"></app-land-use>
+    </div>
+  </cdk-step>
+  <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-nfu-proposal [$application]="$application"></app-nfu-proposal>
-  </mat-step>
-  <mat-step label="Upload Attachments">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Proposal">
+      <app-nfu-proposal [$application]="$application" (navigateToStep)="onBeforeSwitchStep($event)"></app-nfu-proposal>
+    </div>
+  </cdk-step>
+  <cdk-step label="Upload Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-other-attachments [$application]="$application"></app-other-attachments>
-  </mat-step>
-  <mat-step label="Review & Submit">
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
+      <app-other-attachments
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-other-attachments>
+    </div>
+  </cdk-step>
+  <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-and-submit [$application]="$application"></app-review-and-submit>
-  </mat-step>
-  <mat-step label="Submit to ALCS (Note: this will be removed in final version)">
-    <p>Note this is only for testing purposes. The submission process will be changed in follow-up tickets.</p>
-    <button (click)="onSubmitToAlcs()">Submit to ALCS</button>
-  </mat-step>
-</mat-stepper>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
+      <app-review-and-submit [$application]="$application"></app-review-and-submit>
+    </div>
+  </cdk-step>
+</app-custom-stepper>

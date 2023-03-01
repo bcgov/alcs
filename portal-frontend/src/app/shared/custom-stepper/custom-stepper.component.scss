@@ -1,0 +1,126 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/functions.scss';
+@import '../../../styles/typography.scss';
+
+:host {
+  $size: rem(64);
+  $half-size: rem(32);
+  $quarter-size: rem(16);
+
+  .display-none {
+    display: none !important;
+  }
+
+  .stepper-wrapper {
+    display: flex;
+    width: 100%;
+
+    .stepper-controls {
+      min-width: rem(34);
+      max-height: rem(34);
+      width: rem(34);
+      height: rem(34);
+      background-color: white;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: rem(4);
+      padding: 0 !important;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(238, 237, 237, 0.5);
+      }
+
+      &:active {
+        background-color: rgba(238, 237, 237, 1);
+      }
+    }
+
+    .steps-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+      width: 100%;
+      overflow: hidden;
+      scroll-behavior: smooth;
+
+      .step-wrapper {
+        text-align: center;
+        flex: 1;
+
+        &:not(:last-child) {
+          .step {
+            &:after {
+              content: '';
+              height: rem(1);
+              max-height: rem(1);
+              min-height: rem(1);
+              background-color: $primary-color-dark;
+              order: -1;
+              position: absolute;
+              display: flex;
+              left: calc(50% + $quarter-size);
+              width: calc(100% - $half-size);
+              top: $quarter-size;
+            }
+          }
+        }
+
+        .active {
+          background-color: $primary-color;
+          color: white;
+        }
+
+        .step {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          border-radius: 15%;
+          flex: 1;
+          width: 100%;
+          min-width: rem(140);
+          position: relative;
+
+          .step-label {
+            width: rem(110);
+            display: inline-block;
+          }
+
+          &:hover {
+            cursor: pointer;
+          }
+
+          .step-number {
+            border: 1px solid $primary-color-dark;
+            border-radius: 50%;
+            width: $half-size;
+            height: $half-size;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+  .steps-wrapper-desktop {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .stepper-controls-hide {
+    display: none;
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    .stepper-wrapper {
+      .steps-wrapper-desktop {
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+    }
+  }
+}

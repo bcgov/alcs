@@ -111,11 +111,11 @@ export class ApplicationParcelService {
     }
   }
 
-  async delete(parcelUuid: string) {
+  async deleteMany(parcelUuids: string[]) {
     try {
       this.overlayService.showSpinner();
       const result = await firstValueFrom(
-        this.httpClient.delete(`${environment.apiUrl}/application-parcel/${parcelUuid}`)
+        this.httpClient.delete(`${environment.apiUrl}/application-parcel`, { body: parcelUuids })
       );
       this.toastService.showSuccessToast('Parcel deleted');
       return result;

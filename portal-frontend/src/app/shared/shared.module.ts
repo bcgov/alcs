@@ -1,4 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -25,7 +26,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { provideNgxMask } from 'ngx-mask';
-import { CompletedComponent } from './completed/completed.component';
+import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { NoDataComponent } from './no-data/no-data.component';
@@ -44,7 +45,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     provideNgxMask(),
   ],
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatAutocompleteModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatAutocompleteModule, CdkStepperModule],
   exports: [
     CommonModule,
     FormsModule,
@@ -75,8 +76,9 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatSelectModule,
     NoDataComponent,
     ValidationErrorComponent,
-    CompletedComponent,
     OverlayModule,
+    CustomStepperComponent,
+    CdkStepperModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -85,7 +87,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     NoDataComponent,
     ValidationErrorComponent,
-    CompletedComponent,
+    CustomStepperComponent,
   ],
 })
 export class SharedModule {

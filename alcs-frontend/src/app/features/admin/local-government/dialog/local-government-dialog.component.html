@@ -18,10 +18,38 @@
     </div>
 
     <div>
+      <div>
+        <ng-select
+          appearance="outline"
+          name="preferredRegionCode"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Preferred region *"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          [(ngModel)]="model.preferredRegionCode"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.label }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
+    <div>
       <mat-label>This is a First Nation Government</mat-label>
       <mat-button-toggle-group id="isFirstNation" [(ngModel)]="model.isFirstNation" name="isFirstNation">
         <mat-button-toggle value="true">Yes</mat-button-toggle>
         <mat-button-toggle value="false">No</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div>
+      <mat-label>Status</mat-label>
+      <mat-button-toggle-group id="isActive" [(ngModel)]="model.isActive" name="isActive">
+        <mat-button-toggle value="true">Active</mat-button-toggle>
+        <mat-button-toggle value="false">Inactive</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </form>

@@ -3,6 +3,13 @@ import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
+export interface StatusHistory {
+  type: 'status_change';
+  label: string;
+  description: string;
+  time: number;
+}
+
 export interface CreateApplicationDto {
   fileNumber: string;
   applicant: string;
@@ -14,6 +21,26 @@ export interface CreateApplicationDto {
 
 export interface ApplicationDecisionMeetingDto {
   date: Date;
+}
+
+export interface ApplicationReviewDto {
+  localGovernmentFileNumber: string;
+  firstName: string;
+  lastName: string;
+  position: string;
+  department: string;
+  phoneNumber: string;
+  email: string;
+  isOCPDesignation: boolean | null;
+  OCPBylawName: string | null;
+  OCPDesignation: string | null;
+  OCPConsistent: boolean | null;
+  isSubjectToZoning: boolean | null;
+  zoningBylawName: string | null;
+  zoningDesignation: string | null;
+  zoningMinimumLotSize: string | null;
+  isZoningConsistent: boolean | null;
+  isAuthorized: boolean | null;
 }
 
 export interface ApplicationDto {
@@ -35,6 +62,8 @@ export interface ApplicationDto {
   paused: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
+  statusHistory: StatusHistory[];
+  applicationReview?: ApplicationReviewDto;
 }
 
 export interface UpdateApplicationDto {

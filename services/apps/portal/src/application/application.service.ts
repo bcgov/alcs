@@ -98,6 +98,8 @@ export class ApplicationService {
     application.typeCode = updateDto.typeCode || application.typeCode;
     application.localGovernmentUuid = updateDto.localGovernmentUuid;
     application.returnedComment = updateDto.returnedComment;
+    application.hasOtherParcelsInCommunity =
+      updateDto.hasOtherParcelsInCommunity;
 
     this.setLandUseFields(application, updateDto);
     this.setNFUFields(application, updateDto);
@@ -140,25 +142,20 @@ export class ApplicationService {
     return application;
   }
 
-  async submitToLg(fileNumber: string) {
-    await this.updateStatus(fileNumber, APPLICATION_STATUS.SUBMITTED_TO_LG);
+  async submitToLg(application: Application) {
+    await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_LG);
   }
 
-  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
+  async updateStatus(application: Application, statusCode: APPLICATION_STATUS) {
     const status = await this.applicationStatusRepository.findOneOrFail({
       where: {
         code: statusCode,
       },
     });
 
-    return await this.applicationRepository.update(
-      {
-        fileNumber,
-      },
-      {
-        status,
-      },
-    );
+    application.status = status;
+    //Use save to trigger subscriber
+    await this.applicationRepository.save(application);
   }
 
   async submitToAlcs(
@@ -203,7 +200,7 @@ export class ApplicationService {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
           fileNumber: fileNumber,
-          applicant: fileNumber,
+          applicant: application.applicant || fileNumber,
           localGovernmentUuid: application.localGovernmentUuid!,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),
@@ -211,11 +208,15 @@ export class ApplicationService {
             type: d.type!, //TODO: Do we verify this?
             documentUuid: d.document.alcsDocumentUuid,
           })),
+          statusHistory: application.statusHistory.map((history) => ({
+            ...history,
+            time: history.time.toString(10),
+          })),
           applicationReview: mappedReview,
         }),
       );
 
-      await this.updateStatus(fileNumber, APPLICATION_STATUS.SUBMITTED_TO_ALC);
+      await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
       this.logger.error(
         `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
@@ -418,10 +419,7 @@ export class ApplicationService {
   }
 
   async cancel(application: Application) {
-    await this.updateStatus(
-      application.fileNumber,
-      APPLICATION_STATUS.CANCELLED,
-    );
+    await this.updateStatus(application, APPLICATION_STATUS.CANCELLED);
   }
 
   private setNFUFields(
@@ -435,18 +433,20 @@ export class ApplicationService {
     application.nfuAgricultureSupport =
       updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
     application.nfuWillImportFill =
-      updateDto.nfuWillImportFill || application.nfuWillImportFill;
+      updateDto.nfuWillImportFill !== undefined
+        ? updateDto.nfuWillImportFill
+        : application.nfuWillImportFill;
     application.nfuTotalFillPlacement =
       updateDto.nfuTotalFillPlacement || application.nfuTotalFillPlacement;
     application.nfuMaxFillDepth =
       updateDto.nfuMaxFillDepth || application.nfuMaxFillDepth;
     application.nfuFillVolume =
       updateDto.nfuFillVolume || application.nfuFillVolume;
-    application.nfuProjectDurationYears =
-      updateDto.nfuProjectDurationYears || application.nfuProjectDurationYears;
-    application.nfuProjectDurationMonths =
-      updateDto.nfuProjectDurationMonths ||
-      application.nfuProjectDurationMonths;
+    application.nfuProjectDurationUnit =
+      updateDto.nfuProjectDurationUnit || application.nfuProjectDurationUnit;
+    application.nfuProjectDurationAmount =
+      updateDto.nfuProjectDurationAmount ||
+      application.nfuProjectDurationAmount;
     application.nfuFillTypeDescription =
       updateDto.nfuFillTypeDescription || application.nfuFillTypeDescription;
     application.nfuFillOriginDescription =

@@ -21,6 +21,7 @@ import { ApplicationParcelOwnershipType } from './application-parcel/application
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
+import { ApplicationStatusSubscriber } from './application-status.subscriber';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
@@ -52,6 +53,7 @@ import { ApplicationService } from './application.service';
     ApplicationParcelDocumentService,
     ApplicationOwnerService,
     ApplicationOwnerProfile,
+    ApplicationStatusSubscriber,
   ],
   controllers: [
     ApplicationController,

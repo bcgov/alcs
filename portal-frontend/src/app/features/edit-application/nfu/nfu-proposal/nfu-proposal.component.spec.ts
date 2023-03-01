@@ -1,9 +1,9 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailedDto, ApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 
 import { NfuProposalComponent } from './nfu-proposal.component';

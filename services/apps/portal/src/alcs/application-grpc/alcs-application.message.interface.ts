@@ -30,6 +30,7 @@ export class ApplicationCreateGrpcRequest {
   localGovernmentUuid: string;
   documents: ApplicationDocumentGrpc[];
   applicationReview?: ApplicationReviewGrpc;
+  statusHistory: StatusHistoryGrpc[];
 }
 
 export class ApplicationDocumentGrpc {
@@ -55,6 +56,13 @@ export class ApplicationReviewGrpc {
   zoningMinimumLotSize: string | null;
   isZoningConsistent: boolean | null;
   isAuthorized: boolean | null;
+}
+
+export class StatusHistoryGrpc {
+  type: 'status_change';
+  label: string;
+  description: string;
+  time: string;
 }
 
 // Protobuf does not allow method without parameters so the only way is to specify interface without properties
