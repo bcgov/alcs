@@ -16,6 +16,7 @@ import { LocalGovernmentService } from '../alcs/local-government/local-governmen
 import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { APPLICATION_STATUS } from '../application/application-status/application-status.dto';
+import { ApplicationValidatorService } from '../application/application-validator.service';
 import { ApplicationService } from '../application/application.service';
 import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
@@ -33,6 +34,7 @@ export class ApplicationReviewController {
     private applicationReviewService: ApplicationReviewService,
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: LocalGovernmentService,
+    private applicationValidatorService: ApplicationValidatorService,
   ) {}
 
   @Get('/:fileNumber')
@@ -156,9 +158,21 @@ export class ApplicationReviewController {
       userLocalGovernment.isFirstNation,
     );
 
+    const validationResult =
+      await this.applicationValidatorService.validateApplication(application);
+
+    if (!validationResult.application) {
+      throw new BaseServiceException(
+        `Invalid application found during LG Submission ${application.fileNumber}`,
+      );
+    }
+
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
       if (completedReview.isAuthorized !== false) {
-        await this.applicationService.submitToAlcs(fileNumber, completedReview);
+        await this.applicationService.submitToAlcs(
+          validationResult.application,
+          completedReview,
+        );
       } else {
         await this.applicationService.updateStatus(
           application,

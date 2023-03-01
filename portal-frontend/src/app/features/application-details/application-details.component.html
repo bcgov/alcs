@@ -44,11 +44,13 @@
         <div class="grid-double">
           {{ primaryContact.phoneNumber }}
           <app-no-data [showRequired]="true" *ngIf="!primaryContact.phoneNumber"></app-no-data>
+          <app-validation-error *ngIf="!(primaryContact.phoneNumber | phoneValid)">Invalid Format</app-validation-error>
         </div>
         <div class="subheading2 grid-1">Email</div>
         <div class="grid-double">
           {{ primaryContact.email }}
           <app-no-data [showRequired]="true" *ngIf="!primaryContact.email"></app-no-data>
+          <app-validation-error *ngIf="!(primaryContact.email | emailValid)">Invalid Format</app-validation-error>
         </div>
       </ng-container>
     </ng-container>
@@ -107,49 +109,49 @@
       {{ application.parcelsNonAgricultureUseDescription }}
       <app-no-data [showRequired]="true" *ngIf="!application.parcelsNonAgricultureUseDescription"></app-no-data>
     </div>
-  </div>
-  <div *ngIf="application" class="review-table scrollable">
     <div class="full-width">
       <h4>Land Use of Adjacent Parcels</h4>
     </div>
-    <div class="grid-1 subheading2"></div>
-    <div class="grid-2 subheading2">Main Land Use Type</div>
-    <div class="grid-3 subheading2">Specific Activity</div>
-    <div class="grid-1 subheading2">North</div>
-    <div class="grid-2">
-      {{ application.northLandUseType }}
-      <app-no-data [showRequired]="true" *ngIf="!application.northLandUseType"></app-no-data>
-    </div>
-    <div class="grid-3">
-      {{ application.northLandUseTypeDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.northLandUseTypeDescription"></app-no-data>
-    </div>
-    <div class="grid-1 subheading2">East</div>
-    <div class="grid-2">
-      {{ application.eastLandUseType }}
-      <app-no-data [showRequired]="true" *ngIf="!application.eastLandUseType"></app-no-data>
-    </div>
-    <div class="grid-3">
-      {{ application.eastLandUseTypeDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.eastLandUseTypeDescription"></app-no-data>
-    </div>
-    <div class="grid-1 subheading2">South</div>
-    <div class="grid-2">
-      {{ application.southLandUseType }}
-      <app-no-data [showRequired]="true" *ngIf="!application.southLandUseType"></app-no-data>
-    </div>
-    <div class="grid-3">
-      {{ application.southLandUseTypeDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.southLandUseTypeDescription"></app-no-data>
-    </div>
-    <div class="grid-1 subheading2">West</div>
-    <div class="grid-2">
-      {{ application.westLandUseType }}
-      <app-no-data [showRequired]="true" *ngIf="!application.westLandUseType"></app-no-data>
-    </div>
-    <div class="grid-3">
-      {{ application.westLandUseTypeDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.westLandUseTypeDescription"></app-no-data>
+    <div class="adjacent-parcels full-width">
+      <div class="grid-1 subheading2"></div>
+      <div class="grid-2 subheading2">Main Land Use Type</div>
+      <div class="grid-3 subheading2">Specific Activity</div>
+      <div class="grid-1 subheading2">North</div>
+      <div class="grid-2">
+        {{ application.northLandUseType }}
+        <app-no-data [showRequired]="true" *ngIf="!application.northLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ application.northLandUseTypeDescription }}
+        <app-no-data [showRequired]="true" *ngIf="!application.northLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">East</div>
+      <div class="grid-2">
+        {{ application.eastLandUseType }}
+        <app-no-data [showRequired]="true" *ngIf="!application.eastLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ application.eastLandUseTypeDescription }}
+        <app-no-data [showRequired]="true" *ngIf="!application.eastLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">South</div>
+      <div class="grid-2">
+        {{ application.southLandUseType }}
+        <app-no-data [showRequired]="true" *ngIf="!application.southLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ application.southLandUseTypeDescription }}
+        <app-no-data [showRequired]="true" *ngIf="!application.southLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">West</div>
+      <div class="grid-2">
+        {{ application.westLandUseType }}
+        <app-no-data [showRequired]="true" *ngIf="!application.westLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ application.westLandUseTypeDescription }}
+        <app-no-data [showRequired]="true" *ngIf="!application.westLandUseTypeDescription"></app-no-data>
+      </div>
     </div>
     <div class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
@@ -162,22 +164,24 @@
 </section>
 <section>
   <h3>7. Optional Documents</h3>
-  <div *ngIf="application" class="review-table scrollable">
-    <div class="grid-1 subheading2">Type</div>
-    <div class="grid-2 subheading2">Description</div>
-    <div class="grid-3 subheading2">File Name</div>
-    <ng-container *ngFor="let file of otherFiles">
-      <div class="grid-1">{{ file.type }} <app-no-data [showRequired]="true" *ngIf="!file.type"></app-no-data></div>
-      <div class="grid-2">
-        {{ file.description }}
-        <app-no-data [showRequired]="true" *ngIf="!file.description"></app-no-data>
+  <div *ngIf="application" class="review-table">
+    <div class="other-attachments full-width">
+      <div class="grid-1 subheading2">Type</div>
+      <div class="grid-2 subheading2">Description</div>
+      <div class="grid-3 subheading2">File Name</div>
+      <ng-container *ngFor="let file of otherFiles">
+        <div class="grid-1">{{ file.type }} <app-no-data [showRequired]="true" *ngIf="!file.type"></app-no-data></div>
+        <div class="grid-2">
+          {{ file.description }}
+          <app-no-data [showRequired]="true" *ngIf="!file.description"></app-no-data>
+        </div>
+        <div class="grid-3">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </ng-container>
+      <div class="full-width">
+        <app-no-data [showRequired]="false" *ngIf="otherFiles.length === 0"></app-no-data>
       </div>
-      <div class="grid-3">
-        <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
-      </div>
-    </ng-container>
-    <div class="full-width">
-      <app-no-data [showRequired]="false" *ngIf="otherFiles.length === 0"></app-no-data>
     </div>
     <div class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
@@ -190,8 +194,6 @@
     <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
       Previous<span class="mobile-hidden"> Step</span>
     </button>
-    <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">
-      Submit
-    </button>
+    <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
   </div>
 </div>

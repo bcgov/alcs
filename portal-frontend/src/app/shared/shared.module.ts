@@ -30,7 +30,9 @@ import { CustomStepperComponent } from './custom-stepper/custom-stepper.componen
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
+import { PhoneValidPipe } from './pipes/phoneValid.pipe';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
@@ -69,6 +71,8 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatStepperModule,
     FileDragDropComponent,
     FileSizePipe,
+    EmailValidPipe,
+    PhoneValidPipe,
     WarningBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -83,6 +87,8 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
   declarations: [
     FileDragDropComponent,
     FileSizePipe,
+    EmailValidPipe,
+    PhoneValidPipe,
     DragDropDirective,
     WarningBannerComponent,
     NoDataComponent,
