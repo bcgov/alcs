@@ -97,13 +97,16 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
       return;
     }
 
-    parcel.pid = formData.pid;
-    parcel.pin = formData.pin;
-    parcel.legalDescription = formData.legalDescription;
-    parcel.mapAreaHectares = formData.mapArea;
-    parcel.ownershipTypeCode = formData.parcelType;
-    parcel.isFarm = parseStringToBoolean(formData.isFarm);
-    parcel.purchasedDate = formData.purchaseDate?.getTime();
+    parcel.pid = formData.pid !== undefined ? formData.pid : parcel.pid;
+    parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
+    parcel.legalDescription =
+      formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
+
+    parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
+    parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
+    parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
+    parcel.purchasedDate =
+      formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
     if (formData.owners) {
       parcel.owners = formData.owners;
@@ -169,6 +172,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async onOwnersUpdated() {
+    console.log('onOwnersUpdated');
     const owners = await this.applicationOwnerService.fetchByFileId(this.fileId);
     if (owners) {
       const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
