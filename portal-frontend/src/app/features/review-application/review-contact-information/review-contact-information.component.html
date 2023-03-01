@@ -58,6 +58,7 @@
     <div class="button-container">
       <button mat-stroked-button color="accent" (click)="onExit()">Save and Exit</button>
       <div>
+        <div><!--this is required for correct responsive view --></div>
         <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
           Next<span class="mobile-hidden"> Step</span>
         </button>
