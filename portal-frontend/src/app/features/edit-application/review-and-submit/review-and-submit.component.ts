@@ -34,7 +34,7 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
   }
 
   onNavigateToStep(step: number) {
-    this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}`);
+    this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}?errors=t`);
   }
 
   async onSubmitToAlcs() {

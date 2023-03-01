@@ -34,33 +34,16 @@ export interface ParcelEntryFormData {
   styleUrls: ['./parcel-entry.component.scss'],
 })
 export class ParcelEntryComponent implements OnInit {
-  @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
-  @Output() private onFilesUpdated = new EventEmitter<void>();
-  @Output() private onSaveProgress = new EventEmitter<void>();
-  @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Input() parcel!: ApplicationParcelDto;
+  @Input() fileId!: string;
+  @Input() $owners: BehaviorSubject<ApplicationOwnerDto[]> = new BehaviorSubject<ApplicationOwnerDto[]>([]);
 
-  @Input()
-  parcel!: ApplicationParcelDto;
-
-  @Input()
-  fileId!: string;
-
-  @Input()
-  $owners: BehaviorSubject<ApplicationOwnerDto[]> = new BehaviorSubject<ApplicationOwnerDto[]>([]);
-  owners: ApplicationOwnerDto[] = [];
-  filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
-
-  @Input()
-  enableOwners: boolean = true;
-  @Input()
-  enableCertificateOfTitleUpload: boolean = true;
-  @Input()
-  enableUserSignOff: boolean = true;
-  @Input()
-  enableAddNewOwner: boolean = true;
-
-  @Input()
-  _disabled: boolean = false;
+  @Input() enableOwners = true;
+  @Input() enableCertificateOfTitleUpload = true;
+  @Input() enableUserSignOff = true;
+  @Input() enableAddNewOwner = true;
+  @Input() showErrors = false;
+  @Input() _disabled = false;
 
   @Input()
   public set disabled(disabled: boolean) {
@@ -68,12 +51,20 @@ export class ParcelEntryComponent implements OnInit {
     this.onFormDisabled();
   }
 
+  @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
+  @Output() private onFilesUpdated = new EventEmitter<void>();
+  @Output() private onSaveProgress = new EventEmitter<void>();
+  @Output() onOwnersUpdated = new EventEmitter<void>();
+
+  owners: ApplicationOwnerDto[] = [];
+  filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
+
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
   mapArea = new FormControl<string | null>(null, [Validators.required]);
   pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
-  parcelType = new FormControl<string | null>(null);
+  parcelType = new FormControl<string | null>(null, [Validators.required]);
   isFarm = new FormControl<string | null>(null);
   purchaseDate = new FormControl<any | null>(null, [Validators.required]);
   isConfirmedByApplicant = new FormControl<boolean>(false);
@@ -290,6 +281,10 @@ export class ParcelEntryComponent implements OnInit {
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
+
+    if (this.showErrors) {
+      this.parcelForm.markAllAsTouched();
+    }
   }
 
   private updateParcelOwners(updatedArray: ApplicationOwnerDto[]) {

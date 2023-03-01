@@ -23,16 +23,18 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   styleUrls: ['./parcel-details.component.scss'],
 })
 export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+  $destroy = new Subject<void>();
+
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
+
   @Output() navigateToStep = new EventEmitter<number>();
   @Output() componentInitialized = new EventEmitter<boolean>();
-  currentStep = EditApplicationSteps.AppParcel;
-  $destroy = new Subject<void>();
-  fileId!: string;
 
+  currentStep = EditApplicationSteps.AppParcel;
+  fileId!: string;
   parcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
-
   newParcelAdded = false;
 
   constructor(

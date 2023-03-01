@@ -18,6 +18,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
   $destroy = new Subject<void>();
@@ -178,6 +179,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.organizationName.disable();
         this.email.disable();
         this.phoneNumber.disable();
+      }
+
+      if (this.showErrors) {
+        this.form.markAllAsTouched();
       }
     }
   }

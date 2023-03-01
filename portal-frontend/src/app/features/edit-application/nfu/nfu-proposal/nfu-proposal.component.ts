@@ -17,6 +17,7 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
@@ -71,6 +72,11 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
 
         if (application.nfuWillImportFill !== null) {
           this.willImportFill.setValue(application.nfuWillImportFill ? 'true' : 'false');
+          this.onChangeFill(application.nfuWillImportFill ? 'true' : 'false');
+        }
+
+        if (this.showErrors) {
+          this.form.markAllAsTouched();
         }
       }
     });
@@ -124,8 +130,7 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeFill($event: MatButtonToggleChange) {
-    const value = $event.value;
+  onChangeFill(value: string) {
     if (value === 'true') {
       this.totalFillPlacement.enable();
       this.maxFillDepth.enable();
