@@ -4,7 +4,7 @@ from db import inject_conn_pool
 @inject_conn_pool
 def process_applications(conn=None):
     """
-    Processes ALR (Agricultural Land Reserve) applications by performing the following steps:
+    Processes ALR applications by performing the following steps:
         - Retrieves metadata about the applications from the oats.oats_alr_applications table.
         - Runs an SQL script to retrieve the necessary data from related tables and inserts new records into the
           alcs_applications table.
@@ -34,19 +34,14 @@ def process_applications(conn=None):
         "select count(*) from alcs.application a where a.audit_created_by = 'oats_etl'"
     )
     print("- Actual inserted: ", final_count)
-
-    cursor.commit()
     cursor.close()
 
 
 @inject_conn_pool
 def clean_applications(conn=None):
     cursor = conn.cursor()
-    clean_sql = """
-        DELETE FROM alcs.cards WHERE applications.audit_created_by = "oats_etl";
-        DELETE FROM alcs.applications WHERE applications.audit_created_by = "oats_etl";
-        """
-    cursor.execute(clean_sql)
-
-    cursor.commit()
+    cursor.execute(
+        "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
+    )
+    cursor.execute("DELETE FROM alcs.card c WHERE c.audit_created_by = 'oats_etl'")
     cursor.close()

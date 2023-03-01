@@ -29,7 +29,7 @@ SELECT
 FROM
     application_etl ae
 WHERE
-    ae.duplicate IS false;
+    ae.duplicated IS false;
 
 -- Step 3: Perform a lookup to retrieve the applicant's name or organization for each application ID
 WITH applicant_lookup AS (
@@ -101,4 +101,4 @@ FROM
     LEFT JOIN applicant_lookup ON oa.alr_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
 WHERE
-    ae.duplicate IS false;
+    ae.duplicated IS false;
