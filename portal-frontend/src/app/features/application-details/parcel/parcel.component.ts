@@ -14,7 +14,6 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper';
 
-export const emailRegex = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
   isInvalid: boolean = false;

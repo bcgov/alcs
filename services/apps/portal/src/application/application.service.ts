@@ -22,6 +22,7 @@ import { CompletedApplicationReview } from '../application-review/application-re
 import { User } from '../user/user.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { ValidatedApplication } from './application-validator.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -159,18 +160,9 @@ export class ApplicationService {
   }
 
   async submitToAlcs(
-    fileNumber: string,
+    application: ValidatedApplication,
     applicationReview?: CompletedApplicationReview,
   ) {
-    const application = await this.applicationRepository.findOneOrFail({
-      where: { fileNumber },
-      relations: {
-        documents: {
-          document: true,
-        },
-      },
-    });
-
     let submittedApp: ApplicationGrpcResponse | null = null;
 
     const mappedReview: ApplicationReviewGrpc | undefined = applicationReview
@@ -199,12 +191,12 @@ export class ApplicationService {
     try {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
-          fileNumber: fileNumber,
-          applicant: application.applicant || fileNumber,
-          localGovernmentUuid: application.localGovernmentUuid!,
+          fileNumber: application.fileNumber,
+          applicant: application.applicant,
+          localGovernmentUuid: application.localGovernmentUuid,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),
-          documents: application?.documents.map((d) => ({
+          documents: application.documents.map((d) => ({
             type: d.type!, //TODO: Do we verify this?
             documentUuid: d.document.alcsDocumentUuid,
           })),
@@ -219,14 +211,14 @@ export class ApplicationService {
       await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
       this.logger.error(
-        `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
+        `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${application.fileNumber}`,
         ex,
       );
 
       //TODO set failed status here?
 
       throw new BaseServiceException(
-        `Failed to submit application: ${fileNumber}`,
+        `Failed to submit application: ${application.fileNumber}`,
       );
     }
 

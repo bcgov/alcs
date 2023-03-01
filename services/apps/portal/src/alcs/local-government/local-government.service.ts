@@ -6,7 +6,6 @@ export type LocalGovernment = {
   uuid: string;
   bceidBusinessGuid?: string;
   isFirstNation: boolean;
-  isActive: boolean;
 };
 
 @Injectable()

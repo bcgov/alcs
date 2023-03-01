@@ -5,6 +5,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -16,17 +17,20 @@ import { AuthGuard } from '../common/authorization/auth-guard.service';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
+import { ApplicationValidatorService } from './application-validator.service';
 import { ApplicationCreateDto, ApplicationUpdateDto } from './application.dto';
-import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
 @Controller('application')
 @UseGuards(AuthGuard)
 export class ApplicationController {
+  private logger: Logger = new Logger(ApplicationController.name);
+
   constructor(
     private applicationService: ApplicationService,
     private documentService: ApplicationDocumentService,
     private localGovernmentService: LocalGovernmentService,
+    private applicationValidatorService: ApplicationValidatorService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -137,26 +141,19 @@ export class ApplicationController {
       req.user.entity,
     );
 
-    await this.verifyApplication(application);
+    const validationResult =
+      await this.applicationValidatorService.validateApplication(application);
 
-    if (application.typeCode === 'TURP') {
-      return await this.applicationService.submitToAlcs(fileId);
+    if (validationResult.application) {
+      const validApplication = validationResult.application;
+      if (validApplication.typeCode === 'TURP') {
+        return await this.applicationService.submitToAlcs(validApplication);
+      } else {
+        return await this.applicationService.submitToLg(validApplication);
+      }
     } else {
-      return await this.applicationService.submitToLg(application);
-    }
-  }
-
-  async verifyApplication(application: Application) {
-    const localGovernments = await this.localGovernmentService.get();
-    const matchingLg = localGovernments.find(
-      (lg) => lg.uuid === application.localGovernmentUuid,
-    );
-    if (
-      !application.localGovernmentUuid ||
-      !matchingLg ||
-      !matchingLg.bceidBusinessGuid
-    ) {
-      throw new BadRequestException('Invalid Local Government');
+      this.logger.debug(validationResult.errors);
+      throw new BadRequestException('Invalid Application');
     }
   }
 }

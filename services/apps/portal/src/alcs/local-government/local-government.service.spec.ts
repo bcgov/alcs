@@ -16,14 +16,12 @@ describe('LocalGovernmentService', () => {
       name: 'fake-lg',
       uuid: 'fake-uuid',
       isFirstNation: false,
-      isActive: true,
     },
     {
       name: 'matching-lg',
       uuid: 'matching-uuid',
       bceidBusinessGuid: 'matching-guid',
       isFirstNation: false,
-      isActive: true,
     },
   ];
 
