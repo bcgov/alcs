@@ -1,34 +1,104 @@
--- Step 1: Perform a lookup to retrieve the applicant's name or organization for each application ID
-with applicant_lookup as (
-    select distinct
-    oaap.alr_application_id as application_id,
-    string_agg(distinct oo.organization_name, ', ') filter (where oo.organization_name is not null) as orgs,
-    string_agg(distinct concat(op.first_name || ' ' || op.last_name), ', ') filter (where op.last_name is not null or op.first_name is not null) as persons
-    from oats.oats_alr_application_parties oaap
-    left join oats.oats_person_organizations opo on oaap.person_organization_id = opo.person_organization_id
-    left join oats.oats_persons op on op.person_id  = opo.person_id 
-    left join oats.oats_organizations oo on opo.organization_id = oo.organization_id 
-    where oaap.alr_appl_role_code = 'APPL' group by oaap.alr_application_id
+-- Step 1: Create helper table to lookup guids and deal with duplicates
+DROP TABLE IF EXISTS application_etl;
+
+CREATE TEMPORARY TABLE application_etl (
+    id SERIAL PRIMARY KEY,
+    application_id int,
+    card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+    duplicated bool DEFAULT false
+);
+
+INSERT INTO
+    application_etl (application_id, duplicated)
+SELECT
+    DISTINCT oa.alr_application_id AS application_id,
+    CASE
+        WHEN a.uuid IS NOT NULL THEN TRUE
+        ELSE false
+    END AS duplicated
+FROM
+    oats.oats_alr_applications AS oa
+    LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number;
+
+-- Step 2: Create associated card
+INSERT INTO
+    alcs.card (uuid, audit_created_by)
+SELECT
+    ae.card_uuid,
+    'oats_etl'
+FROM
+    application_etl ae
+WHERE
+    ae.duplicate IS false;
+
+-- Step 3: Perform a lookup to retrieve the applicant's name or organization for each application ID
+WITH applicant_lookup AS (
+    SELECT
+        DISTINCT oaap.alr_application_id AS application_id,
+        string_agg(DISTINCT oo.organization_name, ', ') FILTER (
+            WHERE
+                oo.organization_name IS NOT NULL
+        ) AS orgs,
+        string_agg(
+            DISTINCT concat(op.first_name || ' ' || op.last_name),
+            ', '
+        ) FILTER (
+            WHERE
+                op.last_name IS NOT NULL
+                OR op.first_name IS NOT NULL
+        ) AS persons
+    FROM
+        oats.oats_alr_application_parties oaap
+        LEFT JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
+        LEFT JOIN oats.oats_persons op ON op.person_id = opo.person_id
+        LEFT JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
+    WHERE
+        oaap.alr_appl_role_code = 'APPL'
+    GROUP BY
+        oaap.alr_application_id
 ),
--- Step 2: Perform a lookup to retrieve the region code for each application ID
-panel_lookup as (
-    select distinct oaap.alr_application_id as application_id, oo2.organization_name as panel_region
-    from oats.oats_alr_application_parties oaap 
-    join oats.oats_person_organizations opo on oaap.person_organization_id = opo.person_organization_id
-    join oats.oats_organizations oo on opo.organization_id = oo.organization_id 
-    join oats.oats_organizations oo2 on oo.parent_organization_id = oo2.organization_id 
-    where oo2.organization_type_cd = 'PANEL'
-)
--- Step 3: Insert new records into the alcs_applications table
-INSERT INTO alcs_applications (file_number, applicant, region_code) 
-SELECT 
-    oa.alr_application_id::text as file_number,
-    case 
-        when applicant_lookup.orgs is not null then applicant_lookup.orgs
-        else applicant_lookup.persons
-    end as applicant,
-    panel_lookup.panel_region as panel_region
-FROM oats.oats_alr_applications as oa
-left join applicant_lookup on oa.alr_application_id = applicant_lookup.application_id
-left join panel_lookup on oa.alr_application_id = panel_lookup.application_id
-group by lookup_application_id
+-- Step 4: Perform a lookup to retrieve the region code for each application ID
+panel_lookup AS (
+    SELECT
+        DISTINCT oaap.alr_application_id AS application_id,
+        oo2.organization_name AS panel_region
+    FROM
+        oats.oats_alr_application_parties oaap
+        JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
+        JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
+        JOIN oats.oats_organizations oo2 ON oo.parent_organization_id = oo2.organization_id
+    WHERE
+        oo2.organization_type_cd = 'PANEL'
+) -- Step 5: Insert new records into the alcs_applications table
+INSERT INTO
+    alcs.application (
+        file_number,
+        card_uuid,
+        type_code,
+        applicant,
+        region_code,
+        local_government_uuid,
+        audit_created_by
+    )
+SELECT
+    oa.alr_application_id :: text AS file_number,
+    ae.card_uuid AS card_uuid,
+    -- TODO: type code lookup
+    'NARU',
+    CASE
+        WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
+        WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
+        ELSE 'Unknown'
+    END AS applicant,
+    -- TODO: panel region lookup
+    'INTR',
+    --Peace river TODO: local government lookup
+    '001cfdad-bc6e-4d25-9294-1550603da980',
+    'oats_etl'
+FROM
+    oats.oats_alr_applications AS oa
+    JOIN application_etl AS ae ON oa.alr_application_id = ae.application_id
+    LEFT JOIN applicant_lookup ON oa.alr_application_id = applicant_lookup.application_id
+    LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
+WHERE
+    ae.duplicate IS false;

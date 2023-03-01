@@ -22,12 +22,31 @@ def process_applications(conn=None):
     cursor = conn.cursor()
     count_sql = "SELECT COUNT(*) FROM oats.oats_alr_applications"
     cursor.execute(count_sql)
-    count = cursor.fetchone()[0]
-    print("Number of applications: ", count)
+    count_total = cursor.fetchone()[0]
+    print("- Applications to insert: ", count_total)
 
-    # with open("sql/insert-application.sql", "r", encoding="utf-8") as sql_file:
-    #     application_sql = sql_file.read()
+    with open("sql/insert-application.sql", "r", encoding="utf-8") as sql_file:
+        application_sql = sql_file.read()
 
-    # cursor.execute(application_sql)
+    cursor.execute(application_sql)
 
+    final_count = cursor.execute(
+        "select count(*) from alcs.application a where a.audit_created_by = 'oats_etl'"
+    )
+    print("- Actual inserted: ", final_count)
+
+    cursor.commit()
+    cursor.close()
+
+
+@inject_conn_pool
+def clean_applications(conn=None):
+    cursor = conn.cursor()
+    clean_sql = """
+        DELETE FROM alcs.cards WHERE applications.audit_created_by = "oats_etl";
+        DELETE FROM alcs.applications WHERE applications.audit_created_by = "oats_etl";
+        """
+    cursor.execute(clean_sql)
+
+    cursor.commit()
     cursor.close()

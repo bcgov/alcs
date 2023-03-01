@@ -1,6 +1,8 @@
 import sys, logging, argparse
 from dotenv import load_dotenv
-from applications import process_applications
+from rich.console import Console
+
+from applications import process_applications, clean_applications
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="OATS ETL utility")
@@ -20,14 +22,18 @@ if __name__ == "__main__":
 
     # Setup
     logging.basicConfig(level=logging.INFO)
+    console = Console()  # Console for UI
 
     # Call function corresponding to selected action using match statement
     match args.action:
         case "import":
-            print("Beginning import")
-            process_applications()
-            # import_function(conn_pool)
+            console.log("Beginning OATS -> ALCS import process")
+            with console.status("[bold green]Import OATS into ALCS...") as status:
+                console.log("Processing applications:")
+                process_applications()
+                console.log("Done")
         case "clean":
-
-            print("Beginning import")
-            # clean_function(conn_pool)
+            with console.status("[bold green]Import OATS into ALCS...") as status:
+                console.log("Cleaning applications:")
+                clean_applications()
+                console.log("Done")
