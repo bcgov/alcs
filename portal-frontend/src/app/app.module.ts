@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ApplicationDetailsModule } from './features/application-details/application-details.module';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { CreateApplicationDialogComponent } from './features/create-application-dialog/create-application-dialog.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
@@ -44,6 +45,7 @@ import { SharedModule } from './shared/shared.module';
     MatSortModule,
     MatPaginatorModule,
     MatToolbarModule,
+    ApplicationDetailsModule,
   ],
   providers: [
     ConfirmationDialogService,

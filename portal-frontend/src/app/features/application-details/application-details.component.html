@@ -1,14 +1,16 @@
 <section>
   <app-parcel
     [$application]="$application"
-    [isValidate]="isValidate"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
     (isParcelDetailsValid)="parcelValidation($event)"
   ></app-parcel>
 </section>
 <section>
   <app-parcel
     [$application]="$application"
-    [isValidate]="isValidate"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
     [parcelType]="parcelType.OTHER"
     (isParcelDetailsValid)="parcelValidation($event)"
   ></app-parcel>
@@ -19,7 +21,7 @@
     <div class="subheading2 grid-1">Primary Contact</div>
     <div class="grid-double" *ngIf="primaryContact?.type?.code !== 'AGEN'">
       {{ primaryContact?.displayName }}
-      <app-no-data [showRequired]="true" *ngIf="!primaryContact"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact"></app-no-data>
     </div>
     <ng-container *ngIf="primaryContact">
       <div *ngIf="primaryContact.type.code === 'AGEN'">Third Party Agent</div>
@@ -28,28 +30,28 @@
         <div class="subheading2 grid-1">First Name</div>
         <div class="grid-double">
           {{ primaryContact.firstName }}
-          <app-no-data [showRequired]="true" *ngIf="!primaryContact.firstName"></app-no-data>
+          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.firstName"></app-no-data>
         </div>
         <div class="subheading2 grid-1">Last Name</div>
         <div class="grid-double">
           {{ primaryContact.lastName }}
-          <app-no-data [showRequired]="true" *ngIf="!primaryContact.lastName"></app-no-data>
+          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.lastName"></app-no-data>
         </div>
         <div class="subheading2 grid-1">Organization (Optional)</div>
         <div class="grid-double">
           {{ primaryContact.organizationName }}
-          <app-no-data [showRequired]="false" *ngIf="!primaryContact.organizationName"></app-no-data>
+          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.organizationName"></app-no-data>
         </div>
         <div class="subheading2 grid-1">Phone</div>
         <div class="grid-double">
           {{ primaryContact.phoneNumber }}
-          <app-no-data [showRequired]="true" *ngIf="!primaryContact.phoneNumber"></app-no-data>
+          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.phoneNumber"></app-no-data>
           <app-validation-error *ngIf="!(primaryContact.phoneNumber | phoneValid)">Invalid Format</app-validation-error>
         </div>
         <div class="subheading2 grid-1">Email</div>
         <div class="grid-double">
           {{ primaryContact.email }}
-          <app-no-data [showRequired]="true" *ngIf="!primaryContact.email"></app-no-data>
+          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.email"></app-no-data>
           <app-validation-error *ngIf="!(primaryContact.email | emailValid)">Invalid Format</app-validation-error>
         </div>
       </ng-container>
@@ -64,7 +66,7 @@
         <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
       </div>
     </div>
-    <div class="edit-button">
+    <div *ngIf="showEdit" class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
     </div>
   </div>
@@ -75,9 +77,9 @@
     <div class="subheading2 grid-1">Local of First Nation Government</div>
     <div class="grid-double">
       {{ localGovernment?.name }}
-      <app-no-data [showRequired]="true" *ngIf="!localGovernment"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
     </div>
-    <div class="edit-button">
+    <div *ngIf="showEdit" class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
     </div>
   </div>
@@ -93,21 +95,24 @@
     </div>
     <div class="grid-double">
       {{ application.parcelsAgricultureDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.parcelsAgricultureDescription"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!application.parcelsAgricultureDescription"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       Quantify and describe in detail all agricultural improvements made to the parcel(s).
     </div>
     <div class="grid-double">
       {{ application.parcelsAgricultureImprovementDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.parcelsAgricultureImprovementDescription"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="!application.parcelsAgricultureImprovementDescription"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
     </div>
     <div class="grid-double">
       {{ application.parcelsNonAgricultureUseDescription }}
-      <app-no-data [showRequired]="true" *ngIf="!application.parcelsNonAgricultureUseDescription"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!application.parcelsNonAgricultureUseDescription"></app-no-data>
     </div>
     <div class="full-width">
       <h4>Land Use of Adjacent Parcels</h4>
@@ -119,48 +124,48 @@
       <div class="grid-1 subheading2">North</div>
       <div class="grid-2">
         {{ application.northLandUseType }}
-        <app-no-data [showRequired]="true" *ngIf="!application.northLandUseType"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.northLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
         {{ application.northLandUseTypeDescription }}
-        <app-no-data [showRequired]="true" *ngIf="!application.northLandUseTypeDescription"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.northLandUseTypeDescription"></app-no-data>
       </div>
       <div class="grid-1 subheading2">East</div>
       <div class="grid-2">
         {{ application.eastLandUseType }}
-        <app-no-data [showRequired]="true" *ngIf="!application.eastLandUseType"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.eastLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
         {{ application.eastLandUseTypeDescription }}
-        <app-no-data [showRequired]="true" *ngIf="!application.eastLandUseTypeDescription"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.eastLandUseTypeDescription"></app-no-data>
       </div>
       <div class="grid-1 subheading2">South</div>
       <div class="grid-2">
         {{ application.southLandUseType }}
-        <app-no-data [showRequired]="true" *ngIf="!application.southLandUseType"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.southLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
         {{ application.southLandUseTypeDescription }}
-        <app-no-data [showRequired]="true" *ngIf="!application.southLandUseTypeDescription"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.southLandUseTypeDescription"></app-no-data>
       </div>
       <div class="grid-1 subheading2">West</div>
       <div class="grid-2">
         {{ application.westLandUseType }}
-        <app-no-data [showRequired]="true" *ngIf="!application.westLandUseType"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.westLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
         {{ application.westLandUseTypeDescription }}
-        <app-no-data [showRequired]="true" *ngIf="!application.westLandUseTypeDescription"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!application.westLandUseTypeDescription"></app-no-data>
       </div>
     </div>
-    <div class="edit-button">
+    <div *ngIf="showEdit" class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
     </div>
   </div>
 </section>
 <section>
   <h3>6. Proposal</h3>
-  <app-nfu-details [application]="application"></app-nfu-details>
+  <app-nfu-details [showErrors]="showErrors" [showEdit]="showEdit" [application]="application"></app-nfu-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
@@ -170,10 +175,12 @@
       <div class="grid-2 subheading2">Description</div>
       <div class="grid-3 subheading2">File Name</div>
       <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1">{{ file.type }} <app-no-data [showRequired]="true" *ngIf="!file.type"></app-no-data></div>
+        <div class="grid-1">
+          {{ file.type }} <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
+        </div>
         <div class="grid-2">
           {{ file.description }}
-          <app-no-data [showRequired]="true" *ngIf="!file.description"></app-no-data>
+          <app-no-data [showRequired]="showErrors" *ngIf="!file.description"></app-no-data>
         </div>
         <div class="grid-3">
           <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
@@ -184,16 +191,7 @@
       </div>
     </div>
     <div class="edit-button">
-      <button mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
+      <button *ngIf="showEdit" mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
     </div>
   </div>
 </section>
-<div class="button-container">
-  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <div>
-    <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
-      Previous<span class="mobile-hidden"> Step</span>
-    </button>
-    <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
-  </div>
-</div>
