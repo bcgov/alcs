@@ -43,6 +43,8 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="20" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_21eddf92cb75ff3cc0c99b80d86" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
          </column>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="21" name="status_history" nullable="false" remarks="JSONB Column containing the status history of the Application from the Portal" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="application_review" nullable="true" remarks="JSONB Column containing the government / first nation government review from the Portal" size="2147483647" type="jsonb" typeCode="1111"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
@@ -178,6 +180,7 @@
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="bceid_business_guid" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="false" digits="0" id="9" name="is_first_nation" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="10" name="is_active" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_58853fcb8957e8b2c131cc12da1" unique="true">
             <column ascending="true" name="uuid"/>
