@@ -7,7 +7,7 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
-import { ReviewApplicationSteps } from '../review-application.component';
+import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-attachments',
@@ -17,7 +17,7 @@ import { ReviewApplicationSteps } from '../review-application.component';
 export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
   @Output() navigateToStep = new EventEmitter<number>();
-  currentStep = ReviewApplicationSteps.Attachments;
+  currentStep: ReviewApplicationSteps | ReviewApplicationFngSteps = ReviewApplicationSteps.Attachments;
 
   $destroy = new Subject<void>();
 
@@ -44,6 +44,10 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       if (applicationReview) {
         this.fileId = applicationReview.applicationFileNumber;
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        if (this.isFirstNationGovernment) {
+          this.currentStep = ReviewApplicationFngSteps.Attachments;
+        }
+
         this.showMandatoryUploads =
           applicationReview.isSubjectToZoning === true ||
           applicationReview.isOCPDesignation === true ||

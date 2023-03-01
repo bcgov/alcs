@@ -23,6 +23,18 @@ export enum ReviewApplicationSteps {
   ReviewAndSubmit = 5,
 }
 
+export enum ReviewApplicationFngSteps {
+  ContactInformation = 0,
+  Resolution = 1,
+  Attachments = 2,
+  ReviewAndSubmitFng = 3,
+}
+
+export class NavigateToStep {
+  from!: number;
+  to!: number;
+}
+
 @Component({
   selector: 'app-review-application',
   templateUrl: './review-application.component.html',
@@ -36,6 +48,7 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
 
   isFirstNationGovernment = true;
   reviewAppSteps = ReviewApplicationSteps;
+  reviewAppFngSteps = ReviewApplicationFngSteps;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -112,24 +125,40 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   async saveApplicationReview(step: number) {
-    switch (step) {
-      case ReviewApplicationSteps.ContactInformation:
-        await this.reviewContactInformationComponent.onSave();
-        break;
-      case ReviewApplicationSteps.OCP:
-        await this.reviewOcpComponent.onSave();
-        break;
-      case ReviewApplicationSteps.Zoning:
-        await this.reviewZoningComponent.onSave();
-        break;
-      case ReviewApplicationSteps.Resolution:
-        await this.reviewResolutionComponent.onSave();
-        break;
-      case ReviewApplicationSteps.ReviewAndSubmit:
-      case ReviewApplicationSteps.Attachments:
-        return;
-      default:
-        this.toastService.showErrorToast('Error updating application.');
+    if (this.isFirstNationGovernment) {
+      switch (step) {
+        case ReviewApplicationFngSteps.ContactInformation:
+          await this.reviewContactInformationComponent.onSave();
+          break;
+        case ReviewApplicationFngSteps.Resolution:
+          await this.reviewResolutionComponent.onSave();
+          break;
+        case ReviewApplicationFngSteps.ReviewAndSubmitFng:
+        case ReviewApplicationFngSteps.Attachments:
+          return;
+        default:
+          this.toastService.showErrorToast('Error updating application.');
+      }
+    } else {
+      switch (step) {
+        case ReviewApplicationSteps.ContactInformation:
+          await this.reviewContactInformationComponent.onSave();
+          break;
+        case ReviewApplicationSteps.OCP:
+          await this.reviewOcpComponent.onSave();
+          break;
+        case ReviewApplicationSteps.Zoning:
+          await this.reviewZoningComponent.onSave();
+          break;
+        case ReviewApplicationSteps.Resolution:
+          await this.reviewResolutionComponent.onSave();
+          break;
+        case ReviewApplicationSteps.ReviewAndSubmit:
+        case ReviewApplicationSteps.Attachments:
+          return;
+        default:
+          this.toastService.showErrorToast('Error updating application.');
+      }
     }
   }
 
@@ -141,7 +170,6 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   async onBeforeSwitchStep(index: number) {
-    console.log('onBeforeSwitchStep');
     this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
   }
 
