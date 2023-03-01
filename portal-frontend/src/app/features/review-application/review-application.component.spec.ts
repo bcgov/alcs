@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
@@ -49,9 +49,12 @@ describe('ReviewApplicationComponent', () => {
           provide: MatDialog,
           useValue: mockDialog,
         },
+        {
+          provide: MatSnackBar,
+          useValue: createMock<DeepMocked<MatSnackBar>>(),
+        },
       ],
       declarations: [ReviewApplicationComponent],
-      imports: [MatSnackBarModule],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
