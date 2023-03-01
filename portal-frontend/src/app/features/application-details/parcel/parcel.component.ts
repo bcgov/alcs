@@ -49,7 +49,8 @@ export class ParcelComponent {
   @Output() isParcelDetailsValid: EventEmitter<boolean> = new EventEmitter(false);
 
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
-  @Input() isValidate: boolean = false;
+  @Input() showErrors = true;
+  @Input() showEdit = true;
   @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
 
   pageTitle: string = '1. Identify Parcel(s) Under Application';
@@ -58,7 +59,6 @@ export class ParcelComponent {
 
   fileId: string = '';
   parcels: ApplicationParcelExtended[] = [];
-  showErrors = true;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -67,7 +67,6 @@ export class ParcelComponent {
   ) {}
 
   ngOnInit(): void {
-    this.showErrors = this.isValidate;
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
@@ -95,7 +94,7 @@ export class ParcelComponent {
   }
 
   private async validateParcelDetails() {
-    if (this.isValidate) {
+    if (this.showErrors) {
       if (this.parcels) {
         this.parcels.forEach((p) => {
           p.validation = this.validateParcelBasic(p);

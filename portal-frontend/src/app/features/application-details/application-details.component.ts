@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
@@ -6,21 +6,20 @@ import { ApplicationDocumentService } from '../../services/application-document/
 import { ApplicationOwnerDetailedDto } from '../../services/application-owner/application-owner.dto';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
-import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-application-details',
   templateUrl: './application-details.component.html',
   styleUrls: ['./application-details.component.scss'],
 })
-export class ApplicationDetailsComponent implements OnInit {
+export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
-  @Input() isValidate: boolean = true;
+  @Input() showErrors: boolean = true;
+  @Input() showEdit: boolean = true;
   isParcelDetailsValid = false;
   parcelType = PARCEL_TYPE;
   application: ApplicationDetailedDto | undefined;
@@ -39,9 +38,7 @@ export class ApplicationDetailsComponent implements OnInit {
   constructor(
     private codeService: CodeService,
     private applicationDocumentService: ApplicationDocumentService,
-    private router: Router,
-    private toastService: ToastService,
-    private applicationService: ApplicationService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +64,11 @@ export class ApplicationDetailsComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     window.open(res?.url, '_blank');
@@ -74,29 +76,6 @@ export class ApplicationDetailsComponent implements OnInit {
 
   onNavigateToStep(step: number) {
     this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}`);
-  }
-
-  async onSubmitToAlcs() {
-    if (!this.application?.localGovernmentUuid) {
-      this.toastService.showErrorToast('Please set local government first.');
-      return;
-    }
-
-    const el = document.getElementsByClassName('error');
-    if (el && el.length > 0) {
-      el[0].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-      this.toastService.showErrorToast('Please correct all errors before submitting the form');
-    } else if (this.application) {
-      await this.applicationService.submitToAlcs(this.application.fileNumber);
-      await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
-    }
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
   }
 
   private async loadGovernments() {

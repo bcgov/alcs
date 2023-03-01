@@ -7,7 +7,13 @@
     <div class="full-width flex-space-between-wrap">
       <h4>Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>
       <div>
-        <button class="mobile-hidden" mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
+        <button
+          *ngIf="showEdit"
+          class="mobile-hidden"
+          mat-flat-button
+          color="accent"
+          (click)="onEditParcelClick(parcel.uuid)"
+        >
           Edit Parcel {{ parcelInd + 1 }}
         </button>
       </div>
@@ -16,22 +22,28 @@
     <div class="subheading2 grid-1">Ownership Type</div>
     <div class="grid-double">
       {{ parcel.ownershipType?.label }}
-      <app-no-data [showRequired]="true" *ngIf="!parcel.ownershipType"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Legal Description</div>
     <div class="grid-double">
       {{ parcel.legalDescription }}
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isLegalDescriptionRequired || false"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="parcel.validation?.isLegalDescriptionRequired || false"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Area (Hectares)</div>
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">PID</div>
     <div class="grid-double">
       {{ parcel.pid }}
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isPidRequired || false"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="parcel.validation?.isPidRequired || false"></app-no-data>
     </div>
     <div class="subheading2 grid-1">PIN (Optional)</div>
     <div class="grid-double">
@@ -47,14 +59,14 @@
     <div class="subheading2 grid-1">Farm Classification</div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
-      <app-no-data [showRequired]="true" *ngIf="parcel.isFarm === null"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
     </div>
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
       <div *ngFor="let document of parcel.documents">
         <a (click)="onOpenFile(document.uuid)">{{ document.fileName }}</a>
       </div>
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isCertificateRequired || false"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="parcel.validation?.isCertificateRequired || false"></app-no-data>
     </div>
     <div class="full-width subheading1">Owner Information</div>
     <div class="full-width owner-information">
@@ -76,16 +88,16 @@
         </div>
       </ng-container>
       <div class="full-width">
-        <app-no-data [showRequired]="true" *ngIf="parcel.owners.length === 0"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="parcel.owners.length === 0"></app-no-data>
       </div>
     </div>
-    <div class="edit-button tablet-hidden">
+    <div *ngIf="showEdit" class="edit-button tablet-hidden">
       <button mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
         Edit Parcel {{ parcelInd + 1 }}
       </button>
     </div>
   </ng-container>
-  <div class="edit-button">
+  <div *ngIf="showEdit" class="edit-button">
     <button mat-flat-button (click)="onEditParcelsClick($event)" color="accent">Edit Section</button>
   </div>
 </div>

@@ -59,24 +59,11 @@
                 Review Application
               </button>
             </div>
-            <div class="view-box">
-              <div>
-                <div class="subheading2">Application ID</div>
-                <div>{{ application.fileNumber }}</div>
-              </div>
-              <div>
-                <div class="subheading2">Applicant Status</div>
-                <div>{{ application.status.label }}</div>
-              </div>
-              <div>
-                <div class="subheading2">Applicant Name</div>
-                <div>{{ application.applicant }}</div>
-              </div>
-              <div>
-                <div class="subheading2">Application Type</div>
-                <div>{{ application.type }}</div>
-              </div>
-            </div>
+            <app-application-details
+              [showEdit]="false"
+              [showErrors]="false"
+              [$application]="$application"
+            ></app-application-details>
           </section>
         </div>
         <div class="buttons" *ngIf="application">
@@ -131,10 +118,7 @@
               Review Application
             </button>
           </div>
-          <div
-            *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.IN_PROGRESS"
-            class="warning"
-          >
+          <div *ngIf="application.status.code === APPLICATION_STATUS.IN_PROGRESS" class="warning">
             This section will update after the application is submitted.
           </div>
           <div
@@ -407,7 +391,7 @@
   <button class="change-step" mat-flat-button color="primary" (click)="onChangeMobileStep()">View</button>
   <div *ngIf="application && mobileStep === MOBILE_STEP.INTRODUCTION" class="content">
     <img class="tractor" src="/assets/tractor.png" alt="Tractor" />
-    <span class='center'>Select section to view more</span>
+    <span class="center">Select section to view more</span>
   </div>
   <div *ngIf="application && mobileStep === MOBILE_STEP.APPLICATION" class="content">
     <section>
@@ -434,24 +418,11 @@
           </button>
         </div>
       </div>
-      <div class="view-box">
-        <div>
-          <div class="subheading2">Application ID</div>
-          <div>{{ application.fileNumber }}</div>
-        </div>
-        <div>
-          <div class="subheading2">Applicant Status</div>
-          <div>{{ application.status.label }}</div>
-        </div>
-        <div>
-          <div class="subheading2">Applicant Name</div>
-          <div>{{ application.applicant }}</div>
-        </div>
-        <div>
-          <div class="subheading2">Application Type</div>
-          <div>{{ application.type }}</div>
-        </div>
-      </div>
+      <app-application-details
+        [showEdit]="false"
+        [showErrors]="false"
+        [$application]="$application"
+      ></app-application-details>
       <div class="buttons" *ngIf="application">
         <div>
           <button
@@ -508,6 +479,9 @@
             Review Application
           </button>
         </div>
+      </div>
+      <div *ngIf="application.status.code === APPLICATION_STATUS.IN_PROGRESS" class="warning">
+        This section will update after the application is submitted.
       </div>
       <div
         *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC"

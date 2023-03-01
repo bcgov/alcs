@@ -9,6 +9,8 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 })
 export class NfuDetailsComponent {
   @Input() application: ApplicationDetailedDto | undefined;
+  @Input() showErrors = true;
+  @Input() showEdit = true;
 
   constructor(private router: Router) {}
 
