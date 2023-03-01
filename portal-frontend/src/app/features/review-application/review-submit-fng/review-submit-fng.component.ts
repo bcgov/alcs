@@ -1,6 +1,5 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
@@ -8,8 +7,9 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
+import { ReviewApplicationFngSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-submit-fng[stepper]',
@@ -18,7 +18,9 @@ import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 })
 export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
-  @Input() stepper!: MatStepper;
+  @Input() stepper!: CustomStepperComponent;
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationFngSteps.ReviewAndSubmitFng;
 
   @ViewChild('contactInfo') contactInfoPanel?: MatExpansionPanel;
   @ViewChild('attachmentInfo') attachmentPanel?: MatExpansionPanel;
@@ -36,7 +38,6 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationReviewService,
-    private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 
@@ -77,7 +78,8 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   }
 
   onEditSection(index: number) {
-    this.stepper.selectedIndex = index;
+    // this.stepper.selectedIndex = index;
+    this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
   }
 
   async onSubmit() {
@@ -157,5 +159,9 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
 
   private validateAttachments() {
     return this.resolutionDocument.length > 0;
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

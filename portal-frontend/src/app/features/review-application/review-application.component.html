@@ -5,48 +5,94 @@
   </div>
 </ng-template>
 
-<mat-stepper *ngIf="!isFirstNationGovernment" class="review-application" linear="true" #stepper>
-  <mat-step label="Contact Information">
+<app-custom-stepper
+  class="review-application"
+  *ngIf="!isFirstNationGovernment"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+>
+  <cdk-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-contact-information></app-review-contact-information>
-  </mat-step>
-  <mat-step label="Plans & Bylaws: OCP">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.ContactInformation">
+      <app-review-contact-information (navigateToStep)="onBeforeSwitchStep($event)"></app-review-contact-information>
+    </div>
+  </cdk-step>
+  <cdk-step label="Plans & Bylaws: OCP">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-ocp></app-review-ocp>
-  </mat-step>
-  <mat-step label="Plans & Bylaws: Zoning">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.OCP">
+      <app-review-ocp (navigateToStep)="onBeforeSwitchStep($event)"></app-review-ocp>
+    </div>
+  </cdk-step>
+  <cdk-step label="Plans & Bylaws: Zoning">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-zoning></app-review-zoning>
-  </mat-step>
-  <mat-step label="Resolution">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Zoning">
+      <app-review-zoning (navigateToStep)="onBeforeSwitchStep($event)"></app-review-zoning>
+    </div>
+  </cdk-step>
+  <cdk-step label="Resolution">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-resolution></app-review-resolution>
-  </mat-step>
-  <mat-step label="Attachments">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Resolution">
+      <app-review-resolution (navigateToStep)="onBeforeSwitchStep($event)"></app-review-resolution>
+    </div>
+  </cdk-step>
+  <cdk-step label="Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-attachments [$application]="$application"></app-review-attachments>
-  </mat-step>
-  <mat-step label="Review & Submit">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Attachments">
+      <app-review-attachments
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-review-attachments>
+    </div>
+  </cdk-step>
+  <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-submit [$application]="$application" [stepper]="stepper"></app-review-submit>
-  </mat-step>
-</mat-stepper>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.ReviewAndSubmit">
+      <app-review-submit
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [stepper]="cdkStepper"
+      ></app-review-submit>
+    </div>
+  </cdk-step>
+</app-custom-stepper>
 
-<mat-stepper *ngIf="isFirstNationGovernment" class="review-application" linear="true" #stepper>
-  <mat-step label="Contact Information">
+<app-custom-stepper
+  class="review-application"
+  *ngIf="isFirstNationGovernment"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+>
+  <cdk-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-contact-information></app-review-contact-information>
-  </mat-step>
-  <mat-step label="Resolution">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.ContactInformation">
+      <app-review-contact-information (navigateToStep)="onBeforeSwitchStep($event)"></app-review-contact-information>
+    </div>
+  </cdk-step>
+  <cdk-step label="Resolution">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-resolution></app-review-resolution>
-  </mat-step>
-  <mat-step label="Attachments">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.Resolution">
+      <app-review-resolution (navigateToStep)="onBeforeSwitchStep($event)"></app-review-resolution>
+    </div>
+  </cdk-step>
+  <cdk-step label="Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-attachments [$application]="$application"></app-review-attachments>
-  </mat-step>
-  <mat-step label="Review & Submit">
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.Attachments">
+      <app-review-attachments
+        [$application]="$application"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-review-attachments>
+    </div>
+  </cdk-step>
+  <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <app-review-submit-fng [$application]="$application" [stepper]="stepper"></app-review-submit-fng>
-  </mat-step>
-</mat-stepper>
+    <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.ReviewAndSubmitFng">
+      <app-review-submit-fng
+        [$application]="$application"
+        [stepper]="cdkStepper"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-review-submit-fng>
+    </div>
+  </cdk-step>
+</app-custom-stepper>

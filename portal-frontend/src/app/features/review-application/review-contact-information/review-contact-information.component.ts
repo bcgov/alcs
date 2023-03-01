@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-contact-information',
@@ -11,6 +12,8 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 })
 export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationSteps.ContactInformation;
 
   lgFileNumber = new FormControl<string | null>('');
   firstName = new FormControl<string | null>('');
@@ -55,9 +58,8 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onSaveExit() {
+  async onExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -79,5 +81,9 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

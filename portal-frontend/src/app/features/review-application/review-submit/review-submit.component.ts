@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
@@ -10,6 +10,8 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
+import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
+import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -18,7 +20,9 @@ import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
-  @Input() stepper!: MatStepper;
+  @Input() stepper!: CustomStepperComponent;
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationSteps.ReviewAndSubmit;
 
   @ViewChild('contactInfo') contactInfoPanel?: MatExpansionPanel;
   @ViewChild('ocpInfo') ocpInfoPanel?: MatExpansionPanel;
@@ -208,5 +212,9 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
       }
     }
     return true;
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

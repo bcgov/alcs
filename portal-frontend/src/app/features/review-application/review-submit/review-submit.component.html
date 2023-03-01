@@ -190,7 +190,10 @@
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null" class="edit-button">
+        <div
+          *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null"
+          class="edit-button"
+        >
           <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
         </div>
       </div>
@@ -431,7 +434,10 @@
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null" class="edit-button">
+        <div
+          *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null"
+          class="edit-button"
+        >
           <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
         </div>
       </div>
@@ -488,7 +494,7 @@
   <div class="button-container">
     <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
       <button (click)="onSubmit()" mat-flat-button color="primary">Submit</button>

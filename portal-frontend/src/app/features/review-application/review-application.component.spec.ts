@@ -2,11 +2,12 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationReviewDto } from '../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../services/application-review/application-review.service';
 import { ApplicationService } from '../../services/application/application.service';
+import { ToastService } from '../../services/toast/toast.service';
 import { ReviewApplicationComponent } from './review-application.component';
 
 describe('ReviewApplicationComponent', () => {
@@ -47,6 +48,10 @@ describe('ReviewApplicationComponent', () => {
         {
           provide: MatDialog,
           useValue: mockDialog,
+        },
+        {
+          provide: ToastService,
+          useValue: createMock<DeepMocked<ToastService>>(),
         },
       ],
       declarations: [ReviewApplicationComponent],
