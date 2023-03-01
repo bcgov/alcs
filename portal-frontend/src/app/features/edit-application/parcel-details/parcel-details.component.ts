@@ -172,7 +172,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async onOwnersUpdated() {
-    console.log('onOwnersUpdated');
     const owners = await this.applicationOwnerService.fetchByFileId(this.fileId);
     if (owners) {
       const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
