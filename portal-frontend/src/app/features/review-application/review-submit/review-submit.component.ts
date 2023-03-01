@@ -10,7 +10,6 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
-import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -19,7 +18,7 @@ import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-st
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
-  @Input() stepper!: CustomStepperComponent;
+  @Input() stepper!: MatStepper;
 
   @ViewChild('contactInfo') contactInfoPanel?: MatExpansionPanel;
   @ViewChild('ocpInfo') ocpInfoPanel?: MatExpansionPanel;
