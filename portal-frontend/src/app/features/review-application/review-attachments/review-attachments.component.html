@@ -19,6 +19,7 @@
         (uploadFiles)="attachFile($event, documentTypes.RESOLUTION_DOCUMENT)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
+        [isRequired]="true"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -29,6 +30,7 @@
         (uploadFiles)="attachFile($event, documentTypes.STAFF_REPORT)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
+        [isRequired]="true"
       ></app-file-drag-drop>
     </section>
     <section>
