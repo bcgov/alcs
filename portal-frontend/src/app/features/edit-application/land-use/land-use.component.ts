@@ -7,14 +7,14 @@ import { ApplicationService } from '../../../services/application/application.se
 import { EditApplicationSteps } from '../edit-application.component';
 
 export enum MainLandUseTypeOptions {
-  AgriculturalFarm = 'Agricultural/Farm',
-  CivicInstitutional = 'Civic/Institutional',
-  CommercialRetail = 'Commercial/Retail',
+  AgriculturalFarm = 'Agricultural / Farm',
+  CivicInstitutional = 'Civic / Institutional',
+  CommercialRetail = 'Commercial / Retail',
   Industrial = 'Industrial',
   Other = 'Other',
   Recreational = 'Recreational',
   Residential = 'Residential',
-  TransportationUtilities = 'Transportation/Utilities',
+  TransportationUtilities = 'Transportation / Utilities',
   Unused = 'Unused',
 }
 
@@ -27,6 +27,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.LandUse;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
   fileId: string = '';
@@ -67,6 +68,10 @@ export class LandUseComponent implements OnInit, OnDestroy {
         this.populateFormValues(application);
       }
     });
+
+    if (this.showErrors) {
+      this.landUseForm.markAllAsTouched();
+    }
   }
 
   async ngOnDestroy() {

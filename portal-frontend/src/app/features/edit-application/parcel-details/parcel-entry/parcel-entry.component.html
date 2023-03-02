@@ -62,7 +62,7 @@
     <div>
       <label for="pid">PID</label>
       <mat-form-field class="full-width-input" appearance="outline">
-        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength='11' mask="000-000-000" />
+        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength="11" mask="000-000-000" />
       </mat-form-field>
       <div *ngIf="pid.invalid && (pid.dirty || pid.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
