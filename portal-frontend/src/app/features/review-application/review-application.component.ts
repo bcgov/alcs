@@ -82,15 +82,15 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
             this.showValidationErrors = showErrors === 't';
           }
 
-          if (stepInd) {
-            // setTimeout is required for stepper to be initialized
-            setTimeout(() => {
-              this.customStepper.navigateToStep(parseInt(stepInd), true);
-            });
-          }
-
           this.loadApplication(fileId);
-          this.loadApplicationReview(fileId);
+          this.loadApplicationReview(fileId).then(() => {
+            if (stepInd) {
+              // setTimeout is required for stepper to be initialized
+              setTimeout(() => {
+                this.customStepper.navigateToStep(parseInt(stepInd), true);
+              });
+            }
+          });
         }
       });
 

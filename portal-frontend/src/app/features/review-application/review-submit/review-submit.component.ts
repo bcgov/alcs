@@ -106,7 +106,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   }
 
   private runValidation() {
-    this.showErrors = true;
     if (this._applicationReview) {
       const review = this._applicationReview;
       const contactInfoValid = this.validateContactInfo(review);

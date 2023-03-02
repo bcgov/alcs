@@ -28,7 +28,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
   _applicationReview: ApplicationReviewDto | undefined;
-  showErrors = false;
+  showErrors = true;
   isMobile = false;
 
   resolutionDocument: ApplicationDocumentDto[] = [];
@@ -93,8 +93,6 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   }
 
   private runValidation() {
-    this.showErrors = true;
-
     const contactInfoValid = this.validateContactInfo();
     if (!contactInfoValid) {
       if (this.contactInfoPanel) {

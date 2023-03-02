@@ -77,7 +77,10 @@
   <cdk-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.ContactInformation">
-      <app-review-contact-information (navigateToStep)="onBeforeSwitchStep($event)"></app-review-contact-information>
+      <app-review-contact-information
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [showErrors]="showValidationErrors"
+      ></app-review-contact-information>
     </div>
   </cdk-step>
   <cdk-step label="Resolution">
@@ -91,6 +94,7 @@
     <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.Attachments">
       <app-review-attachments
         [$application]="$application"
+        [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-attachments>
     </div>
