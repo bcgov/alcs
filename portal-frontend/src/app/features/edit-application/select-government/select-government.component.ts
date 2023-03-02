@@ -74,7 +74,13 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
       if (localGovernment) {
         this.showWarning = !localGovernment.hasGuid;
+
         this.localGovernment.setValue(localGovernment.name);
+        if (localGovernment.hasGuid) {
+          this.localGovernment.setErrors(null);
+        } else {
+          this.localGovernment.setErrors({ invalid: localGovernment.hasGuid });
+        }
       }
     }
   }
@@ -142,6 +148,9 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     if (lg) {
       this.localGovernment.patchValue(lg.name);
       this.showWarning = !lg.hasGuid;
+      if (!lg.hasGuid) {
+        this.localGovernment.setErrors({ invalid: true });
+      }
     }
   }
 
