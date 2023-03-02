@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -17,8 +17,8 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
   currentStep = ReviewApplicationSteps.OCP;
 
   isOCPDesignation = new FormControl<string | null>(null);
-  OCPBylawName = new FormControl<string | null>('');
-  OCPDesignation = new FormControl<string | null>('');
+  OCPBylawName = new FormControl<string | null>('', [Validators.required]);
+  OCPDesignation = new FormControl<string | null>('', [Validators.required]);
   isOCPConsistent = new FormControl<string | null>(null);
 
   ocpForm = new FormGroup({

@@ -29,12 +29,20 @@
         <mat-form-field class="input" appearance="outline">
           <input id="bylaw-name" matInput placeholder="Type OCP Bylaw Name" formControlName="OCPBylawName" />
         </mat-form-field>
+        <div *ngIf="OCPBylawName.invalid && (OCPBylawName.dirty || OCPBylawName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="OCPBylawName.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="designation">OCP Designation</label>
         <mat-form-field class="input" appearance="outline">
           <input id="designation" matInput placeholder="Type OCP Designation" formControlName="OCPDesignation" />
         </mat-form-field>
+        <div *ngIf="OCPDesignation.invalid && (OCPDesignation.dirty || OCPDesignation.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="OCPDesignation.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="full-row">
         <label for="is-consistent">Is this proposal consistent with the current OCP designation?</label>

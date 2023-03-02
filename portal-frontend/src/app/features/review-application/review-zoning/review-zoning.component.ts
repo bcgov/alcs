@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -17,9 +17,9 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
   currentStep = ReviewApplicationSteps.Zoning;
 
   isSubjectToZoning = new FormControl<string | null>(null);
-  zoningBylawName = new FormControl<string | null>('');
-  zoningMinimumLotSize = new FormControl<string | null>('');
-  zoningDesignation = new FormControl<string | null>('');
+  zoningBylawName = new FormControl<string | null>('', [Validators.required]);
+  zoningMinimumLotSize = new FormControl<string | null>('', [Validators.required]);
+  zoningDesignation = new FormControl<string | null>('', [Validators.required]);
   isZoningConsistent = new FormControl<string | null>(null);
 
   zoningForm = new FormGroup({
