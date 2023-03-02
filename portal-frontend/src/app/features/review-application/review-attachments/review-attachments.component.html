@@ -20,6 +20,7 @@
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [isRequired]="true"
+        [showErrors]="showErrors"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -31,6 +32,7 @@
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [isRequired]="true"
+        [showErrors]="showErrors"
       ></app-file-drag-drop>
     </section>
     <section>

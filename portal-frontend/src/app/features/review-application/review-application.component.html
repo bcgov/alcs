@@ -15,19 +15,28 @@
   <cdk-step label="Contact Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.ContactInformation">
-      <app-review-contact-information (navigateToStep)="onBeforeSwitchStep($event)"></app-review-contact-information>
+      <app-review-contact-information
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [showErrors]="showValidationErrors"
+      ></app-review-contact-information>
     </div>
   </cdk-step>
   <cdk-step label="Plans & Bylaws: OCP">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.OCP">
-      <app-review-ocp (navigateToStep)="onBeforeSwitchStep($event)"></app-review-ocp>
+      <app-review-ocp
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [showErrors]="showValidationErrors"
+      ></app-review-ocp>
     </div>
   </cdk-step>
   <cdk-step label="Plans & Bylaws: Zoning">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Zoning">
-      <app-review-zoning (navigateToStep)="onBeforeSwitchStep($event)"></app-review-zoning>
+      <app-review-zoning
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [showErrors]="showValidationErrors"
+      ></app-review-zoning>
     </div>
   </cdk-step>
   <cdk-step label="Resolution">
@@ -41,6 +50,7 @@
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Attachments">
       <app-review-attachments
         [$application]="$application"
+        [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-attachments>
     </div>

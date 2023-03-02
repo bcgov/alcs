@@ -77,11 +77,6 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  onEditSection(index: number) {
-    // this.stepper.selectedIndex = index;
-    this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
-  }
-
   async onSubmit() {
     const isValid = this.runValidation();
     if (isValid && this.fileId) {
@@ -162,6 +157,6 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   }
 
   onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
+    this.router.navigateByUrl(`application/${this.fileId}/review/${step}?errors=t`);
   }
 }

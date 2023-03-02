@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -14,6 +14,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.ContactInformation;
+  @Input() showErrors = false;
 
   lgFileNumber = new FormControl<string | null>('', [Validators.required]);
   firstName = new FormControl<string | null>('', [Validators.required]);
@@ -50,6 +51,10 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
         this.phoneNumber.setValue(applicationReview.phoneNumber);
         this.email.setValue(applicationReview.email);
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+
+        if (this.showErrors) {
+          this.contactForm.markAllAsTouched();
+        }
       }
     });
   }

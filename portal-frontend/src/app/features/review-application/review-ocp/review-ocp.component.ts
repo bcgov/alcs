@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.OCP;
+  @Input() showErrors = false;
 
   isOCPDesignation = new FormControl<string | null>(null);
   OCPBylawName = new FormControl<string | null>('', [Validators.required]);
@@ -48,6 +49,10 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
           if (applicationReview.OCPConsistent !== null) {
             this.isOCPConsistent.setValue(applicationReview.OCPConsistent ? 'true' : 'false');
           }
+        }
+
+        if (this.showErrors) {
+          this.ocpForm.markAllAsTouched();
         }
       }
     });

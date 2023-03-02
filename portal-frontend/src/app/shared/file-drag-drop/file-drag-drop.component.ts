@@ -18,6 +18,7 @@ export class FileDragDropComponent implements OnInit {
   @Input() disabled = false;
   @Input() uploadedFiles: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
   @Input() isRequired = false;
+  @Input() showErrors = false;
 
   @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
 
@@ -26,10 +27,12 @@ export class FileDragDropComponent implements OnInit {
   ngOnInit(): void {}
 
   _deleteFile(file: ApplicationDocumentDto) {
+    this.showErrors = true;
     this.deleteFile.emit(file);
   }
 
   filesDropped($event: FileHandle) {
+    this.showErrors = true;
     this.uploadFiles.emit($event);
   }
 
@@ -38,6 +41,7 @@ export class FileDragDropComponent implements OnInit {
   }
 
   onFileUploadClicked() {
+    this.showErrors = true;
     this.beforeFileUploadOpened.emit();
     this.fileUpload.nativeElement.click();
   }
