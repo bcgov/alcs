@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
@@ -15,13 +15,13 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.ContactInformation;
 
-  lgFileNumber = new FormControl<string | null>('');
-  firstName = new FormControl<string | null>('');
-  lastName = new FormControl<string | null>('');
-  position = new FormControl<string | null>('');
-  department = new FormControl<string | null>('');
-  phoneNumber = new FormControl<string | null>('');
-  email = new FormControl<string | null>('');
+  lgFileNumber = new FormControl<string | null>('', [Validators.required]);
+  firstName = new FormControl<string | null>('', [Validators.required]);
+  lastName = new FormControl<string | null>('', [Validators.required]);
+  position = new FormControl<string | null>('', [Validators.required]);
+  department = new FormControl<string | null>('', [Validators.required]);
+  phoneNumber = new FormControl<string | null>('', [Validators.required]);
+  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
   isFirstNationGovernment = false;
 
   contactForm = new FormGroup({
