@@ -79,8 +79,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
           this.loadApplication(fileId).then(() => {
             const stepInd = paramMap.get('stepInd');
             const parcelUuid = queryParamMap.get('parcelUuid');
-            if (queryParamMap.get('errors')) {
-              this.showValidationErrors = queryParamMap.get('errors') === 't';
+            const showErrors = queryParamMap.get('errors');
+            if (showErrors) {
+              this.showValidationErrors = showErrors === 't';
             }
 
             if (stepInd) {
