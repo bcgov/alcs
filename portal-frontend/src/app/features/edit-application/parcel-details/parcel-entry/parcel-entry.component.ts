@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { MatInput } from '@angular/material/input';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
@@ -79,6 +80,8 @@ export class ParcelEntryComponent implements OnInit {
     purchaseDate: this.purchaseDate,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
   });
+
+  ownerInput = new FormControl<string | null>(null);
 
   documentTypes = DOCUMENT;
   maxPurchasedDate = new Date();
@@ -284,10 +287,24 @@ export class ParcelEntryComponent implements OnInit {
 
     if (this.showErrors) {
       this.parcelForm.markAllAsTouched();
+
+      if (this.parcel.owners.length === 0) {
+        this.ownerInput.setValidators([Validators.required]);
+        this.ownerInput.setErrors({ required: true });
+        this.ownerInput.markAllAsTouched();
+      }
     }
   }
 
   private updateParcelOwners(updatedArray: ApplicationOwnerDto[]) {
+    if (updatedArray.length > 0) {
+      this.ownerInput.clearValidators();
+      this.ownerInput.updateValueAndValidity();
+    } else if (updatedArray.length === 0 && this.showErrors) {
+      this.ownerInput.markAllAsTouched();
+      this.ownerInput.setValidators([Validators.required]);
+      this.ownerInput.setErrors({ required: true });
+    }
     this.parcel.owners = updatedArray;
     this.filteredOwners = this.mapOwners(this.owners);
     this.onFormGroupChange.emit({

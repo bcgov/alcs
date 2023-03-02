@@ -26,7 +26,10 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <div *ngIf="localGovernment.invalid && (localGovernment.dirty || localGovernment.touched)" class="field-error">
+      <div
+        *ngIf="localGovernment.errors && localGovernment.errors['required'] && (localGovernment.dirty || localGovernment.touched)"
+        class="field-error"
+      >
         <mat-icon>warning</mat-icon>
         <div *ngIf="localGovernment.errors?.['required']">This field is required</div>
       </div>
