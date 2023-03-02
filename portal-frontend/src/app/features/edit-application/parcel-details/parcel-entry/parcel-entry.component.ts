@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { MatInput } from '@angular/material/input';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
@@ -34,33 +35,16 @@ export interface ParcelEntryFormData {
   styleUrls: ['./parcel-entry.component.scss'],
 })
 export class ParcelEntryComponent implements OnInit {
-  @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
-  @Output() private onFilesUpdated = new EventEmitter<void>();
-  @Output() private onSaveProgress = new EventEmitter<void>();
-  @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Input() parcel!: ApplicationParcelDto;
+  @Input() fileId!: string;
+  @Input() $owners: BehaviorSubject<ApplicationOwnerDto[]> = new BehaviorSubject<ApplicationOwnerDto[]>([]);
 
-  @Input()
-  parcel!: ApplicationParcelDto;
-
-  @Input()
-  fileId!: string;
-
-  @Input()
-  $owners: BehaviorSubject<ApplicationOwnerDto[]> = new BehaviorSubject<ApplicationOwnerDto[]>([]);
-  owners: ApplicationOwnerDto[] = [];
-  filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
-
-  @Input()
-  enableOwners: boolean = true;
-  @Input()
-  enableCertificateOfTitleUpload: boolean = true;
-  @Input()
-  enableUserSignOff: boolean = true;
-  @Input()
-  enableAddNewOwner: boolean = true;
-
-  @Input()
-  _disabled: boolean = false;
+  @Input() enableOwners = true;
+  @Input() enableCertificateOfTitleUpload = true;
+  @Input() enableUserSignOff = true;
+  @Input() enableAddNewOwner = true;
+  @Input() showErrors = false;
+  @Input() _disabled = false;
 
   @Input()
   public set disabled(disabled: boolean) {
@@ -68,12 +52,20 @@ export class ParcelEntryComponent implements OnInit {
     this.onFormDisabled();
   }
 
+  @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
+  @Output() private onFilesUpdated = new EventEmitter<void>();
+  @Output() private onSaveProgress = new EventEmitter<void>();
+  @Output() onOwnersUpdated = new EventEmitter<void>();
+
+  owners: ApplicationOwnerDto[] = [];
+  filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
+
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
   mapArea = new FormControl<string | null>(null, [Validators.required]);
   pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
-  parcelType = new FormControl<string | null>(null);
+  parcelType = new FormControl<string | null>(null, [Validators.required]);
   isFarm = new FormControl<string | null>(null);
   purchaseDate = new FormControl<any | null>(null, [Validators.required]);
   isConfirmedByApplicant = new FormControl<boolean>(false);
@@ -88,6 +80,8 @@ export class ParcelEntryComponent implements OnInit {
     purchaseDate: this.purchaseDate,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
   });
+
+  ownerInput = new FormControl<string | null>(null);
 
   documentTypes = DOCUMENT;
   maxPurchasedDate = new Date();
@@ -290,9 +284,27 @@ export class ParcelEntryComponent implements OnInit {
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
+
+    if (this.showErrors) {
+      this.parcelForm.markAllAsTouched();
+
+      if (this.parcel.owners.length === 0) {
+        this.ownerInput.setValidators([Validators.required]);
+        this.ownerInput.setErrors({ required: true });
+        this.ownerInput.markAllAsTouched();
+      }
+    }
   }
 
   private updateParcelOwners(updatedArray: ApplicationOwnerDto[]) {
+    if (updatedArray.length > 0) {
+      this.ownerInput.clearValidators();
+      this.ownerInput.updateValueAndValidity();
+    } else if (updatedArray.length === 0 && this.showErrors) {
+      this.ownerInput.markAllAsTouched();
+      this.ownerInput.setValidators([Validators.required]);
+      this.ownerInput.setErrors({ required: true });
+    }
     this.parcel.owners = updatedArray;
     this.filteredOwners = this.mapOwners(this.owners);
     this.onFormGroupChange.emit({

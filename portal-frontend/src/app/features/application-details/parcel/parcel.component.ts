@@ -181,10 +181,10 @@ export class ParcelComponent {
 
   onEditParcelsClick($event: any) {
     $event.stopPropagation();
-    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}`);
+    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
   }
 
   onEditParcelClick(uuid: string) {
-    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}`);
+    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`);
   }
 }

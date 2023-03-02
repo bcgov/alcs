@@ -62,7 +62,7 @@
     <div>
       <label for="pid">PID</label>
       <mat-form-field class="full-width-input" appearance="outline">
-        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength='11' mask="000-000-000" />
+        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength="11" mask="000-000-000" />
       </mat-form-field>
       <div *ngIf="pid.invalid && (pid.dirty || pid.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -135,6 +135,7 @@
         [matAutocomplete]="auto"
         (input)="onTypeOwner($event)"
         [disabled]="_disabled"
+        [formControl]="ownerInput"
       />
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
@@ -155,6 +156,10 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+    <div *ngIf="ownerInput.errors && ownerInput.errors['required']" class="field-error">
+      <mat-icon>warning</mat-icon>
+      <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
+    </div>
     <button
       class="new-owner"
       *ngIf="enableAddNewOwner"

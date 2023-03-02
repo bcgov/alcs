@@ -101,7 +101,7 @@
         onto the property, including gravel for construction.
       </label>
       <mat-button-toggle-group
-        (change)="onChangeFill($event)"
+        (change)="onChangeFill($event.value)"
         class="input"
         id="will-import-fill"
         formControlName="willImportFill"

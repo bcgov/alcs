@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewChecked,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
@@ -18,6 +27,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Government;
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
   localGovernment = new FormControl<string | any>('', [Validators.required]);
@@ -52,6 +62,10 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       startWith(''),
       map((value) => this.filter(value || ''))
     );
+
+    if (this.showErrors) {
+      this.form.markAllAsTouched();
+    }
   }
 
   onChange($event: MatAutocompleteSelectedEvent) {
@@ -60,7 +74,13 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
       if (localGovernment) {
         this.showWarning = !localGovernment.hasGuid;
+
         this.localGovernment.setValue(localGovernment.name);
+        if (localGovernment.hasGuid) {
+          this.localGovernment.setErrors(null);
+        } else {
+          this.localGovernment.setErrors({ invalid: localGovernment.hasGuid });
+        }
       }
     }
   }
@@ -79,7 +99,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  async ngOnDestroy() {
+  ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -128,6 +148,9 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     if (lg) {
       this.localGovernment.patchValue(lg.name);
       this.showWarning = !lg.hasGuid;
+      if (!lg.hasGuid) {
+        this.localGovernment.setErrors({ invalid: true });
+      }
     }
   }
 

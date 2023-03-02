@@ -20,6 +20,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Attachments;
@@ -54,6 +55,9 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
           newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
         }
         this.form = newForm;
+        if (this.showErrors) {
+          this.form.markAllAsTouched();
+        }
       }
     });
   }
