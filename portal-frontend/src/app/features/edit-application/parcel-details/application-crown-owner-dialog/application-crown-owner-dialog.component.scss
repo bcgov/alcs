@@ -1,0 +1,16 @@
+@import '../../../../../styles/typography';
+
+.actions {
+  button:not(:last-child) {
+    margin-right: rem(8) !important;
+  }
+}
+
+.field-error {
+  color: $error-color;
+  font-size: rem(15);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin-top: rem(4);
+}

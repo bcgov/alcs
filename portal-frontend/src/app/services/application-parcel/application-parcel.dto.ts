@@ -11,6 +11,7 @@ export interface ApplicationParcelUpdateDto {
   purchasedDate?: number | null;
   isFarm?: boolean | null;
   ownershipTypeCode?: string | null;
+  crownLandOwnerType?: string | null;
   isConfirmedByApplicant: boolean;
   ownerUuids: string[] | null;
 }
@@ -20,11 +21,6 @@ export interface ApplicationParcelDto extends Omit<ApplicationParcelUpdateDto, '
   ownershipType?: BaseCodeDto;
   owners: ApplicationOwnerDto[];
   documents: ApplicationDocumentDto[];
-}
-
-export interface ApplicationParcelOtherDto extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
-  parcelType: string;
-  ownerUuid: string;
 }
 
 export enum PARCEL_TYPE {

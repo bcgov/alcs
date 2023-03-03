@@ -22,8 +22,7 @@ export class ApplicationOwnerService {
   constructor(
     private httpClient: HttpClient,
     private toastService: ToastService,
-    private documentService: DocumentService,
-    private overlayService: OverlaySpinnerService
+    private documentService: DocumentService
   ) {}
 
   async fetchByFileId(applicationFileId: string) {

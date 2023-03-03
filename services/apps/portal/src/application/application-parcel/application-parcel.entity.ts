@@ -113,6 +113,15 @@ export class ApplicationParcel extends Base {
   @ManyToOne(() => ApplicationParcelOwnershipType)
   ownershipType: ApplicationParcelOwnershipType;
 
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'text',
+    comment:
+      'For Crown Land parcels to indicate whether they are provincially owned or federally owned',
+    nullable: true,
+  })
+  crownLandOwnerType?: string | null;
+
   @ManyToMany(() => ApplicationOwner, (owner) => owner.parcels)
   @JoinTable()
   owners: ApplicationOwner[];

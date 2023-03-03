@@ -1,0 +1,81 @@
+<div mat-dialog-title>
+  <h2 *ngIf="!isEdit">Add New Government Contact</h2>
+  <h2 *ngIf="isEdit">Edit Government Contact</h2>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-row">
+      <div class="full-row">
+        <label for="ministryName">Ministry or Department Responsible</label>
+        <mat-form-field appearance="outline">
+          <input
+            #ministryNameText
+            id="ministryName"
+            maxlength="30"
+            matInput
+            placeholder="Type ministry or department name"
+            formControlName="ministryName"
+          />
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 30 - ministryNameText.value.length }}</span>
+        <div *ngIf="ministryName.invalid && (ministryName.dirty || ministryName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="ministryName.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+      <div>
+        <label for="firstName">First Name</label>
+        <mat-form-field appearance="outline">
+          <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+        </mat-form-field>
+        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="firstName.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+      <div>
+        <label for="lastName">Last Name</label>
+        <mat-form-field appearance="outline">
+          <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+        </mat-form-field>
+        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="lastName.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+      <div>
+        <label for="phoneNumber">Phone Number</label>
+        <mat-form-field appearance="outline">
+          <input
+            id="phoneNumber"
+            mask="(000) 000-0000"
+            matInput
+            placeholder="(555) 555-5555"
+            formControlName="phoneNumber"
+          />
+        </mat-form-field>
+        <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
+          <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
+        </div>
+      </div>
+      <div>
+        <label for="firstName">Email</label>
+        <mat-form-field appearance="outline">
+          <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+        </mat-form-field>
+        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="email.errors?.['required']">This field is required</div>
+          <div *ngIf="email.errors?.['email']">Invalid format</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-stroked-button (click)="onClose()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="!isEdit" (click)="onCreate()">Add</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="isEdit" (click)="onSave()">Save</button>
+</div>
