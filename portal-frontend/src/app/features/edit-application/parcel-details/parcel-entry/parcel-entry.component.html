@@ -19,17 +19,49 @@
   <h5>Parcel Lookup</h5>
   <div class="form-row">
     <div class="full-row pmbc-search">
-      <label for="lookup-pid">Enter PID (and/or PIN for Crown Land) to auto-fill parcel details</label>
+      <label *ngIf="parcelType.getRawValue() !== 'CRWN'" for="lookup-pid">Enter PID to auto-fill parcel details</label>
+      <label *ngIf="parcelType.getRawValue() === 'CRWN'" for="lookup-pid"
+        >Enter PID or PIN to auto-fill parcel details</label
+      >
       <div>
-        <mat-form-field class="full-width-input" appearance="outline">
-          <input id="lookup-pid" matInput placeholder="Enter 9 digit PID" formControlName="pidPin" />
-        </mat-form-field>
-        <div class="search-buttons">
-          <button mat-stroked-button color="primary" (click)="onSearch()" [disabled]="_disabled">Search</button>
-          <button mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">Reset</button>
+        <div class="lookup-pid-fields">
+          <mat-form-field class="lookup-search-by" *ngIf="parcelType.getRawValue() === 'CRWN'" appearance="outline">
+            <mat-select [formControl]="searchBy" placeholder="Search by ...">
+              <mat-option value="pid">Search by PID</mat-option>
+              <mat-option value="pin">Search by PIN</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="lookup-input" appearance="outline">
+            <input
+              id="lookup-pid"
+              matInput
+              [placeholder]="
+                parcelType.getRawValue() !== 'CRWN' || searchBy.getRawValue() === 'pid'
+                  ? 'Type 9 digit PID'
+                  : 'Type PIN'
+              "
+              formControlName="pidPin"
+            />
+          </mat-form-field>
+          <button
+            class="lookup-search-button"
+            mat-flat-button
+            color="primary"
+            (click)="onSearch()"
+            [disabled]="
+              !parcelType.getRawValue() || _disabled || (parcelType.getRawValue() === 'CRWN' && !searchBy.getRawValue())
+            "
+          >
+            Search
+          </button>
+        </div>
+        <div class="lookup-bottom-row">
+          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">
+            Reset
+          </button>
+          <span class="float-right">Powered by PMBC!</span>
         </div>
       </div>
-      <span class="float-right">Powered by PMBC!</span>
     </div>
 
     <div class="full-row">
@@ -134,7 +166,6 @@
         placeholder="Type owner name"
         [matAutocomplete]="auto"
         (input)="onTypeOwner($event)"
-        [disabled]="_disabled"
         [formControl]="ownerInput"
       />
       <mat-autocomplete #auto="matAutocomplete">

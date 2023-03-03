@@ -10,11 +10,17 @@ export class ParcelService {
     private parcelLookupRepository: Repository<ParcelLookup>,
   ) {}
 
-  async fetchByPidPin(pidPin: string) {
-    pidPin = pidPin.replace(/-/g, '');
-    const paddedPin = pidPin.padStart(9, '0');
+  async fetchByPid(pid: string) {
+    pid = pid.replace(/-/g, '');
+    const paddedPin = pid.padStart(9, '0');
     return this.parcelLookupRepository.findOne({
-      where: [{ pid: pidPin }, { pin: pidPin }, { pid: paddedPin }],
+      where: [{ pid: pid }, { pid: paddedPin }],
+    });
+  }
+
+  async fetchByPin(pin: string) {
+    return this.parcelLookupRepository.findOne({
+      where: [{ pin }],
     });
   }
 }

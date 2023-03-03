@@ -9,15 +9,18 @@ import { ParcelService } from './parcel.service';
 export class ParcelController {
   constructor(private parcelService: ParcelService) {}
 
-  @Get('search/:pid')
-  async searchByPidPin(
+  @Get('search/:type/:pid')
+  async searchByPid(
     @Param() params: SearchParcelDto,
   ): Promise<ParcelLookupDto | undefined> {
-    const lookupResult = await this.parcelService.fetchByPidPin(params.pid);
+    const lookupResult =
+      params.type === 'pin'
+        ? await this.parcelService.fetchByPin(params.pid)
+        : await this.parcelService.fetchByPid(params.pid);
     if (lookupResult) {
       return {
-        pin: lookupResult.pin,
         pid: lookupResult.pid,
+        pin: lookupResult.pin,
         legalDescription: lookupResult.legalDescription,
         mapArea: Number.parseFloat(lookupResult.gisAreaHa).toFixed(2),
       };
