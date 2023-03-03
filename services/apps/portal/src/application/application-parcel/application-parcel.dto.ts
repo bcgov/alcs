@@ -41,6 +41,9 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
+  @AutoMap(() => String)
+  crownLandOwnerType?: string | null;
+
   ownershipType?: ApplicationParcelOwnershipTypeDto;
 
   @AutoMap(() => String)
@@ -98,6 +101,10 @@ export class ApplicationParcelUpdateDto {
   @IsString()
   @IsOptional()
   ownershipTypeCode?: string | null;
+
+  @IsString()
+  @IsOptional()
+  crownLandOwnerType?: string | null;
 
   @IsArray()
   ownerUuids: string[] | null;

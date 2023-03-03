@@ -61,6 +61,7 @@ export class ApplicationParcelService {
       parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
       parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
       parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+      parcel.crownLandOwnerType = updateDto.crownLandOwnerType;
 
       if (updateDto.ownerUuids) {
         hasOwnerUpdate = true;
