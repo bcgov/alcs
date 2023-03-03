@@ -163,9 +163,6 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
-    this.updateParcelOwners([]);
-    this.filteredOwners = this.mapOwners(this.owners);
-
     if ($event.value === 'CRWN') {
       this.isCrownLand = true;
       this.pid.setValidators([]);
@@ -179,6 +176,9 @@ export class ParcelEntryComponent implements OnInit {
       this.crownLandOwnerType.setValue(null);
       this.purchaseDate.enable();
     }
+
+    this.updateParcelOwners([]);
+    this.filteredOwners = this.mapOwners(this.owners);
     this.pin.updateValueAndValidity();
     this.pid.updateValueAndValidity();
   }
