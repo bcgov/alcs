@@ -23,6 +23,10 @@
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
+        <div *ngIf="isSubjectToZoning.getRawValue() === null && showErrors" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </div>
       <div>
         <label for="bylaw-name">Zoning Bylaw Name</label>
@@ -71,6 +75,13 @@
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
+        <div
+          *ngIf="isZoningConsistent.getRawValue() === null && showErrors && !isZoningConsistent.disabled"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </div>
     </div>
   </form>
