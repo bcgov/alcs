@@ -25,6 +25,7 @@ import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/del
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
 
 const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
+
 @Component({
   selector: 'app-other-parcels',
   templateUrl: './other-parcels.component.html',
@@ -52,6 +53,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   application?: ApplicationDetailedDto;
   formDisabled = true;
   newParcelAdded = false;
+  hasCrownLandParcels = false;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -72,6 +74,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
           parcels: o.parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER),
         }));
         this.$owners.next(nonAgentOwners);
+
+        this.hasCrownLandParcels = application.owners.reduce((hasCrownLand, owner) => {
+          return hasCrownLand || owner.parcels.some((parcel) => parcel.ownershipTypeCode === 'CRWN');
+        }, false);
 
         this.setupOtherParcelsData();
         this.setupOtherParcelsForm();
@@ -138,6 +144,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         purchasedDate: parcel.purchasedDate,
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
+        crownLandOwnerType: parcel.crownLandOwnerType,
         isConfirmedByApplicant: false,
         ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
@@ -226,9 +233,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     this.formDisabled = !parseStringToBoolean($event.value) ?? true;
 
     await this.applicationService.updatePending(this.fileId, {
-      ...this.application,
       hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
-    } as ApplicationUpdateDto);
+    });
     await this.reloadApplication();
   }
 
