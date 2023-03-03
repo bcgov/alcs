@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-validation-error',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./validation-error.component.scss'],
 })
 export class ValidationErrorComponent {
-  constructor() {}
+  @Input() errorClass = 'subtext error';
 }
