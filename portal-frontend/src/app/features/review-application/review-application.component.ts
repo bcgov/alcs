@@ -2,7 +2,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, of, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
@@ -50,6 +50,7 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   reviewAppSteps = ReviewApplicationSteps;
   reviewAppFngSteps = ReviewApplicationFngSteps;
   doNotSaveAppReview = false;
+  showValidationErrors = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -68,23 +69,30 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
-      const fileId = paramMap.get('fileId');
-      if (fileId) {
-        this.fileId = fileId;
-        const stepInd = paramMap.get('stepInd');
+    combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(([queryParamMap, paramMap]) => {
+        const fileId = paramMap.get('fileId');
+        if (fileId) {
+          this.fileId = fileId;
+          const stepInd = paramMap.get('stepInd');
 
-        if (stepInd) {
-          // setTimeout is required for stepper to be initialized
-          setTimeout(() => {
-            this.customStepper.navigateToStep(parseInt(stepInd), true);
+          const showErrors = queryParamMap.get('errors');
+          if (showErrors) {
+            this.showValidationErrors = showErrors === 't';
+          }
+
+          this.loadApplication(fileId);
+          this.loadApplicationReview(fileId).then(() => {
+            if (stepInd) {
+              // setTimeout is required for stepper to be initialized
+              setTimeout(() => {
+                this.customStepper.navigateToStep(parseInt(stepInd), true);
+              });
+            }
           });
         }
-
-        this.loadApplication(fileId);
-        this.loadApplicationReview(fileId);
-      }
-    });
+      });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
@@ -176,6 +184,9 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   async onBeforeSwitchStep(index: number) {
+    this.showValidationErrors = this.isFirstNationGovernment
+      ? this.customStepper.selectedIndex === ReviewApplicationFngSteps.ReviewAndSubmitFng
+      : this.customStepper.selectedIndex === ReviewApplicationSteps.ReviewAndSubmit;
     this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
   }
 

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
@@ -8,9 +7,8 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
@@ -32,7 +30,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
   _applicationReview: ApplicationReviewDto | undefined;
-  showErrors = false;
+  showErrors = true;
   isMobile = false;
   hasCompletedStepsBeforeDocuments = false;
 
@@ -92,10 +90,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  onEditSection(index: number) {
-    this.stepper.selectedIndex = index;
-  }
-
   async onSubmit() {
     const isValid = this.runValidation();
     if (isValid && this.fileId) {
@@ -112,7 +106,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   }
 
   private runValidation() {
-    this.showErrors = true;
     if (this._applicationReview) {
       const review = this._applicationReview;
       const contactInfoValid = this.validateContactInfo(review);
@@ -215,6 +208,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   }
 
   onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
+    this.router.navigateByUrl(`application/${this.fileId}/review/${step}?errors=t`);
   }
 }

@@ -23,18 +23,33 @@
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
+        <div *ngIf="isSubjectToZoning.getRawValue() === null && showErrors" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </div>
       <div>
         <label for="bylaw-name">Zoning Bylaw Name</label>
         <mat-form-field class="input" appearance="outline">
           <input id="bylaw-name" matInput placeholder="Type zoning bylaw name" formControlName="zoningBylawName" />
         </mat-form-field>
+        <div *ngIf="zoningBylawName.invalid && (zoningBylawName.dirty || zoningBylawName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="zoningBylawName.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="designation">Zoning Designation</label>
         <mat-form-field class="input" appearance="outline">
           <input id="designation" matInput placeholder="Type zoning designation" formControlName="zoningDesignation" />
         </mat-form-field>
+        <div
+          *ngIf="zoningDesignation.invalid && (zoningDesignation.dirty || zoningDesignation.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="zoningDesignation.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="full-row">
         <label for="lot-size">Minimum Lot Size (hectares)</label>
@@ -46,6 +61,13 @@
             formControlName="zoningMinimumLotSize"
           />
         </mat-form-field>
+        <div
+          *ngIf="zoningMinimumLotSize.invalid && (zoningMinimumLotSize.dirty || zoningMinimumLotSize.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="zoningMinimumLotSize.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="full-row">
         <label for="is-consistent">Is this proposal consistent with the current zoning designation?</label>
@@ -53,6 +75,13 @@
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
+        <div
+          *ngIf="isZoningConsistent.getRawValue() === null && showErrors && !isZoningConsistent.disabled"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </div>
     </div>
   </form>

@@ -16,42 +16,78 @@
           <mat-form-field class="input" appearance="outline">
             <input id="lg-file-number" matInput placeholder="Type file number" formControlName="lgFileNumber" />
           </mat-form-field>
+          <div *ngIf="lgFileNumber.invalid && (lgFileNumber.dirty || lgFileNumber.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="lgFileNumber.errors?.['required']">This field is required</div>
+          </div>
         </div>
         <div>
           <label for="first-name">First Name</label>
           <mat-form-field class="input" appearance="outline">
             <input id="first-name" matInput placeholder="Type first name" formControlName="firstName" />
           </mat-form-field>
+          <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="firstName.errors?.['required']">This field is required</div>
+          </div>
         </div>
         <div>
           <label for="last-name">Last Name</label>
           <mat-form-field class="input" appearance="outline">
             <input id="last-name" matInput placeholder="Type last name" formControlName="lastName" />
           </mat-form-field>
+          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="lastName.errors?.['required']">This field is required</div>
+          </div>
         </div>
         <div>
           <label for="position">Position</label>
           <mat-form-field class="input" appearance="outline">
             <input id="position" matInput placeholder="Type position" formControlName="position" />
           </mat-form-field>
+          <div *ngIf="position.invalid && (position.dirty || position.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="position.errors?.['required']">This field is required</div>
+          </div>
         </div>
         <div>
           <label for="department">Department</label>
           <mat-form-field class="input" appearance="outline">
             <input id="department" matInput placeholder="Type department" formControlName="department" />
           </mat-form-field>
+          <div *ngIf="department.invalid && (department.dirty || department.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="department.errors?.['required']">This field is required</div>
+          </div>
         </div>
         <div>
           <label for="phone-number">Phone Number</label>
           <mat-form-field class="input" appearance="outline">
-            <input id="phone-number" matInput placeholder="Type phone number" formControlName="phoneNumber" />
+            <input
+              id="phone-number"
+              matInput
+              placeholder="Type phone number"
+              formControlName="phoneNumber"
+              mask="(000) 000-0000"
+            />
           </mat-form-field>
+          <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
+            <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
+          </div>
         </div>
         <div>
           <label for="email">Email</label>
           <mat-form-field class="input" appearance="outline">
             <input id="email" matInput placeholder="Type email" formControlName="email" />
           </mat-form-field>
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="email.errors?.['required']">This field is required</div>
+            <div *ngIf="email.errors?.['email']">Invalid format</div>
+          </div>
         </div>
       </div>
     </form>

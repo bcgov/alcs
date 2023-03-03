@@ -15,12 +15,21 @@
     align-items: center;
 
     button {
-      margin-top: 0 !important;;
+      margin-top: 0 !important;
     }
   }
 }
 
 :host::ng-deep {
+  .field-error {
+    color: $error-color;
+    font-size: rem(15);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: rem(4);
+  }
+
   .mat-horizontal-content-container {
     padding: 0;
     min-height: 100%;
@@ -64,7 +73,7 @@
     display: none;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: initial
+      display: initial;
     }
   }
 
