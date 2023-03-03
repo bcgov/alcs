@@ -197,7 +197,7 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <div *ngIf="ownerInput.errors && ownerInput.errors['required']" class="field-error">
+    <div *ngIf="ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled" class="field-error">
       <mat-icon>warning</mat-icon>
       <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
     </div>

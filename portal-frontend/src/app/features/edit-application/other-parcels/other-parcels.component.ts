@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -41,7 +41,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
 
-  hasOtherParcelsInCommunity = new FormControl<string | null>(null);
+  hasOtherParcelsInCommunity = new FormControl<string | null>(null, [Validators.required]);
 
   otherParcelsForm = new FormGroup({
     hasOtherParcelsInCommunity: this.hasOtherParcelsInCommunity,
@@ -211,6 +211,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       this.otherParcelsForm.patchValue({
         hasOtherParcelsInCommunity: formatBooleanToString(this.application.hasOtherParcelsInCommunity),
       });
+
+      if (this.showErrors) {
+        this.otherParcelsForm.markAllAsTouched();
+      }
     }
   }
 
