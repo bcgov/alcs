@@ -46,17 +46,20 @@
     <div class="subheading2 grid-1">PID</div>
     <div class="grid-double">
       {{ parcel.pid }}
-      <app-no-data [showRequired]="showErrors" *ngIf="parcel.validation?.isPidRequired || false"></app-no-data>
+      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPidRequired" *ngIf="!parcel.pid"></app-no-data>
     </div>
     <div class="subheading2 grid-1">PIN (Optional)</div>
     <div class="grid-double">
       {{ parcel.pin }}
-      <app-no-data [showRequired]="parcel.validation?.isPinRequired || false" *ngIf="!parcel.pin"></app-no-data>
+      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPinRequired" *ngIf="!parcel.pin"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Purchase Date</div>
     <div class="grid-double">
       {{ parcel.purchasedDate | date }}
-      <app-no-data [showRequired]="parcel.validation?.isPurchasedDateRequired || false" *ngIf="!parcel.purchasedDate">
+      <app-no-data
+        [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
+        *ngIf="!parcel.purchasedDate"
+      >
       </app-no-data>
     </div>
     <div class="subheading2 grid-1">Farm Classification</div>

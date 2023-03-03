@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 
 @Component({
@@ -25,11 +26,11 @@ export class ParcelOwnersComponent {
   }
 
   @Input() parcelUuid?: string | undefined;
+  @Input() isCrown = false;
 
   _owners: ApplicationOwnerDto[] = [];
+  _disabled = false;
   displayedColumns = ['position', 'displayName', 'phone', 'email', 'type', 'actions'];
-
-  _disabled: boolean = false;
 
   constructor(
     private dialog: MatDialog,
@@ -38,19 +39,27 @@ export class ParcelOwnersComponent {
   ) {}
 
   onEdit(owner: ApplicationOwnerDto) {
-    this.dialog
-      .open(ApplicationOwnerDialogComponent, {
+    let dialog;
+    if (owner.type.code === APPLICATION_OWNER.CROWN) {
+      dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
         data: {
           parcelUuid: this.parcelUuid,
           existingOwner: owner,
         },
-      })
-      .beforeClosed()
-      .subscribe((updatedUuid) => {
-        if (updatedUuid) {
-          this.onOwnersUpdated.emit();
-        }
       });
+    } else {
+      dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
+        data: {
+          parcelUuid: this.parcelUuid,
+          existingOwner: owner,
+        },
+      });
+    }
+    dialog.beforeClosed().subscribe((updatedUuid) => {
+      if (updatedUuid) {
+        this.onOwnersUpdated.emit();
+      }
+    });
   }
 
   async onRemove(uuid: string) {

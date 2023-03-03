@@ -75,3 +75,12 @@
     }
   }
 }
+
+.crown-owner-type {
+  display: block;
+  margin-bottom: rem(24);
+
+  .mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: rem(16);
+  }
+}

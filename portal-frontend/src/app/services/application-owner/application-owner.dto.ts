@@ -6,9 +6,12 @@ export enum APPLICATION_OWNER {
   INDIVIDUAL = 'INDV',
   ORGANIZATION = 'ORGZ',
   AGENT = 'AGEN',
+  CROWN = 'CRWN',
 }
 
-export interface ApplicationOwnerTypeDto extends BaseCodeDto {}
+export interface ApplicationOwnerTypeDto extends BaseCodeDto {
+  code: APPLICATION_OWNER;
+}
 
 export interface ApplicationOwnerDto {
   uuid: string;

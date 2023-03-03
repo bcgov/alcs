@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -16,7 +16,7 @@ import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
-  isInvalid: boolean = false;
+  isInvalid = false;
 
   isTypeRequired: boolean = false;
   isPidRequired: boolean = false;
@@ -46,8 +46,6 @@ interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ow
 export class ParcelComponent {
   // TODO instead of providing application load parcel as input or in addition to application
   $destroy = new Subject<void>();
-
-  @Output() isParcelDetailsValid: EventEmitter<boolean> = new EventEmitter(false);
 
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   @Input() showErrors = true;
@@ -98,15 +96,11 @@ export class ParcelComponent {
   }
 
   private async validateParcelDetails() {
-    if (this.showErrors) {
-      if (this.parcels) {
-        this.parcels.forEach((p) => {
-          p.validation = this.validateParcelBasic(p);
-        });
-      }
+    if (this.parcels) {
+      this.parcels.forEach((p) => {
+        p.validation = this.validateParcelBasic(p);
+      });
     }
-
-    this.isParcelDetailsValid.emit(false);
   }
 
   async onOpenFile(uuid: string) {

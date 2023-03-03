@@ -110,6 +110,8 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
     parcel.purchasedDate =
       formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    parcel.crownLandOwnerType =
+      formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
       parcel.owners = formData.owners;
     }
@@ -128,6 +130,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
         isConfirmedByApplicant: parcel.isConfirmedByApplicant,
+        crownLandOwnerType: parcel.crownLandOwnerType,
         ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
     }

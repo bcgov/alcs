@@ -4,13 +4,14 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
-import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
+import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/application-owners-dialog.component';
 
@@ -24,6 +25,7 @@ export interface ParcelEntryFormData {
   parcelType: string | undefined | null;
   isFarm: string | undefined | null;
   purchaseDate?: Date | null;
+  crownLandOwnerType?: string | null;
   isConfirmedByApplicant: boolean;
   owners: ApplicationOwnerDto[];
 }
@@ -60,6 +62,7 @@ export class ParcelEntryComponent implements OnInit {
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
 
   searchBy = new FormControl<string | null>(null);
+  isCrownLand = false;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
@@ -69,6 +72,7 @@ export class ParcelEntryComponent implements OnInit {
   parcelType = new FormControl<string | null>(null, [Validators.required]);
   isFarm = new FormControl<string | null>(null, [Validators.required]);
   purchaseDate = new FormControl<any | null>(null, [Validators.required]);
+  crownLandOwnerType = new FormControl<string | null>(null);
   isConfirmedByApplicant = new FormControl<boolean>(false, [Validators.requiredTrue]);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
@@ -79,6 +83,7 @@ export class ParcelEntryComponent implements OnInit {
     parcelType: this.parcelType,
     isFarm: this.isFarm,
     purchaseDate: this.purchaseDate,
+    crownLandOwnerType: this.crownLandOwnerType,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
     searchBy: this.searchBy,
   });
@@ -159,11 +164,23 @@ export class ParcelEntryComponent implements OnInit {
 
   onChangeParcelType($event: MatButtonToggleChange) {
     if ($event.value === 'CRWN') {
+      this.isCrownLand = true;
+      this.pid.setValidators([]);
+      this.pin.setValidators([Validators.required]);
       this.purchaseDate.reset();
       this.purchaseDate.disable();
     } else {
+      this.isCrownLand = false;
+      this.pid.setValidators([Validators.required]);
+      this.pin.setValidators([]);
+      this.crownLandOwnerType.setValue(null);
       this.purchaseDate.enable();
     }
+
+    this.updateParcelOwners([]);
+    this.filteredOwners = this.mapOwners(this.owners);
+    this.pin.updateValueAndValidity();
+    this.pid.updateValueAndValidity();
   }
 
   async attachFile(file: FileHandle, documentType: DOCUMENT, parcelUuid: string) {
@@ -206,6 +223,22 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
+  onAddNewGovernmentContact() {
+    const dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
+      data: {
+        fileId: this.fileId,
+        parcelUuid: this.parcel.uuid,
+      },
+    });
+    dialog.beforeClosed().subscribe((createdDto) => {
+      if (createdDto) {
+        this.onOwnersUpdated.emit();
+        const updatedArray = [...this.parcel.owners, createdDto];
+        this.updateParcelOwners(updatedArray);
+      }
+    });
+  }
+
   async onSelectOwner(owner: ApplicationOwnerDto, isSelected: boolean) {
     if (isSelected) {
       const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== owner.uuid);
@@ -223,6 +256,13 @@ export class ParcelEntryComponent implements OnInit {
 
   mapOwners(owners: ApplicationOwnerDto[]) {
     return owners
+      .filter((owner) => {
+        if (this.isCrownLand) {
+          return [APPLICATION_OWNER.CROWN].includes(owner.type.code);
+        } else {
+          return [APPLICATION_OWNER.INDIVIDUAL, APPLICATION_OWNER.ORGANIZATION].includes(owner.type.code);
+        }
+      })
       .map((owner) => {
         const isSelected = this.parcel.owners.some((parcelOwner) => parcelOwner.uuid === owner.uuid);
         return {
@@ -262,7 +302,7 @@ export class ParcelEntryComponent implements OnInit {
         return;
       }
 
-      if ((this.parcelType.getRawValue() === 'CRWN' && !this.searchBy.getRawValue()) || this.disabled) {
+      if ((this.isCrownLand && !this.searchBy.getRawValue()) || this.disabled) {
         this.pidPin.disable({
           emitEvent: false,
         });
@@ -300,8 +340,15 @@ export class ParcelEntryComponent implements OnInit {
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: formatBooleanToString(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
+      crownLandOwnerType: this.parcel.crownLandOwnerType,
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
+    this.isCrownLand = this.parcelType.getRawValue() === 'CRWN';
+    if (this.isCrownLand) {
+      this.purchaseDate.disable();
+      this.pin.setValidators([Validators.required]);
+      this.pid.setValidators([]);
+    }
 
     if (!this.parcelType.getRawValue()) {
       this.pidPin.disable();

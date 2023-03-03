@@ -1,10 +1,9 @@
-<section title="Other parcels">
+<section>
   <h2>Other Parcels in the Community</h2>
   <div class="step-description">
     <div>
       Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
       application are located and owned by the following owners:
-
       <ul>
         <li *ngFor="let owner of owners">{{ owner.displayName }}</li>
       </ul>
@@ -12,6 +11,12 @@
   </div>
 
   <p>All fields are required unless stated optional.</p>
+
+  <p *ngIf="hasCrownLandParcels">
+    For applications involving Crown Land, it is not required to indicate other parcel(s) owned by the Crown.<br />
+    However we encourage applicants to use the proposal section of this application to indicate their interest
+    (ownership or lease) in any other land in the community where the application parcel(s) is located.
+  </p>
 
   <form [formGroup]="otherParcelsForm" class="other-parcels-form">
     <div class="full-row">
@@ -34,6 +39,55 @@
       </div>
     </div>
 
+    <div class="full-row">
+      <mat-expansion-panel
+        *ngFor="let parcel of otherParcels; let parcelInd = index"
+        [expanded]="otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-parcel-entry
+          [parcel]="parcel"
+          [$owners]="$owners"
+          [fileId]="fileId"
+          [enableOwners]="true"
+          [enableCertificateOfTitleUpload]="false"
+          [enableUserSignOff]="false"
+          [enableAddNewOwner]="false"
+          [showErrors]="showErrors"
+          [disabled]="formDisabled"
+          (onFormGroupChange)="onParcelFormChange($event)"
+        ></app-parcel-entry>
+        <div>
+          <div class="flex-evenly-wrap parcel-buttons-wrappers">
+            <button
+              class="margin-top-1-half"
+              mat-stroked-button
+              color="primary"
+              (click)="onSave()"
+              [disabled]="formDisabled"
+            >
+              Save Parcel #{{ parcelInd + 1 }} Details
+            </button>
+            <button
+              class="margin-top-1-half"
+              *ngIf="otherParcels.length > 1"
+              mat-stroked-button
+              color="accent"
+              (click)="onDelete(parcel.uuid, parcelInd + 1)"
+            >
+              Delete Parcel #{{ parcelInd + 1 }} Details
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <div>
+        <button mat-stroked-button color="primary" [disabled]="formDisabled" (click)="onAddParcel()">
+          Add another parcel
+        </button>
+      </div>
+    </div>
     <div class="full-row">
       <mat-expansion-panel
         *ngFor="let parcel of otherParcels; let parcelInd = index"
