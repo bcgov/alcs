@@ -91,6 +91,13 @@
         <app-no-data [showRequired]="showErrors" *ngIf="parcel.owners.length === 0"></app-no-data>
       </div>
     </div>
+    <div class="subheading2 grid-1">
+      I confirm that the owner information provided above matches the current Certificate of Title
+    </div>
+    <div class="grid-double">
+      <span *ngIf="parcel.isConfirmedByApplicant">Yes</span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.isConfirmedByApplicant"></app-no-data>
+    </div>
     <div *ngIf="showEdit" class="edit-button tablet-hidden">
       <button mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
         Edit Parcel {{ parcelInd + 1 }}

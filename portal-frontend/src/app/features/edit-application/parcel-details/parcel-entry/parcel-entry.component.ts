@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { MatInput } from '@angular/material/input';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
@@ -66,9 +65,9 @@ export class ParcelEntryComponent implements OnInit {
   pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
   parcelType = new FormControl<string | null>(null, [Validators.required]);
-  isFarm = new FormControl<string | null>(null);
+  isFarm = new FormControl<string | null>(null, [Validators.required]);
   purchaseDate = new FormControl<any | null>(null, [Validators.required]);
-  isConfirmedByApplicant = new FormControl<boolean>(false);
+  isConfirmedByApplicant = new FormControl<boolean>(false, [Validators.requiredTrue]);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
     legalDescription: this.legalDescription,

@@ -14,6 +14,10 @@
       <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
       <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
     </mat-button-toggle-group>
+    <div *ngIf="parcelType.invalid && (parcelType.dirty || parcelType.touched)" class="field-error">
+      <mat-icon>warning</mat-icon>
+      <div *ngIf="parcelType.errors?.['required']">This field is required</div>
+    </div>
   </div>
 
   <h5>Parcel Lookup</h5>
@@ -105,6 +109,10 @@
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
+        <div *ngIf="isFarm.invalid && (isFarm.dirty || isFarm.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="isFarm.errors?.['required']">This field is required</div>
+        </div>
       </div>
     </div>
   </div>
@@ -180,8 +188,19 @@
       ></app-parcel-owners>
     </div>
   </section>
-  <mat-checkbox *ngIf="enableUserSignOff" formControlName="isConfirmedByApplicant" class="container"
+  <mat-checkbox *ngIf="enableUserSignOff" formControlName="isConfirmedByApplicant" class="parcel-checkbox"
     >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
     information can cause significant delays to processing time.
   </mat-checkbox>
+  <div
+    *ngIf="
+      enableUserSignOff &&
+      isConfirmedByApplicant.invalid &&
+      (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
+    "
+    class="field-error"
+  >
+    <mat-icon>warning</mat-icon>
+    <div *ngIf="isConfirmedByApplicant.errors?.['required']">This field is required</div>
+  </div>
 </form>

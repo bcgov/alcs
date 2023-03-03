@@ -26,6 +26,7 @@ export class ApplicationParcelBasicValidation {
   isPurchasedDateRequired: boolean = false;
   isFarmRequired: boolean = false;
   isCertificateRequired: boolean = false;
+  isConfirmedByApplicant: boolean = false;
 }
 
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
