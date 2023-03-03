@@ -33,6 +33,8 @@
           (deleteFile)="removeCorporateSummary()"
           (openFile)="openCorporateSummary()"
           id="fileUpload"
+          [showErrors]="false"
+          [isRequired]="true"
         ></app-file-drag-drop>
         <mat-form-field style="display: none">
           <input id="corporateSummary" matInput formControlName="corporateSummary" />

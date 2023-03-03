@@ -47,4 +47,6 @@
 >
   Upload File
 </button>
-<app-validation-error *ngIf="isRequired && showErrors && !uploadedFiles.length">This file upload is required</app-validation-error>
+<app-validation-error *ngIf="isRequired && showErrors && !uploadedFiles.length" errorClass="field-error"
+  >This file upload is required</app-validation-error
+>

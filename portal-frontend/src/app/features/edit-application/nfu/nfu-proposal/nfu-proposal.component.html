@@ -109,6 +109,10 @@
         <mat-button-toggle value="true">Yes</mat-button-toggle>
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
+      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
+      </div>
     </div>
   </div>
   <section>

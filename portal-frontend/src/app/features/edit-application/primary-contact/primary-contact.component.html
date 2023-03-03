@@ -121,6 +121,8 @@
       [uploadedFiles]="files"
       (uploadFiles)="onAttachFile($event)"
       (deleteFile)="onRemoveFile($event)"
+      [showErrors]="showErrors"
+      [isRequired]="needsAuthorizationLetter || selectedThirdPartyAgent"
     ></app-file-drag-drop>
   </div>
 </section>

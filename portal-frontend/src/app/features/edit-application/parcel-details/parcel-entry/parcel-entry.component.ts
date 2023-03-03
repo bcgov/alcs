@@ -70,10 +70,10 @@ export class ParcelEntryComponent implements OnInit {
   pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
   parcelType = new FormControl<string | null>(null, [Validators.required]);
-  isFarm = new FormControl<string | null>(null);
+  isFarm = new FormControl<string | null>(null, [Validators.required]);
   purchaseDate = new FormControl<any | null>(null, [Validators.required]);
   crownLandOwnerType = new FormControl<string | null>(null);
-  isConfirmedByApplicant = new FormControl<boolean>(false);
+  isConfirmedByApplicant = new FormControl<boolean>(false, [Validators.requiredTrue]);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
     legalDescription: this.legalDescription,

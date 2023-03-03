@@ -109,12 +109,12 @@
     display: none !important;
 
     @media screen and (min-width: $tabletBreakpoint) {
-      display: initial !important;;
+      display: initial !important;
     }
   }
 
   .tablet-hidden {
-    display: initial !important;;
+    display: initial !important;
 
     @media screen and (min-width: $tabletBreakpoint) {
       display: none !important;
@@ -199,6 +199,10 @@
 
   .container {
     margin: rem(20) 0 rem(20) 0;
+  }
+
+  .parcel-checkbox {
+    margin: rem(20) 0 0 0;
   }
 
   .type {

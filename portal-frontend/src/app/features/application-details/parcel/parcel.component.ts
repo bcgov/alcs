@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -26,6 +26,7 @@ export class ApplicationParcelBasicValidation {
   isPurchasedDateRequired = false;
   isFarmRequired = false;
   isCertificateRequired = false;
+  isConfirmedByApplicant = false;
 }
 
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
@@ -50,6 +51,7 @@ export class ParcelComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
+  PARCEL_TYPES = PARCEL_TYPE;
 
   pageTitle: string = '1. Identify Parcel(s) Under Application';
   showCertificateOfTitle: boolean = true;
@@ -57,6 +59,7 @@ export class ParcelComponent {
 
   fileId: string = '';
   parcels: ApplicationParcelExtended[] = [];
+  application!: ApplicationDetailedDto;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -68,6 +71,7 @@ export class ParcelComponent {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
+        this.application = application;
         this.loadParcels().then(async () => await this.validateParcelDetails());
       }
     });

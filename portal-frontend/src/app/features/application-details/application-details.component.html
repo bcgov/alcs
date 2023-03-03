@@ -58,7 +58,7 @@
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <app-no-data
-          [showRequired]="application.owners.length > 1"
+          [showRequired]="showErrors && application.owners.length > 1"
           *ngIf="authorizationLetters.length === 0"
         ></app-no-data>
         <div *ngFor="let file of authorizationLetters">
