@@ -34,11 +34,19 @@ describe('ParcelService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should make a get request when looking up pid', async () => {
+    const mockRes = {} as ParcelLookupDto;
+    mockHttpClient.get.mockReturnValue(of(mockRes));
+
+    const res = await service.getByPid('fake-pid');
+    expect(res).toBe(mockRes);
+  });
+
   it('should make a get request when looking up pin', async () => {
     const mockRes = {} as ParcelLookupDto;
     mockHttpClient.get.mockReturnValue(of(mockRes));
 
-    const res = await service.getByPidPin('fake-pid');
+    const res = await service.getByPin('fake-pin');
     expect(res).toBe(mockRes);
   });
 });

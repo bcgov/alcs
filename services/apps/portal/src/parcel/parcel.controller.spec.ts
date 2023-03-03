@@ -31,26 +31,46 @@ describe('ParcelController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should lookup and return a mapped parcel', async () => {
+  it('should lookup and return a mapped parcel for PID', async () => {
     const mockRes = {
       pin: '12345',
       legalDescription: 'LEGAL DESC',
       gisAreaHa: '0.612316',
     } as ParcelLookup;
-    mockParcelService.fetchByPidPin.mockResolvedValue(mockRes);
+    mockParcelService.fetchByPid.mockResolvedValue(mockRes);
 
-    const res = await controller.searchByPidPin({
+    const res = await controller.searchByPid({
       pid: '512315',
+      type: 'pid',
     });
+    expect(mockParcelService.fetchByPid).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
     expect(res?.pin).toEqual(mockRes.pin);
   });
 
-  it('should throw an exception if parcel is not found', async () => {
-    mockParcelService.fetchByPidPin.mockResolvedValue(null);
+  it('should lookup and return a mapped parcel for PIN', async () => {
+    const mockRes = {
+      pin: '12345',
+      legalDescription: 'LEGAL DESC',
+      gisAreaHa: '0.612316',
+    } as ParcelLookup;
+    mockParcelService.fetchByPin.mockResolvedValue(mockRes);
 
-    const promise = controller.searchByPidPin({
+    const res = await controller.searchByPid({
+      pid: '512315',
+      type: 'pin',
+    });
+    expect(mockParcelService.fetchByPin).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res?.pin).toEqual(mockRes.pin);
+  });
+
+  it('should throw an exception if parcel is not found for PID', async () => {
+    mockParcelService.fetchByPid.mockResolvedValue(null);
+
+    const promise = controller.searchByPid({
       pid: '1251231',
+      type: 'pid',
     });
     await expect(promise).rejects.toMatchObject(
       new ServiceNotFoundException('Failed to find parcel with given PID/PIN'),

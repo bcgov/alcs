@@ -10,4 +10,7 @@ export class ParcelLookupDto {
 export class SearchParcelDto {
   @IsString()
   pid: string;
+
+  @IsString()
+  type: string;
 }

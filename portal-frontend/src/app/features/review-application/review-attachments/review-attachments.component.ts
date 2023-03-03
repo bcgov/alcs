@@ -18,6 +18,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDto | undefined>;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep: ReviewApplicationSteps | ReviewApplicationFngSteps = ReviewApplicationSteps.Attachments;
+  @Input() showErrors = false;
 
   $destroy = new Subject<void>();
 

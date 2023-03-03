@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -15,11 +15,12 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.Zoning;
+  @Input() showErrors = false;
 
   isSubjectToZoning = new FormControl<string | null>(null);
-  zoningBylawName = new FormControl<string | null>('');
-  zoningMinimumLotSize = new FormControl<string | null>('');
-  zoningDesignation = new FormControl<string | null>('');
+  zoningBylawName = new FormControl<string | null>('', [Validators.required]);
+  zoningMinimumLotSize = new FormControl<string | null>('', [Validators.required]);
+  zoningDesignation = new FormControl<string | null>('', [Validators.required]);
   isZoningConsistent = new FormControl<string | null>(null);
 
   zoningForm = new FormGroup({
@@ -52,6 +53,10 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
           if (applicationReview.isZoningConsistent !== null) {
             this.isZoningConsistent.setValue(applicationReview.isZoningConsistent ? 'true' : 'false');
           }
+        }
+
+        if (this.showErrors) {
+          this.zoningForm.markAllAsTouched();
         }
       }
     });
