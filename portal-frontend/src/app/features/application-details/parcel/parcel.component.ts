@@ -18,15 +18,15 @@ export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
   isInvalid = false;
 
-  isTypeRequired: boolean = false;
-  isPidRequired: boolean = false;
-  isPinRequired: boolean = false;
-  isLegalDescriptionRequired: boolean = false;
-  isMapAreaHectaresRequired: boolean = false;
-  isPurchasedDateRequired: boolean = false;
-  isFarmRequired: boolean = false;
-  isCertificateRequired: boolean = false;
-  isConfirmedByApplicant: boolean = false;
+  isTypeRequired = false;
+  isPidRequired = false;
+  isPinRequired = false;
+  isLegalDescriptionRequired = false;
+  isMapAreaHectaresRequired = false;
+  isPurchasedDateRequired = false;
+  isFarmRequired = false;
+  isCertificateRequired = false;
+  isConfirmedByApplicant = false;
 }
 
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
