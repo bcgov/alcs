@@ -16,16 +16,16 @@ import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
-  isInvalid: boolean = false;
+  isInvalid = false;
 
-  isTypeRequired: boolean = false;
-  isPidRequired: boolean = false;
-  isPinRequired: boolean = false;
-  isLegalDescriptionRequired: boolean = false;
-  isMapAreaHectaresRequired: boolean = false;
-  isPurchasedDateRequired: boolean = false;
-  isFarmRequired: boolean = false;
-  isCertificateRequired: boolean = false;
+  isTypeRequired = false;
+  isPidRequired = false;
+  isPinRequired = false;
+  isLegalDescriptionRequired = false;
+  isMapAreaHectaresRequired = false;
+  isPurchasedDateRequired = false;
+  isFarmRequired = false;
+  isCertificateRequired = false;
 }
 
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
@@ -45,8 +45,6 @@ interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ow
 export class ParcelComponent {
   // TODO instead of providing application load parcel as input or in addition to application
   $destroy = new Subject<void>();
-
-  @Output() isParcelDetailsValid: EventEmitter<boolean> = new EventEmitter(false);
 
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   @Input() showErrors = true;
@@ -94,15 +92,11 @@ export class ParcelComponent {
   }
 
   private async validateParcelDetails() {
-    if (this.showErrors) {
-      if (this.parcels) {
-        this.parcels.forEach((p) => {
-          p.validation = this.validateParcelBasic(p);
-        });
-      }
+    if (this.parcels) {
+      this.parcels.forEach((p) => {
+        p.validation = this.validateParcelBasic(p);
+      });
     }
-
-    this.isParcelDetailsValid.emit(false);
   }
 
   async onOpenFile(uuid: string) {

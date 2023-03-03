@@ -115,11 +115,10 @@
           [matDatepicker]="purchaseDatePicker"
           formControlName="purchaseDate"
           [max]="maxPurchasedDate"
-          placeholder="YYYY-MMM-DD"
+          [placeholder]="isCrownLand ? 'Fee Simple Only' : 'YYYY-MMM-DD'"
         />
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #purchaseDatePicker startView="year"></mat-datepicker>
-        <mat-hint class="subtext">Fee Simple Only</mat-hint>
       </mat-form-field>
       <div *ngIf="purchaseDate.invalid && (purchaseDate.dirty || purchaseDate.touched)" class="field-error">
         <mat-icon>warning</mat-icon>

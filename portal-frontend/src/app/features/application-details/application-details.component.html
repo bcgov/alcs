@@ -3,7 +3,6 @@
     [$application]="$application"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
-    (isParcelDetailsValid)="parcelValidation($event)"
   ></app-parcel>
 </section>
 <section>
@@ -12,7 +11,6 @@
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [parcelType]="parcelType.OTHER"
-    (isParcelDetailsValid)="parcelValidation($event)"
   ></app-parcel>
 </section>
 <section>
@@ -56,16 +54,21 @@
         </div>
       </ng-container>
     </ng-container>
-    <div class="subheading2 grid-1">Authorization Letter(s)</div>
-    <div class="grid-double">
-      <app-no-data
-        [showRequired]="application.owners.length > 1"
-        *ngIf="authorizationLetters.length === 0"
-      ></app-no-data>
-      <div *ngFor="let file of authorizationLetters">
-        <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+    <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
+      <div class="subheading2 grid-1">Authorization Letter(s)</div>
+      <div class="grid-double">
+        <app-no-data
+          [showRequired]="application.owners.length > 1"
+          *ngIf="authorizationLetters.length === 0"
+        ></app-no-data>
+        <div *ngFor="let file of authorizationLetters">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+        <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
+          Authorization letters are not required, please remove them
+        </app-validation-error>
       </div>
-    </div>
+    </ng-container>
     <div *ngIf="showEdit" class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
     </div>

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { ApplicationOwnerDetailedDto } from '../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDetailedDto } from '../../services/application-owner/application-owner.dto';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
 import { ApplicationDetailedDto } from '../../services/application/application.dto';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
@@ -20,20 +20,16 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
   @Input() showErrors: boolean = true;
   @Input() showEdit: boolean = true;
-  isParcelDetailsValid = false;
   parcelType = PARCEL_TYPE;
   application: ApplicationDetailedDto | undefined;
   primaryContact: ApplicationOwnerDetailedDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
+  needsAuthorizationLetter = true;
 
   private localGovernments: LocalGovernmentDto[] = [];
   private otherFileTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
-
-  parcelValidation(isParcelDetailsValid: boolean) {
-    this.isParcelDetailsValid = isParcelDetailsValid;
-  }
 
   constructor(
     private codeService: CodeService,
@@ -60,6 +56,12 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
           .sort((a, b) => {
             return a.uploadedAt - b.uploadedAt;
           });
+
+        const hasSelectedAgent = this.primaryContact?.type.code == APPLICATION_OWNER.AGENT;
+        const nonAgentOwners = app.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+        const crownOwners = app.owners.filter((owner) => owner.type.code === APPLICATION_OWNER.CROWN);
+
+        this.needsAuthorizationLetter = nonAgentOwners.length > 1 || hasSelectedAgent || crownOwners.length > 0;
       }
     });
   }
