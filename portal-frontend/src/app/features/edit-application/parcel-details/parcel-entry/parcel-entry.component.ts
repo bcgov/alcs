@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { MatInput } from '@angular/material/input';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
@@ -60,6 +59,8 @@ export class ParcelEntryComponent implements OnInit {
   owners: ApplicationOwnerDto[] = [];
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
 
+  searchBy = new FormControl<string | null>(null);
+
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
   mapArea = new FormControl<string | null>(null, [Validators.required]);
@@ -79,6 +80,7 @@ export class ParcelEntryComponent implements OnInit {
     isFarm: this.isFarm,
     purchaseDate: this.purchaseDate,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
+    searchBy: this.searchBy,
   });
 
   ownerInput = new FormControl<string | null>(null);
@@ -111,7 +113,13 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   async onSearch() {
-    const result = await this.parcelService.getByPidPin(this.pidPin.getRawValue()!);
+    let result;
+    if (this.searchBy.getRawValue() === 'pin') {
+      result = await this.parcelService.getByPin(this.pidPin.getRawValue()!);
+    } else {
+      result = await this.parcelService.getByPid(this.pidPin.getRawValue()!);
+    }
+
     this.onReset();
     if (result) {
       this.legalDescription.setValue(result.legalDescription);
@@ -254,6 +262,16 @@ export class ParcelEntryComponent implements OnInit {
         return;
       }
 
+      if ((this.parcelType.getRawValue() === 'CRWN' && !this.searchBy.getRawValue()) || this.disabled) {
+        this.pidPin.disable({
+          emitEvent: false,
+        });
+      } else {
+        this.pidPin.enable({
+          emitEvent: false,
+        });
+      }
+
       if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
         this.parcel.isConfirmedByApplicant = false;
         formData.isConfirmedByApplicant = false;
@@ -284,6 +302,10 @@ export class ParcelEntryComponent implements OnInit {
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
+
+    if (!this.parcelType.getRawValue()) {
+      this.pidPin.disable();
+    }
 
     if (this.showErrors) {
       this.parcelForm.markAllAsTouched();
@@ -316,8 +338,10 @@ export class ParcelEntryComponent implements OnInit {
   private onFormDisabled() {
     if (this._disabled) {
       this.parcelForm.disable();
+      this.ownerInput.disable();
     } else {
       this.parcelForm.enable();
+      this.ownerInput.enable();
     }
   }
 }

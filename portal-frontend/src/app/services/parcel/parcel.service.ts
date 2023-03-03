@@ -13,11 +13,20 @@ export class ParcelService {
 
   constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 
-  async getByPidPin(pidPin: string) {
+  async getByPid(pid: string) {
     try {
-      return await firstValueFrom(this.httpClient.get<ParcelLookupDto>(`${this.serviceUrl}/search/${pidPin}`));
+      return await firstValueFrom(this.httpClient.get<ParcelLookupDto>(`${this.serviceUrl}/search/pid/${pid}`));
     } catch (e) {
-      this.toastService.showErrorToast('No Parcel found with the given PID/PIN, please verify and try again');
+      this.toastService.showErrorToast('No Parcel found with the given PID, please verify and try again');
+      return undefined;
+    }
+  }
+
+  async getByPin(pin: string) {
+    try {
+      return await firstValueFrom(this.httpClient.get<ParcelLookupDto>(`${this.serviceUrl}/search/pin/${pin}`));
+    } catch (e) {
+      this.toastService.showErrorToast('No Parcel found with the given PIN, please verify and try again');
       return undefined;
     }
   }
