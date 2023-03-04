@@ -1,9 +1,5 @@
 <section>
-  <app-parcel
-    [$application]="$application"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-  ></app-parcel>
+  <app-parcel [$application]="$application" [showErrors]="showErrors" [showEdit]="showEdit"></app-parcel>
 </section>
 <section>
   <app-parcel
@@ -58,7 +54,7 @@
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <app-no-data
-          [showRequired]="showErrors && application.owners.length > 1"
+          [showRequired]="showErrors && needsAuthorizationLetter"
           *ngIf="authorizationLetters.length === 0"
         ></app-no-data>
         <div *ngFor="let file of authorizationLetters">
