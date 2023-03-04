@@ -70,6 +70,19 @@ describe('ApplicationValidatorService', () => {
     );
   });
 
+  it('should return an error for no parcels', async () => {
+    const application = new Application({
+      owners: [],
+      documents: [],
+    });
+
+    const res = await service.validateApplication(application);
+
+    expect(includesError(res.errors, new Error('Missing applicant'))).toBe(
+      true,
+    );
+  });
+
   it('provide errors for invalid application parcel', async () => {
     const application = new Application({
       owners: [],
@@ -80,6 +93,7 @@ describe('ApplicationValidatorService', () => {
       owners: [],
       documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
+      ownershipTypeCode: 'SMPL',
     });
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
@@ -105,6 +119,78 @@ describe('ApplicationValidatorService', () => {
         new ServiceValidationException(
           `Parcel is missing certificate of title ${parcel.uuid}`,
         ),
+      ),
+    ).toBe(true);
+    expect(
+      includesError(
+        res.errors,
+        new ServiceValidationException(
+          `Fee Simple Parcel ${parcel.uuid} has no PID`,
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it('should report an invalid PID', async () => {
+    const application = new Application({
+      owners: [],
+      documents: [],
+    });
+    const parcel = new ApplicationParcel({
+      uuid: 'parcel-1',
+      owners: [],
+      documents: [],
+      parcelType: PARCEL_TYPE.APPLICATION,
+      ownershipTypeCode: 'SMPL',
+      pid: '1251251',
+    });
+
+    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
+
+    const res = await service.validateApplication(application);
+
+    expect(
+      includesError(
+        res.errors,
+        new ServiceValidationException(`Parcel ${parcel.uuid} has invalid PID`),
+      ),
+    ).toBe(true);
+  });
+
+  it('should require certificate of title and crown description for CRWN parcels with PID and with CRWN owners', async () => {
+    const application = new Application({
+      owners: [
+        new ApplicationOwner({
+          type: new ApplicationOwnerType({
+            code: APPLICATION_OWNER.CROWN,
+          }),
+        }),
+      ],
+      documents: [],
+    });
+    const parcel = new ApplicationParcel({
+      uuid: 'parcel-1',
+      owners: [],
+      documents: [],
+      parcelType: PARCEL_TYPE.APPLICATION,
+      ownershipTypeCode: 'CRWN',
+      pid: '12512',
+    });
+
+    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
+
+    const res = await service.validateApplication(application);
+
+    expect(
+      includesError(
+        res.errors,
+        new Error(`Crown Parcel ${parcel.uuid} has no ownership type`),
+      ),
+    ).toBe(true);
+    expect(
+      includesError(
+        res.errors,
+        new Error(`Parcel is missing certificate of title ${parcel.uuid}`),
       ),
     ).toBe(true);
   });

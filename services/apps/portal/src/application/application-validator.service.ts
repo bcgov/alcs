@@ -42,6 +42,133 @@ export class ApplicationValidatorService {
     };
   }
 
+  private async validateParcels(application: Application, errors: Error[]) {
+    const parcels = await this.appParcelService.fetchByApplicationFileId(
+      application.fileNumber,
+    );
+
+    if (parcels.length === 0) {
+      errors.push(new ServiceValidationException(`Application has no parcels`));
+    }
+
+    if (application.hasOtherParcelsInCommunity === null) {
+      errors.push(
+        new ServiceValidationException(`Not answered has Other Parcels`),
+      );
+    }
+
+    for (const parcel of parcels) {
+      if (
+        parcel.ownershipTypeCode === null ||
+        parcel.legalDescription === null ||
+        parcel.mapAreaHectares === null ||
+        parcel.isFarm === null ||
+        !parcel.isConfirmedByApplicant
+      ) {
+        errors.push(
+          new ServiceValidationException(`Invalid Parcel ${parcel.uuid}`),
+        );
+      }
+
+      if (parcel.ownershipTypeCode === 'SMPL' && !parcel.pid) {
+        errors.push(
+          new ServiceValidationException(
+            `Fee Simple Parcel ${parcel.uuid} has no PID`,
+          ),
+        );
+      }
+
+      if (parcel.pid && parcel.pid.length !== 9) {
+        errors.push(
+          new ServiceValidationException(
+            `Parcel ${parcel.uuid} has invalid PID`,
+          ),
+        );
+      }
+
+      if (parcel.ownershipTypeCode === 'SMPL' && !parcel.purchasedDate) {
+        errors.push(
+          new ServiceValidationException(
+            `Fee Simple Parcel ${parcel.uuid} has no purchase date`,
+          ),
+        );
+      }
+
+      if (parcel.ownershipTypeCode === 'CRWN' && !parcel.crownLandOwnerType) {
+        errors.push(
+          new ServiceValidationException(
+            `Crown Parcel ${parcel.uuid} has no ownership type`,
+          ),
+        );
+      }
+
+      if (parcel.owners.length === 0) {
+        errors.push(
+          new ServiceValidationException(`Parcel has no Owners ${parcel.uuid}`),
+        );
+      }
+
+      if (
+        parcel.parcelType === PARCEL_TYPE.APPLICATION &&
+        parcel.documents.length === 0 &&
+        (parcel.ownershipTypeCode === 'SMPL' || parcel.pid)
+      ) {
+        errors.push(
+          new ServiceValidationException(
+            `Parcel is missing certificate of title ${parcel.uuid}`,
+          ),
+        );
+      }
+    }
+  }
+
+  private async validatePrimaryContact(
+    application: Application,
+    errors: Error[],
+  ) {
+    const primaryOwner = application.owners.find(
+      (owner) => owner.uuid === application.primaryContactOwnerUuid,
+    );
+
+    if (!primaryOwner) {
+      errors.push(
+        new ServiceValidationException(`Application has no primary contact`),
+      );
+      return;
+    }
+
+    const hasCrownLandOwners = application.owners.some(
+      (owner) => owner.type.code === APPLICATION_OWNER.CROWN,
+    );
+    if (application.owners.length > 1 || hasCrownLandOwners) {
+      const authorizationLetters = application.documents.filter(
+        (document) => document.type === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+      );
+      if (authorizationLetters.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `Application has no authorization letters`,
+          ),
+        );
+      }
+    }
+
+    if (primaryOwner.type.code === APPLICATION_OWNER.AGENT) {
+      if (
+        !primaryOwner.firstName ||
+        !primaryOwner.lastName ||
+        !primaryOwner.phoneNumber ||
+        !primaryOwner.email
+      ) {
+        errors.push(
+          new ServiceValidationException(
+            `Invalid Third Party Agent Information`,
+          ),
+        );
+      }
+    }
+  }
+
   private async validateLocalGovernment(
     application: Application,
     errors: Error[],
@@ -71,94 +198,6 @@ export class ApplicationValidatorService {
           `Selected local government is setup in portal ${matchingLg.name}`,
         ),
       );
-    }
-  }
-
-  private async validateParcels(application: Application, errors: Error[]) {
-    const parcels = await this.appParcelService.fetchByApplicationFileId(
-      application.fileNumber,
-    );
-
-    if (application.hasOtherParcelsInCommunity === null) {
-      errors.push(
-        new ServiceValidationException(`Not answered has Other Parcels`),
-      );
-    }
-
-    for (const parcel of parcels) {
-      if (
-        parcel.ownershipTypeCode === null ||
-        parcel.legalDescription === null ||
-        parcel.mapAreaHectares === null ||
-        parcel.isFarm === null ||
-        parcel.purchasedDate === null ||
-        !parcel.isConfirmedByApplicant
-      ) {
-        errors.push(
-          new ServiceValidationException(`Invalid Parcel ${parcel.uuid}`),
-        );
-      }
-
-      if (parcel.owners.length === 0) {
-        errors.push(
-          new ServiceValidationException(`Parcel has no Owners ${parcel.uuid}`),
-        );
-      }
-
-      if (
-        parcel.parcelType === PARCEL_TYPE.APPLICATION &&
-        parcel.documents.length === 0
-      ) {
-        errors.push(
-          new ServiceValidationException(
-            `Parcel is missing certificate of title ${parcel.uuid}`,
-          ),
-        );
-      }
-    }
-  }
-
-  private async validatePrimaryContact(
-    application: Application,
-    errors: Error[],
-  ) {
-    const primaryOwner = application.owners.find(
-      (owner) => owner.uuid === application.primaryContactOwnerUuid,
-    );
-
-    if (!primaryOwner) {
-      errors.push(
-        new ServiceValidationException(`Application has no primary contact`),
-      );
-      return;
-    }
-
-    if (application.owners.length > 1) {
-      const authorizationLetters = application.documents.filter(
-        (document) => document.type === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
-      );
-      if (authorizationLetters.length === 0) {
-        errors.push(
-          new ServiceValidationException(
-            `Application has no authorization letters`,
-          ),
-        );
-      }
-    }
-
-    if (primaryOwner.type.code === APPLICATION_OWNER.AGENT) {
-      if (
-        !primaryOwner.firstName ||
-        !primaryOwner.lastName ||
-        !primaryOwner.phoneNumber ||
-        !primaryOwner.email
-      ) {
-        errors.push(
-          new ServiceValidationException(
-            `Invalid Third Party Agent Information`,
-          ),
-        );
-      }
     }
   }
 
