@@ -1,9 +1,5 @@
 <section>
-  <app-parcel
-    [$application]="$application"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-  ></app-parcel>
+  <app-parcel [$application]="$application" [showErrors]="showErrors" [showEdit]="showEdit"></app-parcel>
 </section>
 <section>
   <app-parcel
@@ -81,6 +77,12 @@
     <div class="grid-double">
       {{ localGovernment?.name }}
       <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
+      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row">
+        This Local/First Nation Government has not yet been set up with the ALC Portal to receive applications. To
+        submit, you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca"
+          >ALC.Portal@gov.bc.ca</a
+        >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+      </app-warning-banner>
     </div>
     <div *ngIf="showEdit" class="edit-button">
       <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
