@@ -100,14 +100,10 @@
     </div>
 
     <div>
-      <label for="pin">PIN <span *ngIf="!isCrownLand">(optional)</span></label>
+      <label for="pin">PIN (optional)</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
       </mat-form-field>
-      <div *ngIf="pin.invalid && (pin.dirty || pin.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="pin.errors?.['required']">This field is required</div>
-      </div>
     </div>
 
     <div>
@@ -145,7 +141,7 @@
     </div>
   </div>
 
-  <div class="section" *ngIf="enableCertificateOfTitleUpload && !isCrownLand">
+  <div class="section" *ngIf="enableCertificateOfTitleUpload">
     <label for="certificate-of-title-upload">Upload Certificate of Title</label>
     <app-file-drag-drop
       id="certificate-of-title-upload"
@@ -155,7 +151,7 @@
       (openFile)="openFile($event)"
       (beforeFileUploadOpened)="beforeFileUploadOpened()"
       [showErrors]="showErrors"
-      [isRequired]="true"
+      [isRequired]="isCertificateOfTitleRequired"
     ></app-file-drag-drop>
   </div>
 
@@ -230,6 +226,10 @@
       >
         <mat-radio-button value="provincial">Provincial Crown</mat-radio-button>
         <mat-radio-button value="federal">Federal Crown</mat-radio-button>
+        <div *ngIf="showErrors && !crownLandOwnerType.getRawValue()" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </mat-radio-group>
       <mat-form-field class="full-width-input" appearance="outline">
         <input

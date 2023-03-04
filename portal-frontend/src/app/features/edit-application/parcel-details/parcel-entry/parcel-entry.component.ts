@@ -63,6 +63,7 @@ export class ParcelEntryComponent implements OnInit {
 
   searchBy = new FormControl<string | null>(null);
   isCrownLand = false;
+  isCertificateOfTitleRequired = true;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
@@ -164,22 +165,21 @@ export class ParcelEntryComponent implements OnInit {
 
   onChangeParcelType($event: MatButtonToggleChange) {
     if ($event.value === 'CRWN') {
+      this.searchBy.setValue(null);
       this.isCrownLand = true;
       this.pid.setValidators([]);
-      this.pin.setValidators([Validators.required]);
       this.purchaseDate.reset();
       this.purchaseDate.disable();
     } else {
+      this.searchBy.setValue('pid');
       this.isCrownLand = false;
       this.pid.setValidators([Validators.required]);
-      this.pin.setValidators([]);
       this.crownLandOwnerType.setValue(null);
       this.purchaseDate.enable();
     }
 
     this.updateParcelOwners([]);
     this.filteredOwners = this.mapOwners(this.owners);
-    this.pin.updateValueAndValidity();
     this.pid.updateValueAndValidity();
   }
 
@@ -312,6 +312,13 @@ export class ParcelEntryComponent implements OnInit {
         });
       }
 
+      const pidValue = this.pid.getRawValue();
+      if (this.isCrownLand) {
+        this.isCertificateOfTitleRequired = !!pidValue && pidValue.length > 0;
+      } else {
+        this.isCertificateOfTitleRequired = true;
+      }
+
       if (this.parcelForm.dirty && formData.isConfirmedByApplicant === this.parcel.isConfirmedByApplicant) {
         this.parcel.isConfirmedByApplicant = false;
         formData.isConfirmedByApplicant = false;
@@ -346,8 +353,11 @@ export class ParcelEntryComponent implements OnInit {
     this.isCrownLand = this.parcelType.getRawValue() === 'CRWN';
     if (this.isCrownLand) {
       this.purchaseDate.disable();
-      this.pin.setValidators([Validators.required]);
       this.pid.setValidators([]);
+      const pidValue = this.pid.getRawValue();
+      this.isCertificateOfTitleRequired = !!pidValue && pidValue.length > 0;
+    } else {
+      this.isCertificateOfTitleRequired = true;
     }
 
     if (!this.parcelType.getRawValue()) {

@@ -26,7 +26,9 @@ export class ApplicationParcelBasicValidation {
   isPurchasedDateRequired = false;
   isFarmRequired = false;
   isCertificateRequired = false;
+  isCertificateUploaded = false;
   isConfirmedByApplicant = false;
+  isCrownSelectionMandatory = false;
 }
 
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
@@ -125,7 +127,6 @@ export class ParcelComponent {
 
       if (!parcel.pid && !parcel.pin) {
         validation.isPidRequired = true;
-        validation.isPinRequired = true;
       }
 
       if (!parcel.purchasedDate) {
@@ -135,10 +136,6 @@ export class ParcelComponent {
 
     if (!parcel.pid && parcel.ownershipType?.code === 'SMPL') {
       validation.isPidRequired = true;
-    }
-
-    if (!parcel.pin && parcel.ownershipType?.code === 'CRWN') {
-      validation.isPinRequired = true;
     }
 
     if (!parcel.legalDescription) {
@@ -153,11 +150,18 @@ export class ParcelComponent {
       validation.isPurchasedDateRequired = true;
     }
 
+    if (parcel.ownershipType?.code === 'CRWN') {
+      validation.isCrownSelectionMandatory = true;
+    }
+
     if (!parcel.isFarm) {
       validation.isFarmRequired = true;
     }
 
-    if (this.showCertificateOfTitle && (!parcel.documents || (parcel.documents && parcel.documents.length <= 0))) {
+    validation.isCertificateUploaded = parcel.documents && parcel.documents.length > 0;
+    const isCrownWithPid = parcel.ownershipType?.code === 'CRWN' && parcel.pid && parcel.pid.length > 0;
+    const isFeeSimple = parcel.ownershipType?.code === 'SMPL';
+    if (this.showCertificateOfTitle && (isCrownWithPid || isFeeSimple)) {
       validation.isCertificateRequired = true;
     }
 

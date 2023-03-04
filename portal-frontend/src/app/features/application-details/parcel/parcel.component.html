@@ -67,12 +67,19 @@
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
       <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
     </div>
+    <ng-container *ngIf="parcel.validation?.isCrownSelectionMandatory">
+      <div class="subheading2 grid-1">Crown Selection</div>
+      <div class="grid-double">
+        <span class='crown-land' *ngIf="parcel.crownLandOwnerType !== null">{{ parcel.crownLandOwnerType }}</span>
+        <app-no-data [showRequired]="showErrors" *ngIf="parcel.crownLandOwnerType === null"></app-no-data>
+      </div>
+    </ng-container>
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
       <div *ngFor="let document of parcel.documents">
         <a (click)="onOpenFile(document.uuid)">{{ document.fileName }}</a>
       </div>
-      <app-no-data [showRequired]="showErrors" *ngIf="parcel.validation?.isCertificateRequired || false"></app-no-data>
+      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired" *ngIf="!parcel.validation?.isCertificateUploaded"></app-no-data>
     </div>
     <div class="full-width subheading1">Owner Information</div>
     <div class="full-width owner-information">

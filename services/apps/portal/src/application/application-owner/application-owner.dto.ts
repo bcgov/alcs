@@ -8,6 +8,7 @@ export enum APPLICATION_OWNER {
   INDIVIDUAL = 'INDV',
   ORGANIZATION = 'ORGZ',
   AGENT = 'AGEN',
+  CROWN = 'CRWN',
 }
 
 export class ApplicationOwnerTypeDto extends BaseCodeDto {}
