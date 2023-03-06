@@ -45,8 +45,11 @@
     </div>
     <div class="subheading2 grid-1">PID</div>
     <div class="grid-double">
-      {{ parcel.pid }}
+      <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
       <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPidRequired" *ngIf="!parcel.pid"></app-no-data>
+      <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
+        Invalid Format
+      </app-validation-error>
     </div>
     <div class="subheading2 grid-1">PIN (Optional)</div>
     <div class="grid-double">
@@ -70,7 +73,7 @@
     <ng-container *ngIf="parcel.validation?.isCrownSelectionMandatory">
       <div class="subheading2 grid-1">Crown Selection</div>
       <div class="grid-double">
-        <span class='crown-land' *ngIf="parcel.crownLandOwnerType !== null">{{ parcel.crownLandOwnerType }}</span>
+        <span class="crown-land" *ngIf="parcel.crownLandOwnerType !== null">{{ parcel.crownLandOwnerType }}</span>
         <app-no-data [showRequired]="showErrors" *ngIf="parcel.crownLandOwnerType === null"></app-no-data>
       </div>
     </ng-container>
@@ -79,7 +82,10 @@
       <div *ngFor="let document of parcel.documents">
         <a (click)="onOpenFile(document.uuid)">{{ document.fileName }}</a>
       </div>
-      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired" *ngIf="!parcel.validation?.isCertificateUploaded"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"
+        *ngIf="!parcel.validation?.isCertificateUploaded"
+      ></app-no-data>
     </div>
     <div class="full-width subheading1">Owner Information</div>
     <div class="full-width owner-information">
