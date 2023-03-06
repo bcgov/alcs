@@ -17,11 +17,11 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
   currentStep = ReviewApplicationSteps.Zoning;
   @Input() showErrors = false;
 
-  isSubjectToZoning = new FormControl<string | null>(null);
+  isSubjectToZoning = new FormControl<string | null>(null, [Validators.required]);
   zoningBylawName = new FormControl<string | null>('', [Validators.required]);
   zoningMinimumLotSize = new FormControl<string | null>('', [Validators.required]);
   zoningDesignation = new FormControl<string | null>('', [Validators.required]);
-  isZoningConsistent = new FormControl<string | null>(null);
+  isZoningConsistent = new FormControl<string | null>(null, [Validators.required]);
 
   zoningForm = new FormGroup({
     isSubjectToZoning: this.isSubjectToZoning,
