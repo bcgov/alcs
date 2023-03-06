@@ -20,10 +20,14 @@
           id="is-ocp"
           formControlName="isOCPDesignation"
         >
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle value="true" [ngClass]="{ 'error-outline': isOCPDesignation.invalid && showErrors }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle value="false" [ngClass]="{ 'error-outline': isOCPDesignation.invalid && showErrors }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
-        <div *ngIf="isOCPDesignation.getRawValue() === null && showErrors" class="field-error">
+        <div *ngIf="isOCPDesignation.invalid && showErrors" class="field-error">
           <mat-icon>warning</mat-icon>
           <div>This field is required</div>
         </div>
@@ -51,13 +55,22 @@
       <div class="full-row">
         <label for="is-consistent">Is this proposal consistent with the current OCP designation?</label>
         <mat-button-toggle-group class="input" id="is-consistent" formControlName="isOCPConsistent">
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle
+            value="true"
+            [ngClass]="{
+              'error-outline': isOCPConsistent.invalid && showErrors
+            }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle
+            value="false"
+            [ngClass]="{
+              'error-outline': isOCPConsistent.invalid && showErrors
+            }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
-        <div
-          *ngIf="isOCPConsistent.getRawValue() === null && showErrors && !isOCPConsistent.disabled"
-          class="field-error"
-        >
+        <div *ngIf="isOCPConsistent.invalid && showErrors" class="field-error">
           <mat-icon>warning</mat-icon>
           <div>This field is required</div>
         </div>

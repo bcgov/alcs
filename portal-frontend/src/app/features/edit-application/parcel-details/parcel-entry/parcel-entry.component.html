@@ -11,8 +11,16 @@
       id="parcelType"
       formControlName="parcelType"
     >
-      <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
-      <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
+      <mat-button-toggle
+        value="SMPL"
+        [ngClass]="{ 'error-outline': parcelType.invalid && (parcelType.dirty || parcelType.touched) }"
+        >Fee Simple</mat-button-toggle
+      >
+      <mat-button-toggle
+        value="CRWN"
+        [ngClass]="{ 'error-outline': parcelType.invalid && (parcelType.dirty || parcelType.touched) }"
+        >Crown</mat-button-toggle
+      >
     </mat-button-toggle-group>
     <div *ngIf="parcelType.invalid && (parcelType.dirty || parcelType.touched)" class="field-error">
       <mat-icon>warning</mat-icon>
@@ -130,8 +138,16 @@
       <div>
         <label for="isFarm">Farm classification</label>
         <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle
+            value="true"
+            [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle
+            value="false"
+            [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
         <div *ngIf="isFarm.invalid && (isFarm.dirty || isFarm.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -162,6 +178,7 @@
       <label for="owner-search">Add Owner to Parcel</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input
+          [ngClass]="{ 'error-outline': ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled }"
           id="owner-search"
           type="text"
           aria-label="Text"
@@ -291,7 +308,17 @@
       </div>
     </ng-container>
   </section>
-  <mat-checkbox *ngIf="enableUserSignOff" formControlName="isConfirmedByApplicant" class="parcel-checkbox"
+  <mat-checkbox
+    *ngIf="enableUserSignOff"
+    formControlName="isConfirmedByApplicant"
+    [ngClass]="{
+      'parcel-checkbox': true,
+      'error-outline':
+        enableUserSignOff &&
+        isConfirmedByApplicant.invalid &&
+        (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
+    }"
+    class=""
     >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
     information can cause significant delays to processing time.
   </mat-checkbox>

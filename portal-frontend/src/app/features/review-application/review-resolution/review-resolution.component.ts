@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
@@ -14,8 +14,9 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep: ReviewApplicationSteps | ReviewApplicationFngSteps = ReviewApplicationSteps.Resolution;
+  @Input() showErrors = false;
 
-  isAuthorized = new FormControl<string | null>(null);
+  isAuthorized = new FormControl<string | null>(null, [Validators.required]);
 
   resolutionForm = new FormGroup({
     isAuthorized: this.isAuthorized,
@@ -40,6 +41,10 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
 
         if (applicationReview.isAuthorized !== null) {
           this.isAuthorized.setValue(applicationReview.isAuthorized ? 'true' : 'false');
+        }
+
+        if (this.showErrors) {
+          this.resolutionForm.markAllAsTouched();
         }
       }
     });

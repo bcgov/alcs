@@ -30,7 +30,15 @@
         formControlName="hasOtherParcelsInCommunity"
         (change)="onHasOtherParcelsInCommunityChange($event)"
       >
-        <mat-button-toggle value="true">Yes</mat-button-toggle>
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{
+            'error-outline':
+              hasOtherParcelsInCommunity.invalid &&
+              (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+          }"
+          >Yes</mat-button-toggle
+        >
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
       <div

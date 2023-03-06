@@ -42,7 +42,10 @@
   <cdk-step label="Resolution">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Resolution">
-      <app-review-resolution (navigateToStep)="onBeforeSwitchStep($event)"></app-review-resolution>
+      <app-review-resolution
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        [showErrors]="showValidationErrors"
+      ></app-review-resolution>
     </div>
   </cdk-step>
   <cdk-step label="Attachments">

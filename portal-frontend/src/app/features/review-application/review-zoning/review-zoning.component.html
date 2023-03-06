@@ -20,10 +20,14 @@
           id="is-ocp"
           formControlName="isSubjectToZoning"
         >
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle value="true" [ngClass]="{ 'error-outline': isSubjectToZoning.invalid && showErrors }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle value="false" [ngClass]="{ 'error-outline': isSubjectToZoning.invalid && showErrors }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
-        <div *ngIf="isSubjectToZoning.getRawValue() === null && showErrors" class="field-error">
+        <div *ngIf="isSubjectToZoning.invalid && showErrors" class="field-error">
           <mat-icon>warning</mat-icon>
           <div>This field is required</div>
         </div>
@@ -72,13 +76,14 @@
       <div class="full-row">
         <label for="is-consistent">Is this proposal consistent with the current zoning designation?</label>
         <mat-button-toggle-group class="input" id="is-consistent" formControlName="isZoningConsistent">
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle value="true" [ngClass]="{ 'error-outline': isZoningConsistent.invalid && showErrors }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle value="false" [ngClass]="{ 'error-outline': isZoningConsistent.invalid && showErrors }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
-        <div
-          *ngIf="isZoningConsistent.getRawValue() === null && showErrors && !isZoningConsistent.disabled"
-          class="field-error"
-        >
+        <div *ngIf="isZoningConsistent.invalid && showErrors" class="field-error">
           <mat-icon>warning</mat-icon>
           <div>This field is required</div>
         </div>

@@ -17,10 +17,10 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
   currentStep = ReviewApplicationSteps.OCP;
   @Input() showErrors = false;
 
-  isOCPDesignation = new FormControl<string | null>(null);
+  isOCPDesignation = new FormControl<string | null>(null, [Validators.required]);
   OCPBylawName = new FormControl<string | null>('', [Validators.required]);
   OCPDesignation = new FormControl<string | null>('', [Validators.required]);
-  isOCPConsistent = new FormControl<string | null>(null);
+  isOCPConsistent = new FormControl<string | null>(null, [Validators.required]);
 
   ocpForm = new FormGroup({
     isOCPDesignation: this.isOCPDesignation,
