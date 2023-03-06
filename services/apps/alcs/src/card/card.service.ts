@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RedisClientType } from 'redis';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
+import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
@@ -27,6 +28,7 @@ export class CardService {
     @InjectRepository(CardType)
     private cardTypeRepository: Repository<CardType>,
     private redisService: RedisService,
+    private subtaskService: CardSubtaskService,
   ) {
     this.loadCardTypesToRedis();
   }
@@ -132,5 +134,42 @@ export class CardService {
 
   async mapToDetailedDto(card: Card) {
     return this.mapper.map(card, Card, CardDetailedDto);
+  }
+
+  async archive(uuid: string) {
+    const card = await this.cardRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+      relations: {
+        subtasks: true,
+      },
+    });
+
+    const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
+    await this.subtaskService.deleteMany(subtaskUuids);
+
+    card.archived = true;
+    await this.cardRepository.save(card);
+    await this.cardRepository.softRemove(card);
+  }
+
+  async recover(uuid: string) {
+    const card = await this.cardRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+      relations: {
+        subtasks: true,
+      },
+      withDeleted: true,
+    });
+
+    const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
+    await this.subtaskService.recoverMany(subtaskUuids);
+
+    card.archived = false;
+    await this.cardRepository.save(card);
+    await this.cardRepository.recover(card);
   }
 }

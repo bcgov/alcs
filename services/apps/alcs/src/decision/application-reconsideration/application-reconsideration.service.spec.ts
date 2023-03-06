@@ -360,4 +360,15 @@ describe('ReconsiderationService', () => {
 
     expect(reconsiderationRepositoryMock.find).toBeCalledWith(findOptions);
   });
+
+  it('should load deleted cards', async () => {
+    reconsiderationRepositoryMock.find.mockResolvedValue([]);
+
+    await service.getDeletedCards('file-number');
+
+    expect(reconsiderationRepositoryMock.find).toHaveBeenCalledTimes(1);
+    expect(
+      reconsiderationRepositoryMock.find.mock.calls[0][0]!.withDeleted,
+    ).toEqual(true);
+  });
 });

@@ -5,8 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
+import { AuthenticationService, ROLES } from '../../../../services/authentication/authentication.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
@@ -32,6 +34,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
+  canArchive = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
@@ -41,7 +44,9 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
     private boardService: BoardService,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService,
-    private router: Router
+    private router: Router,
+    private cardService: CardService,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +61,13 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
       }
+    });
+
+    this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
+      this.canArchive =
+        !!currentUser &&
+        !!currentUser.client_roles &&
+        (currentUser.client_roles.includes(ROLES.ADMIN) || currentUser.client_roles.includes(ROLES.APP_SPECIALIST));
     });
 
     this.dialogRef.backdropClick().subscribe(() => {
@@ -152,5 +164,23 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  onArchiveCard() {
+    const card = this.application.card;
+    if (card) {
+      const answer = this.confirmationDialogService.openDialog({
+        body: 'Are you sure you want to archive the card?',
+      });
+      answer.subscribe(async (answer) => {
+        if (answer) {
+          const res = await this.cardService.archiveCard(card.uuid);
+          if (res) {
+            this.toastService.showSuccessToast('Card archived');
+            this.dialogRef.close(true);
+          }
+        }
+      });
+    }
   }
 }

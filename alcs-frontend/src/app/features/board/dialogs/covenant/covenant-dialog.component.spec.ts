@@ -8,6 +8,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ICurrentUser } from '../../../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
@@ -17,7 +18,6 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SharedModule } from '../../../../shared/shared.module';
 import { CovenantDialogComponent } from './covenant-dialog.component';
 
 describe('CovenantDialogComponent', () => {
@@ -25,6 +25,7 @@ describe('CovenantDialogComponent', () => {
   let fixture: ComponentFixture<CovenantDialogComponent>;
   let mockUserService: DeepMocked<UserService>;
   let mockBoardService: DeepMocked<BoardService>;
+  let authenticationService: DeepMocked<AuthenticationService>;
 
   const mockCovenantDto: CovenantDto = {
     applicant: 'fake-type',
@@ -62,6 +63,9 @@ describe('CovenantDialogComponent', () => {
     mockBoardService = createMock();
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
+    authenticationService = createMock();
+    authenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+
     await TestBed.configureTestingModule({
       declarations: [CovenantDialogComponent],
       providers: [
@@ -92,6 +96,10 @@ describe('CovenantDialogComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: {},
+        },
+        {
+          provide: AuthenticationService,
+          useValue: authenticationService,
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],

@@ -137,4 +137,13 @@ describe('PlanningReviewService', () => {
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
   });
+
+  it('should load deleted cards', async () => {
+    mockRepository.find.mockResolvedValue([]);
+
+    await service.getDeletedCards('file-number');
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockRepository.find.mock.calls[0][0]!.withDeleted).toEqual(true);
+  });
 });

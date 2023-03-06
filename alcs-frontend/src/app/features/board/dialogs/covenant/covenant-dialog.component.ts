@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { AuthenticationService, ROLES } from '../../../../services/authentication/authentication.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardUpdateDto } from '../../../../services/card/card.dto';
@@ -33,6 +34,7 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
 
   covenant: CovenantDto = this.data;
   isDirty = false;
+  canArchive = false;
 
   boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
@@ -46,7 +48,8 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService,
     private covenantService: CovenantService,
-    private router: Router
+    private router: Router,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +65,13 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
       }
+    });
+
+    this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
+      this.canArchive =
+        !!currentUser &&
+        !!currentUser.client_roles &&
+        (currentUser.client_roles.includes(ROLES.ADMIN) || currentUser.client_roles.includes(ROLES.APP_SPECIALIST));
     });
 
     this.title = `${this.covenant.fileNumber} (${this.covenant.applicant})`;
@@ -158,6 +168,24 @@ export class CovenantDialogComponent implements OnInit, OnDestroy {
       await this.reloadCovenant();
     } catch (e) {
       this.toastService.showErrorToast('Failed to move to new board');
+    }
+  }
+
+  onArchiveCard() {
+    const card = this.covenant.card;
+    if (card) {
+      const answer = this.confirmationDialogService.openDialog({
+        body: 'Are you sure you want to archive the card?',
+      });
+      answer.subscribe(async (answer) => {
+        if (answer) {
+          const res = await this.cardService.archiveCard(card.uuid);
+          if (res) {
+            this.toastService.showSuccessToast('Card archived');
+            this.dialogRef.close(true);
+          }
+        }
+      });
     }
   }
 

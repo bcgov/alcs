@@ -8,6 +8,7 @@ import {
   FindOptionsWhere,
   In,
   IsNull,
+  Not,
   Repository,
 } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
@@ -67,6 +68,21 @@ export class ApplicationReconsiderationService {
 
   getByApplication(applicationFileNumber: string) {
     return this.getBy({ application: { fileNumber: applicationFileNumber } });
+  }
+
+  getDeletedCards(applicationFileNumber: string) {
+    return this.reconsiderationRepository.find({
+      where: {
+        application: {
+          fileNumber: applicationFileNumber,
+        },
+        card: {
+          auditDeletedDateAt: Not(IsNull()),
+        },
+      },
+      withDeleted: true,
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
   }
 
   getBy(findOptions: FindOptionsWhere<ApplicationReconsideration>) {

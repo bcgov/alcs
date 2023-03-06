@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { AuthenticationService, ROLES } from '../../../../services/authentication/authentication.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService } from '../../../../services/board/board.service';
 import { CardUpdateDto } from '../../../../services/card/card.dto';
@@ -32,6 +33,7 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
 
   planningReview: PlanningReviewDto = this.data;
   isDirty = false;
+  canArchive = false;
   boardStatuses: BoardStatusDto[] = [];
 
   constructor(
@@ -41,7 +43,8 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
     private cardService: CardService,
     private boardService: BoardService,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +68,13 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
       }
+    });
+
+    this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
+      this.canArchive =
+        !!currentUser &&
+        !!currentUser.client_roles &&
+        (currentUser.client_roles.includes(ROLES.ADMIN) || currentUser.client_roles.includes(ROLES.APP_SPECIALIST));
     });
 
     this.title = this.planningReview.fileNumber;
@@ -123,6 +133,24 @@ export class PlanningReviewDialogComponent implements OnInit, OnDestroy {
           });
       }
     });
+  }
+
+  onArchiveCard() {
+    const card = this.planningReview.card;
+    if (card) {
+      const answer = this.confirmationDialogService.openDialog({
+        body: 'Are you sure you want to archive the card?',
+      });
+      answer.subscribe(async (answer) => {
+        if (answer) {
+          const res = await this.cardService.archiveCard(card.uuid);
+          if (res) {
+            this.toastService.showSuccessToast('Card archived');
+            this.dialogRef.close(true);
+          }
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {

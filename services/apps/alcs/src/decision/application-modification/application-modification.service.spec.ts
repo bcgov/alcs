@@ -307,4 +307,15 @@ describe('ApplicationModificationService', () => {
 
     expect(modificationRepoMock.find).toBeCalledWith(findOptions);
   });
+
+  it('should load deleted cards', async () => {
+    modificationRepoMock.find.mockResolvedValue([]);
+
+    await service.getDeletedCards('file-number');
+
+    expect(modificationRepoMock.find).toHaveBeenCalledTimes(1);
+    expect(modificationRepoMock.find.mock.calls[0][0]!.withDeleted).toEqual(
+      true,
+    );
+  });
 });

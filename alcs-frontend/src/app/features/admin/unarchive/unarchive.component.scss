@@ -1,0 +1,19 @@
+.container {
+  .actions-bar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .search-control {
+    margin-right: 24px;
+    display: inline-block;
+  }
+
+  .delete-btn {
+    color: red;
+  }
+
+  .mat-icon {
+    margin-right: 4px;
+  }
+}

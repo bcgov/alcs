@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { AuthenticationService, ROLES } from '../../../../services/authentication/authentication.service';
 import { BoardStatusDto } from '../../../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardUpdateDto } from '../../../../services/card/card.dto';
@@ -37,6 +38,7 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
   boards: BoardWithFavourite[] = [];
 
   isApplicationDirty = false;
+  canArchive = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationReconsiderationDto,
@@ -47,7 +49,8 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private reconService: ApplicationReconsiderationService,
     private confirmationDialogService: ConfirmationDialogService,
-    private router: Router
+    private router: Router,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +65,13 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
       }
+    });
+
+    this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
+      this.canArchive =
+        !!currentUser &&
+        !!currentUser.client_roles &&
+        (currentUser.client_roles.includes(ROLES.ADMIN) || currentUser.client_roles.includes(ROLES.APP_SPECIALIST));
     });
 
     this.dialogRef.backdropClick().subscribe(() => {
@@ -161,6 +171,24 @@ export class ReconsiderationDialogComponent implements OnInit, OnDestroy {
           });
       }
     });
+  }
+
+  onArchiveCard() {
+    const card = this.recon.card;
+    if (card) {
+      const answer = this.confirmationDialogService.openDialog({
+        body: 'Are you sure you want to archive the card?',
+      });
+      answer.subscribe(async (answer) => {
+        if (answer) {
+          const res = await this.cardService.archiveCard(card.uuid);
+          if (res) {
+            this.toastService.showSuccessToast('Card archived');
+            this.dialogRef.close(true);
+          }
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {

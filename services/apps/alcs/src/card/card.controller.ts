@@ -1,7 +1,18 @@
-import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ROLES_ALLOWED_BOARDS } from '../common/authorization/roles';
+import {
+  AUTH_ROLE,
+  ROLES_ALLOWED_ARCHIVE,
+  ROLES_ALLOWED_BOARDS,
+} from '../common/authorization/roles';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
 import { UserRoles } from '../common/authorization/roles.decorator';
 import { CardUpdateDto } from './card.dto';
@@ -24,5 +35,23 @@ export class CardController {
       assigneeUuid: cardToUpdate.assigneeUuid,
       highPriority: cardToUpdate.highPriority,
     });
+  }
+
+  @Delete('/:uuid')
+  @UserRoles(...ROLES_ALLOWED_ARCHIVE)
+  async archiveCard(@Param('uuid') uuid: string) {
+    await this.cardService.archive(uuid);
+    return {
+      deleted: true,
+    };
+  }
+
+  @Patch('/restore/:uuid')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async restoreCard(@Param('uuid') uuid: string) {
+    await this.cardService.recover(uuid);
+    return {
+      restored: true,
+    };
   }
 }

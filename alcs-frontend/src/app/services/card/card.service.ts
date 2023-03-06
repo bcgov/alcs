@@ -31,4 +31,14 @@ export class CardService {
     }
     return;
   }
+
+  async archiveCard(uuid: string) {
+    try {
+      return await firstValueFrom(this.http.delete<{ deleted: boolean }>(`${environment.apiUrl}/card/${uuid}`));
+    } catch (e) {
+      console.warn(e);
+      this.toastService.showErrorToast('Failed to archive card');
+    }
+    return;
+  }
 }

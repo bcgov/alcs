@@ -74,6 +74,12 @@ export class Card extends Base {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
+  @Column({
+    default: false,
+    comment: 'Indicates if a card was manually archived by a User',
+  })
+  archived: boolean;
+
   @AutoMap()
   @OneToMany(() => CardHistory, (cardHistory) => cardHistory.card)
   history: CardHistory[];

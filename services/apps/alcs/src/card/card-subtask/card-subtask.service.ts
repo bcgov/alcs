@@ -1,7 +1,7 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, In, Repository } from 'typeorm';
 import { Card } from '../card.entity';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
 import { UpdateCardSubtaskDto } from './card-subtask.dto';
@@ -78,7 +78,31 @@ export class CardSubtaskService {
   }
 
   async delete(uuid: string) {
-    await this.cardSubtaskRepository.delete(uuid);
+    const subtask = await this.cardSubtaskRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+    });
+    await this.cardSubtaskRepository.remove(subtask);
+  }
+
+  async deleteMany(uuids: string[]) {
+    const subtasks = await this.cardSubtaskRepository.find({
+      where: {
+        uuid: In(uuids),
+      },
+    });
+    await this.cardSubtaskRepository.softRemove(subtasks);
+  }
+
+  async recoverMany(uuids: string[]) {
+    const subtasks = await this.cardSubtaskRepository.find({
+      where: {
+        uuid: In(uuids),
+      },
+      withDeleted: true,
+    });
+    await this.cardSubtaskRepository.recover(subtasks);
   }
 
   async getByCard(cardUuid: string) {

@@ -8,35 +8,26 @@
         <app-application-type-pill *ngIf="showModificationLabel" [type]="modificationLabel"></app-application-type-pill>
       </div>
     </div>
-    <div *ngIf="showCardMenu" class="center">
+    <div class="center">
       <button
-        *ngIf="!_reconsiderations.length && !_modifications.length"
+        *ngIf="linkedCards.length === 1"
         class="menu-item"
         mat-flat-button
         color="accent"
-        (click)="onGoToCard()"
+        (click)="onGoToCard(linkedCards[0])"
       >
         <div class="center">
           Go to card
           <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
         </div>
       </button>
-
-      <ng-container *ngIf="_reconsiderations.length || _modifications.length">
+      <ng-container *ngIf="linkedCards.length > 1">
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
-          <button mat-menu-item (click)="onGoToCard()">Standard Application</button>
-          <button *ngFor="let recon of _reconsiderations; let i = index" mat-menu-item (click)="onGoToSubCard(recon)">
-            Reconsideration Request #{{ i + 1 }}
-          </button>
-          <button
-            *ngFor="let modification of _modifications; let i = index"
-            mat-menu-item
-            (click)="onGoToSubCard(modification)"
-          >
-            Modification Request #{{ i + 1 }}
+          <button *ngFor="let card of linkedCards" mat-menu-item (click)="onGoToCard(card)">
+            {{ card.displayName }}
           </button>
         </mat-menu>
       </ng-container>
