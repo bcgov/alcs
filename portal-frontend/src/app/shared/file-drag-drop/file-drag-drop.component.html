@@ -21,7 +21,8 @@
 </div>
 <div
   *ngIf="!uploadedFiles.length || allowMultiple"
-  class="desktop-file-drag-drop"
+  class=""
+  [ngClass]="{ 'desktop-file-drag-drop': true, 'error-outline': isRequired && showErrors && !uploadedFiles.length }"
   dragDropFile
   [disabled]="disabled"
   (files)="filesDropped($event)"

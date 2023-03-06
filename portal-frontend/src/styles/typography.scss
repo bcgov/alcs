@@ -153,3 +153,7 @@ button {
     @include typography-style(rem(16), 700);
   }
 }
+
+.error-outline {
+  border: 1px solid $error-color !important;
+}
