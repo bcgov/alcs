@@ -32,30 +32,43 @@ export class UnarchiveCardService {
       });
     }
 
-    const reconsiderations = await this.reconsiderationService.getDeletedCards(
-      fileId,
-    );
-    for (const reconsideration of reconsiderations) {
+    await this.fetchAndMapRecons(fileId, result);
+    await this.fetchAndMapPlanningReviews(fileId, result);
+    await this.fetchAndMapModifications(fileId, result);
+    await this.fetchAndMapCovenants(fileId, result);
+
+    return result;
+  }
+
+  private async fetchAndMapCovenants(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const covenants = await this.covenantService.getDeletedCards(fileId);
+    for (const covenant of covenants) {
       result.push({
-        cardUuid: reconsideration.cardUuid,
-        createdAt: reconsideration.auditCreatedAt.getTime(),
-        type: 'Reconsideration',
-        status: reconsideration.card!.status.label,
+        cardUuid: covenant.cardUuid,
+        createdAt: covenant.auditCreatedAt.getTime(),
+        type: 'Covenant',
+        status: covenant.card!.status.label,
       });
     }
+  }
 
-    const planningReviews = await this.planningReviewService.getDeletedCards(
-      fileId,
-    );
-    for (const planningReview of planningReviews) {
-      result.push({
-        cardUuid: planningReview.cardUuid,
-        createdAt: planningReview.auditCreatedAt.getTime(),
-        type: 'Planning Review',
-        status: planningReview.card!.status.label,
-      });
-    }
-
+  private async fetchAndMapModifications(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
     const modifications = await this.modificationService.getDeletedCards(
       fileId,
     );
@@ -67,17 +80,49 @@ export class UnarchiveCardService {
         status: modification.card!.status.label,
       });
     }
+  }
 
-    const covenants = await this.covenantService.getDeletedCards(fileId);
-    for (const covenant of covenants) {
+  private async fetchAndMapPlanningReviews(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const planningReviews = await this.planningReviewService.getDeletedCards(
+      fileId,
+    );
+    for (const planningReview of planningReviews) {
       result.push({
-        cardUuid: covenant.cardUuid,
-        createdAt: covenant.auditCreatedAt.getTime(),
-        type: 'Covenant',
-        status: covenant.card!.status.label,
+        cardUuid: planningReview.cardUuid,
+        createdAt: planningReview.auditCreatedAt.getTime(),
+        type: 'Planning Review',
+        status: planningReview.card!.status.label,
       });
     }
+  }
 
-    return result;
+  private async fetchAndMapRecons(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const reconsiderations = await this.reconsiderationService.getDeletedCards(
+      fileId,
+    );
+    for (const reconsideration of reconsiderations) {
+      result.push({
+        cardUuid: reconsideration.cardUuid,
+        createdAt: reconsideration.auditCreatedAt.getTime(),
+        type: 'Reconsideration',
+        status: reconsideration.card!.status.label,
+      });
+    }
   }
 }
