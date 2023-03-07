@@ -36,18 +36,13 @@
       <div>
         <div class="lookup-pid-fields">
           <mat-form-field class="lookup-search-by" *ngIf="isCrownLand" appearance="outline">
-            <mat-select [formControl]="searchBy" placeholder="Search by ...">
+            <mat-select [formControl]="searchBy" (valueChange)="onChangeSearchBy($event)" placeholder="Search by ...">
               <mat-option value="pid">Search by PID</mat-option>
               <mat-option value="pin">Search by PIN</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field class="lookup-input" appearance="outline">
-            <input
-              id="lookup-pid"
-              matInput
-              [placeholder]="!isCrownLand || searchBy.getRawValue() !== 'pin' ? 'Type 9 digit PID' : 'Type PIN'"
-              formControlName="pidPin"
-            />
+            <input id="lookup-pid" matInput [placeholder]="pidPinPlaceholder" formControlName="pidPin" />
           </mat-form-field>
           <button
             class="lookup-search-button"
@@ -292,7 +287,7 @@
         (click)="onAddNewGovernmentContact()"
         mat-stroked-button
         color="primary"
-        [disabled]="_disabled"
+        [disabled]="_disabled || parcel.owners.length > 0"
       >
         Add new government contact
       </button>
