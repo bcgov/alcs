@@ -39,7 +39,15 @@
           }"
           >Yes</mat-button-toggle
         >
-        <mat-button-toggle value="false">No</mat-button-toggle>
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{
+            'error-outline':
+              hasOtherParcelsInCommunity.invalid &&
+              (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+          }"
+          >No</mat-button-toggle
+        >
       </mat-button-toggle-group>
       <div
         *ngIf="
