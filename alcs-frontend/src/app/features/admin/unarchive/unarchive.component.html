@@ -1,0 +1,46 @@
+<div class="container">
+  <h3>Unarchive Cards</h3>
+  <div class="actions-bar">
+    <div>
+      <div class="search-control">
+        <mat-form-field>
+          <mat-label>Enter file ID</mat-label>
+          <input matInput placeholder="61265126" type="text" [(ngModel)]="search" />
+        </mat-form-field>
+      </div>
+      <div class="search-control">
+        <button mat-flat-button color="primary" (click)="onSearch()">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="cards">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef>Created At</th>
+      <td mat-cell *matCellDef="let row">{{ row.createdAt | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button class="edit-btn" mat-flat-button color="primary" (click)="onUnarchive(row.cardUuid)">Unarchive</button>
+      </td>
+    </ng-container>
+    <tr class="mat-row no-data" *matNoDataRow>
+      <td class="text-center" colspan="7">No Archived Cards Found</td>
+    </tr>
+  </table>
+</div>

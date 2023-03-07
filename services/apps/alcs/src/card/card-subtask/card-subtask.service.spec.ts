@@ -110,11 +110,14 @@ describe('CardSubtaskService', () => {
   });
 
   it('should call through for delete', async () => {
-    mockSubtaskRepo.delete.mockResolvedValue({} as any);
+    const subtask = new CardSubtask();
+    mockSubtaskRepo.remove.mockResolvedValue({} as any);
+    mockSubtaskRepo.findOneOrFail.mockResolvedValue(subtask);
 
     await cardSubtaskService.delete('fake-uuid');
 
-    expect(mockSubtaskRepo.delete).toHaveBeenCalledTimes(1);
-    expect(mockSubtaskRepo.delete.mock.calls[0][0]).toEqual('fake-uuid');
+    expect(mockSubtaskRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskRepo.remove).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskRepo.remove.mock.calls[0][0]).toBe(subtask);
   });
 });

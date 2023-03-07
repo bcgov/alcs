@@ -12,6 +12,7 @@ import {
   initCardMockEntity,
 } from '../../test/mocks/mockEntities';
 import { Board } from '../board/board.entity';
+import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
@@ -23,12 +24,14 @@ describe('CardService', () => {
   let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
   let mockCardEntity;
   let mockRedisService: DeepMocked<RedisService>;
+  let mockSubtaskService: DeepMocked<CardSubtaskService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
     cardTypeRepositoryMock = createMock<Repository<CardType>>();
     mockCardEntity = initCardMockEntity();
     mockRedisService = createMock();
+    mockSubtaskService = createMock();
     const mockRedisClient: DeepMocked<RedisClientType> = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -50,6 +53,10 @@ describe('CardService', () => {
         {
           provide: RedisService,
           useValue: mockRedisService,
+        },
+        {
+          provide: CardSubtaskService,
+          useValue: mockSubtaskService,
         },
       ],
     }).compile();

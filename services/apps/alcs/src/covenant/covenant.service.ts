@@ -10,6 +10,7 @@ import {
   FindOptionsRelations,
   FindOptionsWhere,
   IsNull,
+  Not,
   Repository,
 } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
@@ -107,6 +108,19 @@ export class CovenantService {
   getBy(findOptions: FindOptionsWhere<Covenant>) {
     return this.repository.find({
       where: findOptions,
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  getDeletedCards(fileNumber: string) {
+    return this.repository.find({
+      where: {
+        fileNumber,
+        card: {
+          auditDeletedDateAt: Not(IsNull()),
+        },
+      },
+      withDeleted: true,
       relations: this.DEFAULT_RELATIONS,
     });
   }

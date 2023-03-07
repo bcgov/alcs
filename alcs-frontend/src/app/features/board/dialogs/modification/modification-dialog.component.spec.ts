@@ -12,6 +12,7 @@ import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/a
 import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
+import { AuthenticationService, ICurrentUser } from '../../../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
@@ -26,6 +27,7 @@ describe('ModificationDialogComponent', () => {
   let fixture: ComponentFixture<ModificationDialogComponent>;
   let mockUserService: DeepMocked<UserService>;
   let mockBoardService: DeepMocked<BoardService>;
+  let authenticationService: DeepMocked<AuthenticationService>;
 
   const mockModificationDto: ApplicationModificationDto = {
     uuid: '',
@@ -69,6 +71,9 @@ describe('ModificationDialogComponent', () => {
     mockBoardService = createMock();
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
+    authenticationService = createMock();
+    authenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+
     await TestBed.configureTestingModule({
       declarations: [ModificationDialogComponent],
       providers: [
@@ -103,6 +108,10 @@ describe('ModificationDialogComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: {},
+        },
+        {
+          provide: AuthenticationService,
+          useValue: authenticationService,
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],

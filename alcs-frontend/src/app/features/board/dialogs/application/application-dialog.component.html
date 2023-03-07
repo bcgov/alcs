@@ -1,6 +1,6 @@
 <div mat-dialog-title>
   <div class="close">
-    <button mat-icon-button [mat-dialog-close]="isApplicationDirty">
+    <button mat-icon-button [mat-dialog-close]="isDirty">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -14,22 +14,18 @@
     <div class="center">
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
       <mat-menu xPosition="before" #moreActions="matMenu">
-        <button
-          [mat-dialog-close]="isApplicationDirty"
-          [routerLink]="['application', application.fileNumber]"
-          mat-menu-item
-        >
+        <button [mat-dialog-close]="isDirty" [routerLink]="['application', application.fileNumber]" mat-menu-item>
           View Detail
         </button>
         <button
-          [mat-dialog-close]="isApplicationDirty"
+          [mat-dialog-close]="isDirty"
           [routerLink]="['application', application.fileNumber, 'info-request']"
           mat-menu-item
         >
           Add Info Request
         </button>
         <button
-          [mat-dialog-close]="isApplicationDirty"
+          [mat-dialog-close]="isDirty"
           [routerLink]="['application', application.fileNumber, 'site-visit-meeting']"
           mat-menu-item
         >
@@ -56,14 +52,24 @@
               ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
             </span>
             <span>{{ board.title }}</span>
-            <span *ngIf="application.card!.board.code === board.code"
+            <span *ngIf="card && card!.board.code === board.code"
               ><mat-icon class="selected-board-icon">check</mat-icon></span
             >
           </div>
         </button>
       </mat-menu>
       <button
-        [matTooltip]="application.card!.highPriority ? 'Remove Priority' : 'Add Priority'"
+        *ngIf="canArchive"
+        matTooltip="Archive Card"
+        class="toggle-priority"
+        (click)="onArchiveCard()"
+        mat-icon-button
+      >
+        <mat-icon>archive</mat-icon>
+      </button>
+      <button
+        *ngIf="card"
+        [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
         mat-icon-button
@@ -71,8 +77,8 @@
         <div
           class="priority"
           [ngClass]="{
-            'filled-priority': application.card!.highPriority,
-            'empty-priority': !application.card!.highPriority
+            'filled-priority': card.highPriority,
+            'empty-priority': !card.highPriority
           }"
         ></div>
       </button>
@@ -119,11 +125,12 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks [cardUuid]="application.card!.uuid"></app-subtasks>
+    <app-subtasks *ngIf="card" [cardUuid]="card.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
     <app-comments
-      [cardUuid]="application.card!.uuid"
+      *ngIf="card"
+      [cardUuid]="card.uuid"
       [fileNumber]="application.fileNumber"
       [notificationTitle]="cardTitle"
     ></app-comments>

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
+import { UnarchiveComponent } from './unarchive/unarchive.component';
 
 export const childRoutes = [
   {
@@ -22,6 +23,12 @@ export const childRoutes = [
     menuTitle: 'CEO Criterion',
     icon: 'psychology',
     component: CeoCriterionComponent,
+  },
+  {
+    path: 'unarchive',
+    menuTitle: 'Unarchive Cards',
+    icon: 'unarchive',
+    component: UnarchiveComponent,
   },
 ];
 

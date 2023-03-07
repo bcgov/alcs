@@ -12,6 +12,7 @@ import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pip
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
+import { CardDialogComponent } from './dialogs/card-dialog/card-dialog.component';
 import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
 import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
@@ -34,6 +35,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     BoardComponent,
+    CardDialogComponent,
     DragDropBoardComponent,
     StatusFilterPipe,
     ApplicationDialogComponent,
