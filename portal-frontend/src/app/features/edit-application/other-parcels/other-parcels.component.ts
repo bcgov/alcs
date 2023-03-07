@@ -236,7 +236,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   async onHasOtherParcelsInCommunityChange($event: MatButtonToggleChange) {
     const parsedHasParcels = parseStringToBoolean($event.value);
-    debugger;
 
     if (parsedHasParcels === false) {
       this.dialog
