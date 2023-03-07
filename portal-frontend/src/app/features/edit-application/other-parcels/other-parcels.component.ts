@@ -15,7 +15,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
@@ -23,6 +23,7 @@ import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
+import { OtherParcelConfirmationDialogComponent } from './other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 
 const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
 
@@ -234,10 +235,37 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async onHasOtherParcelsInCommunityChange($event: MatButtonToggleChange) {
-    this.formDisabled = !parseStringToBoolean($event.value) ?? true;
+    const parsedHasParcels = parseStringToBoolean($event.value);
 
+    if (parsedHasParcels === false) {
+      this.dialog
+        .open(OtherParcelConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (result) => {
+          if (result) {
+            this.hasOtherParcelsInCommunity.patchValue('false');
+            this.formDisabled = true;
+            await this.setHasOtherParcelsInCommunity(false);
+            await this.saveProgress();
+            await this.reloadApplication();
+          } else {
+            this.hasOtherParcelsInCommunity.patchValue('true');
+            this.formDisabled = false;
+            await this.setHasOtherParcelsInCommunity(true);
+          }
+        });
+    } else {
+      this.formDisabled = !parsedHasParcels ?? true;
+      await this.setHasOtherParcelsInCommunity(parsedHasParcels);
+    }
+  }
+
+  private async setHasOtherParcelsInCommunity(value?: boolean | null) {
     await this.applicationService.updatePending(this.fileId, {
-      hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
+      hasOtherParcelsInCommunity: value,
     });
     await this.reloadApplication();
   }

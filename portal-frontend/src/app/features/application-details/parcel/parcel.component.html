@@ -3,7 +3,7 @@
 </h3>
 <div class="review-table">
   <app-no-data
-    [showRequired]="parcelType === PARCEL_TYPES.OTHER && application.hasOtherParcelsInCommunity === null"
+    [showRequired]="parcelType === PARCEL_TYPES.OTHER && application.hasOtherParcelsInCommunity === null && showErrors"
     *ngIf="parcels.length === 0"
   ></app-no-data>
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
