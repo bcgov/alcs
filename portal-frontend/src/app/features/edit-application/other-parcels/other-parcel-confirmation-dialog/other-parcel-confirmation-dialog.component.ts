@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ApplicationParcelDeleteStepsEnum } from '../../parcel-details/delete-parcel/delete-parcel-dialog.component';
 
 @Component({
@@ -13,10 +13,7 @@ export class OtherParcelConfirmationDialogComponent {
   warningStep = ApplicationParcelDeleteStepsEnum.warning;
   confirmationStep = ApplicationParcelDeleteStepsEnum.confirmation;
 
-  constructor(
-    private dialogRef: MatDialogRef<OtherParcelConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: OtherParcelConfirmationDialogComponent
-  ) {}
+  constructor(private dialogRef: MatDialogRef<OtherParcelConfirmationDialogComponent>) {}
 
   async next() {
     this.stepIdx += 1;
