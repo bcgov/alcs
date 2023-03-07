@@ -77,7 +77,7 @@
     <div class="grid-double">
       {{ localGovernment?.name }}
       <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
-      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row">
+      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
         This Local/First Nation Government has not yet been set up with the ALC Portal to receive applications. To
         submit, you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca"
           >ALC.Portal@gov.bc.ca</a
