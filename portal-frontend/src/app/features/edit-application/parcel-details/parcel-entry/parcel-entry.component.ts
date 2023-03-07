@@ -88,6 +88,7 @@ export class ParcelEntryComponent implements OnInit {
     isConfirmedByApplicant: this.isConfirmedByApplicant,
     searchBy: this.searchBy,
   });
+  pidPinPlaceholder = '';
 
   ownerInput = new FormControl<string | null>(null);
 
@@ -166,12 +167,14 @@ export class ParcelEntryComponent implements OnInit {
   onChangeParcelType($event: MatButtonToggleChange) {
     if ($event.value === 'CRWN') {
       this.searchBy.setValue(null);
+      this.pidPinPlaceholder = '';
       this.isCrownLand = true;
       this.pid.setValidators([]);
       this.purchaseDate.reset();
       this.purchaseDate.disable();
     } else {
       this.searchBy.setValue('pid');
+      this.pidPinPlaceholder = 'Type 9 digit PID';
       this.isCrownLand = false;
       this.pid.setValidators([Validators.required]);
       this.crownLandOwnerType.setValue(null);
@@ -297,6 +300,45 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   private setupForm() {
+    this.parcelForm.patchValue({
+      legalDescription: this.parcel.legalDescription,
+      mapArea: this.parcel.mapAreaHectares,
+      pid: this.parcel.pid,
+      pin: this.parcel.pin,
+      parcelType: this.parcel.ownershipTypeCode,
+      isFarm: formatBooleanToString(this.parcel.isFarm),
+      purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
+      crownLandOwnerType: this.parcel.crownLandOwnerType,
+      isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
+    });
+
+    this.isCrownLand = this.parcelType.getRawValue() === 'CRWN';
+    if (this.isCrownLand) {
+      this.pidPin.disable();
+      this.purchaseDate.disable();
+      this.pid.setValidators([]);
+      const pidValue = this.pid.getRawValue();
+      this.isCertificateOfTitleRequired = !!pidValue && pidValue.length > 0;
+      this.pidPinPlaceholder = '';
+    } else {
+      this.pidPinPlaceholder = 'Type 9 digit PID';
+      this.isCertificateOfTitleRequired = true;
+    }
+
+    if (this.parcel.owners.length > 0 && this.isCrownLand) {
+      this.ownerInput.disable();
+    }
+
+    if (this.showErrors) {
+      this.parcelForm.markAllAsTouched();
+
+      if (this.parcel.owners.length === 0) {
+        this.ownerInput.setValidators([Validators.required]);
+        this.ownerInput.setErrors({ required: true });
+        this.ownerInput.markAllAsTouched();
+      }
+    }
+
     this.parcelForm.valueChanges.subscribe((formData) => {
       if (!this.parcelForm.dirty) {
         return;
@@ -338,41 +380,6 @@ export class ParcelEntryComponent implements OnInit {
         purchaseDate: new Date(formData.purchaseDate?.valueOf()),
       });
     });
-
-    this.parcelForm.patchValue({
-      legalDescription: this.parcel.legalDescription,
-      mapArea: this.parcel.mapAreaHectares,
-      pid: this.parcel.pid,
-      pin: this.parcel.pin,
-      parcelType: this.parcel.ownershipTypeCode,
-      isFarm: formatBooleanToString(this.parcel.isFarm),
-      purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
-      crownLandOwnerType: this.parcel.crownLandOwnerType,
-      isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
-    });
-    this.isCrownLand = this.parcelType.getRawValue() === 'CRWN';
-    if (this.isCrownLand) {
-      this.purchaseDate.disable();
-      this.pid.setValidators([]);
-      const pidValue = this.pid.getRawValue();
-      this.isCertificateOfTitleRequired = !!pidValue && pidValue.length > 0;
-    } else {
-      this.isCertificateOfTitleRequired = true;
-    }
-
-    if (!this.parcelType.getRawValue()) {
-      this.pidPin.disable();
-    }
-
-    if (this.showErrors) {
-      this.parcelForm.markAllAsTouched();
-
-      if (this.parcel.owners.length === 0) {
-        this.ownerInput.setValidators([Validators.required]);
-        this.ownerInput.setErrors({ required: true });
-        this.ownerInput.markAllAsTouched();
-      }
-    }
   }
 
   private updateParcelOwners(updatedArray: ApplicationOwnerDto[]) {
@@ -384,6 +391,13 @@ export class ParcelEntryComponent implements OnInit {
       this.ownerInput.setValidators([Validators.required]);
       this.ownerInput.setErrors({ required: true });
     }
+
+    if (this.isCrownLand && updatedArray.length > 0) {
+      this.ownerInput.disable();
+    } else {
+      this.ownerInput.enable();
+    }
+
     this.parcel.owners = updatedArray;
     this.filteredOwners = this.mapOwners(this.owners);
     this.onFormGroupChange.emit({
@@ -399,6 +413,14 @@ export class ParcelEntryComponent implements OnInit {
     } else {
       this.parcelForm.enable();
       this.ownerInput.enable();
+    }
+  }
+
+  onChangeSearchBy(value: string) {
+    if (value === 'pid') {
+      this.pidPinPlaceholder = 'Type 9 digit PID';
+    } else {
+      this.pidPinPlaceholder = 'Type PIN';
     }
   }
 }
