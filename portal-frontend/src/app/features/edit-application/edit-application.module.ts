@@ -21,6 +21,7 @@ import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-own
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { OtherParcelConfirmationDialogComponent } from './other-parcels/other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const routes: Routes = [
     OtherAttachmentsComponent,
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
+    OtherParcelConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,
