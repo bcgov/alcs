@@ -103,14 +103,19 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
     this.parcelEntryChanged = true;
 
-    parcel.pid = formData.pid;
-    parcel.pin = formData.pin;
-    parcel.legalDescription = formData.legalDescription;
-    parcel.mapAreaHectares = formData.mapArea;
-    parcel.ownershipTypeCode = formData.parcelType;
-    parcel.isFarm = parseStringToBoolean(formData.isFarm);
-    parcel.purchasedDate = formData.purchaseDate?.getTime();
+    parcel.pid = formData.pid !== undefined ? formData.pid : parcel.pid;
+    parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
+    parcel.legalDescription =
+      formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
+
+    parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
+    parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
+    parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
+    parcel.purchasedDate =
+      formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    parcel.crownLandOwnerType =
+      formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
       parcel.owners = formData.owners;
     }
