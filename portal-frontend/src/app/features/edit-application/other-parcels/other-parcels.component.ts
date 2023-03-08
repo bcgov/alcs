@@ -55,6 +55,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   formDisabled = true;
   newParcelAdded = false;
   hasCrownLandParcels = false;
+  parcelEntryChanged = false;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -99,6 +100,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       this.toastService.showErrorToast('Error updating the parcel. Please refresh page and try again.');
       return;
     }
+
+    this.parcelEntryChanged = true;
 
     parcel.pid = formData.pid;
     parcel.pin = formData.pin;
@@ -237,7 +240,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   async onHasOtherParcelsInCommunityChange($event: MatButtonToggleChange) {
     const parsedHasParcels = parseStringToBoolean($event.value);
 
-    if (parsedHasParcels === false) {
+    if (
+      parsedHasParcels === false &&
+      (this.otherParcels.some((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL) || this.parcelEntryChanged)
+    ) {
       this.dialog
         .open(OtherParcelConfirmationDialogComponent, {
           panelClass: 'no-padding',
@@ -251,6 +257,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
             await this.setHasOtherParcelsInCommunity(false);
             await this.saveProgress();
             await this.reloadApplication();
+            this.parcelEntryChanged = false;
           } else {
             this.hasOtherParcelsInCommunity.patchValue('true');
             this.formDisabled = false;
