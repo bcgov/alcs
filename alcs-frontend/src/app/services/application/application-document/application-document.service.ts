@@ -73,4 +73,10 @@ export class ApplicationDocumentService {
       this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/reviewDocuments`)
     );
   }
+
+  async getApplicantDocuments(fileNumber: string) {
+    return firstValueFrom(
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/applicantDocuments`)
+    );
+  }
 }

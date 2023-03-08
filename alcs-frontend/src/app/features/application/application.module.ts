@@ -9,6 +9,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { DATE_FORMATS } from '../../shared/utils/date-format';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
+import { ApplicationDetailsModule } from './applicant-info/application-details/application-details.module';
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
@@ -73,6 +74,7 @@ const routes: Routes = [
     MtxDatetimepickerModule,
     MtxNativeDatetimeModule,
     MatCheckboxModule,
+    ApplicationDetailsModule,
   ],
 })
 export class ApplicationModule {}

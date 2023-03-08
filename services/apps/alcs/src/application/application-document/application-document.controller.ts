@@ -97,6 +97,33 @@ export class ApplicationDocumentController {
     );
   }
 
+  @Get('/application/:fileNumber/applicantDocuments')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listApplicantDocuments(
+    @Param('fileNumber') fileNumber: string,
+  ): Promise<ApplicationDocumentDto[]> {
+    const documents = await this.applicationDocumentService.list(fileNumber);
+
+    const reviewTypes = [
+      DOCUMENT_TYPE.PROFESSIONAL_REPORT,
+      DOCUMENT_TYPE.PHOTOGRAPH,
+      DOCUMENT_TYPE.OTHER,
+      DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      DOCUMENT_TYPE.CORPORATE_SUMMARY,
+    ];
+
+    const applicantDocuments = documents.filter((doc) =>
+      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    );
+
+    return this.mapper.mapArray(
+      applicantDocuments,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
+
   @Get('/application/:fileNumber/:documentType')
   @UserRoles(...ANY_AUTH_ROLE)
   async listDocuments(

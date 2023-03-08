@@ -7,6 +7,8 @@ export class ApplicationDocumentDto {
   @AutoMap()
   uuid: string;
 
+  documentUuid: string;
+
   @AutoMap()
   fileName: string;
 

@@ -1,7 +1,12 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationReviewGrpc } from '../../application-grpc/alcs-application.message.interface';
+import {
+  ApplicationReviewGrpc,
+  SubmittedApplicationGrpc,
+  SubmittedApplicationOwnerGrpc,
+  SubmittedApplicationParcelGrpc,
+} from '../../application-grpc/alcs-application.message.interface';
 import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
@@ -15,6 +20,9 @@ import { ApplicationPaused } from '../../application/application-paused.entity';
 import {
   ApplicationDto,
   ApplicationReviewDto,
+  SubmittedApplicationDto,
+  SubmittedApplicationOwnerDto,
+  SubmittedApplicationParcelDto,
 } from '../../application/application.dto';
 import { Application } from '../../application/application.entity';
 import { CardDto } from '../../card/card.dto';
@@ -47,6 +55,25 @@ export class ApplicationProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationReviewGrpc, ApplicationReviewDto);
+      createMap(mapper, SubmittedApplicationGrpc, SubmittedApplicationDto);
+      createMap(
+        mapper,
+        SubmittedApplicationParcelGrpc,
+        SubmittedApplicationParcelDto,
+      );
+      createMap(
+        mapper,
+        SubmittedApplicationOwnerGrpc,
+        SubmittedApplicationOwnerDto,
+        forMember(
+          (pd) => pd.displayName,
+          mapFrom((p) =>
+            p.organizationName
+              ? p.organizationName
+              : `${p.firstName} ${p.lastName}`,
+          ),
+        ),
+      );
 
       createMap(
         mapper,
@@ -117,6 +144,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.uploadedAt,
           mapFrom((ad) => ad.document.uploadedAt.getTime()),
+        ),
+        forMember(
+          (a) => a.documentUuid,
+          mapFrom((ad) => ad.document.uuid),
         ),
       );
 

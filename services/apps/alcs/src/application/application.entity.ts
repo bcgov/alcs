@@ -9,7 +9,10 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { ApplicationReviewGrpc } from '../application-grpc/alcs-application.message.interface';
+import {
+  ApplicationReviewGrpc,
+  SubmittedApplicationGrpc,
+} from '../application-grpc/alcs-application.message.interface';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -147,6 +150,15 @@ export class Application extends Base {
     nullable: true,
   })
   applicationReview: ApplicationReviewGrpc;
+
+  @AutoMap(() => SubmittedApplicationGrpc)
+  @Column({
+    comment:
+      'JSONB Column containing the applicants information from the Portal',
+    type: 'jsonb',
+    nullable: true,
+  })
+  submittedApplication: SubmittedApplicationGrpc;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

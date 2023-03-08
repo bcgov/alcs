@@ -8,7 +8,10 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { ApplicationReviewGrpc } from '../application-grpc/alcs-application.message.interface';
+import {
+  ApplicationReviewGrpc,
+  SubmittedApplicationGrpc,
+} from '../application-grpc/alcs-application.message.interface';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -67,6 +70,148 @@ export class ApplicationReviewDto {
 
   @AutoMap(() => Boolean)
   isAuthorized: boolean | null;
+}
+
+export class SubmittedApplicationOwnerDto {
+  @AutoMap()
+  displayName: string;
+
+  @AutoMap()
+  firstName: string;
+
+  @AutoMap()
+  lastName: string;
+
+  @AutoMap()
+  organizationName?: string;
+
+  @AutoMap()
+  phoneNumber: string;
+
+  @AutoMap()
+  email: string;
+
+  @AutoMap()
+  type: string;
+
+  @AutoMap()
+  corporateSummaryDocumentUuid?: string;
+}
+
+export class SubmittedApplicationParcelDto {
+  @AutoMap()
+  pid?: string;
+
+  @AutoMap()
+  pin?: string;
+
+  @AutoMap()
+  legalDescription: string;
+
+  @AutoMap()
+  mapAreaHectares: string;
+
+  @AutoMap()
+  purchasedDate?: number;
+
+  @AutoMap()
+  isFarm: boolean;
+
+  @AutoMap()
+  ownershipType: string;
+
+  @AutoMap()
+  crownLandOwnerType: string;
+
+  @AutoMap()
+  parcelType: string;
+
+  @AutoMap(() => [String])
+  documentUuids: string[];
+
+  @AutoMap(() => [SubmittedApplicationOwnerDto])
+  owners: SubmittedApplicationOwnerDto[];
+}
+
+export class SubmittedApplicationDto {
+  @AutoMap(() => [SubmittedApplicationParcelDto])
+  parcels: SubmittedApplicationParcelDto[];
+
+  @AutoMap(() => [SubmittedApplicationParcelDto])
+  otherParcels: SubmittedApplicationParcelDto[];
+
+  @AutoMap()
+  primaryContact: SubmittedApplicationOwnerDto;
+
+  @AutoMap()
+  parcelsAgricultureDescription: string;
+
+  @AutoMap()
+  parcelsAgricultureImprovementDescription: string;
+
+  @AutoMap()
+  parcelsNonAgricultureUseDescription: string;
+
+  @AutoMap()
+  northLandUseType: string;
+
+  @AutoMap()
+  northLandUseTypeDescription: string;
+
+  @AutoMap()
+  eastLandUseType: string;
+
+  @AutoMap()
+  eastLandUseTypeDescription: string;
+
+  @AutoMap()
+  southLandUseType: string;
+
+  @AutoMap()
+  southLandUseTypeDescription: string;
+
+  @AutoMap()
+  westLandUseType: string;
+
+  @AutoMap()
+  westLandUseTypeDescription: string;
+
+  //NFU Data
+  @AutoMap()
+  nfuHectares?: string;
+
+  @AutoMap()
+  nfuPurpose?: string;
+
+  @AutoMap()
+  nfuOutsideLands?: string;
+
+  @AutoMap()
+  nfuAgricultureSupport?: string;
+
+  @AutoMap()
+  nfuWillImportFill?: boolean;
+
+  @AutoMap()
+  nfuTotalFillPlacement?: string;
+
+  @AutoMap()
+  nfuMaxFillDepth?: string;
+
+  @AutoMap()
+  nfuFillVolume?: string;
+
+  @AutoMap()
+  nfuProjectDurationAmount?: string;
+
+  @AutoMap()
+  nfuProjectDurationUnit?: string;
+
+  @AutoMap()
+  nfuFillTypeDescription?: string;
+
+  @AutoMap()
+  nfuFillOriginDescription?: string;
 }
 
 export class CreateApplicationDto {
@@ -212,6 +357,10 @@ export class ApplicationDto {
   @AutoMap()
   @Type(() => ApplicationReviewDto)
   applicationReview?: ApplicationReviewDto;
+
+  @AutoMap()
+  @Type(() => SubmittedApplicationDto)
+  submittedApplication?: SubmittedApplicationDto;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -237,4 +386,5 @@ export class CreateApplicationServiceDto {
   localGovernmentUuid: string;
   statusHistory?: StatusHistory[];
   applicationReview?: ApplicationReviewGrpc;
+  submittedApplication?: SubmittedApplicationGrpc;
 }

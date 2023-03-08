@@ -109,6 +109,7 @@ export class ApplicationService {
       region,
       statusHistory: application.statusHistory,
       applicationReview: application.applicationReview,
+      submittedApplication: application.submittedApplication,
     });
 
     newApplication.card = new Card();
