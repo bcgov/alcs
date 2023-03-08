@@ -83,15 +83,14 @@
       <app-other-attachments
         [$application]="$application"
         [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-other-attachments>
     </div>
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
-      <app-review-and-submit
-        [$application]="$application"
-      ></app-review-and-submit>
+      <app-review-and-submit [$application]="$application"></app-review-and-submit>
     </div>
   </cdk-step>
 </app-custom-stepper>
