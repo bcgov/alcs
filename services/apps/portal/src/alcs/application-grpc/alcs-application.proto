@@ -10,39 +10,85 @@ service AlcsApplicationService {
 
 message ApplicationGrpcResponse {
   string fileNumber = 1;
-
   string applicant = 2;
-
   string dateSubmittedToAlc = 3;
-
   string regionCode = 4;
-
   string localGovernmentUuid = 5;
-
   string typeCode = 6;
 }
 
 message ApplicationCreateGrpcRequest {
   string fileNumber = 1;
-
   string applicant = 2;
-
   string typeCode = 3;
-
   string dateSubmittedToAlc = 4;
-
   string localGovernmentUuid = 5;
-
   repeated ApplicationDocumentGrpcRequest documents = 6;
-
   optional ApplicationReviewGrpc applicationReview = 7;
-
   repeated StatusHistoryGrpc statusHistory = 8;
+  SubmittedApplicationGrpc submittedApplication = 9;
 }
 
 message ApplicationDocumentGrpcRequest {
   string type = 1;
   string documentUuid = 2;
+}
+
+message SubmittedApplicationGrpc {
+  repeated SubmittedApplicationParcel parcels = 1;
+  repeated SubmittedApplicationParcel otherParcels = 2;
+  SubmittedApplicationOwner primaryContact = 3;
+
+  string parcelsAgricultureDescription = 4;
+  string parcelsAgricultureImprovementDescription = 5;
+  string parcelsNonAgricultureUseDescription = 6;
+  string northLandUseType = 7;
+  string northLandUseTypeDescription = 8;
+  string eastLandUseType = 9;
+  string eastLandUseTypeDescription = 10;
+  string southLandUseType = 11;
+  string southLandUseTypeDescription = 12;
+  string westLandUseType = 13;
+  string westLandUseTypeDescription = 14;
+
+  //NFU Data
+  optional string nfuHectares = 15;
+  optional string nfuPurpose = 16;
+  optional string nfuOutsideLands = 17;
+  optional string nfuAgricultureSupport = 18;
+  optional string nfuWillImportFill = 19;
+  optional string nfuTotalFillPlacement = 20;
+  optional string nfuMaxFillDepth = 21;
+  optional string nfuFillVolume = 22;
+  optional string nfuProjectDurationAmount = 23;
+  optional string nfuProjectDurationUnit = 24;
+  optional string nfuFillTypeDescription = 25;
+  optional string nfuFillOriginDescription = 26;
+}
+
+message SubmittedApplicationParcel {
+  optional string pid = 1;
+  optional string pin = 2;
+  string legalDescription = 3;
+  string mapAreaHectares = 4;
+  optional string purchasedDate = 5;
+  bool isFarm = 6;
+  string ownershipType = 7;
+  optional string crownLandOwnerType = 8;
+  string parcelType = 9;
+  repeated string documentUuids = 10;
+  repeated SubmittedApplicationOwner owners = 11;
+}
+
+message SubmittedApplicationOwner {
+  string displayName = 1;
+  string firstName = 2;
+  string lastName = 3;
+  optional string organizationName = 4;
+  string phoneNumber = 5;
+  string email = 6;
+  string type = 7;
+  optional string corporateSummaryDocumentUuid = 8;
 }
 
 message ApplicationReviewGrpc {

@@ -1,0 +1,70 @@
+<div *ngIf="application" class="review-table">
+  <div class="subheading2 grid-1">How many hectares are proposed for non-farm use? (hectares)</div>
+  <div class="grid-double">
+    {{ application.nfuHectares }}
+  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ application.nfuPurpose }}
+  </div>
+  <div class="subheading2 grid-1">
+    Could this proposal be accommodated on lands outside of the ALR? Please justify why the proposal cannot be carried
+    out on lands outside the ALR.
+  </div>
+  <div class="grid-double">
+    {{ application.nfuOutsideLands }}
+  </div>
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term? Please explain</div>
+  <div class="grid-double">
+    {{ application.nfuAgricultureSupport }}
+  </div>
+  <div class="subheading2 grid-1">
+    Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought onto
+    the property, including gravel for construction.
+  </div>
+  <div class="grid-double">
+    <span *ngIf="application.nfuWillImportFill !== null">{{ application.nfuWillImportFill ? 'Yes' : 'No' }}</span>
+  </div>
+  <ng-container *ngIf="application.nfuWillImportFill === true">
+    <div class="full-width">
+      <hr />
+    </div>
+    <div class="full-width">
+      <h4>Soil and Fill Components</h4>
+    </div>
+    <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
+    <div class="grid-double">
+      {{ application.nfuFillTypeDescription }}
+    </div>
+    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
+    <div class="grid-double">
+      {{ application.nfuFillOriginDescription }}
+    </div>
+    <div class="full-width">
+      <span class="subheading1">Project Dimensions</span>
+    </div>
+    <div class="subheading2 grid-1">Total fill placement area (ha)</div>
+    <div class="grid-double">
+      {{ application.nfuTotalFillPlacement }}
+    </div>
+    <div class="subheading2 grid-1">Maximum depth of material to be placed as fill (m)</div>
+    <div class="grid-double">
+      {{ application.nfuMaxFillDepth }}
+    </div>
+    <div class="subheading2 grid-1">Volume of material to be placed as fill (m3)</div>
+    <div class="grid-double">
+      {{ application.nfuFillVolume }}
+    </div>
+    <div class="full-width">
+      <span class="subheading1">Project Duration</span>
+    </div>
+    <div class="subheading2 grid-1">Length</div>
+    <div class="grid-double">
+      {{ application.nfuProjectDurationAmount }}
+    </div>
+    <div class="subheading2 grid-1">Unit</div>
+    <div class="grid-double">
+      {{ application.nfuProjectDurationUnit }}
+    </div>
+  </ng-container>
+</div>

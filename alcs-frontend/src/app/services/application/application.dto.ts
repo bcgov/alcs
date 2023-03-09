@@ -43,6 +43,62 @@ export interface ApplicationReviewDto {
   isAuthorized: boolean | null;
 }
 
+export interface SubmittedApplicationOwnerDto {
+  displayName: string;
+  firstName: string;
+  lastName: string;
+  organizationName?: string;
+  phoneNumber: string;
+  email: string;
+  type: string;
+  corporateSummaryDocumentUuid?: string;
+}
+
+export interface SubmittedApplicationParcelDto {
+  pid?: string;
+  pin?: string;
+  legalDescription: string;
+  mapAreaHectares: string;
+  purchasedDate?: number;
+  isFarm: boolean;
+  ownershipType: string;
+  crownLandOwnerType: string;
+  parcelType: string;
+  documentUuids: string[];
+  owners: SubmittedApplicationOwnerDto[];
+}
+
+export interface SubmittedApplicationDto {
+  parcels: SubmittedApplicationParcelDto[];
+  otherParcels: SubmittedApplicationParcelDto[];
+  primaryContact: SubmittedApplicationOwnerDto;
+  parcelsAgricultureDescription: string;
+  parcelsAgricultureImprovementDescription: string;
+  parcelsNonAgricultureUseDescription: string;
+  northLandUseType: string;
+  northLandUseTypeDescription: string;
+  eastLandUseType: string;
+  eastLandUseTypeDescription: string;
+  southLandUseType: string;
+  southLandUseTypeDescription: string;
+  westLandUseType: string;
+  westLandUseTypeDescription: string;
+
+  //NFU Data
+  nfuHectares?: string;
+  nfuPurpose?: string;
+  nfuOutsideLands?: string;
+  nfuAgricultureSupport?: string;
+  nfuWillImportFill?: boolean;
+  nfuTotalFillPlacement?: string;
+  nfuMaxFillDepth?: string;
+  nfuFillVolume?: string;
+  nfuProjectDurationAmount?: string;
+  nfuProjectDurationUnit?: string;
+  nfuFillTypeDescription?: string;
+  nfuFillOriginDescription?: string;
+}
+
 export interface ApplicationDto {
   fileNumber: string;
   applicant: string;
@@ -64,6 +120,7 @@ export interface ApplicationDto {
   card?: CardDto;
   statusHistory: StatusHistory[];
   applicationReview?: ApplicationReviewDto;
+  submittedApplication?: SubmittedApplicationDto;
 }
 
 export interface UpdateApplicationDto {

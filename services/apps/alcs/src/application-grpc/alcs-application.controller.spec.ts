@@ -11,7 +11,7 @@ import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { AlcsApplicationProfile } from '../common/automapper/grpc/application.automapper.profile';
 import { ApplicationGrpcController } from './alcs-application.controller';
-import { ApplicationCreateGrpcRequest } from './alcs-application.message.interface';
+import { SubmittedApplicationGrpc } from './alcs-application.message.interface';
 
 describe('ApplicationGrpcController', () => {
   let controller: ApplicationGrpcController;
@@ -81,6 +81,9 @@ describe('ApplicationGrpcController', () => {
       localGovernmentUuid: '',
       typeCode: '',
       statusHistory: [],
+      submittedApplication: {
+        parcels: [],
+      } as any as SubmittedApplicationGrpc,
     });
 
     expect(mockApplicationService.create).toBeCalledTimes(1);

@@ -1,15 +1,47 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
+import {
+  SubmittedApplicationOwnerGrpc,
+  SubmittedApplicationParcelGrpc,
+} from '../alcs/application-grpc/alcs-application.message.interface';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from './application-document/application-document.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
+import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
+import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { Application } from './application.entity';
 
 export class ValidatedApplication extends Application {
   applicant: string;
   localGovernmentUuid: string;
+  parcels: SubmittedApplicationParcelGrpc[];
+  otherParcels: SubmittedApplicationParcelGrpc[];
+  primaryContact: SubmittedApplicationOwnerGrpc;
+  parcelsAgricultureDescription: string;
+  parcelsAgricultureImprovementDescription: string;
+  parcelsNonAgricultureUseDescription: string;
+  northLandUseType: string;
+  northLandUseTypeDescription: string;
+  eastLandUseType: string;
+  eastLandUseTypeDescription: string;
+  southLandUseType: string;
+  southLandUseTypeDescription: string;
+  westLandUseType: string;
+  westLandUseTypeDescription: string;
+  nfuHectares: number | null;
+  nfuPurpose: string | null;
+  nfuOutsideLands: string | null;
+  nfuAgricultureSupport: string | null;
+  nfuWillImportFill: boolean | null;
+  nfuTotalFillPlacement: number | null;
+  nfuMaxFillDepth: number | null;
+  nfuFillVolume: number | null;
+  nfuProjectDurationAmount: number | null;
+  nfuProjectDurationUnit: string | null;
+  nfuFillTypeDescription: string | null;
+  nfuFillOriginDescription: string | null;
 }
 
 @Injectable()
@@ -28,17 +60,33 @@ export class ApplicationValidatorService {
       errors.push(new ServiceValidationException('Missing applicant'));
     }
 
-    await this.validateParcels(application, errors);
-    await this.validatePrimaryContact(application, errors);
+    const validatedParcels = await this.validateParcels(application, errors);
+    const validatedPrimaryContact = await this.validatePrimaryContact(
+      application,
+      errors,
+    );
     await this.validateLocalGovernment(application, errors);
     await this.validateLandUse(application, errors);
     await this.validateOptionalDocuments(application, errors);
     await this.validateNfuProposal(application, errors);
 
+    const validatedApplication =
+      validatedParcels && validatedPrimaryContact
+        ? ({
+            ...application,
+            primaryContact: validatedPrimaryContact,
+            parcels: validatedParcels.filter(
+              (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
+            ),
+            otherParcels: validatedParcels.filter(
+              (parcel) => parcel.parcelType === PARCEL_TYPE.OTHER,
+            ),
+          } as ValidatedApplication)
+        : undefined;
+
     return {
       errors,
-      application:
-        errors.length > 0 ? undefined : (application as ValidatedApplication),
+      application: errors.length === 0 ? validatedApplication : undefined,
     };
   }
 
@@ -120,12 +168,16 @@ export class ApplicationValidatorService {
         );
       }
     }
+
+    if (errors.length === 0) {
+      return this.mapParcelsToValid(parcels);
+    }
   }
 
   private async validatePrimaryContact(
     application: Application,
     errors: Error[],
-  ) {
+  ): Promise<SubmittedApplicationOwnerGrpc | undefined> {
     const primaryOwner = application.owners.find(
       (owner) => owner.uuid === application.primaryContactOwnerUuid,
     );
@@ -167,6 +219,11 @@ export class ApplicationValidatorService {
         );
       }
     }
+
+    if (errors.length === 0) {
+      return this.mapOwnersToValid([primaryOwner])[0];
+    }
+    return undefined;
   }
 
   private async validateLocalGovernment(
@@ -283,5 +340,40 @@ export class ApplicationValidatorService {
         );
       }
     }
+  }
+
+  private mapParcelsToValid(
+    parcels: ApplicationParcel[],
+  ): SubmittedApplicationParcelGrpc[] {
+    return parcels.map((parcel) => ({
+      owners: this.mapOwnersToValid(parcel.owners),
+      crownLandOwnerType: parcel.crownLandOwnerType!,
+      pid: parcel.pid ? parcel.pid : undefined,
+      isFarm: parcel.isFarm!,
+      parcelType: parcel.parcelType!,
+      documentUuids: parcel.documents.map(
+        (document) => document.document.alcsDocumentUuid,
+      ),
+      legalDescription: parcel.legalDescription!,
+      mapAreaHectares: parcel.mapAreaHectares
+        ? parcel.mapAreaHectares.toString(10)
+        : '',
+      pin: parcel.pin ? parcel.pin : undefined,
+      ownershipType: parcel.ownershipType.label,
+      purchasedDate: parcel.purchasedDate ? parcel.purchasedDate.getTime() : 0,
+    }));
+  }
+
+  private mapOwnersToValid(owners: ApplicationOwner[]) {
+    return owners.map((owner) => ({
+      type: owner.type.label,
+      corporateSummaryDocumentUuid: owner.corporateSummary?.alcsDocumentUuid,
+      displayName: '',
+      email: owner.email!,
+      firstName: owner.firstName!,
+      lastName: owner.lastName!,
+      organizationName: owner.organizationName!,
+      phoneNumber: owner.phoneNumber!,
+    }));
   }
 }

@@ -20,6 +20,7 @@ import {
 } from '../alcs/local-government/local-government.service';
 import { CompletedApplicationReview } from '../application-review/application-review.service';
 import { User } from '../user/user.entity';
+import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplication } from './application-validator.service';
@@ -205,15 +206,41 @@ export class ApplicationService {
             time: history.time.toString(10),
           })),
           applicationReview: mappedReview,
+          submittedApplication: {
+            ...application,
+            nfuPurpose: application.nfuPurpose ?? undefined,
+            nfuOutsideLands: application.nfuOutsideLands ?? undefined,
+            nfuProjectDurationUnit:
+              application.nfuProjectDurationUnit ?? undefined,
+            nfuAgricultureSupport:
+              application.nfuAgricultureSupport ?? undefined,
+            nfuWillImportFill: application.nfuWillImportFill ?? undefined,
+            nfuFillTypeDescription:
+              application.nfuFillTypeDescription ?? undefined,
+            nfuFillOriginDescription:
+              application.nfuFillOriginDescription ?? undefined,
+            nfuHectares: application.nfuHectares
+              ? application.nfuHectares.toString(10)
+              : undefined,
+            nfuTotalFillPlacement: application.nfuTotalFillPlacement
+              ? application.nfuTotalFillPlacement.toString(10)
+              : undefined,
+            nfuMaxFillDepth: application.nfuMaxFillDepth
+              ? application.nfuMaxFillDepth.toString(10)
+              : undefined,
+            nfuFillVolume: application.nfuFillVolume
+              ? application.nfuFillVolume.toString(10)
+              : undefined,
+            nfuProjectDurationAmount: application.nfuProjectDurationAmount
+              ? application.nfuProjectDurationAmount.toString(10)
+              : undefined,
+          },
         }),
       );
 
       await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
-      this.logger.error(
-        `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${application.fileNumber}`,
-        ex,
-      );
+      this.logger.error(ex);
 
       //TODO set failed status here?
 
