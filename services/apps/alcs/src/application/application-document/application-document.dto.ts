@@ -4,6 +4,9 @@ export class ApplicationDocumentDto {
   @AutoMap()
   type: string;
 
+  @AutoMap(() => String)
+  description: string;
+
   @AutoMap()
   uuid: string;
 
@@ -25,4 +28,5 @@ export class ApplicationDocumentDto {
 export class ApplicationDocumentCreateDto {
   type: string;
   documentUuid: string;
+  description?: string;
 }

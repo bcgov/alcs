@@ -60,6 +60,9 @@ export class ApplicationDocument extends BaseEntity {
   @Column()
   type: string; //FIXME: Automapper hates the DOCUMENT_TYPE type
 
+  @Column({ type: 'text', nullable: true })
+  description?: string | null;
+
   @ManyToOne(() => Application, { nullable: false })
   application: Application;
 

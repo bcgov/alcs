@@ -200,6 +200,7 @@ export class ApplicationService {
           documents: application.documents.map((d) => ({
             type: d.type!, //TODO: Do we verify this?
             documentUuid: d.document.alcsDocumentUuid,
+            description: d.description ?? undefined,
           })),
           statusHistory: application.statusHistory.map((history) => ({
             ...history,

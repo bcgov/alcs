@@ -32,6 +32,7 @@ message ApplicationCreateGrpcRequest {
 message ApplicationDocumentGrpcRequest {
   string type = 1;
   string documentUuid = 2;
+  optional string description = 3;
 }
 
 message SubmittedApplicationGrpc {
