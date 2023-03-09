@@ -1,9 +1,7 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { DocumentService } from '../../document/document.service';
-import { User } from '../../user/user.entity';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { Application } from '../application.entity';
@@ -175,14 +173,9 @@ export class ApplicationOwnerService {
     );
   }
 
-  async getByOwner(user: User, ownerUuid: string) {
+  async getOwner(ownerUuid: string) {
     return await this.repository.findOneOrFail({
       where: {
-        application: {
-          createdBy: {
-            uuid: user.uuid,
-          },
-        },
         uuid: ownerUuid,
       },
       relations: {
