@@ -20,9 +20,9 @@ import { DocumentService } from '../../document/document.service';
 import { AttachExternalDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationService } from '../application.service';
 import {
+  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
-  APPLICATION_OWNER,
   ApplicationOwnerUpdateDto,
   SetPrimaryContactDto,
 } from './application-owner.dto';
@@ -59,6 +59,10 @@ export class ApplicationOwnerController {
     @Body() createDto: ApplicationOwnerCreateDto,
     @Req() req,
   ): Promise<ApplicationOwnerDto> {
+    await this.applicationService.verifyAccess(
+      createDto.applicationFileNumber,
+      req.user.entity,
+    );
     this.verifyDto(createDto);
 
     const application = await this.applicationService.verifyAccess(
@@ -76,8 +80,8 @@ export class ApplicationOwnerController {
     @Body() updateDto: ApplicationOwnerUpdateDto,
     @Req() req,
   ) {
+    await this.verifyAccessAndGetOwner(req, uuid);
     this.verifyDto(updateDto);
-    await this.ownerService.getByOwner(req.user.entity, uuid);
 
     const newParcel = await this.ownerService.update(uuid, updateDto);
 
@@ -90,7 +94,7 @@ export class ApplicationOwnerController {
 
   @Delete('/:uuid')
   async delete(@Param('uuid') uuid: string, @Req() req) {
-    const owner = await this.ownerService.getByOwner(req.user.entity, uuid);
+    const owner = await this.verifyAccessAndGetOwner(req, uuid);
     return { uuid: await this.ownerService.delete(owner) };
   }
 
@@ -100,7 +104,8 @@ export class ApplicationOwnerController {
     @Param('parcelUuid') parcelUuid: string,
     @Req() req,
   ) {
-    await this.ownerService.getByOwner(req.user.entity, uuid);
+    await this.verifyAccessAndGetOwner(req, uuid);
+
     return { uuid: await this.ownerService.attachToParcel(uuid, parcelUuid) };
   }
 
@@ -110,7 +115,8 @@ export class ApplicationOwnerController {
     @Param('parcelUuid') parcelUuid: string,
     @Req() req,
   ) {
-    await this.ownerService.getByOwner(req.user.entity, uuid);
+    await this.verifyAccessAndGetOwner(req, uuid);
+
     return { uuid: await this.ownerService.removeFromParcel(uuid, parcelUuid) };
   }
 
@@ -187,8 +193,7 @@ export class ApplicationOwnerController {
         agentOwner,
       );
     } else if (data.ownerUuid) {
-      const primaryContactOwner = await this.ownerService.getByOwner(
-        req.user.entity,
+      const primaryContactOwner = await this.ownerService.getOwner(
         data.ownerUuid,
       );
 
@@ -216,7 +221,7 @@ export class ApplicationOwnerController {
 
   @Get(':uuid/corporateSummary')
   async openCorporateSummary(@Param('uuid') uuid: string, @Req() req) {
-    const owner = await this.ownerService.getByOwner(req.user.entity, uuid);
+    const owner = await this.verifyAccessAndGetOwner(req, uuid);
 
     if (!owner.corporateSummary) {
       throw new BadRequestException('Owner has no corporate summary');
@@ -227,5 +232,15 @@ export class ApplicationOwnerController {
         owner.corporateSummary.alcsDocumentUuid,
       ),
     );
+  }
+
+  private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {
+    const owner = await this.ownerService.getOwner(ownerUuid);
+    await this.applicationService.verifyAccess(
+      owner.applicationFileNumber,
+      req.user.entity,
+    );
+
+    return owner;
   }
 }
