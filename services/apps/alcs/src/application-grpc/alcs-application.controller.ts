@@ -7,6 +7,7 @@ import { DOCUMENT_TYPE } from '../application/application-document/application-d
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { CardService } from '../card/card.service';
 import {
   ApplicationCreateGrpcRequest,
   ApplicationFileNumberGenerateGrpcResponse,
@@ -25,6 +26,7 @@ export class ApplicationGrpcController implements AlcsApplicationService {
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
+    private cardService: CardService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -48,6 +50,10 @@ export class ApplicationGrpcController implements AlcsApplicationService {
       })),
       submittedApplication: data.submittedApplication,
     });
+
+    if (data.applicationReview && !data.applicationReview.isAuthorized) {
+      await this.cardService.archive(application.cardUuid);
+    }
 
     const certificateOfTiles = data.submittedApplication.parcels
       .flatMap((parcel) => parcel.documentUuids)

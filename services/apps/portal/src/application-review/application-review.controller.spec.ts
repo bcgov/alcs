@@ -266,6 +266,7 @@ describe('ApplicationReviewController', () => {
       application: new Application() as ValidatedApplication,
       errors: [],
     });
+    mockAppService.updateStatus.mockResolvedValue({} as any);
 
     await controller.finish(fileNumber, {
       user: {
@@ -280,14 +281,25 @@ describe('ApplicationReviewController', () => {
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
+      APPLICATION_STATUS.SUBMITTED_TO_ALC,
+    );
   });
 
-  it('should update the status and not submit if the review is not authorized', async () => {
+  it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
       new Application({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    mockAppService.updateStatus.mockResolvedValue({} as any);
+    mockAppService.submitToAlcs.mockResolvedValue({
+      fileNumber: '',
+      applicant: '',
+      localGovernmentUuid: '',
+      dateSubmittedToAlc: '',
+      regionCode: '',
+      typeCode: '',
+    });
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
       isAuthorized: false,
@@ -297,6 +309,7 @@ describe('ApplicationReviewController', () => {
       application: new Application() as ValidatedApplication,
       errors: [],
     });
+    mockAppService.updateStatus.mockResolvedValue({} as any);
 
     await controller.finish(fileNumber, {
       user: {
@@ -310,7 +323,7 @@ describe('ApplicationReviewController', () => {
     expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
-    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(0);
+    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.REFUSED_TO_FORWARD,

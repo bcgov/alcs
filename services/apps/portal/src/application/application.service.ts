@@ -238,8 +238,6 @@ export class ApplicationService {
           },
         }),
       );
-
-      await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
       this.logger.error(ex);
 

@@ -299,7 +299,6 @@ describe('ApplicationService', () => {
     mockAlcsApplicationService.create.mockReturnValue(
       of({ fileNumber, applicant } as ApplicationGrpcResponse),
     );
-    mockRepository.save.mockResolvedValue({} as any);
 
     mockStatusRepository.findOneOrFail.mockResolvedValue(
       new ApplicationStatus(),
@@ -312,7 +311,6 @@ describe('ApplicationService', () => {
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
     expect(res.applicant).toEqual(mockApplication.applicant);
     expect(res.fileNumber).toEqual(mockApplication.fileNumber);
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if application exists', async () => {
