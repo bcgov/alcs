@@ -65,7 +65,7 @@
         [expanded]="otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1)"
       >
         <mat-expansion-panel-header>
-          <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details</mat-panel-title>
+          <mat-panel-title> Parcel {{ getLetterIndex(parcelInd) }} Details</mat-panel-title>
         </mat-expansion-panel-header>
         <app-parcel-entry
           [parcel]="parcel"

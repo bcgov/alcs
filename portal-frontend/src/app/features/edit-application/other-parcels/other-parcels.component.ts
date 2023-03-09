@@ -296,4 +296,26 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   onNavigateToStep(step: number) {
     this.navigateToStep.emit(step);
   }
+
+  // A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+  // AA AB AC AD AE ....
+  getLetterIndex(num: number) {
+    let result = '';
+    let quotient = num + 1;
+
+    while (quotient > 0) {
+      let remainder = quotient % 26;
+
+      let letter = String.fromCharCode(remainder + 64);
+      if (remainder === 0) {
+        letter = 'Z';
+        quotient--;
+      }
+
+      result = letter + result;
+      quotient = Math.floor((quotient - 1) / 26);
+    }
+
+    return result;
+  }
 }
