@@ -4,6 +4,7 @@ export interface ApplicationDocumentDto {
   uuid: string;
   documentUuid: string;
   type: DOCUMENT_TYPE;
+  description?: string;
   fileName: string;
   mimeType: string;
   uploadedBy: string;

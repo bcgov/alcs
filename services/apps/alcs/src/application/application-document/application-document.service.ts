@@ -115,6 +115,7 @@ export class ApplicationDocumentService {
                 type: doc.type,
                 applicationUuid: application.uuid,
                 documentUuid: doc.documentUuid,
+                description: doc.description,
               }),
           )
         : [],

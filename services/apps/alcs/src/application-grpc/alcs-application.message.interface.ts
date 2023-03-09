@@ -37,6 +37,7 @@ export class ApplicationCreateGrpcRequest {
 export class ApplicationDocumentGrpc {
   type: string;
   documentUuid: string;
+  description?: string;
 }
 
 export class SubmittedApplicationOwnerGrpc {
