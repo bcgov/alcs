@@ -13,6 +13,7 @@ import { ApplicationParcelService } from '../../../services/application-parcel/a
 import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../shared/utils/boolean-helper';
+import { getLetterCombinations } from '../../../shared/utils/number-to-letter-helper';
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -188,5 +189,9 @@ export class ParcelComponent {
 
   onEditParcelClick(uuid: string) {
     this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`);
+  }
+
+  getLetterIndex(num: number) {
+    return getLetterCombinations(num);
   }
 }

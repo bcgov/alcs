@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUUID, Matches } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { emailRegex } from '../../utils/email.helper';
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
 
@@ -61,7 +62,7 @@ export class ApplicationOwnerUpdateDto {
   @IsOptional()
   phoneNumber?: string;
 
-  @IsEmail()
+  @Matches(emailRegex)
   @IsOptional()
   email?: string;
 

@@ -8,7 +8,10 @@
   ></app-no-data>
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
-      <h4>Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>
+      <h4>
+        Parcel {{ parcelType === PARCEL_TYPES.OTHER ? getLetterIndex(parcelInd) : parcelInd + 1 }}: Parcel and Owner
+        Information
+      </h4>
       <div>
         <button
           *ngIf="showEdit"
@@ -17,7 +20,7 @@
           color="accent"
           (click)="onEditParcelClick(parcel.uuid)"
         >
-          Edit Parcel {{ parcelInd + 1 }}
+          Edit Parcel {{ parcelType === PARCEL_TYPES.OTHER ? getLetterIndex(parcelInd) : parcelInd + 1 }}
         </button>
       </div>
     </div>
