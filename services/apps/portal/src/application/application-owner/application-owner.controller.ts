@@ -59,10 +59,6 @@ export class ApplicationOwnerController {
     @Body() createDto: ApplicationOwnerCreateDto,
     @Req() req,
   ): Promise<ApplicationOwnerDto> {
-    await this.applicationService.verifyAccess(
-      createDto.applicationFileNumber,
-      req.user.entity,
-    );
     this.verifyDto(createDto);
 
     const application = await this.applicationService.verifyAccess(
