@@ -2,10 +2,17 @@
   {{ pageTitle }}
 </h3>
 <div class="review-table">
-  <app-no-data
-    [showRequired]="parcelType === PARCEL_TYPES.OTHER && application.hasOtherParcelsInCommunity === null && showErrors"
-    *ngIf="parcels.length === 0"
-  ></app-no-data>
+  <div class="subheading2 grid-1" *ngIf="parcelType === PARCEL_TYPES.OTHER">
+    Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within the
+    community where the application parcel(s) is located?
+  </div>
+  <div class="grid-double" *ngIf="parcelType === PARCEL_TYPES.OTHER">
+    <span *ngIf="application.hasOtherParcelsInCommunity !== null">{{
+      application.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+    }}</span>
+    <app-no-data [showRequired]="showErrors" *ngIf="application.hasOtherParcelsInCommunity === null"></app-no-data>
+  </div>
+
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
       <h4>Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>
