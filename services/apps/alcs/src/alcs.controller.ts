@@ -32,7 +32,7 @@ export class AlcsController {
   //   console.log('here');
   //   const result = await this.documentGeneration.generateDocument(
   //     'demo-app.pdf',
-  //     '/Users/mekhti/Documents/Bit3/sources/alcs/templates/demo-app.docx',
+  //     'sources/alcs/templates/demo-app.docx',
   //   );
 
   //   resp.type('application/pdf');

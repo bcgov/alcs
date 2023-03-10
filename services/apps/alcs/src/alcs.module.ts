@@ -34,7 +34,7 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
-import { CdogsModule } from './providers/cdogs/cdogs.module';
+import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 
 @Module({
   imports: [
