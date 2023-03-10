@@ -34,6 +34,7 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
+import { CdogsModule } from './providers/cdogs/cdogs.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { UserService } from './user/user.service';
     ImportModule,
     DecisionModule,
     AdminModule,
+    CdogsModule,
   ],
   controllers: [AlcsController, LogoutController],
   providers: [
