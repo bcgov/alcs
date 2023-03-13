@@ -46,6 +46,12 @@
     "SERVICE_CLIENT": "ALCS_SERVICE_CLIENT",
     "PASSWORD": ""
   },
+  "CDOGS": {
+    "URL": "https://cdogs-dev.api.gov.bc.ca",
+    "TOKEN_URL": "https://dev.loginproxy.gov.bc.ca",
+    "SERVICE_CLIENT": "",
+    "SERVICE_CLIENT_SECRET": ""
+  },
   "STORAGE": {
     "URL": "http://localhost",
     "ACCESS_KEY": "minio",

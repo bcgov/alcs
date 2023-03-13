@@ -25,54 +25,63 @@ export const childRoutes = [
     menuTitle: 'Overview',
     icon: 'summarize',
     component: OverviewComponent,
+    requiresAuthorization: false,
   },
   {
     path: 'applicant-info',
     menuTitle: 'Applicant Info',
     icon: 'persons',
     component: ApplicantInfoComponent,
+    requiresAuthorization: false,
   },
   {
     path: 'lfng-info',
     menuTitle: 'L/FNG Info',
     icon: 'account_balance',
     component: LfngInfoComponent,
+    requiresAuthorization: false,
   },
   {
     path: 'intake',
     menuTitle: 'ALC Intake',
     icon: 'content_paste',
     component: IntakeComponent,
+    requiresAuthorization: true,
   },
   {
     path: 'info-request',
     menuTitle: 'Info Request',
     icon: 'contact_mail',
     component: InfoRequestsComponent,
+    requiresAuthorization: true,
   },
   {
     path: 'site-visit-meeting',
     menuTitle: 'Site Visit /\nApplicant Meeting',
     icon: 'diversity_3',
     component: ApplicationMeetingComponent,
+    requiresAuthorization: true,
   },
   {
     path: 'review',
     menuTitle: 'Review',
     icon: 'rate_review',
     component: ReviewComponent,
+    requiresAuthorization: true,
   },
   {
     path: 'decision',
     menuTitle: 'Decision',
     icon: 'gavel',
     component: DecisionComponent,
+    requiresAuthorization: true,
   },
   {
     path: 'post-decision',
     menuTitle: 'Post-Decision',
     icon: 'edit_note',
     component: PostDecisionComponent,
+    requiresAuthorization: true,
   },
 ];
 
@@ -89,6 +98,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   application: ApplicationDto | undefined;
   reconsiderations: ApplicationReconsiderationDto[] = [];
   modifications: ApplicationModificationDto[] = [];
+
+  isAuthorized = true;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -112,6 +123,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
+        this.isAuthorized = application.applicationReview?.isAuthorized ?? true;
       }
     });
 

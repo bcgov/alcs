@@ -19,6 +19,7 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
+import { getLetterCombinations } from '../../../shared/utils/number-to-letter-helper';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
@@ -295,5 +296,9 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   onNavigateToStep(step: number) {
     this.navigateToStep.emit(step);
+  }
+
+  getLetterIndex(num: number) {
+    return getLetterCombinations(num);
   }
 }
