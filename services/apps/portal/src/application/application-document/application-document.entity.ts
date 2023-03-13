@@ -24,8 +24,6 @@ export enum DOCUMENT_TYPE {
   OTHER = 'Other',
   AUTHORIZATION_LETTER = 'authorizationLetter',
   CERTIFICATE_OF_TITLE = 'certificateOfTitle',
-
-  //TUR
   SERVING_NOTICE = 'servingNotice',
   PROPOSAL_MAP = 'proposalMap',
 }

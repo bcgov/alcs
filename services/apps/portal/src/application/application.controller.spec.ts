@@ -264,6 +264,7 @@ describe('ApplicationController', () => {
         typeCode: 'TURP',
       }),
     );
+    mockAppService.updateStatus.mockResolvedValue();
     mockAppValidationService.validateApplication.mockResolvedValue({
       application: new Application({
         typeCode: 'TURP',
@@ -279,6 +280,7 @@ describe('ApplicationController', () => {
 
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
   });
 
   it('should submit to LG if application type is NOT-TURP', async () => {

@@ -65,6 +65,13 @@ message SubmittedApplicationGrpc {
   optional string nfuProjectDurationUnit = 24;
   optional string nfuFillTypeDescription = 25;
   optional string nfuFillOriginDescription = 26;
+
+  //TUR Data
+  optional string turPurpose = 27;
+  optional string turOutsideLands = 28;
+  optional string turAgriculturalActivities = 29;
+  optional string turReduceNegativeImpacts = 30;
+  optional string turTotalCorridorArea = 31;
 }
 
 message SubmittedApplicationParcel {

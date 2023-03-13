@@ -147,7 +147,11 @@ export class ApplicationController {
     if (validationResult.application) {
       const validApplication = validationResult.application;
       if (validApplication.typeCode === 'TURP') {
-        return await this.applicationService.submitToAlcs(validApplication);
+        await this.applicationService.submitToAlcs(validApplication);
+        return await this.applicationService.updateStatus(
+          application,
+          APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        );
       } else {
         return await this.applicationService.submitToLg(validApplication);
       }

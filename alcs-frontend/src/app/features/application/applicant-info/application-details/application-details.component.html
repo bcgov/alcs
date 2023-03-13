@@ -116,7 +116,15 @@
 </section>
 <section>
   <h3>Proposal</h3>
-  <app-nfu-details *ngIf="submittedApplication" [application]="submittedApplication"></app-nfu-details>
+  <app-nfu-details
+    *ngIf="submittedApplication && application.type.code === 'NFUP'"
+    [application]="submittedApplication"
+  ></app-nfu-details>
+  <app-tur-details
+    *ngIf="submittedApplication && application.type.code === 'TURP'"
+    [application]="submittedApplication"
+    [files]='files'
+  ></app-tur-details>
 </section>
 <section>
   <h3>Optional Documents</h3>
@@ -136,6 +144,9 @@
           <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
         </div>
       </ng-container>
+      <div *ngIf='otherFiles.length === 0' class='full-width'>
+        No optional attachments
+      </div>
     </div>
   </div>
 </section>

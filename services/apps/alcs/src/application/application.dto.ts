@@ -212,6 +212,22 @@ export class SubmittedApplicationDto {
 
   @AutoMap()
   nfuFillOriginDescription?: string;
+
+  //TUR Data
+  @AutoMap()
+  turPurpose?: string;
+
+  @AutoMap()
+  turOutsideLands?: string;
+
+  @AutoMap()
+  turAgriculturalActivities?: string;
+
+  @AutoMap()
+  turReduceNegativeImpacts?: string;
+
+  @AutoMap()
+  turTotalCorridorArea?: string;
 }
 
 export class CreateApplicationDto {
