@@ -168,10 +168,14 @@ export class ApplicationReviewController {
     }
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+      await this.applicationService.submitToAlcs(
+        validationResult.application,
+        completedReview,
+      );
       if (completedReview.isAuthorized !== false) {
-        await this.applicationService.submitToAlcs(
-          validationResult.application,
-          completedReview,
+        await this.applicationService.updateStatus(
+          application,
+          APPLICATION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
         await this.applicationService.updateStatus(
