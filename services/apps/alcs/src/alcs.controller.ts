@@ -1,3 +1,4 @@
+import { EmailTemplateServiceService } from '@app/common/email-template-service/email-template-service.service';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -7,7 +8,10 @@ import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 
 @Controller()
 export class AlcsController {
-  constructor(private appService: AlcsService) {}
+  constructor(
+    private appService: AlcsService,
+    private emailTemplateService: EmailTemplateServiceService,
+  ) {}
 
   @Get(['', 'health'])
   @Public()
@@ -21,5 +25,12 @@ export class AlcsController {
   @UseGuards(RoleGuard)
   adminRoute(): string {
     return 'Admin!';
+  }
+
+  @Get('test-email')
+  @Public()
+  testEmail() {
+    const result = this.emailTemplateService.generateEmail('', {});
+    return { html: result.html };
   }
 }

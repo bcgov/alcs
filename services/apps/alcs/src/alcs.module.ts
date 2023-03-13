@@ -1,4 +1,5 @@
 import { ConfigModule } from '@app/common/config/config.module';
+import { EmailTemplateServiceService } from '@app/common/email-template-service/email-template-service.service';
 import { RedisModule } from '@app/common/redis/redis.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -10,7 +11,6 @@ import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AdminModule } from './admin/admin.module';
-
 import { AlcsController } from './alcs.controller';
 import { AlcsService } from './alcs.service';
 import { ApplicationGrpcModule } from './application-grpc/application-grpc.module';
@@ -84,6 +84,8 @@ import { UserService } from './user/user.service';
   ],
   controllers: [AlcsController, LogoutController],
   providers: [
+    // TODO create a module
+    EmailTemplateServiceService,
     AlcsService,
     UserService,
     AuditSubscriber,
