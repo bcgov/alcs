@@ -68,7 +68,13 @@ export class ApplicationValidatorService {
     await this.validateLocalGovernment(application, errors);
     await this.validateLandUse(application, errors);
     await this.validateOptionalDocuments(application, errors);
-    await this.validateNfuProposal(application, errors);
+
+    if (application.typeCode === 'NFUP') {
+      await this.validateNfuProposal(application, errors);
+    }
+    if (application.typeCode === 'TURP') {
+      await this.validateTurProposal(application, errors);
+    }
 
     const validatedApplication =
       validatedParcels && validatedPrimaryContact
@@ -339,6 +345,19 @@ export class ApplicationValidatorService {
           new ServiceValidationException(`NFU Fill Section incomplete`),
         );
       }
+    }
+  }
+
+  private async validateTurProposal(application: Application, errors: Error[]) {
+    if (
+      !application.turPurpose ||
+      !application.turOutsideLands ||
+      !application.turAgriculturalActivities ||
+      !application.turReduceNegativeImpacts ||
+      application.turTotalCorridorArea === null ||
+      !application.turAllOwnersNotified
+    ) {
+      errors.push(new ServiceValidationException(`TUR Proposal incomplete`));
     }
   }
 

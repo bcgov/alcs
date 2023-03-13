@@ -22,6 +22,7 @@ import { PrimaryContactComponent } from './primary-contact/primary-contact.compo
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { OtherParcelConfirmationDialogComponent } from './other-parcels/other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
+import { TurProposalComponent } from './tur/tur-proposal/tur-proposal.component';
 
 const routes: Routes = [
   {
@@ -49,12 +50,13 @@ const routes: Routes = [
     ApplicationOwnerDialogComponent,
     ApplicationCrownOwnerDialogComponent,
     LandUseComponent,
-    NfuProposalComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
     OtherParcelConfirmationDialogComponent,
+    NfuProposalComponent,
+    TurProposalComponent,
   ],
   imports: [
     CommonModule,

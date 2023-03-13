@@ -170,7 +170,18 @@
 </section>
 <section>
   <h3>6. Proposal</h3>
-  <app-nfu-details [showErrors]="showErrors" [showEdit]="showEdit" [application]="application"></app-nfu-details>
+  <app-nfu-details
+    *ngIf="application && application.typeCode === 'NFUP'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [application]="application"
+  ></app-nfu-details>
+  <app-tur-details
+    *ngIf="application && application.typeCode === 'TURP'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [application]="application"
+  ></app-tur-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

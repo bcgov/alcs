@@ -75,7 +75,11 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
     this.application = await this.applicationService.getByFileId(fileId);
     this.$application.next(this.application);
 
-    if (this.application && this.application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC) {
+    if (
+      this.application &&
+      this.application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC &&
+      this.application.typeCode !== 'TURP'
+    ) {
       this.loadApplicationReview(fileId);
       this.staffReport = this.application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
       this.resolutionDocument = this.application.documents.filter(

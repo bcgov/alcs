@@ -46,6 +46,9 @@ export class ApplicationDto {
 
   type: string;
 
+  @AutoMap()
+  typeCode: string;
+
   canEdit: boolean;
   canReview: boolean;
   canView: boolean;
@@ -74,6 +77,8 @@ export class ApplicationDetailedDto extends ApplicationDto {
   westLandUseType: string;
   @AutoMap()
   westLandUseTypeDescription: string;
+  @AutoMap(() => String)
+  primaryContactOwnerUuid?: string | null;
 
   //NFU Specific Fields
   @AutoMap(() => Number)
@@ -112,8 +117,24 @@ export class ApplicationDetailedDto extends ApplicationDto {
   @AutoMap(() => String)
   nfuFillOriginDescription?: string | null;
 
+  //TUR Fields
   @AutoMap(() => String)
-  primaryContactOwnerUuid?: string | null;
+  turPurpose: string | null;
+
+  @AutoMap(() => String)
+  turAgriculturalActivities: string | null;
+
+  @AutoMap(() => String)
+  turReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => String)
+  turOutsideLands: string | null;
+
+  @AutoMap(() => Number)
+  turTotalCorridorArea: number | null;
+
+  @AutoMap(() => Boolean)
+  turAllOwnersNotified?: boolean | null;
 }
 
 export class ApplicationCreateDto {
@@ -243,4 +264,33 @@ export class ApplicationUpdateDto {
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
   nfuFillOriginDescription?: string | null;
+
+  //TUR Fields
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  turPurpose?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  turAgriculturalActivities?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  turReduceNegativeImpacts?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  turOutsideLands?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  turTotalCorridorArea?: number | null;
+
+  @IsBoolean()
+  @IsOptional()
+  turAllOwnersNotified?: boolean | null;
 }

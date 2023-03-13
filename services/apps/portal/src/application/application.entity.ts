@@ -188,6 +188,7 @@ export class Application extends BaseEntity {
   })
   primaryContactOwnerUuid?: string | null;
 
+  @AutoMap()
   @Column({
     comment: 'Application Type Code from ALCS System',
   })
@@ -210,6 +211,15 @@ export class Application extends BaseEntity {
 
   @OneToMany(() => ApplicationOwner, (owner) => owner.application)
   owners: ApplicationOwner[];
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'boolean',
+    comment:
+      'Indicates whether application owners have other parcels in the community.',
+    nullable: true,
+  })
+  hasOtherParcelsInCommunity?: boolean | null;
 
   //NFU Specific Fields
   @AutoMap(() => Number)
@@ -290,12 +300,37 @@ export class Application extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   nfuFillOriginDescription: string | null;
 
+  //TUR Specific Fields
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  turPurpose: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  turAgriculturalActivities: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  turReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  turOutsideLands: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  turTotalCorridorArea: number | null;
+
   @AutoMap(() => String)
   @Column({
     type: 'boolean',
-    comment:
-      'Indicates whether application owners have other parcels in the community.',
     nullable: true,
   })
-  hasOtherParcelsInCommunity?: boolean | null;
+  turAllOwnersNotified?: boolean | null;
 }
