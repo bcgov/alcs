@@ -238,6 +238,15 @@ export class ApplicationService {
             nfuProjectDurationAmount: application.nfuProjectDurationAmount
               ? application.nfuProjectDurationAmount.toString(10)
               : undefined,
+            turPurpose: application.turPurpose ?? undefined,
+            turOutsideLands: application.turOutsideLands ?? undefined,
+            turAgriculturalActivities:
+              application.turAgriculturalActivities ?? undefined,
+            turReduceNegativeImpacts:
+              application.turReduceNegativeImpacts ?? undefined,
+            turTotalCorridorArea: application.turTotalCorridorArea
+              ? application.turTotalCorridorArea.toString(10)
+              : undefined,
           },
         }),
       );

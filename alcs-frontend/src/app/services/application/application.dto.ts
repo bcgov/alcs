@@ -89,7 +89,7 @@ export interface SubmittedApplicationDto {
   nfuPurpose?: string;
   nfuOutsideLands?: string;
   nfuAgricultureSupport?: string;
-  nfuWillImportFill?: boolean;
+  nfuWillImportFill?: string;
   nfuTotalFillPlacement?: string;
   nfuMaxFillDepth?: string;
   nfuFillVolume?: string;
@@ -97,6 +97,13 @@ export interface SubmittedApplicationDto {
   nfuProjectDurationUnit?: string;
   nfuFillTypeDescription?: string;
   nfuFillOriginDescription?: string;
+
+  //TUR Data
+  turPurpose?: string;
+  turOutsideLands?: string;
+  turAgriculturalActivities?: string;
+  turReduceNegativeImpacts?: string;
+  turTotalCorridorArea?: string;
 }
 
 export interface ApplicationDto {

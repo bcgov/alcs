@@ -177,6 +177,21 @@ export class SubmittedApplicationGrpc {
 
   @AutoMap()
   nfuFillOriginDescription?: string;
+
+  @AutoMap()
+  turPurpose?: string;
+
+  @AutoMap()
+  turOutsideLands?: string;
+
+  @AutoMap()
+  turAgriculturalActivities?: string;
+
+  @AutoMap()
+  turReduceNegativeImpacts?: string;
+
+  @AutoMap()
+  turTotalCorridorArea?: string;
 }
 
 export class ApplicationReviewGrpc {

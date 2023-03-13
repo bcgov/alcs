@@ -23,6 +23,8 @@ export enum DOCUMENT_TYPE {
   PHOTOGRAPH = 'Photograph',
   OTHER = 'Other',
   AUTHORIZATION_LETTER = 'authorizationLetter',
+  SERVING_NOTICE = 'servingNotice',
+  PROPOSAL_MAP = 'proposalMap',
 }
 
 @Injectable({

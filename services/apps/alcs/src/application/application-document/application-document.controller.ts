@@ -111,6 +111,8 @@ export class ApplicationDocumentController {
       DOCUMENT_TYPE.AUTHORIZATION_LETTER,
       DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
       DOCUMENT_TYPE.CORPORATE_SUMMARY,
+      DOCUMENT_TYPE.PROPOSAL_MAP,
+      DOCUMENT_TYPE.SERVING_NOTICE,
     ];
 
     const applicantDocuments = documents.filter((doc) =>
