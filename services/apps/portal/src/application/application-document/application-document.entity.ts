@@ -12,15 +12,22 @@ import { Document } from '../../document/document.entity';
 import { Application } from '../application.entity';
 
 export enum DOCUMENT_TYPE {
-  CERTIFICATE_OF_TITLE = 'certificateOfTitle',
+  //Government Review
   RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
   STAFF_REPORT = 'reviewStaffReport',
   REVIEW_OTHER = 'reviewOther',
+
+  //Applicant Uploaded
   CORPORATE_SUMMARY = 'corporateSummary',
   PROFESSIONAL_REPORT = 'Professional Report',
   PHOTOGRAPH = 'Photograph',
   OTHER = 'Other',
   AUTHORIZATION_LETTER = 'authorizationLetter',
+  CERTIFICATE_OF_TITLE = 'certificateOfTitle',
+
+  //TUR
+  SERVING_NOTICE = 'servingNotice',
+  PROPOSAL_MAP = 'proposalMap',
 }
 
 export const DOCUMENT_TYPES = [
@@ -31,6 +38,8 @@ export const DOCUMENT_TYPES = [
   DOCUMENT_TYPE.CORPORATE_SUMMARY,
   DOCUMENT_TYPE.OTHER,
   DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+  DOCUMENT_TYPE.SERVING_NOTICE,
+  DOCUMENT_TYPE.PROPOSAL_MAP,
 ];
 
 @Entity()

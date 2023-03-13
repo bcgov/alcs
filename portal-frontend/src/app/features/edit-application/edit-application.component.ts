@@ -17,6 +17,7 @@ import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { TurProposalComponent } from './tur/tur-proposal/tur-proposal.component';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -54,7 +55,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
-  @ViewChild(NfuProposalComponent) nfuProposalComponent!: NfuProposalComponent;
+  @ViewChild(NfuProposalComponent) nfuProposalComponent?: NfuProposalComponent;
+  @ViewChild(TurProposalComponent) turProposalComponent?: TurProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -161,7 +163,12 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
         await this.landUseComponent.onSave();
         break;
       case EditApplicationSteps.Proposal:
-        await this.nfuProposalComponent.onSave();
+        if (this.nfuProposalComponent) {
+          await this.nfuProposalComponent.onSave();
+        }
+        if (this.turProposalComponent) {
+          await this.turProposalComponent.onSave();
+        }
         break;
       case EditApplicationSteps.Attachments:
         await this.otherAttachmentsComponent.onSave();

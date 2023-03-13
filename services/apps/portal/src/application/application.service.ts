@@ -2,12 +2,13 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
+import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { In, Repository } from 'typeorm';
+import { Column, In, Repository } from 'typeorm';
 import {
   ApplicationGrpcResponse,
   ApplicationReviewGrpc,
@@ -20,6 +21,7 @@ import {
 } from '../alcs/local-government/local-government.service';
 import { CompletedApplicationReview } from '../application-review/application-review.service';
 import { User } from '../user/user.entity';
+import { ColumnNumericTransformer } from '../utils/column-numeric-transform';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -105,6 +107,7 @@ export class ApplicationService {
 
     this.setLandUseFields(application, updateDto);
     this.setNFUFields(application, updateDto);
+    this.setTURFields(application, updateDto);
 
     await this.applicationRepository.save(application);
 
@@ -471,6 +474,28 @@ export class ApplicationService {
       updateDto.nfuFillOriginDescription ||
       application.nfuFillOriginDescription;
 
+    return application;
+  }
+
+  private setTURFields(
+    application: Application,
+    updateDto: ApplicationUpdateDto,
+  ) {
+    application.turPurpose = updateDto.turPurpose || application.turPurpose;
+    application.turAgriculturalActivities =
+      updateDto.turAgriculturalActivities ||
+      application.turAgriculturalActivities;
+    application.turReduceNegativeImpacts =
+      updateDto.turReduceNegativeImpacts ||
+      application.turReduceNegativeImpacts;
+    application.turOutsideLands =
+      updateDto.turOutsideLands || application.turOutsideLands;
+    application.turTotalCorridorArea =
+      updateDto.turTotalCorridorArea || application.turTotalCorridorArea;
+    application.turAllOwnersNotified =
+      updateDto.turAllOwnersNotified !== undefined
+        ? updateDto.turAllOwnersNotified
+        : application.turAllOwnersNotified;
     return application;
   }
 }

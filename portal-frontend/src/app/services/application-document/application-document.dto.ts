@@ -8,6 +8,8 @@ export enum DOCUMENT {
   PHOTOGRAPH = 'Photograph',
   OTHER = 'Other',
   AUTHORIZATION_LETTER = 'authorizationLetter',
+  SERVING_NOTICE = 'servingNotice',
+  PROPOSAL_MAP = 'proposalMap',
 }
 
 export interface ApplicationDocumentDto {

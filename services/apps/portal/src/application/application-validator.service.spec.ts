@@ -551,6 +551,7 @@ describe('ApplicationValidatorService', () => {
       nfuFillVolume: 742.1,
       nfuProjectDurationAmount: 12,
       nfuProjectDurationUnit: 'VALID',
+      typeCode: 'NFUP',
     });
 
     const res = await service.validateApplication(application);
@@ -561,6 +562,22 @@ describe('ApplicationValidatorService', () => {
 
     expect(
       includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
+    ).toBe(true);
+  });
+
+  it('should report TUR errors when information is missing', async () => {
+    const application = new Application({
+      owners: [],
+      documents: [],
+      turAgriculturalActivities: 'turAgriculturalActivities',
+      turReduceNegativeImpacts: 'turReduceNegativeImpacts',
+      typeCode: 'TURP',
+    });
+
+    const res = await service.validateApplication(application);
+
+    expect(
+      includesError(res.errors, new Error(`TUR Proposal incomplete`)),
     ).toBe(true);
   });
 });
