@@ -25,5 +25,11 @@
     "ROOT_CERT": "CertAuth.crt",
     "CERT": "localhost.crt",
     "KEY": "localhost.key"
+  },
+  "CDOGS": {
+    "URL": "https://cdogs-dev.api.gov.bc.ca",
+    "TOKEN_URL": "https://dev.loginproxy.gov.bc.ca",
+    "SERVICE_CLIENT": "",
+    "SERVICE_CLIENT_SECRET": ""
   }
 }
