@@ -1,16 +1,19 @@
-import { EmailTemplateServiceService } from '@app/common/email-template-service/email-template-service.service';
+import { EmailTemplateService } from '@app/common/email-template-service/email-template.service';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Public, RoleGuard } from 'nest-keycloak-connect';
+import { generateTemplate } from '../../../templates/emails/test-template';
 import { AlcsService } from './alcs.service';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
+import { EmailService } from './providers/email/email.service';
 
 @Controller()
 export class AlcsController {
   constructor(
     private appService: AlcsService,
-    private emailTemplateService: EmailTemplateServiceService,
+    private emailTemplateService: EmailTemplateService,
+    private emailService: EmailService,
   ) {}
 
   @Get(['', 'health'])
@@ -43,10 +46,23 @@ export class AlcsController {
   //   resp.send(result.data);
   // }
 
-  @Get('test-email')
   @Public()
+  @Get('test-email')
   testEmail() {
-    const result = this.emailTemplateService.generateEmail('', {});
-    return { html: result.html };
+    const template = generateTemplate({
+      fileNumber: '100095',
+      applicantName: 'John Smith',
+      status: 'In Progress',
+    });
+
+    // console.log(template.html);
+
+    this.emailService.sendEmail({
+      to: ['mekhti@bit3.ca'],
+      body: template.html,
+      subject: 'test',
+    });
+
+    return;
   }
 }

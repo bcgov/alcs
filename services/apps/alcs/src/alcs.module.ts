@@ -1,5 +1,5 @@
 import { ConfigModule } from '@app/common/config/config.module';
-import { EmailTemplateServiceService } from '@app/common/email-template-service/email-template-service.service';
+import { EmailTemplateService } from '@app/common/email-template-service/email-template.service';
 import { RedisModule } from '@app/common/redis/redis.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -10,6 +10,7 @@ import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
+import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 import { AdminModule } from './admin/admin.module';
 import { AlcsController } from './alcs.controller';
 import { AlcsService } from './alcs.service';
@@ -34,7 +35,6 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
-import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 
 @Module({
   imports: [
@@ -87,7 +87,7 @@ import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
   controllers: [AlcsController, LogoutController],
   providers: [
     // TODO create a module
-    EmailTemplateServiceService,
+    EmailTemplateService,
     AlcsService,
     UserService,
     AuditSubscriber,
