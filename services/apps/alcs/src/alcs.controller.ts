@@ -1,19 +1,13 @@
-import { EmailTemplateService } from '@app/common/email-template-service/email-template.service';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Public, RoleGuard } from 'nest-keycloak-connect';
 import { AlcsService } from './alcs.service';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
-import { EmailService } from './providers/email/email.service';
 
 @Controller()
 export class AlcsController {
-  constructor(
-    private appService: AlcsService,
-    private emailTemplateService: EmailTemplateService,
-    private emailService: EmailService,
-  ) {}
+  constructor(private appService: AlcsService) {}
 
   @Get(['', 'health'])
   @Public()
