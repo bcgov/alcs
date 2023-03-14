@@ -1,17 +1,16 @@
 @use '@angular/material' as mat;
+@use 'styles/theme';
+@use 'styles/typography';
+@use 'styles/colors';
+@use 'styles/buttons';
+@use 'styles/form-controls';
+@use 'styles/dialog';
+@use 'styles/functions' as *;
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat.core();
-
-//Include after mat.core so we can override
-@import 'styles/theme';
-@import 'styles/typography';
-@import 'styles/colors';
-@import 'styles/buttons';
-@import 'styles/form-controls';
-@import 'styles/dialog';
 
 html,
 body {
@@ -28,7 +27,7 @@ body {
 }
 
 a {
-  color: $link-color;
+  color: colors.$link-color;
   text-decoration: underline;
   cursor: pointer;
 }

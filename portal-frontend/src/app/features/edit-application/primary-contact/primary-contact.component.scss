@@ -1,5 +1,5 @@
-@import '../../../../styles/typography';
-@import '../../../../styles/colors';
+@use '../../../../styles/functions' as *;
+@use '../../../../styles/colors';
 
 h4 {
   margin-bottom: rem(24) !important;
@@ -46,7 +46,7 @@ section {
 }
 
 .selected {
-  color: $primary-color;
+  color: colors.$primary-color;
   text-align: center;
   display: flex;
   align-items: center;

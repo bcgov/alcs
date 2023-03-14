@@ -1,6 +1,4 @@
-@import '../../../../../styles/colors.scss';
-@import '../../../../../styles/functions';
-@import '../../../../../styles/typography';
+@use '../../../../../styles/functions' as *;
 
 .margin-bottom-1 {
   margin-bottom: rem(16);

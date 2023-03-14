@@ -1,5 +1,4 @@
-@import '../../../styles/functions.scss';
-@import '../../../styles/typography.scss';
+@use '../../../styles/functions' as *;
 
 header {
   .title-wrapper {

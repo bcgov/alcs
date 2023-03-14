@@ -1,18 +1,17 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/typography.scss';
-@import '../../../styles/functions.scss';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
 
 footer {
-  @extend .body-text;
-  background-color: $secondary-color;
-  color: $white;
+  font-size: rem(16);
+  background-color: colors.$secondary-color;
+  color: colors.$white;
 
   .trademark {
     padding: rem(40) rem(24);
   }
 
   a {
-    color: $white;
+    color: colors.$white;
     display: block;
     padding: rem(12) rem(12) rem(12) rem(24);
   }
@@ -33,7 +32,7 @@ footer {
 
     a,
     a:last-child {
-      color: $white;
+      color: colors.$white;
       display: inline-block;
       padding: rem(12) rem(32);
     }

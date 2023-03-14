@@ -1,5 +1,5 @@
-@import "../../../../../styles/typography";
-@import "../../../../../styles/colors";
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
 
 .actions {
   button:not(:last-child) {
@@ -9,5 +9,5 @@
 
 .no-data-text {
   text-align: center;
-  color: $grey;
+  color: colors.$grey;
 }
