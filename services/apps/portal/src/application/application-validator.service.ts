@@ -117,7 +117,8 @@ export class ApplicationValidatorService {
         parcel.legalDescription === null ||
         parcel.mapAreaHectares === null ||
         parcel.isFarm === null ||
-        !parcel.isConfirmedByApplicant
+        (!parcel.isConfirmedByApplicant &&
+          parcel.parcelType === PARCEL_TYPE.APPLICATION)
       ) {
         errors.push(
           new ServiceValidationException(`Invalid Parcel ${parcel.uuid}`),
