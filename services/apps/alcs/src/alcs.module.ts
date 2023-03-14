@@ -1,5 +1,4 @@
 import { ConfigModule } from '@app/common/config/config.module';
-import { EmailTemplateService } from '@app/common/email-template-service/email-template.service';
 import { RedisModule } from '@app/common/redis/redis.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -86,8 +85,6 @@ import { UserService } from './user/user.service';
   ],
   controllers: [AlcsController, LogoutController],
   providers: [
-    // TODO create a module
-    EmailTemplateService,
     AlcsService,
     UserService,
     AuditSubscriber,
