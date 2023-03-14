@@ -40,7 +40,7 @@
           <mat-icon>event</mat-icon>
           {{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}
         </div>
-        <span class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</span>
+        <h4 class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</h4>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="meetings-container">
