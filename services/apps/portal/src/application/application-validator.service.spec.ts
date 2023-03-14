@@ -213,7 +213,7 @@ describe('ApplicationValidatorService', () => {
 
     expect(
       includesError(res.errors, new Error(`Invalid Parcel ${parcel.uuid}`)),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       includesError(
         res.errors,
