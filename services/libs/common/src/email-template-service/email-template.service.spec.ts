@@ -1,18 +1,22 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { EmailTemplateService } from './email-template.service';
 
-describe('EmailTemplateServiceService', () => {
+describe('EmailTemplateService', () => {
   let service: EmailTemplateService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [EmailTemplateService],
-    }).compile();
-
-    service = module.get<EmailTemplateService>(EmailTemplateService);
+  beforeEach(() => {
+    service = new EmailTemplateService();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('generateEmailBase', () => {
+    it('should generate an email base from a template and data', () => {
+      const template = `<mjml><mj-body><mj-section><mj-column><mj-text>Hello {{name}}</mj-text></mj-column></mj-section></mj-body></mjml>`;
+      const data = { name: 'John Smith' };
+      const options = {};
+
+      const result = service.generateEmailBase(template, data, options);
+
+      expect(result.html).toBeDefined();
+      expect(result.html).toContain('Hello John Smith');
+    });
   });
 });

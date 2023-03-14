@@ -3,7 +3,6 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Public, RoleGuard } from 'nest-keycloak-connect';
-import { generateTemplate } from '../../../templates/emails/test-template';
 import { AlcsService } from './alcs.service';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 import { EmailService } from './providers/email/email.service';
@@ -31,8 +30,7 @@ export class AlcsController {
   }
 
   // TODO This is just an example of how to generate pdf using cdogs service.
-  //This code will be removed once we have finalized feature
-
+  // This code will be removed once we have finalized feature
   // @Get('/generate')
   // @Public()
   // async generateDocument(@Res() resp: FastifyReply) {
@@ -46,23 +44,23 @@ export class AlcsController {
   //   resp.send(result.data);
   // }
 
-  @Public()
-  @Get('test-email')
-  testEmail() {
-    const template = generateTemplate({
-      fileNumber: '100095',
-      applicantName: 'John Smith',
-      status: 'In Progress',
-    });
+  // TODO this is an example of email sending using the mjml template.
+  // This code will be removed once we have finalized feature
+  // @Public()
+  // @Get('test-email')
+  // testEmail() {
+  //   const template = generateTemplate({
+  //     fileNumber: '100095',
+  //     applicantName: 'John Smith',
+  //     status: 'In Progress',
+  //   });
 
-    // console.log(template.html);
+  //   this.emailService.sendEmail({
+  //     to: ['mekhti@bit3.ca'],
+  //     body: template.html,
+  //     subject: 'test',
+  //   });
 
-    this.emailService.sendEmail({
-      to: ['mekhti@bit3.ca'],
-      body: template.html,
-      subject: 'test',
-    });
-
-    return;
-  }
+  //   return;
+  // }
 }
