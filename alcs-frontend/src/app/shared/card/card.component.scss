@@ -1,5 +1,5 @@
-@import '../../../styles/colors';
-@import '../../../styles.scss';
+@use '../../../styles/colors';
+@use '../../../styles' as *;
 
 $card-ht: 160px;
 $date-ht: 48px;
@@ -15,24 +15,24 @@ $date-ht: 48px;
   flex-direction: column;
 
   &:hover {
-    border-color: $primary-color;
+    border-color: colors.$primary-color;
     transition: all 100ms ease-in-out;
 
     > .decision-date-info {
-      border-color: $primary-color;
+      border-color: colors.$primary-color;
     }
   }
 }
 
 .card.paused {
   opacity: 0.8;
-  background-color: $paused-color;
+  background-color: colors.$paused-color;
 
   &:hover {
-    border-color: $grey-dark;
+    border-color: colors.$grey-dark;
 
     > .decision-date-info.paused {
-      border-color: $grey-dark;
+      border-color: colors.$grey-dark;
     }
   }
 }
@@ -58,7 +58,7 @@ $date-ht: 48px;
 .high-priority {
   font-size: 1.4em;
   font-weight: bold;
-  color: $error-color;
+  color: colors.$error-color;
   float: right;
 }
 
@@ -81,7 +81,7 @@ $date-ht: 48px;
 
 .decision-date-info {
   align-items: center;
-  background-color: $secondary-color;
+  background-color: colors.$secondary-color;
   border: 2px solid transparent;
   border-bottom: none;
   border-radius: 4px 4px 0 0;
@@ -94,7 +94,7 @@ $date-ht: 48px;
 }
 
 .decision-date-info.paused {
-  background-color: $secondary-color-light;
+  background-color: colors.$secondary-color-light;
   opacity: 0.8;
 }
 
@@ -108,7 +108,7 @@ $date-ht: 48px;
 
 mat-card {
   padding: 16px;
-  
+
   .decision-date {
     border-top: none;
     height: calc($card-ht + $date-ht);

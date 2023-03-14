@@ -1,4 +1,4 @@
-@import '../../../../../../styles/colors';
+@use '../../../../../../styles/colors';
 
 .two-item-row {
   display: grid;
@@ -52,13 +52,13 @@ mat-dialog-actions {
 .warning {
   padding: 16px;
   font-size: 16px;
-  background-color: rgba($secondary-color, 0.2);
+  background-color: rgba(colors.$secondary-color, 0.2);
   border-radius: 8px;
   display: flex;
   align-items: center;
 
   mat-icon {
-    color: $secondary-color-dark;
+    color: colors.$secondary-color-dark;
     margin-right: 16px;
   }
 }

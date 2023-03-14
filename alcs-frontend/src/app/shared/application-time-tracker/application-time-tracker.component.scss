@@ -1,4 +1,4 @@
-@import '../../../styles/colors';
+@use '../../../styles/colors';
 
 .subheading2 {
   margin-bottom: 6px !important;
@@ -8,16 +8,16 @@
   height: 12px;
   width: 12px;
   margin-right: 8px;
-  background-color: $primary-color;
+  background-color: colors.$primary-color;
   border-radius: 50%;
   display: inline-block;
   border: 2px solid #efefef;
-  box-shadow: 0 0 4px 2px rgba($primary-color, 0.3);
+  box-shadow: 0 0 4px 2px rgba(colors.$primary-color, 0.3);
 }
 
 .dot.paused {
-  background-color: $error-color;
-  box-shadow: 0 0 4px 2px rgba($error-color, 0.3);
+  background-color: colors.$error-color;
+  box-shadow: 0 0 4px 2px rgba(colors.$error-color, 0.3);
 }
 
 .time-tracking {

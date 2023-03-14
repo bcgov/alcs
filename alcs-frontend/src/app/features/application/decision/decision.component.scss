@@ -1,4 +1,4 @@
-@import '../../../../styles/colors';
+@use '../../../../styles/colors';
 
 h3 {
   margin-bottom: 24px !important;
@@ -20,7 +20,7 @@ section {
 .loading-overlay {
   position: absolute;
   z-index: 2;
-  background-color: $grey;
+  background-color: colors.$grey;
   opacity: 0.4;
   width: 100%;
   height: 100%;
@@ -43,7 +43,7 @@ section {
 
 .post-decisions {
   padding: 6px 32px;
-  background-color: $accent-color-light;
+  background-color: colors.$accent-color-light;
   grid-template-columns: 1fr 1fr 100px;
   display: grid;
   min-height: 36px;
@@ -57,12 +57,12 @@ section {
   top: 0;
   right: 0;
   height: 36px;
-  background: $accent-color;
+  background: colors.$accent-color;
   box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 0 10px;
 
   button {
-    color: $white;
+    color: colors.$white;
     width: 36px;
     height: 36px;
     line-height: 36px;
@@ -116,7 +116,7 @@ section {
 }
 
 .delete-file-icon {
-  color: $error-color;
+  color: colors.$error-color;
 }
 
 .no-decisions {
@@ -124,7 +124,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $grey-light;
+  background-color: colors.$grey-light;
   height: 72px;
 }
 
@@ -136,5 +136,5 @@ section {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-color: $grey-light;
+  background-color: colors.$grey-light;
 }

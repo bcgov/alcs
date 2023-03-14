@@ -1,4 +1,4 @@
-@import '../../../styles/colors';
+@use '../../../styles/colors';
 
 .layout {
   display: flex;
@@ -26,7 +26,7 @@
 }
 
 .nav {
-  background-color: $bg-color;
+  background-color: colors.$bg-color;
   min-width: 240px;
   width: 240px;
   height: 100%;
@@ -42,20 +42,20 @@
 
   div.active {
     font-weight: bold;
-    background-color: $primary-color-dark;
-    color: $white;
-    border-color: $primary-color-dark;
+    background-color: colors.$primary-color-dark;
+    color: colors.$white;
+    border-color: colors.$primary-color-dark;
 
     &:hover {
       cursor: default;
-      background-color: $primary-color-dark;
-      color: $white;
+      background-color: colors.$primary-color-dark;
+      color: colors.$white;
     }
   }
 
   div:hover {
-    border-color: $primary-color-dark;
-    color: $dark-contrast-text;
+    border-color: colors.$primary-color-dark;
+    color: colors.$dark-contrast-text;
   }
 }
 

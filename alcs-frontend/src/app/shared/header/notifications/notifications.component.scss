@@ -1,4 +1,4 @@
-@import '../../../../styles/colors';
+@use '../../../../styles/colors';
 
 .icon {
   font-size: 32px;
@@ -14,10 +14,10 @@
   content: '';
   position: absolute;
   top: 0;
-  background: $error-color;
+  background: colors.$error-color;
   width: 8px;
   height: 8px;
-  border: 1px solid $primary-color;
+  border: 1px solid colors.$primary-color;
   border-radius: 100%;
   right: calc(50% - 12px);
 }
@@ -83,7 +83,7 @@
 }
 
 .notification.unread {
-  border-left: 4px solid $error-color;
+  border-left: 4px solid colors.$error-color;
 }
 
 .notification:last-child {

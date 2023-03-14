@@ -1,4 +1,4 @@
-@import '../../../../../styles/colors';
+@use '../../../../../styles/colors';
 
 .grid {
   display: grid;
@@ -31,7 +31,7 @@ label {
   align-items: center;
 
   mat-icon {
-    color: $secondary-color-dark;
+    color: colors.$secondary-color-dark;
     margin-right: 16px;
   }
 }
