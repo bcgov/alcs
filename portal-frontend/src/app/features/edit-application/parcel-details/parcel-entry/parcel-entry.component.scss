@@ -1,5 +1,5 @@
-@import '../../../../../styles/typography';
-@import '../../../../../styles/colors';
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
 
 .owner-option {
   display: flex;
@@ -12,7 +12,7 @@
 }
 
 .link-text {
-  color: $link-color;
+  color: colors.$link-color;
   text-decoration: underline;
 }
 

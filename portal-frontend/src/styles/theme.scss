@@ -1,7 +1,7 @@
 @use '@angular/material' as mat;
 
-@import "typography";
-@import "colors";
+@use 'typography';
+@use 'colors';
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -12,7 +12,7 @@ $mat-custom-primary: (
   200: #ccd8ab,
   300: #b7c889,
   400: #a7bc70,
-  500: $primary-color,
+  500: colors.$primary-color,
   600: #90a94f,
   700: #85a046,
   800: #7b973c,
@@ -22,20 +22,20 @@ $mat-custom-primary: (
   A400: #cbff66,
   A700: #c3ff4d,
   contrast: (
-    50: $dark-contrast-text,
-    100: $dark-contrast-text,
-    200: $dark-contrast-text,
-    300: $dark-contrast-text,
-    400: $dark-contrast-text,
-    500: $dark-contrast-text,
-    600: $dark-contrast-text,
-    700: $dark-contrast-text,
-    800: $dark-contrast-text,
-    900: $dark-contrast-text,
-    A100: $dark-contrast-text,
-    A200: $dark-contrast-text,
-    A400: $dark-contrast-text,
-    A700: $dark-contrast-text,
+    50: colors.$dark-contrast-text,
+    100: colors.$dark-contrast-text,
+    200: colors.$dark-contrast-text,
+    300: colors.$dark-contrast-text,
+    400: colors.$dark-contrast-text,
+    500: colors.$dark-contrast-text,
+    600: colors.$dark-contrast-text,
+    700: colors.$dark-contrast-text,
+    800: colors.$dark-contrast-text,
+    900: colors.$dark-contrast-text,
+    A100: colors.$dark-contrast-text,
+    A200: colors.$dark-contrast-text,
+    A400: colors.$dark-contrast-text,
+    A700: colors.$dark-contrast-text,
   ),
 );
 
@@ -45,7 +45,7 @@ $mat-custom-accent: (
   200: #85adce,
   300: #548cba,
   400: #2f73ab,
-  500: $accent-color,
+  500: colors.$accent-color,
   600: #095294,
   700: #07488a,
   800: #053f80,
@@ -55,20 +55,20 @@ $mat-custom-accent: (
   A400: #3778ff,
   A700: #1e67ff,
   contrast: (
-    50: $dark-contrast-text,
-    100: $dark-contrast-text,
-    200: $dark-contrast-text,
-    300: $dark-contrast-text,
-    400: $light-contrast-text,
-    500: $light-contrast-text,
-    600: $light-contrast-text,
-    700: $light-contrast-text,
-    800: $light-contrast-text,
-    900: $light-contrast-text,
-    A100: $dark-contrast-text,
-    A200: $dark-contrast-text,
-    A400: $dark-contrast-text,
-    A700: $light-contrast-text,
+    50: colors.$dark-contrast-text,
+    100: colors.$dark-contrast-text,
+    200: colors.$dark-contrast-text,
+    300: colors.$dark-contrast-text,
+    400: colors.$light-contrast-text,
+    500: colors.$light-contrast-text,
+    600: colors.$light-contrast-text,
+    700: colors.$light-contrast-text,
+    800: colors.$light-contrast-text,
+    900: colors.$light-contrast-text,
+    A100: colors.$dark-contrast-text,
+    A200: colors.$dark-contrast-text,
+    A400: colors.$dark-contrast-text,
+    A700: colors.$light-contrast-text,
   ),
 );
 
@@ -78,7 +78,7 @@ $mat-custom-warn: (
   200: #ec9497,
   300: #e4696d,
   400: #de494e,
-  500: $error-color,
+  500: colors.$error-color,
   600: #d4242a,
   700: #ce1f23,
   800: #c8191d,
@@ -88,20 +88,20 @@ $mat-custom-warn: (
   A400: #ff8688,
   A700: #ff6d6e,
   contrast: (
-    50: $dark-contrast-text,
-    100: $dark-contrast-text,
-    200: $dark-contrast-text,
-    300: $dark-contrast-text,
-    400: $dark-contrast-text,
-    500: $light-contrast-text,
-    600: $light-contrast-text,
-    700: $light-contrast-text,
-    800: $light-contrast-text,
-    900: $light-contrast-text,
-    A100: $dark-contrast-text,
-    A200: $dark-contrast-text,
-    A400: $dark-contrast-text,
-    A700: $dark-contrast-text,
+    50: colors.$dark-contrast-text,
+    100: colors.$dark-contrast-text,
+    200: colors.$dark-contrast-text,
+    300: colors.$dark-contrast-text,
+    400: colors.$dark-contrast-text,
+    500: colors.$light-contrast-text,
+    600: colors.$light-contrast-text,
+    700: colors.$light-contrast-text,
+    800: colors.$light-contrast-text,
+    900: colors.$light-contrast-text,
+    A100: colors.$dark-contrast-text,
+    A200: colors.$dark-contrast-text,
+    A400: colors.$dark-contrast-text,
+    A700: colors.$dark-contrast-text,
   ),
 );
 
@@ -114,13 +114,13 @@ $alcs-warn: mat.define-palette($mat-custom-warn);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $alcs-theme: mat.define-light-theme(
-    (
-      color: (
-        primary: $alcs-primary,
-        accent: $alcs-accent,
-        warn: $alcs-warn,
-      ),
-    )
+  (
+    color: (
+      primary: $alcs-primary,
+      accent: $alcs-accent,
+      warn: $alcs-warn,
+    ),
+  )
 );
 
 // Include theme styles for core and each component used in your app.

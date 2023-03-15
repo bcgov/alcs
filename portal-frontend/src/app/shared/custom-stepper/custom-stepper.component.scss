@@ -1,6 +1,5 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/functions.scss';
-@import '../../../styles/typography.scss';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
 
 :host {
   $size: rem(64);
@@ -56,7 +55,7 @@
               height: rem(1);
               max-height: rem(1);
               min-height: rem(1);
-              background-color: $primary-color-dark;
+              background-color: colors.$primary-color-dark;
               order: -1;
               position: absolute;
               display: flex;
@@ -68,7 +67,7 @@
         }
 
         .active {
-          background-color: $primary-color;
+          background-color: colors.$primary-color;
           color: white;
         }
 
@@ -93,7 +92,7 @@
           }
 
           .step-number {
-            border: 1px solid $primary-color-dark;
+            border: 1px solid colors.$primary-color-dark;
             border-radius: 50%;
             width: $half-size;
             height: $half-size;

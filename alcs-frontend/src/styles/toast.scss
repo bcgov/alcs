@@ -1,4 +1,4 @@
-@import './colors';
+@use './colors';
 
 .mat-mdc-snack-bar-container {
   padding: 0 !important;
@@ -35,16 +35,16 @@
 }
 
 .mat-mdc-snack-bar-container.success .mdc-snackbar__surface {
-  background: $success-color;
+  background: colors.$success-color;
   color: #fff;
 }
 
 .mat-mdc-snack-bar-container.warning .mdc-snackbar__surface {
-  background: $warning-color;
+  background: colors.$warning-color;
   color: #fff;
 }
 
 .mat-mdc-snack-bar-container.error .mdc-snackbar__surface {
-  background: $error-color;
+  background: colors.$error-color;
   color: #fff;
 }

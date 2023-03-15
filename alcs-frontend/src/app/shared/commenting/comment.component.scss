@@ -1,4 +1,4 @@
-@import '../../../styles/colors.scss';
+@use '../../../styles/colors.scss';
 
 .comment {
   width: 100%;
@@ -6,7 +6,7 @@
   .body {
     padding: 6px 8px;
     border-radius: 4px;
-    background-color: $grey-light;
+    background-color: colors.$grey-light;
     min-height: 28px;
     display: flex;
     justify-content: center;
@@ -35,7 +35,7 @@
   button {
     font-size: 12px !important;
     text-decoration: underline;
-    color: $grey-dark;
+    color: colors.$grey-dark;
     min-width: unset;
     padding: 0 8px;
     line-height: 14px;
@@ -44,7 +44,7 @@
   .edited {
     display: flex;
     align-items: center;
-    color: $grey-dark;
+    color: colors.$grey-dark;
     font-size: 12px;
   }
 }

@@ -1,5 +1,5 @@
-@import 'colors';
-@import 'typography';
+@use 'functions' as *;
+@use 'colors';
 
 .mat-flat-button,
 .mat-stroked-button {
@@ -7,7 +7,7 @@
 }
 
 .mat-stroked-button {
-  border: rem(2) solid $primary-color !important;
+  border: rem(2) solid colors.$primary-color !important;
 }
 
 .mat-flat-button.mat-primary {
@@ -17,15 +17,15 @@
   }
 
   &:not(.mat-button-disabled):hover {
-    background-color: $primary-color-light;
+    background-color: colors.$primary-color-light;
 
     .mat-button-wrapper {
-      color: $primary-color;
+      color: colors.$primary-color;
     }
   }
 
   &:active {
-    background-color: $primary-color-dark;
+    background-color: colors.$primary-color-dark;
 
     .mat-button-wrapper {
       color: #fff;
@@ -40,15 +40,15 @@
   }
 
   &:not(.mat-button-disabled):hover {
-    background-color: $accent-color-light;
+    background-color: colors.$accent-color-light;
 
     .mat-button-wrapper {
-      color: $accent-color;
+      color: colors.$accent-color;
     }
   }
 
   &:active {
-    background-color: $accent-color-dark;
+    background-color: colors.$accent-color-dark;
 
     .mat-button-wrapper {
       color: #fff;
@@ -58,24 +58,24 @@
 
 .mat-stroked-button.mat-primary {
   &:not(.mat-button-disabled) {
-    border-color: $primary-color-dark !important;
+    border-color: colors.$primary-color-dark !important;
   }
 
   .mat-button-wrapper {
     text-transform: uppercase;
-    color: $primary-color;
+    color: colors.$primary-color;
   }
 
   &:not(.mat-button-disabled):hover {
-    background-color: $primary-color-light;
+    background-color: colors.$primary-color-light;
 
     .mat-button-wrapper {
-      color: $primary-color;
+      color: colors.$primary-color;
     }
   }
 
   &:active {
-    background-color: $primary-color-dark;
+    background-color: colors.$primary-color-dark;
 
     .mat-button-wrapper {
       color: #fff;
@@ -85,45 +85,45 @@
 
 .mat-stroked-button.mat-accent {
   &:not(.mat-button-disabled) {
-    border-color: $accent-color-dark !important;
+    border-color: colors.$accent-color-dark !important;
   }
 
   .mat-button-wrapper {
     text-transform: uppercase;
-    color: $accent-color;
+    color: colors.$accent-color;
   }
 
   &:not(.mat-button-disabled):hover {
-    border-color: $accent-color-dark;
-    background-color: $accent-color-light;
+    border-color: colors.$accent-color-dark;
+    background-color: colors.$accent-color-light;
 
     .mat-button-wrapper {
-      color: $accent-color-dark;
+      color: colors.$accent-color-dark;
     }
   }
 
   &:active {
-    background-color: $accent-color-dark;
+    background-color: colors.$accent-color-dark;
 
     .mat-button-wrapper {
-      color: $white;
+      color: colors.$white;
     }
   }
 }
 
 .mat-stroked-button.mat-warn {
-  border: rem(2) solid $error-color !important;
+  border: rem(2) solid colors.$error-color !important;
 }
 
 .mat-error {
-  border: rem(2) solid $error-color !important;
+  border: rem(2) solid colors.$error-color !important;
 }
 
 .mat-button-disabled {
-  background-color: $grey !important;
+  background-color: colors.$grey !important;
   color: #fff !important;
 }
 
 .mat-mdc-icon-button:hover {
-  background-color: rgba($grey, 0.2);
+  background-color: rgba(colors.$grey, 0.2);
 }

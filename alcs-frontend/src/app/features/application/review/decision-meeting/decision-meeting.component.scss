@@ -1,11 +1,11 @@
-@import '../../../../../styles/colors';
+@use '../../../../../styles/colors';
 
 .action-btn.edit {
-  color: $error-color;
+  color: colors.$error-color;
 }
 
 .action-btn.delete {
-  color: $error-color;
+  color: colors.$error-color;
 }
 
 :host::ng-deep {

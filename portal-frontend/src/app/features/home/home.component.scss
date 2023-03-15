@@ -1,7 +1,6 @@
-@import '../../../styles/colors';
-@import '../../../styles/functions';
-@import '../../../styles/typography';
-@import '../../../styles/navigation-wrapper';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
+@use '../../../styles/navigation-wrapper';
 
 .header-row {
   .learn-more-wrapper {
@@ -9,7 +8,7 @@
     margin-bottom: rem(24);
     .learn-more-ctr {
       display: inline-block;
-      color: $accent-color;
+      color: colors.$accent-color;
       text-transform: uppercase;
 
       mat-icon {

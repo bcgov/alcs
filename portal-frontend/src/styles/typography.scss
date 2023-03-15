@@ -1,13 +1,8 @@
-@import '@bcgov/bc-sans/css/BCSans.css';
-@import './colors';
-@import './functions.scss';
+@use '@bcgov/bc-sans/css/BCSans.css';
+@use './colors';
+@use './functions' as *;
 
 $font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
-
-$tabletBreakpoint: rem(481);
-$desktopBreakpoint: rem(769);
-$midBreakpoint: rem(669);
-$minWidth: rem(300);
 
 @mixin typography-style($size, $weight) {
   font-family: $font-family !important;
@@ -155,5 +150,5 @@ button {
 }
 
 .error-outline {
-  border: 1px solid $error-color !important;
+  border: 1px solid colors.$error-color !important;
 }

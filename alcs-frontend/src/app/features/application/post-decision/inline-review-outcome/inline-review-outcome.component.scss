@@ -1,4 +1,4 @@
-@import '../../../../../styles/colors';
+@use '../../../../../styles/colors';
 
 .editing.hidden {
   display: none;
@@ -9,6 +9,6 @@
     margin-right: 2px !important;
   }
   .save {
-    color: $primary-color;
+    color: colors.$primary-color;
   }
 }

@@ -1,5 +1,4 @@
-@import '../../../styles/functions';
-@import '../../../styles/typography';
+@use '../../../styles/functions' as *;
 
 .mat-dialog-actions {
   justify-content: flex-end;

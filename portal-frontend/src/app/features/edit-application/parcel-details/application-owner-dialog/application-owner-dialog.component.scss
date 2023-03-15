@@ -1,4 +1,5 @@
-@import '../../../../../styles/typography';
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
 
 .actions {
   button:not(:last-child) {
@@ -8,7 +9,7 @@
 
 :host::ng-deep {
   .field-error {
-    color: $error-color;
+    color: colors.$error-color;
     font-size: rem(15);
     font-weight: 700;
     display: flex;

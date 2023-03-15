@@ -1,4 +1,4 @@
-@import '../../../styles/colors';
+@use '../../../styles/colors';
 
 .layout {
   display: flex;
@@ -24,6 +24,6 @@
 .board-title:hover app-favorite-button {
   ::ng-deep .favorite-btn {
     visibility: visible;
-    color: $pending-star;
+    color: colors.$pending-star;
   }
 }

@@ -1,7 +1,7 @@
-@import '../../../../../styles/colors';
+@use '../../../../../styles/colors';
 
 .close {
-  color: $grey;
+  color: colors.$grey;
   display: flex;
   justify-content: right;
   margin: -42px 0 0px;
@@ -27,7 +27,6 @@
 }
 
 .card-title {
-  align-items: center;
   margin-right: 2rem !important;
 }
 
@@ -59,14 +58,14 @@
   height: 20px;
   margin-top: 2px;
   font-size: 18px;
-  color: $secondary-color-dark;
+  color: colors.$secondary-color-dark;
 }
 
 .selected-board-icon {
   height: 20px;
   margin-top: 2px;
   font-size: 18px;
-  color: $primary-color;
+  color: colors.$primary-color;
 }
 
 .priority {

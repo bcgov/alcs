@@ -1,4 +1,4 @@
-@import '../../../styles/colors';
+@use '../../../styles/colors';
 
 .application-type {
   margin-left: 16px;
@@ -6,7 +6,7 @@
 
 .header {
   padding: 16px 80px;
-  border-bottom: 1px solid $primary-color-dark;
+  border-bottom: 1px solid colors.$primary-color-dark;
 
   .heading {
     display: flex;

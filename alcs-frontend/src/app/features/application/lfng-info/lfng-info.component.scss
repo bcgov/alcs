@@ -1,4 +1,4 @@
-@import '../../../../styles/colors';
+@use '../../../../styles/colors';
 
 h3 {
   margin-bottom: 16px !important;
@@ -9,13 +9,13 @@ h4 {
 }
 
 .warning {
-  background-color: $secondary-color-light;
+  background-color: colors.$secondary-color-light;
   padding: 16px;
 }
 
 .review-table {
   padding: 16px;
-  background-color: $grey-light;
+  background-color: colors.$grey-light;
   display: grid;
   grid-row-gap: 24px;
   grid-template-columns: 1fr 1fr;
