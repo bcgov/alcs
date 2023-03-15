@@ -23,7 +23,7 @@ export class DocumentService {
   private dataStore: S3Client;
   private logger = new Logger(DocumentService.name);
   private bucket = this.config.get<string>('STORAGE.BUCKET');
-  private documentTimeout = this.config.get<number>('ALCS.DOCUMENT_TIMEOUT');
+  private documentTimeout = this.config.get<number>('DOCUMENT_TIMEOUT');
 
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,

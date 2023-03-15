@@ -60,8 +60,8 @@ export class AuthorizationService {
 
   async exchangeCodeForToken(code: string) {
     const baseUrl = this.config.get<string>('PORTAL.BASE_URL');
-    const secret = this.config.get<string>('PORTAL.KEYCLOAK.SECRET');
-    const clientId = this.config.get<string>('PORTAL.KEYCLOAK.CLIENT_ID');
+    const secret = this.config.get<string>('KEYCLOAK.SECRET');
+    const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
     const tokenUrl = this.config.get<string>('KEYCLOAK.AUTH_TOKEN_URL');
 
     const res = await firstValueFrom(
@@ -95,8 +95,8 @@ export class AuthorizationService {
   }
 
   async refreshToken(refreshToken: string): Promise<TokenResponse> {
-    const secret = this.config.get<string>('PORTAL.KEYCLOAK.SECRET');
-    const clientId = this.config.get<string>('PORTAL.KEYCLOAK.CLIENT_ID');
+    const secret = this.config.get<string>('KEYCLOAK.SECRET');
+    const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
     const tokenUrl = this.config.get<string>('KEYCLOAK.AUTH_TOKEN_URL');
 
     const res = await firstValueFrom(

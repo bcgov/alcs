@@ -1,26 +1,18 @@
 {
   "ENV": "production",
   "LOG_LEVEL": "debug",
+  "DOCUMENT_TIMEOUT": 60,
   "ALCS": {
     "BASE_URL": "http://localhost:8080",
     "PORT": 8080,
     "API_PREFIX": "",
-    "FRONTEND_ROOT": "http://localhost:4200",
-    "KEYCLOAK": {
-      "CLIENT_ID": "",
-      "SECRET": ""
-    },
-    "DOCUMENT_TIMEOUT": 60
+    "FRONTEND_ROOT": "http://localhost:4200"
   },
   "PORTAL": {
     "BASE_URL": "http://localhost:8081",
     "PORT": 8081,
     "API_PREFIX": "",
     "FRONTEND_ROOT": "http://localhost:4201",
-    "KEYCLOAK": {
-      "CLIENT_ID": "",
-      "SECRET": ""
-    },
     "ALCS_GRPC_URL": "localhost:50057"
   },
   "DATABASE": {
@@ -32,6 +24,8 @@
     "MIGRATION_TABLE": "migrations"
   },
   "KEYCLOAK": {
+    "CLIENT_ID": "",
+    "SECRET": "",
     "AUTH_SERVER": "test.loginproxy.gov.bc.ca",
     "AUTH_SERVER_URL": "https://test.loginproxy.gov.bc.ca/auth",
     "AUTH_TOKEN_URL": "https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",

@@ -14,9 +14,9 @@ export class KeycloakConfigService implements KeycloakConnectOptionsFactory {
     return {
       authServerUrl: this.config.get<string>('KEYCLOAK.AUTH_SERVER_URL'),
       realm: this.config.get<string>('KEYCLOAK.REALM'),
-      secret: this.config.get<string>('ALCS.KEYCLOAK.SECRET'),
+      secret: this.config.get<string>('KEYCLOAK.SECRET'),
       'ssl-required': 'external',
-      resource: this.config.get<string>('ALCS.KEYCLOAK.CLIENT_ID'),
+      resource: this.config.get<string>('KEYCLOAK.CLIENT_ID'),
       'confidential-port': 0,
       tokenValidation: TokenValidation.OFFLINE,
       verifyTokenAudience: true,
