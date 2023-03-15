@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
 import { DocumentUploadResponseGrpc } from '../alcs/document-grpc/alcs-document.message.interface';
-import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../application-proposal/application-document/application-document.entity';
 import { DocumentController } from './document.controller';
 import { DocumentService } from './document.service';
 
