@@ -21,11 +21,11 @@ import { ApplicationParcelOwnershipType } from './application-parcel/application
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
+import { ApplicationProposalStatusSubscriber } from './application-proposal-status.subscriber';
 import { ApplicationProposalValidatorService } from './application-proposal-validator.service';
 import { ApplicationProposalController } from './application-proposal.controller';
 import { ApplicationProposal } from './application-proposal.entity';
 import { ApplicationProposalService } from './application-proposal.service';
-import { ApplicationProposalStatusSubscriber } from './application-status.subscriber';
 import { ApplicationStatus } from './application-status/application-status.entity';
 
 @Module({

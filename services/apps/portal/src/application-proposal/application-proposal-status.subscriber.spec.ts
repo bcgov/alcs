@@ -1,11 +1,11 @@
 import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource, InsertEvent, UpdateEvent } from 'typeorm';
+import { ApplicationProposalStatusSubscriber } from './application-proposal-status.subscriber';
 import { ApplicationProposal } from './application-proposal.entity';
-import { ApplicationProposalStatusSubscriber } from './application-status.subscriber';
 import { ApplicationStatus } from './application-status/application-status.entity';
 
-describe('ApplicationStatusSubscriber', () => {
+describe('ApplicationProposalStatusSubscriber', () => {
   let service: ApplicationProposalStatusSubscriber;
   let dataSource;
   let subscribers;
