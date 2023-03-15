@@ -45,6 +45,7 @@
          </column>
          <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="21" name="status_history" nullable="false" remarks="JSONB Column containing the status history of the Application from the Portal" size="2147483647" type="jsonb" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="application_review" nullable="true" remarks="JSONB Column containing the government / first nation government review from the Portal" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="submitted_application" nullable="true" remarks="JSONB Column containing the applicants information from the Portal" size="2147483647" type="jsonb" typeCode="1111"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
@@ -155,6 +156,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="document_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_12ae8ee45c8e1f1b074c169a3e5" implied="false" onDeleteCascade="false" schema="alcs" table="document"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_87ec4d3edd458858cf7370ddfd3" unique="true">
             <column ascending="true" name="uuid"/>
@@ -498,6 +500,7 @@
          <column autoUpdated="false" defaultValue="'APP'::text" digits="0" id="11" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_30b9e07ab7c729f90911604179f" implied="false" onDeleteCascade="false" schema="alcs" table="card_type"/>
          </column>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="12" name="archived" nullable="false" remarks="Indicates if a card was manually archived by a User" size="1" type="bool" typeCode="-7"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_dc3046f87b3ecabadae16bc4a8b" unique="true">
             <column ascending="true" name="uuid"/>

@@ -204,11 +204,13 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
                                                 <td title="application_parcel_document.application_parcel_uuid references application_parcel.uuid via FK_31dce1c6fcd24fc6bd45824fea5"><a href='application_parcel_document.html'>application_parcel_document</a><span class='relatedKey'>.application_parcel_uuid</span></td>
-                                                <td class="constraint detail">FK_31dce1c6fcd24fc6bd45824fea5<span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                                <td class="constraint detail">FK_31dce1c6fcd24fc6bd45824fea5</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                             <tr>
                                                 <td title="application_parcel_owners_application_owner.application_parcel_uuid references application_parcel.uuid via FK_587cc07208988480adbbb7817c3"><a href='application_parcel_owners_appli_455f9d2c.html'>application_parcel_owners_application_owner</a><span class='relatedKey'>.application_parcel_uuid</span></td>
-                                                <td class="constraint detail">FK_587cc07208988480adbbb7817c3<span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                                <td class="constraint detail">FK_587cc07208988480adbbb7817c3</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -352,7 +354,8 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
                                                 <td title="application_parcel.application_file_number references application.file_number via FK_803e574fe048adacb88443c8d45"><a href='application.html'>application</a><span class='relatedKey'>.file_number</span></td>
-                                                <td class="constraint detail">FK_803e574fe048adacb88443c8d45<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td class="constraint detail">FK_803e574fe048adacb88443c8d45</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -373,7 +376,8 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
                                                 <td title="application_parcel.ownership_type_code references application_parcel_ownership_type.code via FK_33f7b06b2c4e0e128d670526c66"><a href='application_parcel_ownership_type.html'>application_parcel_ownership_type</a><span class='relatedKey'>.code</span></td>
-                                                <td class="constraint detail">FK_33f7b06b2c4e0e128d670526c66<span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                                <td class="constraint detail">FK_33f7b06b2c4e0e128d670526c66</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -395,6 +399,23 @@
                                         </table>
                                     </td>
                                     <td><p>The Parcels type, &ldquo;other&rdquo; means parcels not related to application but related to the owner</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="crown_land_owner_type">crown_land_owner_type</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>For Crown Land parcels to indicate whether they are provincially owned or federally owned</p></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -457,7 +478,7 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="463,5,875,544">
+<area shape="rect" id="node1" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="463,5,875,573">
 <area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,307,419,483">
 <area shape="rect" id="node3" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="33,500,391,647">
 <area shape="rect" id="node4" href="application_parcel_document.html" target="_top" title="application_parcel_document" alt="" coords="984,43,1297,219">
@@ -473,17 +494,17 @@
 <area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="809,216,1067,304">
 <area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="401,301,562,389">
 <area shape="rect" id="node6" href="application_owner.html" target="_top" title="application_owner" alt="" coords="825,111,1051,199">
-<area shape="rect" id="node7" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="732,321,1144,860">
+<area shape="rect" id="node7" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="732,321,1144,889">
 <area shape="rect" id="node8" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="302,735,661,881">
-<area shape="rect" id="node9" href="application_parcel_document.html" target="_top" title="application_parcel_document" alt="" coords="1253,568,1567,744">
-<area shape="rect" id="node10" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1188,344,1632,467">
+<area shape="rect" id="node9" href="application_parcel_document.html" target="_top" title="application_parcel_document" alt="" coords="1253,625,1567,801">
+<area shape="rect" id="node10" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1188,275,1632,397">
 <area shape="rect" id="node11" href="application_review.html" target="_top" title="application_review" alt="" coords="823,5,1053,93">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_parcel.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="463,5,875,544">
+<area shape="rect" id="node1" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="463,5,875,573">
 <area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,307,419,483">
 <area shape="rect" id="node3" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="33,500,391,647">
 <area shape="rect" id="node4" href="application_parcel_document.html" target="_top" title="application_parcel_document" alt="" coords="984,43,1297,219">
@@ -499,10 +520,10 @@
 <area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="809,216,1067,304">
 <area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="401,259,562,347">
 <area shape="rect" id="node6" href="application_owner.html" target="_top" title="application_owner" alt="" coords="825,111,1051,199">
-<area shape="rect" id="node7" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="732,321,1144,860">
+<area shape="rect" id="node7" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="732,321,1144,889">
 <area shape="rect" id="node8" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="302,735,661,881">
-<area shape="rect" id="node9" href="application_parcel_document.html" target="_top" title="application_parcel_document" alt="" coords="1253,568,1567,744">
-<area shape="rect" id="node10" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1188,344,1632,467">
+<area shape="rect" id="node9" href="application_parcel_document.html" target="_top" title="application_parcel_document" alt="" coords="1253,625,1567,801">
+<area shape="rect" id="node10" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1188,275,1632,397">
 <area shape="rect" id="node11" href="application_review.html" target="_top" title="application_review" alt="" coords="823,5,1053,93">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_parcel.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>

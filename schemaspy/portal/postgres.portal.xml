@@ -49,6 +49,12 @@
          <column autoUpdated="false" defaultValue="null" digits="2" id="32" name="nfu_max_fill_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <column autoUpdated="false" defaultValue="null" digits="2" id="33" name="nfu_fill_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="34" name="has_other_parcels_in_community" nullable="true" remarks="Indicates whether application owners have other parcels in the community." size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="35" name="tur_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="36" name="tur_agricultural_activities" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="37" name="tur_reduce_negative_impacts" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="38" name="tur_outside_lands" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="39" name="tur_total_corridor_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="40" name="tur_all_owners_notified" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
          <primaryKey column="file_number" sequenceNumberInPK="1"/>
          <index name="PK_39c4f5ceb0f5a7a4c819d46a0d5" unique="true">
             <column ascending="true" name="file_number"/>
@@ -146,6 +152,7 @@
             <parent column="code" foreignKey="FK_33f7b06b2c4e0e128d670526c66" implied="false" onDeleteCascade="false" schema="portal" table="application_parcel_ownership_type"/>
          </column>
          <column autoUpdated="false" defaultValue="'application'::character varying" digits="0" id="15" name="parcel_type" nullable="false" remarks="The Parcels type, &quot;other&quot; means parcels not related to application but related to the owner" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="crown_land_owner_type" nullable="true" remarks="For Crown Land parcels to indicate whether they are provincially owned or federally owned" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_4c88659b418020abbb9b65fd4e0" unique="true">
             <column ascending="true" name="uuid"/>
