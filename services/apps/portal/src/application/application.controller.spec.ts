@@ -17,7 +17,7 @@ import {
 } from './application-validator.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDetailedDto, ApplicationDto } from './application.dto';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 import { ApplicationService } from './application.service';
 
 describe('ApplicationController', () => {
@@ -69,15 +69,15 @@ describe('ApplicationController', () => {
     controller = module.get<ApplicationController>(ApplicationController);
 
     mockAppService.update.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         applicant: applicant,
         localGovernmentUuid,
       }),
     );
 
     mockAppService.create.mockResolvedValue('2');
-    mockAppService.getIfCreator.mockResolvedValue(new Application());
-    mockAppService.verifyAccess.mockResolvedValue(new Application());
+    mockAppService.getIfCreator.mockResolvedValue(new ApplicationProposal());
+    mockAppService.verifyAccess.mockResolvedValue(new ApplicationProposal());
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
     mockLgService.get.mockResolvedValue([
@@ -125,7 +125,7 @@ describe('ApplicationController', () => {
   it('should call out to service when cancelling an application', async () => {
     mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationDto]);
     mockAppService.getIfCreator.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.IN_PROGRESS,
         }),
@@ -146,7 +146,7 @@ describe('ApplicationController', () => {
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
     mockAppService.getIfCreator.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.CANCELLED,
         }),
@@ -192,7 +192,7 @@ describe('ApplicationController', () => {
       name: 'fake-name',
       isFirstNation: false,
     });
-    const mockApplication = new Application();
+    const mockApplication = new ApplicationProposal();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
     mockAppService.mapToDetailedDTO.mockResolvedValue(
       {} as ApplicationDetailedDto,
@@ -260,13 +260,13 @@ describe('ApplicationController', () => {
       {} as ApplicationGrpcResponse,
     );
     mockAppService.getIfCreator.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         typeCode: 'TURP',
       }),
     );
     mockAppService.updateStatus.mockResolvedValue();
     mockAppValidationService.validateApplication.mockResolvedValue({
-      application: new Application({
+      application: new ApplicationProposal({
         typeCode: 'TURP',
       }) as ValidatedApplication,
       errors: [],
@@ -287,13 +287,13 @@ describe('ApplicationController', () => {
     const mockFileId = 'file-id';
     mockAppService.submitToLg.mockResolvedValue();
     mockAppService.getIfCreator.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         typeCode: 'NOT-TURP',
         localGovernmentUuid,
       }),
     );
     mockAppValidationService.validateApplication.mockResolvedValue({
-      application: new Application() as ValidatedApplication,
+      application: new ApplicationProposal() as ValidatedApplication,
       errors: [],
     });
 
@@ -310,7 +310,7 @@ describe('ApplicationController', () => {
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
     mockAppService.getIfCreator.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         typeCode: 'NOT-TURP',
       }),
     );

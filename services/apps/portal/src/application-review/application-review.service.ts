@@ -10,13 +10,13 @@ import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
-import { Application } from '../application/application.entity';
+import { ApplicationProposal } from '../application/application.entity';
 import { User } from '../user/user.entity';
 import {
   ApplicationReviewDto,
   UpdateApplicationReviewDto,
 } from './application-review.dto';
-import { ApplicationReview } from './application-review.entity';
+import { ApplicationProposalReview } from './application-review.entity';
 
 export type CompletedApplicationReview = {
   localGovernmentFileNumber: string;
@@ -41,8 +41,8 @@ export type CompletedApplicationReview = {
 @Injectable()
 export class ApplicationReviewService {
   constructor(
-    @InjectRepository(ApplicationReview)
-    private applicationReviewRepository: Repository<ApplicationReview>,
+    @InjectRepository(ApplicationProposalReview)
+    private applicationReviewRepository: Repository<ApplicationProposalReview>,
     private applicationDocumentService: ApplicationDocumentService,
     @InjectMapper('') private mapper: Mapper,
   ) {}
@@ -74,8 +74,8 @@ export class ApplicationReviewService {
     });
   }
 
-  async startReview(application: Application) {
-    const applicationReview = new ApplicationReview({
+  async startReview(application: ApplicationProposal) {
+    const applicationReview = new ApplicationProposalReview({
       application,
     });
     return await this.applicationReviewRepository.save(applicationReview);
@@ -185,8 +185,8 @@ export class ApplicationReviewService {
   }
 
   verifyComplete(
-    application: Application,
-    applicationReview: ApplicationReview,
+    application: ApplicationProposal,
+    applicationReview: ApplicationProposalReview,
     isFirstNationGovernment: boolean,
   ): CompletedApplicationReview {
     if (
@@ -269,12 +269,12 @@ export class ApplicationReviewService {
   }
 
   async mapToDto(
-    review: ApplicationReview,
+    review: ApplicationProposalReview,
     localGovernment: LocalGovernment,
   ): Promise<ApplicationReviewDto> {
     const mappedReview = await this.mapper.mapAsync(
       review,
-      ApplicationReview,
+      ApplicationProposalReview,
       ApplicationReviewDto,
     );
     return {
@@ -283,7 +283,7 @@ export class ApplicationReviewService {
     };
   }
 
-  async delete(applicationReview: ApplicationReview) {
+  async delete(applicationReview: ApplicationProposalReview) {
     await this.applicationReviewRepository.remove(applicationReview);
   }
 }

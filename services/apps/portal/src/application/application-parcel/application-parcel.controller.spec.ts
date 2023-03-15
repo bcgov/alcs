@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationParcelController } from './application-parcel.controller';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
@@ -69,7 +69,9 @@ describe('ApplicationParcelController', () => {
   });
 
   it('should call out to service when creating parcels', async () => {
-    mockApplicationService.getOrFail.mockResolvedValue({} as Application);
+    mockApplicationService.getOrFail.mockResolvedValue(
+      {} as ApplicationProposal,
+    );
     mockApplicationParcelService.create.mockResolvedValue(
       {} as ApplicationParcel,
     );
@@ -87,7 +89,9 @@ describe('ApplicationParcelController', () => {
 
   it('should call out to service and revert newly created "other" parcel if failed to link it to and owner during creation process', async () => {
     const mockError = new Error('mock error');
-    mockApplicationService.getOrFail.mockResolvedValue({} as Application);
+    mockApplicationService.getOrFail.mockResolvedValue(
+      {} as ApplicationProposal,
+    );
     mockApplicationParcelService.create.mockResolvedValue(
       {} as ApplicationParcel,
     );

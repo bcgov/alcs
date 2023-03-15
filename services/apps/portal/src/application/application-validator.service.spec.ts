@@ -16,7 +16,7 @@ import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationValidatorService } from './application-validator.service';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 
 function includesError(errors: Error[], target: Error) {
   return errors.some((error) => error.message === target.message);
@@ -58,7 +58,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should return an error for missing applicant', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -71,7 +71,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should return an error for no parcels', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -84,7 +84,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('provide errors for invalid application parcel', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -132,7 +132,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should report an invalid PID', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -158,7 +158,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should require certificate of title and crown description for CRWN parcels with PID and with CRWN owners', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [
         new ApplicationOwner({
           type: new ApplicationOwnerType({
@@ -196,7 +196,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should not require certificate of title for other parcels', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -229,7 +229,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should return an error for no primary contact', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -253,7 +253,7 @@ describe('ApplicationValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [mockOwner],
       documents: [],
       primaryContactOwnerUuid: mockOwner.uuid,
@@ -278,7 +278,7 @@ describe('ApplicationValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [mockOwner, mockOwner],
       documents: [],
       primaryContactOwnerUuid: mockOwner.uuid,
@@ -303,7 +303,7 @@ describe('ApplicationValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [mockOwner],
       documents: [],
       primaryContactOwnerUuid: mockOwner.uuid,
@@ -328,7 +328,7 @@ describe('ApplicationValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [mockOwner, mockOwner],
       documents: [
         new ApplicationDocument({
@@ -349,7 +349,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should produce an error for missing local government', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
     });
@@ -373,7 +373,7 @@ describe('ApplicationValidatorService', () => {
     };
     mockLGService.get.mockResolvedValue([mockLg]);
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       localGovernmentUuid: mockLg.uuid,
@@ -392,7 +392,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should not have land use errors when all fields are filled', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       parcelsAgricultureDescription: 'VALID',
@@ -419,7 +419,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should have land use errors when not all fields are filled', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       parcelsAgricultureDescription: undefined,
@@ -449,7 +449,7 @@ describe('ApplicationValidatorService', () => {
     const incompleteDocument = new ApplicationDocument({
       type: null,
     });
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [incompleteDocument],
     });
@@ -469,7 +469,7 @@ describe('ApplicationValidatorService', () => {
       type: DOCUMENT_TYPE.OTHER,
       description: undefined,
     });
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [incompleteDocument],
     });
@@ -485,7 +485,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should report no NFU errors when all information is present and there is fill', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       nfuHectares: 1.5125,
@@ -514,7 +514,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should not report NFU errors when there is no fill', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       nfuHectares: 1.5125,
@@ -536,7 +536,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should report NFU errors when information is missing', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       nfuHectares: null,
@@ -566,7 +566,7 @@ describe('ApplicationValidatorService', () => {
   });
 
   it('should report TUR errors when information is missing', async () => {
-    const application = new Application({
+    const application = new ApplicationProposal({
       owners: [],
       documents: [],
       turAgriculturalActivities: 'turAgriculturalActivities',

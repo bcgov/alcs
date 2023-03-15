@@ -20,13 +20,13 @@ import { ApplicationDocument } from './application-document/application-document
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplication } from './application-validator.service';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 import { ApplicationService } from './application.service';
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
   let mockAppTypeService: DeepMocked<ApplicationTypeService>;
-  let mockRepository: DeepMocked<Repository<Application>>;
+  let mockRepository: DeepMocked<Repository<ApplicationProposal>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
   let mockAlcsApplicationService: DeepMocked<AlcsApplicationService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
@@ -48,7 +48,7 @@ describe('ApplicationService', () => {
         ApplicationService,
         ApplicationProfile,
         {
-          provide: getRepositoryToken(Application),
+          provide: getRepositoryToken(ApplicationProposal),
           useValue: mockRepository,
         },
         {
@@ -78,7 +78,7 @@ describe('ApplicationService', () => {
   });
 
   it('should return the fetched application', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const app = await service.getOrFail('');
@@ -86,7 +86,7 @@ describe('ApplicationService', () => {
   });
 
   it('should return the fetched application when fetching with user', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const app = await service.getIfCreator('', new User());
@@ -115,7 +115,7 @@ describe('ApplicationService', () => {
     const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
     mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
-    mockRepository.save.mockResolvedValue(new Application());
+    mockRepository.save.mockResolvedValue(new ApplicationProposal());
     mockAlcsApplicationService.generateFileNumber.mockReturnValue(
       of({
         fileNumber: fileId,
@@ -133,7 +133,7 @@ describe('ApplicationService', () => {
   });
 
   it('should call through for get by user', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     mockRepository.find.mockResolvedValue([application]);
 
     const res = await service.getByUser(new User());
@@ -143,7 +143,7 @@ describe('ApplicationService', () => {
   });
 
   it('should call through for getByFileId', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.getByFileId('', new User());
@@ -152,7 +152,7 @@ describe('ApplicationService', () => {
   });
 
   it('should call through for getForGovernmentByFileId', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.getForGovernmentByFileId('', {
@@ -165,7 +165,7 @@ describe('ApplicationService', () => {
   });
 
   it('should load the canceled status and save the application for cancel', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     const cancelStatus = new ApplicationStatus({
       code: APPLICATION_STATUS.CANCELLED,
     });
@@ -180,7 +180,7 @@ describe('ApplicationService', () => {
   });
 
   it('should throw an exception if it fails to load cancelled status', async () => {
-    const application = new Application();
+    const application = new ApplicationProposal();
     const exception = new BaseServiceException('');
     mockStatusRepository.findOneOrFail.mockRejectedValue(exception);
 
@@ -199,7 +199,7 @@ describe('ApplicationService', () => {
     mockStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
     mockRepository.save.mockResolvedValue({} as any);
 
-    await service.submitToLg(new Application());
+    await service.submitToLg(new ApplicationProposal());
     expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].status).toEqual(mockStatus);
@@ -218,7 +218,7 @@ describe('ApplicationService', () => {
       },
     ]);
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       applicant,
       typeCode: typeCode,
       status: new ApplicationStatus({
@@ -240,7 +240,7 @@ describe('ApplicationService', () => {
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new Application({
+    const mockApplication = new ApplicationProposal({
       fileNumber,
       applicant,
       typeCode,
@@ -276,7 +276,7 @@ describe('ApplicationService', () => {
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new Application({
+    const mockApplication = new ApplicationProposal({
       fileNumber,
       applicant,
       typeCode,
@@ -319,7 +319,7 @@ describe('ApplicationService', () => {
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
 
-    const mockApplication = new Application({
+    const mockApplication = new ApplicationProposal({
       fileNumber,
       applicant: 'incognito',
       typeCode: 'fake',
@@ -338,7 +338,7 @@ describe('ApplicationService', () => {
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOne).toBeCalledTimes(2);
     expect(result).toEqual(
-      new Application({
+      new ApplicationProposal({
         fileNumber,
         applicant,
         typeCode,

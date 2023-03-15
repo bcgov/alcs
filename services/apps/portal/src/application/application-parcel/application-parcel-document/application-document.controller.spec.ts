@@ -9,7 +9,7 @@ import { AlcsDocumentService } from '../../../alcs/document-grpc/alcs-document.s
 import { ApplicationParcelProfile } from '../../../common/automapper/application-parcel.automapper.profile';
 import { Document } from '../../../document/document.entity';
 import { User } from '../../../user/user.entity';
-import { Application } from '../../application.entity';
+import { ApplicationProposal } from '../../application.entity';
 import { ApplicationService } from '../../application.service';
 import { ApplicationParcel } from '../application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel.service';
@@ -76,7 +76,9 @@ describe('ApplicationDocumentController', () => {
       ApplicationParcelDocumentController,
     );
 
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
   });
 
   it('should be defined', () => {

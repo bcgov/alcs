@@ -10,7 +10,7 @@ import { ApplicationOwnerProfile } from '../../common/automapper/application-own
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { DOCUMENT_TYPE } from '../application-document/application-document.entity';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner.controller';
@@ -74,7 +74,9 @@ describe('ApplicationOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
     mockAppOwnerService.fetchByApplicationFileId.mockResolvedValue([owner]);
 
     const owners = await controller.fetchByFileId('', {
@@ -96,7 +98,9 @@ describe('ApplicationOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
     mockAppOwnerService.create.mockResolvedValue(owner);
 
     const createdOwner = await controller.create(
@@ -162,7 +166,9 @@ describe('ApplicationOwnerController', () => {
   it('should call through for update', async () => {
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     const res = await controller.update(
       '',
@@ -187,7 +193,9 @@ describe('ApplicationOwnerController', () => {
   it('should call through for delete', async () => {
     mockAppOwnerService.delete.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     await controller.delete('', {
       user: {
@@ -203,7 +211,9 @@ describe('ApplicationOwnerController', () => {
   it('should call through for attachToParcel', async () => {
     mockAppOwnerService.attachToParcel.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     await controller.linkToParcel('', '', {
       user: {
@@ -219,7 +229,9 @@ describe('ApplicationOwnerController', () => {
   it('should call through for removeFromParcel', async () => {
     mockAppOwnerService.removeFromParcel.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     await controller.removeFromParcel('', '', {
       user: {
@@ -266,7 +278,9 @@ describe('ApplicationOwnerController', () => {
       new ApplicationOwner({ corporateSummary: new Document() }),
     );
     mockDocumentService.getDownloadUrl.mockReturnValue(of(mockResponse));
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     const res = await controller.openCorporateSummary('', {
       user: {
@@ -282,8 +296,12 @@ describe('ApplicationOwnerController', () => {
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
     mockAppOwnerService.create.mockResolvedValue(new ApplicationOwner());
-    mockAppOwnerService.setPrimaryContact.mockResolvedValue(new Application());
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue(
+      new ApplicationProposal(),
+    );
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     await controller.setPrimaryContact(
       { fileNumber: '' },
@@ -307,9 +325,13 @@ describe('ApplicationOwnerController', () => {
         }),
       }),
     );
-    mockAppOwnerService.setPrimaryContact.mockResolvedValue(new Application());
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue(
+      new ApplicationProposal(),
+    );
     mockAppOwnerService.deleteAgents.mockResolvedValue({} as any);
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     await controller.setPrimaryContact(
       { fileNumber: '', ownerUuid: 'fake-uuid' },
@@ -334,8 +356,12 @@ describe('ApplicationOwnerController', () => {
       }),
     );
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
-    mockAppOwnerService.setPrimaryContact.mockResolvedValue(new Application());
-    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue(
+      new ApplicationProposal(),
+    );
+    mockApplicationService.verifyAccess.mockResolvedValue(
+      new ApplicationProposal(),
+    );
 
     await controller.setPrimaryContact(
       { fileNumber: '', ownerUuid: 'fake-uuid' },

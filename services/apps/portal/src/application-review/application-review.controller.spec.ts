@@ -13,12 +13,12 @@ import {
   ApplicationValidatorService,
   ValidatedApplication,
 } from '../application/application-validator.service';
-import { Application } from '../application/application.entity';
+import { ApplicationProposal } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { User } from '../user/user.entity';
 import { ApplicationReviewController } from './application-review.controller';
 import { ApplicationReviewDto } from './application-review.dto';
-import { ApplicationReview } from './application-review.entity';
+import { ApplicationProposalReview } from './application-review.entity';
 import {
   ApplicationReviewService,
   CompletedApplicationReview,
@@ -50,7 +50,7 @@ describe('ApplicationReviewController', () => {
     mockAppDocService = createMock();
     mockAppValidatorService = createMock();
 
-    applicationReview = new ApplicationReview({
+    applicationReview = new ApplicationProposalReview({
       applicationFileNumber: fileNumber,
     });
 
@@ -119,9 +119,9 @@ describe('ApplicationReviewController', () => {
       },
     ]);
 
-    const reviewWithApp = new ApplicationReview({
+    const reviewWithApp = new ApplicationProposalReview({
       ...applicationReview,
-      application: new Application({
+      application: new ApplicationProposal({
         statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
         localGovernmentUuid: 'uuid',
       }),
@@ -149,9 +149,9 @@ describe('ApplicationReviewController', () => {
       },
     ]);
 
-    const reviewWithApp = new ApplicationReview({
+    const reviewWithApp = new ApplicationProposalReview({
       ...applicationReview,
-      application: new Application({
+      application: new ApplicationProposal({
         statusCode: APPLICATION_STATUS.IN_REVIEW,
         localGovernmentUuid: 'uuid',
       }),
@@ -173,7 +173,7 @@ describe('ApplicationReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
-      new Application(),
+      new ApplicationProposal(),
     );
     mockAppService.updateStatus.mockResolvedValue({} as any);
 
@@ -217,14 +217,16 @@ describe('ApplicationReviewController', () => {
   it('should throw an exception when trying to finish a review on an application not in review', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
-      new Application({ statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC }),
+      new ApplicationProposal({
+        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+      }),
     );
     mockAppReviewService.verifyComplete.mockReturnValue(
       applicationReview as CompletedApplicationReview,
     );
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateApplication.mockResolvedValue({
-      application: new Application() as ValidatedApplication,
+      application: new ApplicationProposal() as ValidatedApplication,
       errors: [],
     });
 
@@ -247,7 +249,7 @@ describe('ApplicationReviewController', () => {
   it('should load review and call submitToAlcs when in correct status for finish', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
-      new Application({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
+      new ApplicationProposal({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
     mockAppService.submitToAlcs.mockResolvedValue({
       fileNumber: '',
@@ -263,7 +265,7 @@ describe('ApplicationReviewController', () => {
     } as CompletedApplicationReview);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateApplication.mockResolvedValue({
-      application: new Application() as ValidatedApplication,
+      application: new ApplicationProposal() as ValidatedApplication,
       errors: [],
     });
     mockAppService.updateStatus.mockResolvedValue({} as any);
@@ -290,7 +292,7 @@ describe('ApplicationReviewController', () => {
   it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
-      new Application({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
+      new ApplicationProposal({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
     mockAppService.submitToAlcs.mockResolvedValue({
       fileNumber: '',
@@ -306,7 +308,7 @@ describe('ApplicationReviewController', () => {
     } as CompletedApplicationReview);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateApplication.mockResolvedValue({
-      application: new Application() as ValidatedApplication,
+      application: new ApplicationProposal() as ValidatedApplication,
       errors: [],
     });
     mockAppService.updateStatus.mockResolvedValue({} as any);
@@ -333,7 +335,7 @@ describe('ApplicationReviewController', () => {
   it('should update the status, delete documents, and update the application for return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
-      new Application({
+      new ApplicationProposal({
         statusCode: APPLICATION_STATUS.IN_REVIEW,
         documents: [
           new ApplicationDocument({
@@ -379,7 +381,9 @@ describe('ApplicationReviewController', () => {
   it('should throw an exception when trying to return an application not in review', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
-      new Application({ statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC }),
+      new ApplicationProposal({
+        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+      }),
     );
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
 

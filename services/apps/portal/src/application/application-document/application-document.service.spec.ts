@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationDocument,
@@ -29,7 +29,7 @@ describe('ApplicationDocumentService', () => {
     mockApplicationService = createMock<ApplicationService>();
     mockRepository = createMock<Repository<ApplicationDocument>>();
 
-    mockApplication = new Application({
+    mockApplication = new ApplicationProposal({
       fileNumber,
     });
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);

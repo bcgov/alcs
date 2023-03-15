@@ -1,9 +1,9 @@
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource, InsertEvent, UpdateEvent } from 'typeorm';
 import { ApplicationStatusSubscriber } from './application-status.subscriber';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 
 describe('ApplicationStatusSubscriber', () => {
   let service: ApplicationStatusSubscriber;
@@ -40,7 +40,7 @@ describe('ApplicationStatusSubscriber', () => {
 
   it('should set the initial event history before insert', () => {
     const mockLabel = 'mock status';
-    const app = new Application({
+    const app = new ApplicationProposal({
       status: new ApplicationStatus({
         code: 'code',
         description: '',
@@ -49,7 +49,7 @@ describe('ApplicationStatusSubscriber', () => {
     });
     service.beforeInsert({
       entity: app,
-    } as InsertEvent<Application>);
+    } as InsertEvent<ApplicationProposal>);
 
     expect(app.statusHistory.length).toEqual(1);
     expect(app.statusHistory[0].label).toEqual(mockLabel);
@@ -60,7 +60,7 @@ describe('ApplicationStatusSubscriber', () => {
     const oldLabel = 'old status';
     const newLabel = 'new status';
 
-    const existingApp = new Application({
+    const existingApp = new ApplicationProposal({
       status: new ApplicationStatus({
         code: 'old-status',
         description: '',
@@ -72,7 +72,7 @@ describe('ApplicationStatusSubscriber', () => {
       ],
     });
 
-    const updateApp = new Application({
+    const updateApp = new ApplicationProposal({
       status: new ApplicationStatus({
         code: 'new-status',
         description: '',
@@ -85,7 +85,7 @@ describe('ApplicationStatusSubscriber', () => {
     service.beforeUpdate({
       entity: updateApp,
       databaseEntity: existingApp,
-    } as unknown as UpdateEvent<Application>);
+    } as unknown as UpdateEvent<ApplicationProposal>);
 
     expect(updateApp.statusHistory.length).toEqual(2);
     expect(updateApp.statusHistory[0].label).toEqual(oldLabel);
@@ -97,7 +97,7 @@ describe('ApplicationStatusSubscriber', () => {
   it("should leave the status alone if it isn't changed", () => {
     const existingLabel = 'old status';
 
-    const existingApp = new Application({
+    const existingApp = new ApplicationProposal({
       status: new ApplicationStatus({
         code: 'code',
         description: '',
@@ -117,7 +117,7 @@ describe('ApplicationStatusSubscriber', () => {
     service.beforeUpdate({
       entity: existingApp,
       databaseEntity: existingApp,
-    } as unknown as UpdateEvent<Application>);
+    } as unknown as UpdateEvent<ApplicationProposal>);
 
     expect(existingApp.statusHistory.length).toEqual(1);
     expect(existingApp.statusHistory[0].label).toEqual(existingLabel);

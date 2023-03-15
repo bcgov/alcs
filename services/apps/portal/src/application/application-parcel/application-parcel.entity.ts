@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationParcelDocument } from './application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
 
@@ -102,8 +102,8 @@ export class ApplicationParcel extends Base {
   applicationFileNumber: string;
 
   @AutoMap()
-  @ManyToOne(() => Application)
-  application: Application;
+  @ManyToOne(() => ApplicationProposal)
+  application: ApplicationProposal;
 
   @AutoMap(() => String)
   @Column({ nullable: true })

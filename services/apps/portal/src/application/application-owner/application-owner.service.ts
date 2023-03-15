@@ -4,7 +4,7 @@ import { Any, Repository } from 'typeorm';
 import { DocumentService } from '../../document/document.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import {
@@ -40,7 +40,10 @@ export class ApplicationOwnerService {
     });
   }
 
-  async create(createDto: ApplicationOwnerCreateDto, application: Application) {
+  async create(
+    createDto: ApplicationOwnerCreateDto,
+    application: ApplicationProposal,
+  ) {
     const type = await this.typeRepository.findOneOrFail({
       where: {
         code: createDto.typeCode,
@@ -193,7 +196,7 @@ export class ApplicationOwnerService {
     });
   }
 
-  async deleteAgents(application: Application) {
+  async deleteAgents(application: ApplicationProposal) {
     const agentOwners = await this.repository.find({
       where: {
         application: {

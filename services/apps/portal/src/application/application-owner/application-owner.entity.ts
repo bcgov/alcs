@@ -10,7 +10,7 @@ import {
 import { Base } from '../../common/entities/base.entity';
 import { Document } from '../../document/document.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 
 @Entity()
@@ -68,8 +68,8 @@ export class ApplicationOwner extends Base {
   @ManyToOne(() => ApplicationOwnerType, { nullable: false })
   type: ApplicationOwnerType;
 
-  @ManyToOne(() => Application, { nullable: false })
-  application: Application;
+  @ManyToOne(() => ApplicationProposal, { nullable: false })
+  application: ApplicationProposal;
 
   @Column()
   applicationFileNumber: string;

@@ -11,9 +11,9 @@ import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 
-export class ValidatedApplication extends Application {
+export class ValidatedApplication extends ApplicationProposal {
   applicant: string;
   localGovernmentUuid: string;
   parcels: SubmittedApplicationParcelGrpc[];
@@ -53,7 +53,7 @@ export class ApplicationValidatorService {
     private appParcelService: ApplicationParcelService,
   ) {}
 
-  async validateApplication(application: Application) {
+  async validateApplication(application: ApplicationProposal) {
     const errors: Error[] = [];
 
     if (!application.applicant) {
@@ -96,7 +96,10 @@ export class ApplicationValidatorService {
     };
   }
 
-  private async validateParcels(application: Application, errors: Error[]) {
+  private async validateParcels(
+    application: ApplicationProposal,
+    errors: Error[],
+  ) {
     const parcels = await this.appParcelService.fetchByApplicationFileId(
       application.fileNumber,
     );
@@ -182,7 +185,7 @@ export class ApplicationValidatorService {
   }
 
   private async validatePrimaryContact(
-    application: Application,
+    application: ApplicationProposal,
     errors: Error[],
   ): Promise<SubmittedApplicationOwnerGrpc | undefined> {
     const primaryOwner = application.owners.find(
@@ -234,7 +237,7 @@ export class ApplicationValidatorService {
   }
 
   private async validateLocalGovernment(
-    application: Application,
+    application: ApplicationProposal,
     errors: Error[],
   ) {
     const localGovernments = await this.localGovernmentService.get();
@@ -265,7 +268,10 @@ export class ApplicationValidatorService {
     }
   }
 
-  private async validateLandUse(application: Application, errors: Error[]) {
+  private async validateLandUse(
+    application: ApplicationProposal,
+    errors: Error[],
+  ) {
     if (
       !application.parcelsAgricultureDescription ||
       !application.parcelsAgricultureImprovementDescription ||
@@ -289,7 +295,7 @@ export class ApplicationValidatorService {
   }
 
   private async validateOptionalDocuments(
-    application: Application,
+    application: ApplicationProposal,
     errors: Error[],
   ) {
     const untypedDocuments = application.documents.filter(
@@ -321,7 +327,10 @@ export class ApplicationValidatorService {
     }
   }
 
-  private async validateNfuProposal(application: Application, errors: Error[]) {
+  private async validateNfuProposal(
+    application: ApplicationProposal,
+    errors: Error[],
+  ) {
     if (
       !application.nfuHectares ||
       !application.nfuPurpose ||
@@ -349,7 +358,10 @@ export class ApplicationValidatorService {
     }
   }
 
-  private async validateTurProposal(application: Application, errors: Error[]) {
+  private async validateTurProposal(
+    application: ApplicationProposal,
+    errors: Error[],
+  ) {
     if (
       !application.turPurpose ||
       !application.turOutsideLands ||

@@ -5,7 +5,7 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { InsertEvent } from 'typeorm/subscriber/event/InsertEvent';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 
 @EventSubscriber()
 export class ApplicationStatusSubscriber implements EntitySubscriberInterface {
@@ -14,10 +14,10 @@ export class ApplicationStatusSubscriber implements EntitySubscriberInterface {
   }
 
   listenTo() {
-    return Application;
+    return ApplicationProposal;
   }
 
-  async beforeInsert(event: InsertEvent<Application>) {
+  async beforeInsert(event: InsertEvent<ApplicationProposal>) {
     if (!event.entity) {
       return;
     }
@@ -32,7 +32,7 @@ export class ApplicationStatusSubscriber implements EntitySubscriberInterface {
     ];
   }
 
-  async beforeUpdate(event: UpdateEvent<Application>) {
+  async beforeUpdate(event: UpdateEvent<ApplicationProposal>) {
     if (!event.entity) {
       return;
     }
@@ -40,9 +40,9 @@ export class ApplicationStatusSubscriber implements EntitySubscriberInterface {
     this.updateStatusHistory(event);
   }
 
-  private updateStatusHistory(event: UpdateEvent<Application>) {
+  private updateStatusHistory(event: UpdateEvent<ApplicationProposal>) {
     const oldApplication = event.databaseEntity;
-    const newApplication = event.entity as Application;
+    const newApplication = event.entity as ApplicationProposal;
 
     //Status is set directly since the application.statusCode will still reflect the old status
     if (oldApplication.statusCode !== newApplication.status.code) {

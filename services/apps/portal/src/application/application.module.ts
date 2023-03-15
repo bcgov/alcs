@@ -25,13 +25,13 @@ import { ApplicationStatusSubscriber } from './application-status.subscriber';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ApplicationValidatorService } from './application-validator.service';
 import { ApplicationController } from './application.controller';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 import { ApplicationService } from './application.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Application,
+      ApplicationProposal,
       ApplicationDocument,
       ApplicationStatus,
       ApplicationParcel,

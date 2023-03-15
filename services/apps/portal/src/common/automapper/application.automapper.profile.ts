@@ -14,7 +14,7 @@ import {
   ApplicationDetailedDto,
   ApplicationDto,
 } from '../../application/application.dto';
-import { Application } from '../../application/application.entity';
+import { ApplicationProposal } from '../../application/application.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -26,7 +26,7 @@ export class ApplicationProfile extends AutomapperProfile {
     return (mapper) => {
       createMap(
         mapper,
-        Application,
+        ApplicationProposal,
         ApplicationDto,
         forMember(
           (a) => a.lastStatusUpdate,
@@ -95,7 +95,7 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        Application,
+        ApplicationProposal,
         ApplicationDetailedDto,
         forMember(
           (a) => a.lastStatusUpdate,

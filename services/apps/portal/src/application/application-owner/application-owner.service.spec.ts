@@ -4,11 +4,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
-import { User } from '../../user/user.entity';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
-import { Application } from '../application.entity';
+import { ApplicationProposal } from '../application.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwner } from './application-owner.entity';
@@ -62,7 +61,7 @@ describe('ApplicationOwnerService', () => {
         owners: [new ApplicationOwner()],
       }),
     ]);
-    mockApplicationservice.update.mockResolvedValue(new Application());
+    mockApplicationservice.update.mockResolvedValue(new ApplicationProposal());
   });
 
   it('should be defined', () => {
@@ -88,7 +87,7 @@ describe('ApplicationOwnerService', () => {
         phoneNumber: '',
         typeCode: '',
       },
-      new Application(),
+      new ApplicationProposal(),
     );
 
     expect(mockRepo.save).toHaveBeenCalledTimes(1);

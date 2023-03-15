@@ -23,8 +23,8 @@ export class StatusHistory {
 }
 
 @Entity()
-export class Application extends BaseEntity {
-  constructor(data?: Partial<Application>) {
+export class ApplicationProposal extends BaseEntity {
+  constructor(data?: Partial<ApplicationProposal>) {
     super();
     if (data) {
       Object.assign(this, data);

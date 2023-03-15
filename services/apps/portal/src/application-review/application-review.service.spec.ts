@@ -10,14 +10,14 @@ import {
   DOCUMENT_TYPE,
 } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
-import { Application } from '../application/application.entity';
+import { ApplicationProposal } from '../application/application.entity';
 import { ApplicationReviewProfile } from '../common/automapper/application-review.automapper.profile';
-import { ApplicationReview } from './application-review.entity';
+import { ApplicationProposalReview } from './application-review.entity';
 import { ApplicationReviewService } from './application-review.service';
 
 describe('ApplicationReviewService', () => {
   let service: ApplicationReviewService;
-  let mockRepository: DeepMocked<Repository<ApplicationReview>>;
+  let mockRepository: DeepMocked<Repository<ApplicationProposalReview>>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   const mockLocalGovernment = {
@@ -41,7 +41,7 @@ describe('ApplicationReviewService', () => {
         ApplicationReviewService,
         ApplicationReviewProfile,
         {
-          provide: getRepositoryToken(ApplicationReview),
+          provide: getRepositoryToken(ApplicationProposalReview),
           useValue: mockRepository,
         },
         {
@@ -59,7 +59,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should call through for get', async () => {
-    const appReview = new ApplicationReview();
+    const appReview = new ApplicationProposalReview();
     mockRepository.findOne.mockResolvedValue(appReview);
 
     const res = await service.getForGovernment('', mockLocalGovernment);
@@ -68,16 +68,16 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should call save for startReview', async () => {
-    const appReview = new ApplicationReview();
+    const appReview = new ApplicationProposalReview();
     mockRepository.save.mockResolvedValue(appReview);
 
-    const res = await service.startReview(new Application());
+    const res = await service.startReview(new ApplicationProposal());
 
     expect(res).toBe(appReview);
   });
 
   it('should call save for update', async () => {
-    const appReview = new ApplicationReview();
+    const appReview = new ApplicationProposalReview();
     mockRepository.findOne.mockResolvedValue(appReview);
     mockRepository.save.mockResolvedValue({} as any);
 
@@ -87,7 +87,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should delete the staff report and the resolution document when there is no ocp or zoning for update', async () => {
-    const appReview = new ApplicationReview({});
+    const appReview = new ApplicationProposalReview({});
     mockRepository.findOne.mockResolvedValue(appReview);
     mockAppDocumentService.deleteByType.mockResolvedValue({} as any);
     mockRepository.save.mockResolvedValue({} as any);
@@ -102,7 +102,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should call remove for delete', async () => {
-    const appReview = new ApplicationReview();
+    const appReview = new ApplicationProposalReview();
     mockRepository.remove.mockResolvedValue(appReview);
 
     await service.delete(appReview);
@@ -111,15 +111,15 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should throw an exception for when verifying an incomplete review', () => {
-    const appReview = new ApplicationReview();
+    const appReview = new ApplicationProposalReview();
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview, false);
+      service.verifyComplete(new ApplicationProposal(), appReview, false);
     }).toThrow(new BaseServiceException('Contact information not complete'));
   });
 
   it('should throw an ocp exception for when verifying a review with just contact info', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -131,12 +131,12 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview, false);
+      service.verifyComplete(new ApplicationProposal(), appReview, false);
     }).toThrow(new BaseServiceException('OCP information not complete'));
   });
 
   it('should throw a zoning exception for when review has zoning null', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -149,12 +149,12 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview, false);
+      service.verifyComplete(new ApplicationProposal(), appReview, false);
     }).toThrow(new BaseServiceException('Zoning information not complete'));
   });
 
   it('should throw an authorized exception when review is missing authorized', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -171,14 +171,14 @@ describe('ApplicationReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new Application(), appReview, false);
+      service.verifyComplete(new ApplicationProposal(), appReview, false);
     }).toThrow(
       new BaseServiceException('Review authorization needs to be set'),
     );
   });
 
   it('should throw an exception when application is missing staff report', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -194,7 +194,7 @@ describe('ApplicationReviewService', () => {
       isAuthorized: true,
     });
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       documents: [
         new ApplicationDocument({
           type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
@@ -210,7 +210,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should return the completed review when its authorized and has correct files', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -226,7 +226,7 @@ describe('ApplicationReviewService', () => {
       isAuthorized: true,
     });
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       documents: [
         new ApplicationDocument({
           type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
@@ -248,7 +248,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should not require a staff report if the application was not authorized', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -264,7 +264,7 @@ describe('ApplicationReviewService', () => {
       isAuthorized: false,
     });
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       documents: [
         new ApplicationDocument({
           type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
@@ -283,7 +283,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should allow null authorization if both ocp and zoning are false', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -296,7 +296,7 @@ describe('ApplicationReviewService', () => {
       isAuthorized: null,
     });
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       documents: [
         new ApplicationDocument({
           type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
@@ -318,7 +318,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should return the completed review when its valid and first nations', () => {
-    const appReview = new ApplicationReview({
+    const appReview = new ApplicationProposalReview({
       localGovernmentFileNumber: '123',
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -329,7 +329,7 @@ describe('ApplicationReviewService', () => {
       isAuthorized: true,
     });
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       documents: [
         new ApplicationDocument({
           type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
@@ -348,7 +348,7 @@ describe('ApplicationReviewService', () => {
   });
 
   it('should map in the local government first nation flag when mapping dto', async () => {
-    const res = await service.mapToDto(new ApplicationReview(), {
+    const res = await service.mapToDto(new ApplicationProposalReview(), {
       bceidBusinessGuid: '',
       uuid: '',
       name: '',

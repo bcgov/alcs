@@ -2,13 +2,12 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { Column, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import {
   ApplicationGrpcResponse,
   ApplicationReviewGrpc,
@@ -21,8 +20,6 @@ import {
 } from '../alcs/local-government/local-government.service';
 import { CompletedApplicationReview } from '../application-review/application-review.service';
 import { User } from '../user/user.entity';
-import { ColumnNumericTransformer } from '../utils/column-numeric-transform';
-import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplication } from './application-validator.service';
@@ -31,7 +28,7 @@ import {
   ApplicationDto,
   ApplicationUpdateDto,
 } from './application.dto';
-import { Application } from './application.entity';
+import { ApplicationProposal } from './application.entity';
 
 const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.SUBMITTED_TO_LG,
@@ -45,8 +42,8 @@ export class ApplicationService {
   private logger: Logger = new Logger(ApplicationService.name);
 
   constructor(
-    @InjectRepository(Application)
-    private applicationRepository: Repository<Application>,
+    @InjectRepository(ApplicationProposal)
+    private applicationRepository: Repository<ApplicationProposal>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
     private alcsApplicationService: AlcsApplicationService,
@@ -84,7 +81,7 @@ export class ApplicationService {
       );
     }
 
-    const application = new Application({
+    const application = new ApplicationProposal({
       fileNumber: alcsApplicationNumber.fileNumber,
       status: initialStatus,
       typeCode: type,
@@ -122,7 +119,7 @@ export class ApplicationService {
   }
 
   private setLandUseFields(
-    application: Application,
+    application: ApplicationProposal,
     updateDto: ApplicationUpdateDto,
   ) {
     application.parcelsAgricultureDescription =
@@ -147,11 +144,14 @@ export class ApplicationService {
     return application;
   }
 
-  async submitToLg(application: Application) {
+  async submitToLg(application: ApplicationProposal) {
     await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_LG);
   }
 
-  async updateStatus(application: Application, statusCode: APPLICATION_STATUS) {
+  async updateStatus(
+    application: ApplicationProposal,
+    statusCode: APPLICATION_STATUS,
+  ) {
     const status = await this.applicationStatusRepository.findOneOrFail({
       where: {
         code: statusCode,
@@ -395,13 +395,13 @@ export class ApplicationService {
   }
 
   async mapToDTOs(
-    apps: Application[],
+    apps: ApplicationProposal[],
     user: User,
     userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationTypeService.list();
     return apps.map((app) => ({
-      ...this.mapper.map(app, Application, ApplicationDto),
+      ...this.mapper.map(app, ApplicationProposal, ApplicationDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
       canEdit: [
         APPLICATION_STATUS.IN_PROGRESS,
@@ -420,13 +420,13 @@ export class ApplicationService {
   }
 
   async mapToDetailedDTO(
-    application: Application,
+    application: ApplicationProposal,
     userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationTypeService.list();
     const mappedApp = this.mapper.map(
       application,
-      Application,
+      ApplicationProposal,
       ApplicationDetailedDto,
     );
     return {
@@ -448,12 +448,12 @@ export class ApplicationService {
     };
   }
 
-  async cancel(application: Application) {
+  async cancel(application: ApplicationProposal) {
     await this.updateStatus(application, APPLICATION_STATUS.CANCELLED);
   }
 
   private setNFUFields(
-    application: Application,
+    application: ApplicationProposal,
     updateDto: ApplicationUpdateDto,
   ) {
     application.nfuHectares = updateDto.nfuHectares || application.nfuHectares;
@@ -487,7 +487,7 @@ export class ApplicationService {
   }
 
   private setTURFields(
-    application: Application,
+    application: ApplicationProposal,
     updateDto: ApplicationUpdateDto,
   ) {
     application.turPurpose = updateDto.turPurpose || application.turPurpose;

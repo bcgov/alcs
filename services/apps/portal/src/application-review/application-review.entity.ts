@@ -1,11 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { Application } from '../application/application.entity';
+import { ApplicationProposal } from '../application/application.entity';
 import { Base } from '../common/entities/base.entity';
 
 @Entity()
-export class ApplicationReview extends Base {
-  constructor(data?: Partial<ApplicationReview>) {
+export class ApplicationProposalReview extends Base {
+  constructor(data?: Partial<ApplicationProposalReview>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -81,9 +81,9 @@ export class ApplicationReview extends Base {
   isAuthorized: boolean | null;
 
   @AutoMap()
-  @OneToOne(() => Application, { nullable: false })
+  @OneToOne(() => ApplicationProposal, { nullable: false })
   @JoinColumn()
-  application: Application;
+  application: ApplicationProposal;
 
   @AutoMap()
   @Column()
