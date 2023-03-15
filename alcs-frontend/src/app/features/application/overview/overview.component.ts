@@ -92,7 +92,10 @@ export class OverviewComponent implements OnInit {
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateSubmittedToAlc) {
       mappedEvents.push({
-        name: 'Submitted to ALC',
+        name:
+          application.applicationReview && !application.applicationReview.isAuthorized
+            ? 'L/FNG Refused to Forward'
+            : 'Submitted to ALC',
         startDate: new Date(application.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),
         isFulfilled: true,
       });

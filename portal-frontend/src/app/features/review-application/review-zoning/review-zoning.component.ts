@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-zoning',
@@ -12,12 +13,15 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 })
 export class ReviewZoningComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationSteps.Zoning;
+  @Input() showErrors = false;
 
-  isSubjectToZoning = new FormControl<string | null>(null);
-  zoningBylawName = new FormControl<string | null>('');
-  zoningMinimumLotSize = new FormControl<string | null>('');
-  zoningDesignation = new FormControl<string | null>('');
-  isZoningConsistent = new FormControl<string | null>(null);
+  isSubjectToZoning = new FormControl<string | null>(null, [Validators.required]);
+  zoningBylawName = new FormControl<string | null>('', [Validators.required]);
+  zoningMinimumLotSize = new FormControl<string | null>('', [Validators.required]);
+  zoningDesignation = new FormControl<string | null>('', [Validators.required]);
+  isZoningConsistent = new FormControl<string | null>(null, [Validators.required]);
 
   zoningForm = new FormGroup({
     isSubjectToZoning: this.isSubjectToZoning,
@@ -50,6 +54,10 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
             this.isZoningConsistent.setValue(applicationReview.isZoningConsistent ? 'true' : 'false');
           }
         }
+
+        if (this.showErrors) {
+          this.zoningForm.markAllAsTouched();
+        }
       }
     });
   }
@@ -58,9 +66,8 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onSaveExit() {
+  async onExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -110,5 +117,9 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
       this.isZoningConsistent.disable();
       this.zoningDesignation.disable();
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

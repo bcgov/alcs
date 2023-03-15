@@ -1,0 +1,152 @@
+<section>
+  <app-parcel *ngIf="files && submittedApplication" [files]="files" [application]="submittedApplication"></app-parcel>
+</section>
+<section>
+  <app-parcel
+    *ngIf="files && submittedApplication"
+    [files]="files"
+    [application]="submittedApplication"
+    parcelType="other"
+  ></app-parcel>
+</section>
+<section>
+  <h3>Primary Contact</h3>
+  <div *ngIf="submittedApplication" class="review-table">
+    <div class="subheading2 grid-1">Primary Contact</div>
+    <div *ngIf="submittedApplication.primaryContact" class="grid-double">
+      {{ submittedApplication.primaryContact.displayName }}
+    </div>
+    <ng-container>
+      <div *ngIf="submittedApplication.primaryContact.type === 'AGEN'">Third Party Agent</div>
+      <ng-container *ngIf="submittedApplication.primaryContact.type === 'AGEN'">
+        <div class="full-width subheading1">Agent Contact Information</div>
+        <div class="subheading2 grid-1">First Name</div>
+        <div class="grid-double">
+          {{ submittedApplication.primaryContact.firstName }}
+        </div>
+        <div class="subheading2 grid-1">Last Name</div>
+        <div class="grid-double">
+          {{ submittedApplication.primaryContact.lastName }}
+        </div>
+        <div class="subheading2 grid-1">Organization</div>
+        <div class="grid-double">
+          {{ submittedApplication.primaryContact.organizationName }}
+        </div>
+        <div class="subheading2 grid-1">Phone</div>
+        <div class="grid-double">
+          {{ submittedApplication.primaryContact.phoneNumber }}
+        </div>
+        <div class="subheading2 grid-1">Email</div>
+        <div class="grid-double">
+          {{ submittedApplication.primaryContact.email }}
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="authorizationLetters.length > 0">
+      <div class="subheading2 grid-1">Authorization Letter(s)</div>
+      <div class="grid-double">
+        <div *ngFor="let file of authorizationLetters">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>
+<section>
+  <h3>Land Use</h3>
+  <div *ngIf="submittedApplication" class="review-table">
+    <div class="full-width">
+      <h4>Land Use of Parcel(s) under Application</h4>
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe in detail all agriculture that currently takes place on the parcel(s).
+    </div>
+    <div class="grid-double">
+      {{ submittedApplication.parcelsAgricultureDescription }}
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe in detail all agricultural improvements made to the parcel(s).
+    </div>
+    <div class="grid-double">
+      {{ submittedApplication.parcelsAgricultureImprovementDescription }}
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
+    </div>
+    <div class="grid-double">
+      {{ submittedApplication.parcelsNonAgricultureUseDescription }}
+    </div>
+    <div class="full-width">
+      <h4>Land Use of Adjacent Parcels</h4>
+    </div>
+    <div class="adjacent-parcels full-width">
+      <div class="grid-1 subheading2"></div>
+      <div class="grid-2 subheading2">Main Land Use Type</div>
+      <div class="grid-3 subheading2">Specific Activity</div>
+      <div class="grid-1 subheading2">North</div>
+      <div class="grid-2">
+        {{ submittedApplication.northLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submittedApplication.northLandUseTypeDescription }}
+      </div>
+      <div class="grid-1 subheading2">East</div>
+      <div class="grid-2">
+        {{ submittedApplication.eastLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submittedApplication.eastLandUseTypeDescription }}
+      </div>
+      <div class="grid-1 subheading2">South</div>
+      <div class="grid-2">
+        {{ submittedApplication.southLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submittedApplication.southLandUseTypeDescription }}
+      </div>
+      <div class="grid-1 subheading2">West</div>
+      <div class="grid-2">
+        {{ submittedApplication.westLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submittedApplication.westLandUseTypeDescription }}
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Proposal</h3>
+  <app-nfu-details
+    *ngIf="submittedApplication && application.type.code === 'NFUP'"
+    [application]="submittedApplication"
+  ></app-nfu-details>
+  <app-tur-details
+    *ngIf="submittedApplication && application.type.code === 'TURP'"
+    [application]="submittedApplication"
+    [files]='files'
+  ></app-tur-details>
+</section>
+<section>
+  <h3>Optional Documents</h3>
+  <div *ngIf="submittedApplication" class="review-table">
+    <div class="other-attachments full-width">
+      <div class="grid-1 subheading2">Type</div>
+      <div class="grid-2 subheading2">Description</div>
+      <div class="grid-3 subheading2">File Name</div>
+      <ng-container *ngFor="let file of otherFiles">
+        <div class="grid-1">
+          {{ file.type }}
+        </div>
+        <div class="grid-2">
+          {{ file.description }}
+        </div>
+        <div class="grid-3">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </ng-container>
+      <div *ngIf='otherFiles.length === 0' class='full-width'>
+        No optional attachments
+      </div>
+    </div>
+  </div>
+</section>

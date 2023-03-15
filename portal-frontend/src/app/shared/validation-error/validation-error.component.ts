@@ -6,7 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./validation-error.component.scss'],
 })
 export class ValidationErrorComponent {
-  @Input() text = '';
-
-  constructor() {}
+  @Input() errorClass = 'subtext error';
 }

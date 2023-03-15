@@ -188,7 +188,7 @@ describe('ApplicationOwnerService', () => {
   it('should call through for verify', async () => {
     mockRepo.findOneOrFail.mockResolvedValue(new ApplicationOwner());
 
-    await service.getByOwner(new User(), '');
+    await service.getOwner('');
 
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
   });

@@ -28,6 +28,10 @@ export enum DOCUMENT_TYPE {
   OTHER = 'Other',
   AUTHORIZATION_LETTER = 'authorizationLetter',
   CERTIFICATE_OF_TITLE = 'certificateOfTitle',
+
+  //TUR
+  SERVING_NOTICE = 'servingNotice',
+  PROPOSAL_MAP = 'proposalMap',
 }
 
 export const DOCUMENT_TYPES = [
@@ -42,6 +46,8 @@ export const DOCUMENT_TYPES = [
   DOCUMENT_TYPE.AUTHORIZATION_LETTER,
   DOCUMENT_TYPE.PROFESSIONAL_REPORT,
   DOCUMENT_TYPE.PHOTOGRAPH,
+  DOCUMENT_TYPE.SERVING_NOTICE,
+  DOCUMENT_TYPE.PROPOSAL_MAP,
 ];
 
 @Entity()
@@ -59,6 +65,9 @@ export class ApplicationDocument extends BaseEntity {
 
   @Column()
   type: string; //FIXME: Automapper hates the DOCUMENT_TYPE type
+
+  @Column({ type: 'text', nullable: true })
+  description?: string | null;
 
   @ManyToOne(() => Application, { nullable: false })
   application: Application;

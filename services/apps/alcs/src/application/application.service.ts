@@ -15,6 +15,7 @@ import {
   FindOptionsWhere,
   IsNull,
   Like,
+  Not,
   Repository,
 } from 'typeorm';
 import { Card } from '../card/card.entity';
@@ -108,6 +109,7 @@ export class ApplicationService {
       region,
       statusHistory: application.statusHistory,
       applicationReview: application.applicationReview,
+      submittedApplication: application.submittedApplication,
     });
 
     newApplication.card = new Card();
@@ -181,6 +183,21 @@ export class ApplicationService {
       where: {
         fileNumber,
       },
+      relations: {
+        ...this.SUBTASK_RELATIONS,
+      },
+    });
+  }
+
+  async getDeletedCard(fileNumber: string) {
+    return this.applicationRepository.findOne({
+      where: {
+        fileNumber,
+        card: {
+          auditDeletedDateAt: Not(IsNull()),
+        },
+      },
+      withDeleted: true,
       relations: {
         ...this.SUBTASK_RELATIONS,
       },

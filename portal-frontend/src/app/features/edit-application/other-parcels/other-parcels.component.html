@@ -1,10 +1,9 @@
-<section title="Other parcels">
+<section>
   <h2>Other Parcels in the Community</h2>
   <div class="step-description">
     <div>
       Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
       application are located and owned by the following owners:
-
       <ul>
         <li *ngFor="let owner of owners">{{ owner.displayName }}</li>
       </ul>
@@ -13,71 +12,102 @@
 
   <p>All fields are required unless stated optional.</p>
 
-  <form [formGroup]="otherParcelsForm" class="other-parcels-form">
-      <div class="full-row">
-        <div for="hasOtherParcelsInCommunity">
-          Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within
-          the <b>community</b> where the application parcel(s) is located?
-        </div>
-        <mat-button-toggle-group
-          class="input"
-          id="hasOtherParcelsInCommunity"
-          formControlName="hasOtherParcelsInCommunity"
-          (change)="onHasOtherParcelsInCommunityChange($event)"
-        >
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
+  <p *ngIf="hasCrownLandParcels">
+    For applications involving Crown Land, it is not required to indicate other parcel(s) owned by the Crown.<br />
+    However we encourage applicants to use the proposal section of this application to indicate their interest
+    (ownership or lease) in any other land in the community where the application parcel(s) is located.
+  </p>
 
-      <div class="full-row">
-        <mat-expansion-panel
-          *ngFor="let parcel of otherParcels; let parcelInd = index"
-          [expanded]="otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1)"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details</mat-panel-title>
-          </mat-expansion-panel-header>
-          <app-parcel-entry
-            [parcel]="parcel"
-            [$owners]="$owners"
-            [fileId]="fileId"
-            [enableOwners]="true"
-            [enableCertificateOfTitleUpload]="false"
-            [enableUserSignOff]="false"
-            [enableAddNewOwner]="false"
-            [disabled]="formDisabled"
-            (onFormGroupChange)="onParcelFormChange($event)"
-          ></app-parcel-entry>
-          <div>
-            <div class="flex-evenly-wrap parcel-buttons-wrappers">
-              <button
-                class="margin-top-1-half"
-                mat-stroked-button
-                color="primary"
-                (click)="onSave()"
-                [disabled]="formDisabled"
-              >
-                Save Parcel #{{ parcelInd + 1 }} Details
-              </button>
-              <button
-                class="margin-top-1-half"
-                *ngIf="otherParcels.length > 1"
-                mat-stroked-button
-                color="accent"
-                (click)="onDelete(parcel.uuid, parcelInd + 1)"
-              >
-                Delete Parcel #{{ parcelInd + 1 }} Details
-              </button>
-            </div>
-          </div>
-        </mat-expansion-panel>
-        <div>
-          <button mat-stroked-button color="primary" [disabled]="formDisabled" (click)="onAddParcel()">
-            Add another parcel
-          </button>
-        </div>
+  <form [formGroup]="otherParcelsForm" class="other-parcels-form">
+    <div class="full-row">
+      <div for="hasOtherParcelsInCommunity">
+        Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within
+        the <b>community</b> where the application parcel(s) is located?
       </div>
+      <mat-button-toggle-group
+        class="input"
+        id="hasOtherParcelsInCommunity"
+        formControlName="hasOtherParcelsInCommunity"
+        (change)="onHasOtherParcelsInCommunityChange($event)"
+      >
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{
+            'error-outline':
+              hasOtherParcelsInCommunity.invalid &&
+              (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{
+            'error-outline':
+              hasOtherParcelsInCommunity.invalid &&
+              (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="
+          hasOtherParcelsInCommunity.invalid && (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hasOtherParcelsInCommunity.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <mat-expansion-panel
+        *ngFor="let parcel of otherParcels; let parcelInd = index"
+        [expanded]="otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title> Parcel {{ getLetterIndex(parcelInd) }} Details</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-parcel-entry
+          [parcel]="parcel"
+          [$owners]="$owners"
+          [fileId]="fileId"
+          [enableOwners]="true"
+          [enableCertificateOfTitleUpload]="false"
+          [enableUserSignOff]="false"
+          [enableAddNewOwner]="false"
+          [showErrors]="showErrors"
+          [disabled]="formDisabled"
+          (onFormGroupChange)="onParcelFormChange($event)"
+        ></app-parcel-entry>
+        <div>
+          <div class="flex-evenly-wrap parcel-buttons-wrappers">
+            <button
+              class="margin-top-1-half"
+              mat-stroked-button
+              color="primary"
+              (click)="onSave()"
+              [disabled]="formDisabled"
+            >
+              Save Parcel #{{ parcelInd + 1 }} Details
+            </button>
+            <button
+              class="margin-top-1-half"
+              *ngIf="otherParcels.length > 1"
+              mat-stroked-button
+              color="accent"
+              (click)="onDelete(parcel.uuid, parcelInd + 1)"
+            >
+              Delete Parcel #{{ parcelInd + 1 }} Details
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <div>
+        <button mat-stroked-button color="primary" [disabled]="formDisabled" (click)="onAddParcel()">
+          Add another parcel
+        </button>
+      </div>
+    </div>
   </form>
 </section>
 

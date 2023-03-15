@@ -2,13 +2,32 @@
   {{ pageTitle }}
 </h3>
 <div class="review-table">
-  <app-no-data [showRequired]="false" *ngIf="parcels.length === 0"></app-no-data>
+  <div class="subheading2 grid-1" *ngIf="parcelType === PARCEL_TYPES.OTHER">
+    Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within the
+    community where the application parcel(s) is located?
+  </div>
+  <div class="grid-double" *ngIf="parcelType === PARCEL_TYPES.OTHER">
+    <span *ngIf="application.hasOtherParcelsInCommunity !== null">{{
+      application.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+    }}</span>
+    <app-no-data [showRequired]="showErrors" *ngIf="application.hasOtherParcelsInCommunity === null"></app-no-data>
+  </div>
+
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
-      <h4>Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>
+      <h4>
+        Parcel {{ parcelType === PARCEL_TYPES.OTHER ? getLetterIndex(parcelInd) : parcelInd + 1 }}: Parcel and Owner
+        Information
+      </h4>
       <div>
-        <button class="mobile-hidden" mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
-          Edit Parcel {{ parcelInd + 1 }}
+        <button
+          *ngIf="showEdit"
+          class="mobile-hidden"
+          mat-flat-button
+          color="accent"
+          (click)="onEditParcelClick(parcel.uuid)"
+        >
+          Edit Parcel {{ parcelType === PARCEL_TYPES.OTHER ? getLetterIndex(parcelInd) : parcelInd + 1 }}
         </button>
       </div>
     </div>
@@ -16,45 +35,67 @@
     <div class="subheading2 grid-1">Ownership Type</div>
     <div class="grid-double">
       {{ parcel.ownershipType?.label }}
-      <app-no-data [showRequired]="true" *ngIf="!parcel.ownershipType"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Legal Description</div>
     <div class="grid-double">
       {{ parcel.legalDescription }}
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isLegalDescriptionRequired || false"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="parcel.validation?.isLegalDescriptionRequired || false"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Area (Hectares)</div>
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">PID</div>
     <div class="grid-double">
-      {{ parcel.pid }}
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isPidRequired || false"></app-no-data>
+      <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
+      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPidRequired" *ngIf="!parcel.pid"></app-no-data>
+      <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
+        Invalid Format
+      </app-validation-error>
     </div>
     <div class="subheading2 grid-1">PIN (Optional)</div>
     <div class="grid-double">
       {{ parcel.pin }}
-      <app-no-data [showRequired]="parcel.validation?.isPinRequired || false" *ngIf="!parcel.pin"></app-no-data>
+      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPinRequired" *ngIf="!parcel.pin"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Purchase Date</div>
     <div class="grid-double">
       {{ parcel.purchasedDate | date }}
-      <app-no-data [showRequired]="parcel.validation?.isPurchasedDateRequired || false" *ngIf="!parcel.purchasedDate">
+      <app-no-data
+        [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
+        *ngIf="!parcel.purchasedDate"
+      >
       </app-no-data>
     </div>
     <div class="subheading2 grid-1">Farm Classification</div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
-      <app-no-data [showRequired]="true" *ngIf="parcel.isFarm === null"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
     </div>
+    <ng-container *ngIf="parcel.validation?.isCrownSelectionMandatory">
+      <div class="subheading2 grid-1">Crown Selection</div>
+      <div class="grid-double">
+        <span class="crown-land" *ngIf="parcel.crownLandOwnerType !== null">{{ parcel.crownLandOwnerType }}</span>
+        <app-no-data [showRequired]="showErrors" *ngIf="parcel.crownLandOwnerType === null"></app-no-data>
+      </div>
+    </ng-container>
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
       <div *ngFor="let document of parcel.documents">
         <a (click)="onOpenFile(document.uuid)">{{ document.fileName }}</a>
       </div>
-      <app-no-data [showRequired]="true" *ngIf="parcel.validation?.isCertificateRequired || false"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"
+        *ngIf="!parcel.validation?.isCertificateUploaded"
+      ></app-no-data>
     </div>
     <div class="full-width subheading1">Owner Information</div>
     <div class="full-width owner-information">
@@ -76,16 +117,23 @@
         </div>
       </ng-container>
       <div class="full-width">
-        <app-no-data [showRequired]="true" *ngIf="parcel.owners.length === 0"></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="parcel.owners.length === 0"></app-no-data>
       </div>
     </div>
-    <div class="edit-button tablet-hidden">
+    <div class="subheading2 grid-1" *ngIf="parcelType !== PARCEL_TYPES.OTHER">
+      I confirm that the owner information provided above matches the current Certificate of Title
+    </div>
+    <div class="grid-double" *ngIf="parcelType !== PARCEL_TYPES.OTHER">
+      <span *ngIf="parcel.isConfirmedByApplicant">Yes</span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.isConfirmedByApplicant"></app-no-data>
+    </div>
+    <div *ngIf="showEdit" class="edit-button tablet-hidden">
       <button mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
         Edit Parcel {{ parcelInd + 1 }}
       </button>
     </div>
   </ng-container>
-  <div class="edit-button">
+  <div *ngIf="showEdit" class="edit-button">
     <button mat-flat-button (click)="onEditParcelsClick($event)" color="accent">Edit Section</button>
   </div>
 </div>

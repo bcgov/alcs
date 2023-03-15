@@ -262,4 +262,15 @@ describe('ApplicationService', () => {
     expect(applicationRepositoryMock.query).toBeCalledTimes(2);
     expect(result).toEqual(applicationMockEntity.uuid);
   });
+
+  it('should load deleted card', async () => {
+    applicationRepositoryMock.findOne.mockResolvedValue(null);
+
+    await applicationService.getDeletedCard('card');
+
+    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
+    expect(
+      applicationRepositoryMock.findOne.mock.calls[0][0].withDeleted,
+    ).toEqual(true);
+  });
 });

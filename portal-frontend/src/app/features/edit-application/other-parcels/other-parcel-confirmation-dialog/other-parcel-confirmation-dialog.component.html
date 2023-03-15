@@ -1,0 +1,35 @@
+<ng-template #startStepControls>
+  <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+  <button mat-flat-button color="primary" (click)="next()">continue</button>
+</ng-template>
+
+<ng-template #lastStepControls>
+  <button mat-stroked-button color="primary" (click)="back()">back</button>
+  <button mat-flat-button color="primary" (click)="onDelete()">confirm</button>
+</ng-template>
+
+<div mat-dialog-title>
+  <h4>Discard Other Parcels in the Community</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <div *ngIf="stepIdx === warningStep">
+    <app-warning-banner>
+      <b>Warning:</b> All information relevant to 'Other Parcels in the Community' will be deleted.
+    </app-warning-banner>
+
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="stepIdx === confirmationStep">
+    <div class="confirm-content">
+      <h5>Are you sure you want to discard 'Other Parcels in the Community'? This action cannot be undone.</h5>
+    </div>
+
+    <div class="step-controls">
+      <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
+    </div>
+  </div>
+</div>

@@ -18,7 +18,13 @@ describe('ParcelEntryComponent', () => {
   let mockParcelService: DeepMocked<ParcelService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
-  let mockParcel = {} as ApplicationParcelDto;
+  let mockParcel: ApplicationParcelDto = {
+    documents: [],
+    isConfirmedByApplicant: false,
+    parcelType: '',
+    uuid: '',
+    owners: [],
+  };
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
 
   beforeEach(async () => {

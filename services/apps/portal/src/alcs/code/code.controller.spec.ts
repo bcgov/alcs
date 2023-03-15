@@ -44,7 +44,6 @@ describe('CodeController', () => {
         uuid: 'fake-uuid',
         name: 'fake-name',
         isFirstNation: false,
-        isActive: true,
       },
     ]);
     mockAppTypeService.list.mockResolvedValue([]);

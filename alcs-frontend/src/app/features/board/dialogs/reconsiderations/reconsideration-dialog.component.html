@@ -1,6 +1,6 @@
 <div mat-dialog-title>
   <div class="close">
-    <button mat-icon-button [mat-dialog-close]="isApplicationDirty">
+    <button mat-icon-button [mat-dialog-close]="isDirty">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -18,7 +18,7 @@
       <button
         color="accent"
         mat-flat-button
-        [mat-dialog-close]="isApplicationDirty"
+        [mat-dialog-close]="isDirty"
         [routerLink]="['application', recon.application.fileNumber]"
       >
         View Detail
@@ -41,14 +41,24 @@
               ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
             </span>
             <span>{{ board.title }}</span>
-            <span *ngIf="recon.card.board.code === board.code"
+            <span *ngIf="card && card.board.code === board.code"
               ><mat-icon class="selected-board-icon">check</mat-icon></span
             >
           </div>
         </button>
       </mat-menu>
       <button
-        [matTooltip]="recon.card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        *ngIf="canArchive"
+        matTooltip="Archive Card"
+        class="toggle-priority"
+        (click)="onArchiveCard()"
+        mat-icon-button
+      >
+        <mat-icon>archive</mat-icon>
+      </button>
+      <button
+        *ngIf="card"
+        [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
         mat-icon-button
@@ -56,8 +66,8 @@
         <div
           class="priority"
           [ngClass]="{
-            'filled-priority': recon.card.highPriority,
-            'empty-priority': !recon.card.highPriority
+            'filled-priority': card.highPriority,
+            'empty-priority': !card.highPriority
           }"
         ></div>
       </button>
@@ -104,9 +114,9 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks [cardUuid]="recon.card.uuid"></app-subtasks>
+    <app-subtasks *ngIf="card" [cardUuid]="card.uuid"></app-subtasks>
   </div>
   <div class="card-comments-wrapper">
-    <app-comments [cardUuid]="recon.card.uuid" [notificationTitle]="cardTitle"></app-comments>
+    <app-comments *ngIf="card" [cardUuid]="card.uuid" [notificationTitle]="cardTitle"></app-comments>
   </div>
 </mat-dialog-content>

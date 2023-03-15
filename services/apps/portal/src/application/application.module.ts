@@ -23,6 +23,7 @@ import { ApplicationParcel } from './application-parcel/application-parcel.entit
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationStatusSubscriber } from './application-status.subscriber';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { ApplicationValidatorService } from './application-validator.service';
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
@@ -54,6 +55,7 @@ import { ApplicationService } from './application.service';
     ApplicationOwnerService,
     ApplicationOwnerProfile,
     ApplicationStatusSubscriber,
+    ApplicationValidatorService,
   ],
   controllers: [
     ApplicationController,
@@ -66,6 +68,7 @@ import { ApplicationService } from './application.service';
     ApplicationService,
     ApplicationDocumentService,
     ApplicationOwnerService,
+    ApplicationValidatorService,
   ],
 })
 export class ApplicationModule {}

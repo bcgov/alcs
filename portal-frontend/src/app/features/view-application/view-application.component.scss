@@ -72,28 +72,6 @@
   padding: 16px;
 }
 
-.view-box {
-  margin: rem(12) 0 rem(20) 0;
-  background-color: $grey-light;
-  padding: rem(16);
-  display: grid;
-  grid-row-gap: rem(32);
-  grid-template-columns: 1fr;
-
-  .subheading2 {
-    margin-bottom: rem(4) !important;
-  }
-
-  @media screen and (min-width: $tabletBreakpoint) {
-    margin: rem(24) 0 rem(40) 0;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media screen and (min-width: $desktopBreakpoint) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
 .action-bar {
   position: fixed;
   bottom: 0;

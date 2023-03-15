@@ -1,6 +1,5 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
@@ -10,7 +9,10 @@ import {
 } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { APPLICATION_STATUS } from '../application/application-status/application-status.dto';
-import { ApplicationStatus } from '../application/application-status/application-status.entity';
+import {
+  ApplicationValidatorService,
+  ValidatedApplication,
+} from '../application/application-validator.service';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { User } from '../user/user.entity';
@@ -28,6 +30,7 @@ describe('ApplicationReviewController', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockAppValidatorService: DeepMocked<ApplicationValidatorService>;
 
   const mockLG = {
     isFirstNation: false,
@@ -45,6 +48,7 @@ describe('ApplicationReviewController', () => {
     mockAppService = createMock();
     mockLGService = createMock();
     mockAppDocService = createMock();
+    mockAppValidatorService = createMock();
 
     applicationReview = new ApplicationReview({
       applicationFileNumber: fileNumber,
@@ -70,6 +74,10 @@ describe('ApplicationReviewController', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocService,
+        },
+        {
+          provide: ApplicationValidatorService,
+          useValue: mockAppValidatorService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -108,7 +116,6 @@ describe('ApplicationReviewController', () => {
         uuid: 'uuid',
         name: '',
         isFirstNation: false,
-        isActive: true,
       },
     ]);
 
@@ -139,7 +146,6 @@ describe('ApplicationReviewController', () => {
         uuid: 'uuid',
         name: '',
         isFirstNation: false,
-        isActive: true,
       },
     ]);
 
@@ -217,6 +223,10 @@ describe('ApplicationReviewController', () => {
       applicationReview as CompletedApplicationReview,
     );
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppValidatorService.validateApplication.mockResolvedValue({
+      application: new Application() as ValidatedApplication,
+      errors: [],
+    });
 
     const promise = controller.finish(fileNumber, {
       user: {
@@ -252,6 +262,11 @@ describe('ApplicationReviewController', () => {
       isAuthorized: true,
     } as CompletedApplicationReview);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppValidatorService.validateApplication.mockResolvedValue({
+      application: new Application() as ValidatedApplication,
+      errors: [],
+    });
+    mockAppService.updateStatus.mockResolvedValue({} as any);
 
     await controller.finish(fileNumber, {
       user: {
@@ -266,19 +281,35 @@ describe('ApplicationReviewController', () => {
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
+      APPLICATION_STATUS.SUBMITTED_TO_ALC,
+    );
   });
 
-  it('should update the status and not submit if the review is not authorized', async () => {
+  it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
       new Application({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    mockAppService.updateStatus.mockResolvedValue({} as any);
+    mockAppService.submitToAlcs.mockResolvedValue({
+      fileNumber: '',
+      applicant: '',
+      localGovernmentUuid: '',
+      dateSubmittedToAlc: '',
+      regionCode: '',
+      typeCode: '',
+    });
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
       isAuthorized: false,
     } as CompletedApplicationReview);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppValidatorService.validateApplication.mockResolvedValue({
+      application: new Application() as ValidatedApplication,
+      errors: [],
+    });
+    mockAppService.updateStatus.mockResolvedValue({} as any);
 
     await controller.finish(fileNumber, {
       user: {
@@ -292,7 +323,7 @@ describe('ApplicationReviewController', () => {
     expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
-    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(0);
+    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.REFUSED_TO_FORWARD,

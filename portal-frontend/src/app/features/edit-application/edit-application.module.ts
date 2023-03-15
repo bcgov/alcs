@@ -11,6 +11,7 @@ import { LandUseComponent } from './land-use/land-use.component';
 import { NfuProposalComponent } from './nfu/nfu-proposal/nfu-proposal.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
+import { ApplicationCrownOwnerDialogComponent } from './parcel-details/application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from './parcel-details/application-owner-dialog/application-owner-dialog.component';
 import { ApplicationOwnersDialogComponent } from './parcel-details/application-owners-dialog/application-owners-dialog.component';
 import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/delete-parcel-dialog.component';
@@ -20,6 +21,8 @@ import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-own
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { OtherParcelConfirmationDialogComponent } from './other-parcels/other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
+import { TurProposalComponent } from './tur/tur-proposal/tur-proposal.component';
 
 const routes: Routes = [
   {
@@ -45,12 +48,15 @@ const routes: Routes = [
     ParcelOwnersComponent,
     ApplicationOwnersDialogComponent,
     ApplicationOwnerDialogComponent,
+    ApplicationCrownOwnerDialogComponent,
     LandUseComponent,
-    NfuProposalComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
+    OtherParcelConfirmationDialogComponent,
+    NfuProposalComponent,
+    TurProposalComponent,
   ],
   imports: [
     CommonModule,

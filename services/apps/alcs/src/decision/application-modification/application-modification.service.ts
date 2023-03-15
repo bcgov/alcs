@@ -7,6 +7,7 @@ import {
   FindOptionsRelations,
   FindOptionsWhere,
   IsNull,
+  Not,
   Repository,
 } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
@@ -60,6 +61,21 @@ export class ApplicationModificationService {
   getBy(findOptions: FindOptionsWhere<ApplicationModification>) {
     return this.modificationRepository.find({
       where: findOptions,
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  getDeletedCards(applicationFileNumber: string) {
+    return this.modificationRepository.find({
+      where: {
+        application: {
+          fileNumber: applicationFileNumber,
+        },
+        card: {
+          auditDeletedDateAt: Not(IsNull()),
+        },
+      },
+      withDeleted: true,
       relations: this.DEFAULT_RELATIONS,
     });
   }

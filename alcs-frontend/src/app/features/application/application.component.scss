@@ -33,7 +33,6 @@
 }
 
 .nav-link {
-  cursor: pointer;
 
   div {
     padding: 12px 24px;
@@ -53,7 +52,8 @@
     }
   }
 
-  div:hover {
+  div:not(.disabled):hover {
+    cursor: pointer;
     border-color: $primary-color-dark;
     color: $dark-contrast-text;
   }
@@ -66,5 +66,9 @@
 
   .mat-icon {
     padding-right: 32px;
+  }
+
+  &.disabled {
+    opacity: 0.5;
   }
 }

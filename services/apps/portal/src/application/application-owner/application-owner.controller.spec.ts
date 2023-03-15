@@ -161,7 +161,8 @@ describe('ApplicationOwnerController', () => {
 
   it('should call through for update', async () => {
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
-    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
+    mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
 
     const res = await controller.update(
       '',
@@ -179,12 +180,14 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {
     mockAppOwnerService.delete.mockResolvedValue({} as any);
-    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
+    mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
 
     await controller.delete('', {
       user: {
@@ -192,13 +195,15 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.delete).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for attachToParcel', async () => {
     mockAppOwnerService.attachToParcel.mockResolvedValue({} as any);
-    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
+    mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
 
     await controller.linkToParcel('', '', {
       user: {
@@ -206,13 +211,15 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for removeFromParcel', async () => {
     mockAppOwnerService.removeFromParcel.mockResolvedValue({} as any);
-    mockAppOwnerService.getByOwner.mockResolvedValue(new ApplicationOwner());
+    mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
 
     await controller.removeFromParcel('', '', {
       user: {
@@ -220,8 +227,9 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.removeFromParcel).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should upload the document to alcs then create it locally for upload', async () => {
@@ -254,10 +262,11 @@ describe('ApplicationOwnerController', () => {
 
   it('should handle opening of a document', async () => {
     const mockResponse = { url: 'cats' };
-    mockAppOwnerService.getByOwner.mockResolvedValue(
+    mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({ corporateSummary: new Document() }),
     );
     mockDocumentService.getDownloadUrl.mockReturnValue(of(mockResponse));
+    mockApplicationService.verifyAccess.mockResolvedValue(new Application());
 
     const res = await controller.openCorporateSummary('', {
       user: {
@@ -265,7 +274,8 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockAppOwnerService.getByOwner).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(mockResponse.url);
   });
@@ -290,7 +300,7 @@ describe('ApplicationOwnerController', () => {
   });
 
   it('should set the owner and delete agents when using a non-agent owner', async () => {
-    mockAppOwnerService.getByOwner.mockResolvedValue(
+    mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({
         type: new ApplicationOwnerType({
           code: APPLICATION_OWNER.INDIVIDUAL,
@@ -316,7 +326,7 @@ describe('ApplicationOwnerController', () => {
   });
 
   it('should update the agent owner when calling set primary contact', async () => {
-    mockAppOwnerService.getByOwner.mockResolvedValue(
+    mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({
         type: new ApplicationOwnerType({
           code: APPLICATION_OWNER.AGENT,

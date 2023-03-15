@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -15,16 +15,19 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../services/application/application.dto';
+import { ApplicationDetailedDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
+import { getLetterCombinations } from '../../../shared/utils/number-to-letter-helper';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-application.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
+import { OtherParcelConfirmationDialogComponent } from './other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 
 const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
+
 @Component({
   selector: 'app-other-parcels',
   templateUrl: './other-parcels.component.html',
@@ -32,6 +35,7 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
 })
 export class OtherParcelsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.OtherParcel;
   $destroy = new Subject<void>();
@@ -40,7 +44,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
 
-  hasOtherParcelsInCommunity = new FormControl<string | null>(null);
+  hasOtherParcelsInCommunity = new FormControl<string | null>(null, [Validators.required]);
 
   otherParcelsForm = new FormGroup({
     hasOtherParcelsInCommunity: this.hasOtherParcelsInCommunity,
@@ -51,6 +55,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   application?: ApplicationDetailedDto;
   formDisabled = true;
   newParcelAdded = false;
+  hasCrownLandParcels = false;
+  parcelEntryChanged = false;
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -72,6 +78,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         }));
         this.$owners.next(nonAgentOwners);
 
+        this.hasCrownLandParcels = application.owners.reduce((hasCrownLand, owner) => {
+          return hasCrownLand || owner.parcels.some((parcel) => parcel.ownershipTypeCode === 'CRWN');
+        }, false);
+
         this.setupOtherParcelsData();
         this.setupOtherParcelsForm();
       }
@@ -92,14 +102,21 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    parcel.pid = formData.pid;
-    parcel.pin = formData.pin;
-    parcel.legalDescription = formData.legalDescription;
-    parcel.mapAreaHectares = formData.mapArea;
-    parcel.ownershipTypeCode = formData.parcelType;
-    parcel.isFarm = parseStringToBoolean(formData.isFarm);
-    parcel.purchasedDate = formData.purchaseDate?.getTime();
+    this.parcelEntryChanged = true;
+
+    parcel.pid = formData.pid !== undefined ? formData.pid : parcel.pid;
+    parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
+    parcel.legalDescription =
+      formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
+
+    parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
+    parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
+    parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
+    parcel.purchasedDate =
+      formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    parcel.crownLandOwnerType =
+      formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
       parcel.owners = formData.owners;
     }
@@ -137,6 +154,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
         purchasedDate: parcel.purchasedDate,
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
+        crownLandOwnerType: parcel.crownLandOwnerType,
         isConfirmedByApplicant: false,
         ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
@@ -210,6 +228,10 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       this.otherParcelsForm.patchValue({
         hasOtherParcelsInCommunity: formatBooleanToString(this.application.hasOtherParcelsInCommunity),
       });
+
+      if (this.showErrors) {
+        this.otherParcelsForm.markAllAsTouched();
+      }
     }
   }
 
@@ -222,12 +244,42 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async onHasOtherParcelsInCommunityChange($event: MatButtonToggleChange) {
-    this.formDisabled = !parseStringToBoolean($event.value) ?? true;
+    const parsedHasParcels = parseStringToBoolean($event.value);
 
+    if (
+      parsedHasParcels === false &&
+      (this.otherParcels.some((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL) || this.parcelEntryChanged)
+    ) {
+      this.dialog
+        .open(OtherParcelConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (result) => {
+          if (result) {
+            this.hasOtherParcelsInCommunity.patchValue('false');
+            this.formDisabled = true;
+            await this.setHasOtherParcelsInCommunity(false);
+            await this.saveProgress();
+            await this.reloadApplication();
+            this.parcelEntryChanged = false;
+          } else {
+            this.hasOtherParcelsInCommunity.patchValue('true');
+            this.formDisabled = false;
+            await this.setHasOtherParcelsInCommunity(true);
+          }
+        });
+    } else {
+      this.formDisabled = !parsedHasParcels ?? true;
+      await this.setHasOtherParcelsInCommunity(parsedHasParcels);
+    }
+  }
+
+  private async setHasOtherParcelsInCommunity(value?: boolean | null) {
     await this.applicationService.updatePending(this.fileId, {
-      ...this.application,
-      hasOtherParcelsInCommunity: parseStringToBoolean($event.value),
-    } as ApplicationUpdateDto);
+      hasOtherParcelsInCommunity: value,
+    });
     await this.reloadApplication();
   }
 
@@ -244,5 +296,9 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   onNavigateToStep(step: number) {
     this.navigateToStep.emit(step);
+  }
+
+  getLetterIndex(num: number) {
+    return getLetterCombinations(num);
   }
 }

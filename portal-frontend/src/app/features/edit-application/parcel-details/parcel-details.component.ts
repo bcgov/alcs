@@ -23,16 +23,18 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   styleUrls: ['./parcel-details.component.scss'],
 })
 export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+  $destroy = new Subject<void>();
+
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
+
   @Output() navigateToStep = new EventEmitter<number>();
   @Output() componentInitialized = new EventEmitter<boolean>();
-  currentStep = EditApplicationSteps.AppParcel;
-  $destroy = new Subject<void>();
-  fileId!: string;
 
+  currentStep = EditApplicationSteps.AppParcel;
+  fileId!: string;
   parcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
-
   newParcelAdded = false;
 
   constructor(
@@ -97,14 +99,19 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
       return;
     }
 
-    parcel.pid = formData.pid;
-    parcel.pin = formData.pin;
-    parcel.legalDescription = formData.legalDescription;
-    parcel.mapAreaHectares = formData.mapArea;
-    parcel.ownershipTypeCode = formData.parcelType;
-    parcel.isFarm = parseStringToBoolean(formData.isFarm);
-    parcel.purchasedDate = formData.purchaseDate?.getTime();
+    parcel.pid = formData.pid !== undefined ? formData.pid : parcel.pid;
+    parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
+    parcel.legalDescription =
+      formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
+
+    parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
+    parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
+    parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
+    parcel.purchasedDate =
+      formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
+    parcel.crownLandOwnerType =
+      formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
       parcel.owners = formData.owners;
     }
@@ -123,6 +130,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
         mapAreaHectares: parcel.mapAreaHectares,
         ownershipTypeCode: parcel.ownershipTypeCode,
         isConfirmedByApplicant: parcel.isConfirmedByApplicant,
+        crownLandOwnerType: parcel.crownLandOwnerType,
         ownerUuids: parcel.owners.map((owner) => owner.uuid),
       });
     }

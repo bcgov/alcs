@@ -1,8 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-resolution',
@@ -11,8 +12,11 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 })
 export class ReviewResolutionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep: ReviewApplicationSteps | ReviewApplicationFngSteps = ReviewApplicationSteps.Resolution;
+  @Input() showErrors = false;
 
-  isAuthorized = new FormControl<string | null>(null);
+  isAuthorized = new FormControl<string | null>(null, [Validators.required]);
 
   resolutionForm = new FormGroup({
     isAuthorized: this.isAuthorized,
@@ -31,9 +35,16 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
         this.isOCPDesignation = applicationReview.isOCPDesignation;
         this.isSubjectToZoning = applicationReview.isSubjectToZoning;
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        if (this.isFirstNationGovernment) {
+          this.currentStep = ReviewApplicationFngSteps.Resolution;
+        }
 
         if (applicationReview.isAuthorized !== null) {
           this.isAuthorized.setValue(applicationReview.isAuthorized ? 'true' : 'false');
+        }
+
+        if (this.showErrors) {
+          this.resolutionForm.markAllAsTouched();
         }
       }
     });
@@ -43,9 +54,8 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onSaveExit() {
+  async onExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -69,5 +79,9 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

@@ -28,11 +28,20 @@ describe('ParcelService', () => {
     expect(service).toBeDefined();
   });
 
+  it('should call through to the repo for get by pid', async () => {
+    const mockRes = {} as ParcelLookup;
+    mockRepo.findOne.mockResolvedValue(mockRes);
+
+    const res = await service.fetchByPid('pid');
+    expect(mockRepo.findOne).toHaveBeenCalledTimes(1);
+    expect(res).toEqual(mockRes);
+  });
+
   it('should call through to the repo for get', async () => {
     const mockRes = {} as ParcelLookup;
     mockRepo.findOne.mockResolvedValue(mockRes);
 
-    const res = await service.fetchByPidPin('pidPin');
+    const res = await service.fetchByPin('pin');
     expect(mockRepo.findOne).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockRes);
   });

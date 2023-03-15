@@ -3,7 +3,7 @@
   <div class="description">
     <div>Provide information about applicable Official Community Plan (OCP)</div>
     <div>
-      <button class='save-button' (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
+      <button class="save-button" (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
     </div>
   </div>
   <form [formGroup]="ocpForm">
@@ -20,38 +20,70 @@
           id="is-ocp"
           formControlName="isOCPDesignation"
         >
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle value="true" [ngClass]="{ 'error-outline': isOCPDesignation.invalid && showErrors }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle value="false" [ngClass]="{ 'error-outline': isOCPDesignation.invalid && showErrors }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
+        <div *ngIf="isOCPDesignation.invalid && showErrors" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </div>
       <div>
         <label for="bylaw-name">OCP Bylaw Name</label>
         <mat-form-field class="input" appearance="outline">
           <input id="bylaw-name" matInput placeholder="Type OCP Bylaw Name" formControlName="OCPBylawName" />
         </mat-form-field>
+        <div *ngIf="OCPBylawName.invalid && (OCPBylawName.dirty || OCPBylawName.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="OCPBylawName.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div>
         <label for="designation">OCP Designation</label>
         <mat-form-field class="input" appearance="outline">
           <input id="designation" matInput placeholder="Type OCP Designation" formControlName="OCPDesignation" />
         </mat-form-field>
+        <div *ngIf="OCPDesignation.invalid && (OCPDesignation.dirty || OCPDesignation.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="OCPDesignation.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="full-row">
         <label for="is-consistent">Is this proposal consistent with the current OCP designation?</label>
         <mat-button-toggle-group class="input" id="is-consistent" formControlName="isOCPConsistent">
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
+          <mat-button-toggle
+            value="true"
+            [ngClass]="{
+              'error-outline': isOCPConsistent.invalid && showErrors
+            }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle
+            value="false"
+            [ngClass]="{
+              'error-outline': isOCPConsistent.invalid && showErrors
+            }"
+            >No</mat-button-toggle
+          >
         </mat-button-toggle-group>
+        <div *ngIf="isOCPConsistent.invalid && showErrors" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div>This field is required</div>
+        </div>
       </div>
     </div>
   </form>
   <div class="button-container">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button (click)="onSave()" mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button (click)="onSave()" mat-flat-button matStepperNext color="primary">
+      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
         Next<span class="mobile-hidden"> Step</span>
       </button>
     </div>

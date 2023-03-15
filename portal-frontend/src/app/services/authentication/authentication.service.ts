@@ -89,6 +89,8 @@ export class AuthenticationService {
       const valid = await this.isTokenValid(existingToken);
       if (valid) {
         await this.setTokens(existingToken, refreshToken);
+        //Refresh Tokens Immediately to reset the refresh tokens validity to 5 minutes
+        await this.refreshTokens();
       }
     }
   }
@@ -114,7 +116,6 @@ export class AuthenticationService {
       return true;
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 401) {
-        //Take user to login page
         return false;
       }
       throw e;

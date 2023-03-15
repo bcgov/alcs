@@ -22,6 +22,7 @@ export interface ApplicationDto {
   lastStatusUpdate: number;
   applicant: string;
   type: string;
+  typeCode: string;
   localGovernmentUuid: string;
   status: ApplicationStatusDto;
   canEdit: boolean;
@@ -61,6 +62,14 @@ export interface ApplicationDetailedDto extends ApplicationDto {
   nfuProjectDurationUnit: string | null;
   nfuFillTypeDescription: string | null;
   nfuFillOriginDescription: string | null;
+
+  //TUR Fields
+  turPurpose: string | null;
+  turAgriculturalActivities: string | null;
+  turReduceNegativeImpacts: string | null;
+  turOutsideLands: string | null;
+  turTotalCorridorArea: number | null;
+  turAllOwnersNotified?: boolean | null;
 }
 
 export interface ApplicationUpdateDto {
@@ -96,4 +105,12 @@ export interface ApplicationUpdateDto {
   nfuProjectDurationUnit?: string | null;
   nfuFillTypeDescription?: string | null;
   nfuFillOriginDescription?: string | null;
+
+  //TUR Fields
+  turPurpose?: string | null;
+  turAgriculturalActivities?: string | null;
+  turReduceNegativeImpacts?: string | null;
+  turOutsideLands?: string | null;
+  turTotalCorridorArea?: number | null;
+  turAllOwnersNotified?: boolean | null;
 }

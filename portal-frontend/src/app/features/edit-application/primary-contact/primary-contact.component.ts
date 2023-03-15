@@ -18,6 +18,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
   $destroy = new Subject<void>();
@@ -109,10 +110,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
           agentPhoneNumber: this.phoneNumber.getRawValue() ?? '',
           ownerUuid: selectedOwner?.uuid,
         });
-      } else {
+      } else if (selectedOwner) {
         await this.applicationOwnerService.setPrimaryContact({
           fileNumber: this.fileId,
-          ownerUuid: selectedOwner?.uuid,
+          ownerUuid: selectedOwner.uuid,
         });
       }
     }
@@ -126,6 +127,7 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       isSelected: owner.uuid === uuid,
     }));
     const hasSelectedAgent = (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) || uuid == 'agent';
+    const hasCrownOwner = this.owners.some((owner) => owner.type.code === APPLICATION_OWNER.CROWN);
     this.selectedThirdPartyAgent = hasSelectedAgent;
     if (hasSelectedAgent) {
       this.firstName.enable();
@@ -141,7 +143,7 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       this.email.disable();
       this.phoneNumber.disable();
     }
-    this.needsAuthorizationLetter = this.nonAgentOwners.length > 1 || hasSelectedAgent;
+    this.needsAuthorizationLetter = this.nonAgentOwners.length > 1 || hasSelectedAgent || hasCrownOwner;
     this.files = this.files.map((file) => ({
       ...file,
       errorMessage: this.needsAuthorizationLetter
@@ -178,6 +180,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.organizationName.disable();
         this.email.disable();
         this.phoneNumber.disable();
+      }
+
+      if (this.showErrors) {
+        this.form.markAllAsTouched();
       }
     }
   }

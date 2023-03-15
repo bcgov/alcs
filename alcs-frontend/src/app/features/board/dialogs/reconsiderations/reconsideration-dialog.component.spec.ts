@@ -15,6 +15,7 @@ import {
   ReconsiderationTypeDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { AuthenticationService, ICurrentUser } from '../../../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
@@ -30,6 +31,7 @@ describe('ReconsiderationDialogComponent', () => {
   let fixture: ComponentFixture<ReconsiderationDialogComponent>;
   let mockUserService: DeepMocked<UserService>;
   let mockBoardService: DeepMocked<BoardService>;
+  let authenticationService: DeepMocked<AuthenticationService>;
 
   const mockReconDto: ApplicationReconsiderationDto = {
     uuid: '',
@@ -75,6 +77,9 @@ describe('ReconsiderationDialogComponent', () => {
     mockBoardService = createMock();
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
+    authenticationService = createMock();
+    authenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+
     await TestBed.configureTestingModule({
       declarations: [ReconsiderationDialogComponent],
       providers: [
@@ -109,6 +114,10 @@ describe('ReconsiderationDialogComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: {},
+        },
+        {
+          provide: AuthenticationService,
+          useValue: authenticationService,
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],

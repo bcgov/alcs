@@ -19,6 +19,7 @@ import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { ValidatedApplication } from './application-validator.service';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -158,7 +159,6 @@ describe('ApplicationService', () => {
       uuid: '',
       name: '',
       isFirstNation: false,
-      isActive: true,
     });
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
@@ -261,14 +261,14 @@ describe('ApplicationService', () => {
         throw new Error('failed');
       },
     );
-    mockRepository.findOneOrFail.mockResolvedValue(mockApplication);
 
-    await expect(service.submitToAlcs(fileNumber)).rejects.toMatchObject(
+    await expect(
+      service.submitToAlcs(mockApplication as ValidatedApplication),
+    ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
     );
 
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
   });
 
   it('should call out to grpc service on submitToAlcs', async () => {
@@ -299,20 +299,18 @@ describe('ApplicationService', () => {
     mockAlcsApplicationService.create.mockReturnValue(
       of({ fileNumber, applicant } as ApplicationGrpcResponse),
     );
-    mockRepository.save.mockResolvedValue({} as any);
-    mockRepository.findOneOrFail.mockResolvedValue(mockApplication);
 
     mockStatusRepository.findOneOrFail.mockResolvedValue(
       new ApplicationStatus(),
     );
 
-    const res = await service.submitToAlcs(fileNumber);
+    const res = await service.submitToAlcs(
+      mockApplication as ValidatedApplication,
+    );
 
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
     expect(res.applicant).toEqual(mockApplication.applicant);
     expect(res.fileNumber).toEqual(mockApplication.fileNumber);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if application exists', async () => {

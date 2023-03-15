@@ -9,10 +9,12 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
 })
 export class NfuDetailsComponent {
   @Input() application: ApplicationDetailedDto | undefined;
+  @Input() showErrors = true;
+  @Input() showEdit = true;
 
   constructor(private router: Router) {}
 
   onEditSection(step: number) {
-    this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}`);
+    this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}?errors=t`);
   }
 }

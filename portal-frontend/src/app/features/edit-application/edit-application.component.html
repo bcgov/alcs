@@ -21,6 +21,7 @@
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
       <app-parcel-details
         [$application]="$application"
+        [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (componentInitialized)="onParcelDetailsInitialized()"
       ></app-parcel-details>
@@ -30,6 +31,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
       <app-other-parcels
+        [showErrors]="showValidationErrors"
         [$application]="$application"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-other-parcels>
@@ -39,6 +41,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
       <app-primary-contact
+        [showErrors]="showValidationErrors"
         [$application]="$application"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-primary-contact>
@@ -48,6 +51,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
       <app-select-government
+        [showErrors]="showValidationErrors"
         [$application]="$application"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-select-government>
@@ -56,13 +60,28 @@
   <cdk-step label="Land Use">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
-      <app-land-use [$application]="$application" (navigateToStep)="onBeforeSwitchStep($event)"></app-land-use>
+      <app-land-use
+        [$application]="$application"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-land-use>
     </div>
   </cdk-step>
   <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Proposal">
-      <app-nfu-proposal [$application]="$application" (navigateToStep)="onBeforeSwitchStep($event)"></app-nfu-proposal>
+    <div *ngIf="application && cdkStepper.selectedIndex === editAppSteps.Proposal">
+      <app-nfu-proposal
+        *ngIf="application.typeCode === 'NFUP'"
+        [$application]="$application"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-nfu-proposal>
+      <app-tur-proposal
+        *ngIf="application.typeCode === 'TURP'"
+        [$application]="$application"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-tur-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">
@@ -70,6 +89,7 @@
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
       <app-other-attachments
         [$application]="$application"
+        [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-other-attachments>
     </div>

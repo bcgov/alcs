@@ -2,12 +2,13 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
+import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { In, Repository } from 'typeorm';
+import { Column, In, Repository } from 'typeorm';
 import {
   ApplicationGrpcResponse,
   ApplicationReviewGrpc,
@@ -20,8 +21,11 @@ import {
 } from '../alcs/local-government/local-government.service';
 import { CompletedApplicationReview } from '../application-review/application-review.service';
 import { User } from '../user/user.entity';
+import { ColumnNumericTransformer } from '../utils/column-numeric-transform';
+import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { ValidatedApplication } from './application-validator.service';
 import {
   ApplicationDetailedDto,
   ApplicationDto,
@@ -103,6 +107,7 @@ export class ApplicationService {
 
     this.setLandUseFields(application, updateDto);
     this.setNFUFields(application, updateDto);
+    this.setTURFields(application, updateDto);
 
     await this.applicationRepository.save(application);
 
@@ -159,18 +164,9 @@ export class ApplicationService {
   }
 
   async submitToAlcs(
-    fileNumber: string,
+    application: ValidatedApplication,
     applicationReview?: CompletedApplicationReview,
   ) {
-    const application = await this.applicationRepository.findOneOrFail({
-      where: { fileNumber },
-      relations: {
-        documents: {
-          document: true,
-        },
-      },
-    });
-
     let submittedApp: ApplicationGrpcResponse | null = null;
 
     const mappedReview: ApplicationReviewGrpc | undefined = applicationReview
@@ -199,34 +195,68 @@ export class ApplicationService {
     try {
       submittedApp = await lastValueFrom(
         this.alcsApplicationService.create({
-          fileNumber: fileNumber,
-          applicant: application.applicant || fileNumber,
-          localGovernmentUuid: application.localGovernmentUuid!,
+          fileNumber: application.fileNumber,
+          applicant: application.applicant,
+          localGovernmentUuid: application.localGovernmentUuid,
           typeCode: application.typeCode,
           dateSubmittedToAlc: Date.now().toString(),
-          documents: application?.documents.map((d) => ({
+          documents: application.documents.map((d) => ({
             type: d.type!, //TODO: Do we verify this?
             documentUuid: d.document.alcsDocumentUuid,
+            description: d.description ?? undefined,
           })),
           statusHistory: application.statusHistory.map((history) => ({
             ...history,
             time: history.time.toString(10),
           })),
           applicationReview: mappedReview,
+          submittedApplication: {
+            ...application,
+            nfuPurpose: application.nfuPurpose ?? undefined,
+            nfuOutsideLands: application.nfuOutsideLands ?? undefined,
+            nfuProjectDurationUnit:
+              application.nfuProjectDurationUnit ?? undefined,
+            nfuAgricultureSupport:
+              application.nfuAgricultureSupport ?? undefined,
+            nfuWillImportFill: application.nfuWillImportFill ?? undefined,
+            nfuFillTypeDescription:
+              application.nfuFillTypeDescription ?? undefined,
+            nfuFillOriginDescription:
+              application.nfuFillOriginDescription ?? undefined,
+            nfuHectares: application.nfuHectares
+              ? application.nfuHectares.toString(10)
+              : undefined,
+            nfuTotalFillPlacement: application.nfuTotalFillPlacement
+              ? application.nfuTotalFillPlacement.toString(10)
+              : undefined,
+            nfuMaxFillDepth: application.nfuMaxFillDepth
+              ? application.nfuMaxFillDepth.toString(10)
+              : undefined,
+            nfuFillVolume: application.nfuFillVolume
+              ? application.nfuFillVolume.toString(10)
+              : undefined,
+            nfuProjectDurationAmount: application.nfuProjectDurationAmount
+              ? application.nfuProjectDurationAmount.toString(10)
+              : undefined,
+            turPurpose: application.turPurpose ?? undefined,
+            turOutsideLands: application.turOutsideLands ?? undefined,
+            turAgriculturalActivities:
+              application.turAgriculturalActivities ?? undefined,
+            turReduceNegativeImpacts:
+              application.turReduceNegativeImpacts ?? undefined,
+            turTotalCorridorArea: application.turTotalCorridorArea
+              ? application.turTotalCorridorArea.toString(10)
+              : undefined,
+          },
         }),
       );
-
-      await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_ALC);
     } catch (ex) {
-      this.logger.error(
-        `Portal -> ApplicationService -> submitToAlcs: failed to submit to ALCS ${fileNumber}`,
-        ex,
-      );
+      this.logger.error(ex);
 
       //TODO set failed status here?
 
       throw new BaseServiceException(
-        `Failed to submit application: ${fileNumber}`,
+        `Failed to submit application: ${application.fileNumber}`,
       );
     }
 
@@ -453,6 +483,28 @@ export class ApplicationService {
       updateDto.nfuFillOriginDescription ||
       application.nfuFillOriginDescription;
 
+    return application;
+  }
+
+  private setTURFields(
+    application: Application,
+    updateDto: ApplicationUpdateDto,
+  ) {
+    application.turPurpose = updateDto.turPurpose || application.turPurpose;
+    application.turAgriculturalActivities =
+      updateDto.turAgriculturalActivities ||
+      application.turAgriculturalActivities;
+    application.turReduceNegativeImpacts =
+      updateDto.turReduceNegativeImpacts ||
+      application.turReduceNegativeImpacts;
+    application.turOutsideLands =
+      updateDto.turOutsideLands || application.turOutsideLands;
+    application.turTotalCorridorArea =
+      updateDto.turTotalCorridorArea || application.turTotalCorridorArea;
+    application.turAllOwnersNotified =
+      updateDto.turAllOwnersNotified !== undefined
+        ? updateDto.turAllOwnersNotified
+        : application.turAllOwnersNotified;
     return application;
   }
 }

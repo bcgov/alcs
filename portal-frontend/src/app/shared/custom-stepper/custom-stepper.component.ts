@@ -69,7 +69,6 @@ export class CustomStepperComponent extends CdkStepper implements OnInit, OnDest
       this.beforeSwitchStep.emit(index);
       return;
     }
-
     this.selectedIndex = index;
   }
 

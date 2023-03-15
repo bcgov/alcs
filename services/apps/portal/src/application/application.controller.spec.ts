@@ -11,6 +11,10 @@ import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import {
+  ApplicationValidatorService,
+  ValidatedApplication,
+} from './application-validator.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDetailedDto, ApplicationDto } from './application.dto';
 import { Application } from './application.entity';
@@ -21,6 +25,7 @@ describe('ApplicationController', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
+  let mockAppValidationService: DeepMocked<ApplicationValidatorService>;
 
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
@@ -30,6 +35,7 @@ describe('ApplicationController', () => {
     mockAppService = createMock();
     mockDocumentService = createMock();
     mockLgService = createMock();
+    mockAppValidationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -46,6 +52,10 @@ describe('ApplicationController', () => {
         {
           provide: LocalGovernmentService,
           useValue: mockLgService,
+        },
+        {
+          provide: ApplicationValidatorService,
+          useValue: mockAppValidationService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -76,7 +86,6 @@ describe('ApplicationController', () => {
         bceidBusinessGuid,
         name: 'fake-name',
         isFirstNation: false,
-        isActive: true,
       },
     ]);
   });
@@ -182,7 +191,6 @@ describe('ApplicationController', () => {
       bceidBusinessGuid,
       name: 'fake-name',
       isFirstNation: false,
-      isActive: true,
     });
     const mockApplication = new Application();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
@@ -254,9 +262,15 @@ describe('ApplicationController', () => {
     mockAppService.getIfCreator.mockResolvedValue(
       new Application({
         typeCode: 'TURP',
-        localGovernmentUuid,
       }),
     );
+    mockAppService.updateStatus.mockResolvedValue();
+    mockAppValidationService.validateApplication.mockResolvedValue({
+      application: new Application({
+        typeCode: 'TURP',
+      }) as ValidatedApplication,
+      errors: [],
+    });
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -266,6 +280,7 @@ describe('ApplicationController', () => {
 
     expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
   });
 
   it('should submit to LG if application type is NOT-TURP', async () => {
@@ -277,6 +292,10 @@ describe('ApplicationController', () => {
         localGovernmentUuid,
       }),
     );
+    mockAppValidationService.validateApplication.mockResolvedValue({
+      application: new Application() as ValidatedApplication,
+      errors: [],
+    });
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -288,13 +307,17 @@ describe('ApplicationController', () => {
     expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw an exception if application has no local government', async () => {
+  it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
     mockAppService.getIfCreator.mockResolvedValue(
       new Application({
         typeCode: 'NOT-TURP',
       }),
     );
+    mockAppValidationService.validateApplication.mockResolvedValue({
+      application: undefined,
+      errors: [new Error('Failed to validate')],
+    });
 
     const promise = controller.submitAsApplicant(mockFileId, {
       user: {
@@ -303,27 +326,7 @@ describe('ApplicationController', () => {
     });
 
     await expect(promise).rejects.toMatchObject(
-      new BadRequestException('Invalid Local Government'),
-    );
-  });
-
-  it('should throw an exception if application has an invalid government', async () => {
-    const mockFileId = 'file-id';
-    mockAppService.getIfCreator.mockResolvedValue(
-      new Application({
-        typeCode: 'NOT-TURP',
-        localGovernmentUuid: 'invalid-uuid',
-      }),
-    );
-
-    const promise = controller.submitAsApplicant(mockFileId, {
-      user: {
-        entity: new User(),
-      },
-    });
-
-    await expect(promise).rejects.toMatchObject(
-      new BadRequestException('Invalid Local Government'),
+      new BadRequestException('Invalid Application'),
     );
   });
 });

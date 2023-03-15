@@ -101,14 +101,26 @@
         onto the property, including gravel for construction.
       </label>
       <mat-button-toggle-group
-        (change)="onChangeFill($event)"
+        (change)="onChangeFill($event.value)"
         class="input"
         id="will-import-fill"
         formControlName="willImportFill"
       >
-        <mat-button-toggle value="true">Yes</mat-button-toggle>
-        <mat-button-toggle value="false">No</mat-button-toggle>
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >No</mat-button-toggle
+        >
       </mat-button-toggle-group>
+      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
+      </div>
     </div>
   </div>
   <section>

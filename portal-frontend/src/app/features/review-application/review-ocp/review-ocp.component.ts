@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
   selector: 'app-review-ocp',
@@ -12,11 +13,14 @@ import { ApplicationReviewService } from '../../../services/application-review/a
 })
 export class ReviewOcpComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  @Output() navigateToStep = new EventEmitter<number>();
+  currentStep = ReviewApplicationSteps.OCP;
+  @Input() showErrors = false;
 
-  isOCPDesignation = new FormControl<string | null>(null);
-  OCPBylawName = new FormControl<string | null>('');
-  OCPDesignation = new FormControl<string | null>('');
-  isOCPConsistent = new FormControl<string | null>(null);
+  isOCPDesignation = new FormControl<string | null>(null, [Validators.required]);
+  OCPBylawName = new FormControl<string | null>('', [Validators.required]);
+  OCPDesignation = new FormControl<string | null>('', [Validators.required]);
+  isOCPConsistent = new FormControl<string | null>(null, [Validators.required]);
 
   ocpForm = new FormGroup({
     isOCPDesignation: this.isOCPDesignation,
@@ -46,6 +50,10 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
             this.isOCPConsistent.setValue(applicationReview.OCPConsistent ? 'true' : 'false');
           }
         }
+
+        if (this.showErrors) {
+          this.ocpForm.markAllAsTouched();
+        }
       }
     });
   }
@@ -54,9 +62,8 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onSaveExit() {
+  async onExit() {
     if (this.fileId) {
-      await this.saveProgress();
       await this.router.navigateByUrl(`/application/${this.fileId}`);
     }
   }
@@ -102,5 +109,9 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
       this.OCPDesignation.disable();
       this.isOCPConsistent.disable();
     }
+  }
+
+  onNavigateToStep(step: number) {
+    this.navigateToStep.emit(step);
   }
 }

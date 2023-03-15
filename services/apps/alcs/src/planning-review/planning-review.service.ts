@@ -10,6 +10,7 @@ import {
   FindOptionsRelations,
   FindOptionsWhere,
   IsNull,
+  Not,
   Repository,
 } from 'typeorm';
 import { Board } from '../board/board.entity';
@@ -106,6 +107,19 @@ export class PlanningReviewService {
     });
   }
 
+  getDeletedCards(fileNumber: string) {
+    return this.repository.find({
+      where: {
+        fileNumber,
+        card: {
+          auditDeletedDateAt: Not(IsNull()),
+        },
+      },
+      withDeleted: true,
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
   private get(uuid: string) {
     return this.repository.findOne({
       where: {
@@ -116,9 +130,16 @@ export class PlanningReviewService {
   }
 
   async getCards() {
-    return this.repository.find({
+    const res = await this.repository.find({
       relations: this.DEFAULT_RELATIONS,
+      where: {
+        card: {
+          auditDeletedDateAt: IsNull(),
+        },
+      },
     });
+    //Typeorm bug its returning deleted cards
+    return res.filter((review) => !!review.card);
   }
 
   async getWithIncompleteSubtaskByType(subtaskType: string) {

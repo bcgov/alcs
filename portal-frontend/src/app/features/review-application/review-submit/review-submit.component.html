@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(0)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(0)" color="accent">Edit Section</button>
         </div>
       </div>
     </section>
@@ -98,7 +98,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(1)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
         </div>
       </div>
     </section>
@@ -157,7 +157,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(2)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
         </div>
       </div>
     </section>
@@ -190,8 +190,11 @@
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null" class="edit-button">
-          <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
+        <div
+          *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null"
+          class="edit-button"
+        >
+          <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
         </div>
       </div>
     </section>
@@ -237,7 +240,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
         </div>
       </div>
     </section>
@@ -301,7 +304,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(0)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(0)" color="accent">Edit Section</button>
         </div>
       </div>
     </mat-expansion-panel>
@@ -343,7 +346,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(1)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
         </div>
       </div>
     </mat-expansion-panel>
@@ -396,7 +399,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(2)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
         </div>
       </div>
     </mat-expansion-panel>
@@ -431,8 +434,11 @@
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null" class="edit-button">
-          <button mat-flat-button (click)="onEditSection(3)" color="accent">Edit Section</button>
+        <div
+          *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null"
+          class="edit-button"
+        >
+          <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
         </div>
       </div>
     </mat-expansion-panel>
@@ -480,7 +486,7 @@
           </div>
         </div>
         <div class="edit-button">
-          <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>
+          <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
         </div>
       </div>
     </mat-expansion-panel>
@@ -488,7 +494,7 @@
   <div class="button-container">
     <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
       <button (click)="onSubmit()" mat-flat-button color="primary">Submit</button>

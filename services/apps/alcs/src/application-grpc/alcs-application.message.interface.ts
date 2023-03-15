@@ -29,6 +29,7 @@ export class ApplicationCreateGrpcRequest {
   dateSubmittedToAlc: string;
   localGovernmentUuid: string;
   documents: ApplicationDocumentGrpc[];
+  submittedApplication: SubmittedApplicationGrpc;
   applicationReview?: ApplicationReviewGrpc;
   statusHistory: StatusHistoryGrpc[];
 }
@@ -36,6 +37,162 @@ export class ApplicationCreateGrpcRequest {
 export class ApplicationDocumentGrpc {
   type: string;
   documentUuid: string;
+  description?: string;
+}
+
+export class SubmittedApplicationOwnerGrpc {
+  @AutoMap()
+  firstName: string;
+
+  @AutoMap()
+  lastName: string;
+
+  @AutoMap()
+  organizationName?: string;
+
+  @AutoMap()
+  phoneNumber: string;
+
+  @AutoMap()
+  email: string;
+
+  @AutoMap()
+  type: string;
+
+  @AutoMap()
+  corporateSummaryDocumentUuid?: string;
+}
+
+export class SubmittedApplicationParcelGrpc {
+  @AutoMap()
+  pid?: string;
+
+  @AutoMap()
+  pin?: string;
+
+  @AutoMap()
+  legalDescription: string;
+
+  @AutoMap()
+  mapAreaHectares: string;
+
+  @AutoMap()
+  purchasedDate?: number;
+
+  @AutoMap()
+  isFarm: boolean;
+
+  @AutoMap()
+  ownershipType: string;
+
+  @AutoMap()
+  crownLandOwnerType: string;
+
+  @AutoMap()
+  parcelType: string;
+
+  @AutoMap(() => [String])
+  documentUuids: string[];
+
+  @AutoMap(() => [SubmittedApplicationOwnerGrpc])
+  owners: SubmittedApplicationOwnerGrpc[];
+}
+
+export class SubmittedApplicationGrpc {
+  @AutoMap(() => [SubmittedApplicationParcelGrpc])
+  parcels: SubmittedApplicationParcelGrpc[];
+
+  @AutoMap(() => [SubmittedApplicationParcelGrpc])
+  otherParcels: SubmittedApplicationParcelGrpc[];
+
+  @AutoMap(() => SubmittedApplicationOwnerGrpc)
+  primaryContact: SubmittedApplicationOwnerGrpc;
+
+  @AutoMap()
+  parcelsAgricultureDescription: string;
+
+  @AutoMap()
+  parcelsAgricultureImprovementDescription: string;
+
+  @AutoMap()
+  parcelsNonAgricultureUseDescription: string;
+
+  @AutoMap()
+  northLandUseType: string;
+
+  @AutoMap()
+  northLandUseTypeDescription: string;
+
+  @AutoMap()
+  eastLandUseType: string;
+
+  @AutoMap()
+  eastLandUseTypeDescription: string;
+
+  @AutoMap()
+  southLandUseType: string;
+
+  @AutoMap()
+  southLandUseTypeDescription: string;
+
+  @AutoMap()
+  westLandUseType: string;
+
+  @AutoMap()
+  westLandUseTypeDescription: string;
+
+  //NFU Data
+  @AutoMap()
+  nfuHectares?: string;
+
+  @AutoMap()
+  nfuPurpose?: string;
+
+  @AutoMap()
+  nfuOutsideLands?: string;
+
+  @AutoMap()
+  nfuAgricultureSupport?: string;
+
+  @AutoMap()
+  nfuWillImportFill?: boolean;
+
+  @AutoMap()
+  nfuTotalFillPlacement?: string;
+
+  @AutoMap()
+  nfuMaxFillDepth?: string;
+
+  @AutoMap()
+  nfuFillVolume?: string;
+
+  @AutoMap()
+  nfuProjectDurationAmount?: string;
+
+  @AutoMap()
+  nfuProjectDurationUnit?: string;
+
+  @AutoMap()
+  nfuFillTypeDescription?: string;
+
+  @AutoMap()
+  nfuFillOriginDescription?: string;
+
+  //TUR Fields
+  @AutoMap()
+  turPurpose?: string;
+
+  @AutoMap()
+  turOutsideLands?: string;
+
+  @AutoMap()
+  turAgriculturalActivities?: string;
+
+  @AutoMap()
+  turReduceNegativeImpacts?: string;
+
+  @AutoMap()
+  turTotalCorridorArea?: string;
 }
 
 export class ApplicationReviewGrpc {

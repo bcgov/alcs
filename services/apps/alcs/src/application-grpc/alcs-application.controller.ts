@@ -3,9 +3,11 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Logger } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
+import { DOCUMENT_TYPE } from '../application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application/application-document/application-document.service';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
+import { CardService } from '../card/card.service';
 import {
   ApplicationCreateGrpcRequest,
   ApplicationFileNumberGenerateGrpcResponse,
@@ -24,6 +26,7 @@ export class ApplicationGrpcController implements AlcsApplicationService {
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
+    private cardService: CardService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -45,11 +48,37 @@ export class ApplicationGrpcController implements AlcsApplicationService {
         ...history,
         time: parseInt(history.time, 10),
       })),
+      submittedApplication: data.submittedApplication,
     });
+
+    if (data.applicationReview && !data.applicationReview.isAuthorized) {
+      await this.cardService.archive(application.cardUuid);
+    }
+
+    const certificateOfTiles = data.submittedApplication.parcels
+      .flatMap((parcel) => parcel.documentUuids)
+      .map((uuid) => ({
+        documentUuid: uuid,
+        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      }));
+
+    const corporateSummaries = data.submittedApplication.parcels
+      .flatMap((parcel) => parcel.owners)
+      .filter((owner) => !!owner.corporateSummaryDocumentUuid)
+      .map((owner) => ({
+        documentUuid: owner.corporateSummaryDocumentUuid!,
+        type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+      }));
+
+    const allDocuments = [
+      ...data.documents,
+      ...certificateOfTiles,
+      ...corporateSummaries,
+    ];
 
     await this.applicationDocumentService.attachExternalDocuments(
       application.fileNumber,
-      data.documents,
+      allDocuments,
     );
 
     return this.mapper.mapAsync(

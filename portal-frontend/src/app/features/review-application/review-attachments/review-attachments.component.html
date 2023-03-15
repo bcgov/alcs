@@ -19,6 +19,8 @@
         (uploadFiles)="attachFile($event, documentTypes.RESOLUTION_DOCUMENT)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
+        [isRequired]="true"
+        [showErrors]="showErrors"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -29,6 +31,8 @@
         (uploadFiles)="attachFile($event, documentTypes.STAFF_REPORT)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
+        [isRequired]="true"
+        [showErrors]="showErrors"
       ></app-file-drag-drop>
     </section>
     <section>
@@ -46,10 +50,12 @@
   <div class="button-container">
     <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
     <div>
-      <button mat-stroked-button matStepperPrevious color="primary">
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button mat-flat-button matStepperNext color="primary">Next<span class="mobile-hidden"> Step</span></button>
+      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
     </div>
   </div>
 </div>

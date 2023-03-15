@@ -16,14 +16,13 @@
         REMOVE
       </button>
     </div>
-    <div class='error-message' *ngIf="!!file.errorMessage">
-      <mat-icon>warning</mat-icon> {{ file.errorMessage }}
-    </div>
+    <div class="error-message" *ngIf="!!file.errorMessage"><mat-icon>warning</mat-icon> {{ file.errorMessage }}</div>
   </ng-container>
 </div>
 <div
   *ngIf="!uploadedFiles.length || allowMultiple"
-  class="desktop-file-drag-drop"
+  class=""
+  [ngClass]="{ 'desktop-file-drag-drop': true, 'error-outline': isRequired && showErrors && !uploadedFiles.length }"
   dragDropFile
   [disabled]="disabled"
   (files)="filesDropped($event)"
@@ -49,3 +48,6 @@
 >
   Upload File
 </button>
+<app-validation-error *ngIf="isRequired && showErrors && !uploadedFiles.length" errorClass="field-error"
+  >This file upload is required</app-validation-error
+>

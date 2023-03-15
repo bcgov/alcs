@@ -23,6 +23,8 @@ export enum DOCUMENT_TYPE {
   PHOTOGRAPH = 'Photograph',
   OTHER = 'Other',
   AUTHORIZATION_LETTER = 'authorizationLetter',
+  SERVING_NOTICE = 'servingNotice',
+  PROPOSAL_MAP = 'proposalMap',
 }
 
 @Injectable({
@@ -71,6 +73,12 @@ export class ApplicationDocumentService {
   async getReviewDocuments(fileNumber: string) {
     return firstValueFrom(
       this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/reviewDocuments`)
+    );
+  }
+
+  async getApplicantDocuments(fileNumber: string) {
+    return firstValueFrom(
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/applicantDocuments`)
     );
   }
 }

@@ -1,15 +1,70 @@
-# Oracle in Docker
+# Ora2PG
 
-## Prerequisites
+There are 2 ways documented here to run the ora2pg binary - using a local install and inside Docker. The first approach was to use Docker exclusively,
+but owing to network issues originating with attempting to reach the OATS db behind a VPN the local install was ultimately used.
+
+The local install usage steps should work for any machine where ora2pg is installed, but specific installation steps for Ubuntu are provided.
+
+---
+
+## Local Ubuntu Ora2pg install
+
+### Prerequisites
+
+- Ubuntu
+- Perl >5.10
+
+### Installation
+
+Followed these instructions in order to install Ora2PG locally:
+https://stackoverflow.com/questions/1414679/perl-ora2pg-on-ubuntu
+
+Rather than installing the perl extensions manually you can also use cpanm
+
+```sh
+apt install cpanminus
+
+cpanm DBI
+cpanm DBD::Oracle
+cpanm DBD::Pg
+```
+
+If you run into an issue where you can't install the DBD::Oracle module, you may need to link the specific versions of your module as below:
+
+`sudo ln -s $ORACLE_HOME/libclntsh.so.xx.x $ORACLE_HOME/libclntsh.so`
+`sudo ln -s $ORACLE_HOME/libclntshcore.so.xx.x $ORACLE_HOME/libclntshcore.so`
+
+### Configuration
+
+Ensure that the ora2pg.conf is populated with the necessary connection details to the Oracle database.
+
+### Usage
+
+There are 3 helper scripts to facilitate performing exports from the OATS DB and importing into the ALCS DB.
+
+- `export-ddl-and-data.sh` - Will export the OATS DDL and Data to the ddl.sql and data.sql files respectively
+- `import-into-pg.sh` - Will import both sql files against the ALCS database
+- `clean-pg.sh` - Will drop the OATS schema within the ALCS database to do a fresh import
+
+_NOTE_: After performing the DDL export, be sure to remove the following constraints from the `oats_alr_appl_components` table (usually located around line 601)
+
+- oats_apcp_chk1
+- oats_apcp_chk3
+- oats_apcp_chk5
+
+---
+
+## Oracle 12.2 in Docker container
+
+### Prerequisites
 
 - Docker
 - Oracle account
 - SQLDeveloper tool
 - At least 4GB of memory allocated to docker
 
-## Oracle 12.2 in Docker container
-
 Login to Oracle Docker registry with your oracle account
+
 ```sh
 docker login container-registry.oracle.com
 ```
@@ -17,6 +72,7 @@ docker login container-registry.oracle.com
 Navigate to https://container-registry.oracle.com/ -> Database -> enterprise -> Sign in and accept the license agreement
 
 Create network
+
 ```sh
 docker network create alpine-net
 ```
@@ -53,33 +109,38 @@ Host: localhost
 Service Name: ORCLPDB1.localdomain
 ```
 
-## Dump import
+### Docker Dump import
 
 Exec into the container
+
 ```sh
 # docker exec -it <db container name> bash
 docker exec -it oraDB bash
 ```
 
 Create a directory in the Oracle container for the dump
+
 ```sh
 # -p create parents if do not exist
 mkdir -p /u01/app/oracle/admin/ORCL/dpdump
 ```
 
 Launch a new terminal window and copy the dump file from the host into it
+
 ```sh
 # docker cp <path to source dump file on host> <db container>:<path to dump file on container>
 docker cp ./expdp.OATS-395.20220831.dmp abc38c2849e0:/u01/app/oracle/admin/ORCL/dpdump
 ```
 
 Set DATA_PUMP_DIRECTORY in CDB. '/u01/app/oracle/admin/ORCL/dpdump' is the location where the dump file was copied to
+
 ```sh
 # connect to oracle CDB inside container
 sqlplus sys/Oradoc_db1@localhost:1521/ORCLCDB
 ```
 
 You can check the current connection by executing
+
 ```SQL
 show con_name;
 ```
@@ -90,6 +151,7 @@ CREATE OR REPLACE DIRECTORY "DATA_PUMP_DIR" as '/u01/app/oracle/admin/ORCL/dpdum
 ```
 
 Switch to the PDB in sqlplus
+
 ```SQL
 alter session set container=ORCLPDB1;
 ```
@@ -130,7 +192,7 @@ Start importing data with impdp
 impdp IMPOATS/Oradoc_db1@localhost:1521/ORCLPDB1.localdomain directory=DATA_PUMP_DIR dumpfile=expdp.OATS-395.20220831.dmp full=y
 ```
 
-## Oracle to Postgres migration
+### Oracle to Postgres migration
 
 Dockerized version of ora2pg tool will be used for migration from Oracle to Postgres. Follow this link for more details: https://github.com/Guy-Incognito/ora2pg
 

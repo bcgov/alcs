@@ -14,20 +14,31 @@
   </div>
   <div class="split">
     <span class="region">{{ planningReview.localGovernment.name }} - {{ planningReview.region.label }} Region</span>
-    <button
-      [matTooltip]="planningReview.card.highPriority ? 'Remove Priority' : 'Add Priority'"
-      class="toggle-priority"
-      (click)="onTogglePriority()"
-      mat-icon-button
-    >
-      <div
-        class="priority"
-        [ngClass]="{
-          'filled-priority': planningReview.card.highPriority,
-          'empty-priority': !planningReview.card.highPriority
-        }"
-      ></div>
-    </button>
+    <div class="right">
+      <button
+        *ngIf="canArchive"
+        matTooltip="Archive Card"
+        class="toggle-priority"
+        (click)="onArchiveCard()"
+        mat-icon-button
+      >
+        <mat-icon>archive</mat-icon>
+      </button>
+      <button *ngIf='card'
+        [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        class="toggle-priority"
+        (click)="onTogglePriority()"
+        mat-icon-button
+      >
+        <div
+          class="priority"
+          [ngClass]="{
+            'filled-priority': card.highPriority,
+            'empty-priority': !card.highPriority
+          }"
+        ></div>
+      </button>
+    </div>
   </div>
 </div>
 <mat-dialog-content>
@@ -69,10 +80,10 @@
       </ng-template>
     </ng-select>
   </div>
-  <div class="subtasks-wrapper">
-    <app-subtasks [cardUuid]="planningReview.card.uuid"></app-subtasks>
+  <div *ngIf='card' class="subtasks-wrapper">
+    <app-subtasks [cardUuid]="card.uuid"></app-subtasks>
   </div>
-  <div class="card-comments-wrapper">
-    <app-comments [cardUuid]="planningReview.card.uuid" [notificationTitle]="cardTitle"></app-comments>
+  <div *ngIf='card' class="card-comments-wrapper">
+    <app-comments [cardUuid]="card.uuid" [notificationTitle]="cardTitle"></app-comments>
   </div>
 </mat-dialog-content>
