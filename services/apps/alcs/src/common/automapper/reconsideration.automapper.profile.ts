@@ -46,7 +46,7 @@ export class ReconsiderationProfile extends AutomapperProfile {
         ApplicationForReconsiderationDto,
         forMember(
           (a) => a.localGovernment,
-          mapFrom((rd) => rd.localGovernment.name),
+          mapFrom((rd) => rd.localGovernment!.name),
         ),
         forMember(
           (a) => a.decisionMeetings,

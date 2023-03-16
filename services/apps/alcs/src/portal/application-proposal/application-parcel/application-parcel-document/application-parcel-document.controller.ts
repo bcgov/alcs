@@ -13,7 +13,6 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { PortalAuthGuard } from '../../../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../../../document/document.service';
-
 import { ApplicationProposalService } from '../../application-proposal.service';
 import { ApplicationParcelService } from '../application-parcel.service';
 import { ApplicationParcelDocumentDto } from './application-parcel-document.dto';
@@ -30,7 +29,7 @@ import { ApplicationParcelDocumentService } from './application-parcel-document.
 export class ApplicationParcelDocumentController {
   constructor(
     private applicationParcelDocumentService: ApplicationParcelDocumentService,
-    private alcsDocumentService: DocumentService,
+    private documentService: DocumentService,
     private applicationParcelService: ApplicationParcelService,
     private applicationService: ApplicationProposalService,
     @InjectMapper() private mapper: Mapper,

@@ -118,19 +118,20 @@ export class Application extends Base {
   @Column()
   typeCode: string;
 
-  @ManyToOne(() => ApplicationRegion)
-  region: ApplicationRegion;
+  @ManyToOne(() => ApplicationRegion, { nullable: true })
+  region?: ApplicationRegion;
 
-  @Column()
-  regionCode: string;
+  @Column({ nullable: true })
+  regionCode?: string;
 
-  @ManyToOne(() => ApplicationLocalGovernment)
-  localGovernment: ApplicationLocalGovernment;
+  @ManyToOne(() => ApplicationLocalGovernment, { nullable: true })
+  localGovernment?: ApplicationLocalGovernment;
 
   @Column({
     type: 'uuid',
+    nullable: true,
   })
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
 
   @AutoMap(() => [StatusHistory])
   @Column({

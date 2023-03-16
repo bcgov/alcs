@@ -14,9 +14,9 @@ import {
 } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
-import { ApplicationDocumentService } from '../application-proposal/application-document/application-document.service';
 import { ApplicationProposalValidatorService } from '../application-proposal/application-proposal-validator.service';
 import { ApplicationProposalService } from '../application-proposal/application-proposal.service';
 import { APPLICATION_STATUS } from '../application-proposal/application-status/application-status.dto';

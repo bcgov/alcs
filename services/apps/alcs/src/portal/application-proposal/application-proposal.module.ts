@@ -6,8 +6,6 @@ import { ApplicationOwnerProfile } from '../../common/automapper/application-own
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationProposalProfile } from '../../common/automapper/application-proposal.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
-import { ApplicationDocumentController } from './application-document/application-document.controller';
-import { ApplicationDocumentService } from './application-document/application-document.service';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -54,7 +52,6 @@ import { ApplicationStatus } from './application-status/application-status.entit
   ],
   controllers: [
     ApplicationProposalController,
-    ApplicationDocumentController,
     ApplicationParcelController,
     ApplicationParcelDocumentController,
     ApplicationOwnerController,

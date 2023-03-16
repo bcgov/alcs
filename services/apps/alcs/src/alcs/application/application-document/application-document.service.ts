@@ -1,11 +1,18 @@
 import { MultipartFile } from '@fastify/multipart';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { ApplicationService } from '../application.service';
-import { ApplicationDocumentCreateDto } from './application-document.dto';
+import {
+  ApplicationDocumentCreateDto,
+  ApplicationDocumentUpdateDto,
+} from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -120,5 +127,51 @@ export class ApplicationDocumentService {
           )
         : [],
     );
+  }
+
+  async update(
+    updates: ApplicationDocumentUpdateDto[],
+    applicationUuid: string,
+  ) {
+    const results: ApplicationDocument[] = [];
+    for (const update of updates) {
+      const file = await this.applicationDocumentRepository.findOne({
+        where: {
+          uuid: update.uuid,
+          applicationUuid,
+        },
+        relations: {
+          document: true,
+        },
+      });
+      if (!file) {
+        throw new BadRequestException(
+          'Failed to find file linked to provided application',
+        );
+      }
+
+      file.type = update.type;
+      file.description = update.description;
+      const updatedFile = await this.applicationDocumentRepository.save(file);
+      results.push(updatedFile);
+    }
+    return results;
+  }
+
+  async deleteByType(documentType: DOCUMENT_TYPE, applicationUuid: string) {
+    const documents = await this.applicationDocumentRepository.find({
+      where: {
+        applicationUuid,
+        type: documentType,
+      },
+      relations: {
+        document: true,
+      },
+    });
+    for (const document of documents) {
+      await this.documentService.softRemove(document.document);
+    }
+
+    return;
   }
 }

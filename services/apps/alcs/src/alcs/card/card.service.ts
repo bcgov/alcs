@@ -4,7 +4,6 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisClientType } from 'redis';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
 import { Board } from '../board/board.entity';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
@@ -29,12 +28,10 @@ export class CardService {
     private cardTypeRepository: Repository<CardType>,
     private redisService: RedisService,
     private subtaskService: CardSubtaskService,
-  ) {
-    this.loadCardTypesToRedis();
-  }
+  ) {}
 
-  private async loadCardTypesToRedis() {
-    const cardTypes = await this.cardTypeRepository.find({
+  async getCardTypes() {
+    return await this.cardTypeRepository.find({
       select: {
         code: true,
         portalHtmlDescription: true,
@@ -44,11 +41,6 @@ export class CardService {
         portalHtmlDescription: Not(''),
       },
     });
-
-    const jsonBlob = JSON.stringify(cardTypes);
-    const redis = this.redisService.getClient() as RedisClientType;
-    await redis.set('cardTypes', jsonBlob);
-    this.logger.debug(`Loaded ${cardTypes.length} card types into Redis`);
   }
 
   get(uuid: string) {
