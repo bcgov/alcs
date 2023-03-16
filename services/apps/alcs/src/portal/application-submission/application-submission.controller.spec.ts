@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { ApplicationSubmissionProfile } from '../common/automapper/application-submission.automapper.profile';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
@@ -43,7 +43,7 @@ describe('ApplicationSubmissionController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionController],
       providers: [
-        ApplicationSubmissionProfile,
+        ApplicationProfile,
         {
           provide: ApplicationSubmissionService,
           useValue: mockAppService,
