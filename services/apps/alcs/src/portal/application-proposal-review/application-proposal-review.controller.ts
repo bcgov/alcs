@@ -12,10 +12,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
-import { DOCUMENT_TYPE } from '../application-proposal/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application-proposal/application-document/application-document.service';
 import { ApplicationProposalValidatorService } from '../application-proposal/application-proposal-validator.service';
 import { ApplicationProposalService } from '../application-proposal/application-proposal.service';
@@ -27,7 +27,7 @@ import {
 import { ApplicationProposalReviewService } from './application-proposal-review.service';
 
 @Controller('application-review')
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 export class ApplicationProposalReviewController {
   constructor(
     private applicationService: ApplicationProposalService,

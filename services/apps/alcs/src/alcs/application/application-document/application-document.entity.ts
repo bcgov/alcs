@@ -63,8 +63,8 @@ export class ApplicationDocument extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @Column()
-  type: string; //FIXME: Automapper hates the DOCUMENT_TYPE type
+  @Column({ type: 'varchar', nullable: true })
+  type?: string | null; //FIXME: Automapper hates the DOCUMENT_TYPE type
 
   @Column({ type: 'text', nullable: true })
   description?: string | null;

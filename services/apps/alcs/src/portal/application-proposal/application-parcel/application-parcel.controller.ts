@@ -10,7 +10,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'nest-keycloak-connect';
+import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationProposalService } from '../application-proposal.service';
 import {
@@ -22,7 +22,7 @@ import { ApplicationParcel } from './application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel.service';
 
 @Controller('application-parcel')
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 export class ApplicationParcelController {
   constructor(
     private parcelService: ApplicationParcelService,

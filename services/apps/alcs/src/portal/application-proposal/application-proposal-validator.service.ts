@@ -1,7 +1,7 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from './application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';

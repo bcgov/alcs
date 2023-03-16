@@ -8,7 +8,7 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { ApplicationDocumentDto } from './application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
@@ -40,10 +40,8 @@ export class ApplicationProposalDto {
   returnedComment: string | null;
 
   lastStatusUpdate: number;
-
   documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
-
   type: string;
 
   @AutoMap()

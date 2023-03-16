@@ -13,22 +13,21 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { AuthGuard } from 'nest-keycloak-connect';
-import { DocumentService } from '../../../document/document.service';
-import { ApplicationProposalService } from '../application-proposal.service';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentUpdateDto,
-} from './application-document.dto';
+import { ApplicationDocumentUpdateDto } from '../../../../../portal/src/application-proposal/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
-} from './application-document.entity';
+} from '../../../alcs/application/application-document/application-document.entity';
+import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
+import { DocumentService } from '../../../document/document.service';
+import { ApplicationProposalService } from '../application-proposal.service';
+
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 @Controller('application-document')
 export class ApplicationDocumentController {
   constructor(
@@ -70,7 +69,7 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
 
     await this.applicationService.verifyAccess(
-      document.applicationFileNumber,
+      document.applicationUuid,
       req.user.entity,
     );
 
@@ -97,7 +96,7 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
 
     await this.applicationService.verifyAccess(
-      document.applicationFileNumber,
+      document.applicationUuid,
       req.user.entity,
     );
 

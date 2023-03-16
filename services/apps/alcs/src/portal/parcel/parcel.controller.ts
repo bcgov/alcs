@@ -1,11 +1,11 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'nest-keycloak-connect';
+import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { ParcelLookupDto, SearchParcelDto } from './parcel.dto';
 import { ParcelService } from './parcel.service';
 
 @Controller('parcel')
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 export class ParcelController {
   constructor(private parcelService: ParcelService) {}
 

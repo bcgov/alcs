@@ -1,8 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../portal/application-proposal/application-document/application-document.dto';
-import { DOCUMENT_TYPE } from '../../portal/application-proposal/application-document/application-document.entity';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationOwnerType } from '../../portal/application-proposal/application-owner/application-owner-type/application-owner-type.entity';
 import {
   ApplicationOwnerDetailedDto,
@@ -24,12 +24,14 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
       if (a.corporateSummary) {
         return {
           uuid: a.corporateSummary.uuid,
+          documentUuid: a.corporateSummary.uuid,
+          mimeType: '',
           fileName: a.corporateSummary.fileName,
           type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
           fileSize: a.corporateSummary.fileSize,
           uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
           uploadedBy: a.corporateSummary.uploadedBy.displayName,
-          description: null,
+          description: undefined,
         };
       }
       return undefined;

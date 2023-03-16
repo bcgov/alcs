@@ -1,8 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../portal/application-proposal/application-document/application-document.dto';
-import { ApplicationDocument } from '../../portal/application-proposal/application-document/application-document.entity';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
@@ -15,7 +15,6 @@ import {
 import { ApplicationProposal } from '../../portal/application-proposal/application-proposal.entity';
 import { ApplicationStatusDto } from '../../portal/application-proposal/application-status/application-status.dto';
 import { ApplicationStatus } from '../../portal/application-proposal/application-status/application-status.entity';
-import { Document } from '../../document/document.entity';
 
 @Injectable()
 export class ApplicationProposalProfile extends AutomapperProfile {
@@ -64,30 +63,6 @@ export class ApplicationProposalProfile extends AutomapperProfile {
             } else {
               return [];
             }
-          }),
-        ),
-      );
-
-      createMap(
-        mapper,
-        ApplicationDocument,
-        ApplicationDocumentDto,
-        forMember(
-          (a) => a.uploadedBy,
-          mapFrom((ad) => {
-            return ad.document.uploadedBy?.name;
-          }),
-        ),
-        forMember(
-          (a) => a.fileName,
-          mapFrom((ad) => {
-            return ad.document.fileName;
-          }),
-        ),
-        forMember(
-          (a) => a.fileSize,
-          mapFrom((ad) => {
-            return ad.document.fileSize;
           }),
         ),
       );

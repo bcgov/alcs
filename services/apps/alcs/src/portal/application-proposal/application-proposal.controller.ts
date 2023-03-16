@@ -12,8 +12,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { ApplicationProposalValidatorService } from './application-proposal-validator.service';
 import {
@@ -24,7 +24,7 @@ import { ApplicationProposalService } from './application-proposal.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 
 @Controller('application')
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 export class ApplicationProposalController {
   private logger: Logger = new Logger(ApplicationProposalController.name);
 

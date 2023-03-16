@@ -6,15 +6,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
-import { DocumentService } from '../../../document/document.service';
-import { User } from '../../../user/user.entity';
-import { ApplicationProposalService } from '../application-proposal.service';
-import { ApplicationDocumentUpdateDto } from './application-document.dto';
+import { ApplicationDocumentUpdateDto } from '../../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
-} from './application-document.entity';
-import { Document } from '../../../document/document.entity';
+} from '../../../alcs/application/application-document/application-document.entity';
+import { DocumentService } from '../../../document/document.service';
+import { ApplicationProposalService } from '../application-proposal.service';
 
 @Injectable()
 export class ApplicationDocumentService {
@@ -80,38 +78,16 @@ export class ApplicationDocumentService {
     return this.documentService.getDownloadUrl(applicationDocument.document);
   }
 
-  async createRecord(
-    fileName: string,
-    fileSize: number,
-    fileNumber: string,
-    alcsDocumentUuid: string,
-    documentType: DOCUMENT_TYPE,
-    user: User,
+  async update(
+    updates: ApplicationDocumentUpdateDto[],
+    applicationUuid: string,
   ) {
-    const application = await this.applicationService.getOrFail(fileNumber);
-
-    const document = new Document({
-      fileName,
-      fileSize,
-      uploadedBy: user,
-    });
-
-    return this.applicationDocumentRepository.save(
-      new ApplicationDocument({
-        document,
-        type: documentType,
-        application,
-      }),
-    );
-  }
-
-  async update(updates: ApplicationDocumentUpdateDto[], fileNumber: string) {
     const results: ApplicationDocument[] = [];
     for (const update of updates) {
       const file = await this.applicationDocumentRepository.findOne({
         where: {
           uuid: update.uuid,
-          applicationFileNumber: fileNumber,
+          applicationUuid,
         },
         relations: {
           document: true,
@@ -131,13 +107,10 @@ export class ApplicationDocumentService {
     return results;
   }
 
-  async deleteByType(
-    documentType: DOCUMENT_TYPE,
-    applicationFileNumber: string,
-  ) {
+  async deleteByType(documentType: DOCUMENT_TYPE, applicationUuid: string) {
     const documents = await this.applicationDocumentRepository.find({
       where: {
-        applicationFileNumber,
+        applicationUuid,
         type: documentType,
       },
       relations: {

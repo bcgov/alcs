@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsString, IsUUID, Matches } from 'class-validator';
+import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { emailRegex } from '../../../utils/email.helper';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
 
 export enum APPLICATION_OWNER {

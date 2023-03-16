@@ -8,8 +8,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
 import { User } from '../../user/user.entity';
-import { DOCUMENT_TYPE } from '../application-proposal/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application-proposal/application-document/application-document.service';
 import { ApplicationProposal } from '../application-proposal/application-proposal.entity';
 import {

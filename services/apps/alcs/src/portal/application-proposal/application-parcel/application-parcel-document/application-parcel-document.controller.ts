@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { AuthGuard } from 'nest-keycloak-connect';
+import { PortalAuthGuard } from '../../../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../../../document/document.service';
 
 import { ApplicationProposalService } from '../../application-proposal.service';
@@ -25,7 +25,7 @@ import {
 import { ApplicationParcelDocumentService } from './application-parcel-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 @Controller('application-parcel-document')
 export class ApplicationParcelDocumentController {
   constructor(

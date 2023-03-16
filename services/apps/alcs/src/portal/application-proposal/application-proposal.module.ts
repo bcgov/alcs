@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AlcsModule } from '../../alcs/alcs.module';
 import { ApplicationModule } from '../../alcs/application/application.module';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
@@ -8,7 +7,6 @@ import { ApplicationParcelProfile } from '../../common/automapper/application-pa
 import { ApplicationProposalProfile } from '../../common/automapper/application-proposal.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
-import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
@@ -32,7 +30,6 @@ import { ApplicationStatus } from './application-status/application-status.entit
   imports: [
     TypeOrmModule.forFeature([
       ApplicationProposal,
-      ApplicationDocument,
       ApplicationStatus,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
@@ -46,7 +43,6 @@ import { ApplicationStatus } from './application-status/application-status.entit
   ],
   providers: [
     ApplicationProposalService,
-    ApplicationDocumentService,
     ApplicationProposalProfile,
     ApplicationParcelProfile,
     ApplicationParcelService,
@@ -65,7 +61,6 @@ import { ApplicationStatus } from './application-status/application-status.entit
   ],
   exports: [
     ApplicationProposalService,
-    ApplicationDocumentService,
     ApplicationOwnerService,
     ApplicationProposalValidatorService,
   ],

@@ -12,7 +12,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'nest-keycloak-connect';
+import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationProposalService } from '../application-proposal.service';
 import {
@@ -26,7 +26,7 @@ import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
 
 @Controller('application-owner')
-@UseGuards(AuthGuard)
+@UseGuards(PortalAuthGuard)
 export class ApplicationOwnerController {
   constructor(
     private ownerService: ApplicationOwnerService,
