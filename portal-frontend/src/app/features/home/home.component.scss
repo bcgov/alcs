@@ -20,10 +20,12 @@
       cursor: pointer;
     }
   }
+
   .mobile-btn {
     width: 100%;
     margin-bottom: rem(8) !important;
   }
+
   .btn {
     display: none;
   }
@@ -43,8 +45,10 @@
     .mobile-btn {
       display: none;
     }
+
     .btn {
-      display: inline-block;
+      display: flex;
+      justify-content: center;
       width: rem(193);
       height: rem(43);
     }
