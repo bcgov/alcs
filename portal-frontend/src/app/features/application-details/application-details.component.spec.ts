@@ -1,11 +1,11 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { ApplicationDetailedDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
 import { ToastService } from '../../services/toast/toast.service';
 
@@ -18,7 +18,7 @@ describe('ApplicationDetailsComponent', () => {
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let mockToastService: DeepMocked<ToastService>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
 
   beforeEach(async () => {
     mockCodeService = createMock();
@@ -45,7 +45,7 @@ describe('ApplicationDetailsComponent', () => {
           useValue: mockToastService,
         },
         {
-          provide: ApplicationService,
+          provide: ApplicationSubmissionService,
           useValue: mockApplicationService,
         },
       ],
@@ -55,7 +55,7 @@ describe('ApplicationDetailsComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

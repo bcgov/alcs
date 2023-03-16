@@ -1,7 +1,7 @@
 import { AfterViewChecked, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ApplicationTypeDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 
@@ -33,7 +33,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   constructor(
     private dialogRef: MatDialogRef<ChangeApplicationTypeDialogComponent>,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationSubmissionService,
     private codeService: CodeService,
     @Inject(MAT_DIALOG_DATA) public data: ChangeApplicationTypeDialogComponent
   ) {

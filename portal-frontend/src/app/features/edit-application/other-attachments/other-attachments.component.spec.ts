@@ -1,18 +1,18 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
 import { OtherAttachmentsComponent } from './other-attachments.component';
 
 describe('OtherAttachmentsComponent', () => {
   let component: OtherAttachmentsComponent;
   let fixture: ComponentFixture<OtherAttachmentsComponent>;
-  let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
 
@@ -24,7 +24,7 @@ describe('OtherAttachmentsComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationService,
+          provide: ApplicationSubmissionService,
           useValue: mockAppService,
         },
         {
@@ -42,7 +42,7 @@ describe('OtherAttachmentsComponent', () => {
 
     fixture = TestBed.createComponent(OtherAttachmentsComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 
