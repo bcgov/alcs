@@ -15,7 +15,7 @@ export enum APPLICATION_STATUS {
 
 export interface ApplicationStatusDto extends BaseCodeDto {}
 
-export interface ApplicationProposalDto {
+export interface ApplicationSubmissionDto {
   fileNumber: string;
   createdAt: string;
   updatedAt: string;
@@ -34,7 +34,7 @@ export interface ApplicationProposalDto {
   returnedComment?: string;
 }
 
-export interface ApplicationProposalDetailedDto extends ApplicationProposalDto {
+export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   primaryContactOwnerUuid?: string;
 
   parcelsAgricultureDescription?: string | null;
@@ -72,7 +72,7 @@ export interface ApplicationProposalDetailedDto extends ApplicationProposalDto {
   turAllOwnersNotified?: boolean | null;
 }
 
-export interface ApplicationProposalUpdateDto {
+export interface ApplicationSubmissionUpdateDto {
   applicant?: string;
   localGovernmentUuid?: string;
   typeCode?: string;

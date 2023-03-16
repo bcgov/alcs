@@ -6,7 +6,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ParcelDetailsComponent } from './parcel-details.component';
 
@@ -18,7 +18,7 @@ describe('ParcelDetailsComponent', () => {
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
-  let applicationPipe = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockHttpClient = createMock();

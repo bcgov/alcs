@@ -3,20 +3,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationProposalReviewDto } from '../../../services/application-review/application-proposal-review.dto';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
+import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 
 import { ReviewContactInformationComponent } from './review-contact-information.component';
 
 describe('ReviewContactInformationComponent', () => {
   let component: ReviewContactInformationComponent;
   let fixture: ComponentFixture<ReviewContactInformationComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
+  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockRouter: DeepMocked<Router>;
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
+      undefined
+    );
 
     mockRouter = createMock();
 
@@ -24,7 +26,7 @@ describe('ReviewContactInformationComponent', () => {
       declarations: [ReviewContactInformationComponent],
       providers: [
         {
-          provide: ApplicationProposalReviewService,
+          provide: ApplicationSubmissionReviewService,
           useValue: mockAppReviewService,
         },
         {

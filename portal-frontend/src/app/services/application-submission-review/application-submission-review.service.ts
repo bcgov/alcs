@@ -5,18 +5,18 @@ import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ToastService } from '../toast/toast.service';
 import {
-  ApplicationProposalReviewDto,
-  ReturnApplicationProposalDto,
-  UpdateApplicationProposalReviewDto,
-} from './application-proposal-review.dto';
+  ApplicationSubmissionReviewDto,
+  ReturnApplicationSubmissionDto,
+  UpdateApplicationSubmissionReviewDto,
+} from './application-submission-review.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationProposalReviewService {
+export class ApplicationSubmissionReviewService {
   private serviceUrl = `${environment.apiUrl}/application-review`;
 
-  $applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
+  $applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(undefined);
 
   constructor(
     private httpClient: HttpClient,
@@ -28,7 +28,7 @@ export class ApplicationProposalReviewService {
     try {
       this.overlayService.showSpinner();
       const applicationReview = await firstValueFrom(
-        this.httpClient.get<ApplicationProposalReviewDto>(`${this.serviceUrl}/${fileId}`)
+        this.httpClient.get<ApplicationSubmissionReviewDto>(`${this.serviceUrl}/${fileId}`)
       );
       this.$applicationReview.next(applicationReview);
     } catch (e) {
@@ -43,7 +43,7 @@ export class ApplicationProposalReviewService {
     try {
       this.overlayService.showSpinner();
       return await firstValueFrom(
-        this.httpClient.post<ApplicationProposalReviewDto>(`${this.serviceUrl}/${fileId}/start`, {})
+        this.httpClient.post<ApplicationSubmissionReviewDto>(`${this.serviceUrl}/${fileId}/start`, {})
       );
     } catch (e) {
       console.error(e);
@@ -54,11 +54,11 @@ export class ApplicationProposalReviewService {
     }
   }
 
-  async update(fileId: string, updateDto: UpdateApplicationProposalReviewDto) {
+  async update(fileId: string, updateDto: UpdateApplicationSubmissionReviewDto) {
     try {
       this.overlayService.showSpinner();
       const updatedAppReview = await firstValueFrom(
-        this.httpClient.post<ApplicationProposalReviewDto>(`${this.serviceUrl}/${fileId}`, updateDto)
+        this.httpClient.post<ApplicationSubmissionReviewDto>(`${this.serviceUrl}/${fileId}`, updateDto)
       );
       this.toastService.showSuccessToast('Application Review Saved');
       this.$applicationReview.next(updatedAppReview);
@@ -83,7 +83,7 @@ export class ApplicationProposalReviewService {
     }
   }
 
-  async returnApplication(fileId: string, returnDto: ReturnApplicationProposalDto) {
+  async returnApplication(fileId: string, returnDto: ReturnApplicationSubmissionDto) {
     try {
       this.overlayService.showSpinner();
       await firstValueFrom(this.httpClient.post<{}>(`${this.serviceUrl}/${fileId}/return`, returnDto));

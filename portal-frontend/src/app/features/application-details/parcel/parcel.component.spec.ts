@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ParcelComponent } from './parcel.component';
 
 describe('ParcelComponent', () => {
@@ -50,8 +50,8 @@ describe('ParcelComponent', () => {
 
     fixture = TestBed.createComponent(ParcelComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(
-      {} as ApplicationProposalDetailedDto
+    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(
+      {} as ApplicationSubmissionDetailedDto
     );
     fixture.detectChanges();
   });

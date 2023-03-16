@@ -4,17 +4,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationProposalReviewDto } from '../../services/application-review/application-proposal-review.dto';
-import { ApplicationProposalReviewService } from '../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalService } from '../../services/application/application-proposal.service';
+import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ReviewApplicationComponent } from './review-application.component';
 
 describe('ReviewApplicationComponent', () => {
   let component: ReviewApplicationComponent;
   let fixture: ComponentFixture<ReviewApplicationComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
-  let mockAppService: DeepMocked<ApplicationProposalService>;
+  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
+  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
@@ -22,7 +22,9 @@ describe('ReviewApplicationComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
+      undefined
+    );
 
     mockAppService = createMock();
 
@@ -34,11 +36,11 @@ describe('ReviewApplicationComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationProposalReviewService,
+          provide: ApplicationSubmissionReviewService,
           useValue: mockAppReviewService,
         },
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: mockAppService,
         },
         {

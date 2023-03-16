@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ApplicationListComponent } from './application-list.component';
@@ -14,7 +14,7 @@ describe('ApplicationListComponent', () => {
       declarations: [ApplicationListComponent],
       providers: [
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: {},
         },
         {

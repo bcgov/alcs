@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationProposalReviewDto } from '../../../services/application-review/application-proposal-review.dto';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-application.component';
@@ -17,7 +17,7 @@ import { ReviewApplicationSteps } from '../review-application.component';
   styleUrls: ['./review-submit.component.scss'],
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationProposalDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
   @Input() stepper!: CustomStepperComponent;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.ReviewAndSubmit;
@@ -29,7 +29,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @ViewChild('attachmentInfo') attachmentInfoPanel?: MatExpansionPanel;
 
   $destroy = new Subject<void>();
-  _applicationReview: ApplicationProposalReviewDto | undefined;
+  _applicationReview: ApplicationSubmissionReviewDto | undefined;
   showErrors = true;
   isMobile = false;
   hasCompletedStepsBeforeDocuments = false;
@@ -41,7 +41,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private applicationReviewService: ApplicationProposalReviewService,
+    private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 
@@ -156,7 +156,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  private validateContactInfo(review: ApplicationProposalReviewDto) {
+  private validateContactInfo(review: ApplicationSubmissionReviewDto) {
     return (
       review.localGovernmentFileNumber &&
       review.firstName &&
@@ -168,7 +168,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     );
   }
 
-  private validateOCP(review: ApplicationProposalReviewDto) {
+  private validateOCP(review: ApplicationSubmissionReviewDto) {
     if (review.isOCPDesignation) {
       return review.isOCPDesignation
         ? review.OCPBylawName && review.OCPDesignation && review.OCPConsistent !== null
@@ -177,7 +177,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     return review.isOCPDesignation !== null;
   }
 
-  private validateZoning(review: ApplicationProposalReviewDto) {
+  private validateZoning(review: ApplicationSubmissionReviewDto) {
     if (review.isSubjectToZoning) {
       return (
         review.isZoningConsistent !== null &&
@@ -189,14 +189,14 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     return review.isSubjectToZoning !== null;
   }
 
-  private validateAuthorization(review: ApplicationProposalReviewDto) {
+  private validateAuthorization(review: ApplicationSubmissionReviewDto) {
     if (review.isSubjectToZoning === true || review.isOCPDesignation === true) {
       return review.isAuthorized !== null;
     }
     return true;
   }
 
-  private validateAttachments(review: ApplicationProposalReviewDto) {
+  private validateAttachments(review: ApplicationSubmissionReviewDto) {
     if (review.isSubjectToZoning === true || review.isOCPDesignation == true) {
       if (review.isAuthorized === true) {
         return this.resolutionDocument.length > 0 && this.staffReport.length > 0;

@@ -4,15 +4,15 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
-import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
 import { PrimaryContactComponent } from './primary-contact.component';
 
 describe('PrimaryContactComponent', () => {
   let component: PrimaryContactComponent;
   let fixture: ComponentFixture<PrimaryContactComponent>;
-  let mockAppService: DeepMocked<ApplicationProposalService>;
+  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
 
@@ -24,7 +24,7 @@ describe('PrimaryContactComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: mockAppService,
         },
         {
@@ -42,7 +42,7 @@ describe('PrimaryContactComponent', () => {
 
     fixture = TestBed.createComponent(PrimaryContactComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

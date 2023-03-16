@@ -3,10 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
-  ApplicationProposalDetailedDto,
-  ApplicationProposalUpdateDto,
-} from '../../../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../../../services/application/application-proposal.service';
+  ApplicationSubmissionDetailedDto,
+  ApplicationSubmissionUpdateDto,
+} from '../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-application.component';
 
@@ -18,7 +18,7 @@ import { EditApplicationSteps } from '../../edit-application.component';
 export class NfuProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
@@ -51,7 +51,7 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private router: Router, private applicationService: ApplicationProposalService) {}
+  constructor(private router: Router, private applicationService: ApplicationSubmissionService) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -112,7 +112,7 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
       const nfuFillTypeDescription = this.fillTypeDescription.getRawValue();
       const nfuFillOriginDescription = this.fillOriginDescription.getRawValue();
 
-      const updateDto: ApplicationProposalUpdateDto = {
+      const updateDto: ApplicationSubmissionUpdateDto = {
         nfuHectares: nfuHectares ? parseFloat(nfuHectares) : null,
         nfuPurpose,
         nfuOutsideLands,

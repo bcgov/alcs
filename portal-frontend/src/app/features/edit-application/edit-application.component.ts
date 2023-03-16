@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
-import { ApplicationProposalDetailedDto } from '../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../services/application/application-proposal.service';
+import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
@@ -40,8 +40,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   documents: ApplicationDocumentDto[] = [];
 
   $destroy = new Subject<void>();
-  $application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
-  application: ApplicationProposalDetailedDto | undefined;
+  $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+  application: ApplicationSubmissionDetailedDto | undefined;
 
   editAppSteps = EditApplicationSteps;
   expandedParcelUuid?: string;
@@ -60,7 +60,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
-    private applicationService: ApplicationProposalService,
+    private applicationService: ApplicationSubmissionService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,

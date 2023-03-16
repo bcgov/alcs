@@ -5,8 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { OtherParcelsComponent } from './other-parcels.component';
@@ -14,12 +14,12 @@ import { OtherParcelsComponent } from './other-parcels.component';
 describe('OtherParcelsComponent', () => {
   let component: OtherParcelsComponent;
   let fixture: ComponentFixture<OtherParcelsComponent>;
-  let mockApplicationService: DeepMocked<ApplicationProposalService>;
+  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockMatDialog: DeepMocked<MatDialog>;
-  let applicationPipe = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -32,7 +32,7 @@ describe('OtherParcelsComponent', () => {
       declarations: [OtherParcelsComponent],
       providers: [
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: mockApplicationService,
         },
         {

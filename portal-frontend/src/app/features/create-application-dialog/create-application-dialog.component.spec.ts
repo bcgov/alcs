@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
-import { ApplicationProposalService } from '../../services/application/application-proposal.service';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
 import { CreateApplicationDialogComponent } from './create-application-dialog.component';
 
@@ -16,7 +16,7 @@ describe('CreateApplicationDialogComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: {} },
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: {},
         },
         {

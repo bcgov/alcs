@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
@@ -26,7 +26,7 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   isSubjectToZoning: boolean | null = null;
   isFirstNationGovernment = false;
 
-  constructor(private applicationReviewService: ApplicationProposalReviewService, private router: Router) {}
+  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {

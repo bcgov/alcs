@@ -3,31 +3,33 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationProposalReviewDto } from '../../../services/application-review/application-proposal-review.dto';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 
 import { ReviewSubmitComponent } from './review-submit.component';
 
 describe('ReviewSubmitComponent', () => {
   let component: ReviewSubmitComponent;
   let fixture: ComponentFixture<ReviewSubmitComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
+  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
 
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
-  let applicationPipe = new BehaviorSubject<ApplicationProposalDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
+      undefined
+    );
 
     mockAppDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationProposalReviewService,
+          provide: ApplicationSubmissionReviewService,
           useValue: mockAppReviewService,
         },
 

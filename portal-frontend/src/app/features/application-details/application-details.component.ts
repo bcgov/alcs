@@ -5,7 +5,7 @@ import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-doc
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDetailedDto } from '../../services/application-owner/application-owner.dto';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
-import { ApplicationProposalDetailedDto } from '../../services/application/application-proposal.dto';
+import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { LocalGovernmentDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
 
@@ -17,11 +17,11 @@ import { CodeService } from '../../services/code/code.service';
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors: boolean = true;
   @Input() showEdit: boolean = true;
   parcelType = PARCEL_TYPE;
-  application: ApplicationProposalDetailedDto | undefined;
+  application: ApplicationSubmissionDetailedDto | undefined;
   primaryContact: ApplicationOwnerDetailedDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;
   authorizationLetters: ApplicationDocumentDto[] = [];

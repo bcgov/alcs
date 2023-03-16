@@ -3,15 +3,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationProposalDetailedDto } from '../../../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../../../services/application/application-proposal.service';
+import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 
 import { NfuProposalComponent } from './nfu-proposal.component';
 
 describe('NfuProposalComponent', () => {
   let component: NfuProposalComponent;
   let fixture: ComponentFixture<NfuProposalComponent>;
-  let mockApplicationService: DeepMocked<ApplicationProposalService>;
+  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockRouter: DeepMocked<Router>;
 
   beforeEach(async () => {
@@ -21,7 +21,7 @@ describe('NfuProposalComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: mockApplicationService,
         },
         {
@@ -35,7 +35,7 @@ describe('NfuProposalComponent', () => {
 
     fixture = TestBed.createComponent(NfuProposalComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

@@ -3,25 +3,27 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationProposalReviewDto } from '../../../services/application-review/application-proposal-review.dto';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
+import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
 import { ReviewSubmitFngComponent } from './review-submit-fng.component';
 
 describe('ReviewSubmitComponent', () => {
   let component: ReviewSubmitFngComponent;
   let fixture: ComponentFixture<ReviewSubmitFngComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
-  let mockAppService: DeepMocked<ApplicationProposalService>;
+  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
+  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
-  let applicationPipe = new BehaviorSubject<ApplicationProposalDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
+      undefined
+    );
     mockAppDocumentService = createMock();
 
     mockAppService = createMock();
@@ -29,11 +31,11 @@ describe('ReviewSubmitComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationProposalReviewService,
+          provide: ApplicationSubmissionReviewService,
           useValue: mockAppReviewService,
         },
         {
-          provide: ApplicationProposalService,
+          provide: ApplicationSubmissionService,
           useValue: mockAppService,
         },
         {

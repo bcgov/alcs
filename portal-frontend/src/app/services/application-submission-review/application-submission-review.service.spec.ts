@@ -4,10 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 
-import { ApplicationProposalReviewService } from './application-proposal-review.service';
+import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 
-describe('ApplicationProposalReviewService', () => {
-  let service: ApplicationProposalReviewService;
+describe('ApplicationSubmissionReviewService', () => {
+  let service: ApplicationSubmissionReviewService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
@@ -27,7 +27,7 @@ describe('ApplicationProposalReviewService', () => {
         },
       ],
     });
-    service = TestBed.inject(ApplicationProposalReviewService);
+    service = TestBed.inject(ApplicationSubmissionReviewService);
   });
 
   it('should be created', () => {

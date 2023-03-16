@@ -10,7 +10,7 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-application.component';
@@ -25,7 +25,7 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
 
-  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
 
   @Output() navigateToStep = new EventEmitter<number>();

@@ -3,9 +3,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
-import { ApplicationProposalReviewService } from '../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalDto } from '../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../services/application/application-proposal.service';
+import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDto } from '../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
@@ -42,8 +42,8 @@ export class NavigateToStep {
 })
 export class ReviewApplicationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  application: ApplicationProposalDto | undefined;
-  $application = new BehaviorSubject<ApplicationProposalDto | undefined>(undefined);
+  application: ApplicationSubmissionDto | undefined;
+  $application = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
   fileId = '';
 
   isFirstNationGovernment = true;
@@ -60,8 +60,8 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   @ViewChild(ReviewResolutionComponent) reviewResolutionComponent!: ReviewResolutionComponent;
 
   constructor(
-    private applicationService: ApplicationProposalService,
-    private applicationReviewService: ApplicationProposalReviewService,
+    private applicationService: ApplicationSubmissionService,
+    private applicationReviewService: ApplicationSubmissionReviewService,
     private router: Router,
     private dialog: MatDialog,
     private toastService: ToastService,

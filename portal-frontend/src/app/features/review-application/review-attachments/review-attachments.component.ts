@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
-import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-application.component';
 
@@ -15,7 +15,7 @@ import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-app
   styleUrls: ['./review-attachments.component.scss'],
 })
 export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationProposalDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep: ReviewApplicationSteps | ReviewApplicationFngSteps = ReviewApplicationSteps.Attachments;
   @Input() showErrors = false;
@@ -35,8 +35,8 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private applicationReviewService: ApplicationProposalReviewService,
-    private applicationService: ApplicationProposalService,
+    private applicationReviewService: ApplicationSubmissionReviewService,
+    private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 

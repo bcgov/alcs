@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationProposalReviewDto } from '../../../services/application-review/application-proposal-review.dto';
-import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
-import { ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { ReviewApplicationFngSteps } from '../review-application.component';
@@ -17,7 +17,7 @@ import { ReviewApplicationFngSteps } from '../review-application.component';
   styleUrls: ['./review-submit-fng.component.scss'],
 })
 export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationProposalDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
   @Input() stepper!: CustomStepperComponent;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationFngSteps.ReviewAndSubmitFng;
@@ -27,7 +27,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   @ViewChild('resolutionInfo') resolutionPanel?: MatExpansionPanel;
 
   $destroy = new Subject<void>();
-  _applicationReview: ApplicationProposalReviewDto | undefined;
+  _applicationReview: ApplicationSubmissionReviewDto | undefined;
   showErrors = true;
   isMobile = false;
 
@@ -37,7 +37,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private applicationReviewService: ApplicationProposalReviewService,
+    private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 
