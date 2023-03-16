@@ -16,7 +16,7 @@ export class UserService {
   public $userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
   private userProfile: UserDto | undefined;
 
-  private baseUrl = `${environment.apiUrl}/user`;
+  private baseUrl = `${environment.authUrl}/user`;
 
   constructor(
     private http: HttpClient,
@@ -42,7 +42,7 @@ export class UserService {
 
   public async updateUserProfile(uuid: string, updateDto: UpdateUserDto) {
     try {
-      await firstValueFrom(this.http.patch<UserDto>(`${environment.apiUrl}/user/${uuid}`, updateDto));
+      await firstValueFrom(this.http.patch<UserDto>(`${environment.authUrl}/user/${uuid}`, updateDto));
       await this.populateUserProfile();
     } catch (e) {
       this.toastService.showErrorToast('Failed to update User');
