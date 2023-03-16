@@ -13,20 +13,20 @@ import {
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { ApplicationProposalProfile } from '../common/automapper/application-proposal.automapper.profile';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { Document } from '../document/document.entity';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
+import { ValidatedApplication } from './application-proposal-validator.service';
+import { ApplicationProposal } from './application-proposal.entity';
+import { ApplicationProposalService } from './application-proposal.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ValidatedApplicationSubmission } from './application-submission-validator.service';
-import { ApplicationSubmission } from './application-submission.entity';
-import { ApplicationSubmissionService } from './application-submission.service';
 
-describe('ApplicationSubmissionService', () => {
-  let service: ApplicationSubmissionService;
+describe('ApplicationProposalService', () => {
+  let service: ApplicationProposalService;
   let mockAppTypeService: DeepMocked<ApplicationTypeService>;
-  let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
+  let mockRepository: DeepMocked<Repository<ApplicationProposal>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
   let mockAlcsApplicationService: DeepMocked<AlcsApplicationService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
@@ -45,10 +45,10 @@ describe('ApplicationSubmissionService', () => {
         }),
       ],
       providers: [
-        ApplicationSubmissionService,
+        ApplicationProposalService,
         ApplicationProfile,
         {
-          provide: getRepositoryToken(ApplicationSubmission),
+          provide: getRepositoryToken(ApplicationProposal),
           useValue: mockRepository,
         },
         {
@@ -70,8 +70,8 @@ describe('ApplicationSubmissionService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationSubmissionService>(
-      ApplicationSubmissionService,
+    service = module.get<ApplicationProposalService>(
+      ApplicationProposalService,
     );
   });
 
@@ -80,7 +80,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should return the fetched application', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const app = await service.getOrFail('');
@@ -88,7 +88,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should return the fetched application when fetching with user', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const app = await service.getIfCreator('', new User());
@@ -117,7 +117,7 @@ describe('ApplicationSubmissionService', () => {
     const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
     mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
-    mockRepository.save.mockResolvedValue(new ApplicationSubmission());
+    mockRepository.save.mockResolvedValue(new ApplicationProposal());
     mockAlcsApplicationService.generateFileNumber.mockReturnValue(
       of({
         fileNumber: fileId,
@@ -135,7 +135,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should call through for get by user', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     mockRepository.find.mockResolvedValue([application]);
 
     const res = await service.getByUser(new User());
@@ -145,7 +145,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should call through for getByFileId', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.getByFileId('', new User());
@@ -154,7 +154,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should call through for getForGovernmentByFileId', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.getForGovernmentByFileId('', {
@@ -167,7 +167,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should load the canceled status and save the application for cancel', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     const cancelStatus = new ApplicationStatus({
       code: APPLICATION_STATUS.CANCELLED,
     });
@@ -182,7 +182,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should throw an exception if it fails to load cancelled status', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationProposal();
     const exception = new BaseServiceException('');
     mockStatusRepository.findOneOrFail.mockRejectedValue(exception);
 
@@ -201,7 +201,7 @@ describe('ApplicationSubmissionService', () => {
     mockStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
     mockRepository.save.mockResolvedValue({} as any);
 
-    await service.submitToLg(new ApplicationSubmission());
+    await service.submitToLg(new ApplicationProposal());
     expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].status).toEqual(mockStatus);
@@ -220,7 +220,7 @@ describe('ApplicationSubmissionService', () => {
       },
     ]);
 
-    const application = new ApplicationSubmission({
+    const application = new ApplicationProposal({
       applicant,
       typeCode: typeCode,
       status: new ApplicationStatus({
@@ -242,7 +242,7 @@ describe('ApplicationSubmissionService', () => {
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new ApplicationSubmission({
+    const mockApplication = new ApplicationProposal({
       fileNumber,
       applicant,
       typeCode,
@@ -265,7 +265,7 @@ describe('ApplicationSubmissionService', () => {
     );
 
     await expect(
-      service.submitToAlcs(mockApplication as ValidatedApplicationSubmission),
+      service.submitToAlcs(mockApplication as ValidatedApplication),
     ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
     );
@@ -278,7 +278,7 @@ describe('ApplicationSubmissionService', () => {
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new ApplicationSubmission({
+    const mockApplication = new ApplicationProposal({
       fileNumber,
       applicant,
       typeCode,
@@ -307,7 +307,7 @@ describe('ApplicationSubmissionService', () => {
     );
 
     const res = await service.submitToAlcs(
-      mockApplication as ValidatedApplicationSubmission,
+      mockApplication as ValidatedApplication,
     );
 
     expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
@@ -321,7 +321,7 @@ describe('ApplicationSubmissionService', () => {
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
 
-    const mockApplication = new ApplicationSubmission({
+    const mockApplication = new ApplicationProposal({
       fileNumber,
       applicant: 'incognito',
       typeCode: 'fake',
@@ -340,7 +340,7 @@ describe('ApplicationSubmissionService', () => {
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOne).toBeCalledTimes(2);
     expect(result).toEqual(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         fileNumber,
         applicant,
         typeCode,

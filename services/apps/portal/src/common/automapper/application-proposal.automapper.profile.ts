@@ -17,7 +17,7 @@ import {
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 
 @Injectable()
-export class ApplicationProfile extends AutomapperProfile {
+export class ApplicationProposalProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }

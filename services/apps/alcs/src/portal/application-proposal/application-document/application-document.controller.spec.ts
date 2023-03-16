@@ -6,11 +6,11 @@ import { ClsService } from 'nestjs-cls';
 import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
-import { ApplicationProposalProfile } from '../../common/automapper/application-proposal.automapper.profile';
+import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
-import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission.service';
+import { ApplicationProposal } from '../application-proposal.entity';
+import { ApplicationProposalService } from '../application-proposal.service';
 import { ApplicationDocumentController } from './application-document.controller';
 import { AttachExternalDocumentDto } from './application-document.dto';
 import {
@@ -22,7 +22,7 @@ import { ApplicationDocumentService } from './application-document.service';
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
   let appDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
+  let mockApplicationService: DeepMocked<ApplicationProposalService>;
   let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   const mockDocument = new ApplicationDocument({
@@ -45,7 +45,7 @@ describe('ApplicationDocumentController', () => {
       ],
       controllers: [ApplicationDocumentController],
       providers: [
-        ApplicationProposalProfile,
+        ApplicationProfile,
         {
           provide: ApplicationDocumentService,
           useValue: appDocumentService,
@@ -55,7 +55,7 @@ describe('ApplicationDocumentController', () => {
           useValue: {},
         },
         {
-          provide: ApplicationSubmissionService,
+          provide: ApplicationProposalService,
           useValue: mockApplicationService,
         },
         {
@@ -70,7 +70,7 @@ describe('ApplicationDocumentController', () => {
     );
 
     mockApplicationService.verifyAccess.mockResolvedValue(
-      new ApplicationSubmission(),
+      new ApplicationProposal(),
     );
   });
 

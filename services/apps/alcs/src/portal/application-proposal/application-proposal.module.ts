@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AlcsModule } from '../alcs/alcs.module';
-import { ApplicationGrpcModule } from '../alcs/application-grpc/application-grpc.module';
-import { AuthorizationModule } from '../common/authorization/authorization.module';
-import { ApplicationOwnerProfile } from '../common/automapper/application-owner.automapper.profile';
-import { ApplicationParcelProfile } from '../common/automapper/application-parcel.automapper.profile';
-import { ApplicationProposalProfile } from '../common/automapper/application-proposal.automapper.profile';
-import { DocumentModule } from '../document/document.module';
+import { AlcsModule } from '../../alcs/alcs.module';
+import { AuthorizationModule } from '../../common/authorization/authorization.module';
+import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
+import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
+import { ApplicationProposalProfile } from '../../common/automapper/application-proposal.automapper.profile';
+import { DocumentModule } from '../../document/document.module';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -21,17 +20,17 @@ import { ApplicationParcelOwnershipType } from './application-parcel/application
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
+import { ApplicationProposalStatusSubscriber } from './application-proposal-status.subscriber';
+import { ApplicationProposalValidatorService } from './application-proposal-validator.service';
+import { ApplicationProposalController } from './application-proposal.controller';
+import { ApplicationProposal } from './application-proposal.entity';
+import { ApplicationProposalService } from './application-proposal.service';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationSubmissionStatusSubscriber } from './application-submission-status.subscriber';
-import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
-import { ApplicationSubmissionController } from './application-submission.controller';
-import { ApplicationSubmission } from './application-submission.entity';
-import { ApplicationSubmissionService } from './application-submission.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      ApplicationSubmission,
+      ApplicationProposal,
       ApplicationDocument,
       ApplicationStatus,
       ApplicationParcel,
@@ -42,11 +41,10 @@ import { ApplicationSubmissionService } from './application-submission.service';
     ]),
     AlcsModule,
     AuthorizationModule,
-    ApplicationGrpcModule,
     DocumentModule,
   ],
   providers: [
-    ApplicationSubmissionService,
+    ApplicationProposalService,
     ApplicationDocumentService,
     ApplicationProposalProfile,
     ApplicationParcelProfile,
@@ -54,21 +52,21 @@ import { ApplicationSubmissionService } from './application-submission.service';
     ApplicationParcelDocumentService,
     ApplicationOwnerService,
     ApplicationOwnerProfile,
-    ApplicationSubmissionStatusSubscriber,
-    ApplicationSubmissionValidatorService,
+    ApplicationProposalStatusSubscriber,
+    ApplicationProposalValidatorService,
   ],
   controllers: [
-    ApplicationSubmissionController,
+    ApplicationProposalController,
     ApplicationDocumentController,
     ApplicationParcelController,
     ApplicationParcelDocumentController,
     ApplicationOwnerController,
   ],
   exports: [
-    ApplicationSubmissionService,
+    ApplicationProposalService,
     ApplicationDocumentService,
     ApplicationOwnerService,
-    ApplicationSubmissionValidatorService,
+    ApplicationProposalValidatorService,
   ],
 })
-export class ApplicationSubmissionModule {}
+export class ApplicationProposalModule {}

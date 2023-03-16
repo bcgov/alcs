@@ -6,29 +6,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { ApplicationProposalProfile } from '../common/automapper/application-proposal.automapper.profile';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { User } from '../user/user.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
+import {
+  ApplicationProposalValidatorService,
+  ValidatedApplication,
+} from './application-proposal-validator.service';
+import { ApplicationProposalController } from './application-proposal.controller';
+import {
+  ApplicationProposalDetailedDto,
+  ApplicationProposalDto,
+} from './application-proposal.dto';
+import { ApplicationProposal } from './application-proposal.entity';
+import { ApplicationProposalService } from './application-proposal.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
-import {
-  ApplicationSubmissionValidatorService,
-  ValidatedApplicationSubmission,
-} from './application-submission-validator.service';
-import { ApplicationSubmissionController } from './application-submission.controller';
-import {
-  ApplicationSubmissionDetailedDto,
-  ApplicationSubmissionDto,
-} from './application-submission.dto';
-import { ApplicationSubmission } from './application-submission.entity';
-import { ApplicationSubmissionService } from './application-submission.service';
 
-describe('ApplicationSubmissionController', () => {
-  let controller: ApplicationSubmissionController;
-  let mockAppService: DeepMocked<ApplicationSubmissionService>;
+describe('ApplicationProposalController', () => {
+  let controller: ApplicationProposalController;
+  let mockAppService: DeepMocked<ApplicationProposalService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
-  let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
+  let mockAppValidationService: DeepMocked<ApplicationProposalValidatorService>;
 
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
@@ -41,11 +41,11 @@ describe('ApplicationSubmissionController', () => {
     mockAppValidationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ApplicationSubmissionController],
+      controllers: [ApplicationProposalController],
       providers: [
-        ApplicationProposalProfile,
+        ApplicationProfile,
         {
-          provide: ApplicationSubmissionService,
+          provide: ApplicationProposalService,
           useValue: mockAppService,
         },
         {
@@ -57,7 +57,7 @@ describe('ApplicationSubmissionController', () => {
           useValue: mockLgService,
         },
         {
-          provide: ApplicationSubmissionValidatorService,
+          provide: ApplicationProposalValidatorService,
           useValue: mockAppValidationService,
         },
         ...mockKeyCloakProviders,
@@ -69,20 +69,20 @@ describe('ApplicationSubmissionController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationSubmissionController>(
-      ApplicationSubmissionController,
+    controller = module.get<ApplicationProposalController>(
+      ApplicationProposalController,
     );
 
     mockAppService.update.mockResolvedValue(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         applicant: applicant,
         localGovernmentUuid,
       }),
     );
 
     mockAppService.create.mockResolvedValue('2');
-    mockAppService.getIfCreator.mockResolvedValue(new ApplicationSubmission());
-    mockAppService.verifyAccess.mockResolvedValue(new ApplicationSubmission());
+    mockAppService.getIfCreator.mockResolvedValue(new ApplicationProposal());
+    mockAppService.verifyAccess.mockResolvedValue(new ApplicationProposal());
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
     mockLgService.get.mockResolvedValue([
@@ -128,11 +128,9 @@ describe('ApplicationSubmissionController', () => {
   });
 
   it('should call out to service when cancelling an application', async () => {
-    mockAppService.mapToDTOs.mockResolvedValue([
-      {} as ApplicationSubmissionDto,
-    ]);
+    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationProposalDto]);
     mockAppService.getIfCreator.mockResolvedValue(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.IN_PROGRESS,
         }),
@@ -153,7 +151,7 @@ describe('ApplicationSubmissionController', () => {
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
     mockAppService.getIfCreator.mockResolvedValue(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.CANCELLED,
         }),
@@ -175,7 +173,7 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service when fetching an application', async () => {
     mockAppService.mapToDetailedDTO.mockResolvedValue(
-      {} as ApplicationSubmissionDetailedDto,
+      {} as ApplicationProposalDetailedDto,
     );
 
     const application = await controller.getApplication(
@@ -199,10 +197,10 @@ describe('ApplicationSubmissionController', () => {
       name: 'fake-name',
       isFirstNation: false,
     });
-    const mockApplication = new ApplicationSubmission();
+    const mockApplication = new ApplicationProposal();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
     mockAppService.mapToDetailedDTO.mockResolvedValue(
-      {} as ApplicationSubmissionDetailedDto,
+      {} as ApplicationProposalDetailedDto,
     );
 
     const application = await controller.getApplication(
@@ -222,9 +220,7 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service when creating an application', async () => {
     mockAppService.create.mockResolvedValue('');
-    mockAppService.mapToDTOs.mockResolvedValue([
-      {} as ApplicationSubmissionDto,
-    ]);
+    mockAppService.mapToDTOs.mockResolvedValue([{} as ApplicationProposalDto]);
 
     const application = await controller.create(
       {
@@ -243,7 +239,7 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service for update and map', async () => {
     mockAppService.mapToDetailedDTO.mockResolvedValue(
-      {} as ApplicationSubmissionDetailedDto,
+      {} as ApplicationProposalDetailedDto,
     );
 
     await controller.update(
@@ -269,15 +265,15 @@ describe('ApplicationSubmissionController', () => {
       {} as ApplicationGrpcResponse,
     );
     mockAppService.getIfCreator.mockResolvedValue(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         typeCode: 'TURP',
       }),
     );
     mockAppService.updateStatus.mockResolvedValue();
     mockAppValidationService.validateApplication.mockResolvedValue({
-      application: new ApplicationSubmission({
+      application: new ApplicationProposal({
         typeCode: 'TURP',
-      }) as ValidatedApplicationSubmission,
+      }) as ValidatedApplication,
       errors: [],
     });
 
@@ -296,14 +292,13 @@ describe('ApplicationSubmissionController', () => {
     const mockFileId = 'file-id';
     mockAppService.submitToLg.mockResolvedValue();
     mockAppService.getIfCreator.mockResolvedValue(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         typeCode: 'NOT-TURP',
         localGovernmentUuid,
       }),
     );
     mockAppValidationService.validateApplication.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      application: new ApplicationProposal() as ValidatedApplication,
       errors: [],
     });
 
@@ -320,7 +315,7 @@ describe('ApplicationSubmissionController', () => {
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
     mockAppService.getIfCreator.mockResolvedValue(
-      new ApplicationSubmission({
+      new ApplicationProposal({
         typeCode: 'NOT-TURP',
       }),
     );

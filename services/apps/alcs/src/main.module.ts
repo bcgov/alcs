@@ -20,6 +20,7 @@ import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { LogoutController } from './logout/logout.controller';
 import { MainController } from './main.controller';
 import { MainService } from './main.service';
+import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
@@ -61,6 +62,7 @@ import { UserService } from './user/user.service';
     }),
     CdogsModule,
     AlcsModule,
+    PortalModule,
     UserModule,
   ],
   controllers: [MainController, LogoutController],

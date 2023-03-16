@@ -5,7 +5,7 @@ import { ApplicationSubmissionReviewDto } from '../../application-submission-rev
 import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
 
 @Injectable()
-export class ApplicationReviewProfile extends AutomapperProfile {
+export class ApplicationProposalReviewProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
