@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, OnInit, ViewEncapsulation } from '@angular
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationProposalService } from '../../services/application/application-proposal.service';
 import { ApplicationTypeDto, SubmissionTypeDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
@@ -35,7 +35,7 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   constructor(
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private codeService: CodeService,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationProposalService,
     private router: Router,
     private overlaySpinner: OverlaySpinnerService
   ) {}

@@ -3,10 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { ApplicationReviewDto } from '../../services/application-review/application-review.dto';
-import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import { APPLICATION_STATUS, ApplicationDetailedDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationProposalReviewDto } from '../../services/application-review/application-proposal-review.dto';
+import { ApplicationProposalReviewService } from '../../services/application-review/application-proposal-review.service';
+import {
+  APPLICATION_STATUS,
+  ApplicationProposalDetailedDto,
+} from '../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../services/application/application-proposal.service';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MOBILE_BREAKPOINT } from '../../shared/utils/breakpoints';
 
@@ -22,9 +25,9 @@ enum MOBILE_STEP {
   styleUrls: ['./view-application.component.scss'],
 })
 export class ViewApplicationComponent implements OnInit, OnDestroy {
-  application: ApplicationDetailedDto | undefined;
-  $application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
-  applicationReview: ApplicationReviewDto | undefined;
+  application: ApplicationProposalDetailedDto | undefined;
+  $application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
+  applicationReview: ApplicationProposalReviewDto | undefined;
 
   $destroy = new Subject<void>();
 
@@ -43,8 +46,8 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private applicationService: ApplicationService,
-    private applicationReviewService: ApplicationReviewService,
+    private applicationService: ApplicationProposalService,
+    private applicationReviewService: ApplicationProposalReviewService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDocumentService: ApplicationDocumentService,
     private route: ActivatedRoute,

@@ -3,9 +3,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
-import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import { ApplicationDto } from '../../services/application/application.dto';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationProposalReviewService } from '../../services/application-review/application-proposal-review.service';
+import { ApplicationProposalDto } from '../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../services/application/application-proposal.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
@@ -42,8 +42,8 @@ export class NavigateToStep {
 })
 export class ReviewApplicationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  application: ApplicationDto | undefined;
-  $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  application: ApplicationProposalDto | undefined;
+  $application = new BehaviorSubject<ApplicationProposalDto | undefined>(undefined);
   fileId = '';
 
   isFirstNationGovernment = true;
@@ -60,8 +60,8 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   @ViewChild(ReviewResolutionComponent) reviewResolutionComponent!: ReviewResolutionComponent;
 
   constructor(
-    private applicationService: ApplicationService,
-    private applicationReviewService: ApplicationReviewService,
+    private applicationService: ApplicationProposalService,
+    private applicationReviewService: ApplicationProposalReviewService,
     private router: Router,
     private dialog: MatDialog,
     private toastService: ToastService,

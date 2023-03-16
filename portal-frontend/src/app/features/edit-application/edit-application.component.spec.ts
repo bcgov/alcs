@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationProposalService } from '../../services/application/application-proposal.service';
 import { CodeService } from '../../services/code/code.service';
 
 import { MatDialogModule } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ describe('EditApplicationComponent', () => {
       declarations: [EditApplicationComponent],
       providers: [
         {
-          provide: ApplicationService,
+          provide: ApplicationProposalService,
           useValue: {},
         },
         {

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { APPLICATION_STATUS, ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { APPLICATION_STATUS, ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
 
 @Component({
   selector: 'app-application-list',
@@ -10,7 +10,7 @@ import { ApplicationService } from '../../../services/application/application.se
   styleUrls: ['./application-list.component.scss'],
 })
 export class ApplicationListComponent implements OnInit {
-  dataSource: MatTableDataSource<ApplicationDto> = new MatTableDataSource<ApplicationDto>();
+  dataSource: MatTableDataSource<ApplicationProposalDto> = new MatTableDataSource<ApplicationProposalDto>();
   displayedColumns: string[] = [
     'fileNumber',
     'dateCreated',
@@ -34,7 +34,7 @@ export class ApplicationListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private applicationService: ApplicationService) {}
+  constructor(private applicationService: ApplicationProposalService) {}
 
   ngOnInit(): void {
     this.loadApplications();

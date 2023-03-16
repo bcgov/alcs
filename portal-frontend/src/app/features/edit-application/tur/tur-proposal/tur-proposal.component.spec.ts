@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationDetailedDto } from '../../../../services/application/application.dto';
-import { ApplicationService } from '../../../../services/application/application.service';
+import { ApplicationProposalDetailedDto } from '../../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../../services/application/application-proposal.service';
 
 import { TurProposalComponent } from './tur-proposal.component';
 
 describe('TurProposalComponent', () => {
   let component: TurProposalComponent;
   let fixture: ComponentFixture<TurProposalComponent>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationService: DeepMocked<ApplicationProposalService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
 
@@ -24,7 +24,7 @@ describe('TurProposalComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationService,
+          provide: ApplicationProposalService,
           useValue: mockApplicationService,
         },
         {
@@ -42,7 +42,7 @@ describe('TurProposalComponent', () => {
 
     fixture = TestBed.createComponent(TurProposalComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

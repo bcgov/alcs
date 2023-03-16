@@ -1,4 +1,4 @@
-export interface ApplicationReviewDto {
+export interface ApplicationProposalReviewDto {
   applicationFileNumber: string;
   localGovernmentFileNumber: string | null;
   firstName: string | null;
@@ -20,7 +20,7 @@ export interface ApplicationReviewDto {
   isFirstNationGovernment: boolean;
 }
 
-export interface UpdateApplicationReviewDto {
+export interface UpdateApplicationProposalReviewDto {
   localGovernmentFileNumber?: string | null;
   firstName?: string | null;
   lastName?: string | null;
@@ -40,7 +40,7 @@ export interface UpdateApplicationReviewDto {
   isAuthorized?: boolean | null;
 }
 
-export interface ReturnApplicationDto {
+export interface ReturnApplicationProposalDto {
   reasonForReturn: 'incomplete' | 'wrongGovernment';
   applicantComment: string;
 }

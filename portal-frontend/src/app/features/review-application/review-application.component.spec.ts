@@ -4,17 +4,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationReviewDto } from '../../services/application-review/application-review.dto';
-import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationProposalReviewDto } from '../../services/application-review/application-proposal-review.dto';
+import { ApplicationProposalReviewService } from '../../services/application-review/application-proposal-review.service';
+import { ApplicationProposalService } from '../../services/application/application-proposal.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ReviewApplicationComponent } from './review-application.component';
 
 describe('ReviewApplicationComponent', () => {
   let component: ReviewApplicationComponent;
   let fixture: ComponentFixture<ReviewApplicationComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationReviewService>;
-  let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
+  let mockAppService: DeepMocked<ApplicationProposalService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
@@ -22,7 +22,7 @@ describe('ReviewApplicationComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
 
     mockAppService = createMock();
 
@@ -34,11 +34,11 @@ describe('ReviewApplicationComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationReviewService,
+          provide: ApplicationProposalReviewService,
           useValue: mockAppReviewService,
         },
         {
-          provide: ApplicationService,
+          provide: ApplicationProposalService,
           useValue: mockAppService,
         },
         {

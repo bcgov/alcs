@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { ApplicationReviewDto } from '../../services/application-review/application-review.dto';
-import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationProposalReviewDto } from '../../services/application-review/application-proposal-review.dto';
+import { ApplicationProposalReviewService } from '../../services/application-review/application-proposal-review.service';
+import { ApplicationProposalService } from '../../services/application/application-proposal.service';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ViewApplicationComponent } from './view-application.component';
@@ -15,8 +15,8 @@ describe('ViewApplicationComponent', () => {
   let fixture: ComponentFixture<ViewApplicationComponent>;
 
   let mockRoute;
-  let mockAppService: DeepMocked<ApplicationService>;
-  let mockAppReviewService: DeepMocked<ApplicationReviewService>;
+  let mockAppService: DeepMocked<ApplicationProposalService>;
+  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
   let mockDialogService: DeepMocked<ConfirmationDialogService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
@@ -28,7 +28,7 @@ describe('ViewApplicationComponent', () => {
     mockAppReviewService = createMock();
     mockAppDocumentService = createMock();
 
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
 
     routeParamMap = new BehaviorSubject(new Map());
     mockRoute.paramMap = routeParamMap;
@@ -40,11 +40,11 @@ describe('ViewApplicationComponent', () => {
           useValue: mockRoute,
         },
         {
-          provide: ApplicationService,
+          provide: ApplicationProposalService,
           useValue: mockAppService,
         },
         {
-          provide: ApplicationReviewService,
+          provide: ApplicationProposalReviewService,
           useValue: mockAppReviewService,
         },
         {

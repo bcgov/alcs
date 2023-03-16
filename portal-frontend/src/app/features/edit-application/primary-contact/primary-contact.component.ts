@@ -6,8 +6,8 @@ import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-application.component';
 
@@ -17,7 +17,7 @@ import { EditApplicationSteps } from '../edit-application.component';
   styleUrls: ['./primary-contact.component.scss'],
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
@@ -48,7 +48,7 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationProposalService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService
   ) {}

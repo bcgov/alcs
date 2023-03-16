@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
 
 export enum ReturnApplicationStepEnum {
   reason = 0,
@@ -27,7 +27,7 @@ export class ReturnApplicationDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ReturnApplicationDialogComponent>,
-    private applicationReviewService: ApplicationReviewService,
+    private applicationReviewService: ApplicationProposalReviewService,
     @Inject(MAT_DIALOG_DATA) public data: ReturnApplicationDialogComponent
   ) {
     this.fileId = data.fileId;

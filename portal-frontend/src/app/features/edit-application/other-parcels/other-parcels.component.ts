@@ -15,8 +15,8 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../shared/utils/boolean-helper';
 import { getLetterCombinations } from '../../../shared/utils/number-to-letter-helper';
@@ -34,7 +34,7 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
   styleUrls: ['./other-parcels.component.scss'],
 })
 export class OtherParcelsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.OtherParcel;
@@ -52,7 +52,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   otherParcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
-  application?: ApplicationDetailedDto;
+  application?: ApplicationProposalDetailedDto;
   formDisabled = true;
   newParcelAdded = false;
   hasCrownLandParcels = false;
@@ -60,7 +60,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationProposalService,
     private toastService: ToastService,
     private dialog: MatDialog,
     private router: Router

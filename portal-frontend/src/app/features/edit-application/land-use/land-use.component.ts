@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
 import { EditApplicationSteps } from '../edit-application.component';
 
 export enum MainLandUseTypeOptions {
@@ -26,7 +26,7 @@ export enum MainLandUseTypeOptions {
 export class LandUseComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.LandUse;
-  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
@@ -59,7 +59,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
     westLandUseTypeDescription: this.westLandUseTypeDescription,
   });
 
-  constructor(private router: Router, private applicationService: ApplicationService) {}
+  constructor(private router: Router, private applicationService: ApplicationProposalService) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -79,7 +79,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  populateFormValues(application: ApplicationDetailedDto) {
+  populateFormValues(application: ApplicationProposalDetailedDto) {
     this.landUseForm.patchValue({
       parcelsAgricultureDescription: application.parcelsAgricultureDescription,
       parcelsAgricultureImprovementDescription: application.parcelsAgricultureImprovementDescription,

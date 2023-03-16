@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
 
 @Component({
   selector: 'app-nfu-details[application]',
@@ -8,7 +8,7 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
   styleUrls: ['./nfu-details.component.scss'],
 })
 export class NfuDetailsComponent {
-  @Input() application: ApplicationDetailedDto | undefined;
+  @Input() application: ApplicationProposalDetailedDto | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
 

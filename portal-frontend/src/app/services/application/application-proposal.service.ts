@@ -4,12 +4,16 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationDetailedDto, ApplicationDto, ApplicationUpdateDto } from './application.dto';
+import {
+  ApplicationProposalDetailedDto,
+  ApplicationProposalDto,
+  ApplicationProposalUpdateDto,
+} from './application-proposal.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationService {
+export class ApplicationProposalService {
   private serviceUrl = `${environment.apiUrl}/application`;
 
   constructor(
@@ -20,7 +24,7 @@ export class ApplicationService {
 
   async getApplications() {
     try {
-      return await firstValueFrom(this.httpClient.get<ApplicationDto[]>(`${this.serviceUrl}`));
+      return await firstValueFrom(this.httpClient.get<ApplicationProposalDto[]>(`${this.serviceUrl}`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to load Applications, please try again later');
@@ -30,7 +34,7 @@ export class ApplicationService {
 
   async getByFileId(fileId: string) {
     try {
-      return await firstValueFrom(this.httpClient.get<ApplicationDetailedDto>(`${this.serviceUrl}/${fileId}`));
+      return await firstValueFrom(this.httpClient.get<ApplicationProposalDetailedDto>(`${this.serviceUrl}/${fileId}`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to load Application, please try again later');
@@ -55,11 +59,11 @@ export class ApplicationService {
     return undefined;
   }
 
-  async updatePending(fileId: string, updateDto: ApplicationUpdateDto) {
+  async updatePending(fileId: string, updateDto: ApplicationProposalUpdateDto) {
     try {
       this.overlayService.showSpinner();
       const result = await firstValueFrom(
-        this.httpClient.put<ApplicationDetailedDto>(`${this.serviceUrl}/${fileId}`, updateDto)
+        this.httpClient.put<ApplicationProposalDetailedDto>(`${this.serviceUrl}/${fileId}`, updateDto)
       );
       this.toastService.showSuccessToast('Application Saved');
       return result;
@@ -89,7 +93,9 @@ export class ApplicationService {
   async submitToAlcs(fileId: string) {
     try {
       this.overlayService.showSpinner();
-      await firstValueFrom(this.httpClient.post<ApplicationDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {}));
+      await firstValueFrom(
+        this.httpClient.post<ApplicationProposalDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {})
+      );
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
       console.error(e);

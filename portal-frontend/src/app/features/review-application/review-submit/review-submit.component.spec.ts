@@ -3,31 +3,31 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationReviewDto } from '../../../services/application-review/application-review.dto';
-import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationProposalReviewDto } from '../../../services/application-review/application-proposal-review.dto';
+import { ApplicationProposalReviewService } from '../../../services/application-review/application-proposal-review.service';
+import { ApplicationProposalDto } from '../../../services/application/application-proposal.dto';
 
 import { ReviewSubmitComponent } from './review-submit.component';
 
 describe('ReviewSubmitComponent', () => {
   let component: ReviewSubmitComponent;
   let fixture: ComponentFixture<ReviewSubmitComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationReviewService>;
+  let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
 
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
-  let applicationPipe = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationProposalDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationProposalReviewDto | undefined>(undefined);
 
     mockAppDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationReviewService,
+          provide: ApplicationProposalReviewService,
           useValue: mockAppReviewService,
         },
 

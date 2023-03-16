@@ -1,10 +1,10 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { ReviewAndSubmitComponent } from './review-and-submit.component';
@@ -14,7 +14,7 @@ describe('ReviewAndSubmitComponent', () => {
   let fixture: ComponentFixture<ReviewAndSubmitComponent>;
   let mockToastService: DeepMocked<ToastService>;
   let mockRouter: DeepMocked<Router>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationService: DeepMocked<ApplicationProposalService>;
 
   beforeEach(async () => {
     mockToastService = createMock();
@@ -34,7 +34,7 @@ describe('ReviewAndSubmitComponent', () => {
           useValue: mockRouter,
         },
         {
-          provide: ApplicationService,
+          provide: ApplicationProposalService,
           useValue: mockApplicationService,
         },
       ],
@@ -42,7 +42,7 @@ describe('ReviewAndSubmitComponent', () => {
 
     fixture = TestBed.createComponent(ReviewAndSubmitComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+    component.$application = new BehaviorSubject<ApplicationProposalDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

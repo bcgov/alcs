@@ -1,19 +1,10 @@
-import {
-  AfterContentInit,
-  AfterViewChecked,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationProposalDetailedDto } from '../../../services/application/application-proposal.dto';
+import { ApplicationProposalService } from '../../../services/application/application-proposal.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { EditApplicationSteps } from '../edit-application.component';
@@ -26,7 +17,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Government;
-  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationProposalDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
@@ -43,7 +34,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
 
   constructor(
     private codeService: CodeService,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationProposalService,
     private router: Router
   ) {}
 
