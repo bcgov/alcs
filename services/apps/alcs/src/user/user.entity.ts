@@ -57,6 +57,9 @@ export class User extends Base {
   @Column({ nullable: true })
   bceidUserName: string;
 
+  @Column({ nullable: true })
+  bceidBusinessGuid: string;
+
   @AutoMap()
   @Column({ default: [], array: true, type: 'text' })
   clientRoles: string[];

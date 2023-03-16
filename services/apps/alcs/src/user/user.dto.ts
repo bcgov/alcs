@@ -53,6 +53,7 @@ export class CreateUserDto {
   bceidUserName?: string;
   idirUserGuid?: string;
   bceidGuid?: string;
+  bceidBusinessGuid?: string;
 }
 
 export class AssigneeDto {

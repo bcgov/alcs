@@ -45,6 +45,7 @@ export type BCeIDBasicToken = BaseToken & {
   identity_provider: 'bceidboth';
   bceid_user_guid: string;
   bceid_username: string;
+  bceid_business_guid?: string;
 };
 
 @Injectable()
@@ -152,6 +153,7 @@ export class AuthorizationService {
         identityProvider: bceidToken.identity_provider,
         preferredUsername: bceidToken.preferred_username,
         bceidGuid: bceidToken.bceid_user_guid,
+        bceidBusinessGuid: bceidToken.bceid_business_guid,
         bceidUserName: bceidToken.bceid_username,
         clientRoles: bceidToken.client_roles || [],
       };
@@ -179,6 +181,7 @@ export class AuthorizationService {
         this.mapUserFromTokenToCreateDto(payload),
       );
 
+      //TODO: Only send if they are trying to load ALCS
       if (user.clientRoles.length === 0) {
         await this.userService.sendNewUserRequestEmail(
           user.email,
