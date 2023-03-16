@@ -1,13 +1,13 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { CardSubtaskType } from '../../card/card-subtask/card-subtask-type/card-subtask-type.entity';
+import { CardSubtaskType } from '../../alcs/card/card-subtask/card-subtask-type/card-subtask-type.entity';
 import {
   HomepageSubtaskDTO,
   CardSubtaskDto,
   CardSubtaskTypeDto,
-} from '../../card/card-subtask/card-subtask.dto';
-import { CardSubtask } from '../../card/card-subtask/card-subtask.entity';
+} from '../../alcs/card/card-subtask/card-subtask.dto';
+import { CardSubtask } from '../../alcs/card/card-subtask/card-subtask.entity';
 
 @Injectable()
 export class ApplicationSubtaskProfile extends AutomapperProfile {

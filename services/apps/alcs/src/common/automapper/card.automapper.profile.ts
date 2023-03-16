@@ -4,11 +4,11 @@ import { Injectable } from '@nestjs/common';
 import {
   CardStatusDto,
   CardTypeDto,
-} from '../../card/card-status/card-status.dto';
-import { CardStatus } from '../../card/card-status/card-status.entity';
-import { CardType } from '../../card/card-type/card-type.entity';
-import { CardDetailedDto, CardDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
+} from '../../alcs/card/card-status/card-status.dto';
+import { CardStatus } from '../../alcs/card/card-status/card-status.entity';
+import { CardType } from '../../alcs/card/card-type/card-type.entity';
+import { CardDetailedDto, CardDto } from '../../alcs/card/card.dto';
+import { Card } from '../../alcs/card/card.entity';
 import { AssigneeDto } from '../../user/user.dto';
 import { User } from '../../user/user.entity';
 

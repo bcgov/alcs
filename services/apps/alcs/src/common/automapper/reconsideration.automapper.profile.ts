@@ -1,13 +1,13 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { Application } from '../../application/application.entity';
-import { CardDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
-import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
+import { Application } from '../../alcs/application/application.entity';
+import { CardDto } from '../../alcs/card/card.dto';
+import { Card } from '../../alcs/card/card.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../alcs/decision/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../alcs/decision/application-decision/application-decision.entity';
 import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
@@ -15,10 +15,10 @@ import {
   ApplicationReconsiderationOutcomeCodeDto,
   ApplicationReconsiderationWithoutApplicationDto,
   ReconsiderationTypeDto,
-} from '../../decision/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsideration } from '../../decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationOutcomeType } from '../../decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
-import { ApplicationReconsiderationType } from '../../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+} from '../../alcs/decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsideration } from '../../alcs/decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationOutcomeType } from '../../alcs/decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
+import { ApplicationReconsiderationType } from '../../alcs/decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 
 @Injectable()
 export class ReconsiderationProfile extends AutomapperProfile {

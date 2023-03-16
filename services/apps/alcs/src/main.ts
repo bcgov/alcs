@@ -12,7 +12,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
-import { AlcsModule } from './alcs.module';
+import { MainModule } from './main.module';
 import { generateModuleGraph } from './commands/graph';
 import { importApplications } from './commands/import';
 import { applyDefaultDocumentTags } from './commands/tag';
@@ -95,7 +95,7 @@ const registerMultiPart = async (app: NestFastifyApplication) => {
 async function bootstrap() {
   // fastify
   const app = await NestFactory.create<NestFastifyApplication>(
-    AlcsModule,
+    MainModule,
     new FastifyAdapter(),
     {
       bufferLogs: false,
