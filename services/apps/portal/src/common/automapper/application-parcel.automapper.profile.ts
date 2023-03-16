@@ -1,16 +1,16 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationOwnerDto } from '../../application-proposal/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../../application-proposal/application-owner/application-owner.entity';
-import { ApplicationParcelDocumentDto } from '../../application-proposal/application-parcel/application-parcel-document/application-parcel-document.dto';
-import { ApplicationParcelDocument } from '../../application-proposal/application-parcel/application-parcel-document/application-parcel-document.entity';
-import { ApplicationParcelOwnershipType } from '../../application-proposal/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
+import { ApplicationOwnerDto } from '../../application-submission/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../application-submission/application-owner/application-owner.entity';
+import { ApplicationParcelDocumentDto } from '../../application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
+import { ApplicationParcelDocument } from '../../application-submission/application-parcel/application-parcel-document/application-parcel-document.entity';
+import { ApplicationParcelOwnershipType } from '../../application-submission/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
 import {
   ApplicationParcelDto,
   ApplicationParcelOwnershipTypeDto,
-} from '../../application-proposal/application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../../application-proposal/application-parcel/application-parcel.entity';
+} from '../../application-submission/application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../../application-submission/application-parcel/application-parcel.entity';
 
 @Injectable()
 export class ApplicationParcelProfile extends AutomapperProfile {
