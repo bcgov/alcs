@@ -1,17 +1,17 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../application-proposal/application-document/application-document.dto';
-import { DOCUMENT_TYPE } from '../../application-proposal/application-document/application-document.entity';
-import { ApplicationOwnerType } from '../../application-proposal/application-owner/application-owner-type/application-owner-type.entity';
+import { ApplicationDocumentDto } from '../../application-submission/application-document/application-document.dto';
+import { DOCUMENT_TYPE } from '../../application-submission/application-document/application-document.entity';
+import { ApplicationOwnerType } from '../../application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
   ApplicationOwnerTypeDto,
-} from '../../application-proposal/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../../application-proposal/application-owner/application-owner.entity';
-import { ApplicationParcelDto } from '../../application-proposal/application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../../application-proposal/application-parcel/application-parcel.entity';
+} from '../../application-submission/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../application-submission/application-owner/application-owner.entity';
+import { ApplicationParcelDto } from '../../application-submission/application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../../application-submission/application-parcel/application-parcel.entity';
 
 @Injectable()
 export class ApplicationOwnerProfile extends AutomapperProfile {
