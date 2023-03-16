@@ -5,7 +5,7 @@ import * as dayjs from 'dayjs';
 import {
   ApplicationService,
   APPLICATION_EXPIRATION_DAY_RANGES,
-} from '../../application/application.service';
+} from '../../alcs/application/application.service';
 import { EmailService } from '../../providers/email/email.service';
 import { QUEUES } from './scheduler.service';
 

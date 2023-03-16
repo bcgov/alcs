@@ -2,7 +2,7 @@ import { ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
-import { ApplicationService } from '../../application/application.service';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { EmailService } from '../../providers/email/email.service';
 import { ApplicationExpiryConsumer } from './applicationExpiry.consumer';

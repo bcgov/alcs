@@ -8,7 +8,7 @@ import {
   ApplicationGrpcResponse,
 } from './alcs-application.message.interface';
 
-import { ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME } from '../../../../alcs/src/application-grpc/alcs-application.message.interface';
+import { ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME } from '../../../../alcs/src/alcs/application-grpc/alcs-application.message.interface';
 import {
   AlcsApplicationServiceClient,
   GRPC_ALCS_APPLICATION_SERVICE_NAME,

@@ -1,8 +1,8 @@
 import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { CovenantDto } from '../../covenant/covenant.dto';
-import { Covenant } from '../../covenant/covenant.entity';
+import { CovenantDto } from '../../alcs/covenant/covenant.dto';
+import { Covenant } from '../../alcs/covenant/covenant.entity';
 
 @Injectable()
 export class CovenantProfile extends AutomapperProfile {

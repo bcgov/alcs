@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bull';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
-import { ApplicationModule } from '../../application/application.module';
-import { NotificationModule } from '../../notification/notification.module';
+import { ApplicationModule } from '../../alcs/application/application.module';
+import { NotificationModule } from '../../alcs/notification/notification.module';
 import { EmailModule } from '../../providers/email/email.module';
 import { BullConfigService } from '../bullConfig.service';
 import { ApplicationExpiryConsumer } from './applicationExpiry.consumer';

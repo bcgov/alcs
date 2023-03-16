@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
-import { AlcsModule } from '../alcs.module';
+import { MainModule } from '../main.module';
 import { DocumentService } from '../document/document.service';
 
 export async function applyDefaultDocumentTags() {
-  const app = await NestFactory.create<NestFastifyApplication>(AlcsModule, {
+  const app = await NestFactory.create<NestFastifyApplication>(MainModule, {
     bufferLogs: false,
   });
   app.useLogger(app.get(Logger));
