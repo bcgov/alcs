@@ -10,7 +10,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '../../common/authorization/auth-guard.service';
+import { AuthGuard } from 'nest-keycloak-connect';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationProposalService } from '../application-proposal.service';
 import {

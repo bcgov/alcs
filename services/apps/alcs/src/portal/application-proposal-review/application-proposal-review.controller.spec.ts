@@ -1,8 +1,10 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
-import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { User } from '../../user/user.entity';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
@@ -15,7 +17,6 @@ import {
 import { ApplicationProposal } from '../application-proposal/application-proposal.entity';
 import { ApplicationProposalService } from '../application-proposal/application-proposal.service';
 import { APPLICATION_STATUS } from '../application-proposal/application-status/application-status.dto';
-import { User } from '../user/user.entity';
 import { ApplicationProposalReviewController } from './application-proposal-review.controller';
 import { ApplicationProposalReviewDto } from './application-proposal-review.dto';
 import { ApplicationProposalReview } from './application-proposal-review.entity';
@@ -28,17 +29,17 @@ describe('ApplicationProposalReviewController', () => {
   let controller: ApplicationProposalReviewController;
   let mockAppReviewService: DeepMocked<ApplicationProposalReviewService>;
   let mockAppService: DeepMocked<ApplicationProposalService>;
-  let mockLGService: DeepMocked<LocalGovernmentService>;
+  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationProposalValidatorService>;
 
-  const mockLG = {
+  const mockLG = new ApplicationLocalGovernment({
     isFirstNation: false,
     isActive: true,
     bceidBusinessGuid: '',
     name: '',
     uuid: '',
-  };
+  });
 
   let applicationReview;
   const fileNumber = '123';
@@ -70,7 +71,7 @@ describe('ApplicationProposalReviewController', () => {
           useValue: mockAppService,
         },
         {
-          provide: LocalGovernmentService,
+          provide: ApplicationLocalGovernmentService,
           useValue: mockLGService,
         },
         {
@@ -112,13 +113,13 @@ describe('ApplicationProposalReviewController', () => {
   it('should fallback to load by owner if user has no government', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.getForGovernment.mockResolvedValue(null);
-    mockLGService.get.mockResolvedValue([
-      {
+    mockLGService.list.mockResolvedValue([
+      new ApplicationLocalGovernment({
         bceidBusinessGuid: '',
         uuid: 'uuid',
         name: '',
         isFirstNation: false,
-      },
+      }),
     ]);
 
     const reviewWithApp = new ApplicationProposalReview({
@@ -142,13 +143,13 @@ describe('ApplicationProposalReviewController', () => {
   it('should throw an exception when user loads review that is not complete', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.getForGovernment.mockResolvedValue(null);
-    mockLGService.get.mockResolvedValue([
-      {
+    mockLGService.list.mockResolvedValue([
+      new ApplicationLocalGovernment({
         bceidBusinessGuid: '',
         uuid: 'uuid',
         name: '',
         isFirstNation: false,
-      },
+      }),
     ]);
 
     const reviewWithApp = new ApplicationProposalReview({
@@ -253,14 +254,14 @@ describe('ApplicationProposalReviewController', () => {
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationProposal({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    mockAppService.submitToAlcs.mockResolvedValue({
-      fileNumber: '',
-      applicant: '',
-      localGovernmentUuid: '',
-      dateSubmittedToAlc: '',
-      regionCode: '',
-      typeCode: '',
-    });
+    // mockAppService.submitToAlcs.mockResolvedValue({
+    //   fileNumber: '',
+    //   applicant: '',
+    //   localGovernmentUuid: '',
+    //   dateSubmittedToAlc: '',
+    //   regionCode: '',
+    //   typeCode: '',
+    // });
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
       isAuthorized: true,
@@ -296,14 +297,14 @@ describe('ApplicationProposalReviewController', () => {
     mockAppService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationProposal({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    mockAppService.submitToAlcs.mockResolvedValue({
-      fileNumber: '',
-      applicant: '',
-      localGovernmentUuid: '',
-      dateSubmittedToAlc: '',
-      regionCode: '',
-      typeCode: '',
-    });
+    // mockAppService.submitToAlcs.mockResolvedValue({
+    //   fileNumber: '',
+    //   applicant: '',
+    //   localGovernmentUuid: '',
+    //   dateSubmittedToAlc: '',
+    //   regionCode: '',
+    //   typeCode: '',
+    // });
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
       isAuthorized: false,

@@ -8,7 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Document } from '../../document/document.entity';
+import { Document } from '../../../document/document.entity';
 import { ApplicationProposal } from '../application-proposal.entity';
 
 export enum DOCUMENT_TYPE {

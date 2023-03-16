@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlcsModule } from '../../alcs/alcs.module';
+import { ApplicationModule } from '../../alcs/application/application.module';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
@@ -39,7 +40,7 @@ import { ApplicationStatus } from './application-status/application-status.entit
       ApplicationOwner,
       ApplicationOwnerType,
     ]),
-    AlcsModule,
+    ApplicationModule,
     AuthorizationModule,
     DocumentModule,
   ],

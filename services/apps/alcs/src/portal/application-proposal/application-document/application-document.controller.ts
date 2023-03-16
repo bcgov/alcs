@@ -8,20 +8,17 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { firstValueFrom } from 'rxjs';
-import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
-import { AuthGuard } from '../../common/authorization/auth-guard.service';
+import { AuthGuard } from 'nest-keycloak-connect';
+import { DocumentService } from '../../../document/document.service';
 import { ApplicationProposalService } from '../application-proposal.service';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentUpdateDto,
-  AttachExternalDocumentDto,
 } from './application-document.dto';
 import {
   ApplicationDocument,
@@ -37,7 +34,7 @@ export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
     private applicationService: ApplicationProposalService,
-    private alcsDocumentService: AlcsDocumentService,
+    private documentService: DocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -108,35 +105,5 @@ export class ApplicationDocumentController {
 
     await this.applicationDocumentService.delete(document);
     return {};
-  }
-
-  @Post('/application/:uuid/attachExternal')
-  async attachExternalDocument(
-    @Param('uuid') fileNumber: string,
-    @Body() data: AttachExternalDocumentDto,
-    @Req() req,
-  ): Promise<ApplicationDocumentDto> {
-    await this.applicationService.verifyAccess(fileNumber, req.user.entity);
-
-    const alcsDocument = await firstValueFrom(
-      this.alcsDocumentService.createExternalDocument({
-        ...data,
-      }),
-    );
-
-    const savedDocument = await this.applicationDocumentService.createRecord(
-      data.fileName,
-      data.fileSize,
-      fileNumber,
-      alcsDocument.alcsDocumentUuid,
-      data.documentType as DOCUMENT_TYPE,
-      req.user.entity,
-    );
-
-    return this.mapper.map(
-      savedDocument,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
   }
 }

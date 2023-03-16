@@ -8,7 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Document } from '../../../document/document.entity';
+import { Document } from '../../../../document/document.entity';
 import { ApplicationParcel } from '../application-parcel.entity';
 
 export const DOCUMENT_TYPES = ['certificateOfTitle'] as const;

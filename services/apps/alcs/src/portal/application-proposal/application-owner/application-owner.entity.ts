@@ -7,11 +7,11 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { Base } from '../../common/entities/base.entity';
-import { Document } from '../../document/document.entity';
+import { Base } from '../../../common/entities/base.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationProposal } from '../application-proposal.entity';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
+import { Document } from '../../../document/document.entity';
 
 @Entity()
 export class ApplicationOwner extends Base {

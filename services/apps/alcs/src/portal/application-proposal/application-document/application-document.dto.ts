@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsString, ValidateIf } from 'class-validator';
-import { IsNull } from 'typeorm';
 import { DOCUMENT_TYPE } from './application-document.entity';
 
 export class ApplicationDocumentDto {
@@ -20,7 +19,7 @@ export class ApplicationDocumentDto {
   fileSize: number;
 
   @AutoMap()
-  uploadedBy: string;
+  uploadedBy?: string;
 
   @AutoMap()
   uploadedAt: number;

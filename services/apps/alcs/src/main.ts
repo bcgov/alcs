@@ -67,6 +67,7 @@ const registerCors = (app: NestFastifyApplication) => {
       config.get<string>('ALCS.BASE_URL'),
       config.get<string>('KEYCLOAK.AUTH_SERVER'),
       config.get<string>('ALCS.FRONTEND_ROOT'),
+      config.get<string>('PORTAL.FRONTEND_ROOT'),
     ],
   });
 };

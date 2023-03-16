@@ -12,12 +12,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
-import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
-import { AuthGuard } from '../../common/authorization/auth-guard.service';
-import { Document } from '../../document/document.entity';
-import { DocumentService } from '../../document/document.service';
-import { AttachExternalDocumentDto } from '../application-document/application-document.dto';
+import { AuthGuard } from 'nest-keycloak-connect';
+import { DocumentService } from '../../../document/document.service';
 import { ApplicationProposalService } from '../application-proposal.service';
 import {
   APPLICATION_OWNER,
@@ -36,7 +32,6 @@ export class ApplicationOwnerController {
     private ownerService: ApplicationOwnerService,
     private applicationService: ApplicationProposalService,
     private documentService: DocumentService,
-    private alcsDocumentService: AlcsDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -138,31 +133,6 @@ export class ApplicationOwnerController {
     }
   }
 
-  @Post('attachExternal')
-  async attachExternalDocument(
-    @Body() data: AttachExternalDocumentDto,
-    @Req() req,
-  ) {
-    const alcsDocument = await firstValueFrom(
-      this.alcsDocumentService.createExternalDocument({
-        ...data,
-      }),
-    );
-
-    const savedDocument = await this.documentService.create(
-      new Document({
-        fileName: data.fileName,
-        fileSize: data.fileSize,
-        alcsDocumentUuid: alcsDocument.alcsDocumentUuid,
-        uploadedBy: req.user.entity,
-      }),
-    );
-
-    return {
-      uuid: savedDocument.uuid,
-    };
-  }
-
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
     const application = await this.applicationService.verifyAccess(
@@ -223,11 +193,7 @@ export class ApplicationOwnerController {
       throw new BadRequestException('Owner has no corporate summary');
     }
 
-    return await firstValueFrom(
-      this.documentService.getDownloadUrl(
-        owner.corporateSummary.alcsDocumentUuid,
-      ),
-    );
+    return await this.documentService.getDownloadUrl(owner.corporateSummary);
   }
 
   private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {

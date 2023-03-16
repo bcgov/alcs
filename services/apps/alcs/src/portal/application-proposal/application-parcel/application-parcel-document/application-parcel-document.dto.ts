@@ -16,7 +16,7 @@ export class ApplicationParcelDocumentDto {
   fileSize: number;
 
   @AutoMap()
-  uploadedBy: string;
+  uploadedBy?: string;
 
   @AutoMap()
   uploadedAt: number;

@@ -124,4 +124,15 @@ export class ApplicationLocalGovernmentService {
       })) || [[], 0]
     );
   }
+
+  async getByGuid(bceidBusinessGuid: string) {
+    return this.repository.findOne({
+      where: {
+        bceidBusinessGuid,
+      },
+      relations: {
+        preferredRegion: true,
+      },
+    });
+  }
 }

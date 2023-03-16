@@ -1,11 +1,8 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
-import { Document } from '../../../document/document.entity';
-import { DocumentService } from '../../../document/document.service';
-import { User } from '../../../user/user.entity';
+import { DocumentService } from '../../../../document/document.service';
 import { ApplicationParcelService } from '../application-parcel.service';
 import {
   ApplicationParcelDocument,
@@ -45,7 +42,7 @@ export class ApplicationParcelDocumentService {
       );
     }
 
-    return this.documentService.delete(applicationParcelDocument.document);
+    return this.documentService.softRemove(applicationParcelDocument.document);
   }
 
   async list(applicationParcelUuid: string, documentType: DOCUMENT_TYPE) {
@@ -63,38 +60,8 @@ export class ApplicationParcelDocumentService {
   }
 
   getInlineUrl(applicationParcelDocument: ApplicationParcelDocument) {
-    return firstValueFrom(
-      this.documentService.getDownloadUrl(
-        applicationParcelDocument.document.alcsDocumentUuid,
-      ),
-    );
-  }
-
-  async createRecord(
-    fileName: string,
-    fileSize: number,
-    applicationParcelUuid: string,
-    alcsDocumentUuid: string,
-    documentType: DOCUMENT_TYPE,
-    user: User,
-  ) {
-    const applicationParcel = await this.applicationParcelService.getOneOrFail(
-      applicationParcelUuid,
-    );
-
-    const document = new Document({
-      fileName,
-      fileSize,
-      alcsDocumentUuid,
-      uploadedBy: user,
-    });
-
-    return this.applicationParcelDocumentRepository.save(
-      new ApplicationParcelDocument({
-        document,
-        type: documentType,
-        applicationParcel,
-      }),
+    return this.documentService.getDownloadUrl(
+      applicationParcelDocument.document,
     );
   }
 }

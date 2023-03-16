@@ -2,27 +2,21 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
-  Body,
   Controller,
   Delete,
   Get,
   Param,
-  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { firstValueFrom } from 'rxjs';
+import { AuthGuard } from 'nest-keycloak-connect';
+import { DocumentService } from '../../../../document/document.service';
 
-import { AlcsDocumentService } from '../../../alcs/document-grpc/alcs-document.service';
-import { AuthGuard } from '../../../common/authorization/auth-guard.service';
 import { ApplicationProposalService } from '../../application-proposal.service';
 import { ApplicationParcelService } from '../application-parcel.service';
-import {
-  ApplicationParcelDocumentDto,
-  AttachExternalDocumentDto,
-} from './application-parcel-document.dto';
+import { ApplicationParcelDocumentDto } from './application-parcel-document.dto';
 import {
   ApplicationParcelDocument,
   DOCUMENT_TYPE,
@@ -36,7 +30,7 @@ import { ApplicationParcelDocumentService } from './application-parcel-document.
 export class ApplicationParcelDocumentController {
   constructor(
     private applicationParcelDocumentService: ApplicationParcelDocumentService,
-    private alcsDocumentService: AlcsDocumentService,
+    private alcsDocumentService: DocumentService,
     private applicationParcelService: ApplicationParcelService,
     private applicationService: ApplicationProposalService,
     @InjectMapper() private mapper: Mapper,
@@ -94,38 +88,27 @@ export class ApplicationParcelDocumentController {
     return {};
   }
 
-  @Post('/application/:uuid/attachExternal')
-  async attachExternalDocument(
-    @Param('uuid') parcelUuid: string,
-    @Body() data: AttachExternalDocumentDto,
-    @Req() req,
-  ): Promise<ApplicationParcelDocumentDto> {
-    const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
-    await this.applicationService.verifyAccess(
-      parcel.applicationFileNumber,
-      req.user.entity,
-    );
-
-    const alcsDocument = await firstValueFrom(
-      this.alcsDocumentService.createExternalDocument({
-        ...data,
-      }),
-    );
-
-    const savedDocument =
-      await this.applicationParcelDocumentService.createRecord(
-        data.fileName,
-        data.fileSize,
-        parcelUuid,
-        alcsDocument.alcsDocumentUuid,
-        data.documentType as DOCUMENT_TYPE,
-        req.user.entity,
-      );
-
-    return this.mapper.map(
-      savedDocument,
-      ApplicationParcelDocument,
-      ApplicationParcelDocumentDto,
-    );
-  }
+  //TODO: Fix document uploads
+  // @Post('/application/:uuid/attachExternal')
+  // async attachExternalDocument(
+  //   @Param('uuid') parcelUuid: string,
+  //   @Body() data: AttachExternalDocumentDto,
+  //   @Req() req,
+  // ): Promise<ApplicationParcelDocumentDto> {
+  //   const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
+  //   await this.applicationService.verifyAccess(
+  //     parcel.applicationFileNumber,
+  //     req.user.entity,
+  //   );
+  //
+  //   const alcsDocument = await this.alcsDocumentService.create({
+  //     ...data,
+  //   });
+  //
+  //   return this.mapper.map(
+  //     savedDocument,
+  //     ApplicationParcelDocument,
+  //     ApplicationParcelDocumentDto,
+  //   );
+  // }
 }

@@ -9,8 +9,8 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { ColumnNumericTransformer } from '../utils/column-numeric-transform';
+import { User } from '../../user/user.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';

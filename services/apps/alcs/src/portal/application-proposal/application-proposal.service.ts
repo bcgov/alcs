@@ -6,20 +6,16 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { In, Repository } from 'typeorm';
 import {
   ApplicationGrpcResponse,
   ApplicationReviewGrpc,
-} from '../alcs/application-grpc/alcs-application.message.interface';
-import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
-import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
-import {
-  LocalGovernment,
-  LocalGovernmentService,
-} from '../alcs/local-government/local-government.service';
-import { CompletedApplicationProposalReview } from '../application-review/application-proposal-review.service';
-import { User } from '../user/user.entity';
+} from '../../alcs/application-grpc/alcs-application.message.interface';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { User } from '../../user/user.entity';
+import { CompletedApplicationProposalReview } from '../application-proposal-review/application-proposal-review.service';
 import { ValidatedApplication } from './application-proposal-validator.service';
 import {
   ApplicationProposalDetailedDto,
@@ -46,9 +42,8 @@ export class ApplicationProposalService {
     private applicationProposalRepository: Repository<ApplicationProposal>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
-    private alcsApplicationService: AlcsApplicationService,
-    private applicationTypeService: ApplicationTypeService,
-    private localGovernmentService: LocalGovernmentService,
+    private alcsApplicationService: ApplicationService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -65,9 +60,8 @@ export class ApplicationProposalService {
   }
 
   async create(type: string, createdBy: User) {
-    const alcsApplicationNumber = await firstValueFrom(
-      this.alcsApplicationService.generateFileNumber(),
-    );
+    const alcsApplicationNumber =
+      await this.alcsApplicationService.generateNextFileNumber();
 
     const initialStatus = await this.applicationStatusRepository.findOne({
       where: {
@@ -82,14 +76,14 @@ export class ApplicationProposalService {
     }
 
     const application = new ApplicationProposal({
-      fileNumber: alcsApplicationNumber.fileNumber,
+      fileNumber: alcsApplicationNumber,
       status: initialStatus,
       typeCode: type,
       createdBy,
     });
     await this.applicationProposalRepository.save(application);
 
-    return alcsApplicationNumber.fileNumber;
+    return alcsApplicationNumber;
   }
 
   async update(fileNumber: string, updateDto: ApplicationProposalUpdateDto) {
@@ -167,7 +161,7 @@ export class ApplicationProposalService {
     application: ValidatedApplication,
     applicationReview?: CompletedApplicationProposalReview,
   ) {
-    let submittedApp: ApplicationGrpcResponse | null = null;
+    const submittedApp: ApplicationGrpcResponse | null = null;
 
     const mappedReview: ApplicationReviewGrpc | undefined = applicationReview
       ? {
@@ -192,73 +186,68 @@ export class ApplicationProposalService {
         }
       : undefined;
 
-    try {
-      submittedApp = await lastValueFrom(
-        this.alcsApplicationService.create({
-          fileNumber: application.fileNumber,
-          applicant: application.applicant,
-          localGovernmentUuid: application.localGovernmentUuid,
-          typeCode: application.typeCode,
-          dateSubmittedToAlc: Date.now().toString(),
-          documents: application.documents.map((d) => ({
-            type: d.type!, //TODO: Do we verify this?
-            documentUuid: d.document.alcsDocumentUuid,
-            description: d.description ?? undefined,
-          })),
-          statusHistory: application.statusHistory.map((history) => ({
-            ...history,
-            time: history.time.toString(10),
-          })),
-          applicationReview: mappedReview,
-          submittedApplication: {
-            ...application,
-            nfuPurpose: application.nfuPurpose ?? undefined,
-            nfuOutsideLands: application.nfuOutsideLands ?? undefined,
-            nfuProjectDurationUnit:
-              application.nfuProjectDurationUnit ?? undefined,
-            nfuAgricultureSupport:
-              application.nfuAgricultureSupport ?? undefined,
-            nfuWillImportFill: application.nfuWillImportFill ?? undefined,
-            nfuFillTypeDescription:
-              application.nfuFillTypeDescription ?? undefined,
-            nfuFillOriginDescription:
-              application.nfuFillOriginDescription ?? undefined,
-            nfuHectares: application.nfuHectares
-              ? application.nfuHectares.toString(10)
-              : undefined,
-            nfuTotalFillPlacement: application.nfuTotalFillPlacement
-              ? application.nfuTotalFillPlacement.toString(10)
-              : undefined,
-            nfuMaxFillDepth: application.nfuMaxFillDepth
-              ? application.nfuMaxFillDepth.toString(10)
-              : undefined,
-            nfuFillVolume: application.nfuFillVolume
-              ? application.nfuFillVolume.toString(10)
-              : undefined,
-            nfuProjectDurationAmount: application.nfuProjectDurationAmount
-              ? application.nfuProjectDurationAmount.toString(10)
-              : undefined,
-            turPurpose: application.turPurpose ?? undefined,
-            turOutsideLands: application.turOutsideLands ?? undefined,
-            turAgriculturalActivities:
-              application.turAgriculturalActivities ?? undefined,
-            turReduceNegativeImpacts:
-              application.turReduceNegativeImpacts ?? undefined,
-            turTotalCorridorArea: application.turTotalCorridorArea
-              ? application.turTotalCorridorArea.toString(10)
-              : undefined,
-          },
-        }),
-      );
-    } catch (ex) {
-      this.logger.error(ex);
-
-      //TODO set failed status here?
-
-      throw new BaseServiceException(
-        `Failed to submit application: ${application.fileNumber}`,
-      );
-    }
+    //TODO: Fix App Submission
+    // try {
+    //   submittedApp = this.alcsApplicationService.create({
+    //     fileNumber: application.fileNumber,
+    //     applicant: application.applicant,
+    //     localGovernmentUuid: application.localGovernmentUuid,
+    //     typeCode: application.typeCode,
+    //     dateSubmittedToAlc: new Date(),
+    //     documents: application.documents.map((d) => ({
+    //       type: d.type!, //TODO: Do we verify this?
+    //       documentUuid: d.document.uuid,
+    //       description: d.description ?? undefined,
+    //     })),
+    //     statusHistory: application.statusHistory,
+    //     applicationReview: mappedReview,
+    //     submittedApplication: {
+    //       ...application,
+    //       nfuPurpose: application.nfuPurpose ?? undefined,
+    //       nfuOutsideLands: application.nfuOutsideLands ?? undefined,
+    //       nfuProjectDurationUnit:
+    //         application.nfuProjectDurationUnit ?? undefined,
+    //       nfuAgricultureSupport: application.nfuAgricultureSupport ?? undefined,
+    //       nfuWillImportFill: application.nfuWillImportFill ?? undefined,
+    //       nfuFillTypeDescription:
+    //         application.nfuFillTypeDescription ?? undefined,
+    //       nfuFillOriginDescription:
+    //         application.nfuFillOriginDescription ?? undefined,
+    //       nfuHectares: application.nfuHectares
+    //         ? application.nfuHectares.toString(10)
+    //         : undefined,
+    //       nfuTotalFillPlacement: application.nfuTotalFillPlacement
+    //         ? application.nfuTotalFillPlacement.toString(10)
+    //         : undefined,
+    //       nfuMaxFillDepth: application.nfuMaxFillDepth
+    //         ? application.nfuMaxFillDepth.toString(10)
+    //         : undefined,
+    //       nfuFillVolume: application.nfuFillVolume
+    //         ? application.nfuFillVolume.toString(10)
+    //         : undefined,
+    //       nfuProjectDurationAmount: application.nfuProjectDurationAmount
+    //         ? application.nfuProjectDurationAmount.toString(10)
+    //         : undefined,
+    //       turPurpose: application.turPurpose ?? undefined,
+    //       turOutsideLands: application.turOutsideLands ?? undefined,
+    //       turAgriculturalActivities:
+    //         application.turAgriculturalActivities ?? undefined,
+    //       turReduceNegativeImpacts:
+    //         application.turReduceNegativeImpacts ?? undefined,
+    //       turTotalCorridorArea: application.turTotalCorridorArea
+    //         ? application.turTotalCorridorArea.toString(10)
+    //         : undefined,
+    //     },
+    //   });
+    // } catch (ex) {
+    //   this.logger.error(ex);
+    //
+    //   //TODO set failed status here?
+    //
+    //   throw new BaseServiceException(
+    //     `Failed to submit application: ${application.fileNumber}`,
+    //   );
+    // }
 
     return submittedApp;
   }
@@ -276,7 +265,11 @@ export class ApplicationProposalService {
     });
   }
 
-  getForGovernment(localGovernment: LocalGovernment) {
+  getForGovernment(localGovernment: ApplicationLocalGovernment) {
+    if (!localGovernment.bceidBusinessGuid) {
+      throw new Error("Cannot load by governments that don't have guids");
+    }
+
     return this.applicationProposalRepository.find({
       where: [
         //Owns
@@ -301,8 +294,12 @@ export class ApplicationProposalService {
 
   async getForGovernmentByFileId(
     fileNumber: string,
-    localGovernment: LocalGovernment,
+    localGovernment: ApplicationLocalGovernment,
   ) {
+    if (!localGovernment.bceidBusinessGuid) {
+      throw new Error("Cannot load by governments that don't have guids");
+    }
+
     const existingApplication =
       await this.applicationProposalRepository.findOne({
         where: [
@@ -398,9 +395,9 @@ export class ApplicationProposalService {
   async mapToDTOs(
     apps: ApplicationProposal[],
     user: User,
-    userGovernment?: LocalGovernment,
+    userGovernment?: ApplicationLocalGovernment,
   ) {
-    const types = await this.applicationTypeService.list();
+    const types = await this.alcsApplicationService.fetchApplicationTypes();
     return apps.map((app) => ({
       ...this.mapper.map(app, ApplicationProposal, ApplicationProposalDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
@@ -422,9 +419,9 @@ export class ApplicationProposalService {
 
   async mapToDetailedDTO(
     application: ApplicationProposal,
-    userGovernment?: LocalGovernment,
+    userGovernment?: ApplicationLocalGovernment,
   ) {
-    const types = await this.applicationTypeService.list();
+    const types = await this.alcsApplicationService.fetchApplicationTypes();
     const mappedApp = this.mapper.map(
       application,
       ApplicationProposal,

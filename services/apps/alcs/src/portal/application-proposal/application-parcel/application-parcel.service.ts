@@ -1,8 +1,8 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
-import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';

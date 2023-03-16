@@ -12,9 +12,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { AuthGuard } from '../common/authorization/auth-guard.service';
-import { User } from '../user/user.entity';
+import { AuthGuard } from 'nest-keycloak-connect';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { User } from '../../user/user.entity';
 import { ApplicationProposalValidatorService } from './application-proposal-validator.service';
 import {
   ApplicationProposalCreateDto,
@@ -30,7 +30,7 @@ export class ApplicationProposalController {
 
   constructor(
     private applicationProposalService: ApplicationProposalService,
-    private localGovernmentService: LocalGovernmentService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationProposalValidatorService: ApplicationProposalValidatorService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -40,7 +40,7 @@ export class ApplicationProposalController {
     const user = req.user.entity as User;
 
     if (user.bceidBusinessGuid) {
-      const localGovernments = await this.localGovernmentService.get();
+      const localGovernments = await this.localGovernmentService.list();
       const matchingGovernment = localGovernments.find(
         (lg) => lg.bceidBusinessGuid === user.bceidBusinessGuid,
       );

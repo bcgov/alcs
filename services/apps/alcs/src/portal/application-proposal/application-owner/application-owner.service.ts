@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
-import { DocumentService } from '../../document/document.service';
+import { DocumentService } from '../../../document/document.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationProposal } from '../application-proposal.entity';
@@ -127,7 +127,7 @@ export class ApplicationOwnerService {
       const oldSummary = existingOwner.corporateSummary;
       existingOwner.corporateSummary = null;
       await this.repository.save(existingOwner);
-      await this.documentService.delete(oldSummary);
+      await this.documentService.softRemove(oldSummary);
     }
 
     existingOwner.corporateSummaryUuid =

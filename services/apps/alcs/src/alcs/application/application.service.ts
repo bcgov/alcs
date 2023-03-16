@@ -2,12 +2,10 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
-import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisClientType } from 'redis';
 import {
   Between,
   FindOptionsOrder,
@@ -31,8 +29,8 @@ import {
   CreateApplicationServiceDto,
 } from './application.dto';
 import {
-  APPLICATION_FILE_NUMBER_SEQUENCE,
   Application,
+  APPLICATION_FILE_NUMBER_SEQUENCE,
 } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -76,11 +74,8 @@ export class ApplicationService {
     private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
-    private redisService: RedisService,
     @InjectMapper() private applicationMapper: Mapper,
-  ) {
-    this.loadApplicationTypesToRedis();
-  }
+  ) {}
 
   async create(
     application: CreateApplicationServiceDto,
@@ -301,8 +296,8 @@ export class ApplicationService {
     );
   }
 
-  private async loadApplicationTypesToRedis() {
-    const localGovernments = await this.applicationTypeRepository.find({
+  async fetchApplicationTypes() {
+    return await this.applicationTypeRepository.find({
       select: {
         code: true,
         portalLabel: true,
@@ -310,13 +305,6 @@ export class ApplicationService {
         label: true,
       },
     });
-
-    const jsonBlob = JSON.stringify(localGovernments);
-    const redis = this.redisService.getClient() as RedisClientType;
-    await redis.set('applicationTypes', jsonBlob);
-    this.logger.debug(
-      `Loaded ${localGovernments.length} application types into Redis`,
-    );
   }
 
   private async getNextFileNumber() {

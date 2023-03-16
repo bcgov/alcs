@@ -1,20 +1,21 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../application-proposal/application-document/application-document.dto';
-import { ApplicationDocument } from '../../application-proposal/application-document/application-document.entity';
+import { ApplicationDocumentDto } from '../../portal/application-proposal/application-document/application-document.dto';
+import { ApplicationDocument } from '../../portal/application-proposal/application-document/application-document.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
-} from '../../application-proposal/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../../application-proposal/application-owner/application-owner.entity';
+} from '../../portal/application-proposal/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../portal/application-proposal/application-owner/application-owner.entity';
 import {
   ApplicationProposalDetailedDto,
   ApplicationProposalDto,
-} from '../../application-proposal/application-proposal.dto';
-import { ApplicationProposal } from '../../application-proposal/application-proposal.entity';
-import { ApplicationStatusDto } from '../../application-proposal/application-status/application-status.dto';
-import { ApplicationStatus } from '../../application-proposal/application-status/application-status.entity';
+} from '../../portal/application-proposal/application-proposal.dto';
+import { ApplicationProposal } from '../../portal/application-proposal/application-proposal.entity';
+import { ApplicationStatusDto } from '../../portal/application-proposal/application-status/application-status.dto';
+import { ApplicationStatus } from '../../portal/application-proposal/application-status/application-status.entity';
+import { Document } from '../../document/document.entity';
 
 @Injectable()
 export class ApplicationProposalProfile extends AutomapperProfile {
@@ -74,7 +75,7 @@ export class ApplicationProposalProfile extends AutomapperProfile {
         forMember(
           (a) => a.uploadedBy,
           mapFrom((ad) => {
-            return ad.document.uploadedBy.name;
+            return ad.document.uploadedBy?.name;
           }),
         ),
         forMember(

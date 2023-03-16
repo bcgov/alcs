@@ -1,10 +1,6 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  SubmittedApplicationOwnerGrpc,
-  SubmittedApplicationParcelGrpc,
-} from '../alcs/application-grpc/alcs-application.message.interface';
-import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from './application-document/application-document.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -16,9 +12,9 @@ import { ApplicationProposal } from './application-proposal.entity';
 export class ValidatedApplication extends ApplicationProposal {
   applicant: string;
   localGovernmentUuid: string;
-  parcels: SubmittedApplicationParcelGrpc[];
-  otherParcels: SubmittedApplicationParcelGrpc[];
-  primaryContact: SubmittedApplicationOwnerGrpc;
+  parcels: ApplicationParcel[];
+  otherParcels: ApplicationParcel[];
+  primaryContact: ApplicationOwner;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;
   parcelsNonAgricultureUseDescription: string;
@@ -49,7 +45,7 @@ export class ApplicationProposalValidatorService {
   private logger: Logger = new Logger(ApplicationProposalValidatorService.name);
 
   constructor(
-    private localGovernmentService: LocalGovernmentService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
     private appParcelService: ApplicationParcelService,
   ) {}
 
@@ -180,14 +176,14 @@ export class ApplicationProposalValidatorService {
     }
 
     if (errors.length === 0) {
-      return this.mapParcelsToValid(parcels);
+      return parcels;
     }
   }
 
   private async validatePrimaryContact(
     application: ApplicationProposal,
     errors: Error[],
-  ): Promise<SubmittedApplicationOwnerGrpc | undefined> {
+  ): Promise<ApplicationOwner | undefined> {
     const primaryOwner = application.owners.find(
       (owner) => owner.uuid === application.primaryContactOwnerUuid,
     );
@@ -231,7 +227,7 @@ export class ApplicationProposalValidatorService {
     }
 
     if (errors.length === 0) {
-      return this.mapOwnersToValid([primaryOwner])[0];
+      return primaryOwner;
     }
     return undefined;
   }
@@ -240,7 +236,7 @@ export class ApplicationProposalValidatorService {
     application: ApplicationProposal,
     errors: Error[],
   ) {
-    const localGovernments = await this.localGovernmentService.get();
+    const localGovernments = await this.localGovernmentService.list();
     const matchingLg = localGovernments.find(
       (lg) => lg.uuid === application.localGovernmentUuid,
     );
@@ -372,40 +368,5 @@ export class ApplicationProposalValidatorService {
     ) {
       errors.push(new ServiceValidationException(`TUR Proposal incomplete`));
     }
-  }
-
-  private mapParcelsToValid(
-    parcels: ApplicationParcel[],
-  ): SubmittedApplicationParcelGrpc[] {
-    return parcels.map((parcel) => ({
-      owners: this.mapOwnersToValid(parcel.owners),
-      crownLandOwnerType: parcel.crownLandOwnerType!,
-      pid: parcel.pid ? parcel.pid : undefined,
-      isFarm: parcel.isFarm!,
-      parcelType: parcel.parcelType!,
-      documentUuids: parcel.documents.map(
-        (document) => document.document.alcsDocumentUuid,
-      ),
-      legalDescription: parcel.legalDescription!,
-      mapAreaHectares: parcel.mapAreaHectares
-        ? parcel.mapAreaHectares.toString(10)
-        : '',
-      pin: parcel.pin ? parcel.pin : undefined,
-      ownershipType: parcel.ownershipType.label,
-      purchasedDate: parcel.purchasedDate ? parcel.purchasedDate.getTime() : 0,
-    }));
-  }
-
-  private mapOwnersToValid(owners: ApplicationOwner[]) {
-    return owners.map((owner) => ({
-      type: owner.type.label,
-      corporateSummaryDocumentUuid: owner.corporateSummary?.alcsDocumentUuid,
-      displayName: '',
-      email: owner.email!,
-      firstName: owner.firstName!,
-      lastName: owner.lastName!,
-      organizationName: owner.organizationName!,
-      phoneNumber: owner.phoneNumber!,
-    }));
   }
 }

@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 import { ApplicationParcelDocumentDto } from './application-parcel-document/application-parcel-document.dto';
 

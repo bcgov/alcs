@@ -17,6 +17,9 @@ export class Document extends Base {
   @Column()
   fileName: string;
 
+  @Column({ nullable: true })
+  fileSize?: number;
+
   @Column()
   mimeType: string;
 

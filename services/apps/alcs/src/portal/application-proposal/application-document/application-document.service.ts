@@ -5,17 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { firstValueFrom } from 'rxjs';
 import { Any, Repository } from 'typeorm';
-import { Document } from '../../document/document.entity';
-import { DocumentService } from '../../document/document.service';
-import { User } from '../../user/user.entity';
+import { DocumentService } from '../../../document/document.service';
+import { User } from '../../../user/user.entity';
 import { ApplicationProposalService } from '../application-proposal.service';
 import { ApplicationDocumentUpdateDto } from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
 } from './application-document.entity';
+import { Document } from '../../../document/document.entity';
 
 @Injectable()
 export class ApplicationDocumentService {
@@ -49,7 +48,7 @@ export class ApplicationDocumentService {
       );
     }
 
-    return this.documentService.delete(applicationDocument.document);
+    return this.documentService.softRemove(applicationDocument.document);
   }
 
   async list(fileNumber: string, documentType: DOCUMENT_TYPE) {
@@ -78,11 +77,7 @@ export class ApplicationDocumentService {
   }
 
   getInlineUrl(applicationDocument: ApplicationDocument) {
-    return firstValueFrom(
-      this.documentService.getDownloadUrl(
-        applicationDocument.document.alcsDocumentUuid,
-      ),
-    );
+    return this.documentService.getDownloadUrl(applicationDocument.document);
   }
 
   async createRecord(
@@ -98,7 +93,6 @@ export class ApplicationDocumentService {
     const document = new Document({
       fileName,
       fileSize,
-      alcsDocumentUuid,
       uploadedBy: user,
     });
 
@@ -151,7 +145,7 @@ export class ApplicationDocumentService {
       },
     });
     for (const document of documents) {
-      await this.documentService.delete(document.document);
+      await this.documentService.softRemove(document.document);
     }
 
     return;

@@ -1,7 +1,9 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Controller, Get, Inject, Logger, Query, Res } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
-import { Public } from 'nest-keycloak-connect';
+import { Keycloak } from 'keycloak-connect';
+import { KEYCLOAK_INSTANCE, Public } from 'nest-keycloak-connect';
+import { v4 } from 'uuid';
 import { AuthorizationService } from './authorization.service';
 
 @Controller('/authorize')
@@ -11,6 +13,7 @@ export class AuthorizationController {
   constructor(
     private authorizationService: AuthorizationService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
+    @Inject(KEYCLOAK_INSTANCE) private keycloak: Keycloak,
   ) {}
 
   @Get()
@@ -42,6 +45,25 @@ export class AuthorizationController {
         refresh_token: token.refresh_token,
         token: token.access_token,
       });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  @Get('/login')
+  @Public()
+  async getLoginUrl() {
+    try {
+      const sessionId = v4();
+      const baseUrl = this.config.get<string>('PORTAL.BASE_URL');
+      const loginUrl = this.keycloak.loginUrl(
+        sessionId,
+        `${baseUrl}/authorize`,
+      );
+      const idpHint = '&kc_idp_hint=bceidboth';
+      return {
+        loginUrl: loginUrl + idpHint,
+      };
     } catch (e) {
       console.log(e);
     }

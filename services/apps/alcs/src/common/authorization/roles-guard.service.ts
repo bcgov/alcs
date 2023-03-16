@@ -78,7 +78,7 @@ export class RolesGuard implements CanActivate {
     };
     this.cls.set('userGuids', userGuids);
 
-    if (matchingRoles.length === 0) {
+    if (matchingRoles.length === 0 && requiredRoles.length !== 0) {
       this.logger.debug(
         `Received request but user ${token.email} has wrong roles. Required: ${requiredRoles} Has: ${userRoles}`,
       );
@@ -88,7 +88,7 @@ export class RolesGuard implements CanActivate {
       );
     }
 
-    if (matchingRoles.length > 0) {
+    if (matchingRoles.length > 0 || requiredRoles.length === 0) {
       request.user.entity = await this.userService.getByGuid(userGuids);
       return true;
     }

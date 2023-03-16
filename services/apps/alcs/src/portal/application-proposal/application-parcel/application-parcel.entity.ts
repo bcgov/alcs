@@ -7,7 +7,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Base } from '../../common/entities/base.entity';
+import { Base } from '../../../common/entities/base.entity';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationProposal } from '../application-proposal.entity';
 import { ApplicationParcelDocument } from './application-parcel-document/application-parcel-document.entity';

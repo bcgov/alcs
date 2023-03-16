@@ -12,14 +12,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
+import { AuthGuard } from 'nest-keycloak-connect';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { User } from '../../user/user.entity';
 import { DOCUMENT_TYPE } from '../application-proposal/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../application-proposal/application-document/application-document.service';
 import { ApplicationProposalValidatorService } from '../application-proposal/application-proposal-validator.service';
 import { ApplicationProposalService } from '../application-proposal/application-proposal.service';
 import { APPLICATION_STATUS } from '../application-proposal/application-status/application-status.dto';
-import { AuthGuard } from '../common/authorization/auth-guard.service';
-import { User } from '../user/user.entity';
 import {
   ReturnApplicationProposalDto,
   UpdateApplicationProposalReviewDto,
@@ -33,7 +33,7 @@ export class ApplicationProposalReviewController {
     private applicationService: ApplicationProposalService,
     private applicationReviewService: ApplicationProposalReviewService,
     private applicationDocumentService: ApplicationDocumentService,
-    private localGovernmentService: LocalGovernmentService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationValidatorService: ApplicationProposalValidatorService,
   ) {}
 
@@ -69,7 +69,7 @@ export class ApplicationProposalReviewController {
       throw new NotFoundException('Failed to load review');
     }
 
-    const localGovernments = await this.localGovernmentService.get();
+    const localGovernments = await this.localGovernmentService.list();
     const matchingGovernment = localGovernments.find(
       (lg) => lg.uuid === applicationReview.application.localGovernmentUuid,
     );
