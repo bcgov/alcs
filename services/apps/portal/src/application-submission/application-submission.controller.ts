@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
   Body,
@@ -32,7 +30,6 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
-    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get()
@@ -58,7 +55,9 @@ export class ApplicationSubmissionController {
       }
     }
 
-    const applications = await this.applicationSubmissionService.getByUser(user);
+    const applications = await this.applicationSubmissionService.getByUser(
+      user,
+    );
     return this.applicationSubmissionService.mapToDTOs(applications, user);
   }
 
@@ -88,7 +87,9 @@ export class ApplicationSubmissionController {
       user,
     );
 
-    return await this.applicationSubmissionService.mapToDetailedDTO(application);
+    return await this.applicationSubmissionService.mapToDetailedDTO(
+      application,
+    );
   }
 
   @Post()
@@ -110,7 +111,10 @@ export class ApplicationSubmissionController {
     @Body() updateDto: ApplicationSubmissionUpdateDto,
     @Req() req,
   ) {
-    await this.applicationSubmissionService.verifyAccess(fileId, req.user.entity);
+    await this.applicationSubmissionService.verifyAccess(
+      fileId,
+      req.user.entity,
+    );
 
     const application = await this.applicationSubmissionService.update(
       fileId,

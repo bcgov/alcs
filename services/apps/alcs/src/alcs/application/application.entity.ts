@@ -9,14 +9,12 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-} from '../application-grpc/alcs-application.message.interface';
+import { Base } from '../../common/entities/base.entity';
+import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Base } from '../../common/entities/base.entity';
 import { ApplicationDecisionMeeting } from '../decision/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
@@ -143,23 +141,23 @@ export class Application extends Base {
   })
   statusHistory: StatusHistory[];
 
-  @AutoMap(() => ApplicationReviewGrpc)
+  @AutoMap(() => ApplicationSubmissionReviewDto)
   @Column({
     comment:
       'JSONB Column containing the government / first nation government review from the Portal',
     type: 'jsonb',
     nullable: true,
   })
-  applicationReview: ApplicationReviewGrpc;
+  applicationReview: ApplicationSubmissionReviewDto;
 
-  @AutoMap(() => SubmittedApplicationGrpc)
+  @AutoMap(() => ApplicationSubmissionDetailedDto)
   @Column({
     comment:
       'JSONB Column containing the applicants information from the Portal',
     type: 'jsonb',
     nullable: true,
   })
-  submittedApplication: SubmittedApplicationGrpc;
+  submittedApplication: ApplicationSubmissionDetailedDto;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

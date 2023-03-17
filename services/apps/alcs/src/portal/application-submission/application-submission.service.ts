@@ -7,15 +7,13 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import {
-  ApplicationGrpcResponse,
-  ApplicationReviewGrpc,
-} from '../../alcs/application-grpc/alcs-application.message.interface';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { User } from '../../user/user.entity';
-import { CompletedApplicationSubmissionReview } from '../application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionReviewDto } from '../application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
@@ -44,6 +42,8 @@ export class ApplicationSubmissionService {
     private applicationStatusRepository: Repository<ApplicationStatus>,
     private alcsApplicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -89,7 +89,7 @@ export class ApplicationSubmissionService {
   async update(fileNumber: string, updateDto: ApplicationSubmissionUpdateDto) {
     const application = await this.getOrFail(fileNumber);
 
-    application.applicant = updateDto.applicant; // TODO is this still a thing?
+    application.applicant = updateDto.applicant;
     application.typeCode = updateDto.typeCode || application.typeCode;
     application.localGovernmentUuid = updateDto.localGovernmentUuid;
     application.returnedComment = updateDto.returnedComment;
@@ -159,95 +159,104 @@ export class ApplicationSubmissionService {
 
   async submitToAlcs(
     application: ValidatedApplicationSubmission,
-    applicationReview?: CompletedApplicationSubmissionReview,
+    applicationReview?: ApplicationSubmissionReview,
   ) {
-    const submittedApp: ApplicationGrpcResponse | null = null;
+    let submittedApp: Application | null = null;
 
-    const mappedReview: ApplicationReviewGrpc | undefined = applicationReview
-      ? {
-          localGovernmentFileNumber:
-            applicationReview.localGovernmentFileNumber,
-          firstName: applicationReview.firstName,
-          lastName: applicationReview.lastName,
-          position: applicationReview.position,
-          department: applicationReview.department,
-          phoneNumber: applicationReview.phoneNumber,
-          email: applicationReview.email,
-          isOCPDesignation: applicationReview.isOCPDesignation,
-          OCPBylawName: applicationReview.OCPBylawName,
-          OCPDesignation: applicationReview.OCPDesignation,
-          OCPConsistent: applicationReview.OCPConsistent,
-          isSubjectToZoning: applicationReview.isSubjectToZoning,
-          zoningBylawName: applicationReview.zoningBylawName,
-          zoningDesignation: applicationReview.zoningDesignation,
-          zoningMinimumLotSize: applicationReview.zoningMinimumLotSize,
-          isZoningConsistent: applicationReview.isZoningConsistent,
-          isAuthorized: applicationReview.isAuthorized,
-        }
-      : undefined;
+    const mappedReview: ApplicationSubmissionReviewDto | undefined =
+      applicationReview
+        ? ({
+            localGovernmentFileNumber:
+              applicationReview.localGovernmentFileNumber,
+            firstName: applicationReview.firstName,
+            lastName: applicationReview.lastName,
+            position: applicationReview.position,
+            department: applicationReview.department,
+            phoneNumber: applicationReview.phoneNumber,
+            email: applicationReview.email,
+            isOCPDesignation: applicationReview.isOCPDesignation,
+            OCPBylawName: applicationReview.OCPBylawName,
+            OCPDesignation: applicationReview.OCPDesignation,
+            OCPConsistent: applicationReview.OCPConsistent,
+            isSubjectToZoning: applicationReview.isSubjectToZoning,
+            zoningBylawName: applicationReview.zoningBylawName,
+            zoningDesignation: applicationReview.zoningDesignation,
+            zoningMinimumLotSize: applicationReview.zoningMinimumLotSize,
+            isZoningConsistent: applicationReview.isZoningConsistent,
+            isAuthorized: applicationReview.isAuthorized,
+            // TODO fix this
+            // isFirstNationGovernment: applicationReview.isFirstNationGovernment,
+          } as ApplicationSubmissionReviewDto)
+        : undefined;
 
-    //TODO: Fix App Submission
-    // try {
-    //   submittedApp = this.alcsApplicationService.create({
-    //     fileNumber: application.fileNumber,
-    //     applicant: application.applicant,
-    //     localGovernmentUuid: application.localGovernmentUuid,
-    //     typeCode: application.typeCode,
-    //     dateSubmittedToAlc: new Date(),
-    //     documents: application.documents.map((d) => ({
-    //       type: d.type!, //TODO: Do we verify this?
-    //       documentUuid: d.document.uuid,
-    //       description: d.description ?? undefined,
-    //     })),
-    //     statusHistory: application.statusHistory,
-    //     applicationReview: mappedReview,
-    //     submittedApplication: {
-    //       ...application,
-    //       nfuPurpose: application.nfuPurpose ?? undefined,
-    //       nfuOutsideLands: application.nfuOutsideLands ?? undefined,
-    //       nfuProjectDurationUnit:
-    //         application.nfuProjectDurationUnit ?? undefined,
-    //       nfuAgricultureSupport: application.nfuAgricultureSupport ?? undefined,
-    //       nfuWillImportFill: application.nfuWillImportFill ?? undefined,
-    //       nfuFillTypeDescription:
-    //         application.nfuFillTypeDescription ?? undefined,
-    //       nfuFillOriginDescription:
-    //         application.nfuFillOriginDescription ?? undefined,
-    //       nfuHectares: application.nfuHectares
-    //         ? application.nfuHectares.toString(10)
-    //         : undefined,
-    //       nfuTotalFillPlacement: application.nfuTotalFillPlacement
-    //         ? application.nfuTotalFillPlacement.toString(10)
-    //         : undefined,
-    //       nfuMaxFillDepth: application.nfuMaxFillDepth
-    //         ? application.nfuMaxFillDepth.toString(10)
-    //         : undefined,
-    //       nfuFillVolume: application.nfuFillVolume
-    //         ? application.nfuFillVolume.toString(10)
-    //         : undefined,
-    //       nfuProjectDurationAmount: application.nfuProjectDurationAmount
-    //         ? application.nfuProjectDurationAmount.toString(10)
-    //         : undefined,
-    //       turPurpose: application.turPurpose ?? undefined,
-    //       turOutsideLands: application.turOutsideLands ?? undefined,
-    //       turAgriculturalActivities:
-    //         application.turAgriculturalActivities ?? undefined,
-    //       turReduceNegativeImpacts:
-    //         application.turReduceNegativeImpacts ?? undefined,
-    //       turTotalCorridorArea: application.turTotalCorridorArea
-    //         ? application.turTotalCorridorArea.toString(10)
-    //         : undefined,
-    //     },
-    //   });
-    // } catch (ex) {
-    //   this.logger.error(ex);
-    //
-    //   //TODO set failed status here?
-    //
-    //   throw new BaseServiceException(
-    //     `Failed to submit application: ${application.fileNumber}`,
-    //   );
-    // }
+    // TODO: Fix App Submission
+    try {
+      submittedApp = await this.alcsApplicationService.create({
+        fileNumber: application.fileNumber,
+        applicant: application.applicant,
+        localGovernmentUuid: application.localGovernmentUuid,
+        typeCode: application.typeCode,
+        dateSubmittedToAlc: new Date(),
+        statusHistory: application.statusHistory,
+        applicationReview: mappedReview,
+        submittedApplication: {
+          // ...application,
+          nfuPurpose: application.nfuPurpose ?? undefined,
+          nfuOutsideLands: application.nfuOutsideLands ?? undefined,
+          nfuProjectDurationUnit:
+            application.nfuProjectDurationUnit ?? undefined,
+          nfuAgricultureSupport: application.nfuAgricultureSupport ?? undefined,
+          nfuWillImportFill: application.nfuWillImportFill ?? undefined,
+          nfuFillTypeDescription:
+            application.nfuFillTypeDescription ?? undefined,
+          nfuFillOriginDescription:
+            application.nfuFillOriginDescription ?? undefined,
+          nfuHectares: application.nfuHectares ?? undefined,
+          nfuTotalFillPlacement: application.nfuTotalFillPlacement ?? undefined,
+          nfuMaxFillDepth: application.nfuMaxFillDepth ?? undefined,
+          nfuFillVolume: application.nfuFillVolume ?? undefined,
+          nfuProjectDurationAmount:
+            application.nfuProjectDurationAmount ?? undefined,
+          turPurpose: application.turPurpose ?? undefined,
+          turOutsideLands: application.turOutsideLands ?? undefined,
+          turAgriculturalActivities:
+            application.turAgriculturalActivities ?? undefined,
+          turReduceNegativeImpacts:
+            application.turReduceNegativeImpacts ?? undefined,
+          turTotalCorridorArea: application.turTotalCorridorArea ?? undefined,
+          turAllOwnersNotified: application.turAllOwnersNotified ?? undefined,
+
+          parcelsAgricultureDescription:
+            application.parcelsAgricultureDescription ?? undefined,
+          parcelsAgricultureImprovementDescription:
+            application.parcelsAgricultureImprovementDescription ?? undefined,
+          parcelsNonAgricultureUseDescription:
+            application.parcelsNonAgricultureUseDescription ?? undefined,
+          northLandUseType: application.northLandUseType ?? undefined,
+          northLandUseTypeDescription:
+            application.northLandUseTypeDescription ?? undefined,
+          eastLandUseType: application.eastLandUseType ?? undefined,
+          eastLandUseTypeDescription:
+            application.eastLandUseTypeDescription ?? undefined,
+          southLandUseType: application.southLandUseType ?? undefined,
+          southLandUseTypeDescription:
+            application.southLandUseTypeDescription ?? undefined,
+          westLandUseType: application.westLandUseType ?? undefined,
+          westLandUseTypeDescription:
+            application.westLandUseTypeDescription ?? undefined,
+          primaryContactOwnerUuid:
+            application.primaryContactOwnerUuid ?? undefined,
+        } as ApplicationSubmissionDetailedDto,
+      });
+    } catch (ex) {
+      this.logger.error(ex);
+
+      //TODO set failed status here?
+
+      throw new BaseServiceException(
+        `Failed to submit application: ${application.fileNumber}`,
+      );
+    }
 
     return submittedApp;
   }

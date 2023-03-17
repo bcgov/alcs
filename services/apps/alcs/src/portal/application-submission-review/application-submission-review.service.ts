@@ -44,6 +44,8 @@ export class ApplicationSubmissionReviewService {
     @InjectRepository(ApplicationSubmissionReview)
     private applicationSubmissionReviewRepository: Repository<ApplicationSubmissionReview>,
     private applicationDocumentService: ApplicationDocumentService,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     @InjectMapper('') private mapper: Mapper,
   ) {}
 
@@ -193,7 +195,7 @@ export class ApplicationSubmissionReviewService {
     application: ApplicationSubmission,
     applicationReview: ApplicationSubmissionReview,
     isFirstNationGovernment: boolean,
-  ): CompletedApplicationSubmissionReview {
+  ): ApplicationSubmissionReview {
     if (
       !applicationReview.localGovernmentFileNumber ||
       !applicationReview.firstName ||
@@ -270,7 +272,7 @@ export class ApplicationSubmissionReviewService {
         }
       }
     }
-    return applicationReview as CompletedApplicationSubmissionReview;
+    return applicationReview;
   }
 
   async mapToDto(

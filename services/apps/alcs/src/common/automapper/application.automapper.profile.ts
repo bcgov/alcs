@@ -1,12 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-  SubmittedApplicationOwnerGrpc,
-  SubmittedApplicationParcelGrpc,
-} from '../../alcs/application-grpc/alcs-application.message.interface';
+
 import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
@@ -17,13 +12,7 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
-import {
-  ApplicationDto,
-  ApplicationReviewDto,
-  SubmittedApplicationDto,
-  SubmittedApplicationOwnerDto,
-  SubmittedApplicationParcelDto,
-} from '../../alcs/application/application.dto';
+import { ApplicationDto } from '../../alcs/application/application.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
@@ -52,27 +41,6 @@ export class ApplicationProfile extends AutomapperProfile {
         mapper,
         ApplicationLocalGovernment,
         ApplicationLocalGovernmentDto,
-      );
-
-      createMap(mapper, ApplicationReviewGrpc, ApplicationReviewDto);
-      createMap(mapper, SubmittedApplicationGrpc, SubmittedApplicationDto);
-      createMap(
-        mapper,
-        SubmittedApplicationParcelGrpc,
-        SubmittedApplicationParcelDto,
-      );
-      createMap(
-        mapper,
-        SubmittedApplicationOwnerGrpc,
-        SubmittedApplicationOwnerDto,
-        forMember(
-          (pd) => pd.displayName,
-          mapFrom((p) =>
-            p.organizationName
-              ? p.organizationName
-              : `${p.firstName} ${p.lastName}`,
-          ),
-        ),
       );
 
       createMap(

@@ -29,8 +29,8 @@ import {
   CreateApplicationServiceDto,
 } from './application.dto';
 import {
-  Application,
   APPLICATION_FILE_NUMBER_SEQUENCE,
+  Application,
 } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -74,6 +74,8 @@ export class ApplicationService {
     private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
