@@ -32,7 +32,7 @@ export class ApplicationDocumentDto {
 }
 
 export class ApplicationDocumentCreateDto {
-  type: string;
+  type?: DOCUMENT_TYPE;
   documentUuid: string;
   description?: string;
 }

@@ -40,7 +40,6 @@ export class ApplicationSubmissionDto {
   returnedComment: string | null;
 
   lastStatusUpdate: number;
-  documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
   type: string;
 

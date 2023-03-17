@@ -18,6 +18,7 @@ import { ReviewApplicationSteps } from '../review-application.component';
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() stepper!: CustomStepperComponent;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.ReviewAndSubmit;
@@ -67,14 +68,15 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
+      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
+      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+    });
+
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.resolutionDocument = application.documents.filter(
-          (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
-        );
-        this.staffReport = application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-        this.otherAttachments = application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
       }
     });
   }

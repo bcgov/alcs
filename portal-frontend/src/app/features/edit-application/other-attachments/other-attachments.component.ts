@@ -20,6 +20,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class OtherAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   $destroy = new Subject<void>();
@@ -44,20 +45,23 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.otherFiles = application.documents
-          .filter((file) => (file.type ? this.selectableTypes.includes(file.type) : true))
-          .sort((a, b) => {
-            return a.uploadedAt - b.uploadedAt;
-          });
-        const newForm = new FormGroup({});
-        for (const file of this.otherFiles) {
-          newForm.addControl(`${file.uuid}-type`, new FormControl(file.type, [Validators.required]));
-          newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
-        }
-        this.form = newForm;
-        if (this.showErrors) {
-          this.form.markAllAsTouched();
-        }
+      }
+    });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.otherFiles = documents
+        .filter((file) => (file.type ? this.selectableTypes.includes(file.type) : true))
+        .sort((a, b) => {
+          return a.uploadedAt - b.uploadedAt;
+        });
+      const newForm = new FormGroup({});
+      for (const file of this.otherFiles) {
+        newForm.addControl(`${file.uuid}-type`, new FormControl(file.type, [Validators.required]));
+        newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
+      }
+      this.form = newForm;
+      if (this.showErrors) {
+        this.form.markAllAsTouched();
       }
     });
   }

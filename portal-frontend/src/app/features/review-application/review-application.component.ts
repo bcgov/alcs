@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
+import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
@@ -44,6 +45,7 @@ export class ReviewApplicationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   application: ApplicationSubmissionDto | undefined;
   $application = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
+  $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   fileId = '';
 
   isFirstNationGovernment = true;

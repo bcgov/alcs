@@ -8,7 +8,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
@@ -194,6 +197,7 @@ export class ApplicationSubmissionReviewService {
   verifyComplete(
     application: ApplicationSubmission,
     applicationReview: ApplicationSubmissionReview,
+    documents: ApplicationDocument[],
     isFirstNationGovernment: boolean,
   ): ApplicationSubmissionReview {
     if (
@@ -255,17 +259,13 @@ export class ApplicationSubmissionReviewService {
       applicationReview.isOCPDesignation
     ) {
       if (
-        !application.documents.some(
-          (doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        )
+        !documents.some((doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT)
       ) {
         throw new BaseServiceException('Review missing resolution document');
       }
 
       if (!isFirstNationGovernment && applicationReview.isAuthorized) {
-        if (
-          !application.documents.some((doc) => doc.type === 'reviewStaffReport')
-        ) {
+        if (!documents.some((doc) => doc.type === 'reviewStaffReport')) {
           throw new BaseServiceException(
             'Review missing staff report document',
           );
