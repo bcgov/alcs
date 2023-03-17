@@ -1,15 +1,7 @@
 import { Observable } from 'rxjs';
-import {
-  ApplicationCreateGrpcRequest,
-  ApplicationFileNumberGenerateGrpcResponse,
-  ApplicationGrpcResponse,
-} from './alcs-application.message.interface';
+import { ApplicationFileNumberGenerateGrpcResponse } from './alcs-application.message.interface';
 
 export interface AlcsApplicationService {
-  create(
-    request: ApplicationCreateGrpcRequest,
-  ): Observable<ApplicationGrpcResponse> | Promise<ApplicationGrpcResponse>;
-
   generateFileNumber(
     ApplicationFileNumberGenerateGrpcRequest,
   ):

@@ -116,19 +116,19 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   //TUR Fields
   @AutoMap(() => String)
-  turPurpose: string | null;
+  turPurpose?: string | null;
 
   @AutoMap(() => String)
-  turAgriculturalActivities: string | null;
+  turAgriculturalActivities?: string | null;
 
   @AutoMap(() => String)
-  turReduceNegativeImpacts: string | null;
+  turReduceNegativeImpacts?: string | null;
 
   @AutoMap(() => String)
-  turOutsideLands: string | null;
+  turOutsideLands?: string | null;
 
   @AutoMap(() => Number)
-  turTotalCorridorArea: number | null;
+  turTotalCorridorArea?: number | null;
 
   @AutoMap(() => Boolean)
   turAllOwnersNotified?: boolean | null;

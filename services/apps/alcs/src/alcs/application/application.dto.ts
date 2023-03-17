@@ -8,10 +8,8 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-} from '../application-grpc/alcs-application.message.interface';
+import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -401,6 +399,6 @@ export class CreateApplicationServiceDto {
   regionCode?: string;
   localGovernmentUuid: string;
   statusHistory?: StatusHistory[];
-  applicationReview?: ApplicationReviewGrpc;
-  submittedApplication?: SubmittedApplicationGrpc;
+  applicationReview?: ApplicationSubmissionReviewDto;
+  submittedApplication?: ApplicationSubmissionDetailedDto;
 }
