@@ -18,6 +18,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
@@ -57,9 +58,12 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.files = application.documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
         this.loadOwners(application.fileNumber, application.primaryContactOwnerUuid);
       }
+    });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.files = documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
     });
   }
 

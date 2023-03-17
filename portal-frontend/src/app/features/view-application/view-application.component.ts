@@ -84,11 +84,7 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
       this.application.typeCode !== 'TURP'
     ) {
       this.loadApplicationReview(fileId);
-      this.staffReport = this.application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-      this.resolutionDocument = this.application.documents.filter(
-        (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
-      );
-      this.otherAttachments = this.application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+      this.loadApplicationDocuments(fileId);
     }
   }
 
@@ -134,5 +130,14 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
   onNavigateHome() {
     this.router.navigateByUrl(`home`);
+  }
+
+  private async loadApplicationDocuments(fileId: string) {
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
+      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
+      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+    }
   }
 }

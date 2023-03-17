@@ -21,6 +21,7 @@ export class TurProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
@@ -66,13 +67,15 @@ export class TurProposalComponent implements OnInit, OnDestroy {
           allOwnersNotified: application.turAllOwnersNotified,
         });
 
-        this.servingNotice = application.documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);
-        this.proposalMap = application.documents.filter((document) => document.type === DOCUMENT.PROPOSAL_MAP);
-
         if (this.showErrors) {
           this.form.markAllAsTouched();
         }
       }
+    });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.servingNotice = documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);
+      this.proposalMap = documents.filter((document) => document.type === DOCUMENT.PROPOSAL_MAP);
     });
   }
 

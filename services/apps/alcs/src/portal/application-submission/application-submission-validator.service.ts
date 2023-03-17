@@ -1,7 +1,12 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  DOCUMENT_TYPE,
+} from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { Application } from '../../alcs/application/application.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
@@ -49,35 +54,46 @@ export class ApplicationSubmissionValidatorService {
   constructor(
     private localGovernmentService: ApplicationLocalGovernmentService,
     private appParcelService: ApplicationParcelService,
+    private appDocumentService: ApplicationDocumentService,
   ) {}
 
-  async validateApplication(application: ApplicationSubmission) {
+  async validateApplication(applicationSubmission: ApplicationSubmission) {
     const errors: Error[] = [];
 
-    if (!application.applicant) {
+    if (!applicationSubmission.applicant) {
       errors.push(new ServiceValidationException('Missing applicant'));
     }
 
-    const validatedParcels = await this.validateParcels(application, errors);
-    const validatedPrimaryContact = await this.validatePrimaryContact(
-      application,
+    const validatedParcels = await this.validateParcels(
+      applicationSubmission,
       errors,
     );
-    await this.validateLocalGovernment(application, errors);
-    await this.validateLandUse(application, errors);
-    await this.validateOptionalDocuments(application, errors);
 
-    if (application.typeCode === 'NFUP') {
-      await this.validateNfuProposal(application, errors);
+    const applicationDocuments =
+      await this.appDocumentService.getApplicantDocuments(
+        applicationSubmission.fileNumber,
+      );
+
+    const validatedPrimaryContact = await this.validatePrimaryContact(
+      applicationSubmission,
+      applicationDocuments,
+      errors,
+    );
+    await this.validateLocalGovernment(applicationSubmission, errors);
+    await this.validateLandUse(applicationSubmission, errors);
+    await this.validateOptionalDocuments(applicationDocuments, errors);
+
+    if (applicationSubmission.typeCode === 'NFUP') {
+      await this.validateNfuProposal(applicationSubmission, errors);
     }
-    if (application.typeCode === 'TURP') {
-      await this.validateTurProposal(application, errors);
+    if (applicationSubmission.typeCode === 'TURP') {
+      await this.validateTurProposal(applicationSubmission, errors);
     }
 
     const validatedApplication =
       validatedParcels && validatedPrimaryContact
         ? ({
-            ...application,
+            ...applicationSubmission,
             primaryContact: validatedPrimaryContact,
             parcels: validatedParcels.filter(
               (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
@@ -183,11 +199,12 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validatePrimaryContact(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
+    documents: ApplicationDocument[],
     errors: Error[],
   ): Promise<ApplicationOwner | undefined> {
-    const primaryOwner = application.owners.find(
-      (owner) => owner.uuid === application.primaryContactOwnerUuid,
+    const primaryOwner = applicationSubmission.owners.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
     );
 
     if (!primaryOwner) {
@@ -197,11 +214,11 @@ export class ApplicationSubmissionValidatorService {
       return;
     }
 
-    const hasCrownLandOwners = application.owners.some(
+    const hasCrownLandOwners = applicationSubmission.owners.some(
       (owner) => owner.type.code === APPLICATION_OWNER.CROWN,
     );
-    if (application.owners.length > 1 || hasCrownLandOwners) {
-      const authorizationLetters = application.documents.filter(
+    if (applicationSubmission.owners.length > 1 || hasCrownLandOwners) {
+      const authorizationLetters = documents.filter(
         (document) => document.type === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
       );
       if (authorizationLetters.length === 0) {
@@ -293,12 +310,10 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateOptionalDocuments(
-    application: ApplicationSubmission,
+    documents: ApplicationDocument[],
     errors: Error[],
   ) {
-    const untypedDocuments = application.documents.filter(
-      (document) => !document.type,
-    );
+    const untypedDocuments = documents.filter((document) => !document.type);
     for (const document of untypedDocuments) {
       errors.push(
         new ServiceValidationException(
@@ -307,7 +322,7 @@ export class ApplicationSubmissionValidatorService {
       );
     }
 
-    const optionalDocuments = application.documents.filter((document) =>
+    const optionalDocuments = documents.filter((document) =>
       [
         DOCUMENT_TYPE.OTHER,
         DOCUMENT_TYPE.PHOTOGRAPH,

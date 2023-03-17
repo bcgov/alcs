@@ -102,25 +102,11 @@ export class ApplicationDocumentController {
   async listApplicantDocuments(
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationDocumentDto[]> {
-    const documents = await this.applicationDocumentService.list(fileNumber);
-
-    const reviewTypes = [
-      DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-      DOCUMENT_TYPE.PHOTOGRAPH,
-      DOCUMENT_TYPE.OTHER,
-      DOCUMENT_TYPE.AUTHORIZATION_LETTER,
-      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-      DOCUMENT_TYPE.CORPORATE_SUMMARY,
-      DOCUMENT_TYPE.PROPOSAL_MAP,
-      DOCUMENT_TYPE.SERVING_NOTICE,
-    ];
-
-    const applicantDocuments = documents.filter((doc) =>
-      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
-    );
+    const documents =
+      await this.applicationDocumentService.getApplicantDocuments(fileNumber);
 
     return this.mapper.mapArray(
-      applicantDocuments,
+      documents,
       ApplicationDocument,
       ApplicationDocumentDto,
     );

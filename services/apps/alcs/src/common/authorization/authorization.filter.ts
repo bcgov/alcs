@@ -26,6 +26,7 @@ export class AuthorizationFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     const sessionId = v4();
+    //TODO: PORTAL vs ALCS?
     const baseUrl = this.config.get<string>('ALCS.BASE_URL');
     const loginUrl = this.singleTenant.loginUrl(
       sessionId,

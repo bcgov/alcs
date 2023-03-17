@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationDocumentUpdateDto, DOCUMENT } from './application-document.dto';
+import { ApplicationDocumentDto, ApplicationDocumentUpdateDto, DOCUMENT } from './application-document.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +64,18 @@ export class ApplicationDocumentService {
   async update(fileNumber: string | undefined, updateDtos: ApplicationDocumentUpdateDto[]) {
     try {
       await firstValueFrom(this.httpClient.patch<void>(`${this.serviceUrl}/application/${fileNumber}`, updateDtos));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to update documents, please try again');
+    }
+    return undefined;
+  }
+
+  async getByFileId(fileNumber: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<ApplicationDocumentDto[]>(`${this.serviceUrl}/application/${fileNumber}`)
+      );
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update documents, please try again');

@@ -328,9 +328,6 @@ export class ApplicationSubmissionService {
           },
         },
         relations: {
-          documents: {
-            document: true,
-          },
           owners: {
             type: true,
             corporateSummary: true,
@@ -348,8 +345,8 @@ export class ApplicationSubmissionService {
     return existingApplication;
   }
 
-  getByFileId(fileNumber: string, user: User) {
-    return this.applicationSubmissionRepository.findOne({
+  async getByFileId(fileNumber: string, user: User) {
+    return await this.applicationSubmissionRepository.findOne({
       where: {
         fileNumber,
         createdBy: {
@@ -357,9 +354,6 @@ export class ApplicationSubmissionService {
         },
       },
       relations: {
-        documents: {
-          document: true,
-        },
         owners: {
           type: true,
           corporateSummary: true,

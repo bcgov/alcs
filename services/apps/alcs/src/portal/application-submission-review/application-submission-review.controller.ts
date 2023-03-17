@@ -13,7 +13,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
@@ -30,7 +29,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 @UseGuards(PortalAuthGuard)
 export class ApplicationSubmissionReviewController {
   constructor(
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: ApplicationLocalGovernmentService,
@@ -111,16 +110,17 @@ export class ApplicationSubmissionReviewController {
       req.user.entity,
     );
 
-    const application = await this.applicationService.getForGovernmentByFileId(
-      fileNumber,
-      userLocalGovernment,
-    );
+    const application =
+      await this.applicationSubmissionService.getForGovernmentByFileId(
+        fileNumber,
+        userLocalGovernment,
+      );
 
     const applicationReview = await this.applicationReviewService.startReview(
       application,
     );
 
-    await this.applicationService.updateStatus(
+    await this.applicationSubmissionService.updateStatus(
       application,
       APPLICATION_STATUS.IN_REVIEW,
     );
@@ -137,16 +137,20 @@ export class ApplicationSubmissionReviewController {
       req.user.entity,
     );
 
-    const application = await this.applicationService.getForGovernmentByFileId(
-      fileNumber,
-      userLocalGovernment,
-    );
+    const application =
+      await this.applicationSubmissionService.getForGovernmentByFileId(
+        fileNumber,
+        userLocalGovernment,
+      );
 
     const applicationReview =
       await this.applicationReviewService.getForGovernment(
         application.fileNumber,
         userLocalGovernment,
       );
+
+    //TODO: Load Documents
+    const applicationDocuments = [];
 
     if (!applicationReview) {
       throw new ServiceNotFoundException('Failed to load applicaiton review');
@@ -155,6 +159,7 @@ export class ApplicationSubmissionReviewController {
     const completedReview = this.applicationReviewService.verifyComplete(
       application,
       applicationReview,
+      applicationDocuments,
       userLocalGovernment.isFirstNation,
     );
 
@@ -168,17 +173,17 @@ export class ApplicationSubmissionReviewController {
     }
 
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-      await this.applicationService.submitToAlcs(
+      await this.applicationSubmissionService.submitToAlcs(
         validationResult.application,
         completedReview,
       );
       if (completedReview.isAuthorized !== false) {
-        await this.applicationService.updateStatus(
+        await this.applicationSubmissionService.updateStatus(
           application,
           APPLICATION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
-        await this.applicationService.updateStatus(
+        await this.applicationSubmissionService.updateStatus(
           application,
           APPLICATION_STATUS.REFUSED_TO_FORWARD,
         );
@@ -198,14 +203,15 @@ export class ApplicationSubmissionReviewController {
       req.user.entity,
     );
 
-    const application = await this.applicationService.getForGovernmentByFileId(
-      fileNumber,
-      userLocalGovernment,
-    );
+    const applicationSubmission =
+      await this.applicationSubmissionService.getForGovernmentByFileId(
+        fileNumber,
+        userLocalGovernment,
+      );
 
     const applicationReview =
       await this.applicationReviewService.getForGovernment(
-        application.fileNumber,
+        applicationSubmission.fileNumber,
         userLocalGovernment,
       );
 
@@ -213,29 +219,30 @@ export class ApplicationSubmissionReviewController {
       throw new ServiceNotFoundException('Failed to load applicaiton review');
     }
 
-    if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-      const documentsToDelete = application.documents.filter((document) =>
-        [
-          DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-          DOCUMENT_TYPE.STAFF_REPORT,
-          DOCUMENT_TYPE.REVIEW_OTHER,
-        ].includes(document.type as DOCUMENT_TYPE),
-      );
-      for (const document of documentsToDelete) {
-        await this.applicationDocumentService.delete(document);
-      }
+    if (applicationSubmission.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+      // TODO: Delete documents below from Application Instead
+      // const documentsToDelete = application.documents.filter((document) =>
+      //   [
+      //     DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      //     DOCUMENT_TYPE.STAFF_REPORT,
+      //     DOCUMENT_TYPE.REVIEW_OTHER,
+      //   ].includes(document.type as DOCUMENT_TYPE),
+      // );
+      // for (const document of documentsToDelete) {
+      //   await this.applicationDocumentService.delete(document);
+      // }
 
       await this.applicationReviewService.delete(applicationReview);
 
-      application.returnedComment = returnDto.applicantComment;
+      applicationSubmission.returnedComment = returnDto.applicantComment;
       if (returnDto.reasonForReturn === 'incomplete') {
-        await this.applicationService.updateStatus(
-          application,
+        await this.applicationSubmissionService.updateStatus(
+          applicationSubmission,
           APPLICATION_STATUS.INCOMPLETE,
         );
       } else {
-        await this.applicationService.updateStatus(
-          application,
+        await this.applicationSubmissionService.updateStatus(
+          applicationSubmission,
           APPLICATION_STATUS.WRONG_GOV,
         );
       }

@@ -76,10 +76,10 @@ export class ApplicationGrpcController implements AlcsApplicationService {
       ...corporateSummaries,
     ];
 
-    await this.applicationDocumentService.attachExternalDocuments(
-      application.fileNumber,
-      allDocuments,
-    );
+    // await this.applicationDocumentService.attachExternalDocuments(
+    //   application.fileNumber,
+    //   allDocuments,
+    // );
 
     return this.mapper.mapAsync(
       application,

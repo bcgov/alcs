@@ -203,12 +203,6 @@ export class ApplicationSubmission extends BaseEntity {
   })
   statusHistory: StatusHistory[];
 
-  @OneToMany(
-    () => ApplicationDocument,
-    (appDocument) => appDocument.application,
-  )
-  documents: ApplicationDocument[];
-
   @OneToMany(() => ApplicationOwner, (owner) => owner.application)
   owners: ApplicationOwner[];
 

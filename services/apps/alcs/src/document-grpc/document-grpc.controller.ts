@@ -64,23 +64,23 @@ export class DocumentGrpcController {
     };
   }
 
-  @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'createExternalDocument')
-  async attachExternalDocument(
-    data: CreateDocumentRequestGrpc,
-  ): Promise<CreateDocumentResponseGrpc> {
-    this.logger.debug(
-      'ALCS-> GRPC -> AlcsDocumentService -> createExternalDocument',
-    );
-
-    const uploadedBy = await this.getUploadedBy(data.uploadedByUuid);
-
-    const document = await this.documentService.createDocumentRecord({
-      ...data,
-      uploadedBy: uploadedBy,
-    });
-
-    return { alcsDocumentUuid: document.uuid };
-  }
+  // @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'createExternalDocument')
+  // async attachExternalDocument(
+  //   data: CreateDocumentRequestGrpc,
+  // ): Promise<CreateDocumentResponseGrpc> {
+  //   this.logger.debug(
+  //     'ALCS-> GRPC -> AlcsDocumentService -> createExternalDocument',
+  //   );
+  //
+  //   const uploadedBy = await this.getUploadedBy(data.uploadedByUuid);
+  //
+  //   const document = await this.documentService.createDocumentRecord({
+  //     ...data,
+  //     uploadedBy: uploadedBy,
+  //   });
+  //
+  //   return { alcsDocumentUuid: document.uuid };
+  // }
 
   @GrpcMethod(ALCS_DOCUMENT_SERVICE_NAME, 'deleteExternalDocument')
   async deleteExternalDocument(

@@ -3,11 +3,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DocumentService } from '../../../../document/document.service';
+import { User } from '../../../../user/user.entity';
 import { ApplicationParcelService } from '../application-parcel.service';
 import {
   ApplicationParcelDocument,
   DOCUMENT_TYPE,
 } from './application-parcel-document.entity';
+import { Document } from '../../../../document/document.entity';
 
 @Injectable()
 export class ApplicationParcelDocumentService {
@@ -62,6 +64,24 @@ export class ApplicationParcelDocumentService {
   getInlineUrl(applicationParcelDocument: ApplicationParcelDocument) {
     return this.documentService.getDownloadUrl(
       applicationParcelDocument.document,
+    );
+  }
+
+  async createRecord(
+    applicationParcelUuid: string,
+    document: Document,
+    documentType?: DOCUMENT_TYPE,
+  ) {
+    const applicationParcel = await this.applicationParcelService.getOneOrFail(
+      applicationParcelUuid,
+    );
+
+    return this.applicationParcelDocumentRepository.save(
+      new ApplicationParcelDocument({
+        document,
+        type: documentType,
+        applicationParcel,
+      }),
     );
   }
 }

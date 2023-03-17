@@ -38,20 +38,6 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
           }),
         ),
         forMember(
-          (a) => a.documents,
-          mapFrom((ad) => {
-            if (ad.documents) {
-              return this.mapper.mapArray(
-                ad.documents,
-                ApplicationDocument,
-                ApplicationDocumentDto,
-              );
-            } else {
-              return [];
-            }
-          }),
-        ),
-        forMember(
           (a) => a.owners,
           mapFrom((ad) => {
             if (ad.owners) {
@@ -81,20 +67,6 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
             }
             //For older applications before status history was created
             return Date.now();
-          }),
-        ),
-        forMember(
-          (a) => a.documents,
-          mapFrom((ad) => {
-            if (ad.documents) {
-              return this.mapper.mapArray(
-                ad.documents,
-                ApplicationDocument,
-                ApplicationDocumentDto,
-              );
-            } else {
-              return [];
-            }
           }),
         ),
         forMember(
