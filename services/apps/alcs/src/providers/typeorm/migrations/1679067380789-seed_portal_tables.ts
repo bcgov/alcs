@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class seedPortalTables1679007636576 implements MigrationInterface {
+export class seedPortalTables1679067380789 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       INSERT INTO "alcs"."application_status" 
