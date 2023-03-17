@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AlcsModule } from '../alcs/alcs.module';
-import { ApplicationGrpcModule } from '../alcs/application-grpc/application-grpc.module';
-import { AuthorizationModule } from '../common/authorization/authorization.module';
-import { ApplicationOwnerProfile } from '../common/automapper/application-owner.automapper.profile';
-import { ApplicationParcelProfile } from '../common/automapper/application-parcel.automapper.profile';
-import { ApplicationSubmissionProfile } from '../common/automapper/application-submission.automapper.profile';
-import { DocumentModule } from '../document/document.module';
-import { ApplicationDocumentController } from './application-document/application-document.controller';
-import { ApplicationDocument } from './application-document/application-document.entity';
-import { ApplicationDocumentService } from './application-document/application-document.service';
+import { ApplicationModule } from '../../alcs/application/application.module';
+import { AuthorizationModule } from '../../common/authorization/authorization.module';
+import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
+import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
+import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
+import { DocumentModule } from '../../document/document.module';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -32,7 +28,6 @@ import { ApplicationSubmissionService } from './application-submission.service';
   imports: [
     TypeOrmModule.forFeature([
       ApplicationSubmission,
-      ApplicationDocument,
       ApplicationStatus,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
@@ -40,14 +35,12 @@ import { ApplicationSubmissionService } from './application-submission.service';
       ApplicationOwner,
       ApplicationOwnerType,
     ]),
-    AlcsModule,
+    ApplicationModule,
     AuthorizationModule,
-    ApplicationGrpcModule,
     DocumentModule,
   ],
   providers: [
     ApplicationSubmissionService,
-    ApplicationDocumentService,
     ApplicationSubmissionProfile,
     ApplicationParcelProfile,
     ApplicationParcelService,
@@ -59,14 +52,12 @@ import { ApplicationSubmissionService } from './application-submission.service';
   ],
   controllers: [
     ApplicationSubmissionController,
-    ApplicationDocumentController,
     ApplicationParcelController,
     ApplicationParcelDocumentController,
     ApplicationOwnerController,
   ],
   exports: [
     ApplicationSubmissionService,
-    ApplicationDocumentService,
     ApplicationOwnerService,
     ApplicationSubmissionValidatorService,
   ],

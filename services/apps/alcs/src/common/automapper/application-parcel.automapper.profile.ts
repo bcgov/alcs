@@ -1,16 +1,16 @@
 import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationOwnerDto } from '../../portal/application-proposal/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../../portal/application-proposal/application-owner/application-owner.entity';
-import { ApplicationParcelDocumentDto } from '../../portal/application-proposal/application-parcel/application-parcel-document/application-parcel-document.dto';
-import { ApplicationParcelDocument } from '../../portal/application-proposal/application-parcel/application-parcel-document/application-parcel-document.entity';
-import { ApplicationParcelOwnershipType } from '../../portal/application-proposal/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
+import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationParcelDocumentDto } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
+import { ApplicationParcelDocument } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.entity';
+import { ApplicationParcelOwnershipType } from '../../portal/application-submission/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
 import {
   ApplicationParcelDto,
   ApplicationParcelOwnershipTypeDto,
-} from '../../portal/application-proposal/application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../../portal/application-proposal/application-parcel/application-parcel.entity';
+} from '../../portal/application-submission/application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 
 @Injectable()
 export class ApplicationParcelProfile extends AutomapperProfile {

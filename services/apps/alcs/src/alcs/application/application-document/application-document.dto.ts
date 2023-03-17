@@ -1,5 +1,7 @@
 import { AutoMap } from '@automapper/classes';
-import { DOCUMENT_TYPE } from '../../../../../portal/src/application-proposal/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.entity';
+// TODO fix me, used the first one from the list so not sure which is correct
+// import { DOCUMENT_TYPE } from '../../../../../portal/src/application-proposal/application-document/application-document.entity';
 
 export class ApplicationDocumentDto {
   @AutoMap()

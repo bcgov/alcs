@@ -13,7 +13,7 @@ import {
 import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
 import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
 import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { ApplicationSubmissionProfile } from '../common/automapper/application-submission.automapper.profile';
+import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
 import { Document } from '../document/document.entity';
 import { User } from '../user/user.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
@@ -46,7 +46,7 @@ describe('ApplicationSubmissionService', () => {
       ],
       providers: [
         ApplicationSubmissionService,
-        ApplicationSubmissionProfile,
+        ApplicationProfile,
         {
           provide: getRepositoryToken(ApplicationSubmission),
           useValue: mockRepository,

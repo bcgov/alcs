@@ -3,15 +3,15 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
-import { ApplicationOwnerType } from '../../portal/application-proposal/application-owner/application-owner-type/application-owner-type.entity';
+import { ApplicationOwnerType } from '../../portal/application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
   ApplicationOwnerTypeDto,
-} from '../../portal/application-proposal/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../../portal/application-proposal/application-owner/application-owner.entity';
-import { ApplicationParcelDto } from '../../portal/application-proposal/application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../../portal/application-proposal/application-parcel/application-parcel.entity';
+} from '../../portal/application-submission/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 
 @Injectable()
 export class ApplicationOwnerProfile extends AutomapperProfile {

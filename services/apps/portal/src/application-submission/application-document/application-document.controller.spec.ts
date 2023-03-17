@@ -6,7 +6,7 @@ import { ClsService } from 'nestjs-cls';
 import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
-import { ApplicationProposalProfile } from '../../common/automapper/application-proposal.automapper.profile';
+import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
@@ -45,7 +45,7 @@ describe('ApplicationDocumentController', () => {
       ],
       controllers: [ApplicationDocumentController],
       providers: [
-        ApplicationProposalProfile,
+        ApplicationSubmissionProfile,
         {
           provide: ApplicationDocumentService,
           useValue: appDocumentService,

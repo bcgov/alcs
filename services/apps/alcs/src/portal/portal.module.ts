@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { ApplicationModule } from '../alcs/application/application.module';
 import { CardModule } from '../alcs/card/card.module';
-import { ApplicationProposalModule } from './application-proposal/application-proposal.module';
-import { ApplicationProposalReviewModule } from './application-proposal-review/application-proposal-review.module';
+import { ApplicationSubmissionReviewModule } from './application-submission-review/application-submission-review.module';
+import { ApplicationSubmissionModule } from './application-submission/application-submission.module';
 import { CodeController } from './code/code.controller';
 import { ParcelModule } from './parcel/parcel.module';
 
@@ -13,13 +13,13 @@ import { ParcelModule } from './parcel/parcel.module';
     ConfigModule,
     ApplicationModule,
     CardModule,
-    ApplicationProposalModule,
+    ApplicationSubmissionModule,
     ParcelModule,
-    ApplicationProposalReviewModule,
+    ApplicationSubmissionReviewModule,
     RouterModule.register([
-      { path: 'portal', module: ApplicationProposalModule },
+      { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: ParcelModule },
-      { path: 'portal', module: ApplicationProposalReviewModule },
+      { path: 'portal', module: ApplicationSubmissionReviewModule },
     ]),
   ],
   controllers: [CodeController],
