@@ -83,8 +83,8 @@ export class ApplicationDocumentController {
       req.user.entity,
     );
 
-    const documents =
-      await this.applicationDocumentService.getApplicantDocuments(fileNumber);
+    //TODO: Update with view flags
+    const documents = await this.applicationDocumentService.list(fileNumber);
     return this.mapper.mapArray(
       documents,
       ApplicationDocument,
@@ -96,12 +96,14 @@ export class ApplicationDocumentController {
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
 
-    await this.applicationSubmissionService.verifyAccess(
-      document.applicationUuid,
-      req.user.entity,
-    );
+    //TODO: How do we know which documents applicant can access?
+    // await this.applicationSubmissionService.verifyAccess(
+    //   document.applicationUuid,
+    //   req.user.entity,
+    // );
 
-    return await this.applicationDocumentService.getInlineUrl(document);
+    const url = await this.applicationDocumentService.getInlineUrl(document);
+    return { url };
   }
 
   @Patch('/application/:fileNumber')
@@ -157,20 +159,17 @@ export class ApplicationDocumentController {
 
     const document = await this.documentService.createDocumentRecord(data);
 
-    //TODO: Application wont exist!
     const savedDocument =
-      await this.applicationDocumentService.attachExternalDocuments(
+      await this.applicationDocumentService.attachExternalDocument(
         submission.fileNumber,
-        [
-          {
-            documentUuid: document.uuid,
-            type: data.documentType,
-          },
-        ],
+        {
+          documentUuid: document.uuid,
+          type: data.documentType,
+        },
       );
 
     return this.mapper.map(
-      savedDocument[0],
+      savedDocument,
       ApplicationDocument,
       ApplicationDocumentDto,
     );
