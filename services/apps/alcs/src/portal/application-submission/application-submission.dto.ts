@@ -8,7 +8,6 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
