@@ -28,6 +28,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
   needsAuthorizationLetter = true;
+  appDocuments: ApplicationDocumentDto[] = [];
 
   private localGovernments: LocalGovernmentDto[] = [];
   private otherFileTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
@@ -65,6 +66,8 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         .sort((a, b) => {
           return a.uploadedAt - b.uploadedAt;
         });
+
+      this.appDocuments = documents;
     });
   }
 

@@ -175,26 +175,10 @@ export class ApplicationSubmissionService {
     const mappedReview: ApplicationSubmissionReviewDto | undefined =
       applicationReview
         ? ({
-            localGovernmentFileNumber:
-              applicationReview.localGovernmentFileNumber,
-            firstName: applicationReview.firstName,
-            lastName: applicationReview.lastName,
-            position: applicationReview.position,
-            department: applicationReview.department,
-            phoneNumber: applicationReview.phoneNumber,
-            email: applicationReview.email,
-            isOCPDesignation: applicationReview.isOCPDesignation,
-            OCPBylawName: applicationReview.OCPBylawName,
-            OCPDesignation: applicationReview.OCPDesignation,
-            OCPConsistent: applicationReview.OCPConsistent,
-            isSubjectToZoning: applicationReview.isSubjectToZoning,
-            zoningBylawName: applicationReview.zoningBylawName,
-            zoningDesignation: applicationReview.zoningDesignation,
-            zoningMinimumLotSize: applicationReview.zoningMinimumLotSize,
-            isZoningConsistent: applicationReview.isZoningConsistent,
-            isAuthorized: applicationReview.isAuthorized,
+            ...applicationReview,
             // TODO fix this
             // isFirstNationGovernment: applicationReview.isFirstNationGovernment,
+            isFirstNationGovernment: false,
           } as ApplicationSubmissionReviewDto)
         : undefined;
 
@@ -205,11 +189,11 @@ export class ApplicationSubmissionService {
         applicant: application.applicant,
         localGovernmentUuid: application.localGovernmentUuid,
         typeCode: application.typeCode,
-        dateSubmittedToAlc: new Date(),
         statusHistory: application.statusHistory,
+        dateSubmittedToAlc: new Date(),
         applicationReview: mappedReview,
+
         submittedApplication: {
-          // ...application,
           nfuPurpose: application.nfuPurpose ?? undefined,
           nfuOutsideLands: application.nfuOutsideLands ?? undefined,
           nfuProjectDurationUnit:
@@ -259,9 +243,6 @@ export class ApplicationSubmissionService {
       });
     } catch (ex) {
       this.logger.error(ex);
-
-      //TODO set failed status here?
-
       throw new BaseServiceException(
         `Failed to submit application: ${application.fileNumber}`,
       );
