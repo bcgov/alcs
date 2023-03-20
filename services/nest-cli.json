@@ -3,10 +3,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/alcs/src",
   "compilerOptions": {
-    "plugins": [
-      "@nestjs/swagger",
-      "@automapper/classes/transformer-plugin"
-    ],
+    "plugins": ["@nestjs/swagger", "@automapper/classes/transformer-plugin"],
     "assets": [
       "common/envs/*",
       {
@@ -29,19 +26,6 @@
       "sourceRoot": "apps/alcs/src",
       "compilerOptions": {
         "tsConfigPath": "apps/alcs/tsconfig.app.json"
-      }
-    },
-    "portal": {
-      "type": "application",
-      "root": "apps/portal",
-      "entryFile": "main",
-      "sourceRoot": "apps/portal/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/portal/tsconfig.app.json",
-        "assets": [
-          "**/*.proto"
-        ],
-        "watchAssets": true
       }
     },
     "common": {
