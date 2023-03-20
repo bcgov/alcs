@@ -60,8 +60,9 @@ export class AuthorizationController {
         sessionId,
         `${baseUrl}/authorize`,
       );
+      const idpHint = '&kc_idp_hint=bceidboth';
       return {
-        loginUrl,
+        loginUrl: loginUrl + idpHint,
       };
     } catch (e) {
       console.log(e);

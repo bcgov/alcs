@@ -1,13 +1,13 @@
-@import '../../../styles/colors';
-@import '../../../styles/typography';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
 
 .text {
-  color: $grey-dark;
+  color: colors.$grey-dark;
 }
 
 .error {
   margin-top: rem(4);
-  color: $error-color;
+  color: colors.$error-color;
   display: flex;
   align-items: center;
 

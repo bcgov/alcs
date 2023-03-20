@@ -1,4 +1,4 @@
-# ALCS API
+# ALCS + Portal API
 
 Main API built with NestJS + TypeOrm
 

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../services/code/code.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog.component';
 
@@ -17,7 +17,7 @@ describe('ChangeApplicationTypeDialogComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: {} },
         {
-          provide: ApplicationService,
+          provide: ApplicationSubmissionService,
           useValue: {},
         },
         {

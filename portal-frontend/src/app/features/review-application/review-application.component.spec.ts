@@ -4,17 +4,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationReviewDto } from '../../services/application-review/application-review.dto';
-import { ApplicationReviewService } from '../../services/application-review/application-review.service';
-import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ReviewApplicationComponent } from './review-application.component';
 
 describe('ReviewApplicationComponent', () => {
   let component: ReviewApplicationComponent;
   let fixture: ComponentFixture<ReviewApplicationComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationReviewService>;
-  let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
+  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
@@ -22,7 +22,9 @@ describe('ReviewApplicationComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
+    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
+      undefined
+    );
 
     mockAppService = createMock();
 
@@ -34,11 +36,11 @@ describe('ReviewApplicationComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationReviewService,
+          provide: ApplicationSubmissionReviewService,
           useValue: mockAppReviewService,
         },
         {
-          provide: ApplicationService,
+          provide: ApplicationSubmissionService,
           useValue: mockAppService,
         },
         {

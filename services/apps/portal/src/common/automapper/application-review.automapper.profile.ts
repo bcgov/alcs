@@ -1,8 +1,8 @@
 import { createMap, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationReviewDto } from '../../application-review/application-review.dto';
-import { ApplicationReview } from '../../application-review/application-review.entity';
+import { ApplicationSubmissionReviewDto } from '../../application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
 
 @Injectable()
 export class ApplicationReviewProfile extends AutomapperProfile {
@@ -12,7 +12,11 @@ export class ApplicationReviewProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, ApplicationReview, ApplicationReviewDto);
+      createMap(
+        mapper,
+        ApplicationSubmissionReview,
+        ApplicationSubmissionReviewDto,
+      );
     };
   }
 }

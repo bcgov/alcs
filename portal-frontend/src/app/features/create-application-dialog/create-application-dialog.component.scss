@@ -1,6 +1,5 @@
-@import '../../../styles/colors';
-@import '../../../styles/typography';
-@import '../../../styles/functions';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
 
 .mat-dialog-container {
   height: auto;
@@ -22,7 +21,7 @@
 
 .warning-banner {
   padding: rem(16);
-  background-color: rgba($accent-color-light, 0.5);
+  background-color: rgba(colors.$accent-color-light, 0.5);
   margin: rem(16) 0;
 
   .read-more-btn {
@@ -31,7 +30,7 @@
     cursor: pointer;
     display: flex;
     justify-content: flex-end;
-    color: $accent-color-dark;
+    color: colors.$accent-color-dark;
   }
 
   .display-none {

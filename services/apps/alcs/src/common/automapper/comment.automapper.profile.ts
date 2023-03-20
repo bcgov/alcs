@@ -1,10 +1,10 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { CommentDto } from '../../comment/comment.dto';
-import { Comment } from '../../comment/comment.entity';
-import { CommentMentionDto } from '../../comment/mention/comment-mention.dto';
-import { CommentMention } from '../../comment/mention/comment-mention.entity';
+import { CommentDto } from '../../alcs/comment/comment.dto';
+import { Comment } from '../../alcs/comment/comment.entity';
+import { CommentMentionDto } from '../../alcs/comment/mention/comment-mention.dto';
+import { CommentMention } from '../../alcs/comment/mention/comment-mention.entity';
 
 @Injectable()
 export class CommentProfile extends AutomapperProfile {

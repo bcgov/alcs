@@ -2,8 +2,11 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../../services/application/application.dto';
-import { ApplicationService } from '../../../../services/application/application.service';
+import {
+  ApplicationSubmissionDetailedDto,
+  ApplicationSubmissionUpdateDto,
+} from '../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-application.component';
 
@@ -15,7 +18,7 @@ import { EditApplicationSteps } from '../../edit-application.component';
 export class NfuProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
@@ -48,7 +51,7 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private router: Router, private applicationService: ApplicationService) {}
+  constructor(private router: Router, private applicationService: ApplicationSubmissionService) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -109,7 +112,7 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
       const nfuFillTypeDescription = this.fillTypeDescription.getRawValue();
       const nfuFillOriginDescription = this.fillOriginDescription.getRawValue();
 
-      const updateDto: ApplicationUpdateDto = {
+      const updateDto: ApplicationSubmissionUpdateDto = {
         nfuHectares: nfuHectares ? parseFloat(nfuHectares) : null,
         nfuPurpose,
         nfuOutsideLands,

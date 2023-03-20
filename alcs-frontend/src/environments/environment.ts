@@ -11,7 +11,8 @@ declare global {
 export const environment = {
   production: false,
   siteName: 'ALCS',
-  apiUrl: window.env?.['apiUrl'] || 'http://localhost:8080',
+  apiUrl: (window.env?.['apiUrl'] || 'http://localhost:8080') + '/alcs',
+  authUrl: window.env?.['apiUrl'] || 'http://localhost:8080',
   homeUrl: window.env?.['homeUrl'] || '/home',
   dateFormat: 'YYYY-MMM-DD',
   shortTimeFormat: 'MMM D, h:mm a',

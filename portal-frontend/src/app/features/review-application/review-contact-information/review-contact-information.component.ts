@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationReviewService } from '../../../services/application-review/application-review.service';
+import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ReviewApplicationSteps } from '../review-application.component';
 
 @Component({
@@ -36,7 +36,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private applicationReviewService: ApplicationReviewService, private router: Router) {}
+  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {

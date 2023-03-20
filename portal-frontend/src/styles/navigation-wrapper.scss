@@ -1,3 +1,6 @@
+@use './functions' as *;
+@use './colors';
+
 .navigation-wrapper {
   ::ng-deep .mat-mdc-tab-body-content {
     overflow-x: hidden;
@@ -42,16 +45,16 @@
       width: 100%;
       margin-top: rem(24);
       height: rem(32);
-      background: $primary-color;
+      background: colors.$primary-color;
       opacity: 1;
 
       .mdc-tab__text-label {
-        color: $white;
+        color: colors.$white;
       }
     }
 
     ::ng-deep .mat-mdc-tab.mdc-tab--active {
-      background-color: $primary-color-dark;
+      background-color: colors.$primary-color-dark;
     }
   }
 

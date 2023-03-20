@@ -1,6 +1,4 @@
-@import '../../../../styles/functions.scss';
-@import '../../../../styles/colors.scss';
-@import '../../../../styles/typography.scss';
+@use '../../../../styles/functions' as *;
 
 .owner-information {
   display: grid;

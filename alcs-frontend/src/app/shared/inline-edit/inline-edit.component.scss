@@ -1,9 +1,9 @@
-@import '../../../styles/colors';
+@use '../../../styles/colors';
 
 .editable {
   display: inline-block;
   cursor: pointer;
-  border: 2px solid $primary-color-dark;
+  border: 2px solid colors.$primary-color-dark;
   padding: 8px;
   border-radius: 2px;
   font-size: 16px;
@@ -30,13 +30,13 @@
 }
 
 .content:hover {
-  border: 2px solid $grey;
+  border: 2px solid colors.$grey;
   border-radius: 4px;
   cursor: pointer;
 
   .edit-button {
-    color: $white;
-    background-color: $grey;
+    color: colors.$white;
+    background-color: colors.$grey;
   }
 
   mat-icon {
@@ -61,13 +61,13 @@
 
 .placeholder {
   font-style: italic;
-  color: $grey;
+  color: colors.$grey;
 }
 
 .editable:hover {
-  border: 2px solid $primary-color;
+  border: 2px solid colors.$primary-color;
 }
 
 .save {
-  color: $primary-color;
+  color: colors.$primary-color;
 }

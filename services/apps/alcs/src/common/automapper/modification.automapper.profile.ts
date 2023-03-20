@@ -1,22 +1,22 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernment } from '../../application/application-code/application-local-government/application-local-government.entity';
-import { Application } from '../../application/application.entity';
-import { CardDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
-import { ApplicationDecisionMeetingDto } from '../../decision/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../decision/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../decision/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../decision/application-decision/application-decision.entity';
+import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { Application } from '../../alcs/application/application.entity';
+import { CardDto } from '../../alcs/card/card.dto';
+import { Card } from '../../alcs/card/card.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../alcs/decision/application-decision/application-decision.dto';
+import { ApplicationDecision } from '../../alcs/decision/application-decision/application-decision.entity';
 import {
   ApplicationForModificationDto,
   ApplicationModificationDto,
   ApplicationModificationOutcomeCodeDto,
-} from '../../decision/application-modification/application-modification.dto';
-import { ApplicationModification } from '../../decision/application-modification/application-modification.entity';
-import { ApplicationModificationOutcomeType } from '../../decision/application-modification/modification-outcome-type/application-modification-outcome-type.entity';
+} from '../../alcs/decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../../alcs/decision/application-modification/application-modification.entity';
+import { ApplicationModificationOutcomeType } from '../../alcs/decision/application-modification/modification-outcome-type/application-modification-outcome-type.entity';
 
 @Injectable()
 export class ModificationProfile extends AutomapperProfile {

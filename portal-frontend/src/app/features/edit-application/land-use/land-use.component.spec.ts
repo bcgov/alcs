@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LandUseComponent } from './land-use.component';
@@ -12,10 +12,10 @@ import { LandUseComponent } from './land-use.component';
 describe('LandUseComponent', () => {
   let component: LandUseComponent;
   let fixture: ComponentFixture<LandUseComponent>;
-  let mockAppService: DeepMocked<ApplicationService>;
+  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockRouter: DeepMocked<Router>;
-  let applicationPipe = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockAppService = createMock();
@@ -29,7 +29,7 @@ describe('LandUseComponent', () => {
           useValue: mockRouter,
         },
         {
-          provide: ApplicationService,
+          provide: ApplicationSubmissionService,
           useValue: mockAppService,
         },
         {

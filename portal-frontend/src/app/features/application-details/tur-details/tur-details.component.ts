@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
 @Component({
   selector: 'app-tur-details[application]',
@@ -10,11 +10,11 @@ import { ApplicationDetailedDto } from '../../../services/application/applicatio
   styleUrls: ['./tur-details.component.scss'],
 })
 export class TurDetailsComponent {
-  _application: ApplicationDetailedDto | undefined;
+  _application: ApplicationSubmissionDetailedDto | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
 
-  @Input() set application(application: ApplicationDetailedDto | undefined) {
+  @Input() set application(application: ApplicationSubmissionDetailedDto | undefined) {
     if (application) {
       this._application = application;
       this.servingNotice = application.documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);

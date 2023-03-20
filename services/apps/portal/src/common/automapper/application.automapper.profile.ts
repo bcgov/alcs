@@ -1,20 +1,20 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../application/application-document/application-document.dto';
-import { ApplicationDocument } from '../../application/application-document/application-document.entity';
+import { ApplicationDocumentDto } from '../../application-submission/application-document/application-document.dto';
+import { ApplicationDocument } from '../../application-submission/application-document/application-document.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
-} from '../../application/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../../application/application-owner/application-owner.entity';
-import { ApplicationStatusDto } from '../../application/application-status/application-status.dto';
-import { ApplicationStatus } from '../../application/application-status/application-status.entity';
+} from '../../application-submission/application-owner/application-owner.dto';
+import { ApplicationOwner } from '../../application-submission/application-owner/application-owner.entity';
+import { ApplicationStatusDto } from '../../application-submission/application-status/application-status.dto';
+import { ApplicationStatus } from '../../application-submission/application-status/application-status.entity';
 import {
-  ApplicationDetailedDto,
-  ApplicationDto,
-} from '../../application/application.dto';
-import { Application } from '../../application/application.entity';
+  ApplicationSubmissionDetailedDto,
+  ApplicationSubmissionDto,
+} from '../../application-submission/application-submission.dto';
+import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -26,8 +26,8 @@ export class ApplicationProfile extends AutomapperProfile {
     return (mapper) => {
       createMap(
         mapper,
-        Application,
-        ApplicationDto,
+        ApplicationSubmission,
+        ApplicationSubmissionDto,
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
@@ -95,8 +95,8 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        Application,
-        ApplicationDetailedDto,
+        ApplicationSubmission,
+        ApplicationSubmissionDetailedDto,
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {

@@ -1,4 +1,4 @@
-@import '../../../../styles/colors';
+@use '../../../../styles/colors';
 
 .post-decision-header {
   margin: 24px 0 !important;
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $grey-light;
+  background-color: colors.$grey-light;
   height: 72px;
 }
 
@@ -48,8 +48,8 @@ section {
   top: 0;
   height: 32px;
   padding: 6px 12px;
-  color: $white;
-  background: $grey-dark;
+  color: colors.$white;
+  background: colors.$grey-dark;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px 0 10px;
 }
@@ -64,15 +64,15 @@ section {
   border-radius: 0 4px 0 10px;
 
   &.recon {
-    background: $accent-color;
+    background: colors.$accent-color;
   }
 
   &.modification {
-    background: $secondary-color-dark;
+    background: colors.$secondary-color-dark;
   }
 
   button {
-    color: $white;
+    color: colors.$white;
     width: 36px;
     height: 36px;
     line-height: 36px;

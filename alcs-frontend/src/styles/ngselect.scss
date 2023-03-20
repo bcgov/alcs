@@ -1,3 +1,4 @@
+@use './colors';
 // Note: ng-select styles must be overridden in global css
 
 .ng-select {
@@ -6,32 +7,32 @@
 
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after {
-  border-color: $primary-color;
+  border-color: colors.$primary-color;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
-  background-color: $grey-light !important;
-  color: $primary-color;
+  background-color: colors.$grey-light !important;
+  color: colors.$primary-color;
 
   &:hover {
-    background-color: $grey-light !important;
+    background-color: colors.$grey-light !important;
   }
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover {
-  background: $secondary-color-light !important;
+  background: colors.$secondary-color-light !important;
 }
 
 .ng-select.ng-select-focused .ng-select-container:after {
-  border-color: $primary-color;
+  border-color: colors.$primary-color;
 }
 
 .ng-select .ng-select-container {
-  border-color: $grey;
+  border-color: colors.$grey;
 }
 
 .ng-select .ng-select-container.ng-appearance-outline:after {
-  border-color: $grey;
+  border-color: colors.$grey;
   height: calc(100% - 0.15em);
 }
 
@@ -50,10 +51,6 @@
 
 .ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-arrow-wrapper {
   bottom: 1.3em;
-}
-
-.ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-clear-wrapper {
-  bottom: 18px !important;
 }
 
 .ng-select .ng-select-container .ng-value-container .ng-input > input {

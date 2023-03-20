@@ -1,8 +1,8 @@
-@import '../../../styles/colors';
-@import '../../../styles/typography';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
 
 .warning-banner {
-  background-color: rgba($accent-color-light, 0.5);
+  background-color: rgba(colors.$accent-color-light, 0.5);
   padding: 1rem;
   display: flex;
   margin: 2rem 0;

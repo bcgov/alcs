@@ -1,4 +1,4 @@
-@import '../../../../styles/typography';
+@use '../../../../styles/functions' as *;
 
 section {
   margin-bottom: rem(24);

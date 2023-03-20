@@ -4,8 +4,11 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationDetailedDto, ApplicationUpdateDto } from '../../../../services/application/application.dto';
-import { ApplicationService } from '../../../../services/application/application.service';
+import {
+  ApplicationSubmissionDetailedDto,
+  ApplicationSubmissionUpdateDto,
+} from '../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-application.component';
 
@@ -17,7 +20,7 @@ import { EditApplicationSteps } from '../../edit-application.component';
 export class TurProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationDetailedDto | undefined>;
+  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
@@ -45,7 +48,7 @@ export class TurProposalComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 
@@ -116,7 +119,7 @@ export class TurProposalComponent implements OnInit, OnDestroy {
       const turTotalCorridorArea = this.totalCorridorArea.getRawValue();
       const turAllOwnersNotified = this.allOwnersNotified.getRawValue();
 
-      const updateDto: ApplicationUpdateDto = {
+      const updateDto: ApplicationSubmissionUpdateDto = {
         turPurpose,
         turOutsideLands,
         turAgriculturalActivities,

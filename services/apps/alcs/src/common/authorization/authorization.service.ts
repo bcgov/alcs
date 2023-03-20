@@ -45,6 +45,7 @@ export type BCeIDBasicToken = BaseToken & {
   identity_provider: 'bceidboth';
   bceid_user_guid: string;
   bceid_username: string;
+  bceid_business_guid?: string;
 };
 
 @Injectable()
@@ -73,8 +74,8 @@ export class AuthorizationService {
 
   async exchangeCodeForToken(code: string) {
     const baseUrl = this.config.get<string>('ALCS.BASE_URL');
-    const secret = this.config.get<string>('ALCS.KEYCLOAK.SECRET');
-    const clientId = this.config.get<string>('ALCS.KEYCLOAK.CLIENT_ID');
+    const secret = this.config.get<string>('KEYCLOAK.SECRET');
+    const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
     const tokenUrl = this.config.get<string>('KEYCLOAK.AUTH_TOKEN_URL');
 
     const res = await firstValueFrom(
@@ -108,8 +109,8 @@ export class AuthorizationService {
   }
 
   async refreshToken(refreshToken: string): Promise<TokenResponse> {
-    const secret = this.config.get<string>('ALCS.KEYCLOAK.SECRET');
-    const clientId = this.config.get<string>('ALCS.KEYCLOAK.CLIENT_ID');
+    const secret = this.config.get<string>('KEYCLOAK.SECRET');
+    const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
     const tokenUrl = this.config.get<string>('KEYCLOAK.AUTH_TOKEN_URL');
 
     const res = await firstValueFrom(
@@ -152,6 +153,7 @@ export class AuthorizationService {
         identityProvider: bceidToken.identity_provider,
         preferredUsername: bceidToken.preferred_username,
         bceidGuid: bceidToken.bceid_user_guid,
+        bceidBusinessGuid: bceidToken.bceid_business_guid,
         bceidUserName: bceidToken.bceid_username,
         clientRoles: bceidToken.client_roles || [],
       };
@@ -179,6 +181,7 @@ export class AuthorizationService {
         this.mapUserFromTokenToCreateDto(payload),
       );
 
+      //TODO: Only send if they are trying to load ALCS
       if (user.clientRoles.length === 0) {
         await this.userService.sendNewUserRequestEmail(
           user.email,

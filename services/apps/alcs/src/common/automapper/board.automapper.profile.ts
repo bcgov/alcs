@@ -1,13 +1,13 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { BoardStatus } from '../../board/board-status.entity';
-import { BoardDto, BoardSmallDto, BoardStatusDto } from '../../board/board.dto';
-import { Board } from '../../board/board.entity';
-import { CardStatusDto } from '../../card/card-status/card-status.dto';
-import { CardStatus } from '../../card/card-status/card-status.entity';
-import { CardDto } from '../../card/card.dto';
-import { Card } from '../../card/card.entity';
+import { BoardStatus } from '../../alcs/board/board-status.entity';
+import { BoardDto, BoardSmallDto, BoardStatusDto } from '../../alcs/board/board.dto';
+import { Board } from '../../alcs/board/board.entity';
+import { CardStatusDto } from '../../alcs/card/card-status/card-status.dto';
+import { CardStatus } from '../../alcs/card/card-status/card-status.entity';
+import { CardDto } from '../../alcs/card/card.dto';
+import { Card } from '../../alcs/card/card.entity';
 
 @Injectable()
 export class BoardAutomapperProfile extends AutomapperProfile {

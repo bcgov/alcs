@@ -1,6 +1,5 @@
-@import 'colors';
-@import 'functions';
-@import 'typography';
+@use 'functions' as *;
+@use 'colors';
 
 // FORM FIELDS
 .mat-form-field-infix {
@@ -60,12 +59,12 @@ input.mat-input-element {
 }
 
 input.mat-input-element::placeholder {
-  color: $grey-dark;
+  color: colors.$grey-dark;
   opacity: 1;
 }
 
 input.mat-input-element:disabled::placeholder {
-  color: $grey;
+  color: colors.$grey;
 }
 
 form {

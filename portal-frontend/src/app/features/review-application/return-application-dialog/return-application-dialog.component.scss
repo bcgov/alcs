@@ -1,6 +1,5 @@
-@import '../../../../styles/colors';
-@import '../../../../styles/functions';
-@import '../../../../styles/typography';
+@use '../../../../styles/functions' as *;
+@use '../../../../styles/colors';
 
 .return-application-modal {
   width: 80vw;
@@ -46,7 +45,7 @@
 .reason-selector {
   width: 100%;
   margin-bottom: rem(8) !important;
-  border-color: $grey !important;
+  border-color: colors.$grey !important;
   text-align: left;
   text-transform: none;
   font-weight: 400 !important;
@@ -59,12 +58,12 @@
   }
 
   &.selected {
-    border: 2px solid $primary-color !important;
+    border: 2px solid colors.$primary-color !important;
   }
 
   .selected-text {
     text-transform: uppercase;
-    color: $grey-dark;
+    color: colors.$grey-dark;
     font-weight: 700;
   }
 }

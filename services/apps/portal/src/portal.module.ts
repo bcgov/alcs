@@ -10,20 +10,20 @@ import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { AlcsModule } from './alcs/alcs.module';
-import { ApplicationReviewModule } from './application-review/application-review.module';
-import { ApplicationModule } from './application/application.module';
+import { ApplicationSubmissionReviewModule } from './application-submission-review/application-submission-review.module';
+import { ApplicationSubmissionModule } from './application-submission/application-submission.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { DocumentModule } from './document/document.module';
 import { LogoutController } from './logout/logout.controller';
+import { ParcelModule } from './parcel/parcel.module';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
-import { ParcelModule } from './parcel/parcel.module';
 
 @Module({
   imports: [
@@ -58,11 +58,11 @@ import { ParcelModule } from './parcel/parcel.module';
             : undefined,
       },
     }),
-    ApplicationModule,
+    ApplicationSubmissionModule,
     AlcsModule,
     DocumentModule,
     ParcelModule,
-    ApplicationReviewModule,
+    ApplicationSubmissionReviewModule,
   ],
   controllers: [PortalController, LogoutController],
   providers: [

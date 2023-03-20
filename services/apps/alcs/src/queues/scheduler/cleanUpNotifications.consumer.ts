@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../alcs/notification/notification.service';
 import { QUEUES } from './scheduler.service';
 
 const DAYS_TO_RETAIN_READ = 30;

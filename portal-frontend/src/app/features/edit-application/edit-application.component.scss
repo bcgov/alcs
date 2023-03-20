@@ -1,5 +1,5 @@
-@import '../../../styles/typography';
-@import '../../../styles/functions';
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
 
 .header {
   margin: rem(24) 0;
@@ -126,7 +126,7 @@
   }
 
   .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
-    background-color: $primary-color-light;
+    background-color: colors.$primary-color-light;
   }
 
   .edit-application {
@@ -210,14 +210,14 @@
   }
 
   .pmbc-search {
-    border: 1px solid $primary-color-dark;
+    border: 1px solid colors.$primary-color-dark;
     border-radius: rem(4);
-    background-color: rgba($accent-color-light, 0.2);
+    background-color: rgba(colors.$accent-color-light, 0.2);
     padding: rem(16);
   }
 
   .field-error {
-    color: $error-color;
+    color: colors.$error-color;
     font-size: rem(15);
     font-weight: 700;
     display: flex;

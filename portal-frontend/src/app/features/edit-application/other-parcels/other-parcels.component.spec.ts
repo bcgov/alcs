@@ -2,11 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationDetailedDto } from '../../../services/application/application.dto';
-import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { OtherParcelsComponent } from './other-parcels.component';
@@ -14,12 +14,12 @@ import { OtherParcelsComponent } from './other-parcels.component';
 describe('OtherParcelsComponent', () => {
   let component: OtherParcelsComponent;
   let fixture: ComponentFixture<OtherParcelsComponent>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockMatDialog: DeepMocked<MatDialog>;
-  let applicationPipe = new BehaviorSubject<ApplicationDetailedDto | undefined>(undefined);
+  let applicationPipe = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -32,7 +32,7 @@ describe('OtherParcelsComponent', () => {
       declarations: [OtherParcelsComponent],
       providers: [
         {
-          provide: ApplicationService,
+          provide: ApplicationSubmissionService,
           useValue: mockApplicationService,
         },
         {

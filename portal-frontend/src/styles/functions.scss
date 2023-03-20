@@ -3,3 +3,8 @@
 @function rem($pixels, $context: 16) {
   @return math.div($pixels, $context) * 1rem;
 }
+
+$tabletBreakpoint: rem(481);
+$desktopBreakpoint: rem(769);
+$midBreakpoint: rem(669);
+$minWidth: rem(300);

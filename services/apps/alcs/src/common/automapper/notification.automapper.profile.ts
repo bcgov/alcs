@@ -1,8 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { NotificationDto } from '../../notification/notification.dto';
-import { Notification } from '../../notification/notification.entity';
+import { NotificationDto } from '../../alcs/notification/notification.dto';
+import { Notification } from '../../alcs/notification/notification.entity';
 
 @Injectable()
 export class NotificationProfile extends AutomapperProfile {

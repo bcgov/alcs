@@ -1,4 +1,5 @@
-@import '../../../styles/functions.scss';
- .login-wrapper {
+@use '../../../styles/functions' as *;
+
+.login-wrapper {
   min-height: rem(250);
 }

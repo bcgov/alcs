@@ -1,4 +1,4 @@
-@import '../../../styles/colors';
+@use '../../../styles/colors';
 
 .avatar-circle {
   border-radius: 50%;
@@ -7,8 +7,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $accent-color-dark;
-  color: $white;
+  background-color: colors.$accent-color-dark;
+  color: colors.$white;
 }
 
 .avatar-circle.large {
