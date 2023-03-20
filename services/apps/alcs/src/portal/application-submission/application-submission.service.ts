@@ -184,7 +184,7 @@ export class ApplicationSubmissionService {
 
     // TODO: Fix App Submission
     try {
-      submittedApp = await this.applicationService.create({
+      submittedApp = await this.applicationService.submit({
         fileNumber: application.fileNumber,
         applicant: application.applicant,
         localGovernmentUuid: application.localGovernmentUuid,

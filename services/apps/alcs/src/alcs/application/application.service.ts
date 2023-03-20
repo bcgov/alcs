@@ -122,6 +122,38 @@ export class ApplicationService {
     }
   }
 
+  async submit(application: CreateApplicationServiceDto): Promise<Application> {
+    const existingApplication = await this.applicationRepository.findOne({
+      where: { fileNumber: application.fileNumber },
+    });
+
+    if (!existingApplication) {
+      throw new ServiceValidationException(
+        `Application with file number does not exist ${application.fileNumber}`,
+      );
+    }
+
+    const region = application.regionCode
+      ? await this.codeService.fetchRegion(application.regionCode)
+      : undefined;
+
+    existingApplication.fileNumber = application.fileNumber;
+    existingApplication.applicant = application.applicant;
+    existingApplication.dateSubmittedToAlc =
+      application.dateSubmittedToAlc || undefined;
+    existingApplication.localGovernmentUuid = application.localGovernmentUuid;
+    existingApplication.typeCode = application.typeCode;
+    existingApplication.region = region;
+    existingApplication.statusHistory = application.statusHistory ?? [];
+    existingApplication.applicationReview = application.applicationReview;
+    existingApplication.submittedApplication = application.submittedApplication;
+
+    existingApplication.card = new Card();
+
+    await this.applicationRepository.save(existingApplication);
+    return this.getOrFail(application.fileNumber);
+  }
+
   async updateByFileNumber(
     fileNumber: string,
     updates: ApplicationUpdateServiceDto,
