@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>application_review - postgres Database</title>
+        <title>application_submission_review - postgres.portal</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -46,7 +46,7 @@
                 <nav class="navbar navbar-static-top">
                     <div class="container">
                         <div class="navbar-header">
-                            <a href="../../index.html" class="navbar-brand"><b>postgres</b> Database</a>
+                            <a href="../../index.html" class="navbar-brand"><b>postgres</b></a><span class="navbar-brand" style="padding-left: 0">.portal</span>
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"><i class="fa fa-bars"></i></button>
                         </div>
 
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>application_review</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>application_submission_review</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -224,7 +224,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_review.local_government_file_number&#39;s name implies that it&#39;s a child of application.file_number, but it doesn&#39;t reference that column."><a href='application.html'>application</a><span class='relatedKey'>.file_number</span></td>
+                                                <td title="application_submission_review.local_government_file_number&#39;s name implies that it&#39;s a child of application_submission.file_number, but it doesn&#39;t reference that column."><a href='application_submission.html'>application_submission</a><span class='relatedKey'>.file_number</span></td>
                                                 <td class="constraint detail">Implied Constraint</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
@@ -518,8 +518,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_review.application_file_number references application.file_number via FK_325a8bf11bfc0f46f45069c3d1e"><a href='application.html'>application</a><span class='relatedKey'>.file_number</span></td>
-                                                <td class="constraint detail">FK_325a8bf11bfc0f46f45069c3d1e</td>
+                                                <td title="application_submission_review.application_file_number references application_submission.file_number via FK_e7960826434a224230f23680d7a"><a href='application_submission.html'>application_submission</a><span class='relatedKey'>.file_number</span></td>
+                                                <td class="constraint detail">FK_e7960826434a224230f23680d7a</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
@@ -593,41 +593,41 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_review.html" target="_top" title="application_review" alt="" coords="463,5,911,779">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,683,419,859">
+<area shape="rect" id="node1" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="463,5,913,779">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,683,419,859">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_review.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_submission_review.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,161,688,337">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,260,175,348">
-<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,155,231,243">
-<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="827,5,1085,93">
-<area shape="rect" id="node5" href="application_owner.html" target="_top" title="application_owner" alt="" coords="843,111,1069,199">
-<area shape="rect" id="node6" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="843,216,1069,304">
-<area shape="rect" id="node7" href="application_review.html" target="_top" title="application_review" alt="" coords="732,321,1180,1095">
+<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="829,5,1086,93">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="275,161,688,337">
+<area shape="rect" id="node5" href="user.html" target="_top" title="user" alt="" coords="61,260,175,348">
+<area shape="rect" id="node6" href="application_status.html" target="_top" title="application_status" alt="" coords="5,155,231,243">
+<area shape="rect" id="node3" href="application_owner.html" target="_top" title="application_owner" alt="" coords="844,111,1071,199">
+<area shape="rect" id="node4" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="845,216,1070,304">
+<area shape="rect" id="node7" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="732,321,1183,1095">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_review.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_submission_review.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_review.html" target="_top" title="application_review" alt="" coords="463,5,911,779">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,433,419,609">
+<area shape="rect" id="node1" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="463,5,913,779">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,433,419,609">
 </map>
-                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_review.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_submission_review.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="275,213,688,389">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="61,312,175,400">
-<area shape="rect" id="node3" href="application_status.html" target="_top" title="application_status" alt="" coords="5,207,231,295">
-<area shape="rect" id="node4" href="application_document.html" target="_top" title="application_document" alt="" coords="827,5,1085,93">
-<area shape="rect" id="node5" href="application_owner.html" target="_top" title="application_owner" alt="" coords="843,111,1069,199">
-<area shape="rect" id="node6" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="843,216,1069,304">
-<area shape="rect" id="node7" href="application_review.html" target="_top" title="application_review" alt="" coords="732,321,1180,1095">
+<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="829,5,1086,93">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="275,213,688,389">
+<area shape="rect" id="node5" href="user.html" target="_top" title="user" alt="" coords="61,312,175,400">
+<area shape="rect" id="node6" href="application_status.html" target="_top" title="application_status" alt="" coords="5,207,231,295">
+<area shape="rect" id="node3" href="application_owner.html" target="_top" title="application_owner" alt="" coords="844,111,1071,199">
+<area shape="rect" id="node4" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="845,216,1070,304">
+<area shape="rect" id="node7" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="732,321,1183,1095">
 </map>
-                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_review.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_submission_review.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

@@ -1,13 +1,13 @@
 parcel_lookup
 migrations
-application_review
+application_submission_review
 application_parcel_owners_application_owner
 application_parcel_document
 application_document
 application_owner
 application_parcel
 document
-application
+application_submission
 application_status
 application_parcel_ownership_type
 application_owner_type
