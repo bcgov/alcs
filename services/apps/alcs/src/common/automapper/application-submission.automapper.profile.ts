@@ -1,8 +1,6 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
@@ -18,7 +16,11 @@ import { ApplicationSubmission } from '../../portal/application-submission/appli
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {
-  constructor(@InjectMapper() mapper: Mapper) {
+  constructor(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    @InjectMapper() mapper: Mapper,
+  ) {
     super(mapper);
   }
 

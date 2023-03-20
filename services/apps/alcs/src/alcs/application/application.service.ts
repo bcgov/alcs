@@ -19,6 +19,7 @@ import {
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
+import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -74,6 +75,7 @@ export class ApplicationService {
     private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     @InjectMapper() private applicationMapper: Mapper,
@@ -133,9 +135,22 @@ export class ApplicationService {
       );
     }
 
-    const region = application.regionCode
+    if (!application.localGovernmentUuid) {
+      throw new ServiceValidationException(
+        `Local government is not set for application ${application.fileNumber}`,
+      );
+    }
+
+    let region = application.regionCode
       ? await this.codeService.fetchRegion(application.regionCode)
       : undefined;
+
+    if (!region) {
+      const localGov = await this.localGovernmentService.getByUuid(
+        application.localGovernmentUuid,
+      );
+      region = localGov?.preferredRegion;
+    }
 
     existingApplication.fileNumber = application.fileNumber;
     existingApplication.applicant = application.applicant;
@@ -146,7 +161,6 @@ export class ApplicationService {
     existingApplication.region = region;
     existingApplication.statusHistory = application.statusHistory ?? [];
     existingApplication.applicationReview = application.applicationReview;
-    existingApplication.submittedApplication = application.submittedApplication;
 
     existingApplication.card = new Card();
 
