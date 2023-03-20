@@ -14,12 +14,8 @@ export class ApplicationDocumentDto {
   uuid: string;
 
   documentUuid: string;
-
-  @AutoMap()
   fileName: string;
-
-  @AutoMap()
-  fileSize?: string;
+  fileSize?: number;
 
   @AutoMap()
   mimeType: string;

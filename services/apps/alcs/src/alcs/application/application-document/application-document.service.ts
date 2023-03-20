@@ -108,25 +108,22 @@ export class ApplicationDocumentService {
     return this.documentService.getDownloadUrl(document.document);
   }
 
-  async attachExternalDocuments(
+  async attachExternalDocument(
     fileNumber: string,
-    data: ApplicationDocumentCreateDto[],
+    data: ApplicationDocumentCreateDto,
   ) {
     const application = await this.applicationService.getOrFail(fileNumber);
+    const document = new ApplicationDocument({
+      type: data.type,
+      applicationUuid: application.uuid,
+      documentUuid: data.documentUuid,
+      description: data.description,
+    });
 
-    return this.applicationDocumentRepository.save(
-      data
-        ? data.map(
-            (doc) =>
-              new ApplicationDocument({
-                type: doc.type,
-                applicationUuid: application.uuid,
-                documentUuid: doc.documentUuid,
-                description: doc.description,
-              }),
-          )
-        : [],
+    const savedDocument = await this.applicationDocumentRepository.save(
+      document,
     );
+    return this.get(savedDocument.uuid);
   }
 
   async update(
