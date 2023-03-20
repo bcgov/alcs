@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -41,6 +42,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
 
   $destroy = new Subject<void>();
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+  $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   application: ApplicationSubmissionDetailedDto | undefined;
 
   editAppSteps = EditApplicationSteps;
@@ -61,6 +63,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(
     private applicationService: ApplicationSubmissionService,
+    private applicationDocumentService: ApplicationDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -109,6 +112,10 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   private async loadApplication(fileId: string) {
     this.overlayService.showSpinner();
     this.application = await this.applicationService.getByFileId(fileId);
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
+    }
     this.fileId = fileId;
     this.$application.next(this.application);
     this.overlayService.hideSpinner();

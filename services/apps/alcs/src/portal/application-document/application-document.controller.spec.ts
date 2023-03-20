@@ -81,7 +81,7 @@ describe('ApplicationDocumentController', () => {
   it('should list documents', async () => {
     appDocumentService.list.mockResolvedValue([mockDocument]);
 
-    const res = await controller.listDocuments(
+    const res = await controller.listDocumentsByType(
       'fake-number',
       DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
       {

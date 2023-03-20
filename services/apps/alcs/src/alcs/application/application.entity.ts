@@ -190,6 +190,7 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'uuid',
+    nullable: true,
   })
   cardUuid: string;
 

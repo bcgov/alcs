@@ -6,7 +6,6 @@ import {
   DOCUMENT_TYPE,
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { Application } from '../../alcs/application/application.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
