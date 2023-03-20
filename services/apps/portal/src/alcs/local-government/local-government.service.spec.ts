@@ -1,5 +1,5 @@
 import { RedisService } from '@app/common/redis/redis.service';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   LocalGovernment,
@@ -26,15 +26,6 @@ describe('LocalGovernmentService', () => {
   ];
 
   beforeEach(async () => {
-    mockRedisService = createMock();
-    mockRedis = createMock<{
-      set: () => any;
-      get: () => any;
-    }>();
-    mockRedis.set.mockResolvedValue(null);
-    mockRedis.get.mockResolvedValue(JSON.stringify(mockLocalGovernments));
-    mockRedisService.getClient.mockReturnValue(mockRedis as any);
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LocalGovernmentService,

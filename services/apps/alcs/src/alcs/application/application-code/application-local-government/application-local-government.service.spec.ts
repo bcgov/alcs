@@ -1,4 +1,3 @@
-import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -8,9 +7,6 @@ import { ApplicationLocalGovernmentService } from './application-local-governmen
 
 describe('ApplicationLocalGovernmentService', () => {
   let mockRepository: DeepMocked<Repository<ApplicationLocalGovernment>>;
-
-  let mockRedisService: DeepMocked<RedisService>;
-  let mockRedis; //Redis type is a bit odd, does not work with createMock
 
   let service: ApplicationLocalGovernmentService;
 
@@ -23,16 +19,7 @@ describe('ApplicationLocalGovernmentService', () => {
 
   beforeEach(async () => {
     mockRepository = createMock<Repository<ApplicationLocalGovernment>>();
-
     mockRepository.find.mockResolvedValue(mockLocalGovernments);
-
-    mockRedisService = createMock();
-    mockRedis = createMock<{
-      set: () => any;
-      get: () => any;
-    }>();
-    mockRedis.set.mockResolvedValue(null);
-    mockRedisService.getClient.mockReturnValue(mockRedis as any);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -40,10 +27,6 @@ describe('ApplicationLocalGovernmentService', () => {
         {
           provide: getRepositoryToken(ApplicationLocalGovernment),
           useValue: mockRepository,
-        },
-        {
-          provide: RedisService,
-          useValue: mockRedisService,
         },
       ],
     }).compile();
@@ -55,14 +38,6 @@ describe('ApplicationLocalGovernmentService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should load lgs into redis on init', async () => {
-    expect(mockRedis.set).toHaveBeenCalledTimes(1);
-    expect(mockRedis.set).toHaveBeenCalledWith(
-      'localGovernments',
-      JSON.stringify(mockLocalGovernments),
-    );
   });
 
   it('should call repositories when listing', async () => {
@@ -102,7 +77,6 @@ describe('ApplicationLocalGovernmentService', () => {
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRedis.set).toHaveBeenCalledTimes(2);
   });
 
   it('should call repository on update', async () => {
@@ -120,6 +94,5 @@ describe('ApplicationLocalGovernmentService', () => {
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRedis.set).toHaveBeenCalledTimes(2);
   });
 });
