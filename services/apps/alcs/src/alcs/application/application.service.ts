@@ -82,6 +82,7 @@ export class ApplicationService {
   async create(
     application: CreateApplicationServiceDto,
     persist = true,
+    createCard = true,
   ): Promise<Application> {
     const existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
@@ -109,7 +110,9 @@ export class ApplicationService {
       submittedApplication: application.submittedApplication,
     });
 
-    newApplication.card = new Card();
+    if (createCard) {
+      newApplication.card = new Card();
+    }
 
     if (persist) {
       await this.applicationRepository.save(newApplication);
@@ -327,5 +330,17 @@ export class ApplicationService {
     } while (application);
 
     return fileNumber;
+  }
+
+  async getUuid(fileNumber: string) {
+    const application = await this.applicationRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+      select: {
+        uuid: true,
+      },
+    });
+    return application.uuid;
   }
 }

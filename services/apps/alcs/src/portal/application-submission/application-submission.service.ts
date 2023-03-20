@@ -40,7 +40,7 @@ export class ApplicationSubmissionService {
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
-    private alcsApplicationService: ApplicationService,
+    private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -60,8 +60,17 @@ export class ApplicationSubmissionService {
   }
 
   async create(type: string, createdBy: User) {
-    const alcsApplicationNumber =
-      await this.alcsApplicationService.generateNextFileNumber();
+    const fileNumber = await this.applicationService.generateNextFileNumber();
+
+    await this.applicationService.create(
+      {
+        fileNumber,
+        applicant: 'Unknown',
+        typeCode: type,
+      },
+      true,
+      false,
+    );
 
     const initialStatus = await this.applicationStatusRepository.findOne({
       where: {
@@ -75,15 +84,15 @@ export class ApplicationSubmissionService {
       );
     }
 
-    const application = new ApplicationSubmission({
-      fileNumber: alcsApplicationNumber,
+    const applicationSubmission = new ApplicationSubmission({
+      fileNumber,
       status: initialStatus,
       typeCode: type,
       createdBy,
     });
-    await this.applicationSubmissionRepository.save(application);
+    await this.applicationSubmissionRepository.save(applicationSubmission);
 
-    return alcsApplicationNumber;
+    return fileNumber;
   }
 
   async update(fileNumber: string, updateDto: ApplicationSubmissionUpdateDto) {
@@ -175,7 +184,7 @@ export class ApplicationSubmissionService {
 
     // TODO: Fix App Submission
     try {
-      submittedApp = await this.alcsApplicationService.create({
+      submittedApp = await this.applicationService.create({
         fileNumber: application.fileNumber,
         applicant: application.applicant,
         localGovernmentUuid: application.localGovernmentUuid,
@@ -381,7 +390,7 @@ export class ApplicationSubmissionService {
     user: User,
     userGovernment?: ApplicationLocalGovernment,
   ) {
-    const types = await this.alcsApplicationService.fetchApplicationTypes();
+    const types = await this.applicationService.fetchApplicationTypes();
     return apps.map((app) => ({
       ...this.mapper.map(app, ApplicationSubmission, ApplicationSubmissionDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
@@ -405,7 +414,7 @@ export class ApplicationSubmissionService {
     application: ApplicationSubmission,
     userGovernment?: ApplicationLocalGovernment,
   ) {
-    const types = await this.alcsApplicationService.fetchApplicationTypes();
+    const types = await this.applicationService.fetchApplicationTypes();
     const mappedApp = this.mapper.map(
       application,
       ApplicationSubmission,

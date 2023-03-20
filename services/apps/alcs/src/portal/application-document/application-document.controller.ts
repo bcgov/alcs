@@ -24,6 +24,7 @@ import {
   DOCUMENT_TYPES,
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../document/document.service';
 import { AttachExternalDocumentDto } from '../application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
@@ -36,12 +37,13 @@ export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
     private applicationSubmissionService: ApplicationSubmissionService,
+    private applicationService: ApplicationService,
     private documentService: DocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/application/:fileNumber/:documentType')
-  async listDocuments(
+  async listDocumentsByType(
     @Param('fileNumber') fileNumber: string,
     @Param('documentType') documentType: DOCUMENT_TYPE | null,
     @Req() req,
@@ -70,16 +72,38 @@ export class ApplicationDocumentController {
     );
   }
 
+  @Get('/application/:fileNumber')
+  async listApplicantDocuments(
+    @Param('fileNumber') fileNumber: string,
+    @Param('documentType') documentType: DOCUMENT_TYPE | null,
+    @Req() req,
+  ): Promise<ApplicationDocumentDto[]> {
+    await this.applicationSubmissionService.verifyAccess(
+      fileNumber,
+      req.user.entity,
+    );
+
+    //TODO: Update with view flags
+    const documents = await this.applicationDocumentService.list(fileNumber);
+    return this.mapper.mapArray(
+      documents,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
+
   @Get('/:uuid/open')
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
 
-    await this.applicationSubmissionService.verifyAccess(
-      document.applicationUuid,
-      req.user.entity,
-    );
+    //TODO: How do we know which documents applicant can access?
+    // await this.applicationSubmissionService.verifyAccess(
+    //   document.applicationUuid,
+    //   req.user.entity,
+    // );
 
-    return await this.applicationDocumentService.getInlineUrl(document);
+    const url = await this.applicationDocumentService.getInlineUrl(document);
+    return { url };
   }
 
   @Patch('/application/:fileNumber')
@@ -92,7 +116,14 @@ export class ApplicationDocumentController {
       fileNumber,
       req.user.entity,
     );
-    const res = await this.applicationDocumentService.update(body, fileNumber);
+
+    //Map form file number to uuid
+    const applicationUuid = await this.applicationService.getUuid(fileNumber);
+
+    const res = await this.applicationDocumentService.update(
+      body,
+      applicationUuid,
+    );
     return this.mapper.mapArray(
       res,
       ApplicationDocument,
@@ -128,20 +159,17 @@ export class ApplicationDocumentController {
 
     const document = await this.documentService.createDocumentRecord(data);
 
-    //TODO: Application wont exist!
     const savedDocument =
-      await this.applicationDocumentService.attachExternalDocuments(
+      await this.applicationDocumentService.attachExternalDocument(
         submission.fileNumber,
-        [
-          {
-            documentUuid: document.uuid,
-            type: data.documentType,
-          },
-        ],
+        {
+          documentUuid: document.uuid,
+          type: data.documentType,
+        },
       );
 
     return this.mapper.map(
-      savedDocument[0],
+      savedDocument,
       ApplicationDocument,
       ApplicationDocumentDto,
     );

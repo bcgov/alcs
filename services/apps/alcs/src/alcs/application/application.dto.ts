@@ -397,7 +397,7 @@ export class CreateApplicationServiceDto {
   typeCode: string;
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
   statusHistory?: StatusHistory[];
   applicationReview?: ApplicationSubmissionReviewDto;
   submittedApplication?: ApplicationSubmissionDetailedDto;
