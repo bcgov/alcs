@@ -1,4 +1,5 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
+import { RedisService } from '@app/common/redis/redis.service';
 import { Controller, Get, Inject, Logger, Query, Res } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { Keycloak } from 'keycloak-connect';
@@ -12,19 +13,35 @@ export class AuthorizationController {
 
   constructor(
     private authorizationService: AuthorizationService,
+    private redisService: RedisService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
     @Inject(KEYCLOAK_INSTANCE) private keycloak: Keycloak,
   ) {}
 
   @Get()
   @Public()
-  async handleAuth(@Query('code') authCode: string, @Res() res: FastifyReply) {
+  async handleAuth(
+    @Query('code') authCode: string,
+    @Query('state') sessionId: string,
+    @Res() res: FastifyReply,
+  ) {
     try {
       const token = await this.authorizationService.exchangeCodeForToken(
         authCode,
       );
 
-      const frontEndUrl = this.config.get('ALCS.FRONTEND_ROOT');
+      const redis = this.redisService.getClient();
+      const sessionData = await redis.get(`session_${sessionId}`);
+
+      let isPortal = true;
+      if (sessionData) {
+        const parsedSession = JSON.parse(sessionData);
+        isPortal = parsedSession.source === 'portal';
+      }
+
+      const frontEndUrl = isPortal
+        ? this.config.get('PORTAL.FRONTEND_ROOT')
+        : this.config.get('ALCS.FRONTEND_ROOT');
 
       res.status(302);
       res.redirect(
@@ -61,6 +78,13 @@ export class AuthorizationController {
         `${baseUrl}/authorize`,
       );
       const idpHint = '&kc_idp_hint=bceidboth';
+
+      const redis = this.redisService.getClient();
+      await redis.set(
+        `session_${sessionId}`,
+        JSON.stringify({ source: 'portal' }),
+      );
+
       return {
         loginUrl: loginUrl + idpHint,
       };
