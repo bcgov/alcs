@@ -189,8 +189,10 @@ export class ApplicationDocumentService {
 
     const documents = await this.list(fileNumber);
 
-    return documents.filter((doc) =>
-      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    const filteredDocuments = documents.filter(
+      (doc) =>
+        doc.type === null || reviewTypes.includes(doc.type as DOCUMENT_TYPE),
     );
+    return filteredDocuments;
   }
 }
