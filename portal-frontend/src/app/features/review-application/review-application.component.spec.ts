@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
@@ -15,19 +17,20 @@ describe('ReviewApplicationComponent', () => {
   let fixture: ComponentFixture<ReviewApplicationComponent>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
   let routeParamMap: BehaviorSubject<Map<string, any>>;
+
+  let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
       undefined
     );
-
     mockAppService = createMock();
-
     mockRoute = createMock();
 
     routeParamMap = new BehaviorSubject(new Map());
@@ -48,6 +51,10 @@ describe('ReviewApplicationComponent', () => {
           useValue: mockRoute,
         },
         {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
+        },
+        {
           provide: MatDialog,
           useValue: mockDialog,
         },
@@ -62,6 +69,7 @@ describe('ReviewApplicationComponent', () => {
 
     fixture = TestBed.createComponent(ReviewApplicationComponent);
     component = fixture.componentInstance;
+    component.$applicationDocuments = applicationDocumentPipe;
     fixture.detectChanges();
   });
 
