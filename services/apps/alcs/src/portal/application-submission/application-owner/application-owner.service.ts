@@ -24,7 +24,6 @@ export class ApplicationOwnerService {
     private documentService: DocumentService,
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
-    @Inject(forwardRef(() => ApplicationSubmissionService))
     private applicationService: ApplicationSubmissionService,
   ) {}
 
