@@ -1,10 +1,8 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { of } from 'rxjs';
-import { DocumentUploadResponseGrpc } from '../alcs/document-grpc/alcs-document.message.interface';
-import { DOCUMENT_TYPE } from '../application-submission/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import { DocumentService } from '../../document/document.service';
 import { DocumentController } from './document.controller';
-import { DocumentService } from './document.service';
 
 describe('DocumentController', () => {
   let controller: DocumentController;
@@ -31,9 +29,10 @@ describe('DocumentController', () => {
   });
 
   it('should call out to service to get url ', async () => {
-    mockDocumentService.getUploadUrl.mockReturnValue(
-      of({} as DocumentUploadResponseGrpc),
-    );
+    mockDocumentService.getUploadUrl.mockResolvedValue({
+      uploadUrl: '',
+      fileKey: '',
+    });
 
     await controller.getUploadUrl('mock', DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
 

@@ -3,12 +3,10 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { of } from 'rxjs';
-import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { AlcsDocumentService } from '../../../alcs/document-grpc/alcs-document.service';
-import { ApplicationParcelProfile } from '../../../common/automapper/application-parcel.automapper.profile';
-import { Document } from '../../../document/document.entity';
-import { User } from '../../../user/user.entity';
+import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
+import { ApplicationParcelProfile } from '../../../../common/automapper/application-parcel.automapper.profile';
+import { DocumentService } from '../../../../document/document.service';
+import { User } from '../../../../user/user.entity';
 import { ApplicationSubmission } from '../../application-submission.entity';
 import { ApplicationSubmissionService } from '../../application-submission.service';
 import { ApplicationParcel } from '../application-parcel.entity';
@@ -17,12 +15,13 @@ import { ApplicationParcelDocumentController } from './application-parcel-docume
 import { AttachExternalDocumentDto } from './application-parcel-document.dto';
 import { ApplicationParcelDocument } from './application-parcel-document.entity';
 import { ApplicationParcelDocumentService } from './application-parcel-document.service';
+import { Document } from '../../../../document/document.entity';
 
-describe('ApplicationDocumentController', () => {
+describe('ApplicationParcelDocumentController', () => {
   let controller: ApplicationParcelDocumentController;
   let mockAppParcelDocumentService: DeepMocked<ApplicationParcelDocumentService>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
-  let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
 
   const mockDocument = new ApplicationParcelDocument({
@@ -36,7 +35,7 @@ describe('ApplicationDocumentController', () => {
 
   beforeEach(async () => {
     mockAppParcelDocumentService = createMock();
-    mockAlcsDocumentService = createMock();
+    mockDocumentService = createMock();
     mockApplicationParcelService = createMock();
     mockApplicationService = createMock();
 
@@ -62,8 +61,8 @@ describe('ApplicationDocumentController', () => {
           useValue: mockApplicationParcelService,
         },
         {
-          provide: AlcsDocumentService,
-          useValue: mockAlcsDocumentService,
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: ApplicationSubmissionService,
@@ -103,7 +102,7 @@ describe('ApplicationDocumentController', () => {
   });
 
   it('should call through to delete documents', async () => {
-    mockAppParcelDocumentService.delete.mockResolvedValue(mockDocument);
+    mockAppParcelDocumentService.delete.mockResolvedValue();
     mockAppParcelDocumentService.get.mockResolvedValue(mockDocument);
 
     await controller.delete('fake-uuid', {
@@ -119,9 +118,7 @@ describe('ApplicationDocumentController', () => {
 
   it('should call through for download', async () => {
     const fakeUrl = 'fake-url';
-    mockAppParcelDocumentService.getInlineUrl.mockResolvedValue({
-      url: fakeUrl,
-    });
+    mockAppParcelDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     mockAppParcelDocumentService.get.mockResolvedValue(mockDocument);
 
     const res = await controller.open('fake-uuid', {
@@ -130,23 +127,24 @@ describe('ApplicationDocumentController', () => {
       },
     });
 
-    expect(res.url).toEqual(fakeUrl);
+    expect(res).toEqual(fakeUrl);
     expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service to attach external document', async () => {
     const user = { user: { entity: 'Bruce' } };
     const fakeUuid = 'fakeUuid';
-    const docObj = { alcsDocumentUuid: 'fake-uuid' };
-    const docDto = {
+    const docObj = new Document({ uuid: 'fake-uuid' });
+    const docDto: AttachExternalDocumentDto = {
       mimeType: 'mimeType',
       fileName: 'fileName',
       fileKey: 'fileKey',
       source: 'Applicant',
       documentType: 'certificateOfTitle',
+      fileSize: 0,
     };
 
-    mockAlcsDocumentService.createExternalDocument.mockReturnValue(of(docObj));
+    mockDocumentService.createDocumentRecord.mockResolvedValue(docObj);
     mockApplicationParcelService.getOneOrFail.mockResolvedValue(
       new ApplicationParcel({
         applicationFileNumber: 'fake',
@@ -171,15 +169,16 @@ describe('ApplicationDocumentController', () => {
 
     const res = await controller.attachExternalDocument(
       'fake-number',
-      docDto as AttachExternalDocumentDto,
+      docDto,
       user,
     );
 
-    expect(mockAlcsDocumentService.createExternalDocument).toBeCalledTimes(1);
+    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
     expect(mockAppParcelDocumentService.createRecord).toBeCalledTimes(1);
-    expect(mockAlcsDocumentService.createExternalDocument).toBeCalledWith(
-      docDto,
-    );
+    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+      ...docDto,
+      uploadedBy: user.user.entity,
+    });
     expect(res.uploadedBy).toEqual(user.user.entity);
     expect(res.uuid).toEqual(fakeUuid);
     expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);

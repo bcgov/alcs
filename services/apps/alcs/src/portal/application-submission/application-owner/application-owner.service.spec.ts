@@ -2,8 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Document } from '../../document/document.entity';
-import { DocumentService } from '../../document/document.service';
+import { Document } from '../../../document/document.entity';
+import { DocumentService } from '../../../document/document.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
@@ -162,7 +162,7 @@ describe('ApplicationOwnerService', () => {
     });
     mockRepo.findOneOrFail.mockResolvedValue(owner);
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
-    mockDocumentService.delete.mockResolvedValue({} as any);
+    mockDocumentService.softRemove.mockResolvedValue({} as any);
 
     await service.update('', {
       organizationName: '',
@@ -173,7 +173,7 @@ describe('ApplicationOwnerService', () => {
     });
 
     expect(owner.corporateSummaryUuid).toEqual('newUuid');
-    expect(mockDocumentService.delete).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepo.save).toHaveBeenCalledTimes(2);
   });

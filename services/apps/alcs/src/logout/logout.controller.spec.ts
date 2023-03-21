@@ -34,7 +34,7 @@ describe('LogoutController', () => {
   it('should return the logout URL', async () => {
     const authServer = config.get<string>('KEYCLOAK.AUTH_SERVER_URL');
 
-    const url = await controller.logout();
+    const url = await controller.logout('portal');
     expect(url.url).toContain(authServer);
   });
 });

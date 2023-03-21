@@ -1,15 +1,17 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { User } from '../../user/user.entity';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
-} from '../application-submission/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../application-submission/application-document/application-document.service';
+} from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { Application } from '../../alcs/application/application.entity';
+import { User } from '../../user/user.entity';
 import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
 import {
   ApplicationSubmissionValidatorService,
@@ -20,15 +22,12 @@ import { ApplicationSubmissionService } from '../application-submission/applicat
 import { ApplicationSubmissionReviewController } from './application-submission-review.controller';
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
-import {
-  ApplicationSubmissionReviewService,
-  CompletedApplicationSubmissionReview,
-} from './application-submission-review.service';
+import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 
 describe('ApplicationSubmissionReviewController', () => {
   let controller: ApplicationSubmissionReviewController;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
-  let mockAppService: DeepMocked<ApplicationSubmissionService>;
+  let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
@@ -46,7 +45,7 @@ describe('ApplicationSubmissionReviewController', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppService = createMock();
+    mockAppSubmissionService = createMock();
     mockLGService = createMock();
     mockAppDocService = createMock();
     mockAppValidatorService = createMock();
@@ -68,7 +67,7 @@ describe('ApplicationSubmissionReviewController', () => {
         },
         {
           provide: ApplicationSubmissionService,
-          useValue: mockAppService,
+          useValue: mockAppSubmissionService,
         },
         {
           provide: ApplicationLocalGovernmentService,
@@ -81,6 +80,10 @@ describe('ApplicationSubmissionReviewController', () => {
         {
           provide: ApplicationSubmissionValidatorService,
           useValue: mockAppValidatorService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],
@@ -175,10 +178,10 @@ describe('ApplicationSubmissionReviewController', () => {
   it('update the applications status when calling create', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockAppService.updateStatus.mockResolvedValue({} as any);
+    mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
 
     await controller.create(fileNumber, {
       user: {
@@ -190,9 +193,11 @@ describe('ApplicationSubmissionReviewController', () => {
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
-    expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
+    expect(
+      mockAppSubmissionService.getForGovernmentByFileId,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.IN_REVIEW,
     );
   });
@@ -219,20 +224,19 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should throw an exception when trying to finish a review on an application not in review', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
       }),
     );
-    mockAppReviewService.verifyComplete.mockReturnValue(
-      applicationReview as CompletedApplicationSubmissionReview,
-    );
+    mockAppReviewService.verifyComplete.mockReturnValue(applicationReview);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateApplication.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
+    mockAppDocService.list.mockResolvedValue([]);
 
     const promise = controller.finish(fileNumber, {
       user: {
@@ -252,28 +256,34 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should load review and call submitToAlcs when in correct status for finish', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    // mockAppService.submitToAlcs.mockResolvedValue({
-    //   fileNumber: '',
-    //   applicant: '',
-    //   localGovernmentUuid: '',
-    //   dateSubmittedToAlc: '',
-    //   regionCode: '',
-    //   typeCode: '',
-    // });
+    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppDocService.list.mockResolvedValue([]);
+
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
       isAuthorized: true,
-    } as CompletedApplicationSubmissionReview);
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    });
+
     mockAppValidatorService.validateApplication.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
-    mockAppService.updateStatus.mockResolvedValue({} as any);
+
+    mockAppSubmissionService.submitToAlcs.mockResolvedValue(
+      new Application({
+        fileNumber: '',
+        applicant: '',
+        localGovernmentUuid: '',
+        regionCode: '',
+        typeCode: '',
+      }),
+    );
+
+    mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
 
     await controller.finish(fileNumber, {
       user: {
@@ -284,40 +294,45 @@ describe('ApplicationSubmissionReviewController', () => {
     });
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
+    expect(
+      mockAppSubmissionService.getForGovernmentByFileId,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
-    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
+    expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.SUBMITTED_TO_ALC,
     );
   });
 
   it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    // mockAppService.submitToAlcs.mockResolvedValue({
-    //   fileNumber: '',
-    //   applicant: '',
-    //   localGovernmentUuid: '',
-    //   dateSubmittedToAlc: '',
-    //   regionCode: '',
-    //   typeCode: '',
-    // });
+    mockAppSubmissionService.submitToAlcs.mockResolvedValue(
+      new Application({
+        fileNumber: '',
+        applicant: '',
+        localGovernmentUuid: '',
+        regionCode: '',
+        typeCode: '',
+      }),
+    );
+
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
       isAuthorized: false,
-    } as CompletedApplicationSubmissionReview);
+    });
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateApplication.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
-    mockAppService.updateStatus.mockResolvedValue({} as any);
+    mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
+    mockAppDocService.list.mockResolvedValue([]);
 
     await controller.finish(fileNumber, {
       user: {
@@ -328,35 +343,39 @@ describe('ApplicationSubmissionReviewController', () => {
     });
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
+    expect(
+      mockAppSubmissionService.getForGovernmentByFileId,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
-    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
+    expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.REFUSED_TO_FORWARD,
     );
   });
 
   it('should update the status, delete documents, and update the application for return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         statusCode: APPLICATION_STATUS.IN_REVIEW,
-        documents: [
-          new ApplicationDocument({
-            type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-          }),
-          new ApplicationDocument({
-            type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-          }),
-        ],
       }),
     );
-    mockAppService.updateStatus.mockResolvedValue({} as any);
+    mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
     mockAppReviewService.delete.mockResolvedValue();
     mockAppDocService.delete.mockResolvedValue({} as any);
+
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      }),
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      }),
+    ];
+    mockAppDocService.list.mockResolvedValue(documents);
 
     await controller.return(
       fileNumber,
@@ -374,19 +393,21 @@ describe('ApplicationSubmissionReviewController', () => {
     );
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
+    expect(
+      mockAppSubmissionService.getForGovernmentByFileId,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppDocService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.delete).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus.mock.calls[0][1]).toEqual(
+    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.INCOMPLETE,
     );
   });
 
   it('should throw an exception when trying to return an application not in review', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
       }),

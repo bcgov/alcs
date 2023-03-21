@@ -3,13 +3,12 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { of } from 'rxjs';
-import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
-import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
-import { Document } from '../../document/document.entity';
-import { DocumentService } from '../../document/document.service';
-import { DOCUMENT_TYPE } from '../application-document/application-document.entity';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
+import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
+import { Document } from '../../../document/document.entity';
+import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
@@ -23,13 +22,11 @@ describe('ApplicationOwnerController', () => {
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockDocumentService: DeepMocked<DocumentService>;
-  let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockAppOwnerService = createMock();
     mockDocumentService = createMock();
-    mockAlcsDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -52,8 +49,12 @@ describe('ApplicationOwnerController', () => {
           useValue: mockDocumentService,
         },
         {
-          provide: AlcsDocumentService,
-          useValue: mockAlcsDocumentService,
+          provide: ApplicationDocumentService,
+          useValue: mockDocumentService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ApplicationOwnerProfile,
         ...mockKeyCloakProviders,
@@ -244,40 +245,11 @@ describe('ApplicationOwnerController', () => {
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
-  it('should upload the document to alcs then create it locally for upload', async () => {
-    mockAlcsDocumentService.createExternalDocument.mockReturnValue(
-      of({ alcsDocumentUuid: '' }),
-    );
-    mockDocumentService.create.mockResolvedValue({} as any);
-
-    await controller.attachExternalDocument(
-      {
-        documentType: DOCUMENT_TYPE.CORPORATE_SUMMARY,
-        fileKey: '',
-        fileName: '',
-        fileSize: 0,
-        mimeType: '',
-        source: 'Applicant',
-      },
-      {
-        user: {
-          entity: {},
-        },
-      },
-    );
-
-    expect(
-      mockAlcsDocumentService.createExternalDocument,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
-  });
-
   it('should handle opening of a document', async () => {
-    const mockResponse = { url: 'cats' };
     mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({ corporateSummary: new Document() }),
     );
-    mockDocumentService.getDownloadUrl.mockReturnValue(of(mockResponse));
+    mockDocumentService.getDownloadUrl.mockResolvedValue('cats');
     mockApplicationService.verifyAccess.mockResolvedValue(
       new ApplicationSubmission(),
     );
@@ -291,7 +263,7 @@ describe('ApplicationOwnerController', () => {
     expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    expect(res.url).toEqual(mockResponse.url);
+    expect(res).toEqual('cats');
   });
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {

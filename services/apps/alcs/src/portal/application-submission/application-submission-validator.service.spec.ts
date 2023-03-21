@@ -1,14 +1,13 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  LocalGovernment,
-  LocalGovernmentService,
-} from '../alcs/local-government/local-government.service';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
-} from './application-document/application-document.entity';
+} from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -24,29 +23,36 @@ function includesError(errors: Error[], target: Error) {
 
 describe('ApplicationSubmissionValidatorService', () => {
   let service: ApplicationSubmissionValidatorService;
-  let mockLGService: DeepMocked<LocalGovernmentService>;
+  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
+  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
     mockLGService = createMock();
     mockAppParcelService = createMock();
+    mockAppDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationSubmissionValidatorService,
         {
-          provide: LocalGovernmentService,
+          provide: ApplicationLocalGovernmentService,
           useValue: mockLGService,
         },
         {
           provide: ApplicationParcelService,
           useValue: mockAppParcelService,
         },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocumentService,
+        },
       ],
     }).compile();
 
-    mockLGService.get.mockResolvedValue([]);
+    mockLGService.list.mockResolvedValue([]);
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([]);
+    mockAppDocumentService.getApplicantDocuments.mockResolvedValue([]);
 
     service = module.get<ApplicationSubmissionValidatorService>(
       ApplicationSubmissionValidatorService,
@@ -58,12 +64,11 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should return an error for missing applicant', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(includesError(res.errors, new Error('Missing applicant'))).toBe(
       true,
@@ -71,12 +76,11 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should return an error for no parcels', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(includesError(res.errors, new Error('Missing applicant'))).toBe(
       true,
@@ -84,9 +88,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('provide errors for invalid application parcel', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
@@ -98,7 +101,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -134,7 +137,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should report an invalid PID', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
@@ -158,7 +160,7 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should require certificate of title and crown description for CRWN parcels with PID and with CRWN owners', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [
         new ApplicationOwner({
           type: new ApplicationOwnerType({
@@ -166,7 +168,6 @@ describe('ApplicationSubmissionValidatorService', () => {
           }),
         }),
       ],
-      documents: [],
     });
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
@@ -179,7 +180,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -196,9 +197,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should not require certificate of title for other parcels', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
@@ -209,7 +209,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(res.errors, new Error(`Invalid Parcel ${parcel.uuid}`)),
@@ -229,12 +229,11 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should return an error for no primary contact', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -253,13 +252,12 @@ describe('ApplicationSubmissionValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [mockOwner],
-      documents: [],
       primaryContactOwnerUuid: mockOwner.uuid,
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -278,13 +276,12 @@ describe('ApplicationSubmissionValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [mockOwner, mockOwner],
-      documents: [],
       primaryContactOwnerUuid: mockOwner.uuid,
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -303,13 +300,12 @@ describe('ApplicationSubmissionValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [mockOwner],
-      documents: [],
       primaryContactOwnerUuid: mockOwner.uuid,
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -330,13 +326,15 @@ describe('ApplicationSubmissionValidatorService', () => {
     });
     const application = new ApplicationSubmission({
       owners: [mockOwner, mockOwner],
-      documents: [
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
-        }),
-      ],
       primaryContactOwnerUuid: mockOwner.uuid,
     });
+
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+      }),
+    ];
+    mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
 
     const res = await service.validateApplication(application);
 
@@ -351,7 +349,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should produce an error for missing local government', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
     });
 
     const res = await service.validateApplication(application);
@@ -365,17 +362,16 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should accept local government when its valid', async () => {
-    const mockLg: LocalGovernment = {
+    const mockLg = new ApplicationLocalGovernment({
       uuid: 'lg-uuid',
       name: 'lg',
       bceidBusinessGuid: 'CATS',
       isFirstNation: false,
-    };
-    mockLGService.get.mockResolvedValue([mockLg]);
+    });
+    mockLGService.list.mockResolvedValue([mockLg]);
 
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
       localGovernmentUuid: mockLg.uuid,
     });
 
@@ -394,7 +390,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not have land use errors when all fields are filled', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
       parcelsAgricultureDescription: 'VALID',
       parcelsAgricultureImprovementDescription: 'VALID',
       parcelsNonAgricultureUseDescription: 'VALID',
@@ -419,9 +414,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should have land use errors when not all fields are filled', async () => {
-    const application = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [],
       parcelsAgricultureDescription: undefined,
       parcelsAgricultureImprovementDescription: 'VALID',
       parcelsNonAgricultureUseDescription: 'VALID',
@@ -435,7 +429,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       westLandUseTypeDescription: 'VALID',
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(res.errors, new Error(`Invalid Parcel Description`)),
@@ -449,12 +443,15 @@ describe('ApplicationSubmissionValidatorService', () => {
     const incompleteDocument = new ApplicationDocument({
       type: null,
     });
-    const application = new ApplicationSubmission({
+
+    const documents = [incompleteDocument];
+    mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+    const applicationSubmission = new ApplicationSubmission({
       owners: [],
-      documents: [incompleteDocument],
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateApplication(applicationSubmission);
 
     expect(
       includesError(
@@ -471,8 +468,10 @@ describe('ApplicationSubmissionValidatorService', () => {
     });
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [incompleteDocument],
     });
+
+    const documents = [incompleteDocument];
+    mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
 
     const res = await service.validateApplication(application);
 
@@ -487,7 +486,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should report no NFU errors when all information is present and there is fill', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
       nfuHectares: 1.5125,
       nfuPurpose: 'VALID',
       nfuOutsideLands: 'VALID',
@@ -516,7 +514,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not report NFU errors when there is no fill', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
       nfuHectares: 1.5125,
       nfuPurpose: 'VALID',
       nfuOutsideLands: 'VALID',
@@ -538,7 +535,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should report NFU errors when information is missing', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
       nfuHectares: null,
       nfuPurpose: 'VALID',
       nfuOutsideLands: 'VALID',
@@ -568,7 +564,6 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should report TUR errors when information is missing', async () => {
     const application = new ApplicationSubmission({
       owners: [],
-      documents: [],
       turAgriculturalActivities: 'turAgriculturalActivities',
       turReduceNegativeImpacts: 'turReduceNegativeImpacts',
       typeCode: 'TURP',

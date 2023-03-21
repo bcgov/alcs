@@ -3,38 +3,42 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { of } from 'rxjs';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { AlcsDocumentService } from '../../alcs/document-grpc/alcs-document.service';
-import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { Document } from '../../document/document.entity';
-import { User } from '../../user/user.entity';
-import { ApplicationProposal } from '../application-proposal.entity';
-import { ApplicationProposalService } from '../application-proposal.service';
-import { ApplicationDocumentController } from './application-document.controller';
-import { AttachExternalDocumentDto } from './application-document.dto';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
-} from './application-document.entity';
-import { ApplicationDocumentService } from './application-document.service';
+} from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { CreateDocumentDto } from '../../document/document.dto';
+import { Document } from '../../document/document.entity';
+import { DocumentService } from '../../document/document.service';
+import { User } from '../../user/user.entity';
+import { AttachExternalDocumentDto } from '../application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
+import { ApplicationSubmission } from '../application-submission/application-submission.entity';
+import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { ApplicationDocumentController } from './application-document.controller';
 
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
   let appDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockApplicationService: DeepMocked<ApplicationProposalService>;
-  let mockAlcsDocumentService: DeepMocked<AlcsDocumentService>;
+  let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   const mockDocument = new ApplicationDocument({
     document: new Document({
       fileName: 'fileName',
+      uploadedAt: new Date(),
       uploadedBy: new User(),
     }),
   });
 
   beforeEach(async () => {
     appDocumentService = createMock();
-    mockAlcsDocumentService = createMock();
+    mockDocumentService = createMock();
+    mockApplicationSubmissionService = createMock();
     mockApplicationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -55,12 +59,16 @@ describe('ApplicationDocumentController', () => {
           useValue: {},
         },
         {
-          provide: ApplicationProposalService,
-          useValue: mockApplicationService,
+          provide: ApplicationSubmissionService,
+          useValue: mockApplicationSubmissionService,
         },
         {
-          provide: AlcsDocumentService,
-          useValue: mockAlcsDocumentService,
+          provide: DocumentService,
+          useValue: mockDocumentService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -69,9 +77,10 @@ describe('ApplicationDocumentController', () => {
       ApplicationDocumentController,
     );
 
-    mockApplicationService.verifyAccess.mockResolvedValue(
-      new ApplicationProposal(),
+    mockApplicationSubmissionService.verifyAccess.mockResolvedValue(
+      new ApplicationSubmission(),
     );
+    mockApplicationService.getUuid.mockResolvedValue('uuid');
   });
 
   it('should be defined', () => {
@@ -127,9 +136,7 @@ describe('ApplicationDocumentController', () => {
 
   it('should call through for download', async () => {
     const fakeUrl = 'fake-url';
-    appDocumentService.getInlineUrl.mockResolvedValue({
-      url: fakeUrl,
-    });
+    appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
 
     const res = await controller.open('fake-uuid', {
@@ -144,42 +151,42 @@ describe('ApplicationDocumentController', () => {
   it('should call out to service to attach external document', async () => {
     const user = { user: { entity: 'Bruce' } };
     const fakeUuid = 'fakeUuid';
-    const docObj = { alcsDocumentUuid: 'fake-uuid' };
-    const docDto = {
+    const docObj = new Document({ uuid: 'fake-uuid' });
+    const userEntity = new User({
+      name: user.user.entity,
+    });
+
+    const docDto: AttachExternalDocumentDto = {
+      fileSize: 0,
       mimeType: 'mimeType',
       fileName: 'fileName',
       fileKey: 'fileKey',
       source: 'Applicant',
-      documentType: 'certificateOfTitle',
     };
 
-    mockAlcsDocumentService.createExternalDocument.mockReturnValue(of(docObj));
+    mockDocumentService.createDocumentRecord.mockResolvedValue(docObj);
 
-    appDocumentService.createRecord.mockResolvedValue(
+    appDocumentService.attachExternalDocument.mockResolvedValue(
       new ApplicationDocument({
         application: undefined,
-        applicationFileNumber: '',
         type: 'fakeType',
         uuid: fakeUuid,
         document: new Document({
-          uploadedBy: new User({
-            name: user.user.entity,
-          }),
+          uploadedAt: new Date(),
+          uploadedBy: userEntity,
         }),
       }),
     );
 
     const res = await controller.attachExternalDocument(
       'fake-number',
-      docDto as AttachExternalDocumentDto,
+      docDto,
       user,
     );
 
-    expect(mockAlcsDocumentService.createExternalDocument).toBeCalledTimes(1);
-    expect(appDocumentService.createRecord).toBeCalledTimes(1);
-    expect(mockAlcsDocumentService.createExternalDocument).toBeCalledWith(
-      docDto,
-    );
+    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toBeCalledTimes(1);
+    expect(mockDocumentService.createDocumentRecord).toBeCalledWith(docDto);
     expect(res.uploadedBy).toEqual(user.user.entity);
     expect(res.uuid).toEqual(fakeUuid);
   });
