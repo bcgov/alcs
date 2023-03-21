@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
   Body,
@@ -32,7 +30,6 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
-    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get()

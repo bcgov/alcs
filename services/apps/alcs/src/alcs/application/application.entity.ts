@@ -148,7 +148,7 @@ export class Application extends Base {
     type: 'jsonb',
     nullable: true,
   })
-  applicationReview: ApplicationSubmissionReviewDto;
+  applicationReview?: ApplicationSubmissionReviewDto;
 
   @AutoMap(() => ApplicationSubmissionDetailedDto)
   @Column({
@@ -157,7 +157,7 @@ export class Application extends Base {
     type: 'jsonb',
     nullable: true,
   })
-  submittedApplication: ApplicationSubmissionDetailedDto;
+  submittedApplication?: ApplicationSubmissionDetailedDto;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

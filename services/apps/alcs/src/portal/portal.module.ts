@@ -4,7 +4,6 @@ import { RouterModule } from '@nestjs/core';
 import { ApplicationModule } from '../alcs/application/application.module';
 import { CardModule } from '../alcs/card/card.module';
 import { DocumentModule } from '../document/document.module';
-import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { PortalApplicationDocumentModule } from './application-document/application-document.module';
 import { ApplicationSubmissionReviewModule } from './application-submission-review/application-submission-review.module';
 import { ApplicationSubmissionModule } from './application-submission/application-submission.module';

@@ -184,7 +184,7 @@ export class ApplicationSubmissionService {
 
     // TODO: Fix App Submission
     try {
-      submittedApp = await this.applicationService.create({
+      submittedApp = await this.applicationService.submit({
         fileNumber: application.fileNumber,
         applicant: application.applicant,
         localGovernmentUuid: application.localGovernmentUuid,
@@ -192,7 +192,7 @@ export class ApplicationSubmissionService {
         statusHistory: application.statusHistory,
         dateSubmittedToAlc: new Date(),
         applicationReview: mappedReview,
-
+        // TODO: submitted application will be deleted once Applicant info will be remapped to point to actual data instead of json
         submittedApplication: {
           nfuPurpose: application.nfuPurpose ?? undefined,
           nfuOutsideLands: application.nfuOutsideLands ?? undefined,
