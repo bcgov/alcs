@@ -14,7 +14,6 @@ import { AlcsModule } from './alcs/alcs.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
-import { DocumentGrpcModule } from './document-grpc/document-grpc.module';
 import { DocumentModule } from './document/document.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { LogoutController } from './logout/logout.controller';
@@ -39,7 +38,6 @@ import { UserService } from './user/user.service';
       middleware: { mount: true },
     }),
     DocumentModule,
-    DocumentGrpcModule,
     AuthorizationModule,
     RedisModule,
     LoggerModule.forRoot({
