@@ -18,6 +18,7 @@ export class LfngInfoComponent implements OnInit {
   resolutionDocument: ApplicationDocumentDto | undefined;
   staffReport: ApplicationDocumentDto | undefined;
   otherAttachments: ApplicationDocumentDto[] = [];
+  requiresReview = true;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -27,6 +28,7 @@ export class LfngInfoComponent implements OnInit {
   ngOnInit(): void {
     this.applicationDetailService.$application.subscribe((application) => {
       if (application) {
+        this.requiresReview = application.type.code !== 'TURP';
         this.applicationReview = application.applicationReview;
         this.loadDocuments(application.fileNumber);
       }
