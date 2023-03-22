@@ -39,9 +39,7 @@ jobs:
         import alcs-api
         import alcs-frontend
         import alcs-migrate
-        import alcs-portal-api
         import alcs-portal-frontend
-        import alcs-portal-migrate
 
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
@@ -54,8 +52,6 @@ jobs:
             "alcs-api": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:${{ github.sha }}",
             "alcs-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-frontend:${{ github.sha }}",
             "alcs-migrate": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-migrate:${{ github.sha }}",
-            "alcs-portal-api": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-api:${{ github.sha }}",
             "alcs-portal-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-frontend:${{ github.sha }}",
-            "alcs-portal-migrate": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-migrate:${{ github.sha }}",
             "commitMessage": "${{ github.sha }}"
           }
