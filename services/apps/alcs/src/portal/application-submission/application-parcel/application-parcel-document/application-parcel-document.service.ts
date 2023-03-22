@@ -43,7 +43,9 @@ export class ApplicationParcelDocumentService {
         'Failed to delete ApplicationParcelDocument, passed ApplicationParcelDocument without Document',
       );
     }
-
+    await this.applicationParcelDocumentRepository.remove(
+      applicationParcelDocument,
+    );
     return this.documentService.softRemove(applicationParcelDocument.document);
   }
 

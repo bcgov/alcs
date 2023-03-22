@@ -363,13 +363,13 @@ export class ApplicationSubmissionService {
   }
 
   async getIfCreator(fileNumber: string, user: User) {
-    const existingApplication = await this.getByFileId(fileNumber, user);
-    if (!existingApplication) {
+    const applicationSubmission = await this.getByFileId(fileNumber, user);
+    if (!applicationSubmission) {
       throw new ServiceNotFoundException(
         `Failed to load application with File ID ${fileNumber}`,
       );
     }
-    return existingApplication;
+    return applicationSubmission;
   }
 
   async verifyAccess(fileId: string, user: User) {

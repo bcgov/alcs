@@ -70,25 +70,23 @@ export class ApplicationSubmissionController {
         user.bceidBusinessGuid,
       );
       if (localGovernment) {
-        const application =
+        const applicationSubmission =
           await this.applicationSubmissionService.getForGovernmentByFileId(
             fileId,
             localGovernment,
           );
         return await this.applicationSubmissionService.mapToDetailedDTO(
-          application,
+          applicationSubmission,
           localGovernment,
         );
       }
     }
 
-    const application = await this.applicationSubmissionService.getIfCreator(
-      fileId,
-      user,
-    );
+    const applicationSubmission =
+      await this.applicationSubmissionService.getIfCreator(fileId, user);
 
     return await this.applicationSubmissionService.mapToDetailedDTO(
-      application,
+      applicationSubmission,
     );
   }
 
