@@ -87,7 +87,11 @@ export class ApplicationOwnerController {
   @Delete('/:uuid')
   async delete(@Param('uuid') uuid: string, @Req() req) {
     const owner = await this.verifyAccessAndGetOwner(req, uuid);
-    return { uuid: await this.ownerService.delete(owner) };
+    if (owner.corporateSummary) {
+      await this.documentService.softRemove(owner.corporateSummary);
+    }
+    await this.ownerService.delete(owner);
+    return { uuid };
   }
 
   @Post('/:uuid/link/:parcelUuid')

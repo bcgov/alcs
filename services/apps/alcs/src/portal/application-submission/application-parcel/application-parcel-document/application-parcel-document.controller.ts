@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { firstValueFrom } from 'rxjs';
 import { PortalAuthGuard } from '../../../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../../../document/document.service';
 import { ApplicationSubmissionService } from '../../application-submission.service';
