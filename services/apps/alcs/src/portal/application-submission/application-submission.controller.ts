@@ -121,11 +121,10 @@ export class ApplicationSubmissionController {
       updateDto,
     );
 
-    const mappedApps = await this.applicationSubmissionService.mapToDetailedDTO(
+    return await this.applicationSubmissionService.mapToDetailedDTO(
       application,
       req.user.entity,
     );
-    return mappedApps[0];
   }
 
   @Post('/:fileId/cancel')
