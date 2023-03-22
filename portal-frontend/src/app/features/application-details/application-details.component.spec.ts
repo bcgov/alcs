@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
@@ -19,6 +20,8 @@ describe('ApplicationDetailsComponent', () => {
   let mockRouter: DeepMocked<Router>;
   let mockToastService: DeepMocked<ToastService>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
+
+  let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockCodeService = createMock();
@@ -56,6 +59,7 @@ describe('ApplicationDetailsComponent', () => {
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
     component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$applicationDocuments = applicationDocumentPipe;
     fixture.detectChanges();
   });
 

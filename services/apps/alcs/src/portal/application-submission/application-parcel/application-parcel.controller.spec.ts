@@ -2,8 +2,9 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
+import { ApplicationParcelProfile } from '../../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -43,6 +44,10 @@ describe('ApplicationParcelController', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockApplicationOwnerService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],

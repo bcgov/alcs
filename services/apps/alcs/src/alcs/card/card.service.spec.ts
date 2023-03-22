@@ -1,11 +1,9 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { RedisService } from '@app/common/redis/redis.service';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { RedisClientType } from 'redis';
 import { Repository } from 'typeorm';
 import {
   initBoardMockEntity,
@@ -23,16 +21,13 @@ describe('CardService', () => {
   let cardRepositoryMock: DeepMocked<Repository<Card>>;
   let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
   let mockCardEntity;
-  let mockRedisService: DeepMocked<RedisService>;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
     cardTypeRepositoryMock = createMock<Repository<CardType>>();
     mockCardEntity = initCardMockEntity();
-    mockRedisService = createMock();
     mockSubtaskService = createMock();
-    const mockRedisClient: DeepMocked<RedisClientType> = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -51,10 +46,6 @@ describe('CardService', () => {
           useValue: cardTypeRepositoryMock,
         },
         {
-          provide: RedisService,
-          useValue: mockRedisService,
-        },
-        {
           provide: CardSubtaskService,
           useValue: mockSubtaskService,
         },
@@ -62,8 +53,6 @@ describe('CardService', () => {
     }).compile();
 
     service = module.get<CardService>(CardService);
-
-    mockRedisService.getClient.mockReturnValue(mockRedisClient);
 
     cardRepositoryMock.findOne.mockResolvedValue(mockCardEntity);
     cardRepositoryMock.save.mockResolvedValue(mockCardEntity);

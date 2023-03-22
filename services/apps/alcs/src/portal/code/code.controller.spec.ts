@@ -1,37 +1,44 @@
 import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationTypeService } from '../application-type/application-type.service';
-import { LocalGovernmentService } from '../local-government/local-government.service';
-import { SubmissionTypeService } from '../submission-type/submission-type.service';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { CardType } from '../../alcs/card/card-type/card-type.entity';
+import { CardService } from '../../alcs/card/card.service';
 import { CodeController } from './code.controller';
 
 describe('CodeController', () => {
   let portalController: CodeController;
-  let mockLgService: DeepMocked<LocalGovernmentService>;
-  let mockAppTypeService: DeepMocked<ApplicationTypeService>;
-  let mockSubmissionTypeService: DeepMocked<SubmissionTypeService>;
+  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockAppService: DeepMocked<ApplicationService>;
+  let mockCardService: DeepMocked<CardService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
-    mockAppTypeService = createMock();
-    mockSubmissionTypeService = createMock();
+    mockAppService = createMock();
+    mockCardService = createMock();
 
     const app: TestingModule = await Test.createTestingModule({
       controllers: [CodeController],
       providers: [
         CodeController,
         {
-          provide: LocalGovernmentService,
+          provide: ApplicationLocalGovernmentService,
           useValue: mockLgService,
         },
         {
-          provide: ApplicationTypeService,
-          useValue: mockAppTypeService,
+          provide: ApplicationService,
+          useValue: mockAppService,
         },
         {
-          provide: SubmissionTypeService,
-          useValue: mockSubmissionTypeService,
+          provide: CardService,
+          useValue: mockCardService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],
@@ -39,21 +46,21 @@ describe('CodeController', () => {
 
     portalController = app.get<CodeController>(CodeController);
 
-    mockLgService.get.mockResolvedValue([
-      {
+    mockLgService.list.mockResolvedValue([
+      new ApplicationLocalGovernment({
         uuid: 'fake-uuid',
         name: 'fake-name',
         isFirstNation: false,
-      },
+      }),
     ]);
-    mockAppTypeService.list.mockResolvedValue([]);
+    mockAppService.fetchApplicationTypes.mockResolvedValue([]);
 
-    mockSubmissionTypeService.list.mockResolvedValue([
-      {
+    mockCardService.getCardTypes.mockResolvedValue([
+      new CardType({
         code: 'fake-code',
         portalHtmlDescription: 'fake-html',
         label: 'fake-label',
-      },
+      }),
     ]);
   });
 
@@ -62,7 +69,7 @@ describe('CodeController', () => {
     expect(codes.localGovernments).toBeDefined();
     expect(codes.localGovernments.length).toBe(1);
     expect(codes.localGovernments[0].name).toEqual('fake-name');
-    expect(mockAppTypeService.list).toHaveBeenCalledTimes(1);
+    expect(mockAppService.fetchApplicationTypes).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to local submission service for fetching codes', async () => {

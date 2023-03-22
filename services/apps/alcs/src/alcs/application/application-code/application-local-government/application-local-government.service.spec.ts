@@ -45,7 +45,7 @@ describe('ApplicationLocalGovernmentService', () => {
 
     await service.list();
 
-    expect(mockRepository.find).toHaveBeenCalledTimes(2);
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call repository on getByUuId', async () => {

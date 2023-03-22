@@ -1,12 +1,10 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { of } from 'rxjs';
 import { Repository } from 'typeorm';
-import { Document } from '../../../document/document.entity';
-
-import { DocumentService } from '../../../document/document.service';
+import { Document } from '../../../../document/document.entity';
+import { DocumentService } from '../../../../document/document.service';
 import { ApplicationParcelService } from '../application-parcel.service';
 import { ApplicationParcelDocument } from './application-parcel-document.entity';
 import { ApplicationParcelDocumentService } from './application-parcel-document.service';
@@ -29,7 +27,7 @@ describe('ApplicationParcelDocumentService', () => {
     mockAppDocument = new ApplicationParcelDocument({
       uuid: 'document-uuid',
       document: new Document({
-        alcsDocumentUuid: 'alcs-document-uuid',
+        uuid: 'alcs-document-uuid',
       }),
     });
 
@@ -65,14 +63,12 @@ describe('ApplicationParcelDocumentService', () => {
   });
 
   it('should call through when deleting a document', async () => {
-    mockDocumentService.delete.mockResolvedValue({
-      uuid: 'fake-uuid',
-    });
+    mockDocumentService.softRemove.mockResolvedValue();
 
     await service.delete(mockAppDocument);
 
-    expect(mockDocumentService.delete).toHaveBeenCalledTimes(1);
-    expect(mockDocumentService.delete.mock.calls[0][0]).toBe(
+    expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.softRemove.mock.calls[0][0]).toBe(
       mockAppDocument.document,
     );
   });
@@ -106,16 +102,16 @@ describe('ApplicationParcelDocumentService', () => {
   it('should call through for download', async () => {
     const mockAppDocument = new ApplicationParcelDocument({
       document: new Document({
-        alcsDocumentUuid: 'document-id',
+        uuid: 'document-id',
       }),
     });
 
     const fakeUrl = 'mock-url';
-    mockDocumentService.getDownloadUrl.mockReturnValue(of({ url: fakeUrl }));
+    mockDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
 
     const res = await service.getInlineUrl(mockAppDocument);
 
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    expect(res.url).toEqual(fakeUrl);
+    expect(res).toEqual(fakeUrl);
   });
 });

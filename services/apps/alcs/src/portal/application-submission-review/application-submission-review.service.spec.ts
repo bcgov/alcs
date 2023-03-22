@@ -5,13 +5,15 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import {
   ApplicationDocument,
   DOCUMENT_TYPE,
-} from '../application-submission/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../application-submission/application-document/application-document.service';
+} from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
-import { ApplicationReviewProfile } from '../common/automapper/application-review.automapper.profile';
+
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 
@@ -20,12 +22,10 @@ describe('ApplicationSubmissionReviewService', () => {
   let mockRepository: DeepMocked<Repository<ApplicationSubmissionReview>>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
-  const mockLocalGovernment = {
-    uuid: '',
-    name: '',
-    isFirstNation: false,
+  const mockLocalGovernment = new ApplicationLocalGovernment({
+    isFirstNation: true,
     isActive: true,
-  };
+  });
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -39,7 +39,7 @@ describe('ApplicationSubmissionReviewService', () => {
       ],
       providers: [
         ApplicationSubmissionReviewService,
-        ApplicationReviewProfile,
+        ApplicationSubmissionReviewProfile,
         {
           provide: getRepositoryToken(ApplicationSubmissionReview),
           useValue: mockRepository,
@@ -116,7 +116,7 @@ describe('ApplicationSubmissionReviewService', () => {
     const appReview = new ApplicationSubmissionReview();
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, false);
+      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
     }).toThrow(new BaseServiceException('Contact information not complete'));
   });
 
@@ -133,7 +133,7 @@ describe('ApplicationSubmissionReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, false);
+      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
     }).toThrow(new BaseServiceException('OCP information not complete'));
   });
 
@@ -151,7 +151,7 @@ describe('ApplicationSubmissionReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, false);
+      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
     }).toThrow(new BaseServiceException('Zoning information not complete'));
   });
 
@@ -173,7 +173,7 @@ describe('ApplicationSubmissionReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, false);
+      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
     }).toThrow(
       new BaseServiceException('Review authorization needs to be set'),
     );
@@ -196,16 +196,16 @@ describe('ApplicationSubmissionReviewService', () => {
       isAuthorized: true,
     });
 
-    const application = new ApplicationSubmission({
-      documents: [
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        }),
-      ],
-    });
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      }),
+    ];
+
+    const application = new ApplicationSubmission({});
 
     expect(() => {
-      service.verifyComplete(application, appReview, false);
+      service.verifyComplete(application, appReview, documents, false);
     }).toThrow(
       new BaseServiceException('Review missing staff report document'),
     );
@@ -228,20 +228,21 @@ describe('ApplicationSubmissionReviewService', () => {
       isAuthorized: true,
     });
 
-    const application = new ApplicationSubmission({
-      documents: [
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        }),
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.STAFF_REPORT,
-        }),
-      ],
-    });
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      }),
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.STAFF_REPORT,
+      }),
+    ];
+
+    const application = new ApplicationSubmission({});
 
     const completedReview = service.verifyComplete(
       application,
       appReview,
+      documents,
       false,
     );
 
@@ -266,17 +267,18 @@ describe('ApplicationSubmissionReviewService', () => {
       isAuthorized: false,
     });
 
-    const application = new ApplicationSubmission({
-      documents: [
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        }),
-      ],
-    });
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      }),
+    ];
+
+    const application = new ApplicationSubmission({});
 
     const completedReview = service.verifyComplete(
       application,
       appReview,
+      documents,
       false,
     );
 
@@ -298,20 +300,21 @@ describe('ApplicationSubmissionReviewService', () => {
       isAuthorized: null,
     });
 
-    const application = new ApplicationSubmission({
-      documents: [
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        }),
-        new ApplicationDocument({
-          type: 'reviewStaffReport',
-        }),
-      ],
-    });
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      }),
+      new ApplicationDocument({
+        type: 'reviewStaffReport',
+      }),
+    ];
+
+    const application = new ApplicationSubmission({});
 
     const completedReview = service.verifyComplete(
       application,
       appReview,
+      documents,
       false,
     );
 
@@ -331,17 +334,18 @@ describe('ApplicationSubmissionReviewService', () => {
       isAuthorized: true,
     });
 
-    const application = new ApplicationSubmission({
-      documents: [
-        new ApplicationDocument({
-          type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        }),
-      ],
-    });
+    const documents = [
+      new ApplicationDocument({
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+      }),
+    ];
+
+    const application = new ApplicationSubmission({});
 
     const completedReview = service.verifyComplete(
       application,
       appReview,
+      documents,
       true,
     );
 
@@ -350,12 +354,10 @@ describe('ApplicationSubmissionReviewService', () => {
   });
 
   it('should map in the local government first nation flag when mapping dto', async () => {
-    const res = await service.mapToDto(new ApplicationSubmissionReview(), {
-      bceidBusinessGuid: '',
-      uuid: '',
-      name: '',
-      isFirstNation: true,
-    });
+    const res = await service.mapToDto(
+      new ApplicationSubmissionReview(),
+      mockLocalGovernment,
+    );
 
     expect(res.isFirstNationGovernment).toBeTruthy();
   });

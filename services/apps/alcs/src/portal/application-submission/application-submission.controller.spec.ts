@@ -3,12 +3,14 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
-import { ApplicationGrpcResponse } from '../alcs/application-grpc/alcs-application.message.interface';
-import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
-import { User } from '../user/user.entity';
-import { ApplicationDocumentService } from './application-document/application-document.service';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { Application } from '../../alcs/application/application.entity';
+import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { User } from '../../user/user.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import {
@@ -27,7 +29,7 @@ describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockLgService: DeepMocked<LocalGovernmentService>;
+  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
 
   const localGovernmentUuid = 'local-government';
@@ -53,12 +55,16 @@ describe('ApplicationSubmissionController', () => {
           useValue: mockDocumentService,
         },
         {
-          provide: LocalGovernmentService,
+          provide: ApplicationLocalGovernmentService,
           useValue: mockLgService,
         },
         {
           provide: ApplicationSubmissionValidatorService,
           useValue: mockAppValidationService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],
@@ -85,13 +91,13 @@ describe('ApplicationSubmissionController', () => {
     mockAppService.verifyAccess.mockResolvedValue(new ApplicationSubmission());
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
-    mockLgService.get.mockResolvedValue([
-      {
+    mockLgService.list.mockResolvedValue([
+      new ApplicationLocalGovernment({
         uuid: localGovernmentUuid,
         bceidBusinessGuid,
         name: 'fake-name',
         isFirstNation: false,
-      },
+      }),
     ]);
   });
 
@@ -193,12 +199,14 @@ describe('ApplicationSubmissionController', () => {
 
   it('should fetch application by bceid if user has same guid as a local government', async () => {
     const bceidBusinessGuid = 'business-guid';
-    mockLgService.getByGuid.mockResolvedValue({
-      uuid: '',
-      bceidBusinessGuid,
-      name: 'fake-name',
-      isFirstNation: false,
-    });
+    mockLgService.getByGuid.mockResolvedValue(
+      new ApplicationLocalGovernment({
+        uuid: '',
+        bceidBusinessGuid,
+        name: 'fake-name',
+        isFirstNation: false,
+      }),
+    );
     const mockApplication = new ApplicationSubmission();
     mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
     mockAppService.mapToDetailedDTO.mockResolvedValue(
@@ -265,9 +273,7 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service on submitAlcs if application type is TURP', async () => {
     const mockFileId = 'file-id';
-    mockAppService.submitToAlcs.mockResolvedValue(
-      {} as ApplicationGrpcResponse,
-    );
+    mockAppService.submitToAlcs.mockResolvedValue(new Application());
     mockAppService.getIfCreator.mockResolvedValue(
       new ApplicationSubmission({
         typeCode: 'TURP',

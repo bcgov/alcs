@@ -30,24 +30,9 @@ jobs:
       dockerfile: Dockerfile.migrate
       build-args: NEST_APP=alcs
     secrets: inherit
-  build-portal-api:
-    uses: ./.github/workflows/_build-image.yml
-    with:
-      image-name: alcs-portal-api 
-      build-context: ./services
-      build-args: NEST_APP=portal
-    secrets: inherit
   build-portal-frontend:
     uses: ./.github/workflows/_build-image.yml
     with:
       image-name: alcs-portal-frontend
       build-context: ./portal-frontend
-    secrets: inherit
-  build-portal-migrate:
-    uses: ./.github/workflows/_build-image.yml
-    with:
-      image-name: alcs-portal-migrate
-      build-context: ./services
-      dockerfile: Dockerfile.migrate
-      build-args: NEST_APP=portal
     secrets: inherit

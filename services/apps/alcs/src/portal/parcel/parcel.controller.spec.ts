@@ -1,7 +1,8 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ParcelLookup } from './parcel-lookup.entity';
 import { ParcelController } from './parcel.controller';
 import { ParcelService } from './parcel.service';
@@ -19,6 +20,10 @@ describe('ParcelController', () => {
         {
           provide: ParcelService,
           useValue: mockParcelService,
+        },
+        {
+          provide: ClsService,
+          useValue: {},
         },
         ...mockKeyCloakProviders,
       ],

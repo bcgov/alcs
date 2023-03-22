@@ -4,19 +4,16 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Observable, of } from 'rxjs';
 import { Repository } from 'typeorm';
-import {
-  ApplicationFileNumberGenerateGrpcResponse,
-  ApplicationGrpcResponse,
-} from '../alcs/application-grpc/alcs-application.message.interface';
-import { AlcsApplicationService } from '../alcs/application-grpc/alcs-application.service';
-import { ApplicationTypeService } from '../alcs/application-type/application-type.service';
-import { LocalGovernmentService } from '../alcs/local-government/local-government.service';
-import { ApplicationProfile } from '../common/automapper/application.automapper.profile';
-import { Document } from '../document/document.entity';
-import { User } from '../user/user.entity';
-import { ApplicationDocument } from './application-document/application-document.entity';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
+import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
+import { Document } from '../../document/document.entity';
+import { User } from '../../user/user.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
@@ -25,17 +22,15 @@ import { ApplicationSubmissionService } from './application-submission.service';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
-  let mockAppTypeService: DeepMocked<ApplicationTypeService>;
   let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
-  let mockAlcsApplicationService: DeepMocked<AlcsApplicationService>;
-  let mockLGService: DeepMocked<LocalGovernmentService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
     mockStatusRepository = createMock();
-    mockAppTypeService = createMock();
-    mockAlcsApplicationService = createMock();
+    mockApplicationService = createMock();
     mockLGService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -46,7 +41,7 @@ describe('ApplicationSubmissionService', () => {
       ],
       providers: [
         ApplicationSubmissionService,
-        ApplicationProfile,
+        ApplicationSubmissionProfile,
         {
           provide: getRepositoryToken(ApplicationSubmission),
           useValue: mockRepository,
@@ -56,15 +51,11 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockStatusRepository,
         },
         {
-          provide: ApplicationTypeService,
-          useValue: mockAppTypeService,
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
         {
-          provide: AlcsApplicationService,
-          useValue: mockAlcsApplicationService,
-        },
-        {
-          provide: LocalGovernmentService,
+          provide: ApplicationLocalGovernmentService,
           useValue: mockLGService,
         },
       ],
@@ -118,20 +109,15 @@ describe('ApplicationSubmissionService', () => {
     mockRepository.findOne.mockResolvedValue(null);
     mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
     mockRepository.save.mockResolvedValue(new ApplicationSubmission());
-    mockAlcsApplicationService.generateFileNumber.mockReturnValue(
-      of({
-        fileNumber: fileId,
-      } as ApplicationFileNumberGenerateGrpcResponse),
-    );
+    mockApplicationService.generateNextFileNumber.mockResolvedValue(fileId);
+    mockApplicationService.create.mockResolvedValue(new Application());
 
     const fileNumber = await service.create('type', new User());
 
     expect(fileNumber).toEqual(fileId);
     expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockAlcsApplicationService.generateFileNumber).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockApplicationService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get by user', async () => {
@@ -157,11 +143,15 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const res = await service.getForGovernmentByFileId('', {
-      uuid: '',
-      name: '',
-      isFirstNation: false,
-    });
+    const res = await service.getForGovernmentByFileId(
+      '',
+      new ApplicationLocalGovernment({
+        uuid: '',
+        name: '',
+        isFirstNation: false,
+        bceidBusinessGuid: 'cats',
+      }),
+    );
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
   });
@@ -211,13 +201,13 @@ describe('ApplicationSubmissionService', () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
 
-    mockAppTypeService.list.mockResolvedValue([
-      {
+    mockApplicationService.fetchApplicationTypes.mockResolvedValue([
+      new ApplicationType({
         code: typeCode,
         portalLabel: 'portalLabel',
         htmlDescription: 'htmlDescription',
         label: 'label',
-      },
+      }),
     ]);
 
     const application = new ApplicationSubmission({
@@ -232,7 +222,9 @@ describe('ApplicationSubmissionService', () => {
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.mapToDTOs([application], new User());
-    expect(mockAppTypeService.list).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.fetchApplicationTypes).toHaveBeenCalledTimes(
+      1,
+    );
     expect(res[0].type).toEqual('label');
     expect(res[0].applicant).toEqual(applicant);
   });
@@ -242,38 +234,26 @@ describe('ApplicationSubmissionService', () => {
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new ApplicationSubmission({
+    const applicationSubmission = new ApplicationSubmission({
       fileNumber,
       applicant,
       typeCode,
       localGovernmentUuid,
-      documents: [
-        new ApplicationDocument({
-          type: 'fake',
-          document: new Document({
-            alcsDocumentUuid: 'document-uuid',
-          }),
-        }),
-      ],
       statusHistory: [],
     });
 
-    mockAlcsApplicationService.create.mockImplementation(
-      (): Observable<ApplicationGrpcResponse> => {
-        throw new Error('failed');
-      },
-    );
+    mockApplicationService.submit.mockRejectedValue(new Error());
 
     await expect(
-      service.submitToAlcs(mockApplication as ValidatedApplicationSubmission),
+      service.submitToAlcs(
+        applicationSubmission as ValidatedApplicationSubmission,
+      ),
     ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
     );
-
-    expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
   });
 
-  it('should call out to grpc service on submitToAlcs', async () => {
+  it('should call out to service on submitToAlcs', async () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
@@ -288,31 +268,15 @@ describe('ApplicationSubmissionService', () => {
         label: '',
       }),
       statusHistory: [],
-      documents: [
-        new ApplicationDocument({
-          type: 'fake',
-          document: new Document({
-            alcsDocumentUuid: 'document-uuid',
-          }),
-        }),
-      ],
     });
 
-    mockAlcsApplicationService.create.mockReturnValue(
-      of({ fileNumber, applicant } as ApplicationGrpcResponse),
-    );
-
-    mockStatusRepository.findOneOrFail.mockResolvedValue(
-      new ApplicationStatus(),
-    );
+    mockApplicationService.submit.mockResolvedValue(new Application());
 
     const res = await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
     );
 
-    expect(mockAlcsApplicationService.create).toBeCalledTimes(1);
-    expect(res.applicant).toEqual(mockApplication.applicant);
-    expect(res.fileNumber).toEqual(mockApplication.fileNumber);
+    expect(mockApplicationService.submit).toBeCalledTimes(1);
   });
 
   it('should update fields if application exists', async () => {

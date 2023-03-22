@@ -1,5 +1,4 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
@@ -26,7 +25,6 @@ export class CardService {
     private cardRepository: Repository<Card>,
     @InjectRepository(CardType)
     private cardTypeRepository: Repository<CardType>,
-    private redisService: RedisService,
     private subtaskService: CardSubtaskService,
   ) {}
 
