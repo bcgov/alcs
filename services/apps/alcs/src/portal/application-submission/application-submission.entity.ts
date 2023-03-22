@@ -4,12 +4,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import { Application } from '../../alcs/application/application.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -327,4 +329,15 @@ export class ApplicationSubmission extends BaseEntity {
     nullable: true,
   })
   turAllOwnersNotified?: boolean | null;
+
+  @AutoMap(() => Application)
+  @OneToOne(
+    () => Application,
+    (application) => application.submittedApplication,
+  )
+  @JoinColumn({
+    name: 'file_number',
+    referencedColumnName: 'fileNumber',
+  })
+  application: Application;
 }

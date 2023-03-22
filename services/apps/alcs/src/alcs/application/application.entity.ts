@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
-import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -150,15 +150,6 @@ export class Application extends Base {
   })
   applicationReview?: ApplicationSubmissionReviewDto;
 
-  @AutoMap(() => ApplicationSubmissionDetailedDto)
-  @Column({
-    comment:
-      'JSONB Column containing the applicants information from the Portal',
-    type: 'jsonb',
-    nullable: true,
-  })
-  submittedApplication?: ApplicationSubmissionDetailedDto;
-
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
   pauses: ApplicationPaused[];
@@ -200,4 +191,8 @@ export class Application extends Base {
     (appRecon) => appRecon.application,
   )
   reconsiderations: ApplicationReconsideration[];
+
+  @AutoMap(() => ApplicationSubmission)
+  @OneToOne(() => ApplicationSubmission, (appSub) => appSub.application)
+  submittedApplication?: ApplicationSubmission;
 }

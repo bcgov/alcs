@@ -191,7 +191,9 @@ export class ApplicationSubmissionService {
         typeCode: application.typeCode,
         statusHistory: application.statusHistory,
         dateSubmittedToAlc: new Date(),
+        // TODO: remove this, this should not be part of submission payload, the actual is tbd
         applicationReview: mappedReview,
+
         // TODO: submitted application will be deleted once Applicant info will be remapped to point to actual data instead of json
         submittedApplication: {
           nfuPurpose: application.nfuPurpose ?? undefined,
