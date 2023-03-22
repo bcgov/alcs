@@ -1,6 +1,7 @@
-import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { SubmittedApplicationParcelDto } from '../../alcs/application/application.dto';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcelDocumentDto } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
@@ -104,6 +105,18 @@ export class ApplicationParcelProfile extends AutomapperProfile {
         mapper,
         ApplicationParcelOwnershipType,
         ApplicationParcelOwnershipTypeDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationParcel,
+        SubmittedApplicationParcelDto,
+        forMember(
+          (a) => a.documentUuids,
+          mapFrom((ad) => {
+            return ad.documents?.map((e) => e.document.uuid) ?? [];
+          }),
+        ),
       );
     };
   }

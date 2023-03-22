@@ -3,6 +3,7 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import { SubmittedApplicationOwnerDto } from '../../alcs/application/application.dto';
 import { ApplicationOwnerType } from '../../portal/application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import {
   ApplicationOwnerDetailedDto,
@@ -87,6 +88,23 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationOwnerType, ApplicationOwnerTypeDto);
+      createMap(
+        mapper,
+        ApplicationOwner,
+        SubmittedApplicationOwnerDto,
+        forMember(
+          (ad) => ad.type,
+          mapFrom((a) => a.type.code),
+        ),
+        forMember(
+          (pd) => pd.displayName,
+          mapFrom((p) =>
+            p.organizationName
+              ? p.organizationName
+              : `${p.firstName} ${p.lastName}`,
+          ),
+        ),
+      );
     };
   }
 }

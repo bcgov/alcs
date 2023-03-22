@@ -42,8 +42,6 @@ export class ApplicationSubmissionService {
     private applicationStatusRepository: Repository<ApplicationStatus>,
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     @InjectMapper() private mapper: Mapper,
   ) {}
 

@@ -76,8 +76,6 @@ export class ApplicationService {
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 

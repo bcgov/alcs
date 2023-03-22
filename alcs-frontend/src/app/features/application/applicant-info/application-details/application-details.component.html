@@ -117,11 +117,11 @@
 <section>
   <h3>Proposal</h3>
   <app-nfu-details
-    *ngIf="submittedApplication && application.type.code === 'NFUP'"
+    *ngIf="submittedApplication && applicationType === 'NFUP'"
     [application]="submittedApplication"
   ></app-nfu-details>
   <app-tur-details
-    *ngIf="submittedApplication && application.type.code === 'TURP'"
+    *ngIf="submittedApplication && applicationType === 'TURP'"
     [application]="submittedApplication"
     [files]='files'
   ></app-tur-details>

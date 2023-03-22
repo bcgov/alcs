@@ -1,24 +1,24 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { doc } from 'prettier';
 import { Subject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
 } from '../../../../services/application/application-document/application-document.service';
-import { ApplicationDto, SubmittedApplicationDto } from '../../../../services/application/application.dto';
+import { SubmittedApplicationDto } from '../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-application-details[application]',
+  selector: 'app-application-details',
   templateUrl: './application-details.component.html',
   styleUrls: ['./application-details.component.scss'],
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() application!: ApplicationDto;
+  @Input() submittedApplication: SubmittedApplicationDto | undefined;
+  @Input() applicationType!: string;
+  @Input() fileNumber!: string;
 
-  submittedApplication!: SubmittedApplicationDto | undefined;
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
   files: ApplicationDocumentDto[] | undefined;
@@ -26,8 +26,8 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
-    this.submittedApplication = this.application.submittedApplication!;
-    this.loadDocuments(this.application.fileNumber);
+    console.log('here', this.submittedApplication);
+    this.loadDocuments(this.fileNumber);
   }
 
   ngOnDestroy(): void {
