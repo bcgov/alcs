@@ -76,8 +76,10 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.attachExternalFile(this.fileId, file.file, null);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 
@@ -85,8 +87,10 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.deleteExternalFile(uuid);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 

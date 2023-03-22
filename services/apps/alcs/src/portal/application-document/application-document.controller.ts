@@ -135,12 +135,11 @@ export class ApplicationDocumentController {
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
 
-    await this.applicationSubmissionService.verifyAccess(
-      document.applicationUuid,
-      req.user.entity,
-    );
-
-    //TODO: How do we control who can delete which document types?
+    //TODO: How do we know which documents applicant can delete?
+    // await this.applicationSubmissionService.verifyAccess(
+    //   document.applicationUuid,
+    //   req.user.entity,
+    // );
 
     await this.applicationDocumentService.delete(document);
     return {};

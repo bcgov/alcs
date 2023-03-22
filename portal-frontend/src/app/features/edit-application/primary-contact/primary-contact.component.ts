@@ -71,8 +71,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.attachExternalFile(this.fileId, file.file, DOCUMENT.AUTHORIZATION_LETTER);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 
@@ -80,8 +82,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.deleteExternalFile(document.uuid);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 

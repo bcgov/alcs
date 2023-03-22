@@ -97,13 +97,21 @@ export class TurProposalComponent implements OnInit, OnDestroy {
       await this.save();
       const mappedFiles = file.file;
       await this.applicationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
     await this.applicationDocumentService.deleteExternalFile($event.uuid);
+    if (this.fileId) {
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
+    }
   }
 
   async openFile(uuid: string) {
