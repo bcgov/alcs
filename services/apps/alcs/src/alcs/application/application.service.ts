@@ -76,6 +76,8 @@ export class ApplicationService {
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
     private localGovernmentService: ApplicationLocalGovernmentService,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -106,8 +108,8 @@ export class ApplicationService {
       typeCode: application.typeCode,
       region,
       statusHistory: application.statusHistory,
+      // TODO: remove this once applicationReview refactored
       applicationReview: application.applicationReview,
-      submittedApplication: application.submittedApplication,
     });
 
     if (createCard) {
@@ -158,6 +160,7 @@ export class ApplicationService {
     existingApplication.typeCode = application.typeCode;
     existingApplication.region = region;
     existingApplication.statusHistory = application.statusHistory ?? [];
+    // TODO: remove this once applicationReview refactored
     existingApplication.applicationReview = application.applicationReview;
 
     existingApplication.card = new Card();
