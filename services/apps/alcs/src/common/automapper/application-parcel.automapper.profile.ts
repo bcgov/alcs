@@ -99,6 +99,12 @@ export class ApplicationParcelProfile extends AutomapperProfile {
             return ad.document.fileSize;
           }),
         ),
+        forMember(
+          (a) => a.documentUuid,
+          mapFrom((ad) => {
+            return ad.document.uuid;
+          }),
+        ),
       );
 
       createMap(
@@ -112,9 +118,17 @@ export class ApplicationParcelProfile extends AutomapperProfile {
         ApplicationParcel,
         SubmittedApplicationParcelDto,
         forMember(
-          (a) => a.documentUuids,
+          (a) => a.documents,
           mapFrom((ad) => {
-            return ad.documents?.map((e) => e.document.uuid) ?? [];
+            if (ad.documents) {
+              return this.mapper.mapArray(
+                ad.documents,
+                ApplicationParcelDocument,
+                ApplicationParcelDocumentDto,
+              );
+            } else {
+              return [];
+            }
           }),
         ),
       );

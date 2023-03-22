@@ -22,6 +22,11 @@ export class ApplicationSubmissionService {
     return await this.applicationSubmissionRepository.findOneOrFail({
       where: { fileNumber },
       relations: {
+        application: {
+          documents: {
+            document: true,
+          },
+        },
         parcels: {
           owners: {
             type: true,
@@ -44,11 +49,9 @@ export class ApplicationSubmissionService {
       SubmittedApplicationDto,
     );
 
-    const primaryContact = submission.owners.filter(
+    const primaryContact = submission.owners.find(
       (e) => e.uuid === submission.primaryContactOwnerUuid,
-    )[0];
-
-    console.log('submission', primaryContact);
+    );
 
     mappedSubmission.primaryContact = await this.mapper.mapAsync(
       primaryContact,

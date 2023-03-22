@@ -1,6 +1,7 @@
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
+import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
 export interface StatusHistory {
@@ -54,6 +55,16 @@ export interface SubmittedApplicationOwnerDto {
   corporateSummaryDocumentUuid?: string;
 }
 
+export interface ApplicationParcelDocumentDto {
+  type: string;
+  uuid: string;
+  fileName: string;
+  fileSize: number;
+  uploadedBy?: string;
+  uploadedAt: number;
+  documentUuid: string;
+}
+
 export interface SubmittedApplicationParcelDto {
   pid?: string;
   pin?: string;
@@ -66,11 +77,13 @@ export interface SubmittedApplicationParcelDto {
   parcelType: string;
   documentUuids: string[];
   owners: SubmittedApplicationOwnerDto[];
+  documents: ApplicationParcelDocumentDto[];
 }
 
 export interface SubmittedApplicationDto {
   parcels: SubmittedApplicationParcelDto[];
   otherParcels: SubmittedApplicationParcelDto[];
+  documents: ApplicationDocumentDto[];
   primaryContact: SubmittedApplicationOwnerDto;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;

@@ -15,7 +15,7 @@ import { SubmittedApplicationDto } from '../../../../services/application/applic
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() submittedApplication: SubmittedApplicationDto | undefined;
+  @Input() submittedApplication!: SubmittedApplicationDto;
   @Input() applicationType!: string;
   @Input() fileNumber!: string;
 
@@ -26,8 +26,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
-    console.log('here', this.submittedApplication);
-    this.loadDocuments(this.fileNumber);
+    this.setDocuments(this.fileNumber);
   }
 
   ngOnDestroy(): void {
@@ -39,8 +38,9 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     await this.applicationDocumentService.download(uuid, '');
   }
 
-  private async loadDocuments(fileNumber: string) {
-    const documents = await this.applicationDocumentService.getApplicantDocuments(fileNumber);
+  private async setDocuments(fileNumber: string) {
+    const documents = this.submittedApplication.documents;
+
     this.otherFiles = documents.filter((document) =>
       [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type)
     );

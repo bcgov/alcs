@@ -22,7 +22,7 @@ export class ApplicationParcelDocumentDto {
   uploadedAt: number;
 
   @AutoMap()
-  documents: ApplicationParcelDocumentDto[];
+  documentUuid: string;
 }
 
 export class AttachExternalDocumentDto {

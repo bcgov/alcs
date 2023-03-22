@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
+import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import { SubmittedApplicationDto } from '../../../../../services/application/application.dto';
 
 @Component({
@@ -19,7 +20,10 @@ export class ParcelComponent implements OnInit {
   fileId: string = '';
   parcels: any[] = [];
 
-  constructor(private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private applicationDocumentService: ApplicationDocumentService,
+    private applicationSubmissionService: ApplicationSubmissionService
+  ) {}
 
   ngOnInit(): void {
     this.parcels = this.application.parcels.map((parcel) => {
@@ -27,7 +31,6 @@ export class ParcelComponent implements OnInit {
 
       return {
         ...parcel,
-        documents: parcel.documentUuids.map((uuid) => this.files.find((file) => file.documentUuid === uuid)!),
         owners: parcel.owners.map((owner) => ({
           ...owner,
           corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
@@ -45,6 +48,12 @@ export class ParcelComponent implements OnInit {
     const file = this.files.find((file) => file.uuid === uuid);
     if (file) {
       await this.applicationDocumentService.download(file.uuid, file.fileName);
+    } else {
+      const parcelFiles = this.application.parcels.flatMap((e) => e.documents);
+      const parcelFile = parcelFiles.find((e) => e.documentUuid === uuid);
+      if (parcelFile) {
+        await this.applicationSubmissionService.downloadFile(parcelFile.documentUuid, parcelFile.fileName);
+      }
     }
   }
 }

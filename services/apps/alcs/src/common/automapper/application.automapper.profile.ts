@@ -179,7 +179,25 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(mapper, ApplicationDto, Card);
 
-      createMap(mapper, ApplicationSubmission, SubmittedApplicationDto);
+      createMap(
+        mapper,
+        ApplicationSubmission,
+        SubmittedApplicationDto,
+        forMember(
+          (a) => a.documents,
+          mapFrom((ad) => {
+            if (ad.application.documents) {
+              return this.mapper.mapArray(
+                ad.application.documents,
+                ApplicationDocument,
+                ApplicationDocumentDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+      );
     };
   }
 
