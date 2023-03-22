@@ -31,7 +31,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
           type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
           fileSize: a.corporateSummary.fileSize,
           uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
-          uploadedBy: a.corporateSummary.uploadedBy.displayName,
+          uploadedBy: a.corporateSummary.uploadedBy,
           description: undefined,
         };
       }

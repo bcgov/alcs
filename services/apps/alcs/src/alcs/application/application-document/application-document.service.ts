@@ -66,7 +66,7 @@ export class ApplicationDocumentService {
   }
 
   async delete(document: ApplicationDocument) {
-    await this.applicationDocumentRepository.delete(document.uuid);
+    await this.applicationDocumentRepository.remove(document);
     await this.documentService.softRemove(document.document);
     return document;
   }

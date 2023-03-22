@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../../document/document.service';
+import { AttachExternalDocumentDto } from '../application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationSubmissionService } from '../application-submission.service';
 import {
   APPLICATION_OWNER,
@@ -86,7 +87,11 @@ export class ApplicationOwnerController {
   @Delete('/:uuid')
   async delete(@Param('uuid') uuid: string, @Req() req) {
     const owner = await this.verifyAccessAndGetOwner(req, uuid);
-    return { uuid: await this.ownerService.delete(owner) };
+    if (owner.corporateSummary) {
+      await this.documentService.softRemove(owner.corporateSummary);
+    }
+    await this.ownerService.delete(owner);
+    return { uuid };
   }
 
   @Post('/:uuid/link/:parcelUuid')
@@ -193,7 +198,10 @@ export class ApplicationOwnerController {
       throw new BadRequestException('Owner has no corporate summary');
     }
 
-    return await this.documentService.getDownloadUrl(owner.corporateSummary);
+    const url = await this.documentService.getDownloadUrl(
+      owner.corporateSummary,
+    );
+    return { url };
   }
 
   private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {
@@ -204,5 +212,16 @@ export class ApplicationOwnerController {
     );
 
     return owner;
+  }
+
+  @Post('attachExternal')
+  async attachExternalDocument(@Body() data: AttachExternalDocumentDto) {
+    const document = await this.documentService.createDocumentRecord({
+      ...data,
+    });
+
+    return {
+      uuid: document.uuid,
+    };
   }
 }

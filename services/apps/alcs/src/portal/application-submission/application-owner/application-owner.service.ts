@@ -36,6 +36,7 @@ export class ApplicationOwnerService {
       },
       relations: {
         type: true,
+        corporateSummary: true,
       },
     });
   }

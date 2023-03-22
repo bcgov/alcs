@@ -263,7 +263,7 @@ describe('ApplicationOwnerController', () => {
     expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    expect(res).toEqual('cats');
+    expect(res.url).toEqual('cats');
   });
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {

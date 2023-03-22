@@ -70,25 +70,23 @@ export class ApplicationSubmissionController {
         user.bceidBusinessGuid,
       );
       if (localGovernment) {
-        const application =
+        const applicationSubmission =
           await this.applicationSubmissionService.getForGovernmentByFileId(
             fileId,
             localGovernment,
           );
         return await this.applicationSubmissionService.mapToDetailedDTO(
-          application,
+          applicationSubmission,
           localGovernment,
         );
       }
     }
 
-    const application = await this.applicationSubmissionService.getIfCreator(
-      fileId,
-      user,
-    );
+    const applicationSubmission =
+      await this.applicationSubmissionService.getIfCreator(fileId, user);
 
     return await this.applicationSubmissionService.mapToDetailedDTO(
-      application,
+      applicationSubmission,
     );
   }
 
@@ -121,11 +119,10 @@ export class ApplicationSubmissionController {
       updateDto,
     );
 
-    const mappedApps = await this.applicationSubmissionService.mapToDetailedDTO(
+    return await this.applicationSubmissionService.mapToDetailedDTO(
       application,
       req.user.entity,
     );
-    return mappedApps[0];
   }
 
   @Post('/:fileId/cancel')

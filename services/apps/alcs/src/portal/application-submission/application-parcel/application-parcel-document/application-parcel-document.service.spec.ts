@@ -64,6 +64,7 @@ describe('ApplicationParcelDocumentService', () => {
 
   it('should call through when deleting a document', async () => {
     mockDocumentService.softRemove.mockResolvedValue();
+    mockRepository.remove.mockResolvedValue({} as any);
 
     await service.delete(mockAppDocument);
 
@@ -71,6 +72,7 @@ describe('ApplicationParcelDocumentService', () => {
     expect(mockDocumentService.softRemove.mock.calls[0][0]).toBe(
       mockAppDocument.document,
     );
+    expect(mockRepository.remove).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get', async () => {

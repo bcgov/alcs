@@ -105,15 +105,15 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
 
     mockDocumentService.softRemove.mockResolvedValue();
-    mockRepository.delete.mockResolvedValue({} as any);
+    mockRepository.remove.mockResolvedValue({} as any);
 
     await service.delete(mockAppDocument);
 
     expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.softRemove.mock.calls[0][0]).toBe(mockDocument);
 
-    expect(mockRepository.delete).toHaveBeenCalledTimes(1);
-    expect(mockRepository.delete.mock.calls[0][0]).toBe(mockAppDocument.uuid);
+    expect(mockRepository.remove).toHaveBeenCalledTimes(1);
+    expect(mockRepository.remove.mock.calls[0][0]).toBe(mockAppDocument);
   });
 
   it('should call through for get', async () => {
