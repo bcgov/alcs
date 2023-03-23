@@ -231,7 +231,7 @@ describe('ApplicationSubmissionReviewController', () => {
     );
     mockAppReviewService.verifyComplete.mockReturnValue(applicationReview);
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
-    mockAppValidatorService.validateApplication.mockResolvedValue({
+    mockAppValidatorService.validateSubmission.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
@@ -267,7 +267,7 @@ describe('ApplicationSubmissionReviewController', () => {
       isAuthorized: true,
     });
 
-    mockAppValidatorService.validateApplication.mockResolvedValue({
+    mockAppValidatorService.validateSubmission.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
@@ -326,7 +326,7 @@ describe('ApplicationSubmissionReviewController', () => {
       isAuthorized: false,
     });
     mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
-    mockAppValidatorService.validateApplication.mockResolvedValue({
+    mockAppValidatorService.validateSubmission.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],

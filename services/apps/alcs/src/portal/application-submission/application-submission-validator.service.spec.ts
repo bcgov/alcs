@@ -68,7 +68,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       owners: [],
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(includesError(res.errors, new Error('Missing applicant'))).toBe(
       true,
@@ -80,7 +80,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       owners: [],
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(includesError(res.errors, new Error('Missing applicant'))).toBe(
       true,
@@ -101,7 +101,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -149,7 +149,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(
@@ -180,7 +180,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -209,7 +209,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(res.errors, new Error(`Invalid Parcel ${parcel.uuid}`)),
@@ -233,7 +233,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       owners: [],
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -257,7 +257,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       primaryContactOwnerUuid: mockOwner.uuid,
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -281,7 +281,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       primaryContactOwnerUuid: mockOwner.uuid,
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -305,7 +305,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       primaryContactOwnerUuid: mockOwner.uuid,
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -336,7 +336,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     ];
     mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(
@@ -351,7 +351,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       owners: [],
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(
@@ -375,7 +375,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       localGovernmentUuid: mockLg.uuid,
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(
@@ -403,7 +403,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       westLandUseTypeDescription: 'VALID',
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(res.errors, new Error(`Invalid Parcel Description`)),
@@ -429,7 +429,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       westLandUseTypeDescription: 'VALID',
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(res.errors, new Error(`Invalid Parcel Description`)),
@@ -451,7 +451,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       owners: [],
     });
 
-    const res = await service.validateApplication(applicationSubmission);
+    const res = await service.validateSubmission(applicationSubmission);
 
     expect(
       includesError(
@@ -473,7 +473,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     const documents = [incompleteDocument];
     mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(
@@ -500,7 +500,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       nfuProjectDurationUnit: 'VALID',
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(res.errors, new Error(`NFU Proposal incomplete`)),
@@ -521,7 +521,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       nfuWillImportFill: false,
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(res.errors, new Error(`NFU Proposal incomplete`)),
@@ -550,7 +550,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       typeCode: 'NFUP',
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(res.errors, new Error(`NFU Proposal incomplete`)),
@@ -569,7 +569,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       typeCode: 'TURP',
     });
 
-    const res = await service.validateApplication(application);
+    const res = await service.validateSubmission(application);
 
     expect(
       includesError(res.errors, new Error(`TUR Proposal incomplete`)),

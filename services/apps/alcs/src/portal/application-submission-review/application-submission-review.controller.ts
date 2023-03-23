@@ -166,7 +166,7 @@ export class ApplicationSubmissionReviewController {
     );
 
     const validationResult =
-      await this.applicationValidatorService.validateApplication(application);
+      await this.applicationValidatorService.validateSubmission(application);
 
     if (!validationResult.application) {
       throw new BaseServiceException(

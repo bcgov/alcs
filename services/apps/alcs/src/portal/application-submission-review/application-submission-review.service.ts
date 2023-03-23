@@ -21,26 +21,6 @@ import {
 } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
 
-export type CompletedApplicationSubmissionReview = {
-  localGovernmentFileNumber: string;
-  firstName: string;
-  lastName: string;
-  position: string;
-  department: string;
-  phoneNumber: string;
-  email: string;
-  isOCPDesignation: boolean | null;
-  OCPBylawName: string | null;
-  OCPDesignation: string | null;
-  OCPConsistent: boolean | null;
-  isSubjectToZoning: boolean | null;
-  zoningBylawName: string | null;
-  zoningDesignation: string | null;
-  zoningMinimumLotSize: string | null;
-  isZoningConsistent: boolean | null;
-  isAuthorized: boolean | null;
-};
-
 @Injectable()
 export class ApplicationSubmissionReviewService {
   constructor(

@@ -21,6 +21,7 @@ export const getTypeOrmModuleOptions = (
     autoLoadEntities: true,
     namingStrategy: new SnakeNamingStrategy(),
     uuidExtension: 'pgcrypto',
+    applicationName: 'alcs',
   };
 };
 

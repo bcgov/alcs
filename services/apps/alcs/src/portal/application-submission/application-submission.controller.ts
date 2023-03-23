@@ -145,27 +145,30 @@ export class ApplicationSubmissionController {
 
   @Post('/alcs/submit/:fileId')
   async submitAsApplicant(@Param('fileId') fileId: string, @Req() req) {
-    const application = await this.applicationSubmissionService.getIfCreator(
-      fileId,
-      req.user.entity,
-    );
+    const applicationSubmission =
+      await this.applicationSubmissionService.getIfCreator(
+        fileId,
+        req.user.entity,
+      );
 
     const validationResult =
-      await this.applicationSubmissionValidatorService.validateApplication(
-        application,
+      await this.applicationSubmissionValidatorService.validateSubmission(
+        applicationSubmission,
       );
 
     if (validationResult.application) {
-      const validApplication = validationResult.application;
-      if (validApplication.typeCode === 'TURP') {
-        await this.applicationSubmissionService.submitToAlcs(validApplication);
+      const validatedApplicationSubmission = validationResult.application;
+      if (validatedApplicationSubmission.typeCode === 'TURP') {
+        await this.applicationSubmissionService.submitToAlcs(
+          validatedApplicationSubmission,
+        );
         return await this.applicationSubmissionService.updateStatus(
-          application,
+          applicationSubmission,
           APPLICATION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
         return await this.applicationSubmissionService.submitToLg(
-          validApplication,
+          validatedApplicationSubmission,
         );
       }
     } else {

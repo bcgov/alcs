@@ -280,7 +280,7 @@ describe('ApplicationSubmissionController', () => {
       }),
     );
     mockAppService.updateStatus.mockResolvedValue();
-    mockAppValidationService.validateApplication.mockResolvedValue({
+    mockAppValidationService.validateSubmission.mockResolvedValue({
       application: new ApplicationSubmission({
         typeCode: 'TURP',
       }) as ValidatedApplicationSubmission,
@@ -307,7 +307,7 @@ describe('ApplicationSubmissionController', () => {
         localGovernmentUuid,
       }),
     );
-    mockAppValidationService.validateApplication.mockResolvedValue({
+    mockAppValidationService.validateSubmission.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
@@ -330,7 +330,7 @@ describe('ApplicationSubmissionController', () => {
         typeCode: 'NOT-TURP',
       }),
     );
-    mockAppValidationService.validateApplication.mockResolvedValue({
+    mockAppValidationService.validateSubmission.mockResolvedValue({
       application: undefined,
       errors: [new Error('Failed to validate')],
     });
