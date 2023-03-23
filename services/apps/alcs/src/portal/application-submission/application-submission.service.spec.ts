@@ -160,12 +160,14 @@ describe('ApplicationSubmissionService', () => {
       code: APPLICATION_STATUS.CANCELLED,
     });
     mockStatusRepository.findOneOrFail.mockResolvedValue(cancelStatus);
+    mockRepository.findOneOrFail.mockResolvedValue(new ApplicationSubmission());
 
     mockRepository.save.mockResolvedValue({} as any);
 
     await service.cancel(application);
     expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].status).toEqual(cancelStatus);
   });
 
@@ -188,9 +190,11 @@ describe('ApplicationSubmissionService', () => {
 
     mockStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
     mockRepository.save.mockResolvedValue({} as any);
+    mockRepository.findOneOrFail.mockResolvedValue(new ApplicationSubmission());
 
     await service.submitToLg(new ApplicationSubmission());
     expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].status).toEqual(mockStatus);
   });

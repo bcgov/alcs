@@ -56,7 +56,7 @@ export class ApplicationSubmissionValidatorService {
     private appDocumentService: ApplicationDocumentService,
   ) {}
 
-  async validateApplication(applicationSubmission: ApplicationSubmission) {
+  async validateSubmission(applicationSubmission: ApplicationSubmission) {
     const errors: Error[] = [];
 
     if (!applicationSubmission.applicant) {
