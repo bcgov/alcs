@@ -16,11 +16,7 @@ import { ApplicationSubmission } from '../../portal/application-submission/appli
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {
-  constructor(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    @InjectMapper() mapper: Mapper,
-  ) {
+  constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 

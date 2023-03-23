@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SubmittedApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-nfu-details[application]',
@@ -7,7 +7,7 @@ import { SubmittedApplicationDto } from '../../../../../services/application/app
   styleUrls: ['./nfu-details.component.scss'],
 })
 export class NfuDetailsComponent {
-  @Input() application!: SubmittedApplicationDto;
+  @Input() application!: ApplicationSubmissionDto;
 
   constructor() {}
 }

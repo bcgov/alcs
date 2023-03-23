@@ -15,6 +15,7 @@ import { Application } from '../../alcs/application/application.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
+import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
 
 export class StatusHistory {
@@ -340,4 +341,8 @@ export class ApplicationSubmission extends BaseEntity {
     referencedColumnName: 'fileNumber',
   })
   application: Application;
+
+  @AutoMap(() => ApplicationParcel)
+  @OneToMany(() => ApplicationParcel, (appParcel) => appParcel.application)
+  parcels: ApplicationParcel[];
 }
