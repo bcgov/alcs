@@ -72,7 +72,7 @@ export class AuthorizationController {
   async getLoginUrl() {
     try {
       const sessionId = v4();
-      const baseUrl = this.config.get<string>('PORTAL.BASE_URL');
+      const baseUrl = this.config.get<string>('ALCS.BASE_URL');
       const loginUrl = this.keycloak.loginUrl(
         sessionId,
         `${baseUrl}/authorize`,
