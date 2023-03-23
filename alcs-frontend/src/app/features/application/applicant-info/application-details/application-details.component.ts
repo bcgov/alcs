@@ -5,7 +5,7 @@ import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
 } from '../../../../services/application/application-document/application-document.service';
-import { SubmittedApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-application-details',
@@ -15,7 +15,7 @@ import { SubmittedApplicationDto } from '../../../../services/application/applic
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() submittedApplication!: SubmittedApplicationDto;
+  @Input() submittedApplication!: ApplicationSubmissionDto;
   @Input() applicationType!: string;
   @Input() fileNumber!: string;
 

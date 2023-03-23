@@ -3,7 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { DOCUMENT_TYPE } from '../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
-import { ApplicationDto, SubmittedApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto, ApplicationSubmissionDto } from '../../../services/application/application.dto';
 
 @Component({
   selector: 'app-applicant-info',
@@ -16,7 +16,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
   application: ApplicationDto | undefined;
-  submission?: SubmittedApplicationDto = undefined;
+  submission?: ApplicationSubmissionDto = undefined;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,

@@ -80,7 +80,7 @@ export interface SubmittedApplicationParcelDto {
   documents: ApplicationParcelDocumentDto[];
 }
 
-export interface SubmittedApplicationDto {
+export interface ApplicationSubmissionDto {
   parcels: SubmittedApplicationParcelDto[];
   otherParcels: SubmittedApplicationParcelDto[];
   documents: ApplicationDocumentDto[];
@@ -140,7 +140,7 @@ export interface ApplicationDto {
   card?: CardDto;
   statusHistory: StatusHistory[];
   applicationReview?: ApplicationReviewDto;
-  submittedApplication?: SubmittedApplicationDto;
+  submittedApplication?: ApplicationSubmissionDto;
 }
 
 export interface UpdateApplicationDto {

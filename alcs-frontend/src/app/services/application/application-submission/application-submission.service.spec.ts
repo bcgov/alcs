@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { SubmittedApplicationDto, SubmittedApplicationOwnerDto } from '../application.dto';
+import { ApplicationSubmissionDto, SubmittedApplicationOwnerDto } from '../application.dto';
 
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -12,7 +12,7 @@ describe('ApplicationSubmissionService', () => {
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
 
-  const mockSubmittedApplication: SubmittedApplicationDto = {
+  const mockSubmittedApplication: ApplicationSubmissionDto = {
     parcels: [],
     otherParcels: [],
     documents: [],

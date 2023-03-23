@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
-import { SubmittedApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-parcel',
@@ -10,7 +10,7 @@ import { SubmittedApplicationDto } from '../../../../../services/application/app
   styleUrls: ['./parcel.component.scss'],
 })
 export class ParcelComponent implements OnInit {
-  @Input() application!: SubmittedApplicationDto;
+  @Input() application!: ApplicationSubmissionDto;
   @Input() files: ApplicationDocumentDto[] = [];
   @Input() parcelType!: string;
 

@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { openFileInline } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
-import { SubmittedApplicationDto } from '../application.dto';
+import { ApplicationSubmissionDto } from '../application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +14,9 @@ export class ApplicationSubmissionService {
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  async fetchSubmission(fileNumber: string): Promise<SubmittedApplicationDto> {
+  async fetchSubmission(fileNumber: string): Promise<ApplicationSubmissionDto> {
     try {
-      return firstValueFrom(this.http.get<SubmittedApplicationDto>(`${this.baseUrl}/${fileNumber}`));
+      return firstValueFrom(this.http.get<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}`));
     } catch (e) {
       this.toastService.showErrorToast('Failed to fetch Application Submission');
       throw e;

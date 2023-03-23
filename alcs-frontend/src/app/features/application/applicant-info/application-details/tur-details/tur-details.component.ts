@@ -5,7 +5,7 @@ import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
 } from '../../../../../services/application/application-document/application-document.service';
-import { SubmittedApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-tur-details[application]',
@@ -13,11 +13,11 @@ import { SubmittedApplicationDto } from '../../../../../services/application/app
   styleUrls: ['./tur-details.component.scss'],
 })
 export class TurDetailsComponent {
-  _application: SubmittedApplicationDto | undefined;
+  _application: ApplicationSubmissionDto | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
 
-  @Input() set application(application: SubmittedApplicationDto | undefined) {
+  @Input() set application(application: ApplicationSubmissionDto | undefined) {
     if (application) {
       this._application = application;
     }
