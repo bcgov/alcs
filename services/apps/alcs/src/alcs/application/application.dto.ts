@@ -373,8 +373,8 @@ export class ApplicationDto {
   card?: CardDto;
 
   @AutoMap()
-  @Type(() => ApplicationReviewDto)
-  applicationReview?: ApplicationReviewDto;
+  @Type(() => ApplicationSubmissionReviewDto)
+  applicationReview?: ApplicationSubmissionReviewDto;
 
   @AutoMap()
   @Type(() => SubmittedApplicationDto)

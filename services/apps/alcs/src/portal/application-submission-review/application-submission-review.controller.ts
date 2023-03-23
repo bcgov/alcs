@@ -64,14 +64,18 @@ export class ApplicationSubmissionReviewController {
       ![
         APPLICATION_STATUS.SUBMITTED_TO_ALC,
         APPLICATION_STATUS.REFUSED_TO_FORWARD,
-      ].includes(applicationReview.application.statusCode as APPLICATION_STATUS)
+      ].includes(
+        applicationReview.applicationSubmission
+          .statusCode as APPLICATION_STATUS,
+      )
     ) {
       throw new NotFoundException('Failed to load review');
     }
 
     const localGovernments = await this.localGovernmentService.list();
     const matchingGovernment = localGovernments.find(
-      (lg) => lg.uuid === applicationReview.application.localGovernmentUuid,
+      (lg) =>
+        lg.uuid === applicationReview.applicationSubmission.localGovernmentUuid,
     );
     if (!matchingGovernment) {
       throw new BaseServiceException('Failed to load Local Government');

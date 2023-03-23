@@ -82,8 +82,11 @@ export class ApplicationSubmissionReview extends Base {
 
   @AutoMap()
   @OneToOne(() => ApplicationSubmission, { nullable: false })
-  @JoinColumn()
-  application: ApplicationSubmission;
+  @JoinColumn({
+    name: 'application_file_number',
+    referencedColumnName: 'fileNumber',
+  })
+  applicationSubmission: ApplicationSubmission;
 
   @AutoMap()
   @Column()
