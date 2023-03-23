@@ -131,6 +131,10 @@ export class ApplicationParcelProfile extends AutomapperProfile {
             }
           }),
         ),
+        forMember(
+          (a) => a.ownershipType,
+          mapFrom((ad) => ad.ownershipType.description),
+        ),
       );
     };
   }

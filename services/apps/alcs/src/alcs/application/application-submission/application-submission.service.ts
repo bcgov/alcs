@@ -34,6 +34,7 @@ export class ApplicationSubmissionService {
           documents: {
             document: true,
           },
+          ownershipType: true,
         },
         owners: {
           type: true,

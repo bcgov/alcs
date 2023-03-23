@@ -1,5 +1,10 @@
 <section>
-  <app-parcel *ngIf="files && submittedApplication" [files]="files" [application]="submittedApplication"></app-parcel>
+  <app-parcel
+    *ngIf="files && submittedApplication"
+    [files]="files"
+    [application]="submittedApplication"
+    parcelType="application"
+  ></app-parcel>
 </section>
 <section>
   <app-parcel
@@ -123,7 +128,7 @@
   <app-tur-details
     *ngIf="submittedApplication && applicationType === 'TURP'"
     [application]="submittedApplication"
-    [files]='files'
+    [files]="files"
   ></app-tur-details>
 </section>
 <section>
@@ -144,9 +149,7 @@
           <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
         </div>
       </ng-container>
-      <div *ngIf='otherFiles.length === 0' class='full-width'>
-        No optional attachments
-      </div>
+      <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
     </div>
   </div>
 </section>

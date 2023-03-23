@@ -26,17 +26,17 @@ export class ParcelComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.parcels = this.application.parcels.map((parcel) => {
-      console.log(this.files);
-
-      return {
-        ...parcel,
-        owners: parcel.owners.map((owner) => ({
-          ...owner,
-          corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
-        })),
-      };
-    });
+    this.parcels = this.application.parcels
+      .filter((e) => e.parcelType === this.parcelType)
+      .map((parcel) => {
+        return {
+          ...parcel,
+          owners: parcel.owners.map((owner) => ({
+            ...owner,
+            corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
+          })),
+        };
+      });
 
     if (this.parcelType === 'other') {
       this.pageTitle = 'Other Parcels in the Community';

@@ -13,7 +13,6 @@ import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
-import { DocumentModule } from './document/document.module';
 
 @Module({
   imports: [
