@@ -11,6 +11,7 @@ import {
   DOCUMENT_TYPE,
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { Application } from '../../alcs/application/application.entity';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 
@@ -25,6 +26,10 @@ describe('ApplicationSubmissionReviewService', () => {
   const mockLocalGovernment = new ApplicationLocalGovernment({
     isFirstNation: true,
     isActive: true,
+  });
+
+  const mockSubmission = new ApplicationSubmission({
+    application: { uuid: 'fake' } as Application,
   });
 
   beforeEach(async () => {
@@ -89,7 +94,9 @@ describe('ApplicationSubmissionReviewService', () => {
   });
 
   it('should delete the staff report and the resolution document when there is no ocp or zoning for update', async () => {
-    const appReview = new ApplicationSubmissionReview({});
+    const appReview = new ApplicationSubmissionReview({
+      applicationSubmission: mockSubmission,
+    });
     mockRepository.findOne.mockResolvedValue(appReview);
     mockAppDocumentService.deleteByType.mockResolvedValue({} as any);
     mockRepository.save.mockResolvedValue({} as any);
@@ -202,10 +209,8 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const application = new ApplicationSubmission({});
-
     expect(() => {
-      service.verifyComplete(application, appReview, documents, false);
+      service.verifyComplete(mockSubmission, appReview, documents, false);
     }).toThrow(
       new BaseServiceException('Review missing staff report document'),
     );
@@ -237,10 +242,8 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const application = new ApplicationSubmission({});
-
     const completedReview = service.verifyComplete(
-      application,
+      mockSubmission,
       appReview,
       documents,
       false,
@@ -273,10 +276,8 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const application = new ApplicationSubmission({});
-
     const completedReview = service.verifyComplete(
-      application,
+      mockSubmission,
       appReview,
       documents,
       false,
@@ -309,10 +310,8 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const application = new ApplicationSubmission({});
-
     const completedReview = service.verifyComplete(
-      application,
+      mockSubmission,
       appReview,
       documents,
       false,
@@ -340,10 +339,8 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const application = new ApplicationSubmission({});
-
     const completedReview = service.verifyComplete(
-      application,
+      mockSubmission,
       appReview,
       documents,
       true,

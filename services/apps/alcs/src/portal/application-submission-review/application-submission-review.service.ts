@@ -56,9 +56,14 @@ export class ApplicationSubmissionReviewService {
   ) {
     return this.applicationSubmissionReviewRepository.findOne({
       where: {
-        application: {
+        applicationSubmission: {
           fileNumber,
           localGovernmentUuid: localGovernment.uuid,
+        },
+      },
+      relations: {
+        applicationSubmission: {
+          application: true,
         },
       },
     });
@@ -67,7 +72,7 @@ export class ApplicationSubmissionReviewService {
   getForOwner(fileNumber: string, user: User) {
     return this.applicationSubmissionReviewRepository.findOneOrFail({
       where: {
-        application: {
+        applicationSubmission: {
           fileNumber,
           createdBy: {
             uuid: user.uuid,
@@ -75,14 +80,14 @@ export class ApplicationSubmissionReviewService {
         },
       },
       relations: {
-        application: true,
+        applicationSubmission: true,
       },
     });
   }
 
   async startReview(application: ApplicationSubmission) {
     const applicationReview = new ApplicationSubmissionReview({
-      application,
+      applicationSubmission: application,
     });
     return await this.applicationSubmissionReviewRepository.save(
       applicationReview,
@@ -180,12 +185,12 @@ export class ApplicationSubmissionReviewService {
       applicationReview.isAuthorized = null;
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        applicationReview.applicationFileNumber,
+        applicationReview.applicationSubmission.application.uuid,
       );
 
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.STAFF_REPORT,
-        applicationReview.applicationFileNumber,
+        applicationReview.applicationSubmission.application.uuid,
       );
     }
 
