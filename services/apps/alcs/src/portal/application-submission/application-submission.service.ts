@@ -191,55 +191,6 @@ export class ApplicationSubmissionService {
         dateSubmittedToAlc: new Date(),
         // TODO: remove this, this should not be part of submission payload, the actual is tbd
         applicationReview: mappedReview,
-
-        // TODO: submitted application will be deleted once Applicant info will be remapped to point to actual data instead of json
-        submittedApplication: {
-          nfuPurpose: application.nfuPurpose ?? undefined,
-          nfuOutsideLands: application.nfuOutsideLands ?? undefined,
-          nfuProjectDurationUnit:
-            application.nfuProjectDurationUnit ?? undefined,
-          nfuAgricultureSupport: application.nfuAgricultureSupport ?? undefined,
-          nfuWillImportFill: application.nfuWillImportFill ?? undefined,
-          nfuFillTypeDescription:
-            application.nfuFillTypeDescription ?? undefined,
-          nfuFillOriginDescription:
-            application.nfuFillOriginDescription ?? undefined,
-          nfuHectares: application.nfuHectares ?? undefined,
-          nfuTotalFillPlacement: application.nfuTotalFillPlacement ?? undefined,
-          nfuMaxFillDepth: application.nfuMaxFillDepth ?? undefined,
-          nfuFillVolume: application.nfuFillVolume ?? undefined,
-          nfuProjectDurationAmount:
-            application.nfuProjectDurationAmount ?? undefined,
-          turPurpose: application.turPurpose ?? undefined,
-          turOutsideLands: application.turOutsideLands ?? undefined,
-          turAgriculturalActivities:
-            application.turAgriculturalActivities ?? undefined,
-          turReduceNegativeImpacts:
-            application.turReduceNegativeImpacts ?? undefined,
-          turTotalCorridorArea: application.turTotalCorridorArea ?? undefined,
-          turAllOwnersNotified: application.turAllOwnersNotified ?? undefined,
-
-          parcelsAgricultureDescription:
-            application.parcelsAgricultureDescription ?? undefined,
-          parcelsAgricultureImprovementDescription:
-            application.parcelsAgricultureImprovementDescription ?? undefined,
-          parcelsNonAgricultureUseDescription:
-            application.parcelsNonAgricultureUseDescription ?? undefined,
-          northLandUseType: application.northLandUseType ?? undefined,
-          northLandUseTypeDescription:
-            application.northLandUseTypeDescription ?? undefined,
-          eastLandUseType: application.eastLandUseType ?? undefined,
-          eastLandUseTypeDescription:
-            application.eastLandUseTypeDescription ?? undefined,
-          southLandUseType: application.southLandUseType ?? undefined,
-          southLandUseTypeDescription:
-            application.southLandUseTypeDescription ?? undefined,
-          westLandUseType: application.westLandUseType ?? undefined,
-          westLandUseTypeDescription:
-            application.westLandUseTypeDescription ?? undefined,
-          primaryContactOwnerUuid:
-            application.primaryContactOwnerUuid ?? undefined,
-        } as ApplicationSubmissionDetailedDto,
       });
     } catch (ex) {
       this.logger.error(ex);

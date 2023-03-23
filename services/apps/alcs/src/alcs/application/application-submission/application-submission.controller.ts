@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -16,7 +14,6 @@ export class ApplicationSubmissionController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private documentService: DocumentService,
-    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @UserRoles(...ANY_AUTH_ROLE)

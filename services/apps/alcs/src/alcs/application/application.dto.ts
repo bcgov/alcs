@@ -10,7 +10,6 @@ import {
 } from 'class-validator';
 import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
 import { ApplicationParcelDocumentDto } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
-import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -405,5 +404,4 @@ export class CreateApplicationServiceDto {
   localGovernmentUuid?: string;
   statusHistory?: StatusHistory[];
   applicationReview?: ApplicationSubmissionReviewDto;
-  submittedApplication?: ApplicationSubmissionDetailedDto;
 }
