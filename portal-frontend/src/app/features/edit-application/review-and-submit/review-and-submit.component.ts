@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -14,6 +15,7 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   private application: ApplicationSubmissionDetailedDto | undefined;
 
   constructor(

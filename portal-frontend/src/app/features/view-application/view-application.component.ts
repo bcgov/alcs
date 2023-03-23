@@ -27,6 +27,7 @@ enum MOBILE_STEP {
 export class ViewApplicationComponent implements OnInit, OnDestroy {
   application: ApplicationSubmissionDetailedDto | undefined;
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+  $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   applicationReview: ApplicationSubmissionReviewDto | undefined;
 
   $destroy = new Subject<void>();
@@ -77,6 +78,7 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
   async loadApplication(fileId: string) {
     this.application = await this.applicationService.getByFileId(fileId);
     this.$application.next(this.application);
+    this.loadApplicationDocuments(fileId);
 
     if (
       this.application &&
@@ -84,11 +86,6 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
       this.application.typeCode !== 'TURP'
     ) {
       this.loadApplicationReview(fileId);
-      this.staffReport = this.application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-      this.resolutionDocument = this.application.documents.filter(
-        (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
-      );
-      this.otherAttachments = this.application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
     }
   }
 
@@ -134,5 +131,15 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
   onNavigateHome() {
     this.router.navigateByUrl(`home`);
+  }
+
+  private async loadApplicationDocuments(fileId: string) {
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
+      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
+      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
+      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+    }
   }
 }

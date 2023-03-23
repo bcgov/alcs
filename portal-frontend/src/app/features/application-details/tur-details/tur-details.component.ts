@@ -17,9 +17,12 @@ export class TurDetailsComponent {
   @Input() set application(application: ApplicationSubmissionDetailedDto | undefined) {
     if (application) {
       this._application = application;
-      this.servingNotice = application.documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);
-      this.proposalMap = application.documents.filter((document) => document.type === DOCUMENT.PROPOSAL_MAP);
     }
+  }
+
+  @Input() set applicationDocuments(documents: ApplicationDocumentDto[]) {
+    this.servingNotice = documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);
+    this.proposalMap = documents.filter((document) => document.type === DOCUMENT.PROPOSAL_MAP);
   }
 
   servingNotice: ApplicationDocumentDto[] = [];

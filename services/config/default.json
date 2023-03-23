@@ -9,7 +9,7 @@
     "FRONTEND_ROOT": "http://localhost:4200"
   },
   "PORTAL": {
-    "BASE_URL": "http://localhost:8081",
+    "BASE_URL": "http://localhost:8080",
     "PORT": 8081,
     "API_PREFIX": "",
     "FRONTEND_ROOT": "http://localhost:4201",

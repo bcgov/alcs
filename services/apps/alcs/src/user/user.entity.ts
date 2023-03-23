@@ -11,6 +11,13 @@ export class UserSettings {
 
 @Entity()
 export class User extends Base {
+  constructor(data?: Partial<User>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @Column()
   email: string;

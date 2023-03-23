@@ -1,4 +1,5 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ArgumentsHost, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -11,9 +12,11 @@ import { AuthorizationFilter } from './authorization.filter';
 describe('AuthorizationFilter', () => {
   let filter: AuthorizationFilter;
   let mockKeycloak: DeepMocked<Keycloak>;
+  let mockRedisService: DeepMocked<RedisService>;
 
   beforeEach(async () => {
     mockKeycloak = createMock<Keycloak>();
+    mockRedisService = createMock();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthorizationFilter,
@@ -24,6 +27,10 @@ describe('AuthorizationFilter', () => {
         {
           provide: CONFIG_TOKEN,
           useValue: config,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
         },
       ],
     }).compile();

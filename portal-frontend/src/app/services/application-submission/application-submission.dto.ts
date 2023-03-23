@@ -28,7 +28,6 @@ export interface ApplicationSubmissionDto {
   canEdit: boolean;
   canReview: boolean;
   canView: boolean;
-  documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;

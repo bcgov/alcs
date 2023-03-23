@@ -2,12 +2,10 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
-import { RedisService } from '@app/common/redis/redis.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisClientType } from 'redis';
 import {
   Between,
   FindOptionsOrder,
@@ -21,6 +19,7 @@ import {
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
+import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -76,15 +75,16 @@ export class ApplicationService {
     private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
-    private redisService: RedisService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     @InjectMapper() private applicationMapper: Mapper,
-  ) {
-    this.loadApplicationTypesToRedis();
-  }
+  ) {}
 
   async create(
     application: CreateApplicationServiceDto,
     persist = true,
+    createCard = true,
   ): Promise<Application> {
     const existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
@@ -108,11 +108,13 @@ export class ApplicationService {
       typeCode: application.typeCode,
       region,
       statusHistory: application.statusHistory,
+      // TODO: remove this once applicationReview refactored
       applicationReview: application.applicationReview,
-      submittedApplication: application.submittedApplication,
     });
 
-    newApplication.card = new Card();
+    if (createCard) {
+      newApplication.card = new Card();
+    }
 
     if (persist) {
       await this.applicationRepository.save(newApplication);
@@ -120,6 +122,51 @@ export class ApplicationService {
     } else {
       return newApplication;
     }
+  }
+
+  async submit(application: CreateApplicationServiceDto): Promise<Application> {
+    const existingApplication = await this.applicationRepository.findOne({
+      where: { fileNumber: application.fileNumber },
+    });
+
+    if (!existingApplication) {
+      throw new ServiceValidationException(
+        `Application with file number does not exist ${application.fileNumber}`,
+      );
+    }
+
+    if (!application.localGovernmentUuid) {
+      throw new ServiceValidationException(
+        `Local government is not set for application ${application.fileNumber}`,
+      );
+    }
+
+    let region = application.regionCode
+      ? await this.codeService.fetchRegion(application.regionCode)
+      : undefined;
+
+    if (!region) {
+      const localGov = await this.localGovernmentService.getByUuid(
+        application.localGovernmentUuid,
+      );
+      region = localGov?.preferredRegion;
+    }
+
+    existingApplication.fileNumber = application.fileNumber;
+    existingApplication.applicant = application.applicant;
+    existingApplication.dateSubmittedToAlc =
+      application.dateSubmittedToAlc || undefined;
+    existingApplication.localGovernmentUuid = application.localGovernmentUuid;
+    existingApplication.typeCode = application.typeCode;
+    existingApplication.region = region;
+    existingApplication.statusHistory = application.statusHistory ?? [];
+    // TODO: remove this once applicationReview refactored
+    existingApplication.applicationReview = application.applicationReview;
+
+    existingApplication.card = new Card();
+
+    await this.applicationRepository.save(existingApplication);
+    return this.getOrFail(application.fileNumber);
   }
 
   async updateByFileNumber(
@@ -301,8 +348,8 @@ export class ApplicationService {
     );
   }
 
-  private async loadApplicationTypesToRedis() {
-    const localGovernments = await this.applicationTypeRepository.find({
+  async fetchApplicationTypes() {
+    return await this.applicationTypeRepository.find({
       select: {
         code: true,
         portalLabel: true,
@@ -310,13 +357,6 @@ export class ApplicationService {
         label: true,
       },
     });
-
-    const jsonBlob = JSON.stringify(localGovernments);
-    const redis = this.redisService.getClient() as RedisClientType;
-    await redis.set('applicationTypes', jsonBlob);
-    this.logger.debug(
-      `Loaded ${localGovernments.length} application types into Redis`,
-    );
   }
 
   private async getNextFileNumber() {
@@ -337,5 +377,17 @@ export class ApplicationService {
     } while (application);
 
     return fileNumber;
+  }
+
+  async getUuid(fileNumber: string) {
+    const application = await this.applicationRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+      select: {
+        uuid: true,
+      },
+    });
+    return application.uuid;
   }
 }

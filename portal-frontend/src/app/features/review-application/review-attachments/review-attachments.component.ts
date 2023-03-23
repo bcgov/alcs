@@ -4,7 +4,6 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-application.component';
@@ -15,7 +14,7 @@ import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-app
   styleUrls: ['./review-attachments.component.scss'],
 })
 export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep: ReviewApplicationSteps | ReviewApplicationFngSteps = ReviewApplicationSteps.Attachments;
   @Input() showErrors = false;
@@ -65,14 +64,10 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.resolutionDocument = application.documents.filter(
-          (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
-        );
-        this.staffReport = application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-        this.otherAttachments = application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
-      }
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
+      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
+      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
     });
   }
 
@@ -82,9 +77,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async loadApplication(fileId: string) {
-    const application = await this.applicationService.getByFileId(fileId);
-    this.$application.next(application);
+  async loadApplicationDocuments(fileId: string) {
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
+    }
   }
 
   async attachFile(fileHandle: FileHandle, documentType: DOCUMENT) {
@@ -95,14 +92,14 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
         documentType,
         'Local Government'
       );
-      await this.loadApplication(this.fileId);
+      await this.loadApplicationDocuments(this.fileId);
     }
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
     if (this.fileId) {
       await this.applicationDocumentService.deleteExternalFile($event.uuid);
-      await this.loadApplication(this.fileId);
+      await this.loadApplicationDocuments(this.fileId);
     }
   }
 

@@ -8,15 +8,14 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-} from '../application-grpc/alcs-application.message.interface';
+import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
+import { ApplicationParcelDocumentDto } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationDecisionMeetingDto } from '../decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
+import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
 
 export class ApplicationReviewDto {
@@ -126,11 +125,11 @@ export class SubmittedApplicationParcelDto {
   @AutoMap()
   parcelType: string;
 
-  @AutoMap(() => [String])
-  documentUuids: string[];
-
   @AutoMap(() => [SubmittedApplicationOwnerDto])
   owners: SubmittedApplicationOwnerDto[];
+
+  @AutoMap(() => [ApplicationParcelDocumentDto])
+  documents: ApplicationParcelDocumentDto[];
 }
 
 export class SubmittedApplicationDto {
@@ -228,6 +227,9 @@ export class SubmittedApplicationDto {
 
   @AutoMap()
   turTotalCorridorArea?: string;
+
+  @AutoMap(() => [ApplicationDocumentDto])
+  documents: ApplicationDocumentDto[];
 }
 
 export class CreateApplicationDto {
@@ -371,8 +373,8 @@ export class ApplicationDto {
   card?: CardDto;
 
   @AutoMap()
-  @Type(() => ApplicationReviewDto)
-  applicationReview?: ApplicationReviewDto;
+  @Type(() => ApplicationSubmissionReviewDto)
+  applicationReview?: ApplicationSubmissionReviewDto;
 
   @AutoMap()
   @Type(() => SubmittedApplicationDto)
@@ -399,8 +401,7 @@ export class CreateApplicationServiceDto {
   typeCode: string;
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
   statusHistory?: StatusHistory[];
-  applicationReview?: ApplicationReviewGrpc;
-  submittedApplication?: SubmittedApplicationGrpc;
+  applicationReview?: ApplicationSubmissionReviewDto;
 }

@@ -52,7 +52,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.Attachments">
       <app-review-attachments
-        [$application]="$application"
+        [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-attachments>
@@ -63,6 +63,7 @@
     <div *ngIf="cdkStepper.selectedIndex === reviewAppSteps.ReviewAndSubmit">
       <app-review-submit
         [$application]="$application"
+        [$applicationDocuments]="$applicationDocuments"
         (navigateToStep)="onBeforeSwitchStep($event)"
         [stepper]="cdkStepper"
       ></app-review-submit>
@@ -96,7 +97,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.Attachments">
       <app-review-attachments
-        [$application]="$application"
+        [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-attachments>
@@ -107,6 +108,7 @@
     <div *ngIf="cdkStepper.selectedIndex === reviewAppFngSteps.ReviewAndSubmitFng">
       <app-review-submit-fng
         [$application]="$application"
+        [$applicationDocuments]="$applicationDocuments"
         [stepper]="cdkStepper"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-submit-fng>

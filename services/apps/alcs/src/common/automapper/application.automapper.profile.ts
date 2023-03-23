@@ -1,12 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-  SubmittedApplicationOwnerGrpc,
-  SubmittedApplicationParcelGrpc,
-} from '../../alcs/application-grpc/alcs-application.message.interface';
+
 import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
@@ -19,10 +14,7 @@ import { ApplicationMeeting } from '../../alcs/application/application-meeting/a
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
 import {
   ApplicationDto,
-  ApplicationReviewDto,
   SubmittedApplicationDto,
-  SubmittedApplicationOwnerDto,
-  SubmittedApplicationParcelDto,
 } from '../../alcs/application/application.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
@@ -35,6 +27,7 @@ import { ApplicationTypeDto } from '../../alcs/code/application-code/application
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -52,27 +45,6 @@ export class ApplicationProfile extends AutomapperProfile {
         mapper,
         ApplicationLocalGovernment,
         ApplicationLocalGovernmentDto,
-      );
-
-      createMap(mapper, ApplicationReviewGrpc, ApplicationReviewDto);
-      createMap(mapper, SubmittedApplicationGrpc, SubmittedApplicationDto);
-      createMap(
-        mapper,
-        SubmittedApplicationParcelGrpc,
-        SubmittedApplicationParcelDto,
-      );
-      createMap(
-        mapper,
-        SubmittedApplicationOwnerGrpc,
-        SubmittedApplicationOwnerDto,
-        forMember(
-          (pd) => pd.displayName,
-          mapFrom((p) =>
-            p.organizationName
-              ? p.organizationName
-              : `${p.firstName} ${p.lastName}`,
-          ),
-        ),
       );
 
       createMap(
@@ -136,6 +108,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.fileName,
           mapFrom((ad) => ad.document.fileName),
+        ),
+        forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
         ),
         forMember(
           (a) => a.uploadedBy,
@@ -202,6 +178,26 @@ export class ApplicationProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationDto, Card);
+
+      createMap(
+        mapper,
+        ApplicationSubmission,
+        SubmittedApplicationDto,
+        forMember(
+          (a) => a.documents,
+          mapFrom((ad) => {
+            if (ad.application.documents) {
+              return this.mapper.mapArray(
+                ad.application.documents,
+                ApplicationDocument,
+                ApplicationDocumentDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+      );
     };
   }
 

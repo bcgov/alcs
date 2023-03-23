@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
+import { SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
 
 import { ApplicationDetailsComponent } from './application-details.component';
 
@@ -26,9 +27,25 @@ describe('ApplicationDetailsComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
-    component.application = {
-      submittedApplication: undefined,
-    } as any;
+    component.submittedApplication = {
+      parcels: [],
+      otherParcels: [],
+      documents: [],
+      primaryContact: {} as SubmittedApplicationOwnerDto,
+      parcelsAgricultureDescription: '',
+      parcelsAgricultureImprovementDescription: '',
+      parcelsNonAgricultureUseDescription: '',
+      northLandUseType: '',
+      northLandUseTypeDescription: '',
+      eastLandUseType: '',
+      eastLandUseTypeDescription: '',
+      southLandUseType: '',
+      southLandUseTypeDescription: '',
+      westLandUseType: '',
+      westLandUseTypeDescription: '',
+    };
+    component.applicationType = 'NFUP';
+    component.fileNumber = 'fake';
     fixture.detectChanges();
   });
 

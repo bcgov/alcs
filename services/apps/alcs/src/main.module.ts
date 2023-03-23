@@ -14,12 +14,12 @@ import { AlcsModule } from './alcs/alcs.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
-import { DocumentGrpcModule } from './document-grpc/document-grpc.module';
 import { DocumentModule } from './document/document.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { LogoutController } from './logout/logout.controller';
 import { MainController } from './main.controller';
 import { MainService } from './main.service';
+import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
@@ -38,7 +38,6 @@ import { UserService } from './user/user.service';
       middleware: { mount: true },
     }),
     DocumentModule,
-    DocumentGrpcModule,
     AuthorizationModule,
     RedisModule,
     LoggerModule.forRoot({
@@ -61,6 +60,7 @@ import { UserService } from './user/user.service';
     }),
     CdogsModule,
     AlcsModule,
+    PortalModule,
     UserModule,
   ],
   controllers: [MainController, LogoutController],

@@ -1,5 +1,9 @@
 <div class="applicant-info">
-  <div *ngIf="application && application.submittedApplication">
-    <app-application-details [application]="application"></app-application-details>
+  <div *ngIf="application && submission">
+    <app-application-details
+      [submittedApplication]="submission"
+      [fileNumber]="fileNumber"
+      [applicationType]="application.type.code"
+    ></app-application-details>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
-import { MTX_DATETIME_FORMATS, MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
+import { MtxNativeDatetimeModule, MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline-datepicker.component';

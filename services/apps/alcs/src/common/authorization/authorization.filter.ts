@@ -1,4 +1,5 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
+import { RedisService } from '@app/common/redis/redis.service';
 import {
   ExceptionFilter,
   Catch,
@@ -17,6 +18,7 @@ export class AuthorizationFilter implements ExceptionFilter {
   constructor(
     @Inject(KEYCLOAK_INSTANCE)
     private singleTenant: Keycloak,
+    private redisService: RedisService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 
@@ -27,6 +29,10 @@ export class AuthorizationFilter implements ExceptionFilter {
 
     const sessionId = v4();
     const baseUrl = this.config.get<string>('ALCS.BASE_URL');
+
+    const redis = this.redisService.getClient();
+    redis.set(`session_${sessionId}`, JSON.stringify({ source: 'alcs' }));
+
     const loginUrl = this.singleTenant.loginUrl(
       sessionId,
       `${baseUrl}/authorize`,

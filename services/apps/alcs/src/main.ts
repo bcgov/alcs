@@ -3,7 +3,6 @@ import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions } from '@nestjs/microservices';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -12,11 +11,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
-import { MainModule } from './main.module';
 import { generateModuleGraph } from './commands/graph';
 import { importApplications } from './commands/import';
 import { applyDefaultDocumentTags } from './commands/tag';
-import { grpcOptions } from './providers/grpc/grpc.options.config';
+import { MainModule } from './main.module';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -67,6 +65,7 @@ const registerCors = (app: NestFastifyApplication) => {
       config.get<string>('ALCS.BASE_URL'),
       config.get<string>('KEYCLOAK.AUTH_SERVER'),
       config.get<string>('ALCS.FRONTEND_ROOT'),
+      config.get<string>('PORTAL.FRONTEND_ROOT'),
     ],
   });
 };
@@ -131,8 +130,9 @@ async function bootstrap() {
   registerPipes(app);
 
   // microservices
-  app.connectMicroservice<MicroserviceOptions>(grpcOptions);
-  await app.startAllMicroservices();
+  // GRPC is disabled after the migration to a single service. For now, this is just an example of configuration.
+  // app.connectMicroservice<MicroserviceOptions>(grpcOptions);
+  // await app.startAllMicroservices();
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {

@@ -9,14 +9,12 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-} from '../application-grpc/alcs-application.message.interface';
+import { Base } from '../../common/entities/base.entity';
+import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Base } from '../../common/entities/base.entity';
 import { ApplicationDecisionMeeting } from '../decision/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
@@ -118,19 +116,20 @@ export class Application extends Base {
   @Column()
   typeCode: string;
 
-  @ManyToOne(() => ApplicationRegion)
-  region: ApplicationRegion;
+  @ManyToOne(() => ApplicationRegion, { nullable: true })
+  region?: ApplicationRegion;
 
-  @Column()
-  regionCode: string;
+  @Column({ nullable: true })
+  regionCode?: string;
 
-  @ManyToOne(() => ApplicationLocalGovernment)
-  localGovernment: ApplicationLocalGovernment;
+  @ManyToOne(() => ApplicationLocalGovernment, { nullable: true })
+  localGovernment?: ApplicationLocalGovernment;
 
   @Column({
     type: 'uuid',
+    nullable: true,
   })
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
 
   @AutoMap(() => [StatusHistory])
   @Column({
@@ -142,23 +141,14 @@ export class Application extends Base {
   })
   statusHistory: StatusHistory[];
 
-  @AutoMap(() => ApplicationReviewGrpc)
+  @AutoMap(() => ApplicationSubmissionReviewDto)
   @Column({
     comment:
       'JSONB Column containing the government / first nation government review from the Portal',
     type: 'jsonb',
     nullable: true,
   })
-  applicationReview: ApplicationReviewGrpc;
-
-  @AutoMap(() => SubmittedApplicationGrpc)
-  @Column({
-    comment:
-      'JSONB Column containing the applicants information from the Portal',
-    type: 'jsonb',
-    nullable: true,
-  })
-  submittedApplication: SubmittedApplicationGrpc;
+  applicationReview?: ApplicationSubmissionReviewDto;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
@@ -191,6 +181,7 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'uuid',
+    nullable: true,
   })
   cardUuid: string;
 
@@ -200,4 +191,8 @@ export class Application extends Base {
     (appRecon) => appRecon.application,
   )
   reconsiderations: ApplicationReconsideration[];
+
+  @AutoMap(() => ApplicationSubmission)
+  @OneToOne(() => ApplicationSubmission, (appSub) => appSub.application)
+  submittedApplication?: ApplicationSubmission;
 }
