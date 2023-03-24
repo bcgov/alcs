@@ -190,17 +190,21 @@ export class ApplicationSubmissionService {
         : undefined;
 
     // TODO: Fix App Submission
+    const shouldCreateCard = applicationReview?.isAuthorized ?? true;
     try {
-      submittedApp = await this.applicationService.submit({
-        fileNumber: application.fileNumber,
-        applicant: application.applicant,
-        localGovernmentUuid: application.localGovernmentUuid,
-        typeCode: application.typeCode,
-        statusHistory: application.statusHistory,
-        dateSubmittedToAlc: new Date(),
-        // TODO: remove this, this should not be part of submission payload, the actual is tbd
-        applicationReview: mappedReview,
-      });
+      submittedApp = await this.applicationService.submit(
+        {
+          fileNumber: application.fileNumber,
+          applicant: application.applicant,
+          localGovernmentUuid: application.localGovernmentUuid,
+          typeCode: application.typeCode,
+          statusHistory: application.statusHistory,
+          dateSubmittedToAlc: new Date(),
+          // TODO: remove this, this should not be part of submission payload, the actual is tbd
+          applicationReview: mappedReview,
+        },
+        shouldCreateCard,
+      );
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(
