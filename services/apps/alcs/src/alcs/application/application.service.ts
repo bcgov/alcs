@@ -124,7 +124,10 @@ export class ApplicationService {
     }
   }
 
-  async submit(application: CreateApplicationServiceDto): Promise<Application> {
+  async submit(
+    application: CreateApplicationServiceDto,
+    createCard = true,
+  ): Promise<Application> {
     const existingApplication = await this.applicationRepository.findOne({
       where: { fileNumber: application.fileNumber },
     });
@@ -163,7 +166,9 @@ export class ApplicationService {
     // TODO: remove this once applicationReview refactored
     existingApplication.applicationReview = application.applicationReview;
 
-    existingApplication.card = new Card();
+    if (createCard) {
+      existingApplication.card = new Card();
+    }
 
     await this.applicationRepository.save(existingApplication);
     return this.getOrFail(application.fileNumber);
