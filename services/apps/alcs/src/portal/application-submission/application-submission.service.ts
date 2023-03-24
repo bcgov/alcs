@@ -12,7 +12,6 @@ import { ApplicationLocalGovernmentService } from '../../alcs/application/applic
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { User } from '../../user/user.entity';
-import { ApplicationSubmissionReviewDto } from '../application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -179,17 +178,6 @@ export class ApplicationSubmissionService {
   ) {
     let submittedApp: Application | null = null;
 
-    const mappedReview: ApplicationSubmissionReviewDto | undefined =
-      applicationReview
-        ? ({
-            ...applicationReview,
-            // TODO fix this
-            // isFirstNationGovernment: applicationReview.isFirstNationGovernment,
-            isFirstNationGovernment: false,
-          } as ApplicationSubmissionReviewDto)
-        : undefined;
-
-    // TODO: Fix App Submission
     const shouldCreateCard = applicationReview?.isAuthorized ?? true;
     try {
       submittedApp = await this.applicationService.submit(
@@ -200,8 +188,6 @@ export class ApplicationSubmissionService {
           typeCode: application.typeCode,
           statusHistory: application.statusHistory,
           dateSubmittedToAlc: new Date(),
-          // TODO: remove this, this should not be part of submission payload, the actual is tbd
-          applicationReview: mappedReview,
         },
         shouldCreateCard,
       );

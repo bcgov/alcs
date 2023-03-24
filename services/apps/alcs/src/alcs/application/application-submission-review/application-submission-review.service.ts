@@ -17,13 +17,6 @@ export class ApplicationSubmissionReviewService {
   async get(fileNumber: string) {
     return await this.applicationSubmissionReviewRepository.findOneOrFail({
       where: { applicationFileNumber: fileNumber },
-      //   relations: {
-      //     application: {
-      //       documents: {
-      //         document: true,
-      //       },
-      //     },
-      //   },
     });
   }
 
