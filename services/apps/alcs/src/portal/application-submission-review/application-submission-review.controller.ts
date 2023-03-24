@@ -60,12 +60,18 @@ export class ApplicationSubmissionReviewController {
       req.user.entity,
     );
 
+    if (!applicationReview.application.submittedApplication) {
+      throw new NotFoundException(
+        `Application submission not found for ${fileNumber}`,
+      );
+    }
+
     if (
       ![
         APPLICATION_STATUS.SUBMITTED_TO_ALC,
         APPLICATION_STATUS.REFUSED_TO_FORWARD,
       ].includes(
-        applicationReview.applicationSubmission
+        applicationReview.application.submittedApplication
           .statusCode as APPLICATION_STATUS,
       )
     ) {
@@ -75,7 +81,8 @@ export class ApplicationSubmissionReviewController {
     const localGovernments = await this.localGovernmentService.list();
     const matchingGovernment = localGovernments.find(
       (lg) =>
-        lg.uuid === applicationReview.applicationSubmission.localGovernmentUuid,
+        lg.uuid ===
+        applicationReview.application.submittedApplication!.localGovernmentUuid,
     );
     if (!matchingGovernment) {
       throw new BaseServiceException('Failed to load Local Government');
@@ -163,7 +170,6 @@ export class ApplicationSubmissionReviewController {
     );
 
     const completedReview = this.applicationReviewService.verifyComplete(
-      application,
       applicationReview,
       applicationDocuments,
       userLocalGovernment.isFirstNation,

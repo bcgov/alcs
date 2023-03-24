@@ -36,15 +36,15 @@ export class ApplicationSubmissionReviewService {
   ) {
     return this.applicationSubmissionReviewRepository.findOne({
       where: {
-        applicationSubmission: {
-          fileNumber,
-          localGovernmentUuid: localGovernment.uuid,
+        application: {
+          submittedApplication: {
+            fileNumber,
+            localGovernmentUuid: localGovernment.uuid,
+          },
         },
       },
       relations: {
-        applicationSubmission: {
-          application: true,
-        },
+        application: true,
       },
     });
   }
@@ -52,22 +52,26 @@ export class ApplicationSubmissionReviewService {
   getForOwner(fileNumber: string, user: User) {
     return this.applicationSubmissionReviewRepository.findOneOrFail({
       where: {
-        applicationSubmission: {
-          fileNumber,
-          createdBy: {
-            uuid: user.uuid,
+        applicationFileNumber: fileNumber,
+        application: {
+          submittedApplication: {
+            createdBy: {
+              uuid: user.uuid,
+            },
           },
         },
       },
       relations: {
-        applicationSubmission: true,
+        application: {
+          submittedApplication: true,
+        },
       },
     });
   }
 
   async startReview(application: ApplicationSubmission) {
     const applicationReview = new ApplicationSubmissionReview({
-      applicationSubmission: application,
+      applicationFileNumber: application.fileNumber,
     });
     return await this.applicationSubmissionReviewRepository.save(
       applicationReview,
@@ -85,7 +89,7 @@ export class ApplicationSubmissionReviewService {
     );
 
     if (!applicationReview) {
-      throw new ServiceNotFoundException('Failed to load applicaiton review');
+      throw new ServiceNotFoundException('Failed to load application review');
     }
 
     applicationReview.localGovernmentFileNumber =
@@ -165,12 +169,12 @@ export class ApplicationSubmissionReviewService {
       applicationReview.isAuthorized = null;
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        applicationReview.applicationSubmission.application.uuid,
+        applicationReview.application.uuid,
       );
 
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.STAFF_REPORT,
-        applicationReview.applicationSubmission.application.uuid,
+        applicationReview.application.uuid,
       );
     }
 
@@ -178,7 +182,6 @@ export class ApplicationSubmissionReviewService {
   }
 
   verifyComplete(
-    application: ApplicationSubmission,
     applicationReview: ApplicationSubmissionReview,
     documents: ApplicationDocument[],
     isFirstNationGovernment: boolean,

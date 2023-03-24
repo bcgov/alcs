@@ -403,5 +403,4 @@ export class CreateApplicationServiceDto {
   regionCode?: string;
   localGovernmentUuid?: string;
   statusHistory?: StatusHistory[];
-  applicationReview?: ApplicationSubmissionReviewDto;
 }

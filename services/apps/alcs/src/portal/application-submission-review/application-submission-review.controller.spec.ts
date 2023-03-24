@@ -127,9 +127,11 @@ describe('ApplicationSubmissionReviewController', () => {
 
     const reviewWithApp = new ApplicationSubmissionReview({
       ...applicationReview,
-      applicationSubmission: new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
-        localGovernmentUuid: 'uuid',
+      application: new Application({
+        submittedApplication: new ApplicationSubmission({
+          statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+          localGovernmentUuid: 'uuid',
+        }),
       }),
     });
 
@@ -157,9 +159,11 @@ describe('ApplicationSubmissionReviewController', () => {
 
     const reviewWithApp = new ApplicationSubmissionReview({
       ...applicationReview,
-      applicationSubmission: new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.IN_REVIEW,
-        localGovernmentUuid: 'uuid',
+      application: new Application({
+        submittedApplication: new ApplicationSubmission({
+          statusCode: APPLICATION_STATUS.IN_REVIEW,
+          localGovernmentUuid: 'uuid',
+        }),
       }),
     });
 

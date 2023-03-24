@@ -10,7 +10,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
-import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
+import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
@@ -141,15 +141,6 @@ export class Application extends Base {
   })
   statusHistory: StatusHistory[];
 
-  @AutoMap(() => ApplicationSubmissionReviewDto)
-  @Column({
-    comment:
-      'JSONB Column containing the government / first nation government review from the Portal',
-    type: 'jsonb',
-    nullable: true,
-  })
-  applicationReview?: ApplicationSubmissionReviewDto;
-
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
   pauses: ApplicationPaused[];
@@ -195,4 +186,11 @@ export class Application extends Base {
   @AutoMap(() => ApplicationSubmission)
   @OneToOne(() => ApplicationSubmission, (appSub) => appSub.application)
   submittedApplication?: ApplicationSubmission;
+
+  @AutoMap(() => ApplicationSubmissionReview)
+  @OneToOne(
+    () => ApplicationSubmissionReview,
+    (appReview) => appReview.application,
+  )
+  submittedApplicationReview?: ApplicationSubmissionReview;
 }

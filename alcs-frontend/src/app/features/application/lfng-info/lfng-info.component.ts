@@ -5,8 +5,8 @@ import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
 } from '../../../services/application/application-document/application-document.service';
+import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
 import { ApplicationReviewDto } from '../../../services/application/application.dto';
-import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-lfng-info',
@@ -22,14 +22,15 @@ export class LfngInfoComponent implements OnInit {
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private applicationReviewService: ApplicationReviewService
   ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.subscribe((application) => {
+    this.applicationDetailService.$application.subscribe(async (application) => {
       if (application) {
         this.requiresReview = application.type.code !== 'TURP';
-        this.applicationReview = application.applicationReview;
+        this.applicationReview = await this.applicationReviewService.fetchReview(application.fileNumber);
         this.loadDocuments(application.fileNumber);
       }
     });

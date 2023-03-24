@@ -30,8 +30,8 @@ import {
   CreateApplicationServiceDto,
 } from './application.dto';
 import {
-  APPLICATION_FILE_NUMBER_SEQUENCE,
   Application,
+  APPLICATION_FILE_NUMBER_SEQUENCE,
 } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
@@ -108,8 +108,6 @@ export class ApplicationService {
       typeCode: application.typeCode,
       region,
       statusHistory: application.statusHistory,
-      // TODO: remove this once applicationReview refactored
-      applicationReview: application.applicationReview,
     });
 
     if (createCard) {
@@ -163,8 +161,6 @@ export class ApplicationService {
     existingApplication.typeCode = application.typeCode;
     existingApplication.region = region;
     existingApplication.statusHistory = application.statusHistory ?? [];
-    // TODO: remove this once applicationReview refactored
-    existingApplication.applicationReview = application.applicationReview;
 
     if (createCard) {
       existingApplication.card = new Card();

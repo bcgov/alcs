@@ -95,7 +95,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
   it('should delete the staff report and the resolution document when there is no ocp or zoning for update', async () => {
     const appReview = new ApplicationSubmissionReview({
-      applicationSubmission: mockSubmission,
+      application: new Application({ uuid: 'fake' }),
     });
     mockRepository.findOne.mockResolvedValue(appReview);
     mockAppDocumentService.deleteByType.mockResolvedValue({} as any);
@@ -123,7 +123,7 @@ describe('ApplicationSubmissionReviewService', () => {
     const appReview = new ApplicationSubmissionReview();
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
+      service.verifyComplete(appReview, [], false);
     }).toThrow(new BaseServiceException('Contact information not complete'));
   });
 
@@ -140,7 +140,7 @@ describe('ApplicationSubmissionReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
+      service.verifyComplete(appReview, [], false);
     }).toThrow(new BaseServiceException('OCP information not complete'));
   });
 
@@ -158,7 +158,7 @@ describe('ApplicationSubmissionReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
+      service.verifyComplete(appReview, [], false);
     }).toThrow(new BaseServiceException('Zoning information not complete'));
   });
 
@@ -180,7 +180,7 @@ describe('ApplicationSubmissionReviewService', () => {
     });
 
     expect(() => {
-      service.verifyComplete(new ApplicationSubmission(), appReview, [], false);
+      service.verifyComplete(appReview, [], false);
     }).toThrow(
       new BaseServiceException('Review authorization needs to be set'),
     );
@@ -210,7 +210,7 @@ describe('ApplicationSubmissionReviewService', () => {
     ];
 
     expect(() => {
-      service.verifyComplete(mockSubmission, appReview, documents, false);
+      service.verifyComplete(appReview, documents, false);
     }).toThrow(
       new BaseServiceException('Review missing staff report document'),
     );
@@ -242,12 +242,7 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const completedReview = service.verifyComplete(
-      mockSubmission,
-      appReview,
-      documents,
-      false,
-    );
+    const completedReview = service.verifyComplete(appReview, documents, false);
 
     expect(completedReview).toBeDefined();
     expect(completedReview).toMatchObject(appReview);
@@ -276,12 +271,7 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const completedReview = service.verifyComplete(
-      mockSubmission,
-      appReview,
-      documents,
-      false,
-    );
+    const completedReview = service.verifyComplete(appReview, documents, false);
 
     expect(completedReview).toBeDefined();
     expect(completedReview).toMatchObject(appReview);
@@ -310,12 +300,7 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const completedReview = service.verifyComplete(
-      mockSubmission,
-      appReview,
-      documents,
-      false,
-    );
+    const completedReview = service.verifyComplete(appReview, documents, false);
 
     expect(completedReview).toBeDefined();
     expect(completedReview).toMatchObject(appReview);
@@ -339,12 +324,7 @@ describe('ApplicationSubmissionReviewService', () => {
       }),
     ];
 
-    const completedReview = service.verifyComplete(
-      mockSubmission,
-      appReview,
-      documents,
-      true,
-    );
+    const completedReview = service.verifyComplete(appReview, documents, true);
 
     expect(completedReview).toBeDefined();
     expect(completedReview).toMatchObject(appReview);
