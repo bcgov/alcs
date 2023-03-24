@@ -3,7 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_TYPE,
+} from '../../../../services/application-document/application-document.dto';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
@@ -92,7 +95,7 @@ export class ParcelEntryComponent implements OnInit {
 
   ownerInput = new FormControl<string | null>(null);
 
-  documentTypes = DOCUMENT;
+  documentTypes = DOCUMENT_TYPE;
   maxPurchasedDate = new Date();
 
   constructor(
@@ -186,7 +189,7 @@ export class ParcelEntryComponent implements OnInit {
     this.pid.updateValueAndValidity();
   }
 
-  async attachFile(file: FileHandle, documentType: DOCUMENT, parcelUuid: string) {
+  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
       await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles);

@@ -42,8 +42,10 @@ export class LfngInfoComponent implements OnInit {
 
   private async loadDocuments(fileNumber: string) {
     const documents = await this.applicationDocumentService.getReviewDocuments(fileNumber);
-    this.resolutionDocument = documents.find((doc) => doc.type === DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
-    this.staffReport = documents.find((doc) => doc.type === DOCUMENT_TYPE.STAFF_REPORT);
-    this.otherAttachments = documents.filter((doc) => doc.type === DOCUMENT_TYPE.REVIEW_OTHER);
+    this.resolutionDocument = documents.find((doc) => doc.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
+    this.staffReport = documents.find((doc) => doc.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+
+    //TODO: Is this right?
+    this.otherAttachments = documents.filter((doc) => doc.type?.code === DOCUMENT_TYPE.OTHER);
   }
 }

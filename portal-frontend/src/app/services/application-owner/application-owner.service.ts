@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT } from '../application-document/application-document.dto';
+import { DOCUMENT_TYPE } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import {
@@ -131,7 +131,7 @@ export class ApplicationOwnerService {
       return await this.documentService.uploadFile(
         'owners',
         file,
-        DOCUMENT.CORPORATE_SUMMARY,
+        DOCUMENT_TYPE.CORPORATE_SUMMARY,
         'Applicant',
         `${this.serviceUrl}/attachExternal`
       );

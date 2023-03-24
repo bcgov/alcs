@@ -26,7 +26,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
-    this.setDocuments(this.fileNumber);
+    this.loadDocuments();
   }
 
   ngOnDestroy(): void {
@@ -38,13 +38,16 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     await this.applicationDocumentService.download(uuid, '');
   }
 
-  private async setDocuments(fileNumber: string) {
-    const documents = this.submittedApplication.documents;
-
-    this.otherFiles = documents.filter((document) =>
-      [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type)
+  private async loadDocuments() {
+    const documents = await this.applicationDocumentService.getApplicantDocuments(this.fileNumber);
+    this.otherFiles = documents.filter(
+      (document) =>
+        document.type &&
+        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code)
     );
-    this.authorizationLetters = documents.filter((document) => document.type === DOCUMENT_TYPE.AUTHORIZATION_LETTER);
+    this.authorizationLetters = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER
+    );
     this.files = documents;
   }
 }

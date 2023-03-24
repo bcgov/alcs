@@ -8,23 +8,23 @@ import { ApplicationDocumentDto } from './application-document.dto';
 
 export enum DOCUMENT_TYPE {
   //ALCS
-  DECISION_DOCUMENT = 'decisionDocument',
-  REVIEW_DOCUMENT = 'reviewDocument',
-  CERTIFICATE_OF_TITLE = 'certificateOfTitle',
+  DECISION_DOCUMENT = 'DPAC',
+  OTHER = 'OTHR',
 
   //Government Review
-  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
-  STAFF_REPORT = 'reviewStaffReport',
-  REVIEW_OTHER = 'reviewOther',
+  RESOLUTION_DOCUMENT = 'RESO',
+  STAFF_REPORT = 'STFF',
 
   //Applicant Uploaded
-  CORPORATE_SUMMARY = 'corporateSummary',
-  PROFESSIONAL_REPORT = 'Professional Report',
-  PHOTOGRAPH = 'Photograph',
-  OTHER = 'Other',
-  AUTHORIZATION_LETTER = 'authorizationLetter',
-  SERVING_NOTICE = 'servingNotice',
-  PROPOSAL_MAP = 'proposalMap',
+  CORPORATE_SUMMARY = 'CORS',
+  PROFESSIONAL_REPORT = 'PROR',
+  PHOTOGRAPH = 'PHTO',
+  AUTHORIZATION_LETTER = 'AAGR',
+  CERTIFICATE_OF_TITLE = 'CERT',
+
+  //TUR
+  SERVING_NOTICE = 'POSN',
+  PROPOSAL_MAP = 'PRSK',
 }
 
 @Injectable({

@@ -157,7 +157,7 @@
     <app-file-drag-drop
       id="certificate-of-title-upload"
       [uploadedFiles]="parcel.documents"
-      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
+      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TITLE, parcel.uuid)"
       (deleteFile)="deleteFile($event)"
       (openFile)="openFile($event)"
       (beforeFileUploadOpened)="beforeFileUploadOpened()"

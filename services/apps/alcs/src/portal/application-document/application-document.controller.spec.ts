@@ -5,13 +5,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document.entity';
+} from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { CreateDocumentDto } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
@@ -169,7 +169,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachExternalDocument.mockResolvedValue(
       new ApplicationDocument({
         application: undefined,
-        type: 'fakeType',
+        type: new ApplicationDocumentCode(),
         uuid: fakeUuid,
         document: new Document({
           uploadedAt: new Date(),

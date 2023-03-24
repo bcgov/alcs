@@ -15,12 +15,13 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { ApplicationDocumentDto } from './application-document.dto';
 import {
-  ApplicationDocument,
+  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
-} from './application-document.entity';
+} from './application-document-code.entity';
+import { ApplicationDocumentDto } from './application-document.dto';
+import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -36,7 +37,7 @@ export class ApplicationDocumentController {
   @UserRoles(...ANY_AUTH_ROLE)
   async attachDocument(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: string,
+    @Param('documentType') documentType: DOCUMENT_TYPE,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
     if (!req.isMultipart()) {
@@ -45,11 +46,11 @@ export class ApplicationDocumentController {
 
     const uploadableDocumentTypes = [
       DOCUMENT_TYPE.DECISION_DOCUMENT,
-      DOCUMENT_TYPE.REVIEW_DOCUMENT,
+      DOCUMENT_TYPE.OTHER,
     ];
 
     if (
-      !uploadableDocumentTypes.includes(documentType as DOCUMENT_TYPE) &&
+      !uploadableDocumentTypes.includes(documentType) &&
       documentType !== null
     ) {
       throw new BadRequestException(
@@ -79,15 +80,8 @@ export class ApplicationDocumentController {
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationDocumentDto[]> {
     const documents = await this.applicationDocumentService.list(fileNumber);
-
-    const reviewTypes = [
-      DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-      DOCUMENT_TYPE.STAFF_REPORT,
-      DOCUMENT_TYPE.REVIEW_OTHER,
-    ];
-
-    const reviewDocuments = documents.filter((doc) =>
-      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    const reviewDocuments = documents.filter(
+      (doc) => doc.document.source === DOCUMENT_SOURCE.LFNG,
     );
 
     return this.mapper.mapArray(

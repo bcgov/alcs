@@ -25,8 +25,8 @@ export class TurDetailsComponent {
 
   @Input() set files(files: ApplicationDocumentDto[] | undefined) {
     if (files) {
-      this.servingNotice = files.filter((file) => file.type === DOCUMENT_TYPE.SERVING_NOTICE);
-      this.proposalMap = files.filter((file) => file.type === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.servingNotice = files.filter((file) => file.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
+      this.proposalMap = files.filter((file) => file.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     }
   }
 

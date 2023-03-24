@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
@@ -239,8 +239,8 @@ export class ApplicationSubmissionReviewController {
         [
           DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
           DOCUMENT_TYPE.STAFF_REPORT,
-          DOCUMENT_TYPE.REVIEW_OTHER,
-        ].includes(document.type as DOCUMENT_TYPE),
+          //DOCUMENT_TYPE.REVIEW_OTHER, DELETE OTHER where Source is L/FNG
+        ].includes(document.type?.code as DOCUMENT_TYPE),
       );
       for (const document of documentsToDelete) {
         await this.applicationDocumentService.delete(document);

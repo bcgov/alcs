@@ -6,9 +6,10 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document.entity';
+} from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { User } from '../../user/user.entity';
@@ -373,10 +374,14 @@ describe('ApplicationSubmissionReviewController', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        type: new ApplicationDocumentCode({
+          code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        }),
       }),
       new ApplicationDocument({
-        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        type: new ApplicationDocumentCode({
+          code: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        }),
       }),
     ];
     mockAppDocService.list.mockResolvedValue(documents);
