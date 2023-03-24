@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Application } from '../../alcs/application/application.entity';
 import { Base } from '../../common/entities/base.entity';
-import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 
 @Entity()
 export class ApplicationSubmissionReview extends Base {
@@ -81,14 +81,17 @@ export class ApplicationSubmissionReview extends Base {
   isAuthorized: boolean | null;
 
   @AutoMap()
-  @OneToOne(() => ApplicationSubmission, { nullable: false })
+  @Column()
+  applicationFileNumber: string;
+
+  @AutoMap(() => Application)
+  @OneToOne(
+    () => Application,
+    (application) => application.submittedApplicationReview,
+  )
   @JoinColumn({
     name: 'application_file_number',
     referencedColumnName: 'fileNumber',
   })
-  applicationSubmission: ApplicationSubmission;
-
-  @AutoMap()
-  @Column()
-  applicationFileNumber: string;
+  application: Application;
 }

@@ -7,6 +7,7 @@ import { ApplicationParcelProfile } from '../../common/automapper/application-pa
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
+import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
@@ -24,6 +25,8 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
+import { ApplicationSubmissionReviewController } from './application-submission-review/application-submission-review.controller';
+import { ApplicationSubmissionReviewService } from './application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionController } from './application-submission/application-submission.controller';
 import { ApplicationSubmissionService } from './application-submission/application-submission.service';
 import { ApplicationTimeTrackingService } from './application-time-tracking.service';
@@ -42,6 +45,7 @@ import { ApplicationService } from './application.service';
       ApplicationLocalGovernment,
       Board,
       ApplicationSubmission,
+      ApplicationSubmissionReview,
     ]),
     NotificationModule,
     DocumentModule,
@@ -64,6 +68,7 @@ import { ApplicationService } from './application.service';
     ApplicationDocumentService,
     ApplicationLocalGovernmentService,
     ApplicationSubmissionService,
+    ApplicationSubmissionReviewService,
   ],
   controllers: [
     ApplicationController,
@@ -71,6 +76,7 @@ import { ApplicationService } from './application.service';
     ApplicationDocumentController,
     ApplicationLocalGovernmentController,
     ApplicationSubmissionController,
+    ApplicationSubmissionReviewController,
   ],
   exports: [
     ApplicationService,
