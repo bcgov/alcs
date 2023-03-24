@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
@@ -11,18 +11,11 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
   templateUrl: './application-document.component.html',
   styleUrls: ['./application-document.component.scss'],
 })
-export class ApplicationDocumentComponent {
+export class ApplicationDocumentComponent implements OnChanges {
   @Input() documentType: DOCUMENT_TYPE = DOCUMENT_TYPE.DECISION_DOCUMENT;
   @Input() title = '';
   @Input() readOnly = false;
-
-  _fileNumber: string = '';
-  @Input() set fileNumber(fileNumber: string) {
-    if (fileNumber) {
-      this._fileNumber = fileNumber;
-      this.loadDocuments();
-    }
-  }
+  @Input() fileNumber: string = '';
 
   isUploading = false;
 
@@ -34,8 +27,14 @@ export class ApplicationDocumentComponent {
     private confirmationDialogService: ConfirmationDialogService
   ) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadDocuments();
+  }
+
   async loadDocuments() {
-    this.documents = await this.applicationDocumentService.list(this._fileNumber, this.documentType);
+    if (this.fileNumber) {
+      this.documents = await this.applicationDocumentService.list(this.fileNumber, this.documentType);
+    }
   }
 
   async onDelete(uuid: string, fileName: string) {
@@ -65,7 +64,7 @@ export class ApplicationDocumentComponent {
     if (fileList && fileList.length > 0) {
       const file: File = fileList[0];
       this.isUploading = true;
-      const uploadedFile = await this.applicationDocumentService.upload(this._fileNumber, this.documentType, file);
+      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, this.documentType, file);
       if (uploadedFile) {
         await this.loadDocuments();
       }
