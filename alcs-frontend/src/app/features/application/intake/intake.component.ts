@@ -25,11 +25,31 @@ export class IntakeComponent implements OnInit {
     });
   }
 
-  async updateApplication(field: keyof UpdateApplicationDto, time: number) {
+  async updateApplicationDate(field: keyof UpdateApplicationDto, time: number) {
     const application = this.application;
     if (application) {
       await this.applicationDetailService.updateApplication(application.fileNumber, {
         [field]: time,
+      });
+      this.toastService.showSuccessToast('Application updated');
+    }
+  }
+
+  async updateApplicationNumber(field: keyof UpdateApplicationDto, value: string | null) {
+    const application = this.application;
+    if (application) {
+      await this.applicationDetailService.updateApplication(application.fileNumber, {
+        [field]: value,
+      });
+      this.toastService.showSuccessToast('Application updated');
+    }
+  }
+
+  async updateApplicationBoolean(field: keyof UpdateApplicationDto, value: boolean) {
+    const application = this.application;
+    if (application) {
+      await this.applicationDetailService.updateApplication(application.fileNumber, {
+        [field]: value,
       });
       this.toastService.showSuccessToast('Application updated');
     }

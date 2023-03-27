@@ -263,39 +263,45 @@ export class UpdateApplicationDto {
   @IsNumber()
   dateSubmittedToAlc?: number;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   applicant?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   typeCode?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   regionCode?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   statusCode?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsUUID()
   assigneeUuid?: string;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   paused?: boolean;
 
   @IsOptional()
   @IsNumber()
-  datePaid?: number;
+  feePaidDate?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  feeWaived?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  feeSplitWithLg?: boolean;
+
+  @IsOptional()
+  @IsString()
+  feeAmount?: string;
 
   @IsOptional()
   @IsNumber()
@@ -309,12 +315,10 @@ export class UpdateApplicationDto {
   @IsNumber()
   dateAcknowledgedComplete?: number;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   highPriority?: boolean;
 
-  @AutoMap()
   @IsString()
   @IsOptional()
   summary?: string;
@@ -338,7 +342,17 @@ export class ApplicationDto {
   paused: boolean;
 
   dateSubmittedToAlc?: number;
-  datePaid?: number;
+
+  feePaidDate?: number;
+
+  @AutoMap(() => Boolean)
+  feeWaived?: boolean;
+
+  @AutoMap(() => Boolean)
+  feeSplitWithLg?: boolean;
+
+  @AutoMap(() => String)
+  feeAmount?: string;
 
   dateAcknowledgedIncomplete?: number;
 
@@ -386,7 +400,10 @@ export class ApplicationUpdateServiceDto {
   applicant?: string;
   typeCode?: string;
   regionCode?: string;
-  datePaid?: Date | null | undefined;
+  feePaidDate?: Date | null;
+  feeWaived?: boolean | undefined | null;
+  feeSplitWithLg?: boolean | undefined | null;
+  feeAmount?: number | undefined | null;
   dateAcknowledgedIncomplete?: Date | null | undefined;
   dateReceivedAllItems?: Date | null | undefined;
   dateAcknowledgedComplete?: Date | null | undefined;

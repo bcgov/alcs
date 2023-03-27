@@ -79,7 +79,13 @@ export class ApplicationController {
         typeCode: updates.typeCode,
         regionCode: updates.regionCode,
         summary: updates.summary,
-        datePaid: formatIncomingDate(updates.datePaid),
+        feePaidDate: formatIncomingDate(updates.feePaidDate),
+        feeAmount:
+          updates.feeAmount !== undefined
+            ? parseFloat(updates.feeAmount)
+            : updates.feeAmount,
+        feeSplitWithLg: updates.feeSplitWithLg,
+        feeWaived: updates.feeWaived,
         dateAcknowledgedIncomplete: formatIncomingDate(
           updates.dateAcknowledgedIncomplete,
         ),
