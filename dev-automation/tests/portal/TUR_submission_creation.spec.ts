@@ -213,5 +213,3 @@ test("test", async ({ page }) => {
     .click();
   await page.getByRole("button", { name: "Save and Exit" }).click();
 });
-
-// npx playwright test  --headed --project=chromium
