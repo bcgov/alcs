@@ -56,8 +56,8 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.dateSubmittedToAlc?.getTime()),
         ),
         forMember(
-          (a) => a.datePaid,
-          mapFrom((ad) => ad.datePaid?.getTime()),
+          (a) => a.feePaidDate,
+          mapFrom((ad) => ad.feePaidDate?.getTime()),
         ),
         forMember(
           (a) => a.dateAcknowledgedIncomplete,
