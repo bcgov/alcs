@@ -76,8 +76,6 @@ export class ApplicationService {
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -108,6 +106,7 @@ export class ApplicationService {
       typeCode: application.typeCode,
       region,
       statusHistory: application.statusHistory,
+      source: application.source,
     });
 
     if (createCard) {

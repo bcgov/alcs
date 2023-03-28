@@ -131,6 +131,13 @@ export class Application extends Base {
   })
   localGovernmentUuid?: string;
 
+  @Column({
+    default: 'ALCS',
+    type: 'text',
+    comment: 'Determines where the application came from',
+  })
+  source: 'ALCS' | 'APPLICANT';
+
   @AutoMap(() => [StatusHistory])
   @Column({
     comment:

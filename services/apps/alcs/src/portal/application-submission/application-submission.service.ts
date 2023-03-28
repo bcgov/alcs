@@ -64,6 +64,7 @@ export class ApplicationSubmissionService {
         fileNumber,
         applicant: 'Unknown',
         typeCode: type,
+        source: 'APPLICANT',
       },
       true,
       false,
