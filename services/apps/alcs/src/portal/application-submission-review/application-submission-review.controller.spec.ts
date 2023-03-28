@@ -7,11 +7,13 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
   ApplicationDocumentCode,
+  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
+import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
 import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
 import {
@@ -377,10 +379,16 @@ describe('ApplicationSubmissionReviewController', () => {
         type: new ApplicationDocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
+        document: new Document({
+          source: DOCUMENT_SOURCE.LFNG,
+        }),
       }),
       new ApplicationDocument({
         type: new ApplicationDocumentCode({
           code: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        }),
+        document: new Document({
+          source: DOCUMENT_SOURCE.APPLICANT,
         }),
       }),
     ];
