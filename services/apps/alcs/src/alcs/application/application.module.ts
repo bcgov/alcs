@@ -25,6 +25,9 @@ import { ApplicationMeeting } from './application-meeting/application-meeting.en
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
+import { ApplicationStaffJournalController } from './application-staff-journal/application-staff-journal.controller';
+import { ApplicationStaffJournal } from './application-staff-journal/application-staff-journal.entity';
+import { ApplicationStaffJournalService } from './application-staff-journal/application-staff-journal.service';
 import { ApplicationSubmissionReviewController } from './application-submission-review/application-submission-review.controller';
 import { ApplicationSubmissionReviewService } from './application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionController } from './application-submission/application-submission.controller';
@@ -46,6 +49,7 @@ import { ApplicationService } from './application.service';
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
+      ApplicationStaffJournal,
     ]),
     NotificationModule,
     DocumentModule,
@@ -69,6 +73,7 @@ import { ApplicationService } from './application.service';
     ApplicationLocalGovernmentService,
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
+    ApplicationStaffJournalService,
   ],
   controllers: [
     ApplicationController,
@@ -77,6 +82,7 @@ import { ApplicationService } from './application.service';
     ApplicationLocalGovernmentController,
     ApplicationSubmissionController,
     ApplicationSubmissionReviewController,
+    ApplicationStaffJournalController,
   ],
   exports: [
     ApplicationService,
