@@ -1,7 +1,7 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import {
@@ -9,13 +9,13 @@ import {
   initMockAssigneeDto,
 } from '../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import { BoardSmallDto } from '../board/board.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import { NotificationService } from '../notification/notification.service';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
@@ -31,6 +31,7 @@ describe('ApplicationController', () => {
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
+    uuid: 'fake',
     summary: 'summary',
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
