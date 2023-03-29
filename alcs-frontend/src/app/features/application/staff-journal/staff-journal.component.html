@@ -18,7 +18,6 @@
   <app-staff-journal-note
     *ngFor="let note of notes"
     [note]="note"
-    [fileNumber]="fileNumber"
     (edit)="onEditNote($event)"
     (delete)="onDeleteNote($event)"
   ></app-staff-journal-note>

@@ -390,4 +390,12 @@ export class ApplicationService {
     });
     return application.uuid;
   }
+
+  async getByUuidOrFail(uuid: string) {
+    return await this.applicationRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+    });
+  }
 }

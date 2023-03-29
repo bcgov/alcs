@@ -23,7 +23,7 @@ export class ApplicationStaffJournalDto {
 export class CreateApplicationStaffJournalDto {
   @IsString()
   @IsNotEmpty()
-  fileNumber: string;
+  applicationUuid: string;
 
   @IsString()
   @IsNotEmpty()

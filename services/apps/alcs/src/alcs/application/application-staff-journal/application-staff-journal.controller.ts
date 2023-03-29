@@ -52,7 +52,7 @@ export class ApplicationStaffJournalController {
     @Req() req,
   ): Promise<ApplicationStaffJournalDto> {
     const newRecord = await this.staffJournalService.create(
-      record.fileNumber,
+      record.applicationUuid,
       record.body,
       req.user.entity,
     );

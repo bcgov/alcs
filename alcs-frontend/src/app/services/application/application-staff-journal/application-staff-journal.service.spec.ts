@@ -58,7 +58,7 @@ describe('ApplicationStaffJournalService', () => {
       ])
     );
 
-    await service.createNote({ body: '', fileNumber: '' });
+    await service.createNote({ body: '', applicationUuid: '' });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);

@@ -8,7 +8,7 @@ export interface ApplicationStaffJournalDto {
 }
 
 export interface CreateApplicationStaffJournalDto {
-  fileNumber: string;
+  applicationUuid: string;
   body: string;
 }
 

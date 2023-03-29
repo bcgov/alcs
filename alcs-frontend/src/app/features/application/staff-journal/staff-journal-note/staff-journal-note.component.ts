@@ -13,7 +13,6 @@ import {
 })
 export class StaffJournalNoteComponent implements OnInit {
   @Input() note!: ApplicationStaffJournalDto;
-  @Input() fileNumber!: string;
 
   @Output() delete = new EventEmitter<string>();
   @Output() edit = new EventEmitter<UpdateApplicationStaffJournalDto>();

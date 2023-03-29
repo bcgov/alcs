@@ -14,7 +14,6 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 })
 export class StaffJournalComponent implements OnInit {
   @Input() applicationUuid: string = '';
-  @Input() fileNumber: string = '';
 
   labelText = 'Add a journal note';
 
@@ -46,8 +45,8 @@ export class StaffJournalComponent implements OnInit {
     this.isEditing = true;
   }
 
-  private async loadNotes(fileNumber: string) {
-    this.notes = await this.staffJournalService.fetchNotes(fileNumber);
+  private async loadNotes(applicationUuid: string) {
+    this.notes = await this.staffJournalService.fetchNotes(applicationUuid);
   }
 
   onCancel() {
@@ -57,8 +56,7 @@ export class StaffJournalComponent implements OnInit {
 
   async onSave(note: CreateApplicationStaffJournalDto) {
     this.isSaving = true;
-    console.log('onSave note', note);
-    note.fileNumber = this.fileNumber;
+    note.applicationUuid = this.applicationUuid;
 
     await this.staffJournalService.createNote(note);
 

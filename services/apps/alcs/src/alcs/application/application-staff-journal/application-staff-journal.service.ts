@@ -18,7 +18,7 @@ export class ApplicationStaffJournalService {
 
   constructor(
     @InjectRepository(ApplicationStaffJournal)
-    private applicationStaffJournalRepository: Repository<ApplicationStaffJournal>, // private cardService: CardService, // private noteMentionService: noteMentionService, // private notificationService: NotificationService,
+    private applicationStaffJournalRepository: Repository<ApplicationStaffJournal>,
     private applicationService: ApplicationService,
   ) {}
 
@@ -43,8 +43,10 @@ export class ApplicationStaffJournalService {
     });
   }
 
-  async create(fileNumber: string, noteBody: string, author: User) {
-    const application = await this.applicationService.getOrFail(fileNumber);
+  async create(applicationUuid: string, noteBody: string, author: User) {
+    const application = await this.applicationService.getByUuidOrFail(
+      applicationUuid,
+    );
 
     const record = new ApplicationStaffJournal({
       body: noteBody,
@@ -94,13 +96,6 @@ export class ApplicationStaffJournalService {
 
     note.edited = true;
     note.body = body;
-
-    const card = await this.applicationService.get(note.applicationUuid);
-    if (!card) {
-      throw new ServiceNotFoundException(
-        `Failed to find application with uuid ${note.applicationUuid}`,
-      );
-    }
 
     await this.applicationStaffJournalRepository.save(note);
 
