@@ -275,8 +275,10 @@ describe('ApplicationDecisionController', () => {
   it('should call through for attaching the document', async () => {
     mockDecisionService.attachDocument.mockResolvedValue({} as any);
     await controller.attachDocument('fake-uuid', {
-      file: () => ({}),
       isMultipart: () => true,
+      body: {
+        file: {},
+      },
       user: {
         entity: {},
       },

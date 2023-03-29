@@ -12,6 +12,7 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
+import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
@@ -81,6 +82,13 @@ export const childRoutes = [
     menuTitle: 'Post-Decision',
     icon: 'edit_note',
     component: PostDecisionComponent,
+    requiresAuthorization: true,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
     requiresAuthorization: true,
   },
 ];

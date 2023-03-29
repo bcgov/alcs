@@ -2,13 +2,10 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { DOCUMENT_TYPE } from '../../../../alcs/application/application-document/application-document-code.entity';
 import { DocumentService } from '../../../../document/document.service';
-import { User } from '../../../../user/user.entity';
 import { ApplicationParcelService } from '../application-parcel.service';
-import {
-  ApplicationParcelDocument,
-  DOCUMENT_TYPE,
-} from './application-parcel-document.entity';
+import { ApplicationParcelDocument } from './application-parcel-document.entity';
 import { Document } from '../../../../document/document.entity';
 
 @Injectable()

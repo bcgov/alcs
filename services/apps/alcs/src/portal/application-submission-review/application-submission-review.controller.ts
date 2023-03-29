@@ -13,9 +13,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_SOURCE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
