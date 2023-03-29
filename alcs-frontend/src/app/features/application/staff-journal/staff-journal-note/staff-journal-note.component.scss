@@ -1,5 +1,5 @@
 @use '../../../../../styles/colors.scss';
-.comment {
+.note {
   width: 100%;
 
   .body {
@@ -18,7 +18,7 @@
   }
 }
 
-.comment-input {
+.note-input {
   width: 100%;
 
   host::ng-deep .mat-form-field-infix {

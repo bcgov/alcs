@@ -16,7 +16,7 @@ export class StaffJournalComponent implements OnInit {
   @Input() applicationUuid: string = '';
   @Input() fileNumber: string = '';
 
-  labelText = 'Add a note...';
+  labelText = 'Add a journal note';
 
   notes: ApplicationStaffJournalDto[] = [];
   isEditing = false;

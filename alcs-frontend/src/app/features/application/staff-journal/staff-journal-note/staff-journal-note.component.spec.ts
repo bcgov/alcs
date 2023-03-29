@@ -8,12 +8,19 @@ describe('StaffJournalNoteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StaffJournalNoteComponent ]
-    })
-    .compileComponents();
+      declarations: [StaffJournalNoteComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StaffJournalNoteComponent);
     component = fixture.componentInstance;
+    component.note = {
+      uuid: '',
+      body: '',
+      author: '',
+      edited: false,
+      createdAt: 1,
+      isEditable: true,
+    };
     fixture.detectChanges();
   });
 

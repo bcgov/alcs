@@ -98,7 +98,7 @@ export class ApplicationStaffJournalService {
     const card = await this.applicationService.get(note.applicationUuid);
     if (!card) {
       throw new ServiceNotFoundException(
-        `Failed to find card with uuid ${note.applicationUuid}`,
+        `Failed to find application with uuid ${note.applicationUuid}`,
       );
     }
 
