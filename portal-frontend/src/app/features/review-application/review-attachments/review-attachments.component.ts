@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
@@ -21,7 +21,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
-  documentTypes = DOCUMENT;
+  documentTypes = DOCUMENT_TYPE;
 
   private fileId: string | undefined;
   resolutionDocument: ApplicationDocumentDto[] = [];
@@ -65,9 +65,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     });
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
-      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
-      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+      this.resolutionDocument = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+      );
+      this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
     });
   }
 
@@ -84,7 +86,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async attachFile(fileHandle: FileHandle, documentType: DOCUMENT) {
+  async attachFile(fileHandle: FileHandle, documentType: DOCUMENT_TYPE) {
     if (this.fileId) {
       await this.applicationDocumentService.attachExternalFile(
         this.fileId,

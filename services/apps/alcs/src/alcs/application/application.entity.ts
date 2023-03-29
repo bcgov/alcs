@@ -12,6 +12,7 @@ import {
 import { Base } from '../../common/entities/base.entity';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -71,7 +72,31 @@ export class Application extends Base {
     type: 'timestamptz',
     nullable: true,
   })
-  datePaid?: Date | null;
+  feePaidDate?: Date | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeWaived?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeSplitWithLg?: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  feeAmount?: number | null;
 
   @AutoMap()
   @Column({

@@ -21,7 +21,7 @@
                 (valueChange)="onChangeType(element.uuid, $event)"
                 placeholder="Select a type"
               >
-                <mat-option *ngFor="let type of selectableTypes" [value]="type">{{ type }}</mat-option>
+                <mat-option *ngFor="let type of selectableTypes" [value]="type.code">{{ type.label }}</mat-option>
               </mat-select>
             </mat-form-field>
             <div

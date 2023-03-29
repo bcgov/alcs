@@ -33,7 +33,9 @@ import { ApplicationTimeTrackerComponent } from './application-time-tracker/appl
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { InlineBooleanComponent } from './inline-boolean/inline-boolean.component';
 import { InlineEditComponent } from './inline-edit/inline-edit.component';
+import { InlineNumberComponent } from './inline-number/inline-number.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
@@ -49,6 +51,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StartOfDayPipe,
     MeetingOverviewComponent,
     InlineEditComponent,
+    InlineBooleanComponent,
+    InlineNumberComponent,
     ApplicationHeaderComponent,
     ApplicationDocumentComponent,
     ApplicationTimeTrackerComponent,
@@ -62,11 +66,13 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MatButtonModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     MatTooltipModule,
     MatCardModule,
     MatMenuModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
   ],
   exports: [
     CommonModule,
@@ -96,6 +102,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StartOfDayPipe,
     MatTooltipModule,
     InlineEditComponent,
+    InlineBooleanComponent,
+    InlineNumberComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
     ApplicationHeaderComponent,

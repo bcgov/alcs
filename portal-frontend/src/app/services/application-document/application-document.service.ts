@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationDocumentDto, ApplicationDocumentUpdateDto, DOCUMENT } from './application-document.dto';
+import { ApplicationDocumentDto, ApplicationDocumentUpdateDto, DOCUMENT_TYPE } from './application-document.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class ApplicationDocumentService {
     private overlayService: OverlaySpinnerService
   ) {}
 
-  async attachExternalFile(fileNumber: string, file: File, documentType: DOCUMENT | null, source = 'Applicant') {
+  async attachExternalFile(fileNumber: string, file: File, documentType: DOCUMENT_TYPE | null, source = 'Applicant') {
     try {
       const res = await this.documentService.uploadFile(
         fileNumber,

@@ -125,7 +125,10 @@ export interface ApplicationDto {
   summary?: string;
   type: ApplicationTypeDto;
   dateSubmittedToAlc: number;
-  datePaid?: number;
+  feePaidDate?: number;
+  feeWaived?: boolean;
+  feeSplitWithLg?: boolean;
+  feeAmount?: string;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -149,7 +152,6 @@ export interface UpdateApplicationDto {
   statusCode?: string;
   regionCode?: string;
   summary?: string;
-  datePaid?: number;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -158,4 +160,8 @@ export interface UpdateApplicationDto {
   assignee?: UserDto;
   highPriority?: boolean;
   notificationSentDate?: number;
+  feePaidDate?: number;
+  feeWaived?: boolean;
+  feeSplitWithLg?: boolean;
+  feeAmount?: string;
 }

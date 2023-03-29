@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
@@ -137,9 +137,11 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
     const documents = await this.applicationDocumentService.getByFileId(fileId);
     if (documents) {
       this.$applicationDocuments.next(documents);
-      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
-      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+      this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+      this.resolutionDocument = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+      );
+      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
     }
   }
 }

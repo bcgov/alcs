@@ -1,12 +1,12 @@
 import { AutoMap } from '@automapper/classes';
+import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { DOCUMENT_TYPE } from '../../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.entity';
 // TODO fix me, used the first one from the list so not sure which is correct
 // import { DOCUMENT_TYPE } from '../../../../../portal/src/application-proposal/application-document/application-document.entity';
 
-export class ApplicationDocumentDto {
-  @AutoMap()
-  type: string;
+export class ApplicationDocumentTypeDto extends BaseCodeDto {}
 
+export class ApplicationDocumentDto {
   @AutoMap(() => String)
   description?: string;
 
@@ -25,6 +25,9 @@ export class ApplicationDocumentDto {
 
   @AutoMap()
   uploadedAt: number;
+
+  @AutoMap(() => ApplicationDocumentTypeDto)
+  type?: ApplicationDocumentTypeDto;
 }
 
 export class ApplicationDocumentCreateDto {
