@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { DOCUMENT } from '../application-document/application-document.dto';
+import { DOCUMENT_TYPE } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationParcelDto, ApplicationParcelUpdateDto, PARCEL_TYPE } from './application-parcel.dto';
@@ -73,7 +73,7 @@ export class ApplicationParcelService {
       const fileUuid = await this.documentService.uploadFile(
         fileId,
         file,
-        DOCUMENT.CERTIFICATE_OF_TILE,
+        DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
         'Applicant',
         `${environment.apiUrl}/application-parcel-document/application/${fileId}/attachExternal`
       );

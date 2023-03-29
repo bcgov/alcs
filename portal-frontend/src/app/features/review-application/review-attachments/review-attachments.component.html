@@ -40,7 +40,7 @@
       <app-file-drag-drop
         id="other-document"
         [uploadedFiles]="otherAttachments"
-        (uploadFiles)="attachFile($event, documentTypes.REVIEW_OTHER)"
+        (uploadFiles)="attachFile($event, documentTypes.OTHER)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [allowMultiple]="true"

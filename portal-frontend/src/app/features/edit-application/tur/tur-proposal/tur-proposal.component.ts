@@ -2,7 +2,10 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_TYPE,
+} from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import {
   ApplicationSubmissionDetailedDto,
@@ -25,7 +28,7 @@ export class TurProposalComponent implements OnInit, OnDestroy {
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
-  DOCUMENT = DOCUMENT;
+  DOCUMENT = DOCUMENT_TYPE;
 
   servingNotice: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
@@ -74,8 +77,8 @@ export class TurProposalComponent implements OnInit, OnDestroy {
     });
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
-      this.servingNotice = documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);
-      this.proposalMap = documents.filter((document) => document.type === DOCUMENT.PROPOSAL_MAP);
+      this.servingNotice = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
+      this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     });
   }
 
@@ -92,7 +95,7 @@ export class TurProposalComponent implements OnInit, OnDestroy {
     await this.save();
   }
 
-  async attachFile(file: FileHandle, documentType: DOCUMENT) {
+  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE) {
     if (this.fileId) {
       await this.save();
       const mappedFiles = file.file;

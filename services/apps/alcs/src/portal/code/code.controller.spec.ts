@@ -1,9 +1,12 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardType } from '../../alcs/card/card-type/card-type.entity';
 import { CardService } from '../../alcs/card/card.service';
@@ -14,13 +17,20 @@ describe('CodeController', () => {
   let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockCardService: DeepMocked<CardService>;
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
     mockAppService = createMock();
     mockCardService = createMock();
+    mockAppDocService = createMock();
 
     const app: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [CodeController],
       providers: [
         CodeController,
@@ -35,6 +45,10 @@ describe('CodeController', () => {
         {
           provide: CardService,
           useValue: mockCardService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
         },
         {
           provide: ClsService,
@@ -62,6 +76,8 @@ describe('CodeController', () => {
         label: 'fake-label',
       }),
     ]);
+
+    mockAppDocService.fetchTypes.mockResolvedValue([]);
   });
 
   it('should call out to local government service for fetching codes', async () => {

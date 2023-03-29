@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
@@ -69,9 +69,11 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     });
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
-      this.resolutionDocument = documents.filter((document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT);
-      this.staffReport = documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-      this.otherAttachments = documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
+      this.resolutionDocument = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+      );
+      this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
     });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {

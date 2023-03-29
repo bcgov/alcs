@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDetailedDto } from '../../services/application-owner/application-owner.dto';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
@@ -31,7 +31,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   appDocuments: ApplicationDocumentDto[] = [];
 
   private localGovernments: LocalGovernmentDto[] = [];
-  private otherFileTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
+  private otherFileTypes = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
   constructor(
     private codeService: CodeService,
@@ -56,13 +56,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.otherFiles = documents
-        .filter((file) => (file.type ? this.otherFileTypes.includes(file.type) : true))
+        .filter((file) => (file.type ? this.otherFileTypes.includes(file.type.code) : true))
         .sort((a, b) => {
           return a.uploadedAt - b.uploadedAt;
         });
 
       this.authorizationLetters = documents
-        .filter((file) => file.type === DOCUMENT.AUTHORIZATION_LETTER)
+        .filter((file) => file.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER)
         .sort((a, b) => {
           return a.uploadedAt - b.uploadedAt;
         });

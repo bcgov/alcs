@@ -1,6 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { DocumentService } from '../../document/document.service';
 import { DocumentController } from './document.controller';
 

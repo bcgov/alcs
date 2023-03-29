@@ -5,13 +5,11 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
+import { CodeService } from '../../code/code.service';
+import { DOCUMENT_TYPE } from './application-document-code.entity';
 import { ApplicationDocumentController } from './application-document.controller';
-import {
-  ApplicationDocument,
-  DOCUMENT_TYPE,
-} from './application-document.entity';
+import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentController', () => {
@@ -68,13 +66,17 @@ describe('ApplicationDocumentController', () => {
 
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
-    const res = await controller.attachDocument('file', 'decisionDocument', {
-      isMultipart: () => true,
-      file: () => mockFile,
-      user: {
-        entity: mockUser,
+    const res = await controller.attachDocument(
+      'file',
+      DOCUMENT_TYPE.DECISION_DOCUMENT,
+      {
+        isMultipart: () => true,
+        file: () => mockFile,
+        user: {
+          entity: mockUser,
+        },
       },
-    });
+    );
 
     expect(res.mimeType).toEqual(mockDocument.document.mimeType);
 
@@ -95,7 +97,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
     await expect(
-      controller.attachDocument('file', 'decisionDocument', {
+      controller.attachDocument('file', DOCUMENT_TYPE.DECISION_DOCUMENT, {
         isMultipart: () => false,
         file: () => mockFile,
         user: {
@@ -114,16 +116,23 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
     await expect(
-      controller.attachDocument('file', 'invalidDocumentType', {
-        isMultipart: () => true,
-        file: () => mockFile,
-        user: {
-          entity: mockUser,
+      controller.attachDocument(
+        'file',
+        'invalidDocumentType' as DOCUMENT_TYPE,
+        {
+          isMultipart: () => true,
+          file: () => mockFile,
+          user: {
+            entity: mockUser,
+          },
         },
-      }),
+      ),
     ).rejects.toMatchObject(
       new BadRequestException(
-        'Invalid document type specified, must be one of decisionDocument, reviewDocument',
+        `Invalid document type specified, must be one of ${[
+          DOCUMENT_TYPE.DECISION_DOCUMENT,
+          DOCUMENT_TYPE.OTHER,
+        ].join(', ')}`,
       ),
     );
   });
