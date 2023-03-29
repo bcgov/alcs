@@ -43,10 +43,8 @@ export class ApplicationStaffJournalService {
     });
   }
 
-  async create(applicationUuid: string, commentBody: string, author: User) {
-    const application = await this.applicationService.getOrFail(
-      applicationUuid,
-    );
+  async create(fileNumber: string, commentBody: string, author: User) {
+    const application = await this.applicationService.getOrFail(fileNumber);
 
     const record = new ApplicationStaffJournal({
       body: commentBody,

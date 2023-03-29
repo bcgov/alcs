@@ -8,6 +8,9 @@
   ></app-inline-edit>
 </section>
 <section>
+  <app-staff-journal *ngIf="application" [applicationUuid]="application.uuid" [fileNumber]="application.fileNumber" />
+</section>
+<section>
   <h5>Application Event Timeline</h5>
   <app-timeline [events]="events"></app-timeline>
 </section>

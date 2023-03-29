@@ -28,6 +28,7 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { StaffJournalComponent } from './staff-journal/staff-journal.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,7 @@ const routes: Routes = [
     EditModificationDialogComponent,
     ApplicantInfoComponent,
     LfngInfoComponent,
+    StaffJournalComponent,
   ],
   imports: [
     SharedModule.forRoot(),

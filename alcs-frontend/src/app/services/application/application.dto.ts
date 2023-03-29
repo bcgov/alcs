@@ -120,6 +120,7 @@ export interface ApplicationSubmissionDto {
 }
 
 export interface ApplicationDto {
+  uuid: string;
   fileNumber: string;
   applicant: string;
   summary?: string;

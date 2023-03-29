@@ -52,7 +52,7 @@ export class ApplicationStaffJournalController {
     @Req() req,
   ): Promise<ApplicationStaffJournalDto> {
     const newRecord = await this.staffJournalService.create(
-      record.applicationUuid,
+      record.fileNumber,
       record.body,
       req.user.entity,
     );
@@ -71,7 +71,7 @@ export class ApplicationStaffJournalController {
     @Req() req,
   ): Promise<ApplicationStaffJournalDto> {
     const existingComment = await this.staffJournalService.get(
-      record.applicationUuid,
+      record.fileNumber,
     );
 
     if (!existingComment) {
