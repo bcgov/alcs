@@ -70,42 +70,40 @@ export class ApplicationStaffJournalController {
     @Body() record: UpdateApplicationStaffJournalDto,
     @Req() req,
   ): Promise<ApplicationStaffJournalDto> {
-    const existingComment = await this.staffJournalService.get(
-      record.fileNumber,
-    );
+    const existingNote = await this.staffJournalService.get(record.uuid);
 
-    if (!existingComment) {
-      throw new NotFoundException(`Comment ${record.uuid} not found`);
+    if (!existingNote) {
+      throw new NotFoundException(`Note ${record.uuid} not found`);
     }
 
-    if (existingComment.author.uuid === req.user.entity.uuid) {
-      const updatedComment = await this.staffJournalService.update(
+    if (existingNote.author.uuid === req.user.entity.uuid) {
+      const updatedNote = await this.staffJournalService.update(
         record.uuid,
         record.body,
       );
       return this.autoMapper.map(
-        updatedComment,
+        updatedNote,
         ApplicationStaffJournal,
         ApplicationStaffJournalDto,
       );
     } else {
-      throw new ForbiddenException('Unable to delete others comments');
+      throw new ForbiddenException('Unable to delete others notes');
     }
   }
 
   @Delete('/:id')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async softDelete(@Param('id') id: string, @Req() req): Promise<void> {
-    const comment = await this.staffJournalService.get(id);
+    const note = await this.staffJournalService.get(id);
 
-    if (!comment) {
-      throw new NotFoundException(`Comment ${id} not found`);
+    if (!note) {
+      throw new NotFoundException(`Note ${id} not found`);
     }
 
-    if (comment.author.uuid === req.user.entity.uuid) {
+    if (note.author.uuid === req.user.entity.uuid) {
       await this.staffJournalService.delete(id);
     } else {
-      throw new ForbiddenException('Unable to delete others comments');
+      throw new ForbiddenException('Unable to delete others notes');
     }
   }
 
@@ -113,13 +111,13 @@ export class ApplicationStaffJournalController {
     records: ApplicationStaffJournal[],
     userUuid: string,
   ): Promise<ApplicationStaffJournalDto[]> {
-    return records.map((comment) => ({
+    return records.map((note) => ({
       ...this.autoMapper.map(
-        comment,
+        note,
         ApplicationStaffJournal,
         ApplicationStaffJournalDto,
       ),
-      isEditable: comment.author.uuid === userUuid,
+      isEditable: note.author.uuid === userUuid,
     }));
   }
 }

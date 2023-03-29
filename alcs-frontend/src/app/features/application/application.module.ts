@@ -29,6 +29,8 @@ import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
 import { StaffJournalComponent } from './staff-journal/staff-journal.component';
+import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
+import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
 
 const routes: Routes = [
   {
@@ -69,6 +71,8 @@ const routes: Routes = [
     ApplicantInfoComponent,
     LfngInfoComponent,
     StaffJournalComponent,
+    StaffJournalNoteComponent,
+    StaffJournalNoteInputComponent,
   ],
   imports: [
     SharedModule.forRoot(),

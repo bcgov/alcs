@@ -30,8 +30,12 @@ export class CreateApplicationStaffJournalDto {
   body: string;
 }
 
-export class UpdateApplicationStaffJournalDto extends CreateApplicationStaffJournalDto {
+export class UpdateApplicationStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   uuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
 }

@@ -1,1 +1,25 @@
-<p>staff-journal works!</p>
+<div class="comments">
+  <h5>Staff journal notes ({{ notes.length }})</h5>
+  <div *ngIf="!isEditing">
+    <mat-form-field class="placeholder-input" appearance="outline" (click)="onEdit()">
+      <input matInput placeholder="Add a note..." />
+    </mat-form-field>
+  </div>
+
+  <app-staff-journal-note-input
+    *ngIf="isEditing"
+    (create)="onSave($event)"
+    [note]="note"
+    (cancel)="onCancel()"
+    [isNewNote]="true"
+    labelText="Add a note"
+  />
+
+  <app-staff-journal-note
+    *ngFor="let note of notes"
+    [note]="note"
+    [fileNumber]="fileNumber"
+    (edit)="onEditNote($event)"
+    (delete)="onDeleteNote($event)"
+  ></app-staff-journal-note>
+</div>

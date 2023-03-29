@@ -1,0 +1,10 @@
+<div class="container">
+  <mat-form-field class="comment-input" appearance="fill">
+    <mat-label [hidden]="!labelText">{{ labelText }}</mat-label>
+    <textarea #textarea cdkTextareaAutosize [(ngModel)]="note.body" [disabled]="isSaving" matInput></textarea>
+  </mat-form-field>
+</div>
+<div class="button-container">
+  <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()">Save</button>
+</div>

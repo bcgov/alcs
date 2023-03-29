@@ -1,0 +1,49 @@
+@use '../../../../../styles/colors.scss';
+.comment {
+  width: 100%;
+
+  .body {
+    padding: 6px 8px;
+    border-radius: 4px;
+    background-color: colors.$grey-light;
+    min-height: 28px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .content {
+    align-items: center;
+    white-space: pre-wrap;
+  }
+}
+
+.comment-input {
+  width: 100%;
+
+  host::ng-deep .mat-form-field-infix {
+    border-top-width: 0;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+
+  button {
+    font-size: 12px !important;
+    text-decoration: underline;
+    color: colors.$grey-dark;
+    min-width: unset;
+    padding: 0 8px;
+    line-height: 14px;
+  }
+
+  .edited {
+    display: flex;
+    align-items: center;
+    color: colors.$grey-dark;
+    font-size: 12px;
+  }
+}

@@ -18,7 +18,7 @@ export class ApplicationStaffJournalService {
 
   constructor(
     @InjectRepository(ApplicationStaffJournal)
-    private applicationStaffJournalRepository: Repository<ApplicationStaffJournal>, // private cardService: CardService, // private commentMentionService: CommentMentionService, // private notificationService: NotificationService,
+    private applicationStaffJournalRepository: Repository<ApplicationStaffJournal>, // private cardService: CardService, // private noteMentionService: noteMentionService, // private notificationService: NotificationService,
     private applicationService: ApplicationService,
   ) {}
 
@@ -34,20 +34,20 @@ export class ApplicationStaffJournalService {
     });
   }
 
-  async get(commentUuid: string) {
+  async get(noteUuid: string) {
     return this.applicationStaffJournalRepository.findOne({
       where: {
-        uuid: commentUuid,
+        uuid: noteUuid,
       },
       relations: this.DEFAULT_APPLICATION_STAFF_JOURNAL_RELATIONS,
     });
   }
 
-  async create(fileNumber: string, commentBody: string, author: User) {
+  async create(fileNumber: string, noteBody: string, author: User) {
     const application = await this.applicationService.getOrFail(fileNumber);
 
     const record = new ApplicationStaffJournal({
-      body: commentBody,
+      body: noteBody,
       application,
       author,
     });
@@ -60,49 +60,49 @@ export class ApplicationStaffJournalService {
   }
 
   async delete(uuid: string): Promise<void> {
-    const comment = await this.applicationStaffJournalRepository.findOne({
+    const note = await this.applicationStaffJournalRepository.findOne({
       where: { uuid },
     });
 
-    if (!comment) {
+    if (!note) {
       throw new ServiceNotFoundException(
-        `Failed to find comment with uuid ${uuid}`,
+        `Failed to find note with uuid ${uuid}`,
       );
     }
 
-    await this.applicationStaffJournalRepository.softRemove([comment]);
+    await this.applicationStaffJournalRepository.softRemove([note]);
     return;
   }
 
   async update(uuid: string, body: string) {
-    const comment = await this.applicationStaffJournalRepository.findOne({
+    const note = await this.applicationStaffJournalRepository.findOne({
       where: { uuid },
       relations: {
         ...this.DEFAULT_APPLICATION_STAFF_JOURNAL_RELATIONS,
       },
     });
 
-    if (!comment) {
+    if (!note) {
       throw new ServiceNotFoundException(
-        `Failed to find comment with uuid ${uuid}`,
+        `Failed to find note with uuid ${uuid}`,
       );
     }
 
     if (body.trim() === '') {
-      throw new ServiceValidationException('Comment body must be filled.');
+      throw new ServiceValidationException('note body must be filled.');
     }
 
-    comment.edited = true;
-    comment.body = body;
+    note.edited = true;
+    note.body = body;
 
-    const card = await this.applicationService.get(comment.applicationUuid);
+    const card = await this.applicationService.get(note.applicationUuid);
     if (!card) {
       throw new ServiceNotFoundException(
-        `Failed to find card with uuid ${comment.applicationUuid}`,
+        `Failed to find card with uuid ${note.applicationUuid}`,
       );
     }
 
-    await this.applicationStaffJournalRepository.save(comment);
+    await this.applicationStaffJournalRepository.save(note);
 
     return;
   }
