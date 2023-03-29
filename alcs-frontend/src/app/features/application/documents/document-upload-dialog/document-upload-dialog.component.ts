@@ -134,12 +134,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  uploadFile($event: Event) {
-    // @ts-ignore
-    const file: File | undefined = $event.target?.files[0];
-    if (file) {
-      this.pendingFile = file;
-      this.name.setValue(file.name);
+  uploadFile(event: Event) {
+    const element = event.target as HTMLInputElement;
+    const selectedFiles = element.files;
+    if (selectedFiles && selectedFiles[0]) {
+      this.pendingFile = selectedFiles[0];
+      this.name.setValue(selectedFiles[0].name);
     }
   }
 
