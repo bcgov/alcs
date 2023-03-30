@@ -82,7 +82,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
       this.parcels.push({
         uuid: parcel!.uuid,
         parcelType: PARCEL_TYPE.APPLICATION,
-        documents: [],
         owners: [],
         isConfirmedByApplicant: false,
       });
@@ -164,16 +163,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
           this.loadParcels();
         }
       });
-  }
-
-  async onFilesUpdated() {
-    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
-    for (const parcel of parcels) {
-      const existingParcel = this.parcels.find((e) => e.uuid === parcel.uuid);
-      if (existingParcel) {
-        existingParcel.documents = parcel.documents;
-      }
-    }
   }
 
   async onOwnersUpdated() {

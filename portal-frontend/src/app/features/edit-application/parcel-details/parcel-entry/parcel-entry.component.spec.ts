@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
@@ -18,20 +19,22 @@ describe('ParcelEntryComponent', () => {
   let mockParcelService: DeepMocked<ParcelService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
+  let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+
   let mockParcel: ApplicationParcelDto = {
-    documents: [],
     isConfirmedByApplicant: false,
     parcelType: '',
     uuid: '',
     owners: [],
   };
-  let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockHttpClient = createMock();
     mockApplicationParcelService = createMock();
     mockAppOwnerService = createMock();
+    mockAppDocService = createMock();
 
     await TestBed.configureTestingModule({
       imports: [MatAutocompleteModule],
@@ -52,6 +55,10 @@ describe('ParcelEntryComponent', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockAppOwnerService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
         },
         {
           provide: MatDialog,

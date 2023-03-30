@@ -10,9 +10,6 @@ import { ApplicationOwnerType } from './application-owner/application-owner-type
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationOwnerService } from './application-owner/application-owner.service';
-import { ApplicationParcelDocumentController } from './application-parcel/application-parcel-document/application-parcel-document.controller';
-import { ApplicationParcelDocument } from './application-parcel/application-parcel-document/application-parcel-document.entity';
-import { ApplicationParcelDocumentService } from './application-parcel/application-parcel-document/application-parcel-document.service';
 import { ApplicationParcelOwnershipType } from './application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
@@ -31,7 +28,6 @@ import { ApplicationSubmissionService } from './application-submission.service';
       ApplicationStatus,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
-      ApplicationParcelDocument,
       ApplicationOwner,
       ApplicationOwnerType,
     ]),
@@ -44,7 +40,6 @@ import { ApplicationSubmissionService } from './application-submission.service';
     ApplicationSubmissionProfile,
     ApplicationParcelProfile,
     ApplicationParcelService,
-    ApplicationParcelDocumentService,
     ApplicationOwnerService,
     ApplicationOwnerProfile,
     ApplicationSubmissionStatusSubscriber,
@@ -53,7 +48,6 @@ import { ApplicationSubmissionService } from './application-submission.service';
   controllers: [
     ApplicationSubmissionController,
     ApplicationParcelController,
-    ApplicationParcelDocumentController,
     ApplicationOwnerController,
   ],
   exports: [

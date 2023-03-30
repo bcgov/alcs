@@ -23,11 +23,13 @@
   </ng-container>
 
   <ng-container matColumnDef="visibility">
-    <th mat-header-cell *matHeaderCellDef>
-      Visibility
-      <div class="body-small">A = Applicant, C = Commissioner,<br />G = L/FNG, P = Public</div>
-    </th>
-    <td mat-cell *matCellDef="let element">{{ element.visibilityFlags.join(', ') }}</td>
+    <th mat-header-cell *matHeaderCellDef>Visibility</th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.visibilityFlags.includes('A')" matTooltip="Applicant">A, </span>
+      <span *ngIf="element.visibilityFlags.includes('C')" matTooltip="Commissioner">C, </span>
+      <span *ngIf="element.visibilityFlags.includes('G')" matTooltip="L/FNG">G, </span>
+      <span *ngIf="element.visibilityFlags.includes('P')" matTooltip="Public">P</span>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="uploadDate">
@@ -44,7 +46,7 @@
       <button mat-icon-button (click)="onEditFile(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button>
+      <button mat-icon-button (click)="onDeleteFile(element)">
         <mat-icon color="warn">delete</mat-icon>
       </button>
     </td>

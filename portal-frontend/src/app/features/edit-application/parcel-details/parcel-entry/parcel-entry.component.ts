@@ -7,6 +7,7 @@ import {
   ApplicationDocumentDto,
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
@@ -57,7 +58,6 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
-  @Output() private onFilesUpdated = new EventEmitter<void>();
   @Output() private onSaveProgress = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<void>();
 
@@ -102,6 +102,7 @@ export class ParcelEntryComponent implements OnInit {
     private parcelService: ParcelService,
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
+    private applicationDocumentService: ApplicationDocumentService,
     private dialog: MatDialog
   ) {}
 
@@ -192,18 +193,21 @@ export class ParcelEntryComponent implements OnInit {
   async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
-      await this.applicationParcelService.attachExternalFile(parcelUuid, mappedFiles);
-      this.onFilesUpdated.emit();
+      this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
+        this.fileId,
+        parcelUuid,
+        mappedFiles
+      );
     }
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
-    await this.applicationParcelService.deleteExternalFile($event.uuid);
-    this.onFilesUpdated.emit();
+    await this.applicationDocumentService.deleteExternalFile($event.uuid);
+    this.parcel.certificateOfTitle = undefined;
   }
 
   async openFile(uuid: string) {
-    const res = await this.applicationParcelService.openFile(uuid);
+    const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }

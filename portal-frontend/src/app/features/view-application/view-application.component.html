@@ -337,10 +337,10 @@
                 <div class="full-width">
                   <div class="subheading2">Other Attachments (optional):</div>
                   <div>
-                    <div class="document" *ngFor="let document of otherAttachments">
+                    <div class="document" *ngFor="let document of governmentOtherAttachments">
                       <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
                     </div>
-                    <div *ngIf="otherAttachments.length === 0"><em>None provided</em></div>
+                    <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
                   </div>
                 </div>
               </div>
@@ -696,10 +696,10 @@
             <div class="full-width">
               <div class="subheading2">Other Attachments (optional):</div>
               <div>
-                <div class="document" *ngFor="let document of otherAttachments">
+                <div class="document" *ngFor="let document of governmentOtherAttachments">
                   <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
                 </div>
-                <div *ngIf="otherAttachments.length === 0"><em>None provided</em></div>
+                <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
               </div>
             </div>
           </div>

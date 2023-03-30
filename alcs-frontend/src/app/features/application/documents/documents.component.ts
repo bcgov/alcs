@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
+import { ToastService } from '../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 
 @Component({
@@ -18,6 +20,8 @@ export class DocumentsComponent {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
     private applicationDetailService: ApplicationDetailService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private toastService: ToastService,
     public dialog: MatDialog
   ) {
     this.applicationDetailService.$application.subscribe((application) => {
@@ -66,6 +70,20 @@ export class DocumentsComponent {
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
+        }
+      });
+  }
+
+  onDeleteFile(element: ApplicationDocumentDto) {
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to delete the selected file?',
+      })
+      .subscribe(async (accepted) => {
+        if (accepted) {
+          await this.applicationDocumentService.delete(element.uuid);
+          this.loadDocuments(this.fileId);
+          this.toastService.showSuccessToast('Document deleted');
         }
       });
   }

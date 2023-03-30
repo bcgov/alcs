@@ -245,27 +245,6 @@ describe('ApplicationOwnerController', () => {
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle opening of a document', async () => {
-    mockAppOwnerService.getOwner.mockResolvedValue(
-      new ApplicationOwner({ corporateSummary: new Document() }),
-    );
-    mockDocumentService.getDownloadUrl.mockResolvedValue('cats');
-    mockApplicationService.verifyAccess.mockResolvedValue(
-      new ApplicationSubmission(),
-    );
-
-    const res = await controller.openCorporateSummary('', {
-      user: {
-        entity: {},
-      },
-    });
-
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
-    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    expect(res.url).toEqual('cats');
-  });
-
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
     mockAppOwnerService.create.mockResolvedValue(new ApplicationOwner());
     mockAppOwnerService.setPrimaryContact.mockResolvedValue(

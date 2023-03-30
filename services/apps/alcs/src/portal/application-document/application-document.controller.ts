@@ -18,17 +18,17 @@ import {
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
 } from '../../alcs/application/application-document/application-document-code.entity';
-import {
-  ApplicationDocumentDto,
-  PortalApplicationDocumentUpdateDto,
-} from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../document/document.service';
-import { AttachExternalDocumentDto } from '../application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import {
+  AttachExternalDocumentDto,
+  PortalApplicationDocumentUpdateDto,
+} from './application-document.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(PortalAuthGuard)
@@ -109,7 +109,7 @@ export class ApplicationDocumentController {
       req.user.entity,
     );
 
-    //Map form file number to uuid
+    //Map from file number to uuid
     const applicationUuid = await this.applicationService.getUuid(fileNumber);
 
     const res = await this.applicationDocumentService.updateDescriptionAndType(

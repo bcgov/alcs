@@ -97,7 +97,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
     });
@@ -144,7 +143,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
       pid: '1251251',
@@ -175,7 +173,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'CRWN',
       pid: '12512',
@@ -206,7 +203,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.OTHER,
     });
 

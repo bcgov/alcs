@@ -89,8 +89,8 @@
     </ng-container>
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
-      <div *ngFor="let document of parcel.documents">
-        <a (click)="onOpenFile(document.uuid)">{{ document.fileName }}</a>
+      <div *ngIf="parcel.certificateOfTitle">
+        <a (click)="onOpenFile(parcel.certificateOfTitle.uuid)">{{ parcel.certificateOfTitle.fileName }}</a>
       </div>
       <app-no-data
         [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"
@@ -110,7 +110,7 @@
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>
-          <a *ngIf="owner.corporateSummary" (click)="onOpenCorporateSummaryFile(owner.uuid)">{{
+          <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
             owner.corporateSummary.fileName
           }}</a>
           <app-no-data [showRequired]="false" *ngIf="!owner.corporateSummary"></app-no-data>

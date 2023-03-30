@@ -45,7 +45,7 @@ export class DocumentService {
     return fileKey;
   }
 
-  async uploadFile(fileId: string, file: File, documentType: DOCUMENT_TYPE | null, source: string, url: string) {
+  async uploadFile<T>(fileId: string, file: File, documentType: DOCUMENT_TYPE | null, source: string, url: string) {
     if (file.size > environment.maxFileSize) {
       const niceSize = environment.maxFileSize / 1048576;
       this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
@@ -56,8 +56,9 @@ export class DocumentService {
       this.overlayService.showSpinner();
       const fileKey = await this.uploadFileToStorage(fileId, file, documentType);
 
-      const fileUuid = await firstValueFrom(
-        this.httpClient.post<{ uuid: string }>(url, {
+      return await firstValueFrom(
+        this.httpClient.post<T>(url, {
+          fileNumber: fileId,
           documentType: documentType,
           mimeType: file.type,
           fileName: file.name,
@@ -66,7 +67,6 @@ export class DocumentService {
           source,
         })
       );
-      return fileUuid.uuid;
     } finally {
       this.overlayService.hideSpinner();
     }
