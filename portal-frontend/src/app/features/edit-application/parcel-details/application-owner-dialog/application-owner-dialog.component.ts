@@ -75,7 +75,6 @@ export class ApplicationOwnerDialogComponent {
       this.email.setValue(data.existingOwner.email);
       this.existingUuid = data.existingOwner.uuid;
       if (data.existingOwner.corporateSummary) {
-        debugger;
         this.files.push(data.existingOwner.corporateSummary);
         this.corporateSummary.setValue(data.existingOwner.corporateSummary.uuid);
       }

@@ -49,7 +49,6 @@ export class ParcelOwnersComponent {
         },
       });
     } else {
-      debugger;
       dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
         data: {
           fileId: this.fileId,

@@ -198,7 +198,6 @@ export class ParcelEntryComponent implements OnInit {
         parcelUuid,
         mappedFiles
       );
-      debugger;
     }
   }
 
