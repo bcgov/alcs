@@ -60,6 +60,7 @@ describe('ApplicationController', () => {
       highPriority: false,
       board: {} as BoardSmallDto,
     } as CardDto,
+    source: 'ALCS',
   };
 
   beforeEach(async () => {

@@ -145,6 +145,7 @@ export interface ApplicationDto {
   statusHistory: StatusHistory[];
   applicationReview?: ApplicationReviewDto;
   submittedApplication?: ApplicationSubmissionDto;
+  source: 'ALCS' | 'APPLICANT';
 }
 
 export interface UpdateApplicationDto {

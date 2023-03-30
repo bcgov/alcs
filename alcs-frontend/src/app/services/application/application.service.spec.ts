@@ -40,6 +40,7 @@ describe('ApplicationService', () => {
       textColor: '',
     },
     statusHistory: [],
+    source: 'ALCS',
   };
 
   beforeEach(() => {

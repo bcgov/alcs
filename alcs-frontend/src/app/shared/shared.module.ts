@@ -27,6 +27,7 @@ import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { DatetimeAdapter } from '@ng-matero/extensions/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationHeaderComponent } from './application-header/application-header.component';
 import { ApplicationTimeTrackerComponent } from './application-time-tracker/application-time-tracker.component';
@@ -75,6 +76,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MatTableModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   exports: [
     CommonModule,
@@ -118,6 +121,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     ApplicationTypePillComponent,
     SafePipe,
     FileSizePipe,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
 })
 export class SharedModule {
