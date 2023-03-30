@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
+  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from '../../services/application/application-document/application-document.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
@@ -33,7 +34,7 @@ export class ApplicationDocumentComponent implements OnChanges {
 
   async loadDocuments() {
     if (this.fileNumber) {
-      this.documents = await this.applicationDocumentService.list(this.fileNumber, this.documentType);
+      this.documents = await this.applicationDocumentService.listByType(this.fileNumber, this.documentType);
     }
   }
 
@@ -64,7 +65,13 @@ export class ApplicationDocumentComponent implements OnChanges {
     if (fileList && fileList.length > 0) {
       const file: File = fileList[0];
       this.isUploading = true;
-      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, this.documentType, file);
+      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, {
+        file,
+        fileName: file.name,
+        visibilityFlags: ['C'],
+        typeCode: this.documentType,
+        source: DOCUMENT_SOURCE.ALCS,
+      });
       if (uploadedFile) {
         await this.loadDocuments();
       }

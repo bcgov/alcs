@@ -4,7 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
+import { DOCUMENT_TYPE } from '../../../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationParcelProfile } from '../../../../common/automapper/application-parcel.automapper.profile';
+import { DOCUMENT_SOURCE } from '../../../../document/document.dto';
+import { Document } from '../../../../document/document.entity';
 import { DocumentService } from '../../../../document/document.service';
 import { User } from '../../../../user/user.entity';
 import { ApplicationSubmission } from '../../application-submission.entity';
@@ -15,7 +18,6 @@ import { ApplicationParcelDocumentController } from './application-parcel-docume
 import { AttachExternalDocumentDto } from './application-parcel-document.dto';
 import { ApplicationParcelDocument } from './application-parcel-document.entity';
 import { ApplicationParcelDocumentService } from './application-parcel-document.service';
-import { Document } from '../../../../document/document.entity';
 
 describe('ApplicationParcelDocumentController', () => {
   let controller: ApplicationParcelDocumentController;
@@ -89,7 +91,7 @@ describe('ApplicationParcelDocumentController', () => {
 
     const res = await controller.listDocuments(
       'fake-number',
-      'certificateOfTitle',
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
       {
         user: {
           entity: {},
@@ -139,8 +141,8 @@ describe('ApplicationParcelDocumentController', () => {
       mimeType: 'mimeType',
       fileName: 'fileName',
       fileKey: 'fileKey',
-      source: 'Applicant',
-      documentType: 'certificateOfTitle',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      documentType: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
       fileSize: 0,
     };
 

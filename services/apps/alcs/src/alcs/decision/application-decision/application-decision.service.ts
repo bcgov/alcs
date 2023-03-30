@@ -383,6 +383,7 @@ export class ApplicationDecisionService {
     const decision = await this.getOrFail(decisionUuid);
     const document = await this.documentService.create(
       `decision/${decision.uuid}`,
+      file.filename,
       file,
       user,
     );

@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { takeUntil } from 'rxjs';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardService } from '../../../../services/card/card.service';
