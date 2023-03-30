@@ -15,14 +15,14 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import {
-  ApplicationDocumentDto,
-  ApplicationDocumentUpdateDto,
-} from '../../alcs/application/application-document/application-document.dto';
-import {
-  ApplicationDocument,
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
-} from '../../alcs/application/application-document/application-document.entity';
+} from '../../alcs/application/application-document/application-document-code.entity';
+import {
+  ApplicationDocumentDto,
+  PortalApplicationDocumentUpdateDto,
+} from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
@@ -65,11 +65,7 @@ export class ApplicationDocumentController {
       fileNumber,
       documentType as DOCUMENT_TYPE,
     );
-    return this.mapper.mapArray(
-      documents,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
+    return this.mapPortalDocuments(documents);
   }
 
   @Get('/application/:fileNumber')
@@ -85,11 +81,7 @@ export class ApplicationDocumentController {
 
     //TODO: Update with view flags
     const documents = await this.applicationDocumentService.list(fileNumber);
-    return this.mapper.mapArray(
-      documents,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
+    return this.mapPortalDocuments(documents);
   }
 
   @Get('/:uuid/open')
@@ -110,7 +102,7 @@ export class ApplicationDocumentController {
   async update(
     @Param('fileNumber') fileNumber: string,
     @Req() req,
-    @Body() body: ApplicationDocumentUpdateDto[],
+    @Body() body: PortalApplicationDocumentUpdateDto[],
   ) {
     await this.applicationSubmissionService.verifyAccess(
       fileNumber,
@@ -120,15 +112,11 @@ export class ApplicationDocumentController {
     //Map form file number to uuid
     const applicationUuid = await this.applicationService.getUuid(fileNumber);
 
-    const res = await this.applicationDocumentService.update(
+    const res = await this.applicationDocumentService.updateDescriptionAndType(
       body,
       applicationUuid,
     );
-    return this.mapper.mapArray(
-      res,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
+    return this.mapPortalDocuments(res);
   }
 
   @Delete('/:uuid')
@@ -167,8 +155,19 @@ export class ApplicationDocumentController {
         },
       );
 
-    return this.mapper.map(
-      savedDocument,
+    const mappedDocs = this.mapPortalDocuments([savedDocument]);
+    return mappedDocs[0];
+  }
+
+  private mapPortalDocuments(documents: ApplicationDocument[]) {
+    const labeledDocuments = documents.map((document) => {
+      if (document.type?.portalLabel) {
+        document.type.label = document.type.portalLabel;
+      }
+      return document;
+    });
+    return this.mapper.mapArray(
+      labeledDocuments,
       ApplicationDocument,
       ApplicationDocumentDto,
     );

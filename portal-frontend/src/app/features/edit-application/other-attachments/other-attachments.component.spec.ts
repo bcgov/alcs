@@ -7,6 +7,7 @@ import { ApplicationDocumentDto } from '../../../services/application-document/a
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { CodeService } from '../../../services/code/code.service';
 
 import { OtherAttachmentsComponent } from './other-attachments.component';
 
@@ -16,6 +17,7 @@ describe('OtherAttachmentsComponent', () => {
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
@@ -23,6 +25,7 @@ describe('OtherAttachmentsComponent', () => {
     mockAppService = createMock();
     mockAppDocumentService = createMock();
     mockRouter = createMock();
+    mockCodeService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -37,6 +40,10 @@ describe('OtherAttachmentsComponent', () => {
         {
           provide: Router,
           useValue: mockRouter,
+        },
+        {
+          provide: CodeService,
+          useValue: mockCodeService,
         },
       ],
       declarations: [OtherAttachmentsComponent],

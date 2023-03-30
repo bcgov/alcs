@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationDocumentService, DOCUMENT_TYPE } from './application-document.service';
+import { ApplicationDocumentService, DOCUMENT_SOURCE, DOCUMENT_TYPE } from './application-document.service';
 
 describe('ApplicationDocumentService', () => {
   let service: ApplicationDocumentService;
@@ -43,7 +43,7 @@ describe('ApplicationDocumentService', () => {
       ])
     );
 
-    const res = await service.list('1', DOCUMENT_TYPE.DECISION_DOCUMENT);
+    const res = await service.listByType('1', DOCUMENT_TYPE.DECISION_DOCUMENT);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
@@ -68,7 +68,13 @@ describe('ApplicationDocumentService', () => {
     const file = createMock<File>();
     Object.defineProperty(file, 'size', { value: environment.maxFileSize + 1 });
 
-    await service.upload('', DOCUMENT_TYPE.DECISION_DOCUMENT, file);
+    await service.upload('', {
+      file,
+      fileName: '',
+      typeCode: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+      source: DOCUMENT_SOURCE.APPLICANT,
+      visibilityFlags: [],
+    });
 
     expect(toastService.showWarningToast).toHaveBeenCalledTimes(1);
     expect(httpClient.post).toHaveBeenCalledTimes(0);

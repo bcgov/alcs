@@ -17,6 +17,7 @@ import { NotificationModule } from '../notification/notification.module';
 import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
+import { ApplicationDocumentCode } from './application-document/application-document-code.entity';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
@@ -45,6 +46,7 @@ import { ApplicationService } from './application.service';
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDocument,
+      ApplicationDocumentCode,
       ApplicationLocalGovernment,
       Board,
       ApplicationSubmission,

@@ -4,10 +4,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document.entity';
+} from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -16,6 +18,7 @@ import { ApplicationParcel } from './application-parcel/application-parcel.entit
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
+import { Document } from '../../document/document.entity';
 
 function includesError(errors: Error[], target: Error) {
   return errors.some((error) => error.message === target.message);
@@ -331,7 +334,9 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+        type: new ApplicationDocumentCode({
+          code: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+        }),
       }),
     ];
     mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
@@ -441,7 +446,10 @@ describe('ApplicationSubmissionValidatorService', () => {
 
   it('should report error for document missing type', async () => {
     const incompleteDocument = new ApplicationDocument({
-      type: null,
+      type: undefined,
+      document: new Document({
+        source: DOCUMENT_SOURCE.APPLICANT,
+      }),
     });
 
     const documents = [incompleteDocument];
@@ -463,7 +471,12 @@ describe('ApplicationSubmissionValidatorService', () => {
 
   it('should report error for other document missing description', async () => {
     const incompleteDocument = new ApplicationDocument({
-      type: DOCUMENT_TYPE.OTHER,
+      type: new ApplicationDocumentCode({
+        code: DOCUMENT_TYPE.OTHER,
+      }),
+      document: new Document({
+        source: DOCUMENT_SOURCE.APPLICANT,
+      }),
       description: undefined,
     });
     const application = new ApplicationSubmission({

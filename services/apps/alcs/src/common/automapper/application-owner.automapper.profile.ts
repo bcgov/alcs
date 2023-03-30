@@ -2,7 +2,6 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document.entity';
 import { SubmittedApplicationOwnerDto } from '../../alcs/application/application.dto';
 import { ApplicationOwnerType } from '../../portal/application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import {
@@ -13,6 +12,7 @@ import {
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
+import { Document } from '../../document/document.entity';
 
 @Injectable()
 export class ApplicationOwnerProfile extends AutomapperProfile {
@@ -21,18 +21,21 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
   }
 
   override get profile() {
-    const mapCorporateSummary = (a): ApplicationDocumentDto | undefined => {
-      if (a.corporateSummary) {
+    const mapCorporateSummary = (
+      corporateSummary: Document | null,
+    ): ApplicationDocumentDto | undefined => {
+      if (corporateSummary) {
         return {
-          uuid: a.corporateSummary.uuid,
-          documentUuid: a.corporateSummary.uuid,
+          uuid: corporateSummary.uuid,
+          documentUuid: corporateSummary.uuid,
           mimeType: '',
-          fileName: a.corporateSummary.fileName,
-          type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
-          fileSize: a.corporateSummary.fileSize,
-          uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
-          uploadedBy: a.corporateSummary.uploadedBy,
+          fileName: corporateSummary.fileName,
+          fileSize: corporateSummary.fileSize,
+          uploadedAt: corporateSummary.auditCreatedAt.getDate(),
+          uploadedBy: corporateSummary.uploadedBy?.displayName || 'Unknown',
+          source: corporateSummary.source,
           description: undefined,
+          visibilityFlags: [],
         };
       }
       return undefined;
@@ -53,7 +56,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.corporateSummary,
-          mapFrom((a) => mapCorporateSummary(a)),
+          mapFrom((a) => mapCorporateSummary(a.corporateSummary)),
         ),
       );
 
@@ -71,7 +74,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.corporateSummary,
-          mapFrom((a) => mapCorporateSummary(a)),
+          mapFrom((a) => mapCorporateSummary(a.corporateSummary)),
         ),
         forMember(
           (ad) => ad.parcels,

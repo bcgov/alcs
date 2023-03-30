@@ -1,10 +1,8 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import {
-  ApplicationDocument,
-  DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -218,7 +216,8 @@ export class ApplicationSubmissionValidatorService {
     );
     if (applicationSubmission.owners.length > 1 || hasCrownLandOwners) {
       const authorizationLetters = documents.filter(
-        (document) => document.type === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
+        (document) =>
+          document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
       );
       if (authorizationLetters.length === 0) {
         errors.push(
@@ -309,10 +308,12 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateOptionalDocuments(
-    documents: ApplicationDocument[],
+    applicantDocuments: ApplicationDocument[],
     errors: Error[],
   ) {
-    const untypedDocuments = documents.filter((document) => !document.type);
+    const untypedDocuments = applicantDocuments.filter(
+      (document) => !document.type,
+    );
     for (const document of untypedDocuments) {
       errors.push(
         new ServiceValidationException(
@@ -321,12 +322,12 @@ export class ApplicationSubmissionValidatorService {
       );
     }
 
-    const optionalDocuments = documents.filter((document) =>
+    const optionalDocuments = applicantDocuments.filter((document) =>
       [
         DOCUMENT_TYPE.OTHER,
         DOCUMENT_TYPE.PHOTOGRAPH,
         DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-      ].includes(document.type as DOCUMENT_TYPE),
+      ].includes(document.type?.code as DOCUMENT_TYPE),
     );
     for (const document of optionalDocuments) {
       if (!document.description) {

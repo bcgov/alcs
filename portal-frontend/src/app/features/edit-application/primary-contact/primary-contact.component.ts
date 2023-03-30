@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
@@ -63,14 +63,18 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     });
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
-      this.files = documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
+      this.files = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER);
     });
   }
 
   async onAttachFile(file: FileHandle) {
     if (this.fileId) {
       await this.onSave();
-      await this.applicationDocumentService.attachExternalFile(this.fileId, file.file, DOCUMENT.AUTHORIZATION_LETTER);
+      await this.applicationDocumentService.attachExternalFile(
+        this.fileId,
+        file.file,
+        DOCUMENT_TYPE.AUTHORIZATION_LETTER
+      );
       const documents = await this.applicationDocumentService.getByFileId(this.fileId);
       if (documents) {
         this.$applicationDocuments.next(documents);

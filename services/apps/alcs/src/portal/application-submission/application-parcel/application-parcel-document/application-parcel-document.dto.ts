@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { DOCUMENT_TYPE } from './application-parcel-document.entity';
+import { DOCUMENT_TYPE } from '../../../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_SOURCE } from '../../../../document/document.dto';
 
 export class ApplicationParcelDocumentDto {
   @AutoMap()
@@ -39,7 +40,7 @@ export class AttachExternalDocumentDto {
   fileKey: string;
 
   @IsString()
-  source: 'Applicant';
+  source: DOCUMENT_SOURCE.APPLICANT;
 
   @IsString()
   @IsOptional()

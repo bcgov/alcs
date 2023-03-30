@@ -5,13 +5,15 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
-import { ApplicationDocumentController } from './application-document.controller';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { CodeService } from '../../code/code.service';
 import {
-  ApplicationDocument,
   DOCUMENT_TYPE,
-} from './application-document.entity';
+  DOCUMENT_TYPES,
+} from './application-document-code.entity';
+import { ApplicationDocumentController } from './application-document.controller';
+import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentController', () => {
@@ -68,9 +70,23 @@ describe('ApplicationDocumentController', () => {
 
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
-    const res = await controller.attachDocument('file', 'decisionDocument', {
+    const res = await controller.attachDocument('fileNumber', {
       isMultipart: () => true,
-      file: () => mockFile,
+      body: {
+        documentType: {
+          value: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        },
+        fileName: {
+          value: 'file',
+        },
+        source: {
+          value: DOCUMENT_SOURCE.APPLICANT,
+        },
+        visibilityFlags: {
+          value: '',
+        },
+        file: mockFile,
+      },
       user: {
         entity: mockUser,
       },
@@ -79,13 +95,10 @@ describe('ApplicationDocumentController', () => {
     expect(res.mimeType).toEqual(mockDocument.document.mimeType);
 
     expect(appDocumentService.attachDocument).toHaveBeenCalledTimes(1);
-    expect(appDocumentService.attachDocument.mock.calls[0][0]).toEqual('file');
-    expect(appDocumentService.attachDocument.mock.calls[0][1]).toEqual(
-      mockFile,
-    );
-    expect(appDocumentService.attachDocument.mock.calls[0][2]).toEqual(
-      mockUser,
-    );
+    const callData = appDocumentService.attachDocument.mock.calls[0][0];
+    expect(callData.fileName).toEqual('file');
+    expect(callData.file).toEqual(mockFile);
+    expect(callData.user).toEqual(mockUser);
   });
 
   it('should throw an exception if request is not the right type', async () => {
@@ -95,7 +108,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
     await expect(
-      controller.attachDocument('file', 'decisionDocument', {
+      controller.attachDocument('fileNumber', {
         isMultipart: () => false,
         file: () => mockFile,
         user: {
@@ -114,8 +127,13 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
     await expect(
-      controller.attachDocument('file', 'invalidDocumentType', {
+      controller.attachDocument('fileNumber', {
         isMultipart: () => true,
+        body: {
+          documentType: {
+            value: 'BAD TYPE',
+          },
+        },
         file: () => mockFile,
         user: {
           entity: mockUser,
@@ -123,7 +141,9 @@ describe('ApplicationDocumentController', () => {
       }),
     ).rejects.toMatchObject(
       new BadRequestException(
-        'Invalid document type specified, must be one of decisionDocument, reviewDocument',
+        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
+          ', ',
+        )}`,
       ),
     );
   });

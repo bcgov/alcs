@@ -37,6 +37,7 @@ import { InlineBooleanComponent } from './inline-boolean/inline-boolean.componen
 import { InlineEditComponent } from './inline-edit/inline-edit.component';
 import { InlineNumberComponent } from './inline-number/inline-number.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
+import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
@@ -58,6 +59,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     ApplicationTimeTrackerComponent,
     ApplicationTypePillComponent,
     SafePipe,
+    FileSizePipe,
   ],
   imports: [
     CommonModule,
@@ -115,6 +117,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     ApplicationTimeTrackerComponent,
     ApplicationTypePillComponent,
     SafePipe,
+    FileSizePipe,
   ],
 })
 export class SharedModule {

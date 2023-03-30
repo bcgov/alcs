@@ -4,7 +4,11 @@ import { Injectable } from '@nestjs/common';
 
 import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
+import {
+  ApplicationDocumentDto,
+  ApplicationDocumentTypeDto,
+} from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import {
   ApplicationMeetingDto,
@@ -127,7 +131,12 @@ export class ApplicationProfile extends AutomapperProfile {
           (a) => a.documentUuid,
           mapFrom((ad) => ad.document.uuid),
         ),
+        forMember(
+          (a) => a.source,
+          mapFrom((ad) => ad.document.source),
+        ),
       );
+      createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);
 
       createMap(
         mapper,

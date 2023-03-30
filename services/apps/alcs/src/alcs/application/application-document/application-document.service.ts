@@ -6,22 +6,22 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { ApplicationService } from '../application.service';
 import {
-  ApplicationDocumentCreateDto,
-  ApplicationDocumentUpdateDto,
-} from './application-document.dto';
-import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
-} from './application-document.entity';
+} from './application-document-code.entity';
+import { PortalApplicationDocumentUpdateDto } from './application-document.dto';
+import { ApplicationDocument } from './application-document.entity';
 
 @Injectable()
 export class ApplicationDocumentService {
   private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationDocument> = {
     document: true,
+    type: true,
   };
 
   constructor(
@@ -29,24 +29,40 @@ export class ApplicationDocumentService {
     private applicationService: ApplicationService,
     @InjectRepository(ApplicationDocument)
     private applicationDocumentRepository: Repository<ApplicationDocument>,
+    @InjectRepository(ApplicationDocumentCode)
+    private applicationDocumentCodeRepository: Repository<ApplicationDocumentCode>,
   ) {}
 
-  async attachDocument(
-    fileNumber: string,
-    file: MultipartFile,
-    user: User,
-    documentType: DOCUMENT_TYPE,
-  ) {
+  async attachDocument({
+    fileNumber,
+    fileName,
+    file,
+    documentType,
+    user,
+    source = DOCUMENT_SOURCE.ALCS,
+    visibilityFlags,
+  }: {
+    fileNumber: string;
+    fileName: string;
+    file: MultipartFile;
+    user: User;
+    documentType: DOCUMENT_TYPE;
+    source?: DOCUMENT_SOURCE;
+    visibilityFlags: string[];
+  }) {
     const application = await this.applicationService.getOrFail(fileNumber);
     const document = await this.documentService.create(
       `application/${fileNumber}`,
+      fileName,
       file,
       user,
+      source,
     );
     const appDocument = new ApplicationDocument({
-      type: documentType,
+      typeCode: documentType,
       application,
       document,
+      visibilityFlags,
     });
 
     return this.applicationDocumentRepository.save(appDocument);
@@ -74,7 +90,7 @@ export class ApplicationDocumentService {
   async list(fileNumber: string, documentType?: DOCUMENT_TYPE) {
     return this.applicationDocumentRepository.find({
       where: {
-        type: documentType,
+        typeCode: documentType,
         application: {
           fileNumber,
         },
@@ -86,7 +102,7 @@ export class ApplicationDocumentService {
   async listAll(fileNumbers: string[], documentType: DOCUMENT_TYPE) {
     return this.applicationDocumentRepository.find({
       where: {
-        type: documentType,
+        typeCode: documentType,
         application: {
           fileNumber: Any(fileNumbers),
         },
@@ -110,11 +126,15 @@ export class ApplicationDocumentService {
 
   async attachExternalDocument(
     fileNumber: string,
-    data: ApplicationDocumentCreateDto,
+    data: {
+      type?: DOCUMENT_TYPE;
+      documentUuid: string;
+      description?: string;
+    },
   ) {
     const application = await this.applicationService.getOrFail(fileNumber);
     const document = new ApplicationDocument({
-      type: data.type,
+      typeCode: data.type,
       applicationUuid: application.uuid,
       documentUuid: data.documentUuid,
       description: data.description,
@@ -126,8 +146,8 @@ export class ApplicationDocumentService {
     return this.get(savedDocument.uuid);
   }
 
-  async update(
-    updates: ApplicationDocumentUpdateDto[],
+  async updateDescriptionAndType(
+    updates: PortalApplicationDocumentUpdateDto[],
     applicationUuid: string,
   ) {
     const results: ApplicationDocument[] = [];
@@ -147,7 +167,7 @@ export class ApplicationDocumentService {
         );
       }
 
-      file.type = update.type;
+      file.typeCode = update.type;
       file.description = update.description;
       const updatedFile = await this.applicationDocumentRepository.save(file);
       results.push(updatedFile);
@@ -159,7 +179,7 @@ export class ApplicationDocumentService {
     const documents = await this.applicationDocumentRepository.find({
       where: {
         applicationUuid,
-        type: documentType,
+        typeCode: documentType,
       },
       relations: {
         document: true,
@@ -173,23 +193,56 @@ export class ApplicationDocumentService {
   }
 
   async getApplicantDocuments(fileNumber: string) {
-    const reviewTypes = [
-      DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-      DOCUMENT_TYPE.PHOTOGRAPH,
-      DOCUMENT_TYPE.OTHER,
-      DOCUMENT_TYPE.AUTHORIZATION_LETTER,
-      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-      DOCUMENT_TYPE.CORPORATE_SUMMARY,
-      DOCUMENT_TYPE.PROPOSAL_MAP,
-      DOCUMENT_TYPE.SERVING_NOTICE,
-    ];
-
     const documents = await this.list(fileNumber);
-
-    const filteredDocuments = documents.filter(
-      (doc) =>
-        doc.type === null || reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    return documents.filter(
+      (doc) => doc.document.source === DOCUMENT_SOURCE.APPLICANT,
     );
-    return filteredDocuments;
+  }
+
+  async fetchTypes() {
+    return await this.applicationDocumentCodeRepository.find();
+  }
+
+  async update({
+    uuid,
+    documentType,
+    file,
+    fileName,
+    source,
+    visibilityFlags,
+    user,
+  }: {
+    uuid: string;
+    file?: any;
+    fileName: string;
+    documentType: DOCUMENT_TYPE;
+    visibilityFlags: string[];
+    source: DOCUMENT_SOURCE;
+    user: User;
+  }) {
+    const appDocument = await this.get(uuid);
+
+    if (file) {
+      const fileNumber = await this.applicationService.getFileNumber(
+        appDocument.applicationUuid,
+      );
+      await this.documentService.softRemove(appDocument.document);
+      appDocument.document = await this.documentService.create(
+        `application/${fileNumber}`,
+        fileName,
+        file,
+        user,
+        source,
+      );
+    } else {
+      await this.documentService.update(appDocument.document, {
+        fileName,
+        source,
+      });
+    }
+    appDocument.type = undefined;
+    appDocument.typeCode = documentType;
+    appDocument.visibilityFlags = visibilityFlags;
+    await this.applicationDocumentRepository.save(appDocument);
   }
 }

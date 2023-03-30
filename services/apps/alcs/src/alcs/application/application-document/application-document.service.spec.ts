@@ -5,15 +5,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { UserService } from '../../../user/user.service';
 import { ApplicationService } from '../application.service';
 import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
-} from './application-document.entity';
+} from './application-document-code.entity';
+import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentService', () => {
@@ -21,14 +23,16 @@ describe('ApplicationDocumentService', () => {
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockRepository: DeepMocked<Repository<ApplicationDocument>>;
+  let mockTypeRepository: DeepMocked<Repository<ApplicationDocumentCode>>;
 
   let mockApplication;
   const fileNumber = '12345';
 
   beforeEach(async () => {
-    mockDocumentService = createMock<DocumentService>();
-    mockApplicationService = createMock<ApplicationService>();
-    mockRepository = createMock<Repository<ApplicationDocument>>();
+    mockDocumentService = createMock();
+    mockApplicationService = createMock();
+    mockRepository = createMock();
+    mockTypeRepository = createMock();
 
     mockApplication = initApplicationMockEntity(fileNumber);
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
@@ -44,6 +48,10 @@ describe('ApplicationDocumentService', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDocumentCode),
+          useValue: mockTypeRepository,
         },
         {
           provide: getRepositoryToken(ApplicationDocument),
@@ -66,7 +74,7 @@ describe('ApplicationDocumentService', () => {
   });
 
   it('should create a document in the happy path', async () => {
-    const mockUser = {};
+    const mockUser = new User();
     const mockFile = {};
     const mockSavedDocument = {};
 
@@ -74,20 +82,23 @@ describe('ApplicationDocumentService', () => {
       mockSavedDocument as ApplicationDocument,
     );
 
-    const res = await service.attachDocument(
+    const res = await service.attachDocument({
       fileNumber,
-      mockFile as MultipartFile,
-      mockUser as User,
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-    );
+      file: mockFile as MultipartFile,
+      user: mockUser,
+      documentType: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      fileName: '',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      visibilityFlags: [],
+    });
 
     expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create.mock.calls[0][0]).toBe(
       'application/12345',
     );
-    expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockFile);
-    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockUser);
+    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockFile);
+    expect(mockDocumentService.create.mock.calls[0][3]).toBe(mockUser);
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].application).toBe(
@@ -192,5 +203,60 @@ describe('ApplicationDocumentService', () => {
 
     expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res).toEqual(fakeUrl);
+  });
+
+  it('should load all applicant sourced documents correctly', async () => {
+    const mockAppDocument = new ApplicationDocument({
+      uuid: '1',
+      document: new Document({
+        source: DOCUMENT_SOURCE.APPLICANT,
+      }),
+    });
+    const mockLgDocument = new ApplicationDocument({
+      uuid: '2',
+      document: new Document({
+        source: DOCUMENT_SOURCE.LFNG,
+      }),
+    });
+
+    mockRepository.find.mockResolvedValue([mockAppDocument, mockLgDocument]);
+
+    const res = await service.getApplicantDocuments('1');
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0]).toBe(mockAppDocument);
+  });
+
+  it('should call delete for each document loaded', async () => {
+    const mockAppDocument = new ApplicationDocument({
+      uuid: '1',
+      document: new Document({
+        source: DOCUMENT_SOURCE.APPLICANT,
+      }),
+    });
+    const mockLgDocument = new ApplicationDocument({
+      uuid: '2',
+      document: new Document({
+        source: DOCUMENT_SOURCE.LFNG,
+      }),
+    });
+
+    mockRepository.find.mockResolvedValue([mockAppDocument, mockLgDocument]);
+    mockDocumentService.softRemove.mockResolvedValue();
+
+    const res = await service.deleteByType(DOCUMENT_TYPE.STAFF_REPORT, '');
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(2);
+  });
+
+  it('should call through for fetchTypes', async () => {
+    mockTypeRepository.find.mockResolvedValue([]);
+
+    const res = await service.fetchTypes();
+
+    expect(mockTypeRepository.find).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
   });
 });

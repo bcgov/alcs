@@ -12,7 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { User } from '../user/user.entity';
-import { CreateDocumentDto } from './document.dto';
+import { CreateDocumentDto, DOCUMENT_SOURCE } from './document.dto';
 import { Document } from './document.entity';
 
 const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
@@ -41,7 +41,13 @@ export class DocumentService {
     });
   }
 
-  async create(filePath: string, file: MultipartFile, user: User) {
+  async create(
+    filePath: string,
+    fileName: string,
+    file: MultipartFile,
+    user: User,
+    source = DOCUMENT_SOURCE.ALCS,
+  ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -58,8 +64,8 @@ export class DocumentService {
       fileSize: file.file.bytesRead,
       mimeType: file.mimetype,
       uploadedBy: user,
-      fileName: file.filename,
-      source: 'ALCS',
+      fileName,
+      source,
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -146,5 +152,14 @@ export class DocumentService {
         uuid,
       },
     });
+  }
+
+  async update(
+    document: Document,
+    updates: { fileName: string; source: DOCUMENT_SOURCE },
+  ) {
+    document.fileName = updates.fileName;
+    document.source = updates.source;
+    await this.documentRepository.save(document);
   }
 }

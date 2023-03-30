@@ -1,39 +1,36 @@
 import { AutoMap } from '@automapper/classes';
-import { DOCUMENT_TYPE } from '../../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.entity';
-// TODO fix me, used the first one from the list so not sure which is correct
-// import { DOCUMENT_TYPE } from '../../../../../portal/src/application-proposal/application-document/application-document.entity';
+import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import { DOCUMENT_TYPE } from './application-document-code.entity';
+
+export class ApplicationDocumentTypeDto extends BaseCodeDto {
+  @AutoMap()
+  oatsCode: string;
+}
 
 export class ApplicationDocumentDto {
-  @AutoMap()
-  type: string;
-
   @AutoMap(() => String)
   description?: string;
 
   @AutoMap()
   uuid: string;
 
+  @AutoMap(() => ApplicationDocumentTypeDto)
+  type?: ApplicationDocumentTypeDto;
+
+  @AutoMap(() => [String])
+  visibilityFlags: string[];
+
+  //Document Fields
   documentUuid: string;
   fileName: string;
   fileSize?: number;
-
-  @AutoMap()
+  source: string;
   mimeType: string;
-
-  @AutoMap()
   uploadedBy: string;
-
-  @AutoMap()
   uploadedAt: number;
 }
 
-export class ApplicationDocumentCreateDto {
-  type?: DOCUMENT_TYPE;
-  documentUuid: string;
-  description?: string;
-}
-
-export class ApplicationDocumentUpdateDto {
+export class PortalApplicationDocumentUpdateDto {
   uuid: string;
   type: DOCUMENT_TYPE | null;
   description: string | null;

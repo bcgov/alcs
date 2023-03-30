@@ -2,7 +2,7 @@
 // Note: ng-select styles must be overridden in global css
 
 .ng-select {
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
 }
 
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
@@ -28,11 +28,11 @@
 }
 
 .ng-select .ng-select-container {
-  border-color: colors.$grey;
+  border-color: colors.$grey !important;
 }
 
 .ng-select .ng-select-container.ng-appearance-outline:after {
-  border-color: colors.$grey;
+  border-color: colors.$grey !important;
   height: calc(100% - 0.15em);
 }
 
@@ -43,6 +43,7 @@
 
 .ng-select .ng-select-container.ng-appearance-outline {
   overflow: visible;
+  margin-top: -4px;
 }
 
 .ng-select .ng-has-value .ng-placeholder {
@@ -54,7 +55,7 @@
 }
 
 .ng-select .ng-select-container .ng-value-container .ng-input > input {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   margin-left: 12px;
   font-size: 18px;
 }

@@ -6,11 +6,14 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document.entity';
+} from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
+import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
 import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
 import {
@@ -373,10 +376,20 @@ describe('ApplicationSubmissionReviewController', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        type: new ApplicationDocumentCode({
+          code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        }),
+        document: new Document({
+          source: DOCUMENT_SOURCE.LFNG,
+        }),
       }),
       new ApplicationDocument({
-        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        type: new ApplicationDocumentCode({
+          code: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        }),
+        document: new Document({
+          source: DOCUMENT_SOURCE.APPLICANT,
+        }),
       }),
     ];
     mockAppDocService.list.mockResolvedValue(documents);

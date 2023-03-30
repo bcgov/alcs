@@ -15,12 +15,17 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { ApplicationDocumentDto } from './application-document.dto';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import {
-  ApplicationDocument,
+  ApplicationDocumentCode,
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
-} from './application-document.entity';
+} from './application-document-code.entity';
+import {
+  ApplicationDocumentDto,
+  ApplicationDocumentTypeDto,
+} from './application-document.dto';
+import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -32,40 +37,93 @@ export class ApplicationDocumentController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Post('/application/:fileNumber/:documentType')
+  @Get('/application/:fileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listAll(
+    @Param('fileNumber') fileNumber: string,
+  ): Promise<ApplicationDocumentDto[]> {
+    const documents = await this.applicationDocumentService.list(fileNumber);
+    return this.mapper.mapArray(
+      documents,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
+
+  @Post('/application/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async attachDocument(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: string,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
 
-    const uploadableDocumentTypes = [
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-      DOCUMENT_TYPE.REVIEW_DOCUMENT,
-    ];
-
-    if (
-      !uploadableDocumentTypes.includes(documentType as DOCUMENT_TYPE) &&
-      documentType !== null
-    ) {
+    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
+    if (!DOCUMENT_TYPES.includes(documentType)) {
       throw new BadRequestException(
-        `Invalid document type specified, must be one of ${uploadableDocumentTypes.join(
+        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
           ', ',
         )}`,
       );
     }
 
-    const file = await req.file();
-    const savedDocument = await this.applicationDocumentService.attachDocument(
+    const file = req.body.file;
+    const fileName = req.body.fileName.value as string;
+    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
+    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+
+    const savedDocument = await this.applicationDocumentService.attachDocument({
       fileNumber,
+      fileName,
       file,
-      req.user.entity,
-      documentType as DOCUMENT_TYPE,
+      user: req.user.entity,
+      documentType: documentType as DOCUMENT_TYPE,
+      source: documentSource,
+      visibilityFlags,
+    });
+    return this.mapper.map(
+      savedDocument,
+      ApplicationDocument,
+      ApplicationDocumentDto,
     );
+  }
+
+  @Post('/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateDocument(
+    @Param('uuid') documentUuid: string,
+    @Req() req,
+  ): Promise<ApplicationDocumentDto> {
+    if (!req.isMultipart()) {
+      throw new BadRequestException('Request is not multipart');
+    }
+
+    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
+    if (!DOCUMENT_TYPES.includes(documentType)) {
+      throw new BadRequestException(
+        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
+          ', ',
+        )}`,
+      );
+    }
+
+    const file = req.body.file;
+    const fileName = req.body.fileName.value as string;
+    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
+    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+
+    const savedDocument = await this.applicationDocumentService.update({
+      uuid: documentUuid,
+      fileName,
+      file,
+      documentType: documentType as DOCUMENT_TYPE,
+      source: documentSource,
+      visibilityFlags,
+      user: req.user.entity,
+    });
+
     return this.mapper.map(
       savedDocument,
       ApplicationDocument,
@@ -79,15 +137,8 @@ export class ApplicationDocumentController {
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationDocumentDto[]> {
     const documents = await this.applicationDocumentService.list(fileNumber);
-
-    const reviewTypes = [
-      DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-      DOCUMENT_TYPE.STAFF_REPORT,
-      DOCUMENT_TYPE.REVIEW_OTHER,
-    ];
-
-    const reviewDocuments = documents.filter((doc) =>
-      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    const reviewDocuments = documents.filter(
+      (doc) => doc.document.source === DOCUMENT_SOURCE.LFNG,
     );
 
     return this.mapper.mapArray(
@@ -134,6 +185,17 @@ export class ApplicationDocumentController {
       documents,
       ApplicationDocument,
       ApplicationDocumentDto,
+    );
+  }
+
+  @Get('/types')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listTypes() {
+    const types = await this.applicationDocumentService.fetchTypes();
+    return this.mapper.mapArray(
+      types,
+      ApplicationDocumentCode,
+      ApplicationDocumentTypeDto,
     );
   }
 
