@@ -8,13 +8,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Any, FindOptionsRelations, Repository } from 'typeorm';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
+import { PortalApplicationDocumentUpdateDto } from '../../../portal/application-document/application-document.dto';
 import { User } from '../../../user/user.entity';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
 } from './application-document-code.entity';
-import { PortalApplicationDocumentUpdateDto } from './application-document.dto';
 import { ApplicationDocument } from './application-document.entity';
 
 @Injectable()
@@ -132,10 +132,10 @@ export class ApplicationDocumentService {
       description?: string;
     },
   ) {
-    const application = await this.applicationService.getOrFail(fileNumber);
+    const applicationUuid = await this.applicationService.getUuid(fileNumber);
     const document = new ApplicationDocument({
+      applicationUuid,
       typeCode: data.type,
-      applicationUuid: application.uuid,
       documentUuid: data.documentUuid,
       description: data.description,
     });

@@ -156,7 +156,7 @@
     <label for="certificate-of-title-upload">Upload Certificate of Title</label>
     <app-file-drag-drop
       id="certificate-of-title-upload"
-      [uploadedFiles]="parcel.documents"
+      [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
       (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TITLE, parcel.uuid)"
       (deleteFile)="deleteFile($event)"
       (openFile)="openFile($event)"
@@ -218,6 +218,7 @@
       </button>
       <div>
         <app-parcel-owners
+          [fileId]="fileId"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
@@ -293,6 +294,7 @@
       </button>
       <div>
         <app-parcel-owners
+          [fileId]='fileId'
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"

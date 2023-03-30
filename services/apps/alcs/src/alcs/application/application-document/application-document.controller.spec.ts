@@ -169,7 +169,7 @@ describe('ApplicationDocumentController', () => {
     expect(appDocumentService.delete).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through for download', async () => {
+  it('should call through for open', async () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
@@ -177,5 +177,39 @@ describe('ApplicationDocumentController', () => {
     const res = await controller.open('fake-uuid');
 
     expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for download', async () => {
+    const fakeUrl = 'fake-url';
+    appDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    appDocumentService.get.mockResolvedValue(mockDocument);
+
+    const res = await controller.download('fake-uuid');
+
+    expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for list types', async () => {
+    appDocumentService.fetchTypes.mockResolvedValue([]);
+
+    const res = await controller.listTypes();
+
+    expect(appDocumentService.fetchTypes).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for list app documents', async () => {
+    appDocumentService.getApplicantDocuments.mockResolvedValue([]);
+
+    const res = await controller.listApplicantDocuments('');
+
+    expect(appDocumentService.getApplicantDocuments).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for list review documents', async () => {
+    appDocumentService.list.mockResolvedValue([]);
+
+    const res = await controller.listReviewDocuments('');
+
+    expect(appDocumentService.list).toHaveBeenCalledTimes(1);
   });
 });

@@ -15,6 +15,7 @@ export enum DOCUMENT_TYPE {
   //ALCS
   DECISION_DOCUMENT = 'DPAC',
   OTHER = 'OTHR',
+  ORIGINAL_APPLICATION = 'ORIG',
 
   //Government Review
   RESOLUTION_DOCUMENT = 'RESO',
@@ -77,8 +78,8 @@ export class ApplicationDocumentService {
     return res;
   }
 
-  async delete(documentId: string) {
-    return firstValueFrom(this.http.delete<ApplicationDocumentDto>(`${this.url}/${documentId}`));
+  async delete(uuid: string) {
+    return firstValueFrom(this.http.delete<ApplicationDocumentDto>(`${this.url}/${uuid}`));
   }
 
   async download(uuid: string, fileName: string, isInline = true) {

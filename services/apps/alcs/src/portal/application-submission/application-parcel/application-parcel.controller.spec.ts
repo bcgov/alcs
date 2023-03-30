@@ -4,7 +4,9 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationParcelProfile } from '../../../common/automapper/application-parcel.automapper.profile';
+import { DocumentService } from '../../../document/document.service';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -18,11 +20,15 @@ describe('ApplicationParcelController', () => {
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
+  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
     mockApplicationParcelService = createMock();
     mockApplicationService = createMock();
     mockApplicationOwnerService = createMock();
+    mockDocumentService = createMock();
+    mockAppDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -44,6 +50,14 @@ describe('ApplicationParcelController', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockApplicationOwnerService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocumentService,
         },
         {
           provide: ClsService,

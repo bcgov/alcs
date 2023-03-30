@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_TYPE,
+} from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
@@ -69,7 +73,9 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
         (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
       );
       this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
-      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
+      this.otherAttachments = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+      );
     });
   }
 

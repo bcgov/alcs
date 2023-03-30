@@ -12,15 +12,18 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
-import { AttachExternalDocumentDto } from '../application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationSubmissionService } from '../application-submission.service';
 import {
   APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
+  AttachCorporateSummaryDto,
   SetPrimaryContactDto,
 } from './application-owner.dto';
 import { ApplicationOwner } from './application-owner.entity';
@@ -31,8 +34,9 @@ import { ApplicationOwnerService } from './application-owner.service';
 export class ApplicationOwnerController {
   constructor(
     private ownerService: ApplicationOwnerService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private documentService: DocumentService,
+    private applicationDocumentService: ApplicationDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -41,7 +45,10 @@ export class ApplicationOwnerController {
     @Param('fileId') fileId: string,
     @Req() req,
   ): Promise<ApplicationOwnerDto[]> {
-    await this.applicationService.verifyAccess(fileId, req.user.entity);
+    await this.applicationSubmissionService.verifyAccess(
+      fileId,
+      req.user.entity,
+    );
     const owners = await this.ownerService.fetchByApplicationFileId(fileId);
     return this.mapper.mapArrayAsync(
       owners,
@@ -57,7 +64,7 @@ export class ApplicationOwnerController {
   ): Promise<ApplicationOwnerDto> {
     this.verifyDto(createDto);
 
-    const application = await this.applicationService.verifyAccess(
+    const application = await this.applicationSubmissionService.verifyAccess(
       createDto.applicationFileNumber,
       req.user.entity,
     );
@@ -88,7 +95,7 @@ export class ApplicationOwnerController {
   async delete(@Param('uuid') uuid: string, @Req() req) {
     const owner = await this.verifyAccessAndGetOwner(req, uuid);
     if (owner.corporateSummary) {
-      await this.documentService.softRemove(owner.corporateSummary);
+      await this.applicationDocumentService.delete(owner.corporateSummary);
     }
     await this.ownerService.delete(owner);
     return { uuid };
@@ -140,7 +147,7 @@ export class ApplicationOwnerController {
 
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
-    const application = await this.applicationService.verifyAccess(
+    const application = await this.applicationSubmissionService.verifyAccess(
       data.fileNumber,
       req.user.entity,
     );
@@ -190,23 +197,9 @@ export class ApplicationOwnerController {
     }
   }
 
-  @Get(':uuid/corporateSummary')
-  async openCorporateSummary(@Param('uuid') uuid: string, @Req() req) {
-    const owner = await this.verifyAccessAndGetOwner(req, uuid);
-
-    if (!owner.corporateSummary) {
-      throw new BadRequestException('Owner has no corporate summary');
-    }
-
-    const url = await this.documentService.getDownloadUrl(
-      owner.corporateSummary,
-    );
-    return { url };
-  }
-
   private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {
     const owner = await this.ownerService.getOwner(ownerUuid);
-    await this.applicationService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccess(
       owner.applicationFileNumber,
       req.user.entity,
     );
@@ -214,14 +207,33 @@ export class ApplicationOwnerController {
     return owner;
   }
 
-  @Post('attachExternal')
-  async attachExternalDocument(@Body() data: AttachExternalDocumentDto) {
+  @Post('attachCorporateSummary')
+  async attachCorporateSummary(
+    @Req() req,
+    @Body() data: AttachCorporateSummaryDto,
+  ) {
+    await this.applicationSubmissionService.verifyAccess(
+      data.fileNumber,
+      req.user.entity,
+    );
+
     const document = await this.documentService.createDocumentRecord({
       ...data,
+      uploadedBy: req.user.entity,
+      source: DOCUMENT_SOURCE.APPLICANT,
     });
 
+    const applicationDocument =
+      await this.applicationDocumentService.attachExternalDocument(
+        data.fileNumber,
+        {
+          documentUuid: document.uuid,
+          type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+        },
+      );
+
     return {
-      uuid: document.uuid,
+      uuid: applicationDocument.uuid,
     };
   }
 }

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
@@ -37,8 +38,8 @@ interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ow
   isFarmText?: string;
   ownershipType?: BaseCodeDto;
   validation?: ApplicationParcelBasicValidation;
-  documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDto[];
+  certificateOfTitle?: ApplicationDocumentDto;
 }
 
 @Component({
@@ -66,6 +67,7 @@ export class ParcelComponent {
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
+    private applicationDocumentService: ApplicationDocumentService,
     private ownerService: ApplicationOwnerService,
     private router: Router
   ) {}
@@ -107,14 +109,7 @@ export class ParcelComponent {
   }
 
   async onOpenFile(uuid: string) {
-    const res = await this.applicationParcelService.openFile(uuid);
-    if (res) {
-      window.open(res.url, '_blank');
-    }
-  }
-
-  async onOpenCorporateSummaryFile(uuid: string) {
-    const res = await this.ownerService.openCorporateSummary(uuid);
+    const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }
@@ -159,7 +154,7 @@ export class ParcelComponent {
       validation.isFarmRequired = true;
     }
 
-    validation.isCertificateUploaded = parcel.documents && parcel.documents.length > 0;
+    validation.isCertificateUploaded = !!parcel.certificateOfTitle;
     const isCrownWithPid = parcel.ownershipType?.code === 'CRWN' && parcel.pid && parcel.pid.length > 0;
     const isFeeSimple = parcel.ownershipType?.code === 'SMPL';
     if (this.showCertificateOfTitle && (isCrownWithPid || isFeeSimple)) {

@@ -1,11 +1,10 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { SubmittedApplicationParcelDto } from '../../alcs/application/application.dto';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationParcelDocumentDto } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
-import { ApplicationParcelDocument } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelOwnershipType } from '../../portal/application-submission/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
 import {
   ApplicationParcelDto,
@@ -34,17 +33,16 @@ export class ApplicationParcelProfile extends AutomapperProfile {
           mapFrom((p) => p.purchasedDate?.getTime()),
         ),
         forMember(
-          (p) => p.documents,
+          (p) => p.certificateOfTitle,
           mapFrom((pd) => {
-            if (pd.documents) {
-              return this.mapper.mapArray(
-                pd.documents,
-                ApplicationParcelDocument,
-                ApplicationParcelDocumentDto,
+            if (pd.certificateOfTitle) {
+              return this.mapper.map(
+                pd.certificateOfTitle,
+                ApplicationDocument,
+                ApplicationDocumentDto,
               );
-            } else {
-              return [];
             }
+            return;
           }),
         ),
         forMember(
@@ -79,62 +77,8 @@ export class ApplicationParcelProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationParcelDocument,
-        ApplicationParcelDocumentDto,
-        forMember(
-          (a) => a.uploadedBy,
-          mapFrom((ad) => {
-            return ad.document.uploadedBy?.name;
-          }),
-        ),
-        forMember(
-          (a) => a.fileName,
-          mapFrom((ad) => {
-            return ad.document.fileName;
-          }),
-        ),
-        forMember(
-          (a) => a.fileSize,
-          mapFrom((ad) => {
-            return ad.document.fileSize;
-          }),
-        ),
-        forMember(
-          (a) => a.documentUuid,
-          mapFrom((ad) => {
-            return ad.document.uuid;
-          }),
-        ),
-      );
-
-      createMap(
-        mapper,
         ApplicationParcelOwnershipType,
         ApplicationParcelOwnershipTypeDto,
-      );
-
-      createMap(
-        mapper,
-        ApplicationParcel,
-        SubmittedApplicationParcelDto,
-        forMember(
-          (a) => a.documents,
-          mapFrom((ad) => {
-            if (ad.documents) {
-              return this.mapper.mapArray(
-                ad.documents,
-                ApplicationParcelDocument,
-                ApplicationParcelDocumentDto,
-              );
-            } else {
-              return [];
-            }
-          }),
-        ),
-        forMember(
-          (a) => a.ownershipType,
-          mapFrom((ad) => ad.ownershipType.description),
-        ),
       );
     };
   }

@@ -1,12 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
-import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ParcelComponent } from './parcel.component';
@@ -15,23 +13,18 @@ describe('ParcelComponent', () => {
   let component: ParcelComponent;
   let fixture: ComponentFixture<ParcelComponent>;
 
-  let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
-  let mockParcel = {} as ApplicationParcelDto;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
-    mockHttpClient = createMock();
     mockApplicationParcelService = createMock();
     mockAppOwnerService = createMock();
+    mockAppDocService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelComponent],
       providers: [
-        {
-          provide: HttpClient,
-          useValue: mockHttpClient,
-        },
         {
           provide: ApplicationParcelService,
           useValue: mockApplicationParcelService,
@@ -39,6 +32,10 @@ describe('ParcelComponent', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockAppOwnerService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
         },
         {
           provides: Router,
