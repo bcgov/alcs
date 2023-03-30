@@ -86,7 +86,9 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
     if (
       this.application &&
-      this.application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC &&
+      [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
+        this.application.status.code
+      ) &&
       this.application.typeCode !== 'TURP'
     ) {
       this.loadApplicationReview(fileId);

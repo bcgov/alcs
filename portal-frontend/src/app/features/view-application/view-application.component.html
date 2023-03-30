@@ -63,7 +63,7 @@
               [showEdit]="false"
               [showErrors]="false"
               [$application]="$application"
-              [$applicationDocuments]='$applicationDocuments'
+              [$applicationDocuments]="$applicationDocuments"
             ></app-application-details>
           </section>
         </div>
@@ -149,7 +149,10 @@
             <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
           </div>
           <div
-            *ngIf="applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC && !isMobile"
+            *ngIf="
+              applicationReview &&
+              !isMobile
+            "
             class="mobile-hidden"
           >
             <section>

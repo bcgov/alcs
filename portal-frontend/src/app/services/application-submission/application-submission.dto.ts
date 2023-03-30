@@ -13,7 +13,9 @@ export enum APPLICATION_STATUS {
   CANCELLED = 'CANC',
 }
 
-export interface ApplicationStatusDto extends BaseCodeDto {}
+export interface ApplicationStatusDto extends BaseCodeDto {
+  code: APPLICATION_STATUS;
+}
 
 export interface ApplicationSubmissionDto {
   fileNumber: string;
