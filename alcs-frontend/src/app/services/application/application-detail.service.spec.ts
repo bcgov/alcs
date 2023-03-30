@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { firstValueFrom, of } from 'rxjs';
+import { ToastService } from '../toast/toast.service';
 import { ApplicationDetailService } from './application-detail.service';
 import { ApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
@@ -18,6 +19,10 @@ describe('ApplicationDetailService', () => {
         {
           provide: ApplicationService,
           useValue: applicationService,
+        },
+        {
+          provide: ToastService,
+          useValue: {},
         },
       ],
     });

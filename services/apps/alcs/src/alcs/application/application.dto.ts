@@ -280,6 +280,9 @@ export class ApplicationDto {
   @AutoMap()
   @Type(() => SubmittedApplicationDto)
   submittedApplication?: SubmittedApplicationDto;
+
+  @AutoMap()
+  source: 'ALCS' | 'APPLICANT';
 }
 
 export class ApplicationUpdateServiceDto {

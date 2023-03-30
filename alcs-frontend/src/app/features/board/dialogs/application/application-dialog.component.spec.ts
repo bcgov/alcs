@@ -71,6 +71,7 @@ describe('ApplicationDialogComponent', () => {
         code: 'card-status',
       },
     } as CardDto,
+    source: 'ALCS',
   };
 
   beforeEach(async () => {
