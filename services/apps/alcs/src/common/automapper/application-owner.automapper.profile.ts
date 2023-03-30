@@ -12,6 +12,7 @@ import {
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
+import { Document } from '../../document/document.entity';
 
 @Injectable()
 export class ApplicationOwnerProfile extends AutomapperProfile {
@@ -20,17 +21,21 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
   }
 
   override get profile() {
-    const mapCorporateSummary = (a): ApplicationDocumentDto | undefined => {
-      if (a.corporateSummary) {
+    const mapCorporateSummary = (
+      corporateSummary: Document | null,
+    ): ApplicationDocumentDto | undefined => {
+      if (corporateSummary) {
         return {
-          uuid: a.corporateSummary.uuid,
-          documentUuid: a.corporateSummary.uuid,
+          uuid: corporateSummary.uuid,
+          documentUuid: corporateSummary.uuid,
           mimeType: '',
-          fileName: a.corporateSummary.fileName,
-          fileSize: a.corporateSummary.fileSize,
-          uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
-          uploadedBy: a.corporateSummary.uploadedBy,
+          fileName: corporateSummary.fileName,
+          fileSize: corporateSummary.fileSize,
+          uploadedAt: corporateSummary.auditCreatedAt.getDate(),
+          uploadedBy: corporateSummary.uploadedBy?.displayName || 'Unknown',
+          source: corporateSummary.source,
           description: undefined,
+          visibilityFlags: [],
         };
       }
       return undefined;
@@ -51,7 +56,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.corporateSummary,
-          mapFrom((a) => mapCorporateSummary(a)),
+          mapFrom((a) => mapCorporateSummary(a.corporateSummary)),
         ),
       );
 
@@ -69,7 +74,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.corporateSummary,
-          mapFrom((a) => mapCorporateSummary(a)),
+          mapFrom((a) => mapCorporateSummary(a.corporateSummary)),
         ),
         forMember(
           (ad) => ad.parcels,

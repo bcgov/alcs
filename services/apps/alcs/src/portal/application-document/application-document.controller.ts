@@ -20,7 +20,7 @@ import {
 } from '../../alcs/application/application-document/application-document-code.entity';
 import {
   ApplicationDocumentDto,
-  ApplicationDocumentUpdateDto,
+  PortalApplicationDocumentUpdateDto,
 } from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -102,7 +102,7 @@ export class ApplicationDocumentController {
   async update(
     @Param('fileNumber') fileNumber: string,
     @Req() req,
-    @Body() body: ApplicationDocumentUpdateDto[],
+    @Body() body: PortalApplicationDocumentUpdateDto[],
   ) {
     await this.applicationSubmissionService.verifyAccess(
       fileNumber,
@@ -112,7 +112,7 @@ export class ApplicationDocumentController {
     //Map form file number to uuid
     const applicationUuid = await this.applicationService.getUuid(fileNumber);
 
-    const res = await this.applicationDocumentService.update(
+    const res = await this.applicationDocumentService.updateDescriptionAndType(
       body,
       applicationUuid,
     );

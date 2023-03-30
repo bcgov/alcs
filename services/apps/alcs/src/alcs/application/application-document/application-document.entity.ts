@@ -43,6 +43,10 @@ export class ApplicationDocument extends BaseEntity {
   @Column({ nullable: true })
   documentUuid?: string | null;
 
+  @AutoMap(() => [String])
+  @Column({ default: [], array: true, type: 'text' })
+  visibilityFlags: string[];
+
   @OneToOne(() => Document)
   @JoinColumn()
   document: Document;

@@ -188,7 +188,7 @@ export class ApplicationDecisionController {
       throw new BadRequestException('Request is not multipart');
     }
 
-    const file = await req.file();
+    const file = req.body.file;
     await this.appDecisionService.attachDocument(
       decisionUuid,
       file,

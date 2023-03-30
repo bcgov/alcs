@@ -3,6 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { DOCUMENT_TYPE } from '../../../../alcs/application/application-document/application-document-code.entity';
 import { Document } from '../../../../document/document.entity';
 import { DocumentService } from '../../../../document/document.service';
 import { ApplicationParcelService } from '../application-parcel.service';
@@ -95,7 +96,7 @@ describe('ApplicationParcelDocumentService', () => {
   it('should call through for list', async () => {
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.list(uuid, 'certificateOfTitle');
+    const res = await service.list(uuid, DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);

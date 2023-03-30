@@ -11,9 +11,6 @@ import {
 import { Document } from '../../../../document/document.entity';
 import { ApplicationParcel } from '../application-parcel.entity';
 
-export const DOCUMENT_TYPES = ['certificateOfTitle'] as const;
-export type DOCUMENT_TYPE = 'certificateOfTitle';
-
 @Entity()
 export class ApplicationParcelDocument extends BaseEntity {
   constructor(data?: Partial<ApplicationParcelDocument>) {

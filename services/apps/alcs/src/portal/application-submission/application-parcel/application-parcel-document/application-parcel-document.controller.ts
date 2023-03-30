@@ -13,6 +13,10 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import {
+  DOCUMENT_TYPE,
+  DOCUMENT_TYPES,
+} from '../../../../alcs/application/application-document/application-document-code.entity';
 import { PortalAuthGuard } from '../../../../common/authorization/portal-auth-guard.service';
 import { DocumentService } from '../../../../document/document.service';
 import { ApplicationSubmissionService } from '../../application-submission.service';
@@ -21,11 +25,7 @@ import {
   ApplicationParcelDocumentDto,
   AttachExternalDocumentDto,
 } from './application-parcel-document.dto';
-import {
-  ApplicationParcelDocument,
-  DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
-} from './application-parcel-document.entity';
+import { ApplicationParcelDocument } from './application-parcel-document.entity';
 import { ApplicationParcelDocumentService } from './application-parcel-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))

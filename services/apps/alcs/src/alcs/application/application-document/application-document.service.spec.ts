@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
@@ -12,7 +13,6 @@ import { UserService } from '../../../user/user.service';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationDocumentCode,
-  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from './application-document-code.entity';
 import { ApplicationDocument } from './application-document.entity';
@@ -74,7 +74,7 @@ describe('ApplicationDocumentService', () => {
   });
 
   it('should create a document in the happy path', async () => {
-    const mockUser = {};
+    const mockUser = new User();
     const mockFile = {};
     const mockSavedDocument = {};
 
@@ -82,20 +82,23 @@ describe('ApplicationDocumentService', () => {
       mockSavedDocument as ApplicationDocument,
     );
 
-    const res = await service.attachDocument(
+    const res = await service.attachDocument({
       fileNumber,
-      mockFile as MultipartFile,
-      mockUser as User,
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-    );
+      file: mockFile as MultipartFile,
+      user: mockUser,
+      documentType: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      fileName: '',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      visibilityFlags: [],
+    });
 
     expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create.mock.calls[0][0]).toBe(
       'application/12345',
     );
-    expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockFile);
-    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockUser);
+    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockFile);
+    expect(mockDocumentService.create.mock.calls[0][3]).toBe(mockUser);
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].application).toBe(
