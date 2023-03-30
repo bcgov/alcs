@@ -403,4 +403,12 @@ export class ApplicationService {
     });
     return application.fileNumber;
   }
+
+  async getByUuidOrFail(uuid: string) {
+    return await this.applicationRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+    });
+  }
 }

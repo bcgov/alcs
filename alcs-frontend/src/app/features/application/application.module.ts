@@ -30,6 +30,9 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { StaffJournalComponent } from './staff-journal/staff-journal.component';
+import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
+import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
 
 const routes: Routes = [
   {
@@ -71,6 +74,9 @@ const routes: Routes = [
     LfngInfoComponent,
     DocumentsComponent,
     DocumentUploadDialogComponent,
+    StaffJournalComponent,
+    StaffJournalNoteComponent,
+    StaffJournalNoteInputComponent,
   ],
   imports: [
     SharedModule.forRoot(),

@@ -330,6 +330,9 @@ export class UpdateApplicationDto {
 
 export class ApplicationDto {
   @AutoMap()
+  uuid: string;
+
+  @AutoMap()
   fileNumber: string;
 
   @AutoMap()
