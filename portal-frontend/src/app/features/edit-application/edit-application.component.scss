@@ -14,7 +14,10 @@
   }
 
   .change-app-type-btn-wrapper {
-    margin: rem(16) 0;
+    display: flex;
+    button {
+      margin: rem(16) 0 rem(16) rem(16) !important;
+    }
 
     .mat-icon {
       vertical-align: middle;

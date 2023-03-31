@@ -1,6 +1,7 @@
 <ng-template #header>
   <div class="header">
     <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
+
     <div class="change-app-type-btn-wrapper">
       <button
         *ngIf="application?.fileNumber"
@@ -10,10 +11,17 @@
       >
         Download PDF
       </button>
-      <button mat-flat-button color="accent" (click)="onApplicationTypeChangeClicked()">Change Application Type</button>
-      <mat-icon color="accent" matTooltip="Changing application type will remove some inputs from your saved progress">
-        help_outline
-      </mat-icon>
+      <div>
+        <button mat-flat-button color="accent" (click)="onApplicationTypeChangeClicked()">
+          Change Application Type
+        </button>
+        <mat-icon
+          color="accent"
+          matTooltip="Changing application type will remove some inputs from your saved progress"
+        >
+          help_outline
+        </mat-icon>
+      </div>
     </div>
   </div>
 </ng-template>
