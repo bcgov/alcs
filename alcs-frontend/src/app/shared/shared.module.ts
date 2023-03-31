@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -78,6 +79,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MatButtonToggleModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    CdkDropList,
+    CdkDrag,
   ],
   exports: [
     CommonModule,

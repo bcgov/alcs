@@ -23,7 +23,7 @@
   </ng-container>
 
   <ng-container matColumnDef="visibilityFlags">
-    <th mat-header-cell *matHeaderCellDef>Visibility</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by visibility">Visibility</th>
     <td mat-cell *matCellDef="let element">
       <span *ngIf="element.visibilityFlags.includes('A')" matTooltip="Applicant">A, </span>
       <span *ngIf="element.visibilityFlags.includes('C')" matTooltip="Commissioner">C, </span>

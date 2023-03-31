@@ -95,4 +95,16 @@ describe('ApplicationDocumentService', () => {
     expect(res.length).toEqual(1);
     expect(res[0].uuid).toEqual('1');
   });
+
+  it('should make a post call for sort', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        uuid: '1',
+      })
+    );
+
+    await service.updateSort([]);
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+  });
 });

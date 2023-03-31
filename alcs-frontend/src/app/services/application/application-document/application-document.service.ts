@@ -128,4 +128,12 @@ export class ApplicationDocumentService {
     this.toastService.showSuccessToast('Review document uploaded');
     return res;
   }
+
+  async updateSort(sortOrder: { uuid: string; order: number }[]) {
+    try {
+      await firstValueFrom(this.http.post<ApplicationDocumentTypeDto[]>(`${this.url}/sort`, sortOrder));
+    } catch (e) {
+      this.toastService.showErrorToast(`Failed to save document order`);
+    }
+  }
 }

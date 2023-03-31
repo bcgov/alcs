@@ -17,6 +17,7 @@ export interface ApplicationDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  evidentiaryRecordSorting?: number;
 }
 
 export interface UpdateDocumentDto {

@@ -19,6 +19,9 @@ export class ApplicationDocumentDto {
   @AutoMap(() => [String])
   visibilityFlags: string[];
 
+  @AutoMap(() => [Number])
+  evidentiaryRecordSorting?: number;
+
   //Document Fields
   documentUuid: string;
   fileName: string;
