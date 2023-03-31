@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
@@ -16,6 +17,7 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { AttachExternalDocumentDto } from '../../../portal/application-document/application-document.dto';
 import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
@@ -221,5 +223,13 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
     await this.applicationDocumentService.delete(document);
     return {};
+  }
+
+  @Post('/sort')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async sortDocuments(
+    @Body() data: { uuid: string; order: number }[],
+  ): Promise<void> {
+    await this.applicationDocumentService.setSorting(data);
   }
 }

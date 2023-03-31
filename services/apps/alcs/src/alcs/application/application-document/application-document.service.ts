@@ -247,4 +247,24 @@ export class ApplicationDocumentService {
     appDocument.visibilityFlags = visibilityFlags;
     await this.applicationDocumentRepository.save(appDocument);
   }
+
+  async setSorting(data: { uuid: string; order: number }[]) {
+    const uuids = data.map((data) => data.uuid);
+    const documents = await this.applicationDocumentRepository.find({
+      where: {
+        uuid: In(uuids),
+      },
+    });
+
+    for (const document of data) {
+      const existingDocument = documents.find(
+        (doc) => doc.uuid === document.uuid,
+      );
+      if (existingDocument) {
+        existingDocument.evidentiaryRecordSorting = document.order;
+      }
+    }
+
+    await this.applicationDocumentRepository.save(documents);
+  }
 }

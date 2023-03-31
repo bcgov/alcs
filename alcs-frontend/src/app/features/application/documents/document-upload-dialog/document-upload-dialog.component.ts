@@ -80,11 +80,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const visibilityFlags: ('A' | 'C' | 'G' | 'P')[] = [];
     if (this.visibleToApplicant.getRawValue()) {
       visibilityFlags.push('A');
+      visibilityFlags.push('G');
     }
 
     if (this.visibleToCommissioner.getRawValue()) {
       visibilityFlags.push('C');
-      visibilityFlags.push('G');
     }
 
     if (this.visibleToPublic.getRawValue()) {

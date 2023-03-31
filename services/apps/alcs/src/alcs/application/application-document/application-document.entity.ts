@@ -47,8 +47,11 @@ export class ApplicationDocument extends BaseEntity {
   @Column()
   applicationUuid: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'uuid' })
   documentUuid?: string | null;
+
+  @Column({ nullable: true, type: 'int' })
+  evidentiaryRecordSorting?: number | null;
 
   @AutoMap(() => [String])
   @Column({ default: [], array: true, type: 'text' })
