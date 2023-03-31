@@ -26,8 +26,13 @@ export const openFileInline = (url: string, fileName: string) => {
 export const getPdfFile = (fileName: string, data: any) => {
   const blob = new Blob([data], { type: 'application/pdf' });
   var downloadURL = URL.createObjectURL(blob);
-  var link = document.createElement('a');
-  link.href = downloadURL;
-  link.download = fileName;
-  link.click();
+  const downloadLink = document.createElement('a');
+  downloadLink.href = downloadURL;
+  downloadLink.download = fileName;
+  if (window.webkitURL == null) {
+    downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
+    downloadLink.style.display = 'none';
+    document.body.appendChild(downloadLink);
+  }
+  downloadLink.click();
 };

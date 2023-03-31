@@ -3,10 +3,14 @@ import * as config from 'config';
 import { CdogsService } from '../../../../../../libs/common/src/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationLocalGovernmentService } from '../../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../../alcs/application/application.service';
 import { User } from '../../../user/user.entity';
+import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
+import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
 
 export enum APPLICATION_SUBMISSION_TYPES {
@@ -22,6 +26,8 @@ export class GenerateSubmissionDocumentService {
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationService: ApplicationService,
     private parcelService: ApplicationParcelService,
+    private ownerService: ApplicationOwnerService,
+    private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
   async generate(fileNumber: string, user: User) {
@@ -32,48 +38,9 @@ export class GenerateSubmissionDocumentService {
       user,
     );
 
-    const application = await this.applicationService.getOrFail(
-      submission.fileNumber,
-    );
-
-    let localGovernment;
-    if (submission.localGovernmentUuid) {
-      localGovernment = await this.localGovernmentService.getByUuid(
-        submission.localGovernmentUuid,
-      );
-    }
-
-    const parcels = await this.parcelService.fetchByApplicationFileId(
-      submission.fileNumber,
-    );
-
-    const payload = {
-      ...submission,
-      application: application,
-      localGovernment: localGovernment,
-      parcels: parcels
-        .filter((e) => e.parcelType === PARCEL_TYPE.APPLICATION)
-        .map((e) => ({
-          ...e,
-          purchasedDate: e.purchasedDate
-            ? e.purchasedDate.toDateString() // TODO this should be of specific format
-            : undefined,
-          certificateOfTitle: undefined, // TODO get this from data
-        })),
-      otherParcels: parcels
-        .filter((e) => e.parcelType === PARCEL_TYPE.OTHER)
-        .map((e) => ({
-          ...e,
-          purchasedDate: e.purchasedDate
-            ? e.purchasedDate.toDateString() // TODO this should be of specific format
-            : undefined,
-          certificateOfTitle: undefined, // TODO get this from data
-        })),
-    };
+    const payload = await this.prepareSubmissionPdfData(submission);
 
     console.log('payload', payload);
-    console.log('parcels', parcels);
-    console.log('owners', submission.owners);
 
     const pdf = await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
@@ -101,5 +68,139 @@ export class GenerateSubmissionDocumentService {
           `Could not find template for application submission type ${applicationSubmissionType}`,
         );
     }
+  }
+
+  private async prepareSubmissionPdfData(submission: ApplicationSubmission) {
+    const application = await this.applicationService.getOrFail(
+      submission.fileNumber,
+    );
+
+    let localGovernment;
+    if (submission.localGovernmentUuid) {
+      localGovernment = await this.localGovernmentService.getByUuid(
+        submission.localGovernmentUuid,
+      );
+    }
+
+    const parcels = await this.parcelService.fetchByApplicationFileId(
+      submission.fileNumber,
+    );
+
+    const owners = await this.ownerService.fetchByApplicationFileId(
+      submission.fileNumber,
+    );
+
+    const primaryContact = owners.find(
+      (e) => e.uuid === submission.primaryContactOwnerUuid,
+    );
+
+    const documents = (
+      await this.applicationDocumentService.list(submission.fileNumber)
+    ).filter(
+      (e) =>
+        !e.typeCode ||
+        [
+          DOCUMENT_TYPE.PHOTOGRAPH,
+          DOCUMENT_TYPE.PROFESSIONAL_REPORT,
+          DOCUMENT_TYPE.OTHER,
+        ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE),
+    );
+
+    const NO_DATA = 'No Data';
+
+    const data = {
+      noData: 'No Data',
+
+      fileNumber: submission.fileNumber,
+      localGovernment: localGovernment,
+      status: submission.status,
+      applicant: submission.applicant,
+      primaryContact: ['INDV', 'ORGZ'].includes(
+        primaryContact?.type.code ?? 'NULL',
+      )
+        ? `${primaryContact?.firstName} ${primaryContact?.lastName}`
+        : primaryContact?.organizationName,
+
+      // Land use
+      parcelsAgricultureDescription: submission.parcelsAgricultureDescription,
+      parcelsAgricultureImprovementDescription:
+        submission.parcelsAgricultureImprovementDescription,
+      parcelsNonAgricultureUseDescription:
+        submission.parcelsNonAgricultureUseDescription,
+      northLandUseType: submission.northLandUseType,
+      northLandUseTypeDescription: submission.northLandUseTypeDescription,
+      eastLandUseType: submission.eastLandUseType,
+      eastLandUseTypeDescription: submission.eastLandUseTypeDescription,
+      southLandUseType: submission.southLandUseType,
+      southLandUseTypeDescription: submission.southLandUseTypeDescription,
+      westLandUseType: submission.westLandUseType,
+      westLandUseTypeDescription: submission.westLandUseTypeDescription,
+
+      // NFU Proposal
+      nfuHectares: submission.nfuHectares,
+      nfuPurpose: submission.nfuPurpose,
+      nfuOutsideLands: submission.nfuOutsideLands,
+      nfuAgricultureSupport: submission.nfuAgricultureSupport,
+      nfuWillImportFill: submission.nfuWillImportFill,
+
+      // NFU Proposal => Soil and Fill
+      nfuFillTypeDescription: submission.nfuFillTypeDescription,
+      nfuFillOriginDescription: submission.nfuFillOriginDescription,
+      nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
+      nfuMaxFillDepth: submission.nfuMaxFillDepth,
+      nfuFillVolume: submission.nfuFillVolume,
+      nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
+      nfuProjectDurationUnit: submission.nfuProjectDurationUnit,
+
+      // Other attachments
+      otherAttachments: documents.map((e) => ({
+        type: e.type?.description ?? '',
+        description: e.description ?? '',
+        name: e.document.fileName,
+        noData: NO_DATA,
+      })),
+
+      application: application,
+      parcels: parcels
+        .filter((e) => e.parcelType === PARCEL_TYPE.APPLICATION)
+        .map((e) => ({
+          ...e,
+          noData: NO_DATA,
+          purchasedDate: e.purchasedDate
+            ? e.purchasedDate.toDateString() // TODO this should be of specific format
+            : undefined,
+          certificateOfTitle: e.certificateOfTitle?.document.fileName,
+          owners: e.owners.map((o) => ({
+            ...o,
+            noData: NO_DATA,
+            name:
+              o.type.code === 'INDV'
+                ? `${o.firstName} ${o.lastName}`
+                : o.organizationName,
+            corporateSummary: o.corporateSummary?.document.fileName,
+          })),
+        })),
+      otherParcels: parcels
+        .filter((e) => e.parcelType === PARCEL_TYPE.OTHER)
+        .map((e) => ({
+          ...e,
+          noData: NO_DATA,
+          purchasedDate: e.purchasedDate
+            ? e.purchasedDate.toDateString() // TODO this should be of specific format
+            : undefined,
+          certificateOfTitle: e.certificateOfTitle?.document.fileName,
+          owners: e.owners.map((o) => ({
+            ...o,
+            noData: NO_DATA,
+            name:
+              o.type.code === 'INDV'
+                ? `${o.firstName} ${o.lastName}`
+                : o.organizationName,
+            corporateSummary: o.corporateSummary?.document.fileName,
+          })),
+        })),
+    };
+
+    return data;
   }
 }
