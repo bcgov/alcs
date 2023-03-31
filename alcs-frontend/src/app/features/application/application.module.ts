@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSortModule } from '@angular/material/sort';
 import { RouterModule, Routes } from '@angular/router';
 import { MtxNativeDatetimeModule, MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
@@ -85,6 +86,7 @@ const routes: Routes = [
     MtxNativeDatetimeModule,
     MatCheckboxModule,
     ApplicationDetailsModule,
+    MatSortModule,
   ],
 })
 export class ApplicationModule {}
