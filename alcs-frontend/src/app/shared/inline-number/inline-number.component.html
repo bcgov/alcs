@@ -19,7 +19,9 @@
         <input
           matInput
           class="editable"
-          type="number"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="99999999"
           name="value"
           [placeholder]="placeholder"
           #editInput

@@ -63,7 +63,7 @@
               [showEdit]="false"
               [showErrors]="false"
               [$application]="$application"
-              [$applicationDocuments]='$applicationDocuments'
+              [$applicationDocuments]="$applicationDocuments"
             ></app-application-details>
           </section>
         </div>
@@ -149,7 +149,10 @@
             <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
           </div>
           <div
-            *ngIf="applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC && !isMobile"
+            *ngIf="
+              applicationReview &&
+              !isMobile
+            "
             class="mobile-hidden"
           >
             <section>
@@ -337,10 +340,10 @@
                 <div class="full-width">
                   <div class="subheading2">Other Attachments (optional):</div>
                   <div>
-                    <div class="document" *ngFor="let document of otherAttachments">
+                    <div class="document" *ngFor="let document of governmentOtherAttachments">
                       <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
                     </div>
-                    <div *ngIf="otherAttachments.length === 0"><em>None provided</em></div>
+                    <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
                   </div>
                 </div>
               </div>
@@ -696,10 +699,10 @@
             <div class="full-width">
               <div class="subheading2">Other Attachments (optional):</div>
               <div>
-                <div class="document" *ngFor="let document of otherAttachments">
+                <div class="document" *ngFor="let document of governmentOtherAttachments">
                   <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
                 </div>
-                <div *ngIf="otherAttachments.length === 0"><em>None provided</em></div>
+                <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
               </div>
             </div>
           </div>

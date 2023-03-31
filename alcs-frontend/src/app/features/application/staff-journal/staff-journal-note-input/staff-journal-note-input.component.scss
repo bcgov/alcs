@@ -1,0 +1,11 @@
+.container {
+  margin-bottom: 8px;
+}
+
+.note-input {
+  width: 100%;
+}
+
+::ng-deep .mdc-text-field {
+  overflow: visible;
+}

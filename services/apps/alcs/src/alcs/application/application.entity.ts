@@ -156,6 +156,7 @@ export class Application extends Base {
   })
   localGovernmentUuid?: string;
 
+  @AutoMap()
   @Column({
     default: 'ALCS',
     type: 'text',

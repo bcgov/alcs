@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
-import { DocumentService } from '../../../document/document.service';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
@@ -21,10 +21,10 @@ export class ApplicationOwnerService {
     private repository: Repository<ApplicationOwner>,
     @InjectRepository(ApplicationOwnerType)
     private typeRepository: Repository<ApplicationOwnerType>,
-    private documentService: DocumentService,
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
     private applicationService: ApplicationSubmissionService,
+    private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -36,7 +36,9 @@ export class ApplicationOwnerService {
       },
       relations: {
         type: true,
-        corporateSummary: true,
+        corporateSummary: {
+          document: true,
+        },
       },
     });
   }
@@ -108,7 +110,9 @@ export class ApplicationOwnerService {
         uuid,
       },
       relations: {
-        corporateSummary: true,
+        corporateSummary: {
+          document: true,
+        },
       },
     });
 
@@ -128,7 +132,7 @@ export class ApplicationOwnerService {
       const oldSummary = existingOwner.corporateSummary;
       existingOwner.corporateSummary = null;
       await this.repository.save(existingOwner);
-      await this.documentService.softRemove(oldSummary);
+      await this.applicationDocumentService.delete(oldSummary);
     }
 
     existingOwner.corporateSummaryUuid =
@@ -184,7 +188,9 @@ export class ApplicationOwnerService {
       },
       relations: {
         type: true,
-        corporateSummary: true,
+        corporateSummary: {
+          document: true,
+        },
       },
     });
   }

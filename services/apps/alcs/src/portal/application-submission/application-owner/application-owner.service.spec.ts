@@ -2,8 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Document } from '../../../document/document.entity';
-import { DocumentService } from '../../../document/document.service';
+import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
@@ -18,14 +18,14 @@ describe('ApplicationOwnerService', () => {
   let mockParcelService: DeepMocked<ApplicationParcelService>;
   let mockRepo: DeepMocked<Repository<ApplicationOwner>>;
   let mockTypeRepo: DeepMocked<Repository<ApplicationOwnerType>>;
-  let mockDocumentService: DeepMocked<DocumentService>;
+  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockApplicationservice: DeepMocked<ApplicationSubmissionService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockRepo = createMock();
     mockTypeRepo = createMock();
-    mockDocumentService = createMock();
+    mockAppDocumentService = createMock();
     mockApplicationservice = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -44,8 +44,8 @@ describe('ApplicationOwnerService', () => {
           useValue: mockTypeRepo,
         },
         {
-          provide: DocumentService,
-          useValue: mockDocumentService,
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocumentService,
         },
         {
           provide: ApplicationSubmissionService,
@@ -158,11 +158,11 @@ describe('ApplicationOwnerService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
       corporateSummaryUuid: 'oldUuid',
-      corporateSummary: new Document(),
+      corporateSummary: new ApplicationDocument(),
     });
     mockRepo.findOneOrFail.mockResolvedValue(owner);
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
-    mockDocumentService.softRemove.mockResolvedValue({} as any);
+    mockAppDocumentService.delete.mockResolvedValue({} as any);
 
     await service.update('', {
       organizationName: '',
@@ -173,7 +173,7 @@ describe('ApplicationOwnerService', () => {
     });
 
     expect(owner.corporateSummaryUuid).toEqual('newUuid');
-    expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockAppDocumentService.delete).toHaveBeenCalledTimes(1);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepo.save).toHaveBeenCalledTimes(2);
   });

@@ -9,7 +9,8 @@ import {
   IsUUID,
 } from 'class-validator';
 import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
-import { ApplicationParcelDocumentDto } from '../../portal/application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
+import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
+import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -18,129 +19,15 @@ import { ApplicationLocalGovernmentDto } from './application-code/application-lo
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
 
-export class ApplicationReviewDto {
-  @AutoMap()
-  localGovernmentFileNumber: string;
-
-  @AutoMap()
-  firstName: string;
-
-  @AutoMap()
-  lastName: string;
-
-  @AutoMap()
-  position: string;
-
-  @AutoMap()
-  department: string;
-
-  @AutoMap()
-  phoneNumber: string;
-
-  @AutoMap()
-  email: string;
-
-  @AutoMap(() => Boolean)
-  isOCPDesignation: boolean | null;
-
-  @AutoMap(() => String)
-  OCPBylawName: string | null;
-
-  @AutoMap(() => String)
-  OCPDesignation: string | null;
-
-  @AutoMap(() => Boolean)
-  OCPConsistent: boolean | null;
-
-  @AutoMap(() => Boolean)
-  isSubjectToZoning: boolean | null;
-
-  @AutoMap(() => String)
-  zoningBylawName: string | null;
-
-  @AutoMap(() => String)
-  zoningDesignation: string | null;
-
-  @AutoMap(() => String)
-  zoningMinimumLotSize: string | null;
-
-  @AutoMap(() => Boolean)
-  isZoningConsistent: boolean | null;
-
-  @AutoMap(() => Boolean)
-  isAuthorized: boolean | null;
-}
-
-export class SubmittedApplicationOwnerDto {
-  @AutoMap()
-  displayName: string;
-
-  @AutoMap()
-  firstName: string;
-
-  @AutoMap()
-  lastName: string;
-
-  @AutoMap()
-  organizationName?: string;
-
-  @AutoMap()
-  phoneNumber: string;
-
-  @AutoMap()
-  email: string;
-
-  @AutoMap()
-  type: string;
-
-  @AutoMap()
-  corporateSummaryDocumentUuid?: string;
-}
-
-export class SubmittedApplicationParcelDto {
-  @AutoMap()
-  pid?: string;
-
-  @AutoMap()
-  pin?: string;
-
-  @AutoMap()
-  legalDescription: string;
-
-  @AutoMap()
-  mapAreaHectares: string;
-
-  @AutoMap()
-  purchasedDate?: number;
-
-  @AutoMap()
-  isFarm: boolean;
-
-  @AutoMap()
-  ownershipType: string;
-
-  @AutoMap()
-  crownLandOwnerType: string;
-
-  @AutoMap()
-  parcelType: string;
-
-  @AutoMap(() => [SubmittedApplicationOwnerDto])
-  owners: SubmittedApplicationOwnerDto[];
-
-  @AutoMap(() => [ApplicationParcelDocumentDto])
-  documents: ApplicationParcelDocumentDto[];
-}
-
 export class SubmittedApplicationDto {
-  @AutoMap(() => [SubmittedApplicationParcelDto])
-  parcels: SubmittedApplicationParcelDto[];
+  @AutoMap(() => [ApplicationParcelDto])
+  parcels: ApplicationParcelDto[];
 
-  @AutoMap(() => [SubmittedApplicationParcelDto])
-  otherParcels: SubmittedApplicationParcelDto[];
+  @AutoMap(() => [ApplicationParcelDto])
+  otherParcels: ApplicationParcelDto[];
 
   @AutoMap()
-  primaryContact: SubmittedApplicationOwnerDto;
+  primaryContact: ApplicationOwnerDto;
 
   @AutoMap()
   parcelsAgricultureDescription: string;
@@ -330,6 +217,9 @@ export class UpdateApplicationDto {
 
 export class ApplicationDto {
   @AutoMap()
+  uuid: string;
+
+  @AutoMap()
   fileNumber: string;
 
   @AutoMap()
@@ -393,6 +283,9 @@ export class ApplicationDto {
   @AutoMap()
   @Type(() => SubmittedApplicationDto)
   submittedApplication?: SubmittedApplicationDto;
+
+  @AutoMap()
+  source: 'ALCS' | 'APPLICANT';
 }
 
 export class ApplicationUpdateServiceDto {

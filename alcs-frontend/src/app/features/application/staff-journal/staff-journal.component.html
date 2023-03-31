@@ -1,0 +1,24 @@
+<div class="notes">
+  <h5>Staff journal notes ({{ notes.length }})</h5>
+  <div *ngIf="!isEditing">
+    <mat-form-field class="placeholder-input" appearance="outline" (click)="onEdit()">
+      <input matInput placeholder="Add a journal note" />
+    </mat-form-field>
+  </div>
+
+  <app-staff-journal-note-input
+    *ngIf="isEditing"
+    (create)="onSave($event)"
+    [note]="note"
+    (cancel)="onCancel()"
+    [isNewNote]="true"
+    labelText="Add a journal note"
+  />
+
+  <app-staff-journal-note
+    *ngFor="let note of notes"
+    [note]="note"
+    (edit)="onEditNote($event)"
+    (delete)="onDeleteNote($event)"
+  ></app-staff-journal-note>
+</div>

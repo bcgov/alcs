@@ -26,7 +26,6 @@ describe('ApplicationParcelService', () => {
     isConfirmedByApplicant: true,
     applicationFileNumber: mockApplicationFileNumber,
     ownershipTypeCode: 'mock_ownershipTypeCode',
-    documents: [],
   });
   const mockError = new Error('Parcel does not exist.');
 
@@ -67,9 +66,11 @@ describe('ApplicationParcelService', () => {
       where: { application: { fileNumber: mockApplicationFileNumber } },
       order: { auditCreatedAt: 'ASC' },
       relations: {
-        documents: { document: true },
+        certificateOfTitle: { document: true },
         owners: {
-          corporateSummary: true,
+          corporateSummary: {
+            document: true,
+          },
           type: true,
         },
         ownershipType: true,

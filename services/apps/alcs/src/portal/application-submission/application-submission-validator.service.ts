@@ -179,7 +179,7 @@ export class ApplicationSubmissionValidatorService {
 
       if (
         parcel.parcelType === PARCEL_TYPE.APPLICATION &&
-        parcel.documents.length === 0 &&
+        !parcel.certificateOfTitle &&
         (parcel.ownershipTypeCode === 'SMPL' || parcel.pid)
       ) {
         errors.push(

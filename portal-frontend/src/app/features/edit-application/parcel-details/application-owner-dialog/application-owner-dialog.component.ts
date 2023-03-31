@@ -5,8 +5,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
+  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import {
   APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
@@ -52,9 +54,10 @@ export class ApplicationOwnerDialogComponent {
     private dialogRef: MatDialogRef<ApplicationOwnerDialogComponent>,
     private appOwnerService: ApplicationOwnerService,
     private codeService: CodeService,
+    private documentService: ApplicationDocumentService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      fileId?: string;
+      fileId: string;
       parcelUuid?: string;
       existingOwner?: ApplicationOwnerDto;
     }
@@ -102,7 +105,7 @@ export class ApplicationOwnerDialogComponent {
       organizationName: this.organizationName.getRawValue() || undefined,
       firstName: this.firstName.getRawValue() || undefined,
       lastName: this.lastName.getRawValue() || undefined,
-      corporateSummaryUuid: documentUuid,
+      corporateSummaryUuid: documentUuid?.uuid,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
@@ -118,12 +121,12 @@ export class ApplicationOwnerDialogComponent {
   }
 
   async onSave() {
-    const documentUuid = await this.uploadPendingFile(this.pendingFile);
+    const document = await this.uploadPendingFile(this.pendingFile);
     const updateDto: ApplicationOwnerUpdateDto = {
       organizationName: this.organizationName.getRawValue(),
       firstName: this.firstName.getRawValue(),
       lastName: this.lastName.getRawValue(),
-      corporateSummaryUuid: documentUuid,
+      corporateSummaryUuid: document?.uuid,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
@@ -145,6 +148,7 @@ export class ApplicationOwnerDialogComponent {
           fileName: this.pendingFile.name,
           fileSize: this.pendingFile.size,
           uuid: '',
+          source: DOCUMENT_SOURCE.APPLICANT,
           uploadedAt: Date.now(),
           uploadedBy: '',
         },
@@ -166,8 +170,8 @@ export class ApplicationOwnerDialogComponent {
     if (this.pendingFile) {
       const fileURL = URL.createObjectURL(this.pendingFile);
       window.open(fileURL, '_blank');
-    } else if (this.existingUuid) {
-      const res = await this.appOwnerService.openCorporateSummary(this.existingUuid);
+    } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
+      const res = await this.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {
         window.open(res.url, '_blank');
       }
@@ -177,7 +181,7 @@ export class ApplicationOwnerDialogComponent {
   private async uploadPendingFile(file?: File) {
     let documentUuid;
     if (file) {
-      documentUuid = await this.appOwnerService.uploadCorporateSummary(file);
+      documentUuid = await this.appOwnerService.uploadCorporateSummary(this.data.fileId, file);
       if (!documentUuid) {
         return;
       }

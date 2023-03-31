@@ -12,13 +12,14 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
-import { AttachExternalDocumentDto } from '../application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { ApplicationDocumentController } from './application-document.controller';
+import { AttachExternalDocumentDto } from './application-document.dto';
 
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
@@ -119,7 +120,7 @@ describe('ApplicationDocumentController', () => {
   });
 
   it('should call through to update documents', async () => {
-    appDocumentService.update.mockResolvedValue([]);
+    appDocumentService.updateDescriptionAndType.mockResolvedValue([]);
 
     await controller.update(
       'file-number',
@@ -131,7 +132,9 @@ describe('ApplicationDocumentController', () => {
       [],
     );
 
-    expect(appDocumentService.update).toHaveBeenCalledTimes(1);
+    expect(appDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call through for download', async () => {
@@ -161,7 +164,7 @@ describe('ApplicationDocumentController', () => {
       mimeType: 'mimeType',
       fileName: 'fileName',
       fileKey: 'fileKey',
-      source: 'Applicant',
+      source: DOCUMENT_SOURCE.APPLICANT,
     };
 
     mockDocumentService.createDocumentRecord.mockResolvedValue(docObj);

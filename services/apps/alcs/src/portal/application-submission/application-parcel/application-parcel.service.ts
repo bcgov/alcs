@@ -2,6 +2,8 @@ import { ServiceValidationException } from '@app/common/exceptions/base.exceptio
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
@@ -22,10 +24,12 @@ export class ApplicationParcelService {
       order: { auditCreatedAt: 'ASC' },
       relations: {
         ownershipType: true,
-        documents: { document: true },
+        certificateOfTitle: { document: true },
         owners: {
           type: true,
-          corporateSummary: true,
+          corporateSummary: {
+            document: true,
+          },
         },
       },
     });
@@ -44,6 +48,14 @@ export class ApplicationParcelService {
     return this.parcelRepository.findOneOrFail({
       where: { uuid },
     });
+  }
+
+  async setCertificateOfTitle(
+    parcel: ApplicationParcel,
+    certificateOfTitle: ApplicationDocument,
+  ) {
+    parcel.certificateOfTitle = certificateOfTitle;
+    return await this.parcelRepository.save(parcel);
   }
 
   async update(updateDtos: ApplicationParcelUpdateDto[]) {

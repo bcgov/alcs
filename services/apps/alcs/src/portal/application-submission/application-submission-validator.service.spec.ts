@@ -5,11 +5,11 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
   ApplicationDocumentCode,
-  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -97,7 +97,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
     });
@@ -144,7 +143,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
       pid: '1251251',
@@ -175,7 +173,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'CRWN',
       pid: '12512',
@@ -206,7 +203,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      documents: [],
       parcelType: PARCEL_TYPE.OTHER,
     });
 

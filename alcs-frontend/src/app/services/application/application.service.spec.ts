@@ -13,6 +13,7 @@ describe('ApplicationService', () => {
   let toastService: DeepMocked<ToastService>;
 
   const mockApplication: ApplicationDto = {
+    uuid: '',
     activeDays: 0,
     applicant: '',
     dateSubmittedToAlc: 0,
@@ -39,6 +40,7 @@ describe('ApplicationService', () => {
       textColor: '',
     },
     statusHistory: [],
+    source: 'ALCS',
   };
 
   beforeEach(() => {

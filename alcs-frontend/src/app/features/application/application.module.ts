@@ -16,6 +16,8 @@ import { CreateApplicationMeetingDialogComponent } from './application-meeting/c
 import { ApplicationComponent, childRoutes } from './application.component';
 import { DecisionDialogComponent } from './decision/decision-dialog/decision-dialog.component';
 import { DecisionComponent } from './decision/decision.component';
+import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
+import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
@@ -28,6 +30,9 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { StaffJournalComponent } from './staff-journal/staff-journal.component';
+import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
+import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
 
 const routes: Routes = [
   {
@@ -67,6 +72,11 @@ const routes: Routes = [
     EditModificationDialogComponent,
     ApplicantInfoComponent,
     LfngInfoComponent,
+    DocumentsComponent,
+    DocumentUploadDialogComponent,
+    StaffJournalComponent,
+    StaffJournalNoteComponent,
+    StaffJournalNoteInputComponent,
   ],
   imports: [
     SharedModule.forRoot(),

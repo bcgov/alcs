@@ -67,7 +67,7 @@ describe('ApplicationSubmissionService', () => {
           owners: {
             type: true,
           },
-          documents: {
+          certificateOfTitle: {
             document: true,
           },
           ownershipType: true,

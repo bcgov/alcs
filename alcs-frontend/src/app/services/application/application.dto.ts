@@ -120,6 +120,7 @@ export interface ApplicationSubmissionDto {
 }
 
 export interface ApplicationDto {
+  uuid: string;
   fileNumber: string;
   applicant: string;
   summary?: string;
@@ -144,6 +145,7 @@ export interface ApplicationDto {
   statusHistory: StatusHistory[];
   applicationReview?: ApplicationReviewDto;
   submittedApplication?: ApplicationSubmissionDto;
+  source: 'ALCS' | 'APPLICANT';
 }
 
 export interface UpdateApplicationDto {

@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
@@ -12,7 +13,6 @@ import { UserService } from '../../../user/user.service';
 import { ApplicationService } from '../application.service';
 import {
   ApplicationDocumentCode,
-  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from './application-document-code.entity';
 import { ApplicationDocument } from './application-document.entity';
@@ -74,7 +74,7 @@ describe('ApplicationDocumentService', () => {
   });
 
   it('should create a document in the happy path', async () => {
-    const mockUser = {};
+    const mockUser = new User();
     const mockFile = {};
     const mockSavedDocument = {};
 
@@ -82,20 +82,23 @@ describe('ApplicationDocumentService', () => {
       mockSavedDocument as ApplicationDocument,
     );
 
-    const res = await service.attachDocument(
+    const res = await service.attachDocument({
       fileNumber,
-      mockFile as MultipartFile,
-      mockUser as User,
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-    );
+      file: mockFile as MultipartFile,
+      user: mockUser,
+      documentType: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      fileName: '',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      visibilityFlags: [],
+    });
 
     expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create.mock.calls[0][0]).toBe(
       'application/12345',
     );
-    expect(mockDocumentService.create.mock.calls[0][1]).toBe(mockFile);
-    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockUser);
+    expect(mockDocumentService.create.mock.calls[0][2]).toBe(mockFile);
+    expect(mockDocumentService.create.mock.calls[0][3]).toBe(mockUser);
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].application).toBe(
@@ -255,5 +258,89 @@ describe('ApplicationDocumentService', () => {
 
     expect(mockTypeRepository.find).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
+  });
+
+  it('should set the type and description for multiple files', async () => {
+    const mockDocument1 = new ApplicationDocument({
+      typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      description: undefined,
+    });
+    const mockDocument2 = new ApplicationDocument({
+      typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      description: undefined,
+    });
+    mockRepository.findOne
+      .mockResolvedValueOnce(mockDocument1)
+      .mockResolvedValueOnce(mockDocument2);
+    mockRepository.save.mockResolvedValue(new ApplicationDocument());
+    const mockUpdates = [
+      {
+        uuid: '1',
+        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        description: 'Secret Documents',
+      },
+      {
+        uuid: '2',
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        description: 'New Description',
+      },
+    ];
+
+    const res = await service.updateDescriptionAndType(mockUpdates, '');
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(2);
+    expect(res).toBeDefined();
+    expect(res.length).toEqual(2);
+    expect(mockDocument1.typeCode).toEqual(DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
+    expect(mockDocument1.description).toEqual('Secret Documents');
+    expect(mockDocument2.typeCode).toEqual(DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
+    expect(mockDocument2.description).toEqual('New Description');
+  });
+
+  it('should create a record for external documents', async () => {
+    mockRepository.save.mockResolvedValue(new ApplicationDocument());
+    mockApplicationService.getUuid.mockResolvedValueOnce('app-uuid');
+    mockRepository.findOne.mockResolvedValue(new ApplicationDocument());
+
+    const res = await service.attachExternalDocument('', {
+      type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      description: '',
+      documentUuid: 'fake-uuid',
+    });
+
+    expect(mockApplicationService.getUuid).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save.mock.calls[0][0].applicationUuid).toEqual(
+      'app-uuid',
+    );
+    expect(mockRepository.save.mock.calls[0][0].typeCode).toEqual(
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+    );
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should delete the existing file and create a new when updating', async () => {
+    mockRepository.findOne.mockResolvedValue(new ApplicationDocument());
+    mockApplicationService.getFileNumber.mockResolvedValue('app-uuid');
+    mockRepository.save.mockResolvedValue(new ApplicationDocument());
+    mockDocumentService.create.mockResolvedValue(new Document());
+    mockDocumentService.softRemove.mockResolvedValue();
+
+    const res = await service.update({
+      source: DOCUMENT_SOURCE.APPLICANT,
+      fileName: 'fileName',
+      user: new User(),
+      file: {} as File,
+      uuid: '',
+      documentType: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      visibilityFlags: [],
+    });
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.getFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 });

@@ -280,7 +280,9 @@ export class ApplicationSubmissionService {
         relations: {
           owners: {
             type: true,
-            corporateSummary: true,
+            corporateSummary: {
+              document: true,
+            },
             parcels: true,
           },
         },
@@ -306,7 +308,9 @@ export class ApplicationSubmissionService {
       relations: {
         owners: {
           type: true,
-          corporateSummary: true,
+          corporateSummary: {
+            document: true,
+          },
           parcels: true,
         },
       },

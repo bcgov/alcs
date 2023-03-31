@@ -133,4 +133,21 @@ describe('CardService', () => {
 
     expect(cardRepositoryMock.save).toBeCalledTimes(0);
   });
+
+  it('should call the repo for listing types', async () => {
+    cardTypeRepositoryMock.find.mockResolvedValue([new CardType({})]);
+
+    const types = await service.getCardTypes();
+    expect(types.length).toEqual(1);
+
+    expect(cardTypeRepositoryMock.find).toBeCalledTimes(1);
+  });
+
+  it('should call the repo for getWithBoard', async () => {
+    cardRepositoryMock.findOne.mockResolvedValue(new Card());
+
+    const card = await service.getWithBoard('');
+    expect(card).toBeDefined();
+    expect(cardRepositoryMock.findOne).toBeCalledTimes(1);
+  });
 });

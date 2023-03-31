@@ -40,7 +40,7 @@ const SORTING_ORDER = {
   styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent implements OnInit {
-  private application?: ApplicationDto;
+  application?: ApplicationDto;
   private $decisions = new BehaviorSubject<ApplicationDecisionDto[]>([]);
   events: TimelineEvent[] = [];
   summary = '';

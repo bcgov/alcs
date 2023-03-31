@@ -16,6 +16,8 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
+import { ApplicationStaffJournalDto } from '../../alcs/application/application-staff-journal/application-staff-journal.dto';
+import { ApplicationStaffJournal } from '../../alcs/application/application-staff-journal/application-staff-journal.entity';
 import {
   ApplicationDto,
   SubmittedApplicationDto,
@@ -129,6 +131,10 @@ export class ApplicationProfile extends AutomapperProfile {
           (a) => a.documentUuid,
           mapFrom((ad) => ad.document.uuid),
         ),
+        forMember(
+          (a) => a.source,
+          mapFrom((ad) => ad.document.source),
+        ),
       );
       createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);
 
@@ -201,6 +207,15 @@ export class ApplicationProfile extends AutomapperProfile {
               return [];
             }
           }),
+        ),
+      );
+      createMap(
+        mapper,
+        ApplicationStaffJournal,
+        ApplicationStaffJournalDto,
+        forMember(
+          (ud) => ud.author,
+          mapFrom((u) => u.author.name),
         ),
       );
     };

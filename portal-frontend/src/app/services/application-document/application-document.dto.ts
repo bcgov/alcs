@@ -21,6 +21,14 @@ export enum DOCUMENT_TYPE {
   PROPOSAL_MAP = 'PRSK',
 }
 
+export enum DOCUMENT_SOURCE {
+  APPLICANT = 'Applicant',
+  ALCS = 'ALCS',
+  LFNG = 'Local Government',
+  AFFECTED_PARTY = 'Affected Party',
+  PUBLIC = 'Public',
+}
+
 export interface ApplicationDocumentTypeDto extends BaseCodeDto {
   code: DOCUMENT_TYPE;
 }
@@ -33,6 +41,7 @@ export interface ApplicationDocumentDto {
   fileSize: number;
   uploadedBy: string;
   uploadedAt: number;
+  source: DOCUMENT_SOURCE;
 }
 
 export interface ApplicationDocumentUpdateDto {

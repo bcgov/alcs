@@ -204,6 +204,7 @@ export class ApplicationService {
     existingApplication: Application,
     updates: ApplicationUpdateServiceDto,
   ): Promise<Application> {
+    // @ts-ignore
     await this.applicationRepository.update(existingApplication.uuid, updates);
     return this.getOrFail(existingApplication.fileNumber);
   }
@@ -389,5 +390,25 @@ export class ApplicationService {
       },
     });
     return application.uuid;
+  }
+
+  async getFileNumber(uuid: string) {
+    const application = await this.applicationRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    return application.fileNumber;
+  }
+
+  async getByUuidOrFail(uuid: string) {
+    return await this.applicationRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+    });
   }
 }

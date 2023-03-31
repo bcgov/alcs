@@ -2,7 +2,7 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
-import { SubmittedApplicationOwnerDto } from '../../alcs/application/application.dto';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationOwnerType } from '../../portal/application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import {
   ApplicationOwnerDetailedDto,
@@ -20,22 +20,6 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
   }
 
   override get profile() {
-    const mapCorporateSummary = (a): ApplicationDocumentDto | undefined => {
-      if (a.corporateSummary) {
-        return {
-          uuid: a.corporateSummary.uuid,
-          documentUuid: a.corporateSummary.uuid,
-          mimeType: '',
-          fileName: a.corporateSummary.fileName,
-          fileSize: a.corporateSummary.fileSize,
-          uploadedAt: a.corporateSummary.auditCreatedAt.getDate(),
-          uploadedBy: a.corporateSummary.uploadedBy,
-          description: undefined,
-        };
-      }
-      return undefined;
-    };
-
     return (mapper) => {
       createMap(
         mapper,
@@ -50,8 +34,16 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.corporateSummary,
-          mapFrom((a) => mapCorporateSummary(a)),
+          (pd) => pd.corporateSummary,
+          mapFrom((p) =>
+            p.corporateSummary
+              ? this.mapper.map(
+                  p.corporateSummary,
+                  ApplicationDocument,
+                  ApplicationDocumentDto,
+                )
+              : undefined,
+          ),
         ),
       );
 
@@ -68,10 +60,6 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.corporateSummary,
-          mapFrom((a) => mapCorporateSummary(a)),
-        ),
-        forMember(
           (ad) => ad.parcels,
           mapFrom((a) => {
             if (a.parcels) {
@@ -83,26 +71,21 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
             }
           }),
         ),
-      );
-
-      createMap(mapper, ApplicationOwnerType, ApplicationOwnerTypeDto);
-      createMap(
-        mapper,
-        ApplicationOwner,
-        SubmittedApplicationOwnerDto,
         forMember(
-          (ad) => ad.type,
-          mapFrom((a) => a.type.code),
-        ),
-        forMember(
-          (pd) => pd.displayName,
+          (pd) => pd.corporateSummary,
           mapFrom((p) =>
-            p.organizationName
-              ? p.organizationName
-              : `${p.firstName} ${p.lastName}`,
+            p.corporateSummary
+              ? this.mapper.map(
+                  p.corporateSummary,
+                  ApplicationDocument,
+                  ApplicationDocumentDto,
+                )
+              : undefined,
           ),
         ),
       );
+
+      createMap(mapper, ApplicationOwnerType, ApplicationOwnerTypeDto);
     };
   }
 }

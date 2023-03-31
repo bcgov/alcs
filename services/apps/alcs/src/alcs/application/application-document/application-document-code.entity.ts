@@ -23,12 +23,6 @@ export enum DOCUMENT_TYPE {
   PROPOSAL_MAP = 'PRSK',
 }
 
-export enum DOCUMENT_SOURCE {
-  APPLICANT = 'Applicant',
-  ALCS = 'ALCS',
-  LFNG = 'Local Government',
-}
-
 export const DOCUMENT_TYPES = [
   DOCUMENT_TYPE.DECISION_DOCUMENT,
   DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,

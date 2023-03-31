@@ -8,15 +8,23 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { DocumentService } from '../../../document/document.service';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationSubmissionService } from '../application-submission.service';
 import {
   ApplicationParcelCreateDto,
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
+  AttachCertificateOfTitleDto,
 } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel.service';
@@ -29,6 +37,8 @@ export class ApplicationParcelController {
     private applicationService: ApplicationSubmissionService,
     @InjectMapper() private mapper: Mapper,
     private ownerService: ApplicationOwnerService,
+    private documentService: DocumentService,
+    private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
   @Get('application/:fileId')
@@ -94,6 +104,37 @@ export class ApplicationParcelController {
       deletedParcels,
       ApplicationParcel,
       ApplicationParcelDto,
+    );
+  }
+
+  @Post(':uuid/attachCertificateOfTitle')
+  async attachCorporateSummary(
+    @Req() req,
+    @Param('uuid') parcelUuid: string,
+    @Body() data: AttachCertificateOfTitleDto,
+  ) {
+    const parcel = await this.parcelService.getOneOrFail(parcelUuid);
+    const document = await this.documentService.createDocumentRecord({
+      ...data,
+      uploadedBy: req.user.entity,
+      source: DOCUMENT_SOURCE.APPLICANT,
+    });
+
+    const certificateOfTitle =
+      await this.applicationDocumentService.attachExternalDocument(
+        parcel.applicationFileNumber,
+        {
+          documentUuid: document.uuid,
+          type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        },
+      );
+
+    await this.parcelService.setCertificateOfTitle(parcel, certificateOfTitle);
+
+    return this.mapper.map(
+      certificateOfTitle,
+      ApplicationDocument,
+      ApplicationDocumentDto,
     );
   }
 }
