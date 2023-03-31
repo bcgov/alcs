@@ -10,9 +10,5 @@
   <app-decision-meeting [fileNumber]="fileNumber"></app-decision-meeting>
 </section>
 <section>
-  <app-document
-    [fileNumber]="fileNumber"
-    [documentType]="DOCUMENT_TYPE.OTHER"
-    title="Evidentiary Record"
-  ></app-document>
+  <app-document [fileNumber]="fileNumber" [visibilityFlags]="['C']" title="Evidentiary Record"></app-document>
 </section>

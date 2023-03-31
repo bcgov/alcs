@@ -12,6 +12,13 @@ import { Document } from '../../../document/document.entity';
 import { Application } from '../application.entity';
 import { ApplicationDocumentCode } from './application-document-code.entity';
 
+export enum VISIBILITY_FLAG {
+  APPLICANT = 'A',
+  COMMISSIONER = 'C',
+  PUBLIC = 'P',
+  GOVERNMENT = 'G',
+}
+
 @Entity()
 export class ApplicationDocument extends BaseEntity {
   constructor(data?: Partial<ApplicationDocument>) {
@@ -45,7 +52,7 @@ export class ApplicationDocument extends BaseEntity {
 
   @AutoMap(() => [String])
   @Column({ default: [], array: true, type: 'text' })
-  visibilityFlags: string[];
+  visibilityFlags: VISIBILITY_FLAG[];
 
   @OneToOne(() => Document)
   @JoinColumn()

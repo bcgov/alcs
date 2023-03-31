@@ -25,7 +25,10 @@ import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
 } from './application-document.dto';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -163,23 +166,16 @@ export class ApplicationDocumentController {
     );
   }
 
-  @Get('/application/:fileNumber/:documentType')
+  @Get('/application/:fileNumber/:visibilityFlags')
   @UserRoles(...ANY_AUTH_ROLE)
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Param('visibilityFlags') visibilityFlags: string,
   ): Promise<ApplicationDocumentDto[]> {
-    if (!DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
+    const mappedFlags = visibilityFlags.split('') as VISIBILITY_FLAG[];
     const documents = await this.applicationDocumentService.list(
       fileNumber,
-      documentType as DOCUMENT_TYPE,
+      mappedFlags,
     );
     return this.mapper.mapArray(
       documents,
