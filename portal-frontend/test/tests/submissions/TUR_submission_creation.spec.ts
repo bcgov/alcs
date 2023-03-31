@@ -1,9 +1,5 @@
 import { test } from '@playwright/test';
-
-const baseUrl = 'http://localhost:4201/login';
-const userName = 'MekhtiHuseinov';
-const password = '';
-const filePathToUseAsUpload = '/Users/mekhti/Desktop/Screen Shot 2022-07-13 at 11.53.19 AM.png';
+import { baseUrl, filePathToUseAsUpload, password, userName } from '../../config';
 
 test('test', async ({ page }) => {
   await page.goto(baseUrl);
