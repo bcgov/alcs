@@ -269,4 +269,22 @@ describe('ApplicationService', () => {
       applicationRepositoryMock.findOne.mock.calls[0][0].withDeleted,
     ).toEqual(true);
   });
+
+  it('should get application by uuid', async () => {
+    const fakeUuid = 'fake';
+
+    applicationRepositoryMock.findOneOrFail.mockResolvedValue(
+      {} as Application,
+    );
+
+    const result = await applicationService.getByUuidOrFail(fakeUuid);
+
+    expect(applicationRepositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.findOneOrFail).toHaveBeenCalledWith({
+      where: {
+        uuid: fakeUuid,
+      },
+    });
+    expect(result).toBeDefined();
+  });
 });

@@ -16,10 +16,10 @@ import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
-import { AttachExternalDocumentDto } from '../application-submission/application-parcel/application-parcel-document/application-parcel-document.dto';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { ApplicationDocumentController } from './application-document.controller';
+import { AttachExternalDocumentDto } from './application-document.dto';
 
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;

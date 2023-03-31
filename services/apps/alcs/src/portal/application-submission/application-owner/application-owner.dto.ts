@@ -1,5 +1,12 @@
 import { AutoMap } from '@automapper/classes';
-import { IsOptional, IsString, IsUUID, Matches } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Matches,
+} from 'class-validator';
+import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { emailRegex } from '../../../utils/email.helper';
@@ -38,6 +45,7 @@ export class ApplicationOwnerDto {
   @AutoMap()
   type: ApplicationOwnerTypeDto;
 
+  @AutoMap(() => ApplicationDocumentDto)
   corporateSummary?: ApplicationDocumentDto;
 }
 
@@ -103,6 +111,23 @@ export class SetPrimaryContactDto {
   @IsUUID()
   @IsOptional()
   ownerUuid?: string;
+
+  @IsString()
+  fileNumber: string;
+}
+
+export class AttachCorporateSummaryDto {
+  @IsString()
+  mimeType: string;
+
+  @IsString()
+  fileName: string;
+
+  @IsNumber()
+  fileSize: number;
+
+  @IsString()
+  fileKey: string;
 
   @IsString()
   fileNumber: string;

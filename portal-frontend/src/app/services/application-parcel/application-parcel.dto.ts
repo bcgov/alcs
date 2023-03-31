@@ -20,7 +20,7 @@ export interface ApplicationParcelDto extends Omit<ApplicationParcelUpdateDto, '
   parcelType: string;
   ownershipType?: BaseCodeDto;
   owners: ApplicationOwnerDto[];
-  documents: ApplicationDocumentDto[];
+  certificateOfTitle?: ApplicationDocumentDto;
 }
 
 export enum PARCEL_TYPE {

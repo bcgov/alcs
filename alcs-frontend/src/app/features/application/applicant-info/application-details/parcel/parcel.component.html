@@ -43,8 +43,8 @@
     </ng-container>
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
-      <div *ngFor="let document of parcel.documents">
-        <a (click)="onOpenFile(document.documentUuid)">{{ document.fileName }}</a>
+      <div *ngIf="parcel.certificateOfTitle">
+        <a (click)="onOpenFile(parcel.certificateOfTitle.documentUuid)">{{ parcel.certificateOfTitle.fileName }}</a>
       </div>
     </div>
     <div class="full-width subheading1">Owner Information</div>

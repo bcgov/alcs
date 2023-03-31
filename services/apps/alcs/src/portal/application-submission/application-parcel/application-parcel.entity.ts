@@ -2,15 +2,18 @@ import { AutoMap } from '@automapper/classes';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
+import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationParcelDocument } from './application-parcel-document/application-parcel-document.entity';
 import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
 
 @Entity()
@@ -126,13 +129,11 @@ export class ApplicationParcel extends Base {
   @JoinTable()
   owners: ApplicationOwner[];
 
-  @AutoMap()
-  @OneToMany(
-    () => ApplicationParcelDocument,
-    (appParcelDocument) => appParcelDocument.applicationParcel,
-    {
-      onDelete: 'CASCADE',
-    },
-  )
-  documents: ApplicationParcelDocument[];
+  @AutoMap(() => ApplicationDocumentDto)
+  @JoinColumn()
+  @OneToOne(() => ApplicationDocument, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  certificateOfTitle?: ApplicationDocument;
 }

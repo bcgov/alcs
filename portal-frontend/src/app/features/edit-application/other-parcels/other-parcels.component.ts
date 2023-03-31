@@ -182,7 +182,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       this.otherParcels.push({
         uuid: parcel!.uuid,
         parcelType: PARCEL_TYPE.OTHER,
-        documents: [],
         owners: [],
         isConfirmedByApplicant: false,
       });
@@ -197,7 +196,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     this.otherParcels.push({
       uuid: PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL,
       parcelType: PARCEL_TYPE.OTHER,
-      documents: [],
       owners: [],
       isConfirmedByApplicant: false,
     });

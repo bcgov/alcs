@@ -1,7 +1,11 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../services/application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_TYPE,
+} from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
@@ -34,7 +38,7 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
   APPLICATION_STATUS = APPLICATION_STATUS;
   resolutionDocument: ApplicationDocumentDto[] = [];
-  otherAttachments: ApplicationDocumentDto[] = [];
+  governmentOtherAttachments: ApplicationDocumentDto[] = [];
   staffReport: ApplicationDocumentDto[] = [];
   isMobile = false;
   mobileStep = MOBILE_STEP.INTRODUCTION;
@@ -82,7 +86,9 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
     if (
       this.application &&
-      this.application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC &&
+      [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
+        this.application.status.code
+      ) &&
       this.application.typeCode !== 'TURP'
     ) {
       this.loadApplicationReview(fileId);
@@ -141,7 +147,9 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
       this.resolutionDocument = documents.filter(
         (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
       );
-      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
+      this.governmentOtherAttachments = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+      );
     }
   }
 }

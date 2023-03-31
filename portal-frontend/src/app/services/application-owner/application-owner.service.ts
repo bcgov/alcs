@@ -126,30 +126,18 @@ export class ApplicationOwnerService {
     return 0;
   }
 
-  async uploadCorporateSummary(file: File) {
+  async uploadCorporateSummary(applicationFileId: string, file: File) {
     try {
-      return await this.documentService.uploadFile(
-        'owners',
+      return await this.documentService.uploadFile<{ uuid: string }>(
+        applicationFileId,
         file,
         DOCUMENT_TYPE.CORPORATE_SUMMARY,
         'Applicant',
-        `${this.serviceUrl}/attachExternal`
+        `${this.serviceUrl}/attachCorporateSummary`
       );
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
-    }
-    return undefined;
-  }
-
-  async openCorporateSummary(ownerUuid: string) {
-    try {
-      return await firstValueFrom(
-        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/${ownerUuid}/corporateSummary`)
-      );
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to open the document, please try again');
     }
     return undefined;
   }

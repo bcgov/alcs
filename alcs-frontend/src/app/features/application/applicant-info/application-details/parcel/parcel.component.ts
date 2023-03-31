@@ -20,10 +20,7 @@ export class ParcelComponent implements OnInit {
   fileId: string = '';
   parcels: any[] = [];
 
-  constructor(
-    private applicationDocumentService: ApplicationDocumentService,
-    private applicationSubmissionService: ApplicationSubmissionService
-  ) {}
+  constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
     this.parcels = this.application.parcels
@@ -48,12 +45,6 @@ export class ParcelComponent implements OnInit {
     const file = this.files.find((file) => file.uuid === uuid);
     if (file) {
       await this.applicationDocumentService.download(file.uuid, file.fileName);
-    } else {
-      const parcelFiles = this.application.parcels.flatMap((e) => e.documents);
-      const parcelFile = parcelFiles.find((e) => e.documentUuid === uuid);
-      if (parcelFile) {
-        await this.applicationSubmissionService.downloadFile(parcelFile.documentUuid, parcelFile.fileName);
-      }
     }
   }
 }

@@ -110,7 +110,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   private async loadDocumentTypes() {
     const docTypes = await this.applicationDocumentService.fetchTypes();
     docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
-    this.documentTypes = docTypes;
+    this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
-import { DOCUMENT_TYPE } from './application-document-code.entity';
 
 export class ApplicationDocumentTypeDto extends BaseCodeDto {
   @AutoMap()
@@ -28,10 +27,4 @@ export class ApplicationDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
-}
-
-export class PortalApplicationDocumentUpdateDto {
-  uuid: string;
-  type: DOCUMENT_TYPE | null;
-  description: string | null;
 }

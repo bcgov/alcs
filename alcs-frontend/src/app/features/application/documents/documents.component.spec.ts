@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
+import { ToastService } from '../../../services/toast/toast.service';
 
 import { DocumentsComponent } from './documents.component';
 
@@ -14,11 +15,13 @@ describe('DocumentsComponent', () => {
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppDetailService: DeepMocked<ApplicationDetailService>;
   let mockDialog: DeepMocked<MatDialog>;
+  let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(async () => {
     mockAppDocService = createMock();
     mockAppDetailService = createMock();
     mockDialog = createMock();
+    mockToastService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
@@ -35,6 +38,10 @@ describe('DocumentsComponent', () => {
         {
           provide: MatDialog,
           useValue: mockDialog,
+        },
+        {
+          provide: ToastService,
+          useValue: mockToastService,
         },
       ],
     }).compileComponents();

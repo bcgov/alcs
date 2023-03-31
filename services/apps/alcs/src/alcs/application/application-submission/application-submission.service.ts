@@ -3,12 +3,10 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
-import {
-  SubmittedApplicationDto,
-  SubmittedApplicationOwnerDto,
-} from '../application.dto';
+import { SubmittedApplicationDto } from '../application.dto';
 
 @Injectable()
 export class ApplicationSubmissionService {
@@ -31,7 +29,7 @@ export class ApplicationSubmissionService {
           owners: {
             type: true,
           },
-          documents: {
+          certificateOfTitle: {
             document: true,
           },
           ownershipType: true,
@@ -57,7 +55,7 @@ export class ApplicationSubmissionService {
     mappedSubmission.primaryContact = await this.mapper.mapAsync(
       primaryContact,
       ApplicationOwner,
-      SubmittedApplicationOwnerDto,
+      ApplicationOwnerDto,
     );
 
     return mappedSubmission;

@@ -7,9 +7,9 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
-import { ApplicationParcelDocumentDto } from './application-parcel-document/application-parcel-document.dto';
 
 export class ApplicationParcelOwnershipTypeDto extends BaseCodeDto {}
 
@@ -49,7 +49,7 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   parcelType: string;
 
-  documents: ApplicationParcelDocumentDto[];
+  certificateOfTitle?: ApplicationDocumentDto;
   owners: ApplicationOwnerDetailedDto[];
 }
 
@@ -113,4 +113,18 @@ export class ApplicationParcelUpdateDto {
 export enum PARCEL_TYPE {
   APPLICATION = 'application',
   OTHER = 'other',
+}
+
+export class AttachCertificateOfTitleDto {
+  @IsString()
+  mimeType: string;
+
+  @IsString()
+  fileName: string;
+
+  @IsNumber()
+  fileSize: number;
+
+  @IsString()
+  fileKey: string;
 }

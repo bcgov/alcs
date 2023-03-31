@@ -11,6 +11,7 @@ import { ApplicationOwnerService } from '../../../../services/application-owner/
 export class ApplicationOwnersDialogComponent {
   isDirty = false;
   owners: ApplicationOwnerDto[] = [];
+  fileId: string;
 
   constructor(
     private applicationOwnerService: ApplicationOwnerService,
@@ -20,6 +21,7 @@ export class ApplicationOwnersDialogComponent {
       fileId: string;
     }
   ) {
+    this.fileId = data.fileId;
     this.owners = data.owners;
   }
 
