@@ -5,6 +5,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgSelectConfig } from '@ng-select/ng-select';
+import { provideNgxMask } from 'ngx-mask';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
@@ -35,6 +36,7 @@ import { SharedModule } from './shared/shared.module';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
+    provideNgxMask(),
     {
       provide: APP_INITIALIZER,
       useFactory: (service: TokenRefreshService) => () => {

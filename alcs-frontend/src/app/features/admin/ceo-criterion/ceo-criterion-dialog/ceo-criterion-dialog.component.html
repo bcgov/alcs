@@ -6,25 +6,34 @@
     <div>
       <mat-form-field class="number-input" appearance="outline">
         <mat-label>Number</mat-label>
-        <input required matInput id="number" type="number" [(ngModel)]="number" name="number" />
+        <input required matInput id="number" mask="0*" [(ngModel)]="number" name="number" />
       </mat-form-field>
     </div>
 
     <div>
       <mat-form-field class="code" appearance="outline">
         <mat-label>Code</mat-label>
-        <input [disabled]='isEdit' required maxlength="4" minlength="4" matInput id="code" [(ngModel)]="code" name="code" />
+        <input
+          [disabled]="isEdit"
+          required
+          maxlength="4"
+          minlength="4"
+          matInput
+          id="code"
+          [(ngModel)]="code"
+          name="code"
+        />
       </mat-form-field>
     </div>
 
-    <div class='full-width'>
+    <div class="full-width">
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
         <input required matInput id="label" [(ngModel)]="label" name="label" />
       </mat-form-field>
     </div>
 
-    <div class='full-width'>
+    <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Description</mat-label>
         <input required matInput id="description" [(ngModel)]="description" name="description" />
