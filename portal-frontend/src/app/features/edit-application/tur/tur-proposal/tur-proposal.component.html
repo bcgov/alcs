@@ -116,7 +116,9 @@
       <mat-form-field appearance="outline">
         <input
           [formControl]="totalCorridorArea"
-          type="number"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="9999999999"
           min="0.01"
           id="total-area"
           matInput

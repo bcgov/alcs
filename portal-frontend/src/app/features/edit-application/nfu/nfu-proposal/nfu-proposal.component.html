@@ -20,7 +20,9 @@
       <mat-form-field appearance="outline">
         <input
           id="hectares"
-          type="number"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="9999999999"
           min="0.01"
           matInput
           formControlName="hectares"
@@ -179,7 +181,9 @@
         <mat-form-field appearance="outline">
           <input
             id="totalFillPlacement"
-            type="number"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
             min="0.01"
             matInput
             formControlName="totalFillPlacement"
@@ -202,7 +206,9 @@
         <mat-form-field appearance="outline">
           <input
             id="maxFillDepth"
-            type="number"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
             min="0.01"
             matInput
             formControlName="maxFillDepth"
@@ -223,7 +229,9 @@
           <input
             min="0.01"
             id="fillVolume"
-            type="number"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
             matInput
             formControlName="fillVolume"
             placeholder="Type volume"
@@ -248,7 +256,9 @@
         <mat-form-field appearance="outline">
           <input
             id="projectDurationAmount"
-            type="number"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
             min="0.01"
             matInput
             formControlName="projectDurationAmount"
