@@ -211,10 +211,12 @@ export class ApplicationSubmissionValidatorService {
       return;
     }
 
-    const hasCrownLandOwners = applicationSubmission.owners.some(
-      (owner) => owner.type.code === APPLICATION_OWNER.CROWN,
-    );
-    if (applicationSubmission.owners.length > 1 || hasCrownLandOwners) {
+    const onlyHasIndividualOwner =
+      applicationSubmission.owners.length === 1 &&
+      applicationSubmission.owners[0].type.code ===
+        APPLICATION_OWNER.INDIVIDUAL;
+
+    if (!onlyHasIndividualOwner) {
       const authorizationLetters = documents.filter(
         (document) =>
           document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
