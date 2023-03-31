@@ -98,7 +98,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
         this.fileId,
         fileHandle.file,
         documentType,
-        'Local Government'
+        DOCUMENT_SOURCE.LFNG
       );
       await this.loadApplicationDocuments(this.fileId);
     }
