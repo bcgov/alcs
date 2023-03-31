@@ -53,9 +53,9 @@ export class ApplicationDocumentService {
     return firstValueFrom(this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}`));
   }
 
-  async listByType(fileNumber: string, documentType?: DOCUMENT_TYPE) {
+  async listByVisibility(fileNumber: string, visibilityFlags: string[]) {
     return firstValueFrom(
-      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/${documentType}`)
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/${visibilityFlags.join()}`)
     );
   }
 

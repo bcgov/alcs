@@ -3,24 +3,22 @@ import { ApplicationDocumentDto } from '../../services/application/application-d
 import {
   ApplicationDocumentService,
   DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
 } from '../../services/application/application-document/application-document.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-document[title][documentType][fileNumber]',
+  selector: 'app-document[title][fileNumber][visibilityFlags]',
   templateUrl: './application-document.component.html',
   styleUrls: ['./application-document.component.scss'],
 })
 export class ApplicationDocumentComponent implements OnChanges {
-  @Input() documentType: DOCUMENT_TYPE = DOCUMENT_TYPE.DECISION_DOCUMENT;
   @Input() title = '';
-  @Input() readOnly = false;
   @Input() fileNumber: string = '';
+  @Input() visibilityFlags: string[] = [];
 
   isUploading = false;
 
-  displayedColumns: string[] = ['fileName', 'uploadedAt', 'uploadedBy', 'action'];
+  displayedColumns: string[] = ['type', 'fileName', 'source', 'uploadedAt', 'action'];
   documents: ApplicationDocumentDto[] = [];
 
   constructor(
@@ -34,7 +32,7 @@ export class ApplicationDocumentComponent implements OnChanges {
 
   async loadDocuments() {
     if (this.fileNumber) {
-      this.documents = await this.applicationDocumentService.listByType(this.fileNumber, this.documentType);
+      this.documents = await this.applicationDocumentService.listByVisibility(this.fileNumber, this.visibilityFlags);
     }
   }
 
@@ -57,25 +55,5 @@ export class ApplicationDocumentComponent implements OnChanges {
 
   async onOpen(uuid: string, fileName: string) {
     await this.applicationDocumentService.download(uuid, fileName);
-  }
-
-  async uploadFile(event: Event) {
-    const element = event.target as HTMLInputElement;
-    const fileList = element.files;
-    if (fileList && fileList.length > 0) {
-      const file: File = fileList[0];
-      this.isUploading = true;
-      const uploadedFile = await this.applicationDocumentService.upload(this.fileNumber, {
-        file,
-        fileName: file.name,
-        visibilityFlags: ['C'],
-        typeCode: this.documentType,
-        source: DOCUMENT_SOURCE.ALCS,
-      });
-      if (uploadedFile) {
-        await this.loadDocuments();
-      }
-      this.isUploading = false;
-    }
   }
 }

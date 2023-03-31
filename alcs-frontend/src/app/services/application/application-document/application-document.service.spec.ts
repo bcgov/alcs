@@ -43,7 +43,7 @@ describe('ApplicationDocumentService', () => {
       ])
     );
 
-    const res = await service.listByType('1', DOCUMENT_TYPE.DECISION_DOCUMENT);
+    const res = await service.listByVisibility('1', []);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);

@@ -1,7 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,12 +13,12 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import {
-  DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
-} from '../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
@@ -42,32 +41,6 @@ export class ApplicationDocumentController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get('/application/:fileNumber/:documentType')
-  async listDocumentsByType(
-    @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: DOCUMENT_TYPE | null,
-    @Req() req,
-  ): Promise<ApplicationDocumentDto[]> {
-    await this.applicationSubmissionService.verifyAccess(
-      fileNumber,
-      req.user.entity,
-    );
-
-    if (documentType !== null && !DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
-    const documents = await this.applicationDocumentService.list(
-      fileNumber,
-      documentType as DOCUMENT_TYPE,
-    );
-    return this.mapPortalDocuments(documents);
-  }
-
   @Get('/application/:fileNumber')
   async listApplicantDocuments(
     @Param('fileNumber') fileNumber: string,
@@ -79,8 +52,9 @@ export class ApplicationDocumentController {
       req.user.entity,
     );
 
-    //TODO: Update with view flags
-    const documents = await this.applicationDocumentService.list(fileNumber);
+    const documents = await this.applicationDocumentService.list(fileNumber, [
+      VISIBILITY_FLAG.APPLICANT,
+    ]);
     return this.mapPortalDocuments(documents);
   }
 

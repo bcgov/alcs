@@ -5,7 +5,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Any, FindOptionsRelations, Repository } from 'typeorm';
+import {
+  Any,
+  ArrayContains,
+  ArrayOverlap,
+  FindOptionsRelations,
+  FindOptionsWhere,
+  In,
+  Repository,
+} from 'typeorm';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { PortalApplicationDocumentUpdateDto } from '../../../portal/application-document/application-document.dto';
@@ -15,7 +23,10 @@ import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
 } from './application-document-code.entity';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from './application-document.entity';
 
 @Injectable()
 export class ApplicationDocumentService {
@@ -48,7 +59,7 @@ export class ApplicationDocumentService {
     user: User;
     documentType: DOCUMENT_TYPE;
     source?: DOCUMENT_SOURCE;
-    visibilityFlags: string[];
+    visibilityFlags: VISIBILITY_FLAG[];
   }) {
     const application = await this.applicationService.getOrFail(fileNumber);
     const document = await this.documentService.create(
@@ -87,29 +98,20 @@ export class ApplicationDocumentService {
     return document;
   }
 
-  async list(fileNumber: string, documentType?: DOCUMENT_TYPE) {
-    return this.applicationDocumentRepository.find({
-      where: {
-        typeCode: documentType,
-        application: {
-          fileNumber,
-        },
+  async list(fileNumber: string, visibilityFlags?: VISIBILITY_FLAG[]) {
+    const where: FindOptionsWhere<ApplicationDocument> = {
+      application: {
+        fileNumber,
       },
-      relations: this.DEFAULT_RELATIONS,
-    });
-  }
-
-  async listAll(fileNumbers: string[], documentType: DOCUMENT_TYPE) {
+    };
+    if (visibilityFlags) {
+      where.visibilityFlags = ArrayOverlap(visibilityFlags);
+    }
     return this.applicationDocumentRepository.find({
-      where: {
-        typeCode: documentType,
-        application: {
-          fileNumber: Any(fileNumbers),
-        },
-      },
+      where,
       order: {
         document: {
-          fileName: 'ASC',
+          uploadedAt: 'DESC',
         },
       },
       relations: this.DEFAULT_RELATIONS,
@@ -216,7 +218,7 @@ export class ApplicationDocumentService {
     file?: any;
     fileName: string;
     documentType: DOCUMENT_TYPE;
-    visibilityFlags: string[];
+    visibilityFlags: VISIBILITY_FLAG[];
     source: DOCUMENT_SOURCE;
     user: User;
   }) {

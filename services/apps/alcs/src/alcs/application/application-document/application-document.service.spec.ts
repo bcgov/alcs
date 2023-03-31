@@ -166,24 +166,7 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.list(fileNumber, DOCUMENT_TYPE.DECISION_DOCUMENT);
-
-    expect(mockRepository.find).toHaveBeenCalledTimes(1);
-    expect(res[0]).toBe(mockAppDocument);
-  });
-
-  it('should call through for listAll', async () => {
-    const mockDocument = {};
-    const mockAppDocument = {
-      uuid: '1',
-      document: mockDocument,
-    } as ApplicationDocument;
-    mockRepository.find.mockResolvedValue([mockAppDocument]);
-
-    const res = await service.listAll(
-      [fileNumber],
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-    );
+    const res = await service.list(fileNumber);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);
