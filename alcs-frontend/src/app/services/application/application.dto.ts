@@ -84,6 +84,7 @@ export interface ApplicationSubmissionDto {
   parcels: SubmittedApplicationParcelDto[];
   otherParcels: SubmittedApplicationParcelDto[];
   documents: ApplicationDocumentDto[];
+  hasOtherParcelsInCommunity?: boolean | null;
   primaryContact: SubmittedApplicationOwnerDto;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;

@@ -1,7 +1,16 @@
 <h3 class="flex-item">
   {{ pageTitle }}
 </h3>
+
 <div class="review-table">
+  <div class="subheading2 grid-1" *ngIf="parcelType === 'other'">
+    Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within the
+    community where the application parcel(s) is located?
+  </div>
+  <div class="grid-double" *ngIf="parcelType === 'other'">
+    {{ application.hasOtherParcelsInCommunity ? 'Yes' : 'No' }}
+  </div>
+
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
       <h4>Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>

@@ -23,6 +23,9 @@ export class SubmittedApplicationDto {
   @AutoMap(() => [ApplicationParcelDto])
   parcels: ApplicationParcelDto[];
 
+  @AutoMap(() => Boolean)
+  hasOtherParcelsInCommunity?: boolean | null;
+
   @AutoMap(() => [ApplicationParcelDto])
   otherParcels: ApplicationParcelDto[];
 
