@@ -18,6 +18,11 @@ export enum APPLICATION_SUBMISSION_TYPES {
   'TURP' = 'TURP',
 }
 
+class PdfTemplate {
+  templateName: string;
+  payload: any;
+}
+
 @Injectable()
 export class GenerateSubmissionDocumentService {
   constructor(
@@ -38,34 +43,35 @@ export class GenerateSubmissionDocumentService {
       user,
     );
 
-    const payload = await this.prepareSubmissionPdfData(submission);
+    // const payload = await this.prepareSubmissionPdfData(submission);
+    const template = await this.getPdfTemplateBySubmissionType(submission);
 
-    console.log('payload', payload);
+    console.log('payload', template.payload);
 
     const pdf = await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
-      `${config.get<string>(
-        'CDOGS.TEMPLATE_FOLDER',
-      )}/${this.getTemplateByApplicationType(
-        submission.typeCode as APPLICATION_SUBMISSION_TYPES,
-      )}`,
-      payload,
+      `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${template.templateName}`,
+      template.payload,
     );
 
     return pdf;
   }
 
-  private getTemplateByApplicationType(
-    applicationSubmissionType: APPLICATION_SUBMISSION_TYPES,
-  ) {
-    switch (applicationSubmissionType) {
+  private async getPdfTemplateBySubmissionType(
+    submission: ApplicationSubmission,
+  ): Promise<PdfTemplate> {
+    let payload: any = await this.prepareSubmissionPdfData(submission);
+
+    switch (submission.typeCode as APPLICATION_SUBMISSION_TYPES) {
       case APPLICATION_SUBMISSION_TYPES.NFUP:
-        return 'nfu-submission-template.docx';
+        payload = this.populateNfuData(submission, payload);
+        return { payload, templateName: 'nfu-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.TURP:
-        return 'tur-submission-template.docx';
+        payload = this.populateTurData(submission, payload);
+        return { payload, templateName: 'tur-submission-template.docx' };
       default:
         throw new ServiceNotFoundException(
-          `Could not find template for application submission type ${applicationSubmissionType}`,
+          `Could not find template for application submission type ${submission.typeCode}`,
         );
     }
   }
@@ -110,6 +116,7 @@ export class GenerateSubmissionDocumentService {
 
     const data = {
       noData: 'No Data',
+      generatedDateTime: new Date().toDateString(), // TODO replace this with applicantTime?
 
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment,
@@ -136,21 +143,20 @@ export class GenerateSubmissionDocumentService {
       westLandUseType: submission.westLandUseType,
       westLandUseTypeDescription: submission.westLandUseTypeDescription,
 
-      // NFU Proposal
-      nfuHectares: submission.nfuHectares,
-      nfuPurpose: submission.nfuPurpose,
-      nfuOutsideLands: submission.nfuOutsideLands,
-      nfuAgricultureSupport: submission.nfuAgricultureSupport,
-      nfuWillImportFill: submission.nfuWillImportFill,
-
-      // NFU Proposal => Soil and Fill
-      nfuFillTypeDescription: submission.nfuFillTypeDescription,
-      nfuFillOriginDescription: submission.nfuFillOriginDescription,
-      nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
-      nfuMaxFillDepth: submission.nfuMaxFillDepth,
-      nfuFillVolume: submission.nfuFillVolume,
-      nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
-      nfuProjectDurationUnit: submission.nfuProjectDurationUnit,
+      // // NFU Proposal
+      // nfuHectares: submission.nfuHectares,
+      // nfuPurpose: submission.nfuPurpose,
+      // nfuOutsideLands: submission.nfuOutsideLands,
+      // nfuAgricultureSupport: submission.nfuAgricultureSupport,
+      // nfuWillImportFill: submission.nfuWillImportFill,
+      // // NFU Proposal => Soil and Fill
+      // nfuFillTypeDescription: submission.nfuFillTypeDescription,
+      // nfuFillOriginDescription: submission.nfuFillOriginDescription,
+      // nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
+      // nfuMaxFillDepth: submission.nfuMaxFillDepth,
+      // nfuFillVolume: submission.nfuFillVolume,
+      // nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
+      // nfuProjectDurationUnit: submission.nfuProjectDurationUnit,
 
       // Other attachments
       otherAttachments: documents.map((e) => ({
@@ -202,5 +208,39 @@ export class GenerateSubmissionDocumentService {
     };
 
     return data;
+  }
+
+  private populateNfuData(submission: ApplicationSubmission, pdfData: any) {
+    return {
+      ...pdfData,
+      // NFU Proposal
+      nfuHectares: submission.nfuHectares,
+      nfuPurpose: submission.nfuPurpose,
+      nfuOutsideLands: submission.nfuOutsideLands,
+      nfuAgricultureSupport: submission.nfuAgricultureSupport,
+      nfuWillImportFill: submission.nfuWillImportFill,
+      // NFU Proposal => Soil and Fill
+      nfuFillTypeDescription: submission.nfuFillTypeDescription,
+      nfuFillOriginDescription: submission.nfuFillOriginDescription,
+      nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
+      nfuMaxFillDepth: submission.nfuMaxFillDepth,
+      nfuFillVolume: submission.nfuFillVolume,
+      nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
+      nfuProjectDurationUnit: submission.nfuProjectDurationUnit,
+    };
+  }
+
+  private populateTurData(submission: ApplicationSubmission, pdfData: any) {
+    pdfData = {
+      ...pdfData,
+      // TUR Proposal
+      turPurpose: submission.turPurpose,
+      turAgriculturalActivities: submission.turAgriculturalActivities,
+      turReduceNegativeImpacts: submission.turReduceNegativeImpacts,
+      turOutsideLands: submission.turOutsideLands,
+      turTotalCorridorArea: submission.turTotalCorridorArea,
+    };
+
+    return pdfData;
   }
 }
