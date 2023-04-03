@@ -1,0 +1,24 @@
+{
+  "name": "alcs",
+  "version": "1.0.0",
+  "description": "[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) ![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999) [![codecov](https://img.shields.io/codeclimate/coverage/bcgov/alcs)](https://codeclimate.com/github/bcgov/alcs)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/alcs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bcgov/alcs/issues"
+  },
+  "homepage": "https://github.com/bcgov/alcs#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.32.0"
+  }
+}
