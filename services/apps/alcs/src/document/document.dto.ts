@@ -2,7 +2,7 @@ import { User } from '../user/user.entity';
 
 export enum DOCUMENT_SOURCE {
   APPLICANT = 'Applicant',
-  ALCS = 'ALCS',
+  ALC = 'ALC',
   LFNG = 'L/FNG',
   AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',

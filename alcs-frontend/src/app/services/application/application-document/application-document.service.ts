@@ -35,7 +35,7 @@ export enum DOCUMENT_TYPE {
 
 export enum DOCUMENT_SOURCE {
   APPLICANT = 'Applicant',
-  ALCS = 'ALCS',
+  ALC = 'ALC',
   LFNG = 'L/FNG',
   AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',

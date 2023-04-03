@@ -40,14 +40,21 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
-    this.dialog.open(DocumentUploadDialogComponent, {
-      minWidth: '600px',
-      maxWidth: '800px',
-      width: '70%',
-      data: {
-        fileId: this.fileId,
-      },
-    });
+    this.dialog
+      .open(DocumentUploadDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '800px',
+        width: '70%',
+        data: {
+          fileId: this.fileId,
+        },
+      })
+      .beforeClosed()
+      .subscribe((isDirty) => {
+        if (isDirty) {
+          this.loadDocuments(this.fileId);
+        }
+      });
   }
 
   async openFile(uuid: string, fileName: string) {
