@@ -127,6 +127,11 @@ export class ApplicationDocumentController {
           documentUuid: document.uuid,
           type: data.documentType,
         },
+        [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.GOVERNMENT,
+          VISIBILITY_FLAG.COMMISSIONER,
+        ],
       );
 
     const mappedDocs = this.mapPortalDocuments([savedDocument]);
