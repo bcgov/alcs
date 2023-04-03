@@ -44,10 +44,9 @@ export class GenerateSubmissionDocumentService {
       user,
     );
 
-    // const payload = await this.prepareSubmissionPdfData(submission);
     const template = await this.getPdfTemplateBySubmissionType(submission);
 
-    console.log('payload', template.payload);
+    console.log('payload', template.templateName, template.payload);
 
     const pdf = await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
@@ -125,7 +124,7 @@ export class GenerateSubmissionDocumentService {
 
     const data = {
       noData: 'No Data',
-      generatedDateTime: new Date().toDateString(), // TODO replace this with applicantTime?
+      generatedDateTime: new Date(), // TODO replace this with applicantTime?
 
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment,
@@ -166,9 +165,7 @@ export class GenerateSubmissionDocumentService {
         .map((e) => ({
           ...e,
           noData: NO_DATA,
-          purchasedDate: e.purchasedDate
-            ? e.purchasedDate.toDateString() // TODO this should be of specific format
-            : undefined,
+          purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
           certificateOfTitle: e.certificateOfTitle?.document.fileName,
           owners: e.owners.map((o) => ({
             ...o,
@@ -185,9 +182,7 @@ export class GenerateSubmissionDocumentService {
         .map((e) => ({
           ...e,
           noData: NO_DATA,
-          purchasedDate: e.purchasedDate
-            ? e.purchasedDate.toDateString() // TODO this should be of specific format
-            : undefined,
+          purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
           certificateOfTitle: e.certificateOfTitle?.document.fileName,
           owners: e.owners.map((o) => ({
             ...o,
