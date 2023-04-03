@@ -133,6 +133,7 @@ export class ApplicationDocumentService {
       documentUuid: string;
       description?: string;
     },
+    visibilityFlags: VISIBILITY_FLAG[],
   ) {
     const applicationUuid = await this.applicationService.getUuid(fileNumber);
     const document = new ApplicationDocument({
@@ -140,6 +141,7 @@ export class ApplicationDocumentService {
       typeCode: data.type,
       documentUuid: data.documentUuid,
       description: data.description,
+      visibilityFlags,
     });
 
     const savedDocument = await this.applicationDocumentRepository.save(
