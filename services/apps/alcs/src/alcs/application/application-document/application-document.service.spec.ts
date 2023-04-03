@@ -286,11 +286,15 @@ describe('ApplicationDocumentService', () => {
     mockApplicationService.getUuid.mockResolvedValueOnce('app-uuid');
     mockRepository.findOne.mockResolvedValue(new ApplicationDocument());
 
-    const res = await service.attachExternalDocument('', {
-      type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-      description: '',
-      documentUuid: 'fake-uuid',
-    });
+    const res = await service.attachExternalDocument(
+      '',
+      {
+        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        description: '',
+        documentUuid: 'fake-uuid',
+      },
+      [],
+    );
 
     expect(mockApplicationService.getUuid).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);

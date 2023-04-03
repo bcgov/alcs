@@ -13,7 +13,10 @@ import {
 } from '@nestjs/common';
 import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
-import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
@@ -127,6 +130,11 @@ export class ApplicationParcelController {
           documentUuid: document.uuid,
           type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
         },
+        [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.GOVERNMENT,
+          VISIBILITY_FLAG.COMMISSIONER,
+        ],
       );
 
     await this.parcelService.setCertificateOfTitle(parcel, certificateOfTitle);

@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { VISIBILITY_FLAG } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
@@ -230,6 +231,11 @@ export class ApplicationOwnerController {
           documentUuid: document.uuid,
           type: DOCUMENT_TYPE.CORPORATE_SUMMARY,
         },
+        [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.GOVERNMENT,
+          VISIBILITY_FLAG.COMMISSIONER,
+        ],
       );
 
     return {
