@@ -146,6 +146,11 @@ export interface ApplicationDto {
   applicationReview?: ApplicationReviewDto;
   submittedApplication?: ApplicationSubmissionDto;
   source: 'ALCS' | 'APPLICANT';
+  alrArea?: number;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
 }
 
 export interface UpdateApplicationDto {
@@ -166,4 +171,9 @@ export interface UpdateApplicationDto {
   feeWaived?: boolean;
   feeSplitWithLg?: boolean;
   feeAmount?: string;
+  alrArea?: string;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
 }

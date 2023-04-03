@@ -94,6 +94,11 @@ export class ApplicationController {
           updates.dateAcknowledgedComplete,
         ),
         notificationSentDate: formatIncomingDate(updates.notificationSentDate),
+        alrArea: updates.alrArea,
+        agCap: updates.agCap,
+        agCapConsultant: updates.agCapConsultant,
+        agCapMap: updates.agCapMap,
+        agCapSource: updates.agCapSource,
       },
     );
 
