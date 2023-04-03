@@ -42,22 +42,24 @@
           <section>
             <div class="header">
               <h3>Application</h3>
-              <button
-                [routerLink]="'/application/' + application.fileNumber + '/edit'"
-                *ngIf="application.canEdit"
-                mat-flat-button
-                color="primary"
-              >
-                Edit Application
-              </button>
-              <button
-                *ngIf="application.fileNumber"
-                mat-flat-button
-                color="primary"
-                (click)="onDownloadPdf(application?.fileNumber)"
-              >
-                Download PDF
-              </button>
+              <div class="btns-wrapper">
+                <button
+                  [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                  *ngIf="application.canEdit"
+                  mat-flat-button
+                  color="primary"
+                >
+                  Edit Application
+                </button>
+                <button
+                  *ngIf="application.canEdit"
+                  mat-flat-button
+                  color="primary"
+                  (click)="onDownloadPdf(application?.fileNumber)"
+                >
+                  Download PDF
+                </button>
+              </div>
               <button
                 *ngIf="application.canReview"
                 (click)="onReview(application.fileNumber)"
