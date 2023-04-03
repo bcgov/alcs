@@ -4,6 +4,7 @@ import { CdogsService } from '../../../../../../libs/common/src/cdogs/cdogs.serv
 import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationLocalGovernmentService } from '../../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../../alcs/application/application.service';
 import { User } from '../../../user/user.entity';
@@ -60,14 +61,21 @@ export class GenerateSubmissionDocumentService {
   private async getPdfTemplateBySubmissionType(
     submission: ApplicationSubmission,
   ): Promise<PdfTemplate> {
-    let payload: any = await this.prepareSubmissionPdfData(submission);
+    const documents = await this.applicationDocumentService.list(
+      submission.fileNumber,
+    );
+
+    let payload: any = await this.prepareSubmissionPdfData(
+      submission,
+      documents,
+    );
 
     switch (submission.typeCode as APPLICATION_SUBMISSION_TYPES) {
       case APPLICATION_SUBMISSION_TYPES.NFUP:
-        payload = this.populateNfuData(submission, payload);
+        payload = this.populateNfuData(payload, submission);
         return { payload, templateName: 'nfu-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.TURP:
-        payload = this.populateTurData(submission, payload);
+        payload = this.populateTurData(payload, submission, documents);
         return { payload, templateName: 'tur-submission-template.docx' };
       default:
         throw new ServiceNotFoundException(
@@ -76,7 +84,10 @@ export class GenerateSubmissionDocumentService {
     }
   }
 
-  private async prepareSubmissionPdfData(submission: ApplicationSubmission) {
+  private async prepareSubmissionPdfData(
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
     const application = await this.applicationService.getOrFail(
       submission.fileNumber,
     );
@@ -100,9 +111,7 @@ export class GenerateSubmissionDocumentService {
       (e) => e.uuid === submission.primaryContactOwnerUuid,
     );
 
-    const documents = (
-      await this.applicationDocumentService.list(submission.fileNumber)
-    ).filter(
+    const otherDocuments = documents.filter(
       (e) =>
         !e.typeCode ||
         [
@@ -143,23 +152,8 @@ export class GenerateSubmissionDocumentService {
       westLandUseType: submission.westLandUseType,
       westLandUseTypeDescription: submission.westLandUseTypeDescription,
 
-      // // NFU Proposal
-      // nfuHectares: submission.nfuHectares,
-      // nfuPurpose: submission.nfuPurpose,
-      // nfuOutsideLands: submission.nfuOutsideLands,
-      // nfuAgricultureSupport: submission.nfuAgricultureSupport,
-      // nfuWillImportFill: submission.nfuWillImportFill,
-      // // NFU Proposal => Soil and Fill
-      // nfuFillTypeDescription: submission.nfuFillTypeDescription,
-      // nfuFillOriginDescription: submission.nfuFillOriginDescription,
-      // nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
-      // nfuMaxFillDepth: submission.nfuMaxFillDepth,
-      // nfuFillVolume: submission.nfuFillVolume,
-      // nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
-      // nfuProjectDurationUnit: submission.nfuProjectDurationUnit,
-
       // Other attachments
-      otherAttachments: documents.map((e) => ({
+      otherAttachments: otherDocuments.map((e) => ({
         type: e.type?.description ?? '',
         description: e.description ?? '',
         name: e.document.fileName,
@@ -210,9 +204,10 @@ export class GenerateSubmissionDocumentService {
     return data;
   }
 
-  private populateNfuData(submission: ApplicationSubmission, pdfData: any) {
+  private populateNfuData(pdfData: any, submission: ApplicationSubmission) {
     return {
       ...pdfData,
+
       // NFU Proposal
       nfuHectares: submission.nfuHectares,
       nfuPurpose: submission.nfuPurpose,
@@ -230,15 +225,29 @@ export class GenerateSubmissionDocumentService {
     };
   }
 
-  private populateTurData(submission: ApplicationSubmission, pdfData: any) {
+  private populateTurData(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
+    const servingNotice = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.SERVING_NOTICE,
+    );
+    const proposalMap = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+
     pdfData = {
       ...pdfData,
+
       // TUR Proposal
       turPurpose: submission.turPurpose,
       turAgriculturalActivities: submission.turAgriculturalActivities,
       turReduceNegativeImpacts: submission.turReduceNegativeImpacts,
       turOutsideLands: submission.turOutsideLands,
       turTotalCorridorArea: submission.turTotalCorridorArea,
+      servingNotice: servingNotice.find((d) => d)?.document.fileName,
+      proposalMap: proposalMap.find((d) => d)?.document.fileName,
     };
 
     return pdfData;
