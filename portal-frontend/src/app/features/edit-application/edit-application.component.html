@@ -1,16 +1,27 @@
 <ng-template #header>
   <div class="header">
     <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
-
-    <div class="change-app-type-btn-wrapper">
+    <!-- <div class="button-container">
       <button
-        *ngIf="application?.fileNumber"
+        *ngIf="application?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
         mat-flat-button
         color="primary"
         (click)="onDownloadPdf(application?.fileNumber)"
       >
         Download PDF
       </button>
+    </div> -->
+    <div class="change-app-type-btn-wrapper">
+      <!-- <div class="button-container">
+        <button
+          *ngIf="application?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
+          mat-flat-button
+          color="primary"
+          (click)="onDownloadPdf(application?.fileNumber)"
+        >
+          Download PDF
+        </button>
+      </div> -->
       <div>
         <button mat-flat-button color="accent" (click)="onApplicationTypeChangeClicked()">
           Change Application Type

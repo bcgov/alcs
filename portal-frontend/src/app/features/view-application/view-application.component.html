@@ -54,7 +54,7 @@
                 <button
                   *ngIf="application.canEdit"
                   mat-flat-button
-                  color="primary"
+                  color="accent"
                   (click)="onDownloadPdf(application?.fileNumber)"
                 >
                   Download PDF
@@ -417,20 +417,20 @@
             Edit Application
           </button>
           <button
+            *ngIf="application.canEdit"
+            mat-flat-button
+            color="accent"
+            (click)="onDownloadPdf(application?.fileNumber)"
+          >
+            Download PDF
+          </button>
+          <button
             *ngIf="application.canReview"
             (click)="onReview(application.fileNumber)"
             mat-flat-button
             color="primary"
           >
             Review Application
-          </button>
-          <button
-            *ngIf="application.fileNumber"
-            mat-flat-button
-            color="primary"
-            (click)="onDownloadPdf(application?.fileNumber)"
-          >
-            Download PDF
           </button>
         </div>
       </div>
@@ -467,14 +467,6 @@
           >
             Review Application
           </button>
-          <button
-            *ngIf="application.fileNumber"
-            mat-flat-button
-            color="primary"
-            (click)="onDownloadPdf(application?.fileNumber)"
-          >
-            Download PDF
-          </button>
         </div>
       </div>
     </section>
@@ -501,14 +493,6 @@
             color="primary"
           >
             Review Application
-          </button>
-          <button
-            *ngIf="application.fileNumber"
-            mat-flat-button
-            color="primary"
-            (click)="onDownloadPdf(application?.fileNumber)"
-          >
-            Download PDF
           </button>
         </div>
       </div>
@@ -759,14 +743,6 @@
           color="primary"
         >
           Review Application
-        </button>
-        <button
-          *ngIf="application.fileNumber"
-          mat-flat-button
-          color="primary"
-          (click)="onDownloadPdf(application?.fileNumber)"
-        >
-          Download PDF
         </button>
       </div>
     </div>
