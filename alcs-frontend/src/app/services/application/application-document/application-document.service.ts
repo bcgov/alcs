@@ -36,7 +36,7 @@ export enum DOCUMENT_TYPE {
 export enum DOCUMENT_SOURCE {
   APPLICANT = 'Applicant',
   ALCS = 'ALCS',
-  LFNG = 'Local Government',
+  LFNG = 'L/FNG',
   AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',
 }
@@ -53,9 +53,9 @@ export class ApplicationDocumentService {
     return firstValueFrom(this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}`));
   }
 
-  async listByType(fileNumber: string, documentType?: DOCUMENT_TYPE) {
+  async listByVisibility(fileNumber: string, visibilityFlags: string[]) {
     return firstValueFrom(
-      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/${documentType}`)
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/${visibilityFlags.join()}`)
     );
   }
 
@@ -127,5 +127,13 @@ export class ApplicationDocumentService {
     const res = await firstValueFrom(this.http.post(`${this.url}/${uuid}`, formData));
     this.toastService.showSuccessToast('Review document uploaded');
     return res;
+  }
+
+  async updateSort(sortOrder: { uuid: string; order: number }[]) {
+    try {
+      await firstValueFrom(this.http.post<ApplicationDocumentTypeDto[]>(`${this.url}/sort`, sortOrder));
+    } catch (e) {
+      this.toastService.showErrorToast(`Failed to save document order`);
+    }
   }
 }

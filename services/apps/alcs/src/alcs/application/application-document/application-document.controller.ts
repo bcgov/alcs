@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
@@ -16,6 +17,7 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { AttachExternalDocumentDto } from '../../../portal/application-document/application-document.dto';
 import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
@@ -25,7 +27,10 @@ import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
 } from './application-document.dto';
-import { ApplicationDocument } from './application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -163,23 +168,16 @@ export class ApplicationDocumentController {
     );
   }
 
-  @Get('/application/:fileNumber/:documentType')
+  @Get('/application/:fileNumber/:visibilityFlags')
   @UserRoles(...ANY_AUTH_ROLE)
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Param('visibilityFlags') visibilityFlags: string,
   ): Promise<ApplicationDocumentDto[]> {
-    if (!DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
+    const mappedFlags = visibilityFlags.split('') as VISIBILITY_FLAG[];
     const documents = await this.applicationDocumentService.list(
       fileNumber,
-      documentType as DOCUMENT_TYPE,
+      mappedFlags,
     );
     return this.mapper.mapArray(
       documents,
@@ -225,5 +223,13 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
     await this.applicationDocumentService.delete(document);
     return {};
+  }
+
+  @Post('/sort')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async sortDocuments(
+    @Body() data: { uuid: string; order: number }[],
+  ): Promise<void> {
+    await this.applicationDocumentService.setSorting(data);
   }
 }

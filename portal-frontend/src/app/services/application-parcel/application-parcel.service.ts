@@ -3,8 +3,11 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../application-document/application-document.dto';
-import { ApplicationOwnerDto } from '../application-owner/application-owner.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_TYPE,
+} from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationParcelDto, ApplicationParcelUpdateDto, PARCEL_TYPE } from './application-parcel.dto';
@@ -75,7 +78,7 @@ export class ApplicationParcelService {
         fileId,
         file,
         DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-        'Applicant',
+        DOCUMENT_SOURCE.APPLICANT,
         `${environment.apiUrl}/application-parcel/${parcelUuid}/attachCertificateOfTitle`
       );
       this.toastService.showSuccessToast('Document uploaded');

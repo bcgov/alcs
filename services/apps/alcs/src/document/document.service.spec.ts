@@ -83,7 +83,7 @@ describe('DocumentService', () => {
       fileKey: 'fileKey',
       fileName: 'fileName',
       uploadedBy: null,
-      source: 'Applicant',
+      source: DOCUMENT_SOURCE.APPLICANT,
     };
     mockRepository.save.mockResolvedValue(mockDoc as Document);
     const res = await service.createDocumentRecord({} as CreateDocumentDto);

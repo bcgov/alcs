@@ -43,7 +43,7 @@ describe('ApplicationDocumentService', () => {
       ])
     );
 
-    const res = await service.listByType('1', DOCUMENT_TYPE.DECISION_DOCUMENT);
+    const res = await service.listByVisibility('1', []);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
@@ -94,5 +94,17 @@ describe('ApplicationDocumentService', () => {
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
     expect(res[0].uuid).toEqual('1');
+  });
+
+  it('should make a post call for sort', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        uuid: '1',
+      })
+    );
+
+    await service.updateSort([]);
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
   });
 });

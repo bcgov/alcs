@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { DOCUMENT_TYPE } from '../application-document/application-document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../application-document/application-document.dto';
 import { ToastService } from '../toast/toast.service';
 import { UploadDocumentUrlDto } from './document.dto';
 
@@ -45,7 +45,13 @@ export class DocumentService {
     return fileKey;
   }
 
-  async uploadFile<T>(fileId: string, file: File, documentType: DOCUMENT_TYPE | null, source: string, url: string) {
+  async uploadFile<T>(
+    fileId: string,
+    file: File,
+    documentType: DOCUMENT_TYPE | null,
+    source: DOCUMENT_SOURCE,
+    url: string
+  ) {
     if (file.size > environment.maxFileSize) {
       const niceSize = environment.maxFileSize / 1048576;
       this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);

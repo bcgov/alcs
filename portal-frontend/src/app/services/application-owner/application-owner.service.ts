@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT_TYPE } from '../application-document/application-document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import {
@@ -132,7 +132,7 @@ export class ApplicationOwnerService {
         applicationFileId,
         file,
         DOCUMENT_TYPE.CORPORATE_SUMMARY,
-        'Applicant',
+        DOCUMENT_SOURCE.APPLICANT,
         `${this.serviceUrl}/attachCorporateSummary`
       );
     } catch (e) {

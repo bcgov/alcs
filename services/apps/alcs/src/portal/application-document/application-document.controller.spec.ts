@@ -4,10 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import {
-  ApplicationDocumentCode,
-  DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -86,23 +83,6 @@ describe('ApplicationDocumentController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  it('should list documents', async () => {
-    appDocumentService.list.mockResolvedValue([mockDocument]);
-
-    const res = await controller.listDocumentsByType(
-      'fake-number',
-      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-      {
-        user: {
-          entity: {},
-        },
-      },
-    );
-
-    expect(res[0].fileName).toEqual(mockDocument.document.fileName);
-    expect(appDocumentService.list).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to delete documents', async () => {

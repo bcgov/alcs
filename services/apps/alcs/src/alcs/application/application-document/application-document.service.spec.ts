@@ -166,24 +166,7 @@ describe('ApplicationDocumentService', () => {
     } as ApplicationDocument;
     mockRepository.find.mockResolvedValue([mockAppDocument]);
 
-    const res = await service.list(fileNumber, DOCUMENT_TYPE.DECISION_DOCUMENT);
-
-    expect(mockRepository.find).toHaveBeenCalledTimes(1);
-    expect(res[0]).toBe(mockAppDocument);
-  });
-
-  it('should call through for listAll', async () => {
-    const mockDocument = {};
-    const mockAppDocument = {
-      uuid: '1',
-      document: mockDocument,
-    } as ApplicationDocument;
-    mockRepository.find.mockResolvedValue([mockAppDocument]);
-
-    const res = await service.listAll(
-      [fileNumber],
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-    );
+    const res = await service.list(fileNumber);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res[0]).toBe(mockAppDocument);
@@ -342,5 +325,34 @@ describe('ApplicationDocumentService', () => {
     expect(mockApplicationService.getFileNumber).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should load and save the documents with the new sort order', async () => {
+    const mockDoc1 = new ApplicationDocument({
+      uuid: 'uuid-1',
+      evidentiaryRecordSorting: 5,
+    });
+    const mockDoc2 = new ApplicationDocument({
+      uuid: 'uuid-2',
+      evidentiaryRecordSorting: 6,
+    });
+    mockRepository.find.mockResolvedValue([mockDoc1, mockDoc2]);
+    mockRepository.save.mockResolvedValue({} as any);
+
+    await service.setSorting([
+      {
+        uuid: mockDoc1.uuid,
+        order: 0,
+      },
+      {
+        uuid: mockDoc2.uuid,
+        order: 1,
+      },
+    ]);
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockDoc1.evidentiaryRecordSorting).toEqual(0);
+    expect(mockDoc2.evidentiaryRecordSorting).toEqual(1);
   });
 });

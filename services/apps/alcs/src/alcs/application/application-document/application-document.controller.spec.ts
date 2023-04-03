@@ -212,4 +212,12 @@ describe('ApplicationDocumentController', () => {
 
     expect(appDocumentService.list).toHaveBeenCalledTimes(1);
   });
+
+  it('should call through for setting sort', async () => {
+    appDocumentService.setSorting.mockResolvedValue();
+
+    await controller.sortDocuments([]);
+
+    expect(appDocumentService.setSorting).toHaveBeenCalledTimes(1);
+  });
 });

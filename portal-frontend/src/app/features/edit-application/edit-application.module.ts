@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { CanDeactivateGuard } from '../../shared/guard/can-deactivate.guard';
@@ -65,6 +66,13 @@ const routes: Routes = [
     NgxMaskDirective,
     NgxMaskPipe,
     ApplicationDetailsModule,
+    MatInputModule,
+    MatInputModule,
+    MatInputModule,
+    MatInputModule,
+    MatInputModule,
+    MatInputModule,
+    MatInputModule,
   ],
 })
 export class EditApplicationModule {}
