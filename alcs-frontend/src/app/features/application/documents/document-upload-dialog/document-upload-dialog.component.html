@@ -81,6 +81,7 @@
     <div class="button-container">
       <button type='button' mat-stroked-button color="primary" [mat-dialog-close]="false">Close</button>
       <button
+        *ngIf='!isSaving'
         type='button'
         mat-flat-button
         color="primary"
@@ -88,6 +89,16 @@
         (click)="onSubmit()"
       >
         Save
+      </button>
+      <button
+        *ngIf='isSaving'
+        type='button'
+        mat-flat-button
+        color='primary'
+        [disabled]="true"
+      >
+        <mat-spinner class='spinner' diameter='20'></mat-spinner>
+        Uploading
       </button>
     </div>
   </mat-dialog-actions>

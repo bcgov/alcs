@@ -22,6 +22,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   title = 'Create';
   isDirty = false;
+  isSaving = false;
   sources = DOCUMENT_TYPE;
   documentTypeAhead: string | undefined = undefined;
 
@@ -98,6 +99,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       typeCode: this.type.getRawValue() as DOCUMENT_TYPE,
       visibilityFlags,
     };
+    this.isSaving = true;
     if (this.data.existingDocument) {
       await this.applicationDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (dto.file !== undefined) {
@@ -105,6 +107,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       await this.applicationDocumentService.upload(this.data.fileId, dto);
     }
     this.dialog.close(true);
+    this.isSaving = false;
   }
 
   private async loadDocumentTypes() {
