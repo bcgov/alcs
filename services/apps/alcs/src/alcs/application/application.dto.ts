@@ -238,6 +238,18 @@ export class UpdateApplicationDto {
   @IsOptional()
   @IsString()
   agCapConsultant?: string;
+
+  @IsOptional()
+  @IsString()
+  nfuUseType?: string;
+
+  @IsOptional()
+  @IsString()
+  nfuUseSubType?: string;
+
+  @IsOptional()
+  @IsNumber()
+  nfuEndDate?: number;
 }
 
 export class ApplicationDto {
@@ -326,6 +338,13 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   agCapConsultant?: string;
+
+  @AutoMap(() => String)
+  nfuUseType?: string;
+
+  @AutoMap(() => String)
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -348,6 +367,9 @@ export class ApplicationUpdateServiceDto {
   agCapSource?: string;
   agCapMap?: string;
   agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: Date | null;
 }
 
 export class CreateApplicationServiceDto {

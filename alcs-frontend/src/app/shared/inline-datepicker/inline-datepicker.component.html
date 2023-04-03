@@ -1,10 +1,10 @@
 <div class="inline-date-picker-wrapper">
   <span class="left" *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!selectedValue"> Add date </a>
-    <span *ngIf="selectedValue">
+    <a (click)="toggleEdit()" class="add-date" *ngIf="!value"> Add date </a>
+    <span *ngIf="value">
       {{ formattedDate }}
     </span>
-    <button *ngIf="selectedValue" class="edit-button" mat-icon-button (click)="toggleEdit()">
+    <button *ngIf="value" class="edit-button" mat-icon-button (click)="toggleEdit()">
       <mat-icon class="edit-icon">edit</mat-icon>
     </button>
   </span>
