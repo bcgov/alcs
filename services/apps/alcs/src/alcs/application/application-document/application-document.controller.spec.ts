@@ -120,34 +120,6 @@ describe('ApplicationDocumentController', () => {
     );
   });
 
-  it('should throw an exception if pass an invalid document type', async () => {
-    const mockFile = {};
-    const mockUser = {};
-
-    appDocumentService.attachDocument.mockResolvedValue(mockDocument);
-
-    await expect(
-      controller.attachDocument('fileNumber', {
-        isMultipart: () => true,
-        body: {
-          documentType: {
-            value: 'BAD TYPE',
-          },
-        },
-        file: () => mockFile,
-        user: {
-          entity: mockUser,
-        },
-      }),
-    ).rejects.toMatchObject(
-      new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      ),
-    );
-  });
-
   it('should list documents', async () => {
     appDocumentService.list.mockResolvedValue([mockDocument]);
 

@@ -66,14 +66,6 @@ export class ApplicationDocumentController {
     }
 
     const documentType = req.body.documentType.value as DOCUMENT_TYPE;
-    if (!DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
     const file = req.body.file;
     const fileName = req.body.fileName.value as string;
     const documentSource = req.body.source.value as DOCUMENT_SOURCE;
@@ -106,14 +98,6 @@ export class ApplicationDocumentController {
     }
 
     const documentType = req.body.documentType.value as DOCUMENT_TYPE;
-    if (!DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
     const file = req.body.file;
     const fileName = req.body.fileName.value as string;
     const documentSource = req.body.source.value as DOCUMENT_SOURCE;

@@ -50,7 +50,7 @@ export class ApplicationDocumentService {
     file,
     documentType,
     user,
-    source = DOCUMENT_SOURCE.ALCS,
+    source = DOCUMENT_SOURCE.ALC,
     visibilityFlags,
   }: {
     fileNumber: string;
