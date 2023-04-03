@@ -164,6 +164,49 @@ export class Application extends Base {
   })
   source: 'ALCS' | 'APPLICANT';
 
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+    comment: 'Area in hectares of ALR impacted by the proposal',
+  })
+  alrArea?: number;
+
+  @AutoMap()
+  @Column({
+    type: 'text',
+    comment: 'Agricultural cap classification',
+    nullable: true,
+  })
+  agCap?: string;
+
+  @AutoMap()
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability classification system used',
+    nullable: true,
+  })
+  agCapSource?: string;
+
+  @AutoMap()
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability map sheet reference',
+    nullable: true,
+  })
+  agCapMap?: string;
+
+  @AutoMap()
+  @Column({
+    type: 'text',
+    comment: 'Consultant who determined the agricultural capability',
+    nullable: true,
+  })
+  agCapConsultant?: string;
+
   @AutoMap(() => [StatusHistory])
   @Column({
     comment:

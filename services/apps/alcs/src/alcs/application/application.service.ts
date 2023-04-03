@@ -204,7 +204,6 @@ export class ApplicationService {
     existingApplication: Application,
     updates: ApplicationUpdateServiceDto,
   ): Promise<Application> {
-    // @ts-ignore
     await this.applicationRepository.update(existingApplication.uuid, updates);
     return this.getOrFail(existingApplication.fileNumber);
   }

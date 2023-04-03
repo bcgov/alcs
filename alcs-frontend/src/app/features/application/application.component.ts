@@ -18,6 +18,7 @@ import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
+import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
 
 export const childRoutes = [
@@ -47,6 +48,13 @@ export const childRoutes = [
     menuTitle: 'ALC Intake',
     icon: 'content_paste',
     component: IntakeComponent,
+    requiresAuthorization: true,
+  },
+  {
+    path: 'proposal',
+    menuTitle: 'App Proposal',
+    icon: 'task',
+    component: ProposalComponent,
     requiresAuthorization: true,
   },
   {
