@@ -9,6 +9,7 @@ import {
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import {
   APPLICATION_STATUS,
   ApplicationSubmissionDetailedDto,
@@ -56,7 +57,8 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDocumentService: ApplicationDocumentService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
   ) {}
 
   onChangeMobileStep() {
@@ -150,6 +152,12 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
       this.governmentOtherAttachments = documents.filter(
         (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
       );
+    }
+  }
+
+  async onDownloadPdf(fileNumber: string | undefined) {
+    if (fileNumber) {
+      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
     }
   }
 }

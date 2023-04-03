@@ -51,6 +51,14 @@
                 Edit Application
               </button>
               <button
+                *ngIf="application.fileNumber"
+                mat-flat-button
+                color="primary"
+                (click)="onDownloadPdf(application?.fileNumber)"
+              >
+                Download PDF
+              </button>
+              <button
                 *ngIf="application.canReview"
                 (click)="onReview(application.fileNumber)"
                 mat-flat-button
@@ -148,13 +156,7 @@
             {{ application.returnedComment }}
             <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
           </div>
-          <div
-            *ngIf="
-              applicationReview &&
-              !isMobile
-            "
-            class="mobile-hidden"
-          >
+          <div *ngIf="applicationReview && !isMobile" class="mobile-hidden">
             <section>
               <h4>Contact Information</h4>
               <div class="review-table">
@@ -420,6 +422,14 @@
           >
             Review Application
           </button>
+          <button
+            *ngIf="application.fileNumber"
+            mat-flat-button
+            color="primary"
+            (click)="onDownloadPdf(application?.fileNumber)"
+          >
+            Download PDF
+          </button>
         </div>
       </div>
       <app-application-details
@@ -455,6 +465,14 @@
           >
             Review Application
           </button>
+          <button
+            *ngIf="application.fileNumber"
+            mat-flat-button
+            color="primary"
+            (click)="onDownloadPdf(application?.fileNumber)"
+          >
+            Download PDF
+          </button>
         </div>
       </div>
     </section>
@@ -481,6 +499,14 @@
             color="primary"
           >
             Review Application
+          </button>
+          <button
+            *ngIf="application.fileNumber"
+            mat-flat-button
+            color="primary"
+            (click)="onDownloadPdf(application?.fileNumber)"
+          >
+            Download PDF
           </button>
         </div>
       </div>
@@ -731,6 +757,14 @@
           color="primary"
         >
           Review Application
+        </button>
+        <button
+          *ngIf="application.fileNumber"
+          mat-flat-button
+          color="primary"
+          (click)="onDownloadPdf(application?.fileNumber)"
+        >
+          Download PDF
         </button>
       </div>
     </div>
