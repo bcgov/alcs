@@ -173,39 +173,62 @@ export class Application extends Base {
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the proposal',
   })
-  alrArea?: number;
+  alrArea?: number | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     type: 'text',
     comment: 'Agricultural cap classification',
     nullable: true,
   })
-  agCap?: string;
+  agCap?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     type: 'text',
     comment: 'Agricultural capability classification system used',
     nullable: true,
   })
-  agCapSource?: string;
+  agCapSource?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     type: 'text',
     comment: 'Agricultural capability map sheet reference',
     nullable: true,
   })
-  agCapMap?: string;
+  agCapMap?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     type: 'text',
     comment: 'Consultant who determined the agricultural capability',
     nullable: true,
   })
-  agCapConsultant?: string;
+  agCapConsultant?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Non-farm use type',
+    nullable: true,
+  })
+  nfuUseType?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Non-farm use sub type',
+    nullable: true,
+  })
+  nfuUseSubType?: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the non-farm use ends',
+    nullable: true,
+  })
+  nfuEndDate?: Date | null;
 
   @AutoMap(() => [StatusHistory])
   @Column({

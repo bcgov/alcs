@@ -99,6 +99,9 @@ export class ApplicationController {
         agCapConsultant: updates.agCapConsultant,
         agCapMap: updates.agCapMap,
         agCapSource: updates.agCapSource,
+        nfuEndDate: formatIncomingDate(updates.nfuEndDate),
+        nfuUseSubType: updates.nfuUseSubType,
+        nfuUseType: updates.nfuUseType,
       },
     );
 

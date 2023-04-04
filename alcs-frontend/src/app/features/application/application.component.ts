@@ -51,8 +51,8 @@ export const childRoutes = [
     requiresAuthorization: true,
   },
   {
-    path: 'proposal',
-    menuTitle: 'App Proposal',
+    path: 'prep',
+    menuTitle: 'App Prep',
     icon: 'task',
     component: ProposalComponent,
     requiresAuthorization: true,

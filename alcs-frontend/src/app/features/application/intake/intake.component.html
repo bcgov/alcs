@@ -3,7 +3,7 @@
   <div>
     <h5>Submitted to ALC</h5>
     <app-inline-datepicker
-      [selectedValue]="application?.dateSubmittedToAlc"
+      [value]="application?.dateSubmittedToAlc"
       (save)="updateApplicationDate('dateSubmittedToAlc', $event)"
     ></app-inline-datepicker>
   </div>
@@ -13,7 +13,7 @@
       <div>
         <div class="subheading2">Payment Date</div>
         <app-inline-datepicker
-          [selectedValue]="application?.feePaidDate"
+          [value]="application?.feePaidDate"
           (save)="updateApplicationDate('feePaidDate', $event)"
         ></app-inline-datepicker>
       </div>
@@ -44,7 +44,7 @@
     <h5>Acknowledged Incomplete</h5>
     <div>
       <app-inline-datepicker
-        [selectedValue]="application?.dateAcknowledgedIncomplete"
+        [value]="application?.dateAcknowledgedIncomplete"
         (save)="updateApplicationDate('dateAcknowledgedIncomplete', $event)"
       ></app-inline-datepicker>
     </div>
@@ -53,7 +53,7 @@
     <h5>Received All Items</h5>
     <div>
       <app-inline-datepicker
-        [selectedValue]="application?.dateReceivedAllItems"
+        [value]="application?.dateReceivedAllItems"
         (save)="updateApplicationDate('dateReceivedAllItems', $event)"
       ></app-inline-datepicker>
     </div>
@@ -62,7 +62,7 @@
     <h5>Acknowledged Complete</h5>
     <div>
       <app-inline-datepicker
-        [selectedValue]="application?.dateAcknowledgedComplete"
+        [value]="application?.dateAcknowledgedComplete"
         (save)="updateApplicationDate('dateAcknowledgedComplete', $event)"
       ></app-inline-datepicker>
     </div>

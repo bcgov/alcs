@@ -28,6 +28,7 @@ import { EditModificationDialogComponent } from './post-decision/edit-modificati
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
+import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
@@ -80,6 +81,7 @@ const routes: Routes = [
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     ProposalComponent,
+    NfuProposalComponent,
   ],
   imports: [
     SharedModule.forRoot(),

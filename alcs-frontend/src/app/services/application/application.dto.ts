@@ -152,6 +152,9 @@ export interface ApplicationDto {
   agCapSource?: string;
   agCapMap?: string;
   agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -177,4 +180,7 @@ export interface UpdateApplicationDto {
   agCapSource?: string;
   agCapMap?: string;
   agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }

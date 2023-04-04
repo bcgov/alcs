@@ -11,7 +11,7 @@ import { formatDateForApi } from '../utils/api-date-formatter';
   styleUrls: ['./inline-datepicker.component.scss'],
 })
 export class InlineDatepickerComponent implements OnInit, OnChanges {
-  @Input() selectedValue: number | undefined;
+  @Input() value: number | undefined;
   @Input() min: Date | number | undefined;
 
   @Output() save = new EventEmitter<number>();
@@ -28,9 +28,9 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
     if (this.min) {
       this.minimum = new Date(this.min);
     }
-    if (this.selectedValue) {
-      this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
-      this.date.setValue(moment(this.selectedValue));
+    if (this.value) {
+      this.formattedDate = moment(this.value).format(environment.dateFormat);
+      this.date.setValue(moment(this.value));
     }
   }
 
@@ -48,9 +48,9 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.selectedValue) {
-      this.formattedDate = moment(this.selectedValue).format(environment.dateFormat);
-      this.date.setValue(moment(this.selectedValue));
+    if (this.value) {
+      this.formattedDate = moment(this.value).format(environment.dateFormat);
+      this.date.setValue(moment(this.value));
     }
   }
 }
