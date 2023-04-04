@@ -1,10 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import moment from 'moment';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { getPdfFile } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
+
+interface Report {
+  fileName: string;
+  data: Blob;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +31,9 @@ export class ApplicationSubmissionDocumentGenerationService {
         responseType: 'blob' as 'json',
       };
       const data = await firstValueFrom(this.httpClient.get(`${this.serviceUrl}/${fileNumber}`, httpOptions));
+
       // TODO return file name and data from request
-      return getPdfFile('demo', data);
+      return getPdfFile(`${fileNumber}_${moment().format('MMM_DD_YYYY_HH-MM_Z')}`, data);
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to generate pdf, please try again later');

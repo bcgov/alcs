@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as config from 'config';
+import * as dayjs from 'dayjs';
 import { CdogsService } from '../../../../../../libs/common/src/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationLocalGovernmentService } from '../../../alcs/application/application-code/application-local-government/application-local-government.service';
@@ -10,6 +11,7 @@ import { ApplicationService } from '../../../alcs/application/application.servic
 import { User } from '../../../user/user.entity';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -23,6 +25,8 @@ class PdfTemplate {
   templateName: string;
   payload: any;
 }
+
+const NO_DATA = 'No Data';
 
 @Injectable()
 export class GenerateSubmissionDocumentService {
@@ -120,14 +124,14 @@ export class GenerateSubmissionDocumentService {
         ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE),
     );
 
-    const NO_DATA = 'No Data';
-
     const data = {
       noData: 'No Data',
-      generatedDateTime: new Date(), // TODO replace this with applicantTime?
+      generatedDateTime: dayjs
+        .tz(new Date(), 'Canada/Pacific')
+        .format('MMM DD, YYYY HH:MM:ss Z'),
 
       fileNumber: submission.fileNumber,
-      localGovernment: localGovernment,
+      localGovernment: localGovernment?.name,
       status: submission.status,
       applicant: submission.applicant,
       primaryContact: ['INDV', 'ORGZ'].includes(
@@ -160,43 +164,33 @@ export class GenerateSubmissionDocumentService {
       })),
 
       application: application,
-      parcels: parcels
-        .filter((e) => e.parcelType === PARCEL_TYPE.APPLICATION)
-        .map((e) => ({
-          ...e,
-          noData: NO_DATA,
-          purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
-          certificateOfTitle: e.certificateOfTitle?.document.fileName,
-          owners: e.owners.map((o) => ({
-            ...o,
-            noData: NO_DATA,
-            name:
-              o.type.code === 'INDV'
-                ? `${o.firstName} ${o.lastName}`
-                : o.organizationName,
-            corporateSummary: o.corporateSummary?.document.fileName,
-          })),
-        })),
-      otherParcels: parcels
-        .filter((e) => e.parcelType === PARCEL_TYPE.OTHER)
-        .map((e) => ({
-          ...e,
-          noData: NO_DATA,
-          purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
-          certificateOfTitle: e.certificateOfTitle?.document.fileName,
-          owners: e.owners.map((o) => ({
-            ...o,
-            noData: NO_DATA,
-            name:
-              o.type.code === 'INDV'
-                ? `${o.firstName} ${o.lastName}`
-                : o.organizationName,
-            corporateSummary: o.corporateSummary?.document.fileName,
-          })),
-        })),
+      parcels: this.mapParcelsWithOwners(
+        parcels.filter((e) => e.parcelType === PARCEL_TYPE.APPLICATION),
+      ),
+      otherParcels: this.mapParcelsWithOwners(
+        parcels.filter((e) => e.parcelType === PARCEL_TYPE.OTHER),
+      ),
     };
 
     return data;
+  }
+
+  private mapParcelsWithOwners(parcels: ApplicationParcel[]) {
+    return parcels.map((e) => ({
+      ...e,
+      noData: NO_DATA,
+      purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
+      certificateOfTitle: e.certificateOfTitle?.document.fileName,
+      owners: e.owners.map((o) => ({
+        ...o,
+        noData: NO_DATA,
+        name:
+          o.type.code === 'INDV'
+            ? `${o.firstName} ${o.lastName}`
+            : o.organizationName,
+        corporateSummary: o.corporateSummary?.document.fileName,
+      })),
+    }));
   }
 
   private populateNfuData(pdfData: any, submission: ApplicationSubmission) {
