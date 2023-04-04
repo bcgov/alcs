@@ -9,6 +9,7 @@ import { ApplicationSubmissionService } from '../../services/application-submiss
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ViewApplicationComponent } from './view-application.component';
+import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 
 describe('ViewApplicationComponent', () => {
   let component: ViewApplicationComponent;
@@ -56,6 +57,10 @@ describe('ViewApplicationComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: mockDialogService,
+        },
+        {
+          provide: ApplicationSubmissionDocumentGenerationService,
+          useValue: {},
         },
       ],
       declarations: [ViewApplicationComponent],

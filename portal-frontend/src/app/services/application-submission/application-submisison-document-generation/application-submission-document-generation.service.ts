@@ -32,7 +32,6 @@ export class ApplicationSubmissionDocumentGenerationService {
       };
       const data = await firstValueFrom(this.httpClient.get(`${this.serviceUrl}/${fileNumber}`, httpOptions));
 
-      // TODO return file name and data from request
       return getPdfFile(`${fileNumber}_${moment().format('MMM_DD_YYYY_HH-MM_Z')}`, data);
     } catch (e) {
       console.error(e);
