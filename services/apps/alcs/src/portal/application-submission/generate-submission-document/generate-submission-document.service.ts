@@ -41,16 +41,12 @@ export class GenerateSubmissionDocumentService {
   ) {}
 
   async generate(fileNumber: string, user: User) {
-    console.log('generate', fileNumber);
-
     const submission = await this.applicationSubmissionService.verifyAccess(
       fileNumber,
       user,
     );
 
     const template = await this.getPdfTemplateBySubmissionType(submission);
-
-    console.log('payload', template.templateName, template.payload);
 
     const pdf = await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
