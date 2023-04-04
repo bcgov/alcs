@@ -36,8 +36,7 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
     private codeService: CodeService,
     private applicationService: ApplicationSubmissionService,
-    private router: Router,
-    private overlaySpinner: OverlaySpinnerService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +50,9 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
 
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
-    this.applicationTypes = codes.applicationTypes.filter((type) => !!type.portalLabel);
+    this.applicationTypes = codes.applicationTypes
+      .filter((type) => !!type.portalLabel)
+      .sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
     this.submissionTypes = codes.submissionTypes.sort((a, b) => (a.code > b.code ? 1 : -1));
   }
 

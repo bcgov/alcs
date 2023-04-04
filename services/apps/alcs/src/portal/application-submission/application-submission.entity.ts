@@ -331,6 +331,23 @@ export class ApplicationSubmission extends BaseEntity {
   })
   turAllOwnersNotified?: boolean | null;
 
+  //Subdivision Fields
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  subdPurpose: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  subdSuitability: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  subdAgricultureSupport: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  subdIsHomeSiteSeverance: boolean | null;
+
   @AutoMap(() => Application)
   @OneToOne(
     () => Application,

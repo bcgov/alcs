@@ -1,0 +1,8 @@
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
+
+.info-banner {
+  background-color: rgba(colors.$secondary-color-light, 0.5);
+  padding: rem(4);
+  margin-bottom: rem(12) !important;
+}

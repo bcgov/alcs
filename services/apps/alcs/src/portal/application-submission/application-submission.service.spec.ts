@@ -7,6 +7,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
@@ -24,12 +26,14 @@ describe('ApplicationSubmissionService', () => {
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
     mockStatusRepository = createMock();
     mockApplicationService = createMock();
     mockLGService = createMock();
+    mockAppDocService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -55,6 +59,10 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: ApplicationLocalGovernmentService,
           useValue: mockLGService,
+        },
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
         },
       ],
     }).compile();
@@ -313,5 +321,31 @@ describe('ApplicationSubmissionService', () => {
         localGovernmentUuid,
       }),
     );
+  });
+
+  it('should delete homesite document when setting homesite to false', async () => {
+    const fileNumber = 'fake';
+    const mockUuid = 'uuid';
+
+    const mockApplicationSubmission = new ApplicationSubmission({
+      fileNumber,
+    });
+
+    mockRepository.findOne.mockResolvedValue(mockApplicationSubmission);
+    mockRepository.save.mockResolvedValue(mockApplicationSubmission);
+    mockApplicationService.getUuid.mockResolvedValue(mockUuid);
+    mockAppDocService.deleteByType.mockResolvedValue();
+
+    await service.update(fileNumber, {
+      subdIsHomeSiteSeverance: false,
+    });
+
+    expect(mockAppDocService.deleteByType).toHaveBeenCalledTimes(1);
+    expect(mockAppDocService.deleteByType.mock.calls[0][0]).toEqual(
+      DOCUMENT_TYPE.HOMESITE_SEVERANCE,
+    );
+    expect(mockAppDocService.deleteByType.mock.calls[0][1]).toEqual(mockUuid);
+    expect(mockRepository.save).toBeCalledTimes(1);
+    expect(mockRepository.findOne).toBeCalledTimes(2);
   });
 });

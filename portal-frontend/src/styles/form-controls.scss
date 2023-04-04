@@ -74,7 +74,7 @@ form {
 
     @media screen and (min-width: $tabletBreakpoint) {
       & {
-        font-size: rem(16);
+        font-size: rem(16) !important;;
       }
     }
   }
@@ -84,7 +84,7 @@ form {
     display: grid;
     grid-template-columns: 1fr;
     grid-column-gap: rem(30);
-    grid-row-gap: rem(6);
+    grid-row-gap: rem(8);
 
     @media screen and (min-width: $tabletBreakpoint) {
       grid-row-gap: rem(24);

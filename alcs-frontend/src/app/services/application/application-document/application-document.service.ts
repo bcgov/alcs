@@ -31,6 +31,9 @@ export enum DOCUMENT_TYPE {
   //TUR
   SERVING_NOTICE = 'POSN',
   PROPOSAL_MAP = 'PRSK',
+
+  //SUBD
+  HOMESITE_SEVERANCE = 'HOME',
 }
 
 export enum DOCUMENT_SOURCE {
