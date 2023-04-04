@@ -163,7 +163,7 @@ export class GenerateSubmissionDocumentService {
         noData: NO_DATA,
       })),
 
-      application: application,
+      applicationTypePortalLabel: application?.type.portalLabel,
       parcels: this.mapParcelsWithOwners(
         parcels.filter((e) => e.parcelType === PARCEL_TYPE.APPLICATION),
       ),
