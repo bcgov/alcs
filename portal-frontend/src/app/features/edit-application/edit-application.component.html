@@ -84,6 +84,13 @@
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-tur-proposal>
+      <app-subd-proposal
+        *ngIf="application.typeCode === 'SUBD'"
+        [$application]="$application"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-subd-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">

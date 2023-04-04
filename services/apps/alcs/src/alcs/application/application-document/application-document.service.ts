@@ -191,6 +191,7 @@ export class ApplicationDocumentService {
     });
     for (const document of documents) {
       await this.documentService.softRemove(document.document);
+      await this.applicationDocumentRepository.remove(document);
     }
 
     return;

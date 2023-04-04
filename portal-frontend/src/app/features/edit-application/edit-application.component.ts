@@ -12,13 +12,14 @@ import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepp
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { LandUseComponent } from './land-use/land-use.component';
-import { NfuProposalComponent } from './nfu/nfu-proposal/nfu-proposal.component';
+import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
-import { TurProposalComponent } from './tur/tur-proposal/tur-proposal.component';
+import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -59,6 +60,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
   @ViewChild(NfuProposalComponent) nfuProposalComponent?: NfuProposalComponent;
   @ViewChild(TurProposalComponent) turProposalComponent?: TurProposalComponent;
+  @ViewChild(SubdProposalComponent) subdProposalComponent?: SubdProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -175,6 +177,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
         }
         if (this.turProposalComponent) {
           await this.turProposalComponent.onSave();
+        }
+        if (this.subdProposalComponent) {
+          await this.subdProposalComponent.onSave();
         }
         break;
       case EditApplicationSteps.Attachments:
