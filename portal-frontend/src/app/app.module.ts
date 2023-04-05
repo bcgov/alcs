@@ -5,6 +5,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideNgxMask } from 'ngx-mask';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ApplicationDetailsModule } from './features/application-details/application-details.module';
@@ -58,6 +59,7 @@ import { SharedModule } from './shared/shared.module';
       deps: [TokenRefreshService],
       multi: true,
     },
+    provideNgxMask(),
   ],
   bootstrap: [AppComponent],
 })

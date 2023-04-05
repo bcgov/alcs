@@ -86,7 +86,7 @@
       ></app-tur-proposal>
       <app-subd-proposal
         *ngIf="application.typeCode === 'SUBD'"
-        [$application]="$application"
+        [$applicationSubmission]="$application"
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"

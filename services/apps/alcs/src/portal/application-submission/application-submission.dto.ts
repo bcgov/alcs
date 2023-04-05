@@ -1,6 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsArray,
   IsBoolean,
+  IsJSON,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -8,9 +10,9 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { Column } from 'typeorm';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
+import { ProposedLot } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
@@ -145,6 +147,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   subdIsHomeSiteSeverance?: boolean | null;
+
+  subdProposedLots?: ProposedLot[];
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -323,4 +327,8 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   subdIsHomeSiteSeverance?: boolean | null;
+
+  @IsArray()
+  @IsOptional()
+  subdProposedLots?: ProposedLot[];
 }

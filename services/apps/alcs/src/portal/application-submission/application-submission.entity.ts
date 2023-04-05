@@ -25,6 +25,11 @@ export class StatusHistory {
   time: number;
 }
 
+export class ProposedLot {
+  type: 'Lot' | 'Road Dedication';
+  size: number;
+}
+
 @Entity()
 export class ApplicationSubmission extends BaseEntity {
   constructor(data?: Partial<ApplicationSubmission>) {
@@ -347,6 +352,15 @@ export class ApplicationSubmission extends BaseEntity {
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   subdIsHomeSiteSeverance: boolean | null;
+
+  @AutoMap(() => [ProposedLot])
+  @Column({
+    comment: 'JSONB Column containing the proposed subdivision lots',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  subdProposedLots: ProposedLot[];
 
   @AutoMap(() => Application)
   @OneToOne(

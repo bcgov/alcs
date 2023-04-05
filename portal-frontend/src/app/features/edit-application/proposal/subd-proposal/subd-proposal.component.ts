@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -7,6 +8,7 @@ import {
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
+import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import {
   ApplicationSubmissionDetailedDto,
   ApplicationSubmissionUpdateDto,
@@ -14,6 +16,8 @@ import {
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-application.component';
+
+type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null };
 
 @Component({
   selector: 'app-subd-proposal',
@@ -23,7 +27,7 @@ import { EditApplicationSteps } from '../../edit-application.component';
 export class SubdProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
@@ -33,12 +37,21 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
   homesiteSeverance: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
 
+  lotsProposed = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   suitability = new FormControl<string | null>(null, [Validators.required]);
   agriculturalSupport = new FormControl<string | null>(null, [Validators.required]);
   isHomeSiteSeverance = new FormControl<string | null>(null, [Validators.required]);
 
+  fieldsAddsUp = false;
+  totalTargetAcres = '0';
+  totalAcres = '0';
+  proposedLots: ProposedLot[] = [];
+  lotsSource = new MatTableDataSource(this.proposedLots);
+  displayedColumns = ['index', 'type', 'size'];
+
   form = new FormGroup({
+    lotsProposed: this.lotsProposed,
     purpose: this.purpose,
     suitability: this.suitability,
     agriculturalSupport: this.agriculturalSupport,
@@ -49,29 +62,39 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private parcelService: ApplicationParcelService
   ) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
 
         let isHomeSiteSeverance = null;
-        if (application.subdIsHomeSiteSeverance !== null) {
-          isHomeSiteSeverance = application.subdIsHomeSiteSeverance ? 'true' : 'false';
+        if (applicationSubmission.subdIsHomeSiteSeverance !== null) {
+          isHomeSiteSeverance = applicationSubmission.subdIsHomeSiteSeverance ? 'true' : 'false';
         }
 
         this.form.patchValue({
-          purpose: application.subdPurpose,
-          suitability: application.subdSuitability,
-          agriculturalSupport: application.subdAgricultureSupport,
+          purpose: applicationSubmission.subdPurpose,
+          suitability: applicationSubmission.subdSuitability,
+          agriculturalSupport: applicationSubmission.subdAgricultureSupport,
+          lotsProposed: applicationSubmission.subdProposedLots.length.toString(10),
           isHomeSiteSeverance,
         });
+        this.proposedLots = applicationSubmission.subdProposedLots.map((lot) => ({
+          ...lot,
+          size: lot.size ? lot.size.toString(10) : null,
+        }));
+        this.lotsSource = new MatTableDataSource(this.proposedLots);
+        this.calculateLotSize();
 
         if (this.showErrors) {
           this.form.markAllAsTouched();
         }
+
+        this.loadParcels(applicationSubmission.fileNumber);
       }
     });
 
@@ -135,14 +158,56 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
         subdSuitability,
         subdAgricultureSupport,
         subdIsHomeSiteSeverance: subdIsHomeSiteSeverance !== null ? subdIsHomeSiteSeverance === 'true' : null,
+        subdProposedLots: this.proposedLots.map((lot) => ({
+          ...lot,
+          size: lot.size ? parseFloat(lot.size) : null,
+        })),
       };
 
       const updatedApp = await this.applicationService.updatePending(this.fileId, updateDto);
-      this.$application.next(updatedApp);
+      this.$applicationSubmission.next(updatedApp);
     }
   }
 
   onNavigateToStep(step: number) {
     this.navigateToStep.emit(step);
+  }
+
+  onChangeLotCount(event: Event) {
+    const targetString = (event.target as HTMLInputElement).value;
+    const targetCount = parseInt(targetString);
+
+    this.proposedLots = this.proposedLots.slice(0, targetCount);
+    while (this.proposedLots.length < targetCount) {
+      this.proposedLots.push({
+        size: null,
+        type: null,
+      });
+    }
+    this.lotsSource = new MatTableDataSource(this.proposedLots);
+    this.calculateLotSize();
+  }
+
+  onChangeLotSize() {
+    this.calculateLotSize();
+  }
+
+  onChangeLotType(i: number, value: 'Lot' | 'Road Dedication') {
+    this.proposedLots[i].type = value;
+  }
+
+  private calculateLotSize() {
+    this.totalAcres = this.proposedLots
+      .reduce((total, lot) => total + (lot.size !== null ? parseFloat(lot.size) : 0), 0)
+      .toFixed(2);
+  }
+
+  private async loadParcels(fileNumber: string) {
+    const parcels = await this.parcelService.fetchByFileId(fileNumber);
+    if (parcels) {
+      this.totalTargetAcres = parcels
+        ?.reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
+        .toFixed(2);
+    }
   }
 }

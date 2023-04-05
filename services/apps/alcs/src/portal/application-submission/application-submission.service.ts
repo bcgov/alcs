@@ -474,6 +474,8 @@ export class ApplicationSubmissionService {
       updateDto.subdIsHomeSiteSeverance !== undefined
         ? updateDto.subdIsHomeSiteSeverance
         : applicationSubmission.subdIsHomeSiteSeverance;
+    applicationSubmission.subdProposedLots =
+      updateDto.subdProposedLots || applicationSubmission.subdProposedLots;
 
     if (updateDto.subdIsHomeSiteSeverance === false) {
       const applicationUuid = await this.applicationService.getUuid(

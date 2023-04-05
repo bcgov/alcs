@@ -5,16 +5,18 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
+import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 
 import { SubdProposalComponent } from './subd-proposal.component';
 
-describe('TurProposalComponent', () => {
+describe('SubdProposalComponent', () => {
   let component: SubdProposalComponent;
   let fixture: ComponentFixture<SubdProposalComponent>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockParcelService: DeepMocked<ApplicationParcelService>;
   let mockRouter: DeepMocked<Router>;
 
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
@@ -23,6 +25,7 @@ describe('TurProposalComponent', () => {
     mockApplicationService = createMock();
     mockRouter = createMock();
     mockAppDocumentService = createMock();
+    mockParcelService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -38,6 +41,10 @@ describe('TurProposalComponent', () => {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
         },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockParcelService,
+        },
       ],
       declarations: [SubdProposalComponent],
       schemas: [NO_ERRORS_SCHEMA],
@@ -45,7 +52,7 @@ describe('TurProposalComponent', () => {
 
     fixture = TestBed.createComponent(SubdProposalComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     component.$applicationDocuments = applicationDocumentPipe;
     fixture.detectChanges();
   });
