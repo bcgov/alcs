@@ -124,7 +124,7 @@ export class GenerateSubmissionDocumentService {
       noData: 'No Data',
       generatedDateTime: dayjs
         .tz(new Date(), 'Canada/Pacific')
-        .format('MMM DD, YYYY HH:MM:ss Z'),
+        .format('MMM DD, YYYY hh:mm:ss Z'),
 
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment?.name,

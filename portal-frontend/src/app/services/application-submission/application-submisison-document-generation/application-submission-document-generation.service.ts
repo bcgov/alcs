@@ -32,7 +32,7 @@ export class ApplicationSubmissionDocumentGenerationService {
       };
       const data = await firstValueFrom(this.httpClient.get(`${this.serviceUrl}/${fileNumber}`, httpOptions));
 
-      return getPdfFile(`${fileNumber}_${moment().format('MMM_DD_YYYY_HH-MM_Z')}`, data);
+      return getPdfFile(`${fileNumber}_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, data);
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to generate pdf, please try again later');
