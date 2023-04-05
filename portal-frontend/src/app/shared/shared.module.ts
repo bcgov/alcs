@@ -29,6 +29,7 @@ import { provideNgxMask } from 'ngx-mask';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
+import { InfoBannerComponent } from './info-banner/info-banner.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
@@ -74,6 +75,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     EmailValidPipe,
     PhoneValidPipe,
     WarningBannerComponent,
+    InfoBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
@@ -91,6 +93,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PhoneValidPipe,
     DragDropDirective,
     WarningBannerComponent,
+    InfoBannerComponent,
     NoDataComponent,
     ValidationErrorComponent,
     CustomStepperComponent,

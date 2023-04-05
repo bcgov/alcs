@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatestWith, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -39,7 +39,8 @@ const SORTING_ORDER = {
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   application?: ApplicationDto;
   private $decisions = new BehaviorSubject<ApplicationDecisionDto[]>([]);
   events: TimelineEvent[] = [];
@@ -55,6 +56,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.applicationDetailService.$application
+      .pipe(takeUntil(this.$destroy))
       .pipe(
         tap((app) => {
           if (app) {
@@ -82,7 +84,12 @@ export class OverviewComponent implements OnInit {
       });
   }
 
-  mapApplicationToEvents(
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
+  private mapApplicationToEvents(
     application: ApplicationDto,
     meetings: ApplicationMeetingDto[],
     decisions: ApplicationDecisionDto[],

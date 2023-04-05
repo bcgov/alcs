@@ -28,7 +28,7 @@ import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { DatetimeAdapter } from '@ng-matero/extensions/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationHeaderComponent } from './application-header/application-header.component';
 import { ApplicationTimeTrackerComponent } from './application-time-tracker/application-time-tracker.component';
@@ -36,8 +36,10 @@ import { ApplicationTypePillComponent } from './application-type-pill/applicatio
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { InlineBooleanComponent } from './inline-boolean/inline-boolean.component';
-import { InlineEditComponent } from './inline-edit/inline-edit.component';
+import { InlineDropdownComponent } from './inline-dropdown/inline-dropdown.component';
 import { InlineNumberComponent } from './inline-number/inline-number.component';
+import { InlineTextComponent } from './inline-text/inline-text.component';
+import { InlineTextareaComponent } from './inline-textarea/inline-textarea.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
@@ -53,9 +55,11 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MomentPipe,
     StartOfDayPipe,
     MeetingOverviewComponent,
-    InlineEditComponent,
+    InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
+    InlineTextComponent,
+    InlineDropdownComponent,
     ApplicationHeaderComponent,
     ApplicationDocumentComponent,
     ApplicationTimeTrackerComponent,
@@ -77,6 +81,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MatTableModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
+    MatSelectModule,
     NgxMaskDirective,
     NgxMaskPipe,
     CdkDropList,
@@ -109,9 +114,11 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MtxButtonModule,
     StartOfDayPipe,
     MatTooltipModule,
-    InlineEditComponent,
+    InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
+    InlineTextComponent,
+    InlineDropdownComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
     ApplicationHeaderComponent,

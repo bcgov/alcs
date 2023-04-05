@@ -46,7 +46,7 @@ export class DocumentService {
     fileName: string,
     file: MultipartFile,
     user: User,
-    source = DOCUMENT_SOURCE.ALCS,
+    source = DOCUMENT_SOURCE.ALC,
   ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({

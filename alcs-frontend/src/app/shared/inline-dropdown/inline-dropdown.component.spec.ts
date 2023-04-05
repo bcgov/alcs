@@ -1,19 +1,19 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InlineEditComponent } from './inline-edit.component';
+import { InlineDropdownComponent } from './inline-dropdown.component';
 
-describe('InlineEditComponent', () => {
-  let component: InlineEditComponent;
-  let fixture: ComponentFixture<InlineEditComponent>;
+describe('InlineDropdownComponent', () => {
+  let component: InlineDropdownComponent;
+  let fixture: ComponentFixture<InlineDropdownComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InlineEditComponent],
+      declarations: [InlineDropdownComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InlineEditComponent);
+    fixture = TestBed.createComponent(InlineDropdownComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -227,6 +227,7 @@ describe('ApplicationDocumentService', () => {
 
     mockRepository.find.mockResolvedValue([mockAppDocument, mockLgDocument]);
     mockDocumentService.softRemove.mockResolvedValue();
+    mockRepository.remove.mockResolvedValue({} as any);
 
     const res = await service.deleteByType(DOCUMENT_TYPE.STAFF_REPORT, '');
 

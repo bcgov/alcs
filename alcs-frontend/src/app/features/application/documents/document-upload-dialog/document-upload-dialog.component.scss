@@ -25,3 +25,15 @@
 .upload-button {
   margin-top: 6px !important;
 }
+
+.spinner {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+:host::ng-deep {
+  .mdc-button__label {
+    display: flex;
+    align-items: center;
+  }
+}

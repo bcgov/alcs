@@ -71,6 +71,12 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   turOutsideLands: string | null;
   turTotalCorridorArea: number | null;
   turAllOwnersNotified?: boolean | null;
+
+  //Subdivision Fields
+  subdPurpose: string | null;
+  subdSuitability: string | null;
+  subdAgricultureSupport: string | null;
+  subdIsHomeSiteSeverance: boolean | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -114,4 +120,10 @@ export interface ApplicationSubmissionUpdateDto {
   turOutsideLands?: string | null;
   turTotalCorridorArea?: number | null;
   turAllOwnersNotified?: boolean | null;
+
+  //Subdivision Fields
+  subdPurpose?: string | null;
+  subdSuitability?: string | null;
+  subdAgricultureSupport?: string | null;
+  subdIsHomeSiteSeverance?: boolean | null;
 }

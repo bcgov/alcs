@@ -1,23 +1,14 @@
-import {
-  AfterContentChecked,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-edit[value]',
-  templateUrl: './inline-edit.component.html',
-  styleUrls: ['./inline-edit.component.scss'],
+  selector: 'app-inline-text[value]',
+  templateUrl: './inline-text.component.html',
+  styleUrls: ['./inline-text.component.scss'],
 })
-export class InlineEditComponent implements AfterContentChecked {
-  @Input() value: string = '';
+export class InlineTextComponent implements AfterContentChecked {
+  @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
-  @Output() save = new EventEmitter<string>();
+  @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
 
@@ -38,8 +29,8 @@ export class InlineEditComponent implements AfterContentChecked {
   }
 
   confirmEdit() {
-    if (this.pendingValue !== this.value && this.pendingValue) {
-      this.save.emit(this.pendingValue);
+    if (this.pendingValue !== this.value) {
+      this.save.emit(this.pendingValue?.toString() ?? null);
       this.value = this.pendingValue;
     }
 

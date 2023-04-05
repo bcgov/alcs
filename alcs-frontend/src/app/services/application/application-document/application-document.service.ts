@@ -31,11 +31,14 @@ export enum DOCUMENT_TYPE {
   //TUR
   SERVING_NOTICE = 'POSN',
   PROPOSAL_MAP = 'PRSK',
+
+  //SUBD
+  HOMESITE_SEVERANCE = 'HOME',
 }
 
 export enum DOCUMENT_SOURCE {
   APPLICANT = 'Applicant',
-  ALCS = 'ALCS',
+  ALC = 'ALC',
   LFNG = 'L/FNG',
   AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',

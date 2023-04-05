@@ -164,6 +164,72 @@ export class Application extends Base {
   })
   source: 'ALCS' | 'APPLICANT';
 
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+    comment: 'Area in hectares of ALR impacted by the proposal',
+  })
+  alrArea?: number | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural cap classification',
+    nullable: true,
+  })
+  agCap?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability classification system used',
+    nullable: true,
+  })
+  agCapSource?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability map sheet reference',
+    nullable: true,
+  })
+  agCapMap?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Consultant who determined the agricultural capability',
+    nullable: true,
+  })
+  agCapConsultant?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Non-farm use type',
+    nullable: true,
+  })
+  nfuUseType?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Non-farm use sub type',
+    nullable: true,
+  })
+  nfuUseSubType?: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the non-farm use ends',
+    nullable: true,
+  })
+  nfuEndDate?: Date | null;
+
   @AutoMap(() => [StatusHistory])
   @Column({
     comment:

@@ -50,7 +50,7 @@ export class ApplicationDocumentService {
     file,
     documentType,
     user,
-    source = DOCUMENT_SOURCE.ALCS,
+    source = DOCUMENT_SOURCE.ALC,
     visibilityFlags,
   }: {
     fileNumber: string;
@@ -191,6 +191,7 @@ export class ApplicationDocumentService {
     });
     for (const document of documents) {
       await this.documentService.softRemove(document.document);
+      await this.applicationDocumentRepository.remove(document);
     }
 
     return;

@@ -8,6 +8,7 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { Column } from 'typeorm';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 
@@ -131,6 +132,19 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   turAllOwnersNotified?: boolean | null;
+
+  //Subdivision Fields
+  @AutoMap(() => String)
+  subdPurpose?: string | null;
+
+  @AutoMap(() => String)
+  subdSuitability?: string | null;
+
+  @AutoMap(() => String)
+  subdAgricultureSupport?: string | null;
+
+  @AutoMap(() => Boolean)
+  subdIsHomeSiteSeverance?: boolean | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -289,4 +303,24 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   turAllOwnersNotified?: boolean | null;
+
+  //Subdivision Fields
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  subdPurpose?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  subdSuitability?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  subdAgricultureSupport?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  subdIsHomeSiteSeverance?: boolean | null;
 }

@@ -9,6 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { User } from '../../user/user.entity';
@@ -41,6 +43,7 @@ export class ApplicationSubmissionService {
     private applicationStatusRepository: Repository<ApplicationStatus>,
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
+    private applicationDocumentService: ApplicationDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -94,22 +97,24 @@ export class ApplicationSubmissionService {
   }
 
   async update(fileNumber: string, updateDto: ApplicationSubmissionUpdateDto) {
-    const application = await this.getOrFail(fileNumber);
+    const applicationSubmission = await this.getOrFail(fileNumber);
 
-    application.applicant = updateDto.applicant;
-    application.typeCode = updateDto.typeCode || application.typeCode;
-    application.localGovernmentUuid = updateDto.localGovernmentUuid;
-    application.returnedComment = updateDto.returnedComment;
-    application.hasOtherParcelsInCommunity =
+    applicationSubmission.applicant = updateDto.applicant;
+    applicationSubmission.typeCode =
+      updateDto.typeCode || applicationSubmission.typeCode;
+    applicationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
+    applicationSubmission.returnedComment = updateDto.returnedComment;
+    applicationSubmission.hasOtherParcelsInCommunity =
       updateDto.hasOtherParcelsInCommunity;
 
-    this.setLandUseFields(application, updateDto);
-    this.setNFUFields(application, updateDto);
-    this.setTURFields(application, updateDto);
+    this.setLandUseFields(applicationSubmission, updateDto);
+    this.setNFUFields(applicationSubmission, updateDto);
+    this.setTURFields(applicationSubmission, updateDto);
+    await this.setSUBDFields(applicationSubmission, updateDto);
 
-    await this.applicationSubmissionRepository.save(application);
+    await this.applicationSubmissionRepository.save(applicationSubmission);
 
-    return this.getOrFail(application.fileNumber);
+    return this.getOrFail(applicationSubmission.fileNumber);
   }
 
   async setPrimaryContact(fileNumber: string, primaryContactUuid: string) {
@@ -452,5 +457,32 @@ export class ApplicationSubmissionService {
         ? updateDto.turAllOwnersNotified
         : application.turAllOwnersNotified;
     return application;
+  }
+
+  private async setSUBDFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.subdPurpose =
+      updateDto.subdPurpose || applicationSubmission.subdPurpose;
+    applicationSubmission.subdSuitability =
+      updateDto.subdSuitability || applicationSubmission.subdSuitability;
+    applicationSubmission.subdAgricultureSupport =
+      updateDto.subdAgricultureSupport ||
+      applicationSubmission.subdAgricultureSupport;
+    applicationSubmission.subdIsHomeSiteSeverance =
+      updateDto.subdIsHomeSiteSeverance !== undefined
+        ? updateDto.subdIsHomeSiteSeverance
+        : applicationSubmission.subdIsHomeSiteSeverance;
+
+    if (updateDto.subdIsHomeSiteSeverance === false) {
+      const applicationUuid = await this.applicationService.getUuid(
+        applicationSubmission.fileNumber,
+      );
+      await this.applicationDocumentService.deleteByType(
+        DOCUMENT_TYPE.HOMESITE_SEVERANCE,
+        applicationUuid,
+      );
+    }
   }
 }

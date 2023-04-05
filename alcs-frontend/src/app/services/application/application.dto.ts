@@ -84,6 +84,7 @@ export interface ApplicationSubmissionDto {
   parcels: SubmittedApplicationParcelDto[];
   otherParcels: SubmittedApplicationParcelDto[];
   documents: ApplicationDocumentDto[];
+  hasOtherParcelsInCommunity?: boolean | null;
   primaryContact: SubmittedApplicationOwnerDto;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;
@@ -146,6 +147,14 @@ export interface ApplicationDto {
   applicationReview?: ApplicationReviewDto;
   submittedApplication?: ApplicationSubmissionDto;
   source: 'ALCS' | 'APPLICANT';
+  alrArea?: number;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -166,4 +175,12 @@ export interface UpdateApplicationDto {
   feeWaived?: boolean;
   feeSplitWithLg?: boolean;
   feeAmount?: string;
+  alrArea?: string;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }

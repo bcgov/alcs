@@ -58,7 +58,7 @@ describe('DocumentService', () => {
         },
       } as MultipartFile,
       {} as User,
-      DOCUMENT_SOURCE.ALCS,
+      DOCUMENT_SOURCE.ALC,
     );
 
     expect(stub.calls().length).toBe(1);

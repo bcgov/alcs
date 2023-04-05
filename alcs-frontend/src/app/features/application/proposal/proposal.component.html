@@ -1,0 +1,41 @@
+<h3>Application Prep</h3>
+<section *ngIf="application?.source === 'APPLICANT'">
+  <h5>Proposal Components - {{application?.type?.label}}</h5>
+  <div class="input-table">
+    <div>
+      <div class="subheading2">ALR Area</div>
+      <app-inline-number [value]="alrArea" (save)="onSaveAlrArea($event)"></app-inline-number>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap</div>
+      <app-inline-dropdown
+        [options]="agCapOptions"
+        [value]="application?.agCap"
+        (save)="updateApplicationValue('agCap', $event)"
+      ></app-inline-dropdown>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap Source</div>
+      <app-inline-dropdown
+        [options]="agCapSourceOptions"
+        [value]="application?.agCapSource"
+        (save)="updateApplicationValue('agCapSource', $event)"
+      ></app-inline-dropdown>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap Map</div>
+      <app-inline-text
+        [value]="application?.agCapMap"
+        (save)="updateApplicationValue('agCapMap', $event)"
+      ></app-inline-text>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap Consultant</div>
+      <app-inline-text
+        [value]="application?.agCapConsultant"
+        (save)="updateApplicationValue('agCapConsultant', $event)"
+      ></app-inline-text>
+    </div>
+  </div>
+  <app-proposal-nfu *ngIf="application && application.type.code === 'NFUP'"></app-proposal-nfu>
+</section>

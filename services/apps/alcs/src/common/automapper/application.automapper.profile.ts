@@ -86,6 +86,10 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.notificationSentDate?.getTime()),
         ),
         forMember(
+          (a) => a.nfuEndDate,
+          mapFrom((ad) => ad.nfuEndDate?.getTime()),
+        ),
+        forMember(
           (ad) => ad.card,
           mapFrom((a) => {
             return this.mapper.map(a.card, Card, CardDto);
