@@ -25,6 +25,85 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
+      <label for="purpose">Total area of the parcels added on Step 1: {{ totalTargetAcres }} (ha)</label>
+      <div class="subtext">Total area of the parcels must equal total area of the proposed lots</div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">Total number of lots proposed</label>
+      <div class="subtext">You must include any road dedications as additional lot(s) in the field below</div>
+      <mat-form-field appearance="outline">
+        <input
+          formControlName="lotsProposed"
+          id="lotsProposed"
+          mask="0*"
+          maxlength="3"
+          matInput
+          placeholder=""
+          (change)="onChangeLotCount($event)"
+        />
+      </mat-form-field>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">
+        Example: If the proposal is to subdivide a 5 ha lot with road dedication from a 20 ha parcel, the total number
+        of lots proposed is three.
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">Enter your proposed lot areas (ha)</label>
+      <table mat-table [dataSource]="lotsSource">
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <mat-form-field appearance="outline">
+              <mat-select [value]='element.type' placeholder="Please select" (valueChange)="onChangeLotType(i, $event)">
+                <mat-option value="Lot"> Lot </mat-option>
+                <mat-option value="Road Dedication"> Road Dedication </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef>Size</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <mat-form-field appearance="outline">
+              <input
+                [(ngModel)]='element.size'
+                type="text"
+                matInput
+                thousandSeparator=','
+                mask="separator.2"
+                separatorLimit="9999999999"
+                min="0.01"
+                [ngModelOptions]="{standalone: true}"
+                (change)="onChangeLotSize()"
+              />
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row no-data" *matNoDataRow>
+          <td class="text-center" colspan="7">No Proposed Lots Entered</td>
+        </tr>
+      </table>
+      <div>Total area of the proposed lots: {{ totalAcres }} ha</div>
+      <div *ngIf="totalAcres !== '0' && totalAcres !== totalTargetAcres" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div>The total lot area proposed must match {{totalTargetAcres}} hectares as provided in Step 1</div>
+      </div>
+    </div>
+    <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <mat-form-field appearance="outline">
         <textarea
@@ -33,7 +112,6 @@
           maxlength="4000"
           id="purpose"
           matInput
-          class="comment-input"
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>

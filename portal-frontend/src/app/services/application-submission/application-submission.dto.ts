@@ -1,5 +1,4 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 
 export enum APPLICATION_STATUS {
@@ -15,6 +14,11 @@ export enum APPLICATION_STATUS {
 
 export interface ApplicationStatusDto extends BaseCodeDto {
   code: APPLICATION_STATUS;
+}
+
+export interface ProposedLot {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
 }
 
 export interface ApplicationSubmissionDto {
@@ -77,6 +81,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   subdSuitability: string | null;
   subdAgricultureSupport: string | null;
   subdIsHomeSiteSeverance: boolean | null;
+  subdProposedLots: ProposedLot[];
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -126,4 +131,5 @@ export interface ApplicationSubmissionUpdateDto {
   subdSuitability?: string | null;
   subdAgricultureSupport?: string | null;
   subdIsHomeSiteSeverance?: boolean | null;
+  subdProposedLots?: ProposedLot[];
 }
