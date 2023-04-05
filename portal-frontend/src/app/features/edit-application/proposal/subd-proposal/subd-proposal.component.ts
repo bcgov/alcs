@@ -8,6 +8,7 @@ import {
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
+import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import {
   ApplicationSubmissionDetailedDto,
@@ -206,7 +207,8 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
     const parcels = await this.parcelService.fetchByFileId(fileNumber);
     if (parcels) {
       this.totalTargetAcres = parcels
-        ?.reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
+        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
+        .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
         .toFixed(2);
     }
   }
