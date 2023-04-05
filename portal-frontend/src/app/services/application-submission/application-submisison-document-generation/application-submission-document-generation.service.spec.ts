@@ -56,6 +56,6 @@ describe('ApplicationSubmissionDocumentGenerationService', () => {
       responseType: 'blob' as 'json',
     });
     expect(getPdfFile).toHaveBeenCalledTimes(1);
-    expect(getPdfFile).toBeCalledWith(`fake_${moment().format('MMM_DD_YYYY_HH-MM_Z')}`, {});
+    expect(getPdfFile).toBeCalledWith(`fake_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, {});
   });
 });
