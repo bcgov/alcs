@@ -30,6 +30,7 @@ import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outc
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
@@ -82,6 +83,7 @@ const routes: Routes = [
     StaffJournalNoteInputComponent,
     ProposalComponent,
     NfuProposalComponent,
+    SubdProposalComponent,
   ],
   imports: [
     SharedModule.forRoot(),
