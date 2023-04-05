@@ -183,6 +183,13 @@
     [application]="application"
     [applicationDocuments]="appDocuments"
   ></app-tur-details>
+  <app-subd-details
+    *ngIf="application && application.typeCode === 'SUBD'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [application]="application"
+    [applicationDocuments]="appDocuments"
+  ></app-subd-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
