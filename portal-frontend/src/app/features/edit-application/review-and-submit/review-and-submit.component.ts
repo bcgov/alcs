@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
+import { ApplicationSubmissionDocumentGenerationService } from '../../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -16,12 +17,13 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
 
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  private application: ApplicationSubmissionDetailedDto | undefined;
+  application: ApplicationSubmissionDetailedDto | undefined;
 
   constructor(
     private router: Router,
     private toastService: ToastService,
-    private applicationService: ApplicationSubmissionService
+    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -55,5 +57,11 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
 
   async onSaveExit() {
     await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
+  }
+
+  async onDownloadPdf(fileNumber: string | undefined) {
+    if (fileNumber) {
+      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
+    }
   }
 }

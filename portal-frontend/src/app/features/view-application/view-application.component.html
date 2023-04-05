@@ -42,14 +42,24 @@
           <section>
             <div class="header">
               <h3>Application</h3>
-              <button
-                [routerLink]="'/application/' + application.fileNumber + '/edit'"
-                *ngIf="application.canEdit"
-                mat-flat-button
-                color="primary"
-              >
-                Edit Application
-              </button>
+              <div class="btns-wrapper">
+                <button
+                  [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                  *ngIf="application.canEdit"
+                  mat-flat-button
+                  color="primary"
+                >
+                  Edit Application
+                </button>
+                <button
+                  *ngIf="application.canEdit"
+                  mat-flat-button
+                  color="accent"
+                  (click)="onDownloadPdf(application?.fileNumber)"
+                >
+                  Download PDF
+                </button>
+              </div>
               <button
                 *ngIf="application.canReview"
                 (click)="onReview(application.fileNumber)"
@@ -148,13 +158,7 @@
             {{ application.returnedComment }}
             <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
           </div>
-          <div
-            *ngIf="
-              applicationReview &&
-              !isMobile
-            "
-            class="mobile-hidden"
-          >
+          <div *ngIf="applicationReview && !isMobile" class="mobile-hidden">
             <section>
               <h4>Contact Information</h4>
               <div class="review-table">
@@ -411,6 +415,14 @@
             color="primary"
           >
             Edit Application
+          </button>
+          <button
+            *ngIf="application.canEdit"
+            mat-flat-button
+            color="accent"
+            (click)="onDownloadPdf(application?.fileNumber)"
+          >
+            Download PDF
           </button>
           <button
             *ngIf="application.canReview"

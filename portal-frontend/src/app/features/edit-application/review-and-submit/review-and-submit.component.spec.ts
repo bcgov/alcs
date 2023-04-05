@@ -8,6 +8,7 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { ReviewAndSubmitComponent } from './review-and-submit.component';
+import { ApplicationSubmissionDocumentGenerationService } from '../../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 
 describe('ReviewAndSubmitComponent', () => {
   let component: ReviewAndSubmitComponent;
@@ -36,6 +37,10 @@ describe('ReviewAndSubmitComponent', () => {
         {
           provide: ApplicationSubmissionService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: ApplicationSubmissionDocumentGenerationService,
+          useValue: {},
         },
       ],
     }).compileComponents();

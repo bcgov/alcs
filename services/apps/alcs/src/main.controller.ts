@@ -23,21 +23,6 @@ export class MainController {
     return 'Admin!';
   }
 
-  // TODO This is just an example of how to generate pdf using cdogs service.
-  // This code will be removed once we have finalized feature
-  // @Get('/generate')
-  // @Public()
-  // async generateDocument(@Res() resp: FastifyReply) {
-  //   console.log('here');
-  //   const result = await this.documentGeneration.generateDocument(
-  //     'demo-app.pdf',
-  //     'sources/alcs/templates/demo-app.docx',
-  //   );
-
-  //   resp.type('application/pdf');
-  //   resp.send(result.data);
-  // }
-
   // TODO this is an example of email sending using the mjml template.
   // This code will be removed once we have finalized feature
   // @Public()

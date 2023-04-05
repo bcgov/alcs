@@ -2,9 +2,10 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
+import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -70,7 +71,8 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
     private dialog: MatDialog,
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
-    private router: Router
+    private router: Router,
+    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -203,6 +205,12 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
     if (this.expandedParcelUuid && this.parcelDetailsComponent) {
       this.parcelDetailsComponent.openParcel(this.expandedParcelUuid);
       this.expandedParcelUuid = undefined;
+    }
+  }
+
+  async onDownloadPdf(fileNumber: string | undefined) {
+    if (fileNumber) {
+      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
     }
   }
 }
