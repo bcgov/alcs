@@ -130,6 +130,11 @@
     [application]="submittedApplication"
     [files]="files"
   ></app-tur-details>
+  <app-subd-details
+    *ngIf="submittedApplication && applicationType === 'SUBD'"
+    [applicationSubmission]="submittedApplication"
+    [files]="files"
+  ></app-subd-details>
 </section>
 <section>
   <h3>Optional Documents</h3>

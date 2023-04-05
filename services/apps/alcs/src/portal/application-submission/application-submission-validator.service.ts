@@ -28,18 +28,6 @@ export class ValidatedApplicationSubmission extends ApplicationSubmission {
   southLandUseTypeDescription: string;
   westLandUseType: string;
   westLandUseTypeDescription: string;
-  nfuHectares: number | null;
-  nfuPurpose: string | null;
-  nfuOutsideLands: string | null;
-  nfuAgricultureSupport: string | null;
-  nfuWillImportFill: boolean | null;
-  nfuTotalFillPlacement: number | null;
-  nfuMaxFillDepth: number | null;
-  nfuFillVolume: number | null;
-  nfuProjectDurationAmount: number | null;
-  nfuProjectDurationUnit: string | null;
-  nfuFillTypeDescription: string | null;
-  nfuFillOriginDescription: string | null;
 }
 
 @Injectable()
@@ -85,6 +73,13 @@ export class ApplicationSubmissionValidatorService {
     }
     if (applicationSubmission.typeCode === 'TURP') {
       await this.validateTurProposal(applicationSubmission, errors);
+    }
+    if (applicationSubmission.typeCode === 'SUBD') {
+      await this.validateSubdProposal(
+        applicationSubmission,
+        applicationDocuments,
+        errors,
+      );
     }
 
     const validatedApplication =
@@ -386,6 +381,48 @@ export class ApplicationSubmissionValidatorService {
       !application.turAllOwnersNotified
     ) {
       errors.push(new ServiceValidationException(`TUR Proposal incomplete`));
+    }
+  }
+
+  private async validateSubdProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (applicationSubmission.subdProposedLots.length === 0) {
+      errors.push(
+        new ServiceValidationException(`SUBD application has no proposed lots`),
+      );
+    }
+    if (
+      !applicationSubmission.subdPurpose ||
+      !applicationSubmission.subdSuitability ||
+      !applicationSubmission.subdAgricultureSupport
+    ) {
+      errors.push(
+        new ServiceValidationException(`SUBD application is not complete`),
+      );
+    }
+
+    if (applicationSubmission.subdIsHomeSiteSeverance === null) {
+      errors.push(
+        new ServiceValidationException(
+          `SUBD did not declare homesite severance`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.subdIsHomeSiteSeverance) {
+      const homesiteDocuments = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.HOMESITE_SEVERANCE,
+      );
+      if (homesiteDocuments.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `SUBD delcared homesite severance but does not have required document`,
+          ),
+        );
+      }
     }
   }
 }

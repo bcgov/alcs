@@ -24,6 +24,11 @@ export interface ApplicationDecisionMeetingDto {
   date: Date;
 }
 
+export interface ProposedLot {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+}
+
 export interface ApplicationReviewDto {
   localGovernmentFileNumber: string;
   firstName: string;
@@ -118,6 +123,13 @@ export interface ApplicationSubmissionDto {
   turAgriculturalActivities?: string;
   turReduceNegativeImpacts?: string;
   turTotalCorridorArea?: string;
+
+  //Subdivision Fields
+  subdPurpose?: string;
+  subdSuitability?: string;
+  subdAgricultureSupport?: string;
+  subdIsHomeSiteSeverance?: boolean;
+  subdProposedLots: ProposedLot[];
 }
 
 export interface ApplicationDto {

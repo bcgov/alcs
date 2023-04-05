@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -8,7 +9,8 @@ import { ToastService } from '../../../../services/toast/toast.service';
   templateUrl: './nfu.component.html',
   styleUrls: ['./nfu.component.scss'],
 })
-export class NfuProposalComponent {
+export class NfuProposalComponent implements OnDestroy, OnInit {
+  $destroy = new Subject<void>();
   application: ApplicationDto | undefined;
 
   nfuTypes = [
@@ -128,7 +130,7 @@ export class NfuProposalComponent {
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.application = application;
       }
@@ -145,5 +147,10 @@ export class NfuProposalComponent {
         this.toastService.showSuccessToast('Application updated');
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

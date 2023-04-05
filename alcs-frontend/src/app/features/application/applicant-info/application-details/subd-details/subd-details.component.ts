@@ -8,26 +8,27 @@ import {
 import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-tur-details[application]',
-  templateUrl: './tur-details.component.html',
-  styleUrls: ['./tur-details.component.scss'],
+  selector: 'app-subd-details[applicationSubmission]',
+  templateUrl: './subd-details.component.html',
+  styleUrls: ['./subd-details.component.scss'],
 })
-export class TurDetailsComponent {
-  _application: ApplicationSubmissionDto | undefined;
-  @Input() set application(application: ApplicationSubmissionDto | undefined) {
-    if (application) {
-      this._application = application;
+export class SubdDetailsComponent {
+  _applicationSubmission: ApplicationSubmissionDto | undefined;
+
+  @Input() set applicationSubmission(applicationSubmission: ApplicationSubmissionDto | undefined) {
+    if (applicationSubmission) {
+      this._applicationSubmission = applicationSubmission;
     }
   }
 
   @Input() set files(files: ApplicationDocumentDto[] | undefined) {
     if (files) {
-      this.servingNotice = files.filter((file) => file.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
-      this.proposalMap = files.filter((file) => file.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.homesiteDocuments = files.filter((document) => document.type?.code === DOCUMENT_TYPE.HOMESITE_SEVERANCE);
+      this.proposalMap = files.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     }
   }
 
-  servingNotice: ApplicationDocumentDto[] = [];
+  homesiteDocuments: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
 
   constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}

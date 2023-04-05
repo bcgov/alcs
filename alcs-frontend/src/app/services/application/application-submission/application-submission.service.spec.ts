@@ -28,6 +28,7 @@ describe('ApplicationSubmissionService', () => {
     southLandUseTypeDescription: '',
     westLandUseType: '',
     westLandUseTypeDescription: '',
+    subdProposedLots: [],
   };
 
   beforeEach(() => {
