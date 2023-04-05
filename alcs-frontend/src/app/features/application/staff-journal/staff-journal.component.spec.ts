@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationStaffJournalService } from '../../../services/application/application-staff-journal/application-staff-journal.service';
@@ -25,6 +26,7 @@ describe('StaffJournalComponent', () => {
         { provide: ConfirmationDialogService, useValue: mockConfirmationDialogService },
         { provide: ToastService, useValue: mockToastService },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StaffJournalComponent);

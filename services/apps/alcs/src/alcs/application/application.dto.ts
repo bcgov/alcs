@@ -12,6 +12,7 @@ import { Column } from 'typeorm';
 import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
+import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
@@ -122,6 +123,21 @@ export class SubmittedApplicationDto {
 
   @AutoMap(() => [ApplicationDocumentDto])
   documents: ApplicationDocumentDto[];
+
+  //Subdivision Fields
+  @AutoMap(() => String)
+  subdPurpose?: string | null;
+
+  @AutoMap(() => String)
+  subdSuitability?: string | null;
+
+  @AutoMap(() => String)
+  subdAgricultureSupport?: string | null;
+
+  @AutoMap(() => Boolean)
+  subdIsHomeSiteSeverance?: boolean | null;
+
+  subdProposedLots?: ProposedLot[];
 }
 
 export class CreateApplicationDto {
