@@ -1,0 +1,50 @@
+@use './colors';
+
+.mat-mdc-snack-bar-container {
+  padding: 0 !important;
+
+  .mat-mdc-simple-snackbar {
+    align-items: stretch;
+  }
+
+  .mdc-snackbar__label {
+    padding: 14px;
+    text-align: center;
+  }
+
+  .mat-mdc-snack-bar-actions {
+    border-left: 1px solid #fff;
+    padding: 0;
+    margin: 0;
+
+    .mdc-button__label {
+      letter-spacing: normal;
+      font-weight: bold;
+      color: #fff;
+    }
+  }
+
+  .mdc-snackbar__surface {
+    padding-right: 0;
+  }
+}
+
+.mat-mdc-snackbar-action button {
+  height: 100% !important;
+  max-height: unset !important;
+}
+
+.mat-mdc-snack-bar-container.success .mdc-snackbar__surface {
+  background: colors.$success-color;
+  color: #fff;
+}
+
+.mat-mdc-snack-bar-container.warning .mdc-snackbar__surface {
+  background: colors.$warning-color;
+  color: #fff;
+}
+
+.mat-mdc-snack-bar-container.error .mdc-snackbar__surface {
+  background: colors.$error-color;
+  color: #fff;
+}
