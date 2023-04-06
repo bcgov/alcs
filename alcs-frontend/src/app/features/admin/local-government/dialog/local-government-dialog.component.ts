@@ -17,10 +17,11 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   model: {
     isFirstNation: string;
     isActive: string;
-    preferredRegionCode: string;
+    preferredRegionCode: string | null;
     name: string;
     bceidBusinessGuid: string | null;
-    uuid: string;
+    uuid?: string;
+    emails: string;
   };
   regions: ApplicationRegionDto[] = [];
 
@@ -33,14 +34,26 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService
   ) {
     this.model = {
-      ...data,
-      isFirstNation: data.isFirstNation ? 'true' : 'false',
-      isActive: data.isActive ? 'true' : 'false',
+      emails: '',
+      isActive: '',
+      name: '',
+      isFirstNation: 'false',
+      preferredRegionCode: null,
+      bceidBusinessGuid: null,
     };
-    this.title = this.model.uuid ? 'Edit' : 'Create';
   }
 
   ngOnInit(): void {
+    if (this.data) {
+      this.model = {
+        ...this.data,
+        isFirstNation: this.data.isFirstNation ? 'true' : 'false',
+        isActive: this.data.isActive ? 'true' : 'false',
+        emails: this.data.emails ? this.data.emails.join(', ') : '',
+      };
+      this.title = this.model.uuid ? 'Edit' : 'Create';
+    }
+
     this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
@@ -54,20 +67,23 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   async onSubmit() {
     this.isLoading = true;
 
-    const dto = {
-      name: this.model.name,
-      bceidBusinessGuid: this.model.bceidBusinessGuid,
-      isFirstNation: this.model.isFirstNation === 'true',
-      isActive: this.model.isActive === 'true',
-      preferredRegionCode: this.model.preferredRegionCode,
-    };
+    if (this.model) {
+      const dto = {
+        name: this.model.name,
+        bceidBusinessGuid: this.model.bceidBusinessGuid,
+        isFirstNation: this.model.isFirstNation === 'true',
+        isActive: this.model.isActive === 'true',
+        preferredRegionCode: this.model.preferredRegionCode,
+        emails: this.model.emails.split(', '),
+      };
 
-    if (this.model.uuid) {
-      await this.localGovernmentService.update(this.model.uuid, dto);
-    } else {
-      await this.localGovernmentService.create(dto);
+      if (this.model.uuid) {
+        await this.localGovernmentService.update(this.model.uuid, dto);
+      } else {
+        await this.localGovernmentService.create(dto);
+      }
+      this.isLoading = false;
+      this.dialogRef.close(true);
     }
-    this.isLoading = false;
-    this.dialogRef.close(true);
   }
 }

@@ -29,6 +29,9 @@ export class ApplicationLocalGovernment extends Base {
   @Column({ type: 'text' })
   preferredRegionCode: string;
 
+  @Column({ array: true, type: 'text', default: '{}' })
+  emails: string[];
+
   @ManyToOne(() => ApplicationRegion, {
     nullable: false,
   })

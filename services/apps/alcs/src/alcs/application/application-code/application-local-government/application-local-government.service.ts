@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { HolidayEntity } from '../../../admin/holiday/holiday.entity';
 import {
   LocalGovernmentCreateDto,
@@ -59,6 +59,7 @@ export class ApplicationLocalGovernmentService {
     localGovernment.isFirstNation = updateDto.isFirstNation;
     localGovernment.isActive = updateDto.isActive;
     localGovernment.preferredRegionCode = updateDto.preferredRegionCode;
+    localGovernment.emails = updateDto.emails;
 
     await this.repository.save(localGovernment);
   }
@@ -70,6 +71,7 @@ export class ApplicationLocalGovernmentService {
     newGovernment.isFirstNation = createDto.isFirstNation;
     newGovernment.isActive = createDto.isActive;
     newGovernment.preferredRegionCode = createDto.preferredRegionCode;
+    newGovernment.emails = createDto.emails;
 
     await this.repository.save(newGovernment);
   }
@@ -80,7 +82,7 @@ export class ApplicationLocalGovernmentService {
 
     if (search) {
       searchExpression = {
-        name: Like(search),
+        name: ILike(`%${search}%`),
       };
     }
 

@@ -5,7 +5,12 @@
       <div class="search-control">
         <mat-form-field>
           <mat-label>Enter name</mat-label>
-          <input matInput placeholder="Peace river" type="text" [(ngModel)]="search" />
+          <input matInput placeholder="Peace river" type="text" [(ngModel)]="search" [matAutocomplete]="auto" (ngModelChange)='updateFilter($event)'>
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
       <div class="search-control">
@@ -17,7 +22,7 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="holidays">
+  <table mat-table [dataSource]="localGovernments">
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 

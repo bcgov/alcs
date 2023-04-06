@@ -20,18 +20,24 @@ export class AdminLocalGovernmentService {
 
   public $localGovernments = new BehaviorSubject<PaginatedLocalGovernmentResponse>({ data: [], total: 0 });
 
-  async fetch(pageIndex: number, itemsPerPage: number, search?: number) {
+  async fetch(pageIndex: number, itemsPerPage: number, search?: string) {
+    const result = await this.search(pageIndex, itemsPerPage, search);
+    if (result) {
+      this.$localGovernments.next(result);
+    }
+  }
+
+  async search(pageIndex: number, itemsPerPage: number, search?: string) {
     const searchQuery = search ? `?search=${search}` : '';
     try {
-      const result = await firstValueFrom(
+      return await firstValueFrom(
         this.http.get<PaginatedLocalGovernmentResponse>(`${this.url}/${pageIndex}/${itemsPerPage}${searchQuery}`)
       );
-
-      this.$localGovernments.next(result);
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch local governments');
     }
+    return;
   }
 
   async create(dto: LocalGovernmentCreateDto) {

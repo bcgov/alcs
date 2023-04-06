@@ -47,6 +47,7 @@ export class LocalGovernmentController {
       bceidBusinessGuid: government.bceidBusinessGuid,
       isFirstNation: government.isFirstNation,
       isActive: government.isActive,
+      emails: government.emails,
     }));
 
     return { data: mappedGovernments, total: result[1] };
