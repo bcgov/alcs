@@ -17,11 +17,9 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
-import { AttachExternalDocumentDto } from '../../../portal/application-document/application-document.dto';
 import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
 } from './application-document-code.entity';
 import {
   ApplicationDocumentDto,

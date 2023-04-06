@@ -38,6 +38,8 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
     this.isEditing = !this.isEditing;
     if (this.isEditing) {
       this.datePicker.open();
+    } else {
+      this.date.setValue(null);
     }
   }
 
