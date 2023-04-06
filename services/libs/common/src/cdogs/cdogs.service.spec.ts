@@ -79,7 +79,7 @@ describe('CdogsService', () => {
     expect(result).toEqual(httpResponse);
   });
 
-  it('should re-use the token if its  not expired', async () => {
+  it('should re-use the token if its not expired', async () => {
     jest.spyOn(fs.promises, 'readFile').mockResolvedValue('template-content');
     mockHttpService.post.mockReturnValueOnce(
       of({
