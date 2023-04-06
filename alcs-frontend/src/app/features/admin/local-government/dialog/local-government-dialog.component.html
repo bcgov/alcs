@@ -2,11 +2,11 @@
   <h4>{{ title }} Government</h4>
 </div>
 <div mat-dialog-content class="local-government-dialog">
-  <form (ngSubmit)="onSubmit()" #holidayForm="ngForm">
+  <form (ngSubmit)="onSubmit()" #governmentForm="ngForm">
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput id="name" [(ngModel)]="model.name" name="name" />
+        <input required matInput id="name" [(ngModel)]="model.name" name="name" />
       </mat-form-field>
     </div>
 
@@ -21,6 +21,7 @@
       <div>
         <ng-select
           appearance="outline"
+          required
           name="preferredRegionCode"
           [items]="regions"
           appendTo="body"
@@ -38,16 +39,29 @@
     </div>
 
     <div>
-      <mat-label>This is a First Nation Government</mat-label>
-      <mat-button-toggle-group id="isFirstNation" [(ngModel)]="model.isFirstNation" name="isFirstNation">
+      <mat-form-field appearance="outline">
+        <mat-label>Contact Emails (comma separated)</mat-label>
+        <input
+          matInput
+          id="emails"
+          placeholder="steve@gov.bc.ca, john@gov.bc.ca"
+          [(ngModel)]="model.emails"
+          name="emails"
+        />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-label>This is a First Nation Government *</mat-label>
+      <mat-button-toggle-group required id="isFirstNation" [(ngModel)]="model.isFirstNation" name="isFirstNation">
         <mat-button-toggle value="true">Yes</mat-button-toggle>
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
 
     <div>
-      <mat-label>Status</mat-label>
-      <mat-button-toggle-group id="isActive" [(ngModel)]="model.isActive" name="isActive">
+      <mat-label>Status * (Inactive governments cannot receive new applications)</mat-label>
+      <mat-button-toggle-group required id="isActive" [(ngModel)]="model.isActive" name="isActive">
         <mat-button-toggle value="true">Active</mat-button-toggle>
         <mat-button-toggle value="false">Inactive</mat-button-toggle>
       </mat-button-toggle-group>
@@ -63,7 +77,7 @@
         mat-flat-button
         color="primary"
         type="submit"
-        [disabled]="!holidayForm.form.valid"
+        [disabled]="!governmentForm.form.valid"
       >
         Save
       </button>

@@ -5,6 +5,7 @@ export interface LocalGovernmentUpdateDto {
   bceidBusinessGuid: string | null;
   isFirstNation: boolean;
   isActive: boolean;
+  emails: string[];
 }
 
 export interface LocalGovernmentCreateDto extends LocalGovernmentUpdateDto {}
@@ -13,4 +14,5 @@ export interface LocalGovernmentDto extends ApplicationLocalGovernmentDto {
   bceidBusinessGuid: string | null;
   isFirstNation: boolean;
   isActive: boolean;
+  emails: string[];
 }

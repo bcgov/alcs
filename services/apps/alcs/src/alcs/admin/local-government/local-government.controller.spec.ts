@@ -56,6 +56,7 @@ describe('LocalGovernmentController', () => {
       bceidBusinessGuid: null,
       isActive: true,
       preferredRegionCode: 'fake',
+      emails: [],
     });
 
     expect(mockLgService.update).toHaveBeenCalledTimes(1);
@@ -70,6 +71,7 @@ describe('LocalGovernmentController', () => {
       bceidBusinessGuid: null,
       isActive: true,
       preferredRegionCode: 'fake',
+      emails: [],
     });
 
     expect(mockLgService.create).toHaveBeenCalledTimes(1);

@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
@@ -42,12 +43,11 @@ describe('LocalGovernmentComponent', () => {
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, MatAutocompleteModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LocalGovernmentComponent);
     component = fixture.componentInstance;
-
     fixture.detectChanges();
   });
 
