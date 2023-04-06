@@ -38,4 +38,4 @@ To run the script, run the following command:
 
 `python migrate-files.py`
 
-The script will start uploading files from the Oracle database to Amazon S3. The upload progress will be displayed in a progress bar. The script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption.
+The script will start uploading files from the Oracle database to DELL ECS. The upload progress will be displayed in a progress bar. The script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption.
