@@ -32,7 +32,7 @@ const template = `<mjml>
       <mj-column width="200px">
         <mj-image align="right" width="86px" height="56px" src="${config.get<string>(
           'PORTAL.FRONTEND_ROOT',
-        )}/assets/alc_logo.png"></mj-image>
+        )}/assets/email/alc_logo.png"></mj-image>
       </mj-column>
     </mj-section>
 
