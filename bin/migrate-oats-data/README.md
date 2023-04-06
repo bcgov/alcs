@@ -6,6 +6,16 @@ This script is an ETL utility that imports data from the OATS system into the AL
 
 Python 3.6 or higher
 
+### Mac OS
+
+- Make sure you have homebrew installed if no install it first
+- install postgresql on local machine `brew install postgresql`. You will need this for psycopg2
+- export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+- `brew install python`
+- install virtualenv `pip install virtualenv`
+- in bin/migrate-oats-data folder init virtual env `virtualenv env`
+- activate virtual env `source env/bin/activate`
+
 ## Installation
 
 Install the required Python packages using pip:
@@ -25,7 +35,7 @@ These variables can be stored in the .env file.
 
 To run the script, navigate to the directory containing the script and run the following command:
 
-`python script.py [action]`
+`python migrate.py [action]`
 Where [action] is one of the following:
 
 - import: Imports data from OATS into ALCS (default action)
