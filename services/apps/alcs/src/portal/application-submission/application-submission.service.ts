@@ -158,11 +158,7 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     statusCode: APPLICATION_STATUS,
   ) {
-    const status = await this.applicationStatusRepository.findOneOrFail({
-      where: {
-        code: statusCode,
-      },
-    });
+    const status = await this.getStatus(statusCode);
 
     //Load submission without relations to prevent save from crazy cascading
     const submission = await this.applicationSubmissionRepository.findOneOrFail(
@@ -176,6 +172,14 @@ export class ApplicationSubmissionService {
     submission.status = status;
     //Use save to trigger subscriber
     await this.applicationSubmissionRepository.save(submission);
+  }
+
+  async getStatus(code: APPLICATION_STATUS) {
+    return await this.applicationStatusRepository.findOneOrFail({
+      where: {
+        code,
+      },
+    });
   }
 
   async submitToAlcs(

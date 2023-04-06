@@ -12,10 +12,15 @@ import {
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
+import { EmailStatus } from '../../providers/email/email-status.entity';
+import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
+import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
+import { ApplicationStatus } from '../application-submission/application-status/application-status.entity';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
@@ -34,6 +39,8 @@ describe('ApplicationSubmissionReviewController', () => {
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
+  let mockAppService: DeepMocked<ApplicationService>;
+  let mockEmailService: DeepMocked<EmailService>;
 
   const mockLG = new ApplicationLocalGovernment({
     isFirstNation: false,
@@ -52,6 +59,8 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService = createMock();
     mockAppDocService = createMock();
     mockAppValidatorService = createMock();
+    mockAppService = createMock();
+    mockEmailService = createMock();
 
     applicationReview = new ApplicationSubmissionReview({
       applicationFileNumber: fileNumber,
@@ -83,6 +92,14 @@ describe('ApplicationSubmissionReviewController', () => {
         {
           provide: ApplicationSubmissionValidatorService,
           useValue: mockAppValidatorService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockAppService,
+        },
+        {
+          provide: EmailService,
+          useValue: mockEmailService,
         },
         {
           provide: ClsService,
@@ -182,11 +199,13 @@ describe('ApplicationSubmissionReviewController', () => {
     );
   });
 
-  it('update the applications status when calling create', async () => {
+  it('should update the applications status when calling create', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission(),
+      new ApplicationSubmission({
+        owners: [],
+      }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
 
@@ -198,6 +217,49 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     });
 
+    expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
+    expect(
+      mockAppSubmissionService.getForGovernmentByFileId,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
+      APPLICATION_STATUS.IN_REVIEW,
+    );
+  });
+
+  it('should send an email through the service when creating with a valid primary contact', async () => {
+    mockLGService.getByGuid.mockResolvedValue(mockLG);
+    mockAppReviewService.startReview.mockResolvedValue(applicationReview);
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      new ApplicationSubmission({
+        owners: [
+          new ApplicationOwner({
+            uuid: 'uuid',
+            email: 'fake-email',
+          }),
+        ],
+        primaryContactOwnerUuid: 'uuid',
+      }),
+    );
+    mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
+    mockAppService.fetchApplicationTypes.mockResolvedValue([]);
+    mockAppSubmissionService.getStatus.mockResolvedValue(
+      new ApplicationStatus({
+        label: '',
+      }),
+    );
+    mockEmailService.sendEmail.mockResolvedValue();
+
+    await controller.create(fileNumber, {
+      user: {
+        entity: new User({
+          bceidBusinessGuid: 'id',
+        }),
+      },
+    });
+
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
     expect(
