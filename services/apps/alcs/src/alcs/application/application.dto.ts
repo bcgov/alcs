@@ -8,12 +8,10 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { Column } from 'typeorm';
 import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
-import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -328,10 +326,6 @@ export class ApplicationDto {
   @AutoMap()
   @Type(() => CardDto)
   card?: CardDto;
-
-  @AutoMap()
-  @Type(() => ApplicationSubmissionReviewDto)
-  applicationReview?: ApplicationSubmissionReviewDto;
 
   @AutoMap()
   @Type(() => SubmittedApplicationDto)

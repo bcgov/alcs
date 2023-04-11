@@ -8,6 +8,7 @@ import { ApplicationModificationService } from '../../services/application/appli
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationReviewService } from '../../services/application/application-review/application-review.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 
@@ -19,6 +20,7 @@ describe('ApplicationComponent', () => {
   let mockAppDetailService: DeepMocked<ApplicationDetailService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
+  let mockReviewService: DeepMocked<ApplicationReviewService>;
 
   beforeEach(async () => {
     mockAppDetailService = createMock();
@@ -29,6 +31,8 @@ describe('ApplicationComponent', () => {
 
     mockModificationService = createMock();
     mockModificationService.$modifications = new BehaviorSubject<ApplicationModificationDto[]>([]);
+
+    mockReviewService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -47,6 +51,10 @@ describe('ApplicationComponent', () => {
         {
           provide: ApplicationModificationService,
           useValue: mockModificationService,
+        },
+        {
+          provide: ApplicationReviewService,
+          useValue: mockReviewService,
         },
         {
           provide: ActivatedRoute,
