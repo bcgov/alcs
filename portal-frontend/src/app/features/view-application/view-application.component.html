@@ -52,22 +52,17 @@
                   Edit Application
                 </button>
                 <button
-                  *ngIf="application.canEdit"
+                  *ngIf="application.canReview"
+                  (click)="onReview(application.fileNumber)"
                   mat-flat-button
-                  color="accent"
-                  (click)="onDownloadPdf(application?.fileNumber)"
+                  color="primary"
                 >
+                  Review Application
+                </button>
+                <button mat-flat-button color="accent" (click)="onDownloadPdf(application?.fileNumber)">
                   Download PDF
                 </button>
               </div>
-              <button
-                *ngIf="application.canReview"
-                (click)="onReview(application.fileNumber)"
-                mat-flat-button
-                color="primary"
-              >
-                Review Application
-              </button>
             </div>
             <app-application-details
               [showEdit]="false"
@@ -417,14 +412,6 @@
             Edit Application
           </button>
           <button
-            *ngIf="application.canEdit"
-            mat-flat-button
-            color="accent"
-            (click)="onDownloadPdf(application?.fileNumber)"
-          >
-            Download PDF
-          </button>
-          <button
             *ngIf="application.canReview"
             (click)="onReview(application.fileNumber)"
             mat-flat-button
@@ -432,6 +419,7 @@
           >
             Review Application
           </button>
+          <button mat-flat-button color="accent" (click)="onDownloadPdf(application?.fileNumber)">Download PDF</button>
         </div>
       </div>
       <app-application-details
