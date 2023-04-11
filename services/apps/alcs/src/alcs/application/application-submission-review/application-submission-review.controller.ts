@@ -20,7 +20,10 @@ export class ApplicationSubmissionReviewController {
     const submission = await this.applicationSubmissionReviewService.get(
       fileNumber,
     );
-
-    return await this.applicationSubmissionReviewService.mapToDto(submission);
+    if (submission) {
+      return await this.applicationSubmissionReviewService.mapToDto(submission);
+    } else {
+      return undefined;
+    }
   }
 }
