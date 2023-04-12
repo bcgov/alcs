@@ -8,7 +8,7 @@ import { mockClient } from 'aws-sdk-client-mock';
 import * as config from 'config';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
-import { CreateDocumentDto } from './document.dto';
+import { CreateDocumentDto, DOCUMENT_SOURCE } from './document.dto';
 import { Document } from './document.entity';
 import { DocumentService } from './document.service';
 
@@ -48,6 +48,7 @@ describe('DocumentService', () => {
 
     const res = await service.create(
       'dummy/path',
+      'fileName',
       {
         toBuffer: () => {
           //EMPTY
@@ -57,6 +58,7 @@ describe('DocumentService', () => {
         },
       } as MultipartFile,
       {} as User,
+      DOCUMENT_SOURCE.ALC,
     );
 
     expect(stub.calls().length).toBe(1);
@@ -81,7 +83,7 @@ describe('DocumentService', () => {
       fileKey: 'fileKey',
       fileName: 'fileName',
       uploadedBy: null,
-      source: 'Applicant',
+      source: DOCUMENT_SOURCE.APPLICANT,
     };
     mockRepository.save.mockResolvedValue(mockDoc as Document);
     const res = await service.createDocumentRecord({} as CreateDocumentDto);

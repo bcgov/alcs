@@ -1,0 +1,14 @@
+// This is just an example of protobuf file, currently it is not used anywere
+syntax = "proto3";
+
+package alcs_application;
+
+service AlcsApplicationService {
+  rpc generateFileNumber(ApplicationFileNumberGenerateGrpcRequest) returns (ApplicationFileNumberGenerateGrpcResponse);
+}
+
+message ApplicationFileNumberGenerateGrpcRequest {}
+
+message ApplicationFileNumberGenerateGrpcResponse {
+  string fileNumber = 1;
+}

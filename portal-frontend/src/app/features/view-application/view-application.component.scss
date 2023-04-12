@@ -31,14 +31,14 @@
   .banner-status {
     margin: rem(16) 0;
     display: grid;
-    grid-template-columns:  1fr;
+    grid-template-columns: 1fr;
 
     div {
       margin-top: rem(16);
     }
 
     @media screen and (min-width: $tabletBreakpoint) {
-      grid-template-columns:  1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       margin-bottom: 0;
     }
   }
@@ -49,6 +49,21 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: rem(24);
+
+  h3 {
+    margin-top: rem(8) !important;
+  }
+
+  .btns-wrapper {
+    button {
+      margin-right: rem(16) !important;
+      margin-top: rem(8) !important;
+    }
+
+    button:last-child {
+      margin-right: 0 !important;
+    }
+  }
 }
 
 .buttons {

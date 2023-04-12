@@ -17,6 +17,9 @@ export class Document extends Base {
   @Column()
   fileName: string;
 
+  @Column({ nullable: true })
+  fileSize?: number;
+
   @Column()
   mimeType: string;
 
@@ -35,6 +38,6 @@ export class Document extends Base {
   @CreateDateColumn({ type: 'timestamptz' })
   uploadedAt: Date;
 
-  @Column({ default: 'ALCS' })
+  @Column({ default: 'ALC' })
   source: string;
 }

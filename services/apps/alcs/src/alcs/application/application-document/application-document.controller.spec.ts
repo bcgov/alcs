@@ -5,13 +5,15 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
-import { ApplicationDocumentController } from './application-document.controller';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { CodeService } from '../../code/code.service';
 import {
-  ApplicationDocument,
   DOCUMENT_TYPE,
-} from './application-document.entity';
+  DOCUMENT_TYPES,
+} from './application-document-code.entity';
+import { ApplicationDocumentController } from './application-document.controller';
+import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentController', () => {
@@ -68,9 +70,23 @@ describe('ApplicationDocumentController', () => {
 
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
-    const res = await controller.attachDocument('file', 'decisionDocument', {
+    const res = await controller.attachDocument('fileNumber', {
       isMultipart: () => true,
-      file: () => mockFile,
+      body: {
+        documentType: {
+          value: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        },
+        fileName: {
+          value: 'file',
+        },
+        source: {
+          value: DOCUMENT_SOURCE.APPLICANT,
+        },
+        visibilityFlags: {
+          value: '',
+        },
+        file: mockFile,
+      },
       user: {
         entity: mockUser,
       },
@@ -79,13 +95,10 @@ describe('ApplicationDocumentController', () => {
     expect(res.mimeType).toEqual(mockDocument.document.mimeType);
 
     expect(appDocumentService.attachDocument).toHaveBeenCalledTimes(1);
-    expect(appDocumentService.attachDocument.mock.calls[0][0]).toEqual('file');
-    expect(appDocumentService.attachDocument.mock.calls[0][1]).toEqual(
-      mockFile,
-    );
-    expect(appDocumentService.attachDocument.mock.calls[0][2]).toEqual(
-      mockUser,
-    );
+    const callData = appDocumentService.attachDocument.mock.calls[0][0];
+    expect(callData.fileName).toEqual('file');
+    expect(callData.file).toEqual(mockFile);
+    expect(callData.user).toEqual(mockUser);
   });
 
   it('should throw an exception if request is not the right type', async () => {
@@ -95,7 +108,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachDocument.mockResolvedValue(mockDocument);
 
     await expect(
-      controller.attachDocument('file', 'decisionDocument', {
+      controller.attachDocument('fileNumber', {
         isMultipart: () => false,
         file: () => mockFile,
         user: {
@@ -104,27 +117,6 @@ describe('ApplicationDocumentController', () => {
       }),
     ).rejects.toMatchObject(
       new BadRequestException('Request is not multipart'),
-    );
-  });
-
-  it('should throw an exception if pass an invalid document type', async () => {
-    const mockFile = {};
-    const mockUser = {};
-
-    appDocumentService.attachDocument.mockResolvedValue(mockDocument);
-
-    await expect(
-      controller.attachDocument('file', 'invalidDocumentType', {
-        isMultipart: () => true,
-        file: () => mockFile,
-        user: {
-          entity: mockUser,
-        },
-      }),
-    ).rejects.toMatchObject(
-      new BadRequestException(
-        'Invalid document type specified, must be one of decisionDocument, reviewDocument',
-      ),
     );
   });
 
@@ -149,7 +141,7 @@ describe('ApplicationDocumentController', () => {
     expect(appDocumentService.delete).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through for download', async () => {
+  it('should call through for open', async () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
@@ -157,5 +149,47 @@ describe('ApplicationDocumentController', () => {
     const res = await controller.open('fake-uuid');
 
     expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for download', async () => {
+    const fakeUrl = 'fake-url';
+    appDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    appDocumentService.get.mockResolvedValue(mockDocument);
+
+    const res = await controller.download('fake-uuid');
+
+    expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for list types', async () => {
+    appDocumentService.fetchTypes.mockResolvedValue([]);
+
+    const res = await controller.listTypes();
+
+    expect(appDocumentService.fetchTypes).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for list app documents', async () => {
+    appDocumentService.getApplicantDocuments.mockResolvedValue([]);
+
+    const res = await controller.listApplicantDocuments('');
+
+    expect(appDocumentService.getApplicantDocuments).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for list review documents', async () => {
+    appDocumentService.list.mockResolvedValue([]);
+
+    const res = await controller.listReviewDocuments('');
+
+    expect(appDocumentService.list).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for setting sort', async () => {
+    appDocumentService.setSorting.mockResolvedValue();
+
+    await controller.sortDocuments([]);
+
+    expect(appDocumentService.setSorting).toHaveBeenCalledTimes(1);
   });
 });

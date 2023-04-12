@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import { UserModule } from '../user/user.module';
 import { AdminModule } from './admin/admin.module';
-import { ApplicationGrpcModule } from './application-grpc/application-grpc.module';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CardModule } from './card/card.module';
@@ -18,7 +16,6 @@ import { PlanningReviewModule } from './planning-review/planning-review.module';
 
 @Module({
   imports: [
-    ApplicationGrpcModule,
     ImportModule,
     ApplicationModule,
     CommentModule,

@@ -1,7 +1,5 @@
-import { ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME } from '../../alcs/application-grpc/alcs-application.message.interface';
-import { ALCS_DOCUMENT_PROTOBUF_PACKAGE_NAME } from '../../document-grpc/alcs-document.message.interface';
+import { ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME } from '../../alcs/obsolete-application-grpc/alcs-application.message.interface';
 
 export const grpcPackagesNames: string[] = [
   ALCS_APPLICATION_PROTOBUF_PACKAGE_NAME,
-  ALCS_DOCUMENT_PROTOBUF_PACKAGE_NAME,
 ];

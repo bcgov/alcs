@@ -1,11 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Subject, takeUntil } from 'rxjs';
 import { LocalGovernmentDto } from '../../../services/admin-local-government/admin-local-government.dto';
 import { AdminLocalGovernmentService } from '../../../services/admin-local-government/admin-local-government.service';
-import { HolidayDto } from '../../../services/stat-holiday/holiday.dto';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { LocalGovernmentDialogComponent } from './dialog/local-government-dialog.component';
 
 @Component({
@@ -18,24 +16,22 @@ export class LocalGovernmentComponent implements OnDestroy, OnInit {
 
   pageIndex = 0;
   itemsPerPage = 20;
-  search?: number = undefined;
-  holidays: HolidayDto[] = [];
+  search?: string = undefined;
+  localGovernments: LocalGovernmentDto[] = [];
   total: number = 0;
   displayedColumns: string[] = ['name', 'bceidBusinessGuid', 'isFirstNation', 'isActive', 'actions'];
+  filteredOptions: string[] = [];
 
-  constructor(
-    private adminLgService: AdminLocalGovernmentService,
-    public dialog: MatDialog,
-    private confirmationDialogService: ConfirmationDialogService
-  ) {}
+  constructor(private adminLgService: AdminLocalGovernmentService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetch();
 
     this.adminLgService.$localGovernments
       .pipe(takeUntil(this.destroy))
-      .subscribe((result: { data: any[]; total: number }) => {
-        this.holidays = result.data;
+      .subscribe((result: { data: LocalGovernmentDto[]; total: number }) => {
+        this.localGovernments = result.data;
+        this.filteredOptions = [];
         this.total = result.total;
       });
   }
@@ -84,5 +80,12 @@ export class LocalGovernmentComponent implements OnDestroy, OnInit {
         await this.fetch();
       }
     });
+  }
+
+  async updateFilter(value: string) {
+    const governmentResponse = await this.adminLgService.search(0, 5, value);
+    if (governmentResponse) {
+      this.filteredOptions = governmentResponse.data.map((gov) => gov.name);
+    }
   }
 }

@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
@@ -18,6 +18,7 @@ import { ReviewApplicationSteps } from '../review-application.component';
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() stepper!: CustomStepperComponent;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.ReviewAndSubmit;
@@ -67,14 +68,17 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.resolutionDocument = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+      );
+      this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
+    });
+
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.resolutionDocument = application.documents.filter(
-          (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
-        );
-        this.staffReport = application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-        this.otherAttachments = application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
       }
     });
   }

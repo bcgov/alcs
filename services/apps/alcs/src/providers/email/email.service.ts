@@ -1,7 +1,10 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
+import { Repository } from 'typeorm';
+import { EmailStatus } from './email-status.entity';
 
 @Injectable()
 export class EmailService {
@@ -10,6 +13,8 @@ export class EmailService {
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private httpService: HttpService,
+    @InjectRepository(EmailStatus)
+    private repository: Repository<EmailStatus>,
   ) {}
 
   private token = '';
@@ -75,7 +80,14 @@ export class EmailService {
         return;
       }
       const res = await firstValueFrom(
-        this.httpService.post(
+        this.httpService.post<{
+          txId: string;
+          messages: {
+            msgId: string;
+            tag: string;
+            to: string[];
+          }[];
+        }>(
           `${serviceUrl}/api/v1/email`,
           {
             bodyType: 'html',
@@ -94,8 +106,28 @@ export class EmailService {
         ),
       );
       this.logger.debug({ to, from, subject }, `Email sent`);
+      this.repository.save(
+        new EmailStatus({
+          recipients: [...to, ...cc, ...bcc].join(', '),
+          status: 'success',
+          transactionId: res.data.txId,
+        }),
+      );
     } catch (e) {
       this.logger.error(e, 'Failed to Send Email');
+
+      let errorMessage = e.message;
+      if (e.response) {
+        errorMessage = e.response.data.detail;
+      }
+
+      this.repository.save(
+        new EmailStatus({
+          recipients: [...to, ...cc, ...bcc].join(', '),
+          status: 'failed',
+          errors: errorMessage,
+        }),
+      );
     }
   }
 }

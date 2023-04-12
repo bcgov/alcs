@@ -42,27 +42,33 @@
           <section>
             <div class="header">
               <h3>Application</h3>
-              <button
-                [routerLink]="'/application/' + application.fileNumber + '/edit'"
-                *ngIf="application.canEdit"
-                mat-flat-button
-                color="primary"
-              >
-                Edit Application
-              </button>
-              <button
-                *ngIf="application.canReview"
-                (click)="onReview(application.fileNumber)"
-                mat-flat-button
-                color="primary"
-              >
-                Review Application
-              </button>
+              <div class="btns-wrapper">
+                <button
+                  [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                  *ngIf="application.canEdit"
+                  mat-flat-button
+                  color="primary"
+                >
+                  Edit Application
+                </button>
+                <button
+                  *ngIf="application.canReview"
+                  (click)="onReview(application.fileNumber)"
+                  mat-flat-button
+                  color="primary"
+                >
+                  Review Application
+                </button>
+                <button mat-flat-button color="accent" (click)="onDownloadPdf(application?.fileNumber)">
+                  Download PDF
+                </button>
+              </div>
             </div>
             <app-application-details
               [showEdit]="false"
               [showErrors]="false"
               [$application]="$application"
+              [$applicationDocuments]="$applicationDocuments"
             ></app-application-details>
           </section>
         </div>
@@ -147,10 +153,7 @@
             {{ application.returnedComment }}
             <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
           </div>
-          <div
-            *ngIf="applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC && !isMobile"
-            class="mobile-hidden"
-          >
+          <div *ngIf="applicationReview && !isMobile" class="mobile-hidden">
             <section>
               <h4>Contact Information</h4>
               <div class="review-table">
@@ -336,10 +339,10 @@
                 <div class="full-width">
                   <div class="subheading2">Other Attachments (optional):</div>
                   <div>
-                    <div class="document" *ngFor="let document of otherAttachments">
+                    <div class="document" *ngFor="let document of governmentOtherAttachments">
                       <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
                     </div>
-                    <div *ngIf="otherAttachments.length === 0"><em>None provided</em></div>
+                    <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
                   </div>
                 </div>
               </div>
@@ -416,6 +419,7 @@
           >
             Review Application
           </button>
+          <button mat-flat-button color="accent" (click)="onDownloadPdf(application?.fileNumber)">Download PDF</button>
         </div>
       </div>
       <app-application-details
@@ -695,10 +699,10 @@
             <div class="full-width">
               <div class="subheading2">Other Attachments (optional):</div>
               <div>
-                <div class="document" *ngFor="let document of otherAttachments">
+                <div class="document" *ngFor="let document of governmentOtherAttachments">
                   <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
                 </div>
-                <div *ngIf="otherAttachments.length === 0"><em>None provided</em></div>
+                <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
               </div>
             </div>
           </div>

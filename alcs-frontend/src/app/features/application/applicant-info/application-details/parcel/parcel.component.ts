@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
-import { SubmittedApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
+import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-parcel',
@@ -9,7 +10,7 @@ import { SubmittedApplicationDto } from '../../../../../services/application/app
   styleUrls: ['./parcel.component.scss'],
 })
 export class ParcelComponent implements OnInit {
-  @Input() application!: SubmittedApplicationDto;
+  @Input() application!: ApplicationSubmissionDto;
   @Input() files: ApplicationDocumentDto[] = [];
   @Input() parcelType!: string;
 
@@ -22,14 +23,17 @@ export class ParcelComponent implements OnInit {
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
-    this.parcels = this.application.parcels.map((parcel) => ({
-      ...parcel,
-      documents: parcel.documentUuids.map((uuid) => this.files.find((file) => file.documentUuid === uuid)!),
-      owners: parcel.owners.map((owner) => ({
-        ...owner,
-        corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
-      })),
-    }));
+    this.parcels = this.application.parcels
+      .filter((e) => e.parcelType === this.parcelType)
+      .map((parcel) => {
+        return {
+          ...parcel,
+          owners: parcel.owners.map((owner) => ({
+            ...owner,
+            corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
+          })),
+        };
+      });
 
     if (this.parcelType === 'other') {
       this.pageTitle = 'Other Parcels in the Community';

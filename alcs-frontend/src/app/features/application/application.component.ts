@@ -8,15 +8,18 @@ import { ApplicationModificationDto } from '../../services/application/applicati
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationReviewService } from '../../services/application/application-review/application-review.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { DecisionComponent } from './decision/decision.component';
+import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
+import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
 
 export const childRoutes = [
@@ -46,6 +49,13 @@ export const childRoutes = [
     menuTitle: 'ALC Intake',
     icon: 'content_paste',
     component: IntakeComponent,
+    requiresAuthorization: true,
+  },
+  {
+    path: 'prep',
+    menuTitle: 'App Prep',
+    icon: 'task',
+    component: ProposalComponent,
     requiresAuthorization: true,
   },
   {
@@ -83,6 +93,13 @@ export const childRoutes = [
     component: PostDecisionComponent,
     requiresAuthorization: true,
   },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
+    requiresAuthorization: true,
+  },
 ];
 
 @Component({
@@ -105,6 +122,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     private applicationDetailService: ApplicationDetailService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
+    private applicationReviewService: ApplicationReviewService,
     private route: ActivatedRoute,
     private titleService: Title
   ) {}
@@ -123,7 +141,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isAuthorized = application.applicationReview?.isAuthorized ?? true;
+        this.loadReview(application.fileNumber);
       }
     });
 
@@ -143,5 +161,10 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   async loadApplication() {
     await this.applicationDetailService.loadApplication(this.fileNumber!);
+  }
+
+  async loadReview(fileNumber: string) {
+    const applicationReview = await this.applicationReviewService.fetchReview(fileNumber);
+    this.isAuthorized = applicationReview?.isAuthorized ?? true;
   }
 }

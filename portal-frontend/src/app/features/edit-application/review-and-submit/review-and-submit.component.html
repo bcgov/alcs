@@ -1,7 +1,22 @@
 <section>
-  <app-application-details [$application]="$application"></app-application-details>
+  <app-application-details
+    [$application]="$application"
+    [$applicationDocuments]="$applicationDocuments"
+  ></app-application-details>
+  <div class="button-container">
+    <button
+      *ngIf="application?.fileNumber"
+      mat-flat-button
+      color="primary"
+      (click)="onDownloadPdf(application?.fileNumber)"
+    >
+      Download PDF
+    </button>
+  </div>
+
   <div class="button-container">
     <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+
     <div>
       <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
         Previous<span class="mobile-hidden"> Step</span>

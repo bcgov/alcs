@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
@@ -17,9 +17,12 @@ export class TurDetailsComponent {
   @Input() set application(application: ApplicationSubmissionDetailedDto | undefined) {
     if (application) {
       this._application = application;
-      this.servingNotice = application.documents.filter((document) => document.type === DOCUMENT.SERVING_NOTICE);
-      this.proposalMap = application.documents.filter((document) => document.type === DOCUMENT.PROPOSAL_MAP);
     }
+  }
+
+  @Input() set applicationDocuments(documents: ApplicationDocumentDto[]) {
+    this.servingNotice = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
+    this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
   }
 
   servingNotice: ApplicationDocumentDto[] = [];

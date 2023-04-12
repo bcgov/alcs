@@ -1,45 +1,69 @@
 <div class="intake">
   <h3>ALC Intake</h3>
   <div>
-    <div class="subheading2">Submitted to ALC</div>
+    <h5>Submitted to ALC</h5>
     <app-inline-datepicker
-    [selectedValue]="application?.dateSubmittedToAlc"
-    (save)="updateApplication('dateSubmittedToAlc', $event)"
-  ></app-inline-datepicker>
+      [value]="application?.dateSubmittedToAlc"
+      (save)="updateApplicationDate('dateSubmittedToAlc', $event)"
+    ></app-inline-datepicker>
+  </div>
+  <div *ngIf='application?.source === "APPLICANT"'>
+    <h5>Payment</h5>
+    <div class="payment-section">
+      <div>
+        <div class="subheading2">Payment Date</div>
+        <app-inline-datepicker
+          [value]="application?.feePaidDate"
+          (save)="updateApplicationDate('feePaidDate', $event)"
+        ></app-inline-datepicker>
+      </div>
+      <div>
+        <div class="subheading2">Payment Amount</div>
+        <app-inline-number
+          [value]="application?.feeAmount"
+          (save)="updateApplicationNumber('feeAmount', $event)"
+        ></app-inline-number>
+      </div>
+      <div>
+        <div class="subheading2">Split with L/FNG</div>
+        <app-inline-boolean
+          [selectedValue]="application?.feeSplitWithLg ?? null"
+          (save)="updateApplicationBoolean('feeSplitWithLg', $event)"
+        ></app-inline-boolean>
+      </div>
+      <div>
+        <div class="subheading2">Fee Waived</div>
+        <app-inline-boolean
+          [selectedValue]="application?.feeWaived ?? null"
+          (save)="updateApplicationBoolean('feeWaived', $event)"
+        ></app-inline-boolean>
+      </div>
+    </div>
   </div>
   <div>
-    <div class="subheading2">Paid</div>
+    <h5>Acknowledged Incomplete</h5>
     <div>
       <app-inline-datepicker
-        [selectedValue]="application?.datePaid"
-        (save)="updateApplication('datePaid', $event)"
+        [value]="application?.dateAcknowledgedIncomplete"
+        (save)="updateApplicationDate('dateAcknowledgedIncomplete', $event)"
       ></app-inline-datepicker>
     </div>
   </div>
   <div>
-    <div class="subheading2">Acknowledged Incomplete</div>
+    <h5>Received All Items</h5>
     <div>
       <app-inline-datepicker
-        [selectedValue]="application?.dateAcknowledgedIncomplete"
-        (save)="updateApplication('dateAcknowledgedIncomplete', $event)"
+        [value]="application?.dateReceivedAllItems"
+        (save)="updateApplicationDate('dateReceivedAllItems', $event)"
       ></app-inline-datepicker>
     </div>
   </div>
   <div>
-    <div class="subheading2">Received All Items</div>
+    <h5>Acknowledged Complete</h5>
     <div>
       <app-inline-datepicker
-        [selectedValue]="application?.dateReceivedAllItems"
-        (save)="updateApplication('dateReceivedAllItems', $event)"
-      ></app-inline-datepicker>
-    </div>
-  </div>
-  <div>
-    <div class="subheading2">Acknowledged Complete</div>
-    <div>
-      <app-inline-datepicker
-        [selectedValue]="application?.dateAcknowledgedComplete"
-        (save)="updateApplication('dateAcknowledgedComplete', $event)"
+        [value]="application?.dateAcknowledgedComplete"
+        (save)="updateApplicationDate('dateAcknowledgedComplete', $event)"
       ></app-inline-datepicker>
     </div>
   </div>

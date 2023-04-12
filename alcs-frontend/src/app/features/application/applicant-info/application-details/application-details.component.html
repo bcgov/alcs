@@ -1,5 +1,10 @@
 <section>
-  <app-parcel *ngIf="files && submittedApplication" [files]="files" [application]="submittedApplication"></app-parcel>
+  <app-parcel
+    *ngIf="files && submittedApplication"
+    [files]="files"
+    [application]="submittedApplication"
+    parcelType="application"
+  ></app-parcel>
 </section>
 <section>
   <app-parcel
@@ -117,14 +122,19 @@
 <section>
   <h3>Proposal</h3>
   <app-nfu-details
-    *ngIf="submittedApplication && application.type.code === 'NFUP'"
+    *ngIf="submittedApplication && applicationType === 'NFUP'"
     [application]="submittedApplication"
   ></app-nfu-details>
   <app-tur-details
-    *ngIf="submittedApplication && application.type.code === 'TURP'"
+    *ngIf="submittedApplication && applicationType === 'TURP'"
     [application]="submittedApplication"
-    [files]='files'
+    [files]="files"
   ></app-tur-details>
+  <app-subd-details
+    *ngIf="submittedApplication && applicationType === 'SUBD'"
+    [applicationSubmission]="submittedApplication"
+    [files]="files"
+  ></app-subd-details>
 </section>
 <section>
   <h3>Optional Documents</h3>
@@ -135,7 +145,7 @@
       <div class="grid-3 subheading2">File Name</div>
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          {{ file.type }}
+          {{ file.type?.label }}
         </div>
         <div class="grid-2">
           {{ file.description }}
@@ -144,9 +154,7 @@
           <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
         </div>
       </ng-container>
-      <div *ngIf='otherFiles.length === 0' class='full-width'>
-        No optional attachments
-      </div>
+      <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
     </div>
   </div>
 </section>

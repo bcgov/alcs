@@ -2,7 +2,7 @@
 <div class="notification-date">
   <div class="subheading1">'Ready for Review' Notification Sent to Applicant</div>
   <app-inline-datepicker
-    [selectedValue]="notificationSentDate"
+    [value]="notificationSentDate"
     (save)="onSaveNotificationDate($event)"
   ></app-inline-datepicker>
 </div>
@@ -10,5 +10,10 @@
   <app-decision-meeting [fileNumber]="fileNumber"></app-decision-meeting>
 </section>
 <section>
-  <app-document [fileNumber]="fileNumber" [documentType]="DOCUMENT_TYPE.REVIEW_DOCUMENT" title="Evidentiary Record"></app-document>
+  <app-document
+    [fileNumber]="fileNumber"
+    [visibilityFlags]="['C']"
+    [sortable]="true"
+    title="Evidentiary Record"
+  ></app-document>
 </section>

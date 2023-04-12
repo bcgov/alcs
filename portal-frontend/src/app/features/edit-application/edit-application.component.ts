@@ -2,8 +2,10 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
+import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -11,13 +13,14 @@ import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepp
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { LandUseComponent } from './land-use/land-use.component';
-import { NfuProposalComponent } from './nfu/nfu-proposal/nfu-proposal.component';
+import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
-import { TurProposalComponent } from './tur/tur-proposal/tur-proposal.component';
+import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -41,6 +44,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
 
   $destroy = new Subject<void>();
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+  $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   application: ApplicationSubmissionDetailedDto | undefined;
 
   editAppSteps = EditApplicationSteps;
@@ -57,15 +61,18 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
   @ViewChild(NfuProposalComponent) nfuProposalComponent?: NfuProposalComponent;
   @ViewChild(TurProposalComponent) turProposalComponent?: TurProposalComponent;
+  @ViewChild(SubdProposalComponent) subdProposalComponent?: SubdProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
     private applicationService: ApplicationSubmissionService,
+    private applicationDocumentService: ApplicationDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
-    private router: Router
+    private router: Router,
+    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +116,10 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
   private async loadApplication(fileId: string) {
     this.overlayService.showSpinner();
     this.application = await this.applicationService.getByFileId(fileId);
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
+    }
     this.fileId = fileId;
     this.$application.next(this.application);
     this.overlayService.hideSpinner();
@@ -169,6 +180,9 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
         if (this.turProposalComponent) {
           await this.turProposalComponent.onSave();
         }
+        if (this.subdProposalComponent) {
+          await this.subdProposalComponent.onSave();
+        }
         break;
       case EditApplicationSteps.Attachments:
         await this.otherAttachmentsComponent.onSave();
@@ -191,6 +205,12 @@ export class EditApplicationComponent implements OnInit, OnDestroy, AfterViewIni
     if (this.expandedParcelUuid && this.parcelDetailsComponent) {
       this.parcelDetailsComponent.openParcel(this.expandedParcelUuid);
       this.expandedParcelUuid = undefined;
+    }
+  }
+
+  async onDownloadPdf(fileNumber: string | undefined) {
+    if (fileNumber) {
+      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
     }
   }
 }

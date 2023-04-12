@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
@@ -18,6 +18,7 @@ import { EditApplicationSteps } from '../edit-application.component';
 })
 export class PrimaryContactComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
@@ -57,18 +58,27 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.files = application.documents.filter((document) => document.type === DOCUMENT.AUTHORIZATION_LETTER);
         this.loadOwners(application.fileNumber, application.primaryContactOwnerUuid);
       }
+    });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.files = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER);
     });
   }
 
   async onAttachFile(file: FileHandle) {
     if (this.fileId) {
       await this.onSave();
-      await this.applicationDocumentService.attachExternalFile(this.fileId, file.file, DOCUMENT.AUTHORIZATION_LETTER);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      await this.applicationDocumentService.attachExternalFile(
+        this.fileId,
+        file.file,
+        DOCUMENT_TYPE.AUTHORIZATION_LETTER
+      );
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 
@@ -76,8 +86,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.deleteExternalFile(document.uuid);
-      const updatedApp = await this.applicationService.getByFileId(this.fileId);
-      this.$application.next(updatedApp);
+      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
     }
   }
 
@@ -127,7 +139,6 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       isSelected: owner.uuid === uuid,
     }));
     const hasSelectedAgent = (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) || uuid == 'agent';
-    const hasCrownOwner = this.owners.some((owner) => owner.type.code === APPLICATION_OWNER.CROWN);
     this.selectedThirdPartyAgent = hasSelectedAgent;
     if (hasSelectedAgent) {
       this.firstName.enable();
@@ -143,7 +154,10 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
       this.email.disable();
       this.phoneNumber.disable();
     }
-    this.needsAuthorizationLetter = this.nonAgentOwners.length > 1 || hasSelectedAgent || hasCrownOwner;
+
+    this.needsAuthorizationLetter = !(
+      this.owners.length === 1 && this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL
+    );
     this.files = this.files.map((file) => ({
       ...file,
       errorMessage: this.needsAuthorizationLetter

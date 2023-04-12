@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatestWith, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -9,7 +9,8 @@ import { ApplicationModificationDto } from '../../../services/application/applic
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
+import { ApplicationDto, ApplicationReviewDto } from '../../../services/application/application.dto';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 
 const editLink = new Map<string, string>([
@@ -39,9 +40,11 @@ const SORTING_ORDER = {
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
 })
-export class OverviewComponent implements OnInit {
-  private application?: ApplicationDto;
+export class OverviewComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
+  application?: ApplicationDto;
   private $decisions = new BehaviorSubject<ApplicationDecisionDto[]>([]);
+  private $review = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
   events: TimelineEvent[] = [];
   summary = '';
 
@@ -50,17 +53,22 @@ export class OverviewComponent implements OnInit {
     private meetingService: ApplicationMeetingService,
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private modificationService: ApplicationModificationService
+    private modificationService: ApplicationModificationService,
+    private reviewService: ApplicationReviewService
   ) {}
 
   ngOnInit(): void {
     this.applicationDetailService.$application
+      .pipe(takeUntil(this.$destroy))
       .pipe(
         tap((app) => {
           if (app) {
             this.meetingService.fetch(app.fileNumber);
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
               this.$decisions.next(res);
+            });
+            this.reviewService.fetchReview(app.fileNumber).then((res) => {
+              this.$review.next(res);
             });
           }
         })
@@ -70,32 +78,43 @@ export class OverviewComponent implements OnInit {
           this.meetingService.$meetings,
           this.$decisions,
           this.reconsiderationService.$reconsiderations,
-          this.modificationService.$modifications
+          this.modificationService.$modifications,
+          this.$review
         )
       )
-      .subscribe(([application, meetings, decisions, reconsiderations, modifications]) => {
+      .subscribe(([application, meetings, decisions, reconsiderations, modifications, applicationReview]) => {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
-          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations, modifications);
+          this.events = this.mapApplicationToEvents(
+            application,
+            meetings,
+            decisions,
+            reconsiderations,
+            modifications,
+            applicationReview
+          );
         }
       });
   }
 
-  mapApplicationToEvents(
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
+  private mapApplicationToEvents(
     application: ApplicationDto,
     meetings: ApplicationMeetingDto[],
     decisions: ApplicationDecisionDto[],
     reconsiderations: ApplicationReconsiderationDto[],
-    modifications: ApplicationModificationDto[]
+    modifications: ApplicationModificationDto[],
+    applicationReview: ApplicationReviewDto | undefined
   ): TimelineEvent[] {
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateSubmittedToAlc) {
       mappedEvents.push({
-        name:
-          application.applicationReview && !application.applicationReview.isAuthorized
-            ? 'L/FNG Refused to Forward'
-            : 'Submitted to ALC',
+        name: applicationReview && !applicationReview.isAuthorized ? 'L/FNG Refused to Forward' : 'Submitted to ALC',
         startDate: new Date(application.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),
         isFulfilled: true,
       });

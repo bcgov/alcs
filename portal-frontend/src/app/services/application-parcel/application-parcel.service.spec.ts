@@ -99,40 +99,4 @@ describe('ApplicationParcelService', () => {
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
-
-  it('should make a get request for open file', async () => {
-    mockHttpClient.get.mockReturnValue(of({}));
-
-    await service.openFile(mockUuid);
-
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.get.mock.calls[0][0]).toContain('application-parcel-document');
-  });
-
-  it('should show an error toast if opening a file fails', async () => {
-    mockHttpClient.get.mockReturnValue(throwError(() => ({})));
-
-    await service.openFile(mockUuid);
-
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should make a delete request for delete file', async () => {
-    mockHttpClient.delete.mockReturnValue(of({}));
-
-    await service.deleteExternalFile('fileId');
-
-    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.delete.mock.calls[0][0]).toContain('application-parcel-document');
-  });
-
-  it('should show an error toast if deleting a file fails', async () => {
-    mockHttpClient.delete.mockReturnValue(throwError(() => ({})));
-
-    await service.deleteExternalFile('fileId');
-
-    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
 });

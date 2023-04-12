@@ -1,8 +1,6 @@
-import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisClientType } from 'redis';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { HolidayEntity } from '../../../admin/holiday/holiday.entity';
 import {
   LocalGovernmentCreateDto,
@@ -17,31 +15,7 @@ export class ApplicationLocalGovernmentService {
   constructor(
     @InjectRepository(ApplicationLocalGovernment)
     private repository: Repository<ApplicationLocalGovernment>,
-    private redisService: RedisService,
-  ) {
-    this.loadGovernmentsToRedis();
-  }
-
-  private async loadGovernmentsToRedis() {
-    const localGovernments = await this.repository.find({
-      select: {
-        uuid: true,
-        name: true,
-        bceidBusinessGuid: true,
-        isFirstNation: true,
-      },
-      where: {
-        isActive: true,
-      },
-    });
-
-    const jsonBlob = JSON.stringify(localGovernments);
-    const redis = this.redisService.getClient() as RedisClientType;
-    await redis.set('localGovernments', jsonBlob);
-    this.logger.debug(
-      `Loaded ${localGovernments.length} governments into Redis`,
-    );
-  }
+  ) {}
 
   async list() {
     return this.repository.find({
@@ -85,9 +59,9 @@ export class ApplicationLocalGovernmentService {
     localGovernment.isFirstNation = updateDto.isFirstNation;
     localGovernment.isActive = updateDto.isActive;
     localGovernment.preferredRegionCode = updateDto.preferredRegionCode;
+    localGovernment.emails = updateDto.emails;
 
     await this.repository.save(localGovernment);
-    await this.loadGovernmentsToRedis();
   }
 
   async create(createDto: LocalGovernmentCreateDto) {
@@ -97,9 +71,9 @@ export class ApplicationLocalGovernmentService {
     newGovernment.isFirstNation = createDto.isFirstNation;
     newGovernment.isActive = createDto.isActive;
     newGovernment.preferredRegionCode = createDto.preferredRegionCode;
+    newGovernment.emails = createDto.emails;
 
     await this.repository.save(newGovernment);
-    await this.loadGovernmentsToRedis();
   }
 
   async fetch(pageIndex: number, itemsPerPage: number, search?: string) {
@@ -108,7 +82,7 @@ export class ApplicationLocalGovernmentService {
 
     if (search) {
       searchExpression = {
-        name: Like(search),
+        name: ILike(`%${search}%`),
       };
     }
 
@@ -123,5 +97,16 @@ export class ApplicationLocalGovernmentService {
         },
       })) || [[], 0]
     );
+  }
+
+  async getByGuid(bceidBusinessGuid: string) {
+    return this.repository.findOne({
+      where: {
+        bceidBusinessGuid,
+      },
+      relations: {
+        preferredRegion: true,
+      },
+    });
   }
 }

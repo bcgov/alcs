@@ -1,29 +1,54 @@
-export enum DOCUMENT {
-  CERTIFICATE_OF_TILE = 'certificateOfTitle',
-  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
-  STAFF_REPORT = 'reviewStaffReport',
-  REVIEW_OTHER = 'reviewOther',
-  CORPORATE_SUMMARY = 'corporateSummary',
-  PROFESSIONAL_REPORT = 'Professional Report',
-  PHOTOGRAPH = 'Photograph',
-  OTHER = 'Other',
-  AUTHORIZATION_LETTER = 'authorizationLetter',
-  SERVING_NOTICE = 'servingNotice',
-  PROPOSAL_MAP = 'proposalMap',
+import { BaseCodeDto } from '../../shared/dto/base.dto';
+
+export enum DOCUMENT_TYPE {
+  //ALCS
+  DECISION_DOCUMENT = 'DPAC',
+  OTHER = 'OTHR',
+
+  //Government Review
+  RESOLUTION_DOCUMENT = 'RESO',
+  STAFF_REPORT = 'STFF',
+
+  //Applicant Uploaded
+  CORPORATE_SUMMARY = 'CORS',
+  PROFESSIONAL_REPORT = 'PROR',
+  PHOTOGRAPH = 'PHTO',
+  AUTHORIZATION_LETTER = 'AAGR',
+  CERTIFICATE_OF_TITLE = 'CERT',
+
+  //TUR
+  SERVING_NOTICE = 'POSN',
+  PROPOSAL_MAP = 'PRSK',
+
+  //SUBD
+  HOMESITE_SEVERANCE = 'HOME',
+}
+
+export enum DOCUMENT_SOURCE {
+  APPLICANT = 'Applicant',
+  ALC = 'ALC',
+  LFNG = 'L/FNG',
+  AFFECTED_PARTY = 'Affected Party',
+  PUBLIC = 'Public',
+}
+
+export interface ApplicationDocumentTypeDto extends BaseCodeDto {
+  code: DOCUMENT_TYPE;
 }
 
 export interface ApplicationDocumentDto {
-  type: DOCUMENT | null;
+  type: ApplicationDocumentTypeDto | null;
   description?: string | null;
   uuid: string;
   fileName: string;
   fileSize: number;
   uploadedBy: string;
   uploadedAt: number;
+  source: DOCUMENT_SOURCE;
 }
 
 export interface ApplicationDocumentUpdateDto {
   uuid: string;
-  type: DOCUMENT | null;
+  type: DOCUMENT_TYPE | null;
   description?: string | null;
 }

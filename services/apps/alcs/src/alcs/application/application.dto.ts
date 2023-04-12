@@ -8,140 +8,30 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-} from '../application-grpc/alcs-application.message.interface';
+import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
+import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
+import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
+import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationDecisionMeetingDto } from '../decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
+import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
 
-export class ApplicationReviewDto {
-  @AutoMap()
-  localGovernmentFileNumber: string;
-
-  @AutoMap()
-  firstName: string;
-
-  @AutoMap()
-  lastName: string;
-
-  @AutoMap()
-  position: string;
-
-  @AutoMap()
-  department: string;
-
-  @AutoMap()
-  phoneNumber: string;
-
-  @AutoMap()
-  email: string;
-
-  @AutoMap(() => Boolean)
-  isOCPDesignation: boolean | null;
-
-  @AutoMap(() => String)
-  OCPBylawName: string | null;
-
-  @AutoMap(() => String)
-  OCPDesignation: string | null;
-
-  @AutoMap(() => Boolean)
-  OCPConsistent: boolean | null;
-
-  @AutoMap(() => Boolean)
-  isSubjectToZoning: boolean | null;
-
-  @AutoMap(() => String)
-  zoningBylawName: string | null;
-
-  @AutoMap(() => String)
-  zoningDesignation: string | null;
-
-  @AutoMap(() => String)
-  zoningMinimumLotSize: string | null;
-
-  @AutoMap(() => Boolean)
-  isZoningConsistent: boolean | null;
-
-  @AutoMap(() => Boolean)
-  isAuthorized: boolean | null;
-}
-
-export class SubmittedApplicationOwnerDto {
-  @AutoMap()
-  displayName: string;
-
-  @AutoMap()
-  firstName: string;
-
-  @AutoMap()
-  lastName: string;
-
-  @AutoMap()
-  organizationName?: string;
-
-  @AutoMap()
-  phoneNumber: string;
-
-  @AutoMap()
-  email: string;
-
-  @AutoMap()
-  type: string;
-
-  @AutoMap()
-  corporateSummaryDocumentUuid?: string;
-}
-
-export class SubmittedApplicationParcelDto {
-  @AutoMap()
-  pid?: string;
-
-  @AutoMap()
-  pin?: string;
-
-  @AutoMap()
-  legalDescription: string;
-
-  @AutoMap()
-  mapAreaHectares: string;
-
-  @AutoMap()
-  purchasedDate?: number;
-
-  @AutoMap()
-  isFarm: boolean;
-
-  @AutoMap()
-  ownershipType: string;
-
-  @AutoMap()
-  crownLandOwnerType: string;
-
-  @AutoMap()
-  parcelType: string;
-
-  @AutoMap(() => [String])
-  documentUuids: string[];
-
-  @AutoMap(() => [SubmittedApplicationOwnerDto])
-  owners: SubmittedApplicationOwnerDto[];
-}
-
 export class SubmittedApplicationDto {
-  @AutoMap(() => [SubmittedApplicationParcelDto])
-  parcels: SubmittedApplicationParcelDto[];
+  @AutoMap(() => [ApplicationParcelDto])
+  parcels: ApplicationParcelDto[];
 
-  @AutoMap(() => [SubmittedApplicationParcelDto])
-  otherParcels: SubmittedApplicationParcelDto[];
+  @AutoMap(() => Boolean)
+  hasOtherParcelsInCommunity?: boolean | null;
+
+  @AutoMap(() => [ApplicationParcelDto])
+  otherParcels: ApplicationParcelDto[];
 
   @AutoMap()
-  primaryContact: SubmittedApplicationOwnerDto;
+  primaryContact: ApplicationOwnerDto;
 
   @AutoMap()
   parcelsAgricultureDescription: string;
@@ -228,6 +118,24 @@ export class SubmittedApplicationDto {
 
   @AutoMap()
   turTotalCorridorArea?: string;
+
+  @AutoMap(() => [ApplicationDocumentDto])
+  documents: ApplicationDocumentDto[];
+
+  //Subdivision Fields
+  @AutoMap(() => String)
+  subdPurpose?: string | null;
+
+  @AutoMap(() => String)
+  subdSuitability?: string | null;
+
+  @AutoMap(() => String)
+  subdAgricultureSupport?: string | null;
+
+  @AutoMap(() => Boolean)
+  subdIsHomeSiteSeverance?: boolean | null;
+
+  subdProposedLots?: ProposedLot[];
 }
 
 export class CreateApplicationDto {
@@ -261,39 +169,45 @@ export class UpdateApplicationDto {
   @IsNumber()
   dateSubmittedToAlc?: number;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   applicant?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   typeCode?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   regionCode?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsString()
   statusCode?: string;
 
-  @AutoMap()
   @IsOptional()
   @IsUUID()
   assigneeUuid?: string;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   paused?: boolean;
 
   @IsOptional()
   @IsNumber()
-  datePaid?: number;
+  feePaidDate?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  feeWaived?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  feeSplitWithLg?: boolean;
+
+  @IsOptional()
+  @IsString()
+  feeAmount?: string;
 
   @IsOptional()
   @IsNumber()
@@ -307,12 +221,10 @@ export class UpdateApplicationDto {
   @IsNumber()
   dateAcknowledgedComplete?: number;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   highPriority?: boolean;
 
-  @AutoMap()
   @IsString()
   @IsOptional()
   summary?: string;
@@ -320,9 +232,44 @@ export class UpdateApplicationDto {
   @IsOptional()
   @IsNumber()
   notificationSentDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  alrArea?: number;
+
+  @IsOptional()
+  @IsString()
+  agCap?: string;
+
+  @IsOptional()
+  @IsString()
+  agCapSource?: string;
+
+  @IsOptional()
+  @IsString()
+  agCapMap?: string;
+
+  @IsOptional()
+  @IsString()
+  agCapConsultant?: string;
+
+  @IsOptional()
+  @IsString()
+  nfuUseType?: string;
+
+  @IsOptional()
+  @IsString()
+  nfuUseSubType?: string;
+
+  @IsOptional()
+  @IsNumber()
+  nfuEndDate?: number;
 }
 
 export class ApplicationDto {
+  @AutoMap()
+  uuid: string;
+
   @AutoMap()
   fileNumber: string;
 
@@ -336,7 +283,17 @@ export class ApplicationDto {
   paused: boolean;
 
   dateSubmittedToAlc?: number;
-  datePaid?: number;
+
+  feePaidDate?: number;
+
+  @AutoMap(() => Boolean)
+  feeWaived?: boolean;
+
+  @AutoMap(() => Boolean)
+  feeSplitWithLg?: boolean;
+
+  @AutoMap(() => String)
+  feeAmount?: string;
 
   dateAcknowledgedIncomplete?: number;
 
@@ -371,12 +328,33 @@ export class ApplicationDto {
   card?: CardDto;
 
   @AutoMap()
-  @Type(() => ApplicationReviewDto)
-  applicationReview?: ApplicationReviewDto;
-
-  @AutoMap()
   @Type(() => SubmittedApplicationDto)
   submittedApplication?: SubmittedApplicationDto;
+
+  @AutoMap()
+  source: 'ALCS' | 'APPLICANT';
+
+  @AutoMap(() => Number)
+  alrArea?: number;
+
+  @AutoMap(() => String)
+  agCap?: string;
+
+  @AutoMap(() => String)
+  agCapSource?: string;
+
+  @AutoMap(() => String)
+  agCapMap?: string;
+
+  @AutoMap(() => String)
+  agCapConsultant?: string;
+
+  @AutoMap(() => String)
+  nfuUseType?: string;
+
+  @AutoMap(() => String)
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -384,13 +362,24 @@ export class ApplicationUpdateServiceDto {
   applicant?: string;
   typeCode?: string;
   regionCode?: string;
-  datePaid?: Date | null | undefined;
+  feePaidDate?: Date | null;
+  feeWaived?: boolean | undefined | null;
+  feeSplitWithLg?: boolean | undefined | null;
+  feeAmount?: number | undefined | null;
   dateAcknowledgedIncomplete?: Date | null | undefined;
   dateReceivedAllItems?: Date | null | undefined;
   dateAcknowledgedComplete?: Date | null | undefined;
   decisionDate?: Date | null | undefined;
   summary?: string;
   notificationSentDate?: Date | null;
+  alrArea?: number;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: Date | null;
 }
 
 export class CreateApplicationServiceDto {
@@ -399,8 +388,7 @@ export class CreateApplicationServiceDto {
   typeCode: string;
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
   statusHistory?: StatusHistory[];
-  applicationReview?: ApplicationReviewGrpc;
-  submittedApplication?: SubmittedApplicationGrpc;
+  source?: 'ALCS' | 'APPLICANT';
 }

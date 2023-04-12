@@ -1,0 +1,23 @@
+<div>
+  <div class="subheading2">Non-Farm Use Type</div>
+  <app-inline-dropdown
+    [value]="application?.nfuUseType"
+    [options]="nfuTypes"
+    (save)="updateApplicationValue('nfuUseType', $event)"
+  ></app-inline-dropdown>
+</div>
+<div>
+  <div class="subheading2">Non-Farm Use Sub-Type</div>
+  <app-inline-dropdown
+    [value]="application?.nfuUseSubType"
+    [options]="nfuSubTypes"
+    (save)="updateApplicationValue('nfuUseSubType', $event)"
+  ></app-inline-dropdown>
+</div>
+<div>
+  <div class="subheading2">Use End Date</div>
+  <app-inline-datepicker
+    [value]="application?.nfuEndDate"
+    (save)="updateApplicationValue('nfuEndDate', $event)"
+  ></app-inline-datepicker>
+</div>

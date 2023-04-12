@@ -1,6 +1,7 @@
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
+import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
 export interface StatusHistory {
@@ -21,6 +22,11 @@ export interface CreateApplicationDto {
 
 export interface ApplicationDecisionMeetingDto {
   date: Date;
+}
+
+export interface ProposedLot {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
 }
 
 export interface ApplicationReviewDto {
@@ -54,6 +60,16 @@ export interface SubmittedApplicationOwnerDto {
   corporateSummaryDocumentUuid?: string;
 }
 
+export interface ApplicationParcelDocumentDto {
+  type: string;
+  uuid: string;
+  fileName: string;
+  fileSize: number;
+  uploadedBy?: string;
+  uploadedAt: number;
+  documentUuid: string;
+}
+
 export interface SubmittedApplicationParcelDto {
   pid?: string;
   pin?: string;
@@ -66,11 +82,14 @@ export interface SubmittedApplicationParcelDto {
   parcelType: string;
   documentUuids: string[];
   owners: SubmittedApplicationOwnerDto[];
+  documents: ApplicationParcelDocumentDto[];
 }
 
-export interface SubmittedApplicationDto {
+export interface ApplicationSubmissionDto {
   parcels: SubmittedApplicationParcelDto[];
   otherParcels: SubmittedApplicationParcelDto[];
+  documents: ApplicationDocumentDto[];
+  hasOtherParcelsInCommunity?: boolean | null;
   primaryContact: SubmittedApplicationOwnerDto;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;
@@ -104,15 +123,26 @@ export interface SubmittedApplicationDto {
   turAgriculturalActivities?: string;
   turReduceNegativeImpacts?: string;
   turTotalCorridorArea?: string;
+
+  //Subdivision Fields
+  subdPurpose?: string;
+  subdSuitability?: string;
+  subdAgricultureSupport?: string;
+  subdIsHomeSiteSeverance?: boolean;
+  subdProposedLots: ProposedLot[];
 }
 
 export interface ApplicationDto {
+  uuid: string;
   fileNumber: string;
   applicant: string;
   summary?: string;
   type: ApplicationTypeDto;
   dateSubmittedToAlc: number;
-  datePaid?: number;
+  feePaidDate?: number;
+  feeWaived?: boolean;
+  feeSplitWithLg?: boolean;
+  feeAmount?: string;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -126,8 +156,16 @@ export interface ApplicationDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
   statusHistory: StatusHistory[];
-  applicationReview?: ApplicationReviewDto;
-  submittedApplication?: SubmittedApplicationDto;
+  submittedApplication?: ApplicationSubmissionDto;
+  source: 'ALCS' | 'APPLICANT';
+  alrArea?: number;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -136,7 +174,6 @@ export interface UpdateApplicationDto {
   statusCode?: string;
   regionCode?: string;
   summary?: string;
-  datePaid?: number;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -145,4 +182,16 @@ export interface UpdateApplicationDto {
   assignee?: UserDto;
   highPriority?: boolean;
   notificationSentDate?: number;
+  feePaidDate?: number;
+  feeWaived?: boolean;
+  feeSplitWithLg?: boolean;
+  feeAmount?: string;
+  alrArea?: string;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  nfuUseType?: string;
+  nfuUseSubType?: string;
+  nfuEndDate?: number;
 }

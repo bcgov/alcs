@@ -25,10 +25,11 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
+import { InfoBannerComponent } from './info-banner/info-banner.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
@@ -45,9 +46,16 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
-    provideNgxMask(),
   ],
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatAutocompleteModule, CdkStepperModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+    CdkStepperModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+  ],
   exports: [
     CommonModule,
     FormsModule,
@@ -74,6 +82,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     EmailValidPipe,
     PhoneValidPipe,
     WarningBannerComponent,
+    InfoBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
@@ -83,6 +92,8 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     OverlayModule,
     CustomStepperComponent,
     CdkStepperModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   declarations: [
     FileDragDropComponent,
@@ -91,6 +102,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PhoneValidPipe,
     DragDropDirective,
     WarningBannerComponent,
+    InfoBannerComponent,
     NoDataComponent,
     ValidationErrorComponent,
     CustomStepperComponent,

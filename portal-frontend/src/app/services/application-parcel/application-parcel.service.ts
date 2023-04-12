@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { DOCUMENT } from '../application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_TYPE,
+} from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationParcelDto, ApplicationParcelUpdateDto, PARCEL_TYPE } from './application-parcel.dto';
@@ -68,47 +72,22 @@ export class ApplicationParcelService {
     return undefined;
   }
 
-  async attachExternalFile(fileId: string, file: File) {
+  async attachCertificateOfTitle(fileId: string, parcelUuid: string, file: File) {
     try {
-      const fileUuid = await this.documentService.uploadFile(
+      const document = await this.documentService.uploadFile<ApplicationDocumentDto | undefined>(
         fileId,
         file,
-        DOCUMENT.CERTIFICATE_OF_TILE,
-        'Applicant',
-        `${environment.apiUrl}/application-parcel-document/application/${fileId}/attachExternal`
+        DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        DOCUMENT_SOURCE.APPLICANT,
+        `${environment.apiUrl}/application-parcel/${parcelUuid}/attachCertificateOfTitle`
       );
       this.toastService.showSuccessToast('Document uploaded');
-      return fileUuid;
+      return document;
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to attach document to Parcel, please try again');
     }
     return undefined;
-  }
-
-  async openFile(fileUuid: string) {
-    try {
-      return await firstValueFrom(
-        this.httpClient.get<{ url: string }>(`${environment.apiUrl}/application-parcel-document/${fileUuid}/open`)
-      );
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to open the document, please try again');
-    }
-    return undefined;
-  }
-
-  async deleteExternalFile(fileUuid: string) {
-    try {
-      this.overlayService.showSpinner();
-      await firstValueFrom(this.httpClient.delete(`${environment.apiUrl}/application-parcel-document/${fileUuid}`));
-      this.toastService.showSuccessToast('Document deleted');
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to delete document, please try again');
-    } finally {
-      this.overlayService.hideSpinner();
-    }
   }
 
   async deleteMany(parcelUuids: string[]) {

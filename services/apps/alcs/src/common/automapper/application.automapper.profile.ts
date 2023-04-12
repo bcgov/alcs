@@ -1,15 +1,14 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-  SubmittedApplicationOwnerGrpc,
-  SubmittedApplicationParcelGrpc,
-} from '../../alcs/application-grpc/alcs-application.message.interface';
+
 import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
+import {
+  ApplicationDocumentDto,
+  ApplicationDocumentTypeDto,
+} from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import {
   ApplicationMeetingDto,
@@ -17,12 +16,11 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
+import { ApplicationStaffJournalDto } from '../../alcs/application/application-staff-journal/application-staff-journal.dto';
+import { ApplicationStaffJournal } from '../../alcs/application/application-staff-journal/application-staff-journal.entity';
 import {
   ApplicationDto,
-  ApplicationReviewDto,
   SubmittedApplicationDto,
-  SubmittedApplicationOwnerDto,
-  SubmittedApplicationParcelDto,
 } from '../../alcs/application/application.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
@@ -35,6 +33,7 @@ import { ApplicationTypeDto } from '../../alcs/code/application-code/application
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -54,27 +53,6 @@ export class ApplicationProfile extends AutomapperProfile {
         ApplicationLocalGovernmentDto,
       );
 
-      createMap(mapper, ApplicationReviewGrpc, ApplicationReviewDto);
-      createMap(mapper, SubmittedApplicationGrpc, SubmittedApplicationDto);
-      createMap(
-        mapper,
-        SubmittedApplicationParcelGrpc,
-        SubmittedApplicationParcelDto,
-      );
-      createMap(
-        mapper,
-        SubmittedApplicationOwnerGrpc,
-        SubmittedApplicationOwnerDto,
-        forMember(
-          (pd) => pd.displayName,
-          mapFrom((p) =>
-            p.organizationName
-              ? p.organizationName
-              : `${p.firstName} ${p.lastName}`,
-          ),
-        ),
-      );
-
       createMap(
         mapper,
         Application,
@@ -84,8 +62,8 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.dateSubmittedToAlc?.getTime()),
         ),
         forMember(
-          (a) => a.datePaid,
-          mapFrom((ad) => ad.datePaid?.getTime()),
+          (a) => a.feePaidDate,
+          mapFrom((ad) => ad.feePaidDate?.getTime()),
         ),
         forMember(
           (a) => a.dateAcknowledgedIncomplete,
@@ -106,6 +84,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.notificationSentDate,
           mapFrom((ad) => ad.notificationSentDate?.getTime()),
+        ),
+        forMember(
+          (a) => a.nfuEndDate,
+          mapFrom((ad) => ad.nfuEndDate?.getTime()),
         ),
         forMember(
           (ad) => ad.card,
@@ -138,6 +120,10 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
+        ),
+        forMember(
           (a) => a.uploadedBy,
           mapFrom((ad) => ad.document.uploadedBy?.name),
         ),
@@ -149,7 +135,12 @@ export class ApplicationProfile extends AutomapperProfile {
           (a) => a.documentUuid,
           mapFrom((ad) => ad.document.uuid),
         ),
+        forMember(
+          (a) => a.source,
+          mapFrom((ad) => ad.document.source),
+        ),
       );
+      createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);
 
       createMap(
         mapper,
@@ -202,6 +193,35 @@ export class ApplicationProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationDto, Card);
+
+      createMap(
+        mapper,
+        ApplicationSubmission,
+        SubmittedApplicationDto,
+        forMember(
+          (a) => a.documents,
+          mapFrom((ad) => {
+            if (ad.application.documents) {
+              return this.mapper.mapArray(
+                ad.application.documents,
+                ApplicationDocument,
+                ApplicationDocumentDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+      );
+      createMap(
+        mapper,
+        ApplicationStaffJournal,
+        ApplicationStaffJournalDto,
+        forMember(
+          (ud) => ud.author,
+          mapFrom((u) => u.author.name),
+        ),
+      );
     };
   }
 

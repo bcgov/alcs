@@ -19,29 +19,29 @@ def process_applications(conn=None):
         psycopg2.OperationalError: If there is an error executing the SQL script or committing the transaction.
     """
 
-    cursor = conn.cursor()
-    count_sql = "SELECT COUNT(*) FROM oats.oats_alr_applications"
-    cursor.execute(count_sql)
-    count_total = cursor.fetchone()[0]
-    print("- Applications to insert: ", count_total)
+    with conn.cursor() as cursor:
+        count_sql = "SELECT COUNT(*) FROM oats.oats_alr_applications"
+        cursor.execute(count_sql)
+        count_total = cursor.fetchone()[0]
+        print("- Applications to insert: ", count_total)
 
-    with open("sql/insert-application.sql", "r", encoding="utf-8") as sql_file:
-        application_sql = sql_file.read()
+        with open("sql/insert-application.sql", "r", encoding="utf-8") as sql_file:
+            application_sql = sql_file.read()
 
-    cursor.execute(application_sql)
+        cursor.execute(application_sql)
 
-    final_count = cursor.execute(
-        "select count(*) from alcs.application a where a.audit_created_by = 'oats_etl'"
-    )
-    print("- Actual inserted: ", final_count)
-    cursor.close()
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "select count(*) from alcs.application a where a.audit_created_by = 'oats_etl'"
+        )
+        final_count = cursor.fetchone()
+        print("- Actual inserted: ", final_count[0])
 
 
 @inject_conn_pool
 def clean_applications(conn=None):
-    cursor = conn.cursor()
-    cursor.execute(
-        "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
-    )
-    cursor.execute("DELETE FROM alcs.card c WHERE c.audit_created_by = 'oats_etl'")
-    cursor.close()
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
+        )
+        cursor.execute("DELETE FROM alcs.card c WHERE c.audit_created_by = 'oats_etl'")

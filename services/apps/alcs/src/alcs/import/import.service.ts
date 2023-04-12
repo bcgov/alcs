@@ -178,7 +178,7 @@ export class ImportService {
 
         //Set Payment / ACK Dates
         const updatedApp = await this.applicationService.update(application, {
-          datePaid: mappedRow.feeReceived,
+          feePaidDate: mappedRow.feeReceived,
           dateAcknowledgedIncomplete: mappedRow.ackDeficient,
           dateReceivedAllItems: mappedRow.ackAllComplete,
           dateAcknowledgedComplete: mappedRow.ackComplete,

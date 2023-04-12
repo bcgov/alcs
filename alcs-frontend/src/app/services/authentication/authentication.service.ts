@@ -142,7 +142,7 @@ export class AuthenticationService {
   }
 
   private async getLogoutUrl() {
-    return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout`));
+    return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout/alcs`));
   }
 
   getCurrentUser = () => this.currentUser;

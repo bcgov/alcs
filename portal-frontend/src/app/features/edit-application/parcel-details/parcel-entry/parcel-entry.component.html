@@ -82,7 +82,15 @@
     <div>
       <label for="map-area">Approx. Map Area (Hectares)</label>
       <mat-form-field class="full-width-input" appearance="outline">
-        <input id="map-area" type="number" matInput placeholder="Enter parcel size" formControlName="mapArea" />
+        <input
+          id="map-area"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          matInput
+          placeholder="Enter parcel size"
+          formControlName="mapArea"
+        />
       </mat-form-field>
       <div *ngIf="mapArea.invalid && (mapArea.dirty || mapArea.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -156,8 +164,8 @@
     <label for="certificate-of-title-upload">Upload Certificate of Title</label>
     <app-file-drag-drop
       id="certificate-of-title-upload"
-      [uploadedFiles]="parcel.documents"
-      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TILE, parcel.uuid)"
+      [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
+      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TITLE, parcel.uuid)"
       (deleteFile)="deleteFile($event)"
       (openFile)="openFile($event)"
       (beforeFileUploadOpened)="beforeFileUploadOpened()"
@@ -218,6 +226,7 @@
       </button>
       <div>
         <app-parcel-owners
+          [fileId]="fileId"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
@@ -293,6 +302,7 @@
       </button>
       <div>
         <app-parcel-owners
+          [fileId]="fileId"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"

@@ -1,10 +1,17 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { ApplicationRegion } from '../../../code/application-code/application-region/application-region.entity';
 import { Base } from '../../../../common/entities/base.entity';
+import { ApplicationRegion } from '../../../code/application-code/application-region/application-region.entity';
 
 @Entity()
 export class ApplicationLocalGovernment extends Base {
+  constructor(data?: Partial<ApplicationLocalGovernment>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @Column()
   name: string;
@@ -21,6 +28,9 @@ export class ApplicationLocalGovernment extends Base {
 
   @Column({ type: 'text' })
   preferredRegionCode: string;
+
+  @Column({ array: true, type: 'text', default: '{}' })
+  emails: string[];
 
   @ManyToOne(() => ApplicationRegion, {
     nullable: false,

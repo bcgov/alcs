@@ -1,5 +1,9 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
+import {
   Body,
   Controller,
   Delete,
@@ -13,16 +17,12 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { CardService } from '../card/card.service';
-import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
-import { NotificationService } from '../notification/notification.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { CardService } from '../card/card.service';
+import { NotificationService } from '../notification/notification.service';
 import {
   ApplicationDto,
   CreateApplicationDto,
@@ -79,7 +79,13 @@ export class ApplicationController {
         typeCode: updates.typeCode,
         regionCode: updates.regionCode,
         summary: updates.summary,
-        datePaid: formatIncomingDate(updates.datePaid),
+        feePaidDate: formatIncomingDate(updates.feePaidDate),
+        feeAmount:
+          updates.feeAmount !== undefined
+            ? parseFloat(updates.feeAmount)
+            : updates.feeAmount,
+        feeSplitWithLg: updates.feeSplitWithLg,
+        feeWaived: updates.feeWaived,
         dateAcknowledgedIncomplete: formatIncomingDate(
           updates.dateAcknowledgedIncomplete,
         ),
@@ -88,6 +94,14 @@ export class ApplicationController {
           updates.dateAcknowledgedComplete,
         ),
         notificationSentDate: formatIncomingDate(updates.notificationSentDate),
+        alrArea: updates.alrArea,
+        agCap: updates.agCap,
+        agCapConsultant: updates.agCapConsultant,
+        agCapMap: updates.agCapMap,
+        agCapSource: updates.agCapSource,
+        nfuEndDate: formatIncomingDate(updates.nfuEndDate),
+        nfuUseSubType: updates.nfuUseSubType,
+        nfuUseType: updates.nfuUseType,
       },
     );
 

@@ -1,24 +1,24 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { doc } from 'prettier';
 import { Subject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
 } from '../../../../services/application/application-document/application-document.service';
-import { ApplicationDto, SubmittedApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-application-details[application]',
+  selector: 'app-application-details',
   templateUrl: './application-details.component.html',
   styleUrls: ['./application-details.component.scss'],
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() application!: ApplicationDto;
+  @Input() submittedApplication!: ApplicationSubmissionDto;
+  @Input() applicationType!: string;
+  @Input() fileNumber!: string;
 
-  submittedApplication!: SubmittedApplicationDto | undefined;
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
   files: ApplicationDocumentDto[] | undefined;
@@ -26,8 +26,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
-    this.submittedApplication = this.application.submittedApplication!;
-    this.loadDocuments(this.application.fileNumber);
+    this.loadDocuments();
   }
 
   ngOnDestroy(): void {
@@ -39,12 +38,16 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     await this.applicationDocumentService.download(uuid, '');
   }
 
-  private async loadDocuments(fileNumber: string) {
-    const documents = await this.applicationDocumentService.getApplicantDocuments(fileNumber);
-    this.otherFiles = documents.filter((document) =>
-      [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type)
+  private async loadDocuments() {
+    const documents = await this.applicationDocumentService.getApplicantDocuments(this.fileNumber);
+    this.otherFiles = documents.filter(
+      (document) =>
+        document.type &&
+        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code)
     );
-    this.authorizationLetters = documents.filter((document) => document.type === DOCUMENT_TYPE.AUTHORIZATION_LETTER);
+    this.authorizationLetters = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER
+    );
     this.files = documents;
   }
 }

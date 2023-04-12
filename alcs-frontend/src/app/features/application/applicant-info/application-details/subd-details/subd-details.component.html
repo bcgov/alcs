@@ -1,0 +1,49 @@
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 full-width">Proposed Lot Areas</div>
+  <div class="full-width parcel-table">
+    <div class="grid-1 subheading2">#</div>
+    <div class="grid-2 subheading2">Type</div>
+    <div class="grid-3 subheading2">Size</div>
+    <ng-container *ngFor="let lot of _applicationSubmission.subdProposedLots; let i = index">
+      <div class="grid-1">
+        {{ i + 1 }}
+      </div>
+      <div class="grid-2">
+        {{ lot.type }}
+      </div>
+      <div class="grid-3">
+        {{ lot.size }}
+      </div>
+    </ng-container>
+  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.subdPurpose }}
+  </div>
+  <div class="subheading2 grid-1">Why do you believe this parcel is suitable for subdivision?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.subdSuitability }}
+  </div>
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term? Please explain.</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.subdAgricultureSupport }}
+  </div>
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let notice of proposalMap" (click)="openFile(notice)">
+      {{ notice.fileName }}
+    </a>
+  </div>
+  <div class="subheading2 grid-1">Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?</div>
+  <div class="grid-double">
+    <span> {{ _applicationSubmission.subdIsHomeSiteSeverance ? 'Yes' : 'No' }}</span>
+  </div>
+  <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
+  <div class="grid-double">
+    <div *ngFor="let document of homesiteDocuments">
+      <a (click)="openFile(document)">
+        {{ document.fileName }}
+      </a>
+    </div>
+  </div>
+</div>

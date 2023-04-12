@@ -181,7 +181,15 @@
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [application]="application"
+    [applicationDocuments]="appDocuments"
   ></app-tur-details>
+  <app-subd-details
+    *ngIf="application && application.typeCode === 'SUBD'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [application]="application"
+    [applicationDocuments]="appDocuments"
+  ></app-subd-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
@@ -192,7 +200,7 @@
       <div class="grid-3 subheading2">File Name</div>
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          {{ file.type }} <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
+          {{ file.type?.label }} <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
         </div>
         <div class="grid-2">
           {{ file.description }}

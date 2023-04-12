@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  // TODO: remove this dragon once deployment is done
   title = 'portal-frontend';
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDetailedDto } from '../../services/application-owner/application-owner.dto';
 import { PARCEL_TYPE } from '../../services/application-parcel/application-parcel.dto';
@@ -18,6 +18,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors: boolean = true;
   @Input() showEdit: boolean = true;
   parcelType = PARCEL_TYPE;
@@ -27,9 +28,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
   needsAuthorizationLetter = true;
+  appDocuments: ApplicationDocumentDto[] = [];
 
   private localGovernments: LocalGovernmentDto[] = [];
-  private otherFileTypes = [DOCUMENT.PHOTOGRAPH, DOCUMENT.PROFESSIONAL_REPORT, DOCUMENT.OTHER];
+  private otherFileTypes = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
   constructor(
     private codeService: CodeService,
@@ -44,25 +46,26 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
       if (app) {
         this.primaryContact = app.owners.find((owner) => owner.uuid === app.primaryContactOwnerUuid);
         this.populateLocalGovernment(app.localGovernmentUuid);
-
-        this.otherFiles = app.documents
-          .filter((file) => (file.type ? this.otherFileTypes.includes(file.type) : true))
-          .sort((a, b) => {
-            return a.uploadedAt - b.uploadedAt;
-          });
-
-        this.authorizationLetters = app.documents
-          .filter((file) => file.type === DOCUMENT.AUTHORIZATION_LETTER)
-          .sort((a, b) => {
-            return a.uploadedAt - b.uploadedAt;
-          });
-
-        const hasSelectedAgent = this.primaryContact?.type.code == APPLICATION_OWNER.AGENT;
-        const nonAgentOwners = app.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
-        const crownOwners = app.owners.filter((owner) => owner.type.code === APPLICATION_OWNER.CROWN);
-
-        this.needsAuthorizationLetter = nonAgentOwners.length > 1 || hasSelectedAgent || crownOwners.length > 0;
+        this.needsAuthorizationLetter = !(
+          app.owners.length === 1 && app.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL
+        );
       }
+    });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.otherFiles = documents
+        .filter((file) => (file.type ? this.otherFileTypes.includes(file.type.code) : true))
+        .sort((a, b) => {
+          return a.uploadedAt - b.uploadedAt;
+        });
+
+      this.authorizationLetters = documents
+        .filter((file) => file.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER)
+        .sort((a, b) => {
+          return a.uploadedAt - b.uploadedAt;
+        });
+
+      this.appDocuments = documents;
     });
   }
 

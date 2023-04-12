@@ -1,5 +1,4 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 
 export enum APPLICATION_STATUS {
@@ -13,7 +12,14 @@ export enum APPLICATION_STATUS {
   CANCELLED = 'CANC',
 }
 
-export interface ApplicationStatusDto extends BaseCodeDto {}
+export interface ApplicationStatusDto extends BaseCodeDto {
+  code: APPLICATION_STATUS;
+}
+
+export interface ProposedLot {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+}
 
 export interface ApplicationSubmissionDto {
   fileNumber: string;
@@ -28,7 +34,6 @@ export interface ApplicationSubmissionDto {
   canEdit: boolean;
   canReview: boolean;
   canView: boolean;
-  documents: ApplicationDocumentDto[];
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
@@ -70,6 +75,13 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   turOutsideLands: string | null;
   turTotalCorridorArea: number | null;
   turAllOwnersNotified?: boolean | null;
+
+  //Subdivision Fields
+  subdPurpose: string | null;
+  subdSuitability: string | null;
+  subdAgricultureSupport: string | null;
+  subdIsHomeSiteSeverance: boolean | null;
+  subdProposedLots: ProposedLot[];
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -113,4 +125,11 @@ export interface ApplicationSubmissionUpdateDto {
   turOutsideLands?: string | null;
   turTotalCorridorArea?: number | null;
   turAllOwnersNotified?: boolean | null;
+
+  //Subdivision Fields
+  subdPurpose?: string | null;
+  subdSuitability?: string | null;
+  subdAgricultureSupport?: string | null;
+  subdIsHomeSiteSeverance?: boolean | null;
+  subdProposedLots?: ProposedLot[];
 }

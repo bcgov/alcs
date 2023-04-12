@@ -10,45 +10,14 @@ import {
 } from 'typeorm';
 import { Document } from '../../../document/document.entity';
 import { Application } from '../application.entity';
+import { ApplicationDocumentCode } from './application-document-code.entity';
 
-export enum DOCUMENT_TYPE {
-  //ALCS
-  DECISION_DOCUMENT = 'decisionDocument',
-  REVIEW_DOCUMENT = 'reviewDocument',
-
-  //Government Review
-  RESOLUTION_DOCUMENT = 'reviewResolutionDocument',
-  STAFF_REPORT = 'reviewStaffReport',
-  REVIEW_OTHER = 'reviewOther',
-
-  //Applicant Uploaded
-  CORPORATE_SUMMARY = 'corporateSummary',
-  PROFESSIONAL_REPORT = 'Professional Report',
-  PHOTOGRAPH = 'Photograph',
-  OTHER = 'Other',
-  AUTHORIZATION_LETTER = 'authorizationLetter',
-  CERTIFICATE_OF_TITLE = 'certificateOfTitle',
-
-  //TUR
-  SERVING_NOTICE = 'servingNotice',
-  PROPOSAL_MAP = 'proposalMap',
+export enum VISIBILITY_FLAG {
+  APPLICANT = 'A',
+  COMMISSIONER = 'C',
+  PUBLIC = 'P',
+  GOVERNMENT = 'G',
 }
-
-export const DOCUMENT_TYPES = [
-  DOCUMENT_TYPE.DECISION_DOCUMENT,
-  DOCUMENT_TYPE.REVIEW_DOCUMENT,
-  DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-  DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-  DOCUMENT_TYPE.STAFF_REPORT,
-  DOCUMENT_TYPE.REVIEW_OTHER,
-  DOCUMENT_TYPE.CORPORATE_SUMMARY,
-  DOCUMENT_TYPE.OTHER,
-  DOCUMENT_TYPE.AUTHORIZATION_LETTER,
-  DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-  DOCUMENT_TYPE.PHOTOGRAPH,
-  DOCUMENT_TYPE.SERVING_NOTICE,
-  DOCUMENT_TYPE.PROPOSAL_MAP,
-];
 
 @Entity()
 export class ApplicationDocument extends BaseEntity {
@@ -63,8 +32,11 @@ export class ApplicationDocument extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @Column()
-  type: string; //FIXME: Automapper hates the DOCUMENT_TYPE type
+  @ManyToOne(() => ApplicationDocumentCode)
+  type?: ApplicationDocumentCode;
+
+  @Column({ nullable: true })
+  typeCode?: string | null;
 
   @Column({ type: 'text', nullable: true })
   description?: string | null;
@@ -75,8 +47,15 @@ export class ApplicationDocument extends BaseEntity {
   @Column()
   applicationUuid: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'uuid' })
   documentUuid?: string | null;
+
+  @Column({ nullable: true, type: 'int' })
+  evidentiaryRecordSorting?: number | null;
+
+  @AutoMap(() => [String])
+  @Column({ default: [], array: true, type: 'text' })
+  visibilityFlags: VISIBILITY_FLAG[];
 
   @OneToOne(() => Document)
   @JoinColumn()

@@ -9,14 +9,13 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import {
-  ApplicationReviewGrpc,
-  SubmittedApplicationGrpc,
-} from '../application-grpc/alcs-application.message.interface';
+import { Base } from '../../common/entities/base.entity';
+import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Base } from '../../common/entities/base.entity';
 import { ApplicationDecisionMeeting } from '../decision/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
@@ -73,7 +72,31 @@ export class Application extends Base {
     type: 'timestamptz',
     nullable: true,
   })
-  datePaid?: Date | null;
+  feePaidDate?: Date | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeWaived?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeSplitWithLg?: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  feeAmount?: number | null;
 
   @AutoMap()
   @Column({
@@ -118,19 +141,94 @@ export class Application extends Base {
   @Column()
   typeCode: string;
 
-  @ManyToOne(() => ApplicationRegion)
-  region: ApplicationRegion;
+  @ManyToOne(() => ApplicationRegion, { nullable: true })
+  region?: ApplicationRegion;
 
-  @Column()
-  regionCode: string;
+  @Column({ nullable: true })
+  regionCode?: string;
 
-  @ManyToOne(() => ApplicationLocalGovernment)
-  localGovernment: ApplicationLocalGovernment;
+  @ManyToOne(() => ApplicationLocalGovernment, { nullable: true })
+  localGovernment?: ApplicationLocalGovernment;
 
   @Column({
     type: 'uuid',
+    nullable: true,
   })
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
+
+  @AutoMap()
+  @Column({
+    default: 'ALCS',
+    type: 'text',
+    comment: 'Determines where the application came from',
+  })
+  source: 'ALCS' | 'APPLICANT';
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+    comment: 'Area in hectares of ALR impacted by the proposal',
+  })
+  alrArea?: number | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural cap classification',
+    nullable: true,
+  })
+  agCap?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability classification system used',
+    nullable: true,
+  })
+  agCapSource?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability map sheet reference',
+    nullable: true,
+  })
+  agCapMap?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Consultant who determined the agricultural capability',
+    nullable: true,
+  })
+  agCapConsultant?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Non-farm use type',
+    nullable: true,
+  })
+  nfuUseType?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Non-farm use sub type',
+    nullable: true,
+  })
+  nfuUseSubType?: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the non-farm use ends',
+    nullable: true,
+  })
+  nfuEndDate?: Date | null;
 
   @AutoMap(() => [StatusHistory])
   @Column({
@@ -141,24 +239,6 @@ export class Application extends Base {
     default: () => `'[]'`,
   })
   statusHistory: StatusHistory[];
-
-  @AutoMap(() => ApplicationReviewGrpc)
-  @Column({
-    comment:
-      'JSONB Column containing the government / first nation government review from the Portal',
-    type: 'jsonb',
-    nullable: true,
-  })
-  applicationReview: ApplicationReviewGrpc;
-
-  @AutoMap(() => SubmittedApplicationGrpc)
-  @Column({
-    comment:
-      'JSONB Column containing the applicants information from the Portal',
-    type: 'jsonb',
-    nullable: true,
-  })
-  submittedApplication: SubmittedApplicationGrpc;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
@@ -191,6 +271,7 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     type: 'uuid',
+    nullable: true,
   })
   cardUuid: string;
 
@@ -200,4 +281,15 @@ export class Application extends Base {
     (appRecon) => appRecon.application,
   )
   reconsiderations: ApplicationReconsideration[];
+
+  @AutoMap(() => ApplicationSubmission)
+  @OneToOne(() => ApplicationSubmission, (appSub) => appSub.application)
+  submittedApplication?: ApplicationSubmission;
+
+  @AutoMap(() => ApplicationSubmissionReview)
+  @OneToOne(
+    () => ApplicationSubmissionReview,
+    (appReview) => appReview.application,
+  )
+  submittedApplicationReview?: ApplicationSubmissionReview;
 }

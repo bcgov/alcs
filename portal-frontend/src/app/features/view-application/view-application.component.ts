@@ -1,10 +1,15 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT } from '../../services/application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_TYPE,
+} from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
+import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import {
   APPLICATION_STATUS,
   ApplicationSubmissionDetailedDto,
@@ -27,13 +32,14 @@ enum MOBILE_STEP {
 export class ViewApplicationComponent implements OnInit, OnDestroy {
   application: ApplicationSubmissionDetailedDto | undefined;
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+  $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   applicationReview: ApplicationSubmissionReviewDto | undefined;
 
   $destroy = new Subject<void>();
 
   APPLICATION_STATUS = APPLICATION_STATUS;
   resolutionDocument: ApplicationDocumentDto[] = [];
-  otherAttachments: ApplicationDocumentDto[] = [];
+  governmentOtherAttachments: ApplicationDocumentDto[] = [];
   staffReport: ApplicationDocumentDto[] = [];
   isMobile = false;
   mobileStep = MOBILE_STEP.INTRODUCTION;
@@ -51,7 +57,8 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDocumentService: ApplicationDocumentService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
   ) {}
 
   onChangeMobileStep() {
@@ -77,18 +84,16 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
   async loadApplication(fileId: string) {
     this.application = await this.applicationService.getByFileId(fileId);
     this.$application.next(this.application);
+    this.loadApplicationDocuments(fileId);
 
     if (
       this.application &&
-      this.application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC &&
+      [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
+        this.application.status.code
+      ) &&
       this.application.typeCode !== 'TURP'
     ) {
       this.loadApplicationReview(fileId);
-      this.staffReport = this.application.documents.filter((document) => document.type === DOCUMENT.STAFF_REPORT);
-      this.resolutionDocument = this.application.documents.filter(
-        (document) => document.type === DOCUMENT.RESOLUTION_DOCUMENT
-      );
-      this.otherAttachments = this.application.documents.filter((document) => document.type === DOCUMENT.REVIEW_OTHER);
     }
   }
 
@@ -134,5 +139,25 @@ export class ViewApplicationComponent implements OnInit, OnDestroy {
 
   onNavigateHome() {
     this.router.navigateByUrl(`home`);
+  }
+
+  private async loadApplicationDocuments(fileId: string) {
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
+      this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+      this.resolutionDocument = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+      );
+      this.governmentOtherAttachments = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+      );
+    }
+  }
+
+  async onDownloadPdf(fileNumber: string | undefined) {
+    if (fileNumber) {
+      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
+    }
   }
 }

@@ -9,3 +9,8 @@ openshift/**/*.json
 openshift/tenant-gitops-aa5cf88
 
 openshift/tenant-gitops-aa5cf88.pub
+node_modules/
+/test-results/
+playwright-report/
+playwright/.cache/
+.~lock.*

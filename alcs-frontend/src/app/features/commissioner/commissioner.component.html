@@ -5,9 +5,8 @@
       <app-document
         *ngIf="fileNumber"
         [fileNumber]="fileNumber"
-        [documentType]="DOCUMENT_TYPE.REVIEW_DOCUMENT"
+        [visibilityFlags]="['C']"
         title="Evidentiary Record"
-        [readOnly]="true"
       ></app-document>
     </section>
   </div>

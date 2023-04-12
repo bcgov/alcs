@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
@@ -9,6 +10,7 @@ import { ApplicationSubmissionService } from '../../services/application-submiss
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ViewApplicationComponent } from './view-application.component';
+import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 
 describe('ViewApplicationComponent', () => {
   let component: ViewApplicationComponent;
@@ -57,8 +59,13 @@ describe('ViewApplicationComponent', () => {
           provide: ConfirmationDialogService,
           useValue: mockDialogService,
         },
+        {
+          provide: ApplicationSubmissionDocumentGenerationService,
+          useValue: {},
+        },
       ],
       declarations: [ViewApplicationComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewApplicationComponent);

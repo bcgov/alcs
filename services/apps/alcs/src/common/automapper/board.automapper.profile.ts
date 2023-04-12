@@ -2,7 +2,11 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { BoardStatus } from '../../alcs/board/board-status.entity';
-import { BoardDto, BoardSmallDto, BoardStatusDto } from '../../alcs/board/board.dto';
+import {
+  BoardDto,
+  BoardSmallDto,
+  BoardStatusDto,
+} from '../../alcs/board/board.dto';
 import { Board } from '../../alcs/board/board.entity';
 import { CardStatusDto } from '../../alcs/card/card-status/card-status.dto';
 import { CardStatus } from '../../alcs/card/card-status/card-status.entity';

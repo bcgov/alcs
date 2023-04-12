@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
@@ -15,11 +16,18 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { ApplicationDocumentDto } from './application-document.dto';
+import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  ApplicationDocumentCode,
+  DOCUMENT_TYPE,
+} from './application-document-code.entity';
+import {
+  ApplicationDocumentDto,
+  ApplicationDocumentTypeDto,
+} from './application-document.dto';
 import {
   ApplicationDocument,
-  DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
+  VISIBILITY_FLAG,
 } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
@@ -32,40 +40,77 @@ export class ApplicationDocumentController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Post('/application/:fileNumber/:documentType')
+  @Get('/application/:fileNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listAll(
+    @Param('fileNumber') fileNumber: string,
+  ): Promise<ApplicationDocumentDto[]> {
+    const documents = await this.applicationDocumentService.list(fileNumber);
+    return this.mapper.mapArray(
+      documents,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
+
+  @Post('/application/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
   async attachDocument(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: string,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
 
-    const uploadableDocumentTypes = [
-      DOCUMENT_TYPE.DECISION_DOCUMENT,
-      DOCUMENT_TYPE.REVIEW_DOCUMENT,
-    ];
+    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
+    const file = req.body.file;
+    const fileName = req.body.fileName.value as string;
+    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
+    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
 
-    if (
-      !uploadableDocumentTypes.includes(documentType as DOCUMENT_TYPE) &&
-      documentType !== null
-    ) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${uploadableDocumentTypes.join(
-          ', ',
-        )}`,
-      );
+    const savedDocument = await this.applicationDocumentService.attachDocument({
+      fileNumber,
+      fileName,
+      file,
+      user: req.user.entity,
+      documentType: documentType as DOCUMENT_TYPE,
+      source: documentSource,
+      visibilityFlags,
+    });
+    return this.mapper.map(
+      savedDocument,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
+
+  @Post('/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateDocument(
+    @Param('uuid') documentUuid: string,
+    @Req() req,
+  ): Promise<ApplicationDocumentDto> {
+    if (!req.isMultipart()) {
+      throw new BadRequestException('Request is not multipart');
     }
 
-    const file = await req.file();
-    const savedDocument = await this.applicationDocumentService.attachDocument(
-      fileNumber,
+    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
+    const file = req.body.file;
+    const fileName = req.body.fileName.value as string;
+    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
+    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+
+    const savedDocument = await this.applicationDocumentService.update({
+      uuid: documentUuid,
+      fileName,
       file,
-      req.user.entity,
-      documentType as DOCUMENT_TYPE,
-    );
+      documentType: documentType as DOCUMENT_TYPE,
+      source: documentSource,
+      visibilityFlags,
+      user: req.user.entity,
+    });
+
     return this.mapper.map(
       savedDocument,
       ApplicationDocument,
@@ -79,15 +124,8 @@ export class ApplicationDocumentController {
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationDocumentDto[]> {
     const documents = await this.applicationDocumentService.list(fileNumber);
-
-    const reviewTypes = [
-      DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-      DOCUMENT_TYPE.STAFF_REPORT,
-      DOCUMENT_TYPE.REVIEW_OTHER,
-    ];
-
-    const reviewDocuments = documents.filter((doc) =>
-      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
+    const reviewDocuments = documents.filter(
+      (doc) => doc.document.source === DOCUMENT_SOURCE.LFNG,
     );
 
     return this.mapper.mapArray(
@@ -102,52 +140,42 @@ export class ApplicationDocumentController {
   async listApplicantDocuments(
     @Param('fileNumber') fileNumber: string,
   ): Promise<ApplicationDocumentDto[]> {
-    const documents = await this.applicationDocumentService.list(fileNumber);
-
-    const reviewTypes = [
-      DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-      DOCUMENT_TYPE.PHOTOGRAPH,
-      DOCUMENT_TYPE.OTHER,
-      DOCUMENT_TYPE.AUTHORIZATION_LETTER,
-      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-      DOCUMENT_TYPE.CORPORATE_SUMMARY,
-      DOCUMENT_TYPE.PROPOSAL_MAP,
-      DOCUMENT_TYPE.SERVING_NOTICE,
-    ];
-
-    const applicantDocuments = documents.filter((doc) =>
-      reviewTypes.includes(doc.type as DOCUMENT_TYPE),
-    );
+    const documents =
+      await this.applicationDocumentService.getApplicantDocuments(fileNumber);
 
     return this.mapper.mapArray(
-      applicantDocuments,
+      documents,
       ApplicationDocument,
       ApplicationDocumentDto,
     );
   }
 
-  @Get('/application/:fileNumber/:documentType')
+  @Get('/application/:fileNumber/:visibilityFlags')
   @UserRoles(...ANY_AUTH_ROLE)
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
-    @Param('documentType') documentType: DOCUMENT_TYPE,
+    @Param('visibilityFlags') visibilityFlags: string,
   ): Promise<ApplicationDocumentDto[]> {
-    if (!DOCUMENT_TYPES.includes(documentType)) {
-      throw new BadRequestException(
-        `Invalid document type specified, must be one of ${DOCUMENT_TYPES.join(
-          ', ',
-        )}`,
-      );
-    }
-
+    const mappedFlags = visibilityFlags.split('') as VISIBILITY_FLAG[];
     const documents = await this.applicationDocumentService.list(
       fileNumber,
-      documentType as DOCUMENT_TYPE,
+      mappedFlags,
     );
     return this.mapper.mapArray(
       documents,
       ApplicationDocument,
       ApplicationDocumentDto,
+    );
+  }
+
+  @Get('/types')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listTypes() {
+    const types = await this.applicationDocumentService.fetchTypes();
+    return this.mapper.mapArray(
+      types,
+      ApplicationDocumentCode,
+      ApplicationDocumentTypeDto,
     );
   }
 
@@ -177,5 +205,13 @@ export class ApplicationDocumentController {
     const document = await this.applicationDocumentService.get(fileUuid);
     await this.applicationDocumentService.delete(document);
     return {};
+  }
+
+  @Post('/sort')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async sortDocuments(
+    @Body() data: { uuid: string; order: number }[],
+  ): Promise<void> {
+    await this.applicationDocumentService.setSorting(data);
   }
 }

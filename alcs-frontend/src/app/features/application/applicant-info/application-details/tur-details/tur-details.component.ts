@@ -5,7 +5,7 @@ import {
   ApplicationDocumentService,
   DOCUMENT_TYPE,
 } from '../../../../../services/application/application-document/application-document.service';
-import { SubmittedApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-tur-details[application]',
@@ -13,11 +13,8 @@ import { SubmittedApplicationDto } from '../../../../../services/application/app
   styleUrls: ['./tur-details.component.scss'],
 })
 export class TurDetailsComponent {
-  _application: SubmittedApplicationDto | undefined;
-  @Input() showErrors = true;
-  @Input() showEdit = true;
-
-  @Input() set application(application: SubmittedApplicationDto | undefined) {
+  _application: ApplicationSubmissionDto | undefined;
+  @Input() set application(application: ApplicationSubmissionDto | undefined) {
     if (application) {
       this._application = application;
     }
@@ -25,8 +22,8 @@ export class TurDetailsComponent {
 
   @Input() set files(files: ApplicationDocumentDto[] | undefined) {
     if (files) {
-      this.servingNotice = files.filter((file) => file.type === DOCUMENT_TYPE.SERVING_NOTICE);
-      this.proposalMap = files.filter((file) => file.type === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.servingNotice = files.filter((file) => file.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
+      this.proposalMap = files.filter((file) => file.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     }
   }
 

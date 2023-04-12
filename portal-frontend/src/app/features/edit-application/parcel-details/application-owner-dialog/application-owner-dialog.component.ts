@@ -2,7 +2,13 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDocumentDto, DOCUMENT } from '../../../../services/application-document/application-document.dto';
+import {
+  ApplicationDocumentDto,
+  ApplicationDocumentTypeDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_TYPE,
+} from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import {
   APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
@@ -10,6 +16,7 @@ import {
   ApplicationOwnerUpdateDto,
 } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
+import { CodeService } from '../../../../services/code/code.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 
 @Component({
@@ -41,13 +48,16 @@ export class ApplicationOwnerDialogComponent {
     corporateSummary: this.corporateSummary,
   });
   private pendingFile: File | undefined;
+  private documentCodes: ApplicationDocumentTypeDto[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<ApplicationOwnerDialogComponent>,
     private appOwnerService: ApplicationOwnerService,
+    private codeService: CodeService,
+    private documentService: ApplicationDocumentService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      fileId?: string;
+      fileId: string;
       parcelUuid?: string;
       existingOwner?: ApplicationOwnerDto;
     }
@@ -69,6 +79,7 @@ export class ApplicationOwnerDialogComponent {
         this.corporateSummary.setValue(data.existingOwner.corporateSummary.uuid);
       }
     }
+    this.loadDocumentCodes();
   }
 
   onChangeType($event: MatButtonToggleChange) {
@@ -94,7 +105,7 @@ export class ApplicationOwnerDialogComponent {
       organizationName: this.organizationName.getRawValue() || undefined,
       firstName: this.firstName.getRawValue() || undefined,
       lastName: this.lastName.getRawValue() || undefined,
-      corporateSummaryUuid: documentUuid,
+      corporateSummaryUuid: documentUuid?.uuid,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
@@ -110,12 +121,12 @@ export class ApplicationOwnerDialogComponent {
   }
 
   async onSave() {
-    const documentUuid = await this.uploadPendingFile(this.pendingFile);
+    const document = await this.uploadPendingFile(this.pendingFile);
     const updateDto: ApplicationOwnerUpdateDto = {
       organizationName: this.organizationName.getRawValue(),
       firstName: this.firstName.getRawValue(),
       lastName: this.lastName.getRawValue(),
-      corporateSummaryUuid: documentUuid,
+      corporateSummaryUuid: document?.uuid,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
@@ -129,16 +140,22 @@ export class ApplicationOwnerDialogComponent {
   async attachFile(fileHandle: FileHandle) {
     this.pendingFile = fileHandle.file;
     this.corporateSummary.setValue('pending');
-    this.files = [
-      {
-        type: DOCUMENT.CORPORATE_SUMMARY,
-        fileName: this.pendingFile.name,
-        fileSize: this.pendingFile.size,
-        uuid: '',
-        uploadedAt: Date.now(),
-        uploadedBy: '',
-      },
-    ];
+    const corporateSummaryType = this.documentCodes.find((code) => code.code === DOCUMENT_TYPE.CORPORATE_SUMMARY);
+    if (corporateSummaryType) {
+      this.files = [
+        {
+          type: corporateSummaryType,
+          fileName: this.pendingFile.name,
+          fileSize: this.pendingFile.size,
+          uuid: '',
+          source: DOCUMENT_SOURCE.APPLICANT,
+          uploadedAt: Date.now(),
+          uploadedBy: '',
+        },
+      ];
+    } else {
+      console.error('Failed to find document type for Corporate Summary');
+    }
   }
 
   removeCorporateSummary() {
@@ -153,8 +170,8 @@ export class ApplicationOwnerDialogComponent {
     if (this.pendingFile) {
       const fileURL = URL.createObjectURL(this.pendingFile);
       window.open(fileURL, '_blank');
-    } else if (this.existingUuid) {
-      const res = await this.appOwnerService.openCorporateSummary(this.existingUuid);
+    } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
+      const res = await this.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {
         window.open(res.url, '_blank');
       }
@@ -164,11 +181,16 @@ export class ApplicationOwnerDialogComponent {
   private async uploadPendingFile(file?: File) {
     let documentUuid;
     if (file) {
-      documentUuid = await this.appOwnerService.uploadCorporateSummary(file);
+      documentUuid = await this.appOwnerService.uploadCorporateSummary(this.data.fileId, file);
       if (!documentUuid) {
         return;
       }
     }
     return documentUuid;
+  }
+
+  private async loadDocumentCodes() {
+    const codes = await this.codeService.loadCodes();
+    this.documentCodes = codes.applicationDocumentTypes;
   }
 }

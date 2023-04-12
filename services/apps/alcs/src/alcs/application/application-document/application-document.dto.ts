@@ -1,32 +1,33 @@
 import { AutoMap } from '@automapper/classes';
+import { BaseCodeDto } from '../../../common/dtos/base.dto';
+
+export class ApplicationDocumentTypeDto extends BaseCodeDto {
+  @AutoMap()
+  oatsCode: string;
+}
 
 export class ApplicationDocumentDto {
-  @AutoMap()
-  type: string;
-
   @AutoMap(() => String)
-  description: string;
+  description?: string;
 
   @AutoMap()
   uuid: string;
 
-  documentUuid: string;
+  @AutoMap(() => ApplicationDocumentTypeDto)
+  type?: ApplicationDocumentTypeDto;
 
-  @AutoMap()
+  @AutoMap(() => [String])
+  visibilityFlags: string[];
+
+  @AutoMap(() => [Number])
+  evidentiaryRecordSorting?: number;
+
+  //Document Fields
+  documentUuid: string;
   fileName: string;
-
-  @AutoMap()
+  fileSize?: number;
+  source: string;
   mimeType: string;
-
-  @AutoMap()
   uploadedBy: string;
-
-  @AutoMap()
   uploadedAt: number;
-}
-
-export class ApplicationDocumentCreateDto {
-  type: string;
-  documentUuid: string;
-  description?: string;
 }

@@ -3,9 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { CodeService } from '../../../services/code/code.service';
 
 import { OtherAttachmentsComponent } from './other-attachments.component';
 
@@ -15,11 +17,15 @@ describe('OtherAttachmentsComponent', () => {
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
+  let mockCodeService: DeepMocked<CodeService>;
+
+  let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockAppService = createMock();
     mockAppDocumentService = createMock();
     mockRouter = createMock();
+    mockCodeService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -35,6 +41,10 @@ describe('OtherAttachmentsComponent', () => {
           provide: Router,
           useValue: mockRouter,
         },
+        {
+          provide: CodeService,
+          useValue: mockCodeService,
+        },
       ],
       declarations: [OtherAttachmentsComponent],
       schemas: [NO_ERRORS_SCHEMA],
@@ -43,6 +53,7 @@ describe('OtherAttachmentsComponent', () => {
     fixture = TestBed.createComponent(OtherAttachmentsComponent);
     component = fixture.componentInstance;
     component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$applicationDocuments = applicationDocumentPipe;
     fixture.detectChanges();
   });
 

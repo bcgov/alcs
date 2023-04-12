@@ -4,6 +4,13 @@ import { BaseCodeEntity } from '../../../../common/entities/base.code.entity';
 
 @Entity()
 export class ApplicationType extends BaseCodeEntity {
+  constructor(data?: Partial<ApplicationType>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @Column()
   shortLabel: string;

@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -27,14 +28,20 @@ import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { DatetimeAdapter } from '@ng-matero/extensions/core';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { ApplicationHeaderComponent } from './application-header/application-header.component';
 import { ApplicationTimeTrackerComponent } from './application-time-tracker/application-time-tracker.component';
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
-import { InlineEditComponent } from './inline-edit/inline-edit.component';
+import { InlineBooleanComponent } from './inline-boolean/inline-boolean.component';
+import { InlineDropdownComponent } from './inline-dropdown/inline-dropdown.component';
+import { InlineNumberComponent } from './inline-number/inline-number.component';
+import { InlineTextComponent } from './inline-text/inline-text.component';
+import { InlineTextareaComponent } from './inline-textarea/inline-textarea.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
+import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
@@ -48,12 +55,17 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MomentPipe,
     StartOfDayPipe,
     MeetingOverviewComponent,
-    InlineEditComponent,
+    InlineTextareaComponent,
+    InlineBooleanComponent,
+    InlineNumberComponent,
+    InlineTextComponent,
+    InlineDropdownComponent,
     ApplicationHeaderComponent,
     ApplicationDocumentComponent,
     ApplicationTimeTrackerComponent,
     ApplicationTypePillComponent,
     SafePipe,
+    FileSizePipe,
   ],
   imports: [
     CommonModule,
@@ -62,11 +74,18 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MatButtonModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     MatTooltipModule,
     MatCardModule,
     MatMenuModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
+    MatSelectModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    CdkDropList,
+    CdkDrag,
   ],
   exports: [
     CommonModule,
@@ -95,7 +114,11 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MtxButtonModule,
     StartOfDayPipe,
     MatTooltipModule,
-    InlineEditComponent,
+    InlineTextareaComponent,
+    InlineBooleanComponent,
+    InlineNumberComponent,
+    InlineTextComponent,
+    InlineDropdownComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
     ApplicationHeaderComponent,
@@ -107,6 +130,9 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     ApplicationTimeTrackerComponent,
     ApplicationTypePillComponent,
     SafePipe,
+    FileSizePipe,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
 })
 export class SharedModule {
