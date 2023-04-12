@@ -161,6 +161,7 @@ export class ApplicationSubmissionController {
       if (validatedApplicationSubmission.typeCode === 'TURP') {
         await this.applicationSubmissionService.submitToAlcs(
           validatedApplicationSubmission,
+          req.user.entity,
         );
         return await this.applicationSubmissionService.updateStatus(
           applicationSubmission,

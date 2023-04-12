@@ -4,12 +4,13 @@ import {
 } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { VISIBILITY_FLAG } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -24,6 +25,7 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
+import { GenerateSubmissionDocumentService } from './generate-submission-document/generate-submission-document.service';
 
 const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.SUBMITTED_TO_LG,
@@ -44,6 +46,8 @@ export class ApplicationSubmissionService {
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
+    @Inject(forwardRef(() => GenerateSubmissionDocumentService))
+    private submissionDocumentGenerationService: GenerateSubmissionDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -184,6 +188,7 @@ export class ApplicationSubmissionService {
 
   async submitToAlcs(
     application: ValidatedApplicationSubmission,
+    user: User,
     applicationReview?: ApplicationSubmissionReview,
   ) {
     let submittedApp: Application | null = null;
@@ -201,6 +206,11 @@ export class ApplicationSubmissionService {
         },
         shouldCreateCard,
       );
+      // TODO: attach generated PDF here. Should the submit fail if the pdf generation fails?
+      await this.generateAndAttachSubmissionPdfSilent(
+        application.fileNumber,
+        user,
+      );
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(
@@ -209,6 +219,36 @@ export class ApplicationSubmissionService {
     }
 
     return submittedApp;
+  }
+
+  private async generateAndAttachSubmissionPdfSilent(
+    fileNumber: string,
+    user: User,
+  ) {
+    const pdfRes = await this.submissionDocumentGenerationService.generate(
+      fileNumber,
+      user,
+    );
+
+    // TODO check other pdfRes statuses, is there something other then 'OK'
+    console.log('pdf generated successfully', pdfRes.statusText);
+
+    if ((pdfRes.statusText = 'OK')) {
+      this.applicationDocumentService.attachDocumentAsBuffer({
+        fileNumber: fileNumber,
+        fileName: `${fileNumber}_Submission`,
+        user: user,
+        file: pdfRes.data,
+        mimeType: 'application/pdf',
+        fileSize: pdfRes.data.length,
+        documentType: DOCUMENT_TYPE.SUBORIG,
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.COMMISSIONER,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
+      });
+    }
   }
 
   getByUser(user: User) {

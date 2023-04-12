@@ -252,6 +252,7 @@ export class ApplicationSubmissionReviewController {
     if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
       await this.applicationSubmissionService.submitToAlcs(
         validationResult.application,
+        req.user.entity,
         completedReview,
       );
       if (completedReview.isAuthorized !== false) {

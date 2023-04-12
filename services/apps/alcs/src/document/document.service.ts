@@ -72,6 +72,39 @@ export class DocumentService {
     return document;
   }
 
+  async createFromBuffer(
+    filePath: string,
+    fileName: string,
+    file: Buffer,
+    mimeType: string,
+    fileSize: number,
+    user: User,
+    source = DOCUMENT_SOURCE.ALC,
+  ) {
+    const fileKey = `${filePath}/${v4()}`;
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: fileKey,
+      Body: file,
+      ACL: 'bucket-owner-full-control',
+      Tagging: DEFAULT_S3_TAGS,
+      ContentType: mimeType,
+      ContentLength: fileSize,
+    });
+    await this.dataStore.send(command);
+    const document = await this.createDocumentRecord({
+      fileKey: fileKey,
+      fileSize: fileSize,
+      mimeType: mimeType,
+      uploadedBy: user,
+      fileName,
+      source,
+    });
+
+    this.logger.debug(`File Uploaded to ${fileKey}`);
+    return document;
+  }
+
   async softRemove(document: Document) {
     await this.documentRepository.softRemove(document);
   }

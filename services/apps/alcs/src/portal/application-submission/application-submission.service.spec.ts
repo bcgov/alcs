@@ -257,6 +257,7 @@ describe('ApplicationSubmissionService', () => {
     await expect(
       service.submitToAlcs(
         applicationSubmission as ValidatedApplicationSubmission,
+        new User(),
       ),
     ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
@@ -284,6 +285,7 @@ describe('ApplicationSubmissionService', () => {
 
     const res = await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
+      new User(),
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);

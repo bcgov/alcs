@@ -6,8 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  Any,
-  ArrayContains,
   ArrayOverlap,
   FindOptionsRelations,
   FindOptionsWhere,
@@ -66,6 +64,47 @@ export class ApplicationDocumentService {
       `application/${fileNumber}`,
       fileName,
       file,
+      user,
+      source,
+    );
+    const appDocument = new ApplicationDocument({
+      typeCode: documentType,
+      application,
+      document,
+      visibilityFlags,
+    });
+
+    return this.applicationDocumentRepository.save(appDocument);
+  }
+
+  async attachDocumentAsBuffer({
+    fileNumber,
+    fileName,
+    file,
+    mimeType,
+    fileSize,
+    documentType,
+    user,
+    source = DOCUMENT_SOURCE.ALC,
+    visibilityFlags,
+  }: {
+    fileNumber: string;
+    fileName: string;
+    file: Buffer;
+    mimeType: string;
+    fileSize: number;
+    user: User;
+    documentType: DOCUMENT_TYPE;
+    source?: DOCUMENT_SOURCE;
+    visibilityFlags: VISIBILITY_FLAG[];
+  }) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+    const document = await this.documentService.createFromBuffer(
+      `application/${fileNumber}`,
+      fileName,
+      file,
+      mimeType,
+      fileSize,
       user,
       source,
     );
