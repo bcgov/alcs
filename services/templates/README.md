@@ -10,7 +10,7 @@ Document generation is done using Common Hosted Document Generation Service
 ### Prerequisites:
 
 - Postman
-- LibreOffice or Microsoft Word (LibreOffice is preferred since CDOGS uses Carbone which uses LibreOffice for pdf generation)
+- LibreOffice for editing templates since it is used in CDOGS -> Carbone which uses LibreOffice for pdf generation. Microsoft Word is not preferred as it generates a different xml structure of the word document and could affect final rendering
 
 ### Demo:
 
