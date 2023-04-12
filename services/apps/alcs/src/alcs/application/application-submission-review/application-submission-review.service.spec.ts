@@ -41,20 +41,18 @@ describe('ApplicationSubmissionReviewService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should successfully find ApplicationSubmission', async () => {
+  it('should successfully find ApplicationSubmissionReview', async () => {
     const fakeFileNumber = 'fake';
 
-    mockApplicationSubmissionRepository.findOneOrFail.mockResolvedValue(
+    mockApplicationSubmissionRepository.findOne.mockResolvedValue(
       {} as ApplicationSubmissionReview,
     );
 
     const result = await service.get(fakeFileNumber);
 
     expect(result).toBeDefined();
-    expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledTimes(
-      1,
-    );
-    expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationSubmissionRepository.findOne).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionRepository.findOne).toBeCalledWith({
       where: { applicationFileNumber: fakeFileNumber },
     });
   });

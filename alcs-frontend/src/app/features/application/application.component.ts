@@ -8,6 +8,7 @@ import { ApplicationModificationDto } from '../../services/application/applicati
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationReviewService } from '../../services/application/application-review/application-review.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
@@ -121,6 +122,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     private applicationDetailService: ApplicationDetailService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
+    private applicationReviewService: ApplicationReviewService,
     private route: ActivatedRoute,
     private titleService: Title
   ) {}
@@ -139,7 +141,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isAuthorized = application.applicationReview?.isAuthorized ?? true;
+        this.loadReview(application.fileNumber);
       }
     });
 
@@ -159,5 +161,10 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   async loadApplication() {
     await this.applicationDetailService.loadApplication(this.fileNumber!);
+  }
+
+  async loadReview(fileNumber: string) {
+    const applicationReview = await this.applicationReviewService.fetchReview(fileNumber);
+    this.isAuthorized = applicationReview?.isAuthorized ?? true;
   }
 }

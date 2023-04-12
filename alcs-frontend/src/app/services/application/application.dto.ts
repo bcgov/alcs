@@ -156,7 +156,6 @@ export interface ApplicationDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
   statusHistory: StatusHistory[];
-  applicationReview?: ApplicationReviewDto;
   submittedApplication?: ApplicationSubmissionDto;
   source: 'ALCS' | 'APPLICANT';
   alrArea?: number;
