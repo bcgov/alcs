@@ -315,6 +315,23 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                    <td><span id="emails">emails</span></td>
+                                    <td>_text</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>&#39;{}&#39;::text[]</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -376,13 +393,15 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
 <area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="761,5,1064,269">
-<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,212,717,604">
-<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,501,232,648">
+<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,189,717,611">
+<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,493,232,640">
 <area shape="rect" id="node4" href="covenant.html" target="_top" title="covenant" alt="" coords="796,287,1029,521">
 <area shape="rect" id="node5" href="planning_review.html" target="_top" title="planning_review" alt="" coords="796,539,1029,773">
 </map>
@@ -390,22 +409,57 @@
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="781,308,951,396">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="439,592,554,680">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,183,717,575">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,255,232,343">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="391,5,603,93">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1373,503,1615,591">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1033,503,1311,591">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1021,608,1323,696">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1015,256,1329,344">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1043,397,1301,485">
-<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1373,151,1615,239">
-<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1055,151,1289,239">
-<area shape="rect" id="node13" href="covenant.html" target="_top" title="covenant" alt="" coords="789,413,943,501">
-<area shape="rect" id="node14" href="planning_review.html" target="_top" title="planning_review" alt="" coords="761,576,971,664">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="781,404,951,492">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="439,79,554,167">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,220,717,641">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,292,232,380">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="391,695,603,783">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1385,148,1627,236">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1039,43,1317,131">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1027,148,1329,236">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1021,852,1335,940">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1049,253,1307,341">
+<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1385,536,1627,624">
+<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1061,536,1295,624">
+<area shape="rect" id="node13" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1039,431,1317,519">
+<area shape="rect" id="node14" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1045,641,1311,729">
+<area shape="rect" id="node15" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1015,747,1341,835">
+<area shape="rect" id="node16" href="covenant.html" target="_top" title="covenant" alt="" coords="789,9,943,97">
+<area shape="rect" id="node17" href="planning_review.html" target="_top" title="planning_review" alt="" coords="761,187,971,275">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_local_government.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="761,5,1064,269">
+<area shape="rect" id="node2" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,189,717,611">
+<area shape="rect" id="node3" href="application_region.html" target="_top" title="application_region" alt="" coords="5,493,232,640">
+<area shape="rect" id="node4" href="covenant.html" target="_top" title="covenant" alt="" coords="796,287,1029,521">
+<area shape="rect" id="node5" href="planning_review.html" target="_top" title="planning_review" alt="" coords="796,539,1029,773">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_local_government.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="761,407,931,495">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="439,367,554,455">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,577,717,999">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,887,232,975">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="391,472,603,560">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1376,111,1617,199">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="993,5,1271,93">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="981,111,1283,199">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="975,252,1289,340">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1003,357,1261,445">
+<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1376,499,1617,587">
+<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1015,499,1249,587">
+<area shape="rect" id="node13" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="993,604,1271,692">
+<area shape="rect" id="node14" href="application_submission.html" target="_top" title="application_submission" alt="" coords="999,745,1265,833">
+<area shape="rect" id="node15" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1333,692,1660,780">
+<area shape="rect" id="node16" href="covenant.html" target="_top" title="covenant" alt="" coords="1420,817,1573,905">
+<area shape="rect" id="node17" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1392,923,1601,1011">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_local_government.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
@@ -425,7 +479,7 @@
                         <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
                         <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
                     </div>
-                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.2-SNAPSHOT</a></strong>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.3-SNAPSHOT</a></strong>
                 </div>
                 <!-- /.container -->
             </footer>

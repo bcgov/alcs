@@ -237,6 +237,11 @@
                                                 <td class="constraint detail">FK_69f4ed0db8aa26fca099a85d3bd</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
+                                            <tr>
+                                                <td title="application_staff_journal.application_uuid references application.uuid via FK_a074329b9f848c30b4165a79889"><a href='application_staff_journal.html'>application_staff_journal</a><span class='relatedKey'>.application_uuid</span></td>
+                                                <td class="constraint detail">FK_a074329b9f848c30b4165a79889</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -254,6 +259,16 @@
                                     <td>nextval(&#39;alcs.alcs_file_number_seq&#39;::regclass)</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_submission.file_number references application.file_number via FK_4776c7dcd306a47a372b322fd9b"><a href='application_submission.html'>application_submission</a><span class='relatedKey'>.file_number</span></td>
+                                                <td class="constraint detail">FK_4776c7dcd306a47a372b322fd9b</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_submission_review.application_file_number references application.file_number via FK_e7960826434a224230f23680d7a"><a href='application_submission_review.html'>application_submission_review</a><span class='relatedKey'>.application_file_number</span></td>
+                                                <td class="constraint detail">FK_e7960826434a224230f23680d7a</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -331,7 +346,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="date_paid">date_paid</span></td>
+                                    <td><span id="fee_paid_date">fee_paid_date</span></td>
                                     <td>timestamptz</td>
                                     <td>35,6</td>
                                     <td title='nullable'>√</td>
@@ -458,7 +473,7 @@
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="region_code">region_code</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -480,7 +495,7 @@
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="local_government_uuid">local_government_uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -502,7 +517,7 @@
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="card_uuid">card_uuid</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -538,12 +553,12 @@
                                     <td><p>JSONB Column containing the status history of the Application from the Portal</p></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="application_review">application_review</span></td>
-                                    <td>jsonb</td>
+                                    <td><span id="source">source</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
-                                    <td title='nullable'>√</td>
                                     <td title=''></td>
-                                    <td>null</td>
+                                    <td title=''></td>
+                                    <td>&#39;ALCS&#39;::text</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
@@ -552,11 +567,79 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>JSONB Column containing the government / first nation government review from the Portal</p></td>
+                                    <td><p>Determines where the application came from</p></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="submitted_application">submitted_application</span></td>
-                                    <td>jsonb</td>
+                                    <td><span id="fee_waived">fee_waived</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="fee_split_with_lg">fee_split_with_lg</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="fee_amount">fee_amount</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="alr_area">alr_area</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Area in hectares of ALR impacted by the proposal</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="ag_cap">ag_cap</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
@@ -569,7 +652,109 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>JSONB Column containing the applicants information from the Portal</p></td>
+                                    <td><p>Agricultural cap classification</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="ag_cap_source">ag_cap_source</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Agricultural capability classification system used</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="ag_cap_map">ag_cap_map</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Agricultural capability map sheet reference</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="ag_cap_consultant">ag_cap_consultant</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Consultant who determined the agricultural capability</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="nfu_use_type">nfu_use_type</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Non-farm use type</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="nfu_use_sub_type">nfu_use_sub_type</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Non-farm use sub type</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="nfu_end_date">nfu_end_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>The date at which the non-farm use ends</p></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -638,62 +823,139 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,204,1095,977">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="323,973,547,1208">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,780,593,956">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,757,232,904">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="323,580,547,727">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1497,445,1768,827">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1157,680,1435,885">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1145,903,1447,1137">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1139,287,1453,433">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1167,451,1425,627">
-<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1512,5,1753,240">
-<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1179,123,1413,269">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,788,1095,1855">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="323,551,547,785">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,1395,593,1571">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1372,232,1519">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="323,1195,547,1341">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1596,5,1867,387">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1207,240,1484,445">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1194,463,1497,697">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1188,908,1503,1055">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1215,1072,1476,1277">
+<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1611,1213,1852,1448">
+<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1229,1331,1462,1477">
+<area shape="rect" id="node13" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1207,715,1484,891">
+<area shape="rect" id="node14" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1139,1495,1552,1671">
+<area shape="rect" id="node15" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1182,1688,1509,1864">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,568,1095,1341">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,799,492,887">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,1361,593,1449">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1396,232,1484">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="323,635,547,781">
-<area shape="rect" id="node22" href="user.html" target="_top" title="user" alt="" coords="61,269,176,357">
-<area shape="rect" id="node23" href="board.html" target="_top" title="board" alt="" coords="55,691,182,779">
-<area shape="rect" id="node24" href="card_status.html" target="_top" title="card_status" alt="" coords="33,796,204,884">
-<area shape="rect" id="node25" href="card_type.html" target="_top" title="card_type" alt="" coords="40,901,197,989">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1652,517,1893,605">
-<area shape="rect" id="node7" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="1260,673,1487,761">
-<area shape="rect" id="node8" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1139,357,1608,445">
-<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="1249,463,1497,551">
-<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1235,252,1512,340">
-<area shape="rect" id="node11" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="1240,568,1507,656">
-<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1222,1120,1525,1208">
-<area shape="rect" id="node19" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="667,111,1065,199">
-<area shape="rect" id="node20" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="655,1711,1077,1799">
-<area shape="rect" id="node21" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="693,1500,1039,1588">
-<area shape="rect" id="node13" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1216,815,1531,961">
-<area shape="rect" id="node14" href="application_document.html" target="_top" title="application_document" alt="" coords="1245,59,1502,235">
-<area shape="rect" id="node15" href="document.html" target="_top" title="document" alt="" coords="785,5,947,93">
-<area shape="rect" id="node16" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1652,1015,1893,1103">
-<area shape="rect" id="node17" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1257,1015,1490,1103">
-<area shape="rect" id="node18" href="application_meeting_type.html" target="_top" title="application_meeting_type" alt="" coords="1231,1225,1515,1313">
-<area shape="rect" id="node26" href="card_history.html" target="_top" title="card_history" alt="" coords="777,463,955,551">
-<area shape="rect" id="node27" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="774,321,958,409">
-<area shape="rect" id="node28" href="comment.html" target="_top" title="comment" alt="" coords="788,216,944,304">
-<area shape="rect" id="node29" href="covenant.html" target="_top" title="covenant" alt="" coords="789,1605,943,1693">
-<area shape="rect" id="node30" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1953,156,2186,244">
-<area shape="rect" id="node31" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1954,431,2185,519">
-<area shape="rect" id="node32" href="planning_review.html" target="_top" title="planning_review" alt="" coords="761,1395,971,1483">
-<area shape="rect" id="node33" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1937,776,2201,864">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,971,1095,2037">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,868,492,956">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,2163,593,2251">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,2197,232,2285">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="323,1472,547,1619">
+<area shape="rect" id="node27" href="user.html" target="_top" title="user" alt="" coords="61,468,176,556">
+<area shape="rect" id="node30" href="board.html" target="_top" title="board" alt="" coords="55,760,182,848">
+<area shape="rect" id="node31" href="card_status.html" target="_top" title="card_status" alt="" coords="33,865,204,953">
+<area shape="rect" id="node32" href="card_type.html" target="_top" title="card_type" alt="" coords="40,971,197,1059">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1652,916,1893,1004">
+<area shape="rect" id="node7" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="1260,861,1487,949">
+<area shape="rect" id="node8" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1139,967,1608,1055">
+<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="1249,1072,1497,1160">
+<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1235,651,1512,739">
+<area shape="rect" id="node11" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="1240,756,1507,844">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1222,1937,1525,2025">
+<area shape="rect" id="node20" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="667,724,1065,812">
+<area shape="rect" id="node24" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="655,2301,1077,2389">
+<area shape="rect" id="node25" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="693,2055,1039,2143">
+<area shape="rect" id="node13" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1216,1319,1531,1465">
+<area shape="rect" id="node14" href="application_document.html" target="_top" title="application_document" alt="" coords="1243,235,1504,440">
+<area shape="rect" id="node15" href="document.html" target="_top" title="document" alt="" coords="785,161,947,249">
+<area shape="rect" id="node16" href="application_document_code.html" target="_top" title="application_document_code" alt="" coords="715,267,1017,355">
+<area shape="rect" id="node17" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1652,1483,1893,1571">
+<area shape="rect" id="node18" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1257,1519,1490,1607">
+<area shape="rect" id="node19" href="application_meeting_type.html" target="_top" title="application_meeting_type" alt="" coords="1231,1213,1515,1301">
+<area shape="rect" id="node21" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1659,296,1886,384">
+<area shape="rect" id="node22" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1167,457,1580,633">
+<area shape="rect" id="node28" href="application_status.html" target="_top" title="application_status" alt="" coords="753,372,979,460">
+<area shape="rect" id="node23" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1660,431,1885,519">
+<area shape="rect" id="node26" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1235,5,1512,181">
+<area shape="rect" id="node29" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1210,1624,1537,1800">
+<area shape="rect" id="node33" href="card_history.html" target="_top" title="card_history" alt="" coords="777,865,955,953">
+<area shape="rect" id="node34" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="774,513,958,601">
+<area shape="rect" id="node35" href="comment.html" target="_top" title="comment" alt="" coords="788,619,944,707">
+<area shape="rect" id="node36" href="covenant.html" target="_top" title="covenant" alt="" coords="789,2196,943,2284">
+<area shape="rect" id="node37" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1953,443,2186,531">
+<area shape="rect" id="node38" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1954,829,2185,917">
+<area shape="rect" id="node39" href="planning_review.html" target="_top" title="planning_review" alt="" coords="761,2407,971,2495">
+<area shape="rect" id="node40" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1937,1305,2201,1393">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,759,1095,1825">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="323,551,547,785">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,1365,593,1541">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1343,232,1489">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="323,1165,547,1312">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1624,5,1895,387">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1207,240,1484,445">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1194,463,1497,697">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1188,715,1503,861">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1215,879,1476,1084">
+<area shape="rect" id="node11" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1639,1020,1880,1255">
+<area shape="rect" id="node12" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1229,1137,1462,1284">
+<area shape="rect" id="node13" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1207,1301,1484,1477">
+<area shape="rect" id="node14" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1139,1495,1552,1671">
+<area shape="rect" id="node15" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1596,1527,1923,1703">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,456,1095,1523">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,1611,492,1699">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,32,593,120">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,68,232,156">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="323,863,547,1009">
+<area shape="rect" id="node27" href="user.html" target="_top" title="user" alt="" coords="61,1873,176,1961">
+<area shape="rect" id="node30" href="board.html" target="_top" title="board" alt="" coords="55,1713,182,1801">
+<area shape="rect" id="node31" href="card_status.html" target="_top" title="card_status" alt="" coords="33,1503,204,1591">
+<area shape="rect" id="node32" href="card_type.html" target="_top" title="card_type" alt="" coords="40,1608,197,1696">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1695,1467,1936,1555">
+<area shape="rect" id="node7" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="1260,1209,1487,1297">
+<area shape="rect" id="node8" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1139,1315,1608,1403">
+<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="1249,1613,1497,1701">
+<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1235,1104,1512,1192">
+<area shape="rect" id="node11" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="1240,1719,1507,1807">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1222,1860,1525,1948">
+<area shape="rect" id="node20" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="667,1681,1065,1769">
+<area shape="rect" id="node24" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="655,2175,1077,2263">
+<area shape="rect" id="node25" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="693,2280,1039,2368">
+<area shape="rect" id="node13" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1216,327,1531,473">
+<area shape="rect" id="node14" href="application_document.html" target="_top" title="application_document" alt="" coords="1243,527,1504,732">
+<area shape="rect" id="node15" href="document.html" target="_top" title="document" alt="" coords="785,1787,947,1875">
+<area shape="rect" id="node16" href="application_document_code.html" target="_top" title="application_document_code" alt="" coords="715,351,1017,439">
+<area shape="rect" id="node17" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1695,785,1936,873">
+<area shape="rect" id="node18" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1257,785,1490,873">
+<area shape="rect" id="node19" href="application_meeting_type.html" target="_top" title="application_meeting_type" alt="" coords="1231,891,1515,979">
+<area shape="rect" id="node21" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1702,495,1929,583">
+<area shape="rect" id="node22" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1240,221,1507,309">
+<area shape="rect" id="node28" href="application_status.html" target="_top" title="application_status" alt="" coords="753,209,979,297">
+<area shape="rect" id="node23" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1703,355,1928,443">
+<area shape="rect" id="node26" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1235,1420,1512,1596">
+<area shape="rect" id="node29" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1652,232,1979,320">
+<area shape="rect" id="node33" href="card_history.html" target="_top" title="card_history" alt="" coords="777,1540,955,1628">
+<area shape="rect" id="node34" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="774,1928,958,2016">
+<area shape="rect" id="node35" href="comment.html" target="_top" title="comment" alt="" coords="788,2033,944,2121">
+<area shape="rect" id="node36" href="covenant.html" target="_top" title="covenant" alt="" coords="1739,117,1892,205">
+<area shape="rect" id="node37" href="decision_document.html" target="_top" title="decision_document" alt="" coords="2038,1572,2271,1660">
+<area shape="rect" id="node38" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="2039,1412,2270,1500">
+<area shape="rect" id="node39" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1711,11,1920,99">
+<area shape="rect" id="node40" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="2023,1785,2287,1873">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
@@ -713,7 +975,7 @@
                         <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
                         <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
                     </div>
-                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.2-SNAPSHOT</a></strong>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.3-SNAPSHOT</a></strong>
                 </div>
                 <!-- /.container -->
             </footer>

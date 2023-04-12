@@ -444,6 +444,8 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
@@ -466,39 +468,99 @@
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="837,1061,1007,1149">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="288,368,667,819">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="319,872,636,960">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="11,905,238,993">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="371,1013,583,1101">
-<area shape="rect" id="node18" href="board.html" target="_top" title="board" alt="" coords="13,477,237,624">
-<area shape="rect" id="node19" href="card_status.html" target="_top" title="card_status" alt="" coords="13,287,237,433">
-<area shape="rect" id="node20" href="user.html" target="_top" title="user" alt="" coords="67,1367,182,1455">
-<area shape="rect" id="node21" href="card_type.html" target="_top" title="card_type" alt="" coords="5,693,244,840">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1536,367,1777,455">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1196,296,1473,384">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1183,419,1486,507">
-<area shape="rect" id="node14" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="723,169,1121,257">
-<area shape="rect" id="node15" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="711,311,1133,399">
-<area shape="rect" id="node16" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="749,452,1095,540">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1177,1059,1492,1147">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1206,1164,1463,1252">
-<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="397,1155,558,1243">
-<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1536,953,1777,1041">
-<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1218,953,1451,1041">
-<area shape="rect" id="node17" href="board_status.html" target="_top" title="board_status" alt="" coords="386,263,569,351">
-<area shape="rect" id="node22" href="card_history.html" target="_top" title="card_history" alt="" coords="810,5,1034,152">
-<area shape="rect" id="node23" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="830,1332,1014,1420">
-<area shape="rect" id="node24" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="364,1296,591,1384">
-<area shape="rect" id="node25" href="comment.html" target="_top" title="comment" alt="" coords="844,1227,1000,1315">
-<area shape="rect" id="node26" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1219,1393,1450,1481">
-<area shape="rect" id="node27" href="covenant.html" target="_top" title="covenant" alt="" coords="805,557,1039,792">
-<area shape="rect" id="node28" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1838,303,2069,391">
-<area shape="rect" id="node29" href="notification.html" target="_top" title="notification" alt="" coords="391,1437,564,1525">
-<area shape="rect" id="node30" href="planning_review.html" target="_top" title="planning_review" alt="" coords="805,809,1039,1044">
-<area shape="rect" id="node31" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1821,425,2085,513">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="837,756,1007,844">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="288,692,667,1143">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="319,304,636,392">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="11,339,238,427">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="371,481,583,569">
+<area shape="rect" id="node18" href="user.html" target="_top" title="user" alt="" coords="67,1409,182,1497">
+<area shape="rect" id="node22" href="board.html" target="_top" title="board" alt="" coords="13,827,237,973">
+<area shape="rect" id="node23" href="card_status.html" target="_top" title="card_status" alt="" coords="13,636,237,783">
+<area shape="rect" id="node24" href="card_type.html" target="_top" title="card_type" alt="" coords="5,1017,244,1164">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1548,631,1789,719">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1202,967,1479,1055">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1189,473,1492,561">
+<area shape="rect" id="node14" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="723,861,1121,949">
+<area shape="rect" id="node15" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="711,363,1133,451">
+<area shape="rect" id="node16" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="749,5,1095,93">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1183,579,1498,667">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1212,1116,1469,1204">
+<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="397,1407,558,1495">
+<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1548,736,1789,824">
+<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1224,720,1457,808">
+<area shape="rect" id="node17" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1202,1301,1479,1389">
+<area shape="rect" id="node19" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1207,1447,1474,1535">
+<area shape="rect" id="node20" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1177,861,1504,949">
+<area shape="rect" id="node21" href="board_status.html" target="_top" title="board_status" alt="" coords="386,587,569,675">
+<area shape="rect" id="node25" href="card_history.html" target="_top" title="card_history" alt="" coords="810,967,1034,1113">
+<area shape="rect" id="node26" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="830,1167,1014,1255">
+<area shape="rect" id="node27" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="364,1160,591,1248">
+<area shape="rect" id="node28" href="comment.html" target="_top" title="comment" alt="" coords="844,1443,1000,1531">
+<area shape="rect" id="node29" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1225,1572,1456,1660">
+<area shape="rect" id="node30" href="covenant.html" target="_top" title="covenant" alt="" coords="805,468,1039,703">
+<area shape="rect" id="node31" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1850,748,2081,836">
+<area shape="rect" id="node32" href="notification.html" target="_top" title="notification" alt="" coords="391,1301,564,1389">
+<area shape="rect" id="node33" href="planning_review.html" target="_top" title="planning_review" alt="" coords="805,111,1039,345">
+<area shape="rect" id="node34" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1833,573,2097,661">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="711,145,1013,409">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="288,536,667,987">
+<area shape="rect" id="node5" href="user.html" target="_top" title="user" alt="" coords="13,1160,237,1336">
+<area shape="rect" id="node6" href="board.html" target="_top" title="board" alt="" coords="13,773,237,920">
+<area shape="rect" id="node7" href="card_status.html" target="_top" title="card_status" alt="" coords="13,609,237,756">
+<area shape="rect" id="node8" href="card_type.html" target="_top" title="card_type" alt="" coords="5,937,244,1084">
+<area shape="rect" id="node3" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1070,5,1347,211">
+<area shape="rect" id="node4" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1057,275,1360,509">
+<area shape="rect" id="node9" href="card_history.html" target="_top" title="card_history" alt="" coords="750,463,974,609">
+<area shape="rect" id="node10" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="750,1131,974,1336">
+<area shape="rect" id="node11" href="comment.html" target="_top" title="comment" alt="" coords="750,1353,974,1529">
+<area shape="rect" id="node12" href="covenant.html" target="_top" title="covenant" alt="" coords="745,627,979,861">
+<area shape="rect" id="node13" href="planning_review.html" target="_top" title="planning_review" alt="" coords="745,879,979,1113">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/card.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="837,923,1007,1011">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="288,591,667,1042">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="319,1342,636,1430">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="11,1376,238,1464">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="371,1059,583,1147">
+<area shape="rect" id="node18" href="user.html" target="_top" title="user" alt="" coords="67,415,182,503">
+<area shape="rect" id="node22" href="board.html" target="_top" title="board" alt="" coords="13,1162,237,1308">
+<area shape="rect" id="node23" href="card_status.html" target="_top" title="card_status" alt="" coords="13,799,237,946">
+<area shape="rect" id="node24" href="card_type.html" target="_top" title="card_type" alt="" coords="5,963,244,1110">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1579,662,1820,750">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1196,732,1473,820">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1183,416,1486,504">
+<area shape="rect" id="node14" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="723,618,1121,706">
+<area shape="rect" id="node15" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="711,404,1133,492">
+<area shape="rect" id="node16" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="749,299,1095,387">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1177,910,1492,998">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1206,522,1463,610">
+<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="397,344,558,432">
+<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1579,1235,1820,1323">
+<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1218,1235,1451,1323">
+<area shape="rect" id="node17" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1196,627,1473,715">
+<area shape="rect" id="node19" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1201,1015,1468,1103">
+<area shape="rect" id="node20" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1536,856,1863,944">
+<area shape="rect" id="node21" href="board_status.html" target="_top" title="board_status" alt="" coords="386,1200,569,1288">
+<area shape="rect" id="node25" href="card_history.html" target="_top" title="card_history" alt="" coords="810,723,1034,870">
+<area shape="rect" id="node26" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="830,194,1014,282">
+<area shape="rect" id="node27" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="364,191,591,279">
+<area shape="rect" id="node28" href="comment.html" target="_top" title="comment" alt="" coords="844,88,1000,176">
+<area shape="rect" id="node29" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1219,51,1450,139">
+<area shape="rect" id="node30" href="covenant.html" target="_top" title="covenant" alt="" coords="1583,1340,1816,1575">
+<area shape="rect" id="node31" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1923,696,2154,784">
+<area shape="rect" id="node32" href="notification.html" target="_top" title="notification" alt="" coords="391,486,564,574">
+<area shape="rect" id="node33" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1583,983,1816,1218">
+<area shape="rect" id="node34" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1907,547,2171,635">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/card.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
@@ -518,7 +580,7 @@
                         <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
                         <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
                     </div>
-                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.2-SNAPSHOT</a></strong>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.3-SNAPSHOT</a></strong>
                 </div>
                 <!-- /.container -->
             </footer>

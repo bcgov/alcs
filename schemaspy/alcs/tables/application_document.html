@@ -117,23 +117,16 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="type">type</span></td>
-                                    <td>varchar</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_owner.corporate_summary_uuid references application_document.uuid via FK_07928aa07dbb4cdb373be95cf02"><a href='application_owner.html'>application_owner</a><span class='relatedKey'>.corporate_summary_uuid</span></td>
+                                                <td class="constraint detail">FK_07928aa07dbb4cdb373be95cf02</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_parcel.certificate_of_title_uuid references application_document.uuid via FK_4b5a4dca01e2f175fa448a734f9"><a href='application_parcel.html'>application_parcel</a><span class='relatedKey'>.certificate_of_title_uuid</span></td>
+                                                <td class="constraint detail">FK_4b5a4dca01e2f175fa448a734f9</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -190,6 +183,62 @@
                                     <td><span id="description">description</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="type_code">type_code</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_document.type_code references application_document_code.code via FK_9c02077523dffbebc9727ecf823"><a href='application_document_code.html'>application_document_code</a><span class='relatedKey'>.code</span></td>
+                                                <td class="constraint detail">FK_9c02077523dffbebc9727ecf823</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="visibility_flags">visibility_flags</span></td>
+                                    <td>_text</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>&#39;{}&#39;::text[]</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="evidentiary_record_sorting">evidentiary_record_sorting</span></td>
+                                    <td>int4</td>
+                                    <td>10</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -268,29 +317,41 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="352,71,733,287">
+<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="352,225,751,500">
 <area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,5,308,269">
 <area shape="rect" id="node3" href="document.html" target="_top" title="document" alt="" coords="45,287,269,433">
+<area shape="rect" id="node4" href="application_document_code.html" target="_top" title="application_document_code" alt="" coords="6,451,307,627">
+<area shape="rect" id="node5" href="application_owner.html" target="_top" title="application_owner" alt="" coords="797,57,1049,263">
+<area shape="rect" id="node6" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="795,280,1052,485">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,386,940,650">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,630,492,718">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,525,593,613">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,489,232,577">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,383,541,471">
-<area shape="rect" id="node14" href="user.html" target="_top" title="user" alt="" coords="61,347,176,435">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1409,546,1651,634">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1036,687,1313,775">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1023,582,1326,670">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1017,441,1332,529">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="984,66,1365,282">
-<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="677,157,901,303">
-<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1409,299,1651,387">
-<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1058,299,1291,387">
-<area shape="rect" id="node15" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1695,251,1928,339">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,919,940,1183">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,823,492,911">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,1083,593,1171">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1046,232,1134">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,942,541,1030">
+<area shape="rect" id="node22" href="user.html" target="_top" title="user" alt="" coords="61,607,176,695">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1435,862,1676,950">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1045,810,1322,898">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1032,915,1335,1003">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1026,1021,1341,1109">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="984,202,1383,477">
+<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="677,211,901,358">
+<area shape="rect" id="node12" href="application_document_code.html" target="_top" title="application_document_code" alt="" coords="638,375,939,551">
+<area shape="rect" id="node13" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1435,1162,1676,1250">
+<area shape="rect" id="node14" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1067,1162,1300,1250">
+<area shape="rect" id="node15" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1429,394,1681,599">
+<area shape="rect" id="node16" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1050,494,1317,582">
+<area shape="rect" id="node17" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="1049,599,1318,687">
+<area shape="rect" id="node18" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1427,143,1684,349">
+<area shape="rect" id="node19" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="1004,97,1363,185">
+<area shape="rect" id="node20" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1728,321,2172,409">
+<area shape="rect" id="node21" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1045,705,1322,793">
+<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1020,1303,1347,1391">
+<area shape="rect" id="node24" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1833,62,2067,150">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
@@ -312,7 +373,7 @@
                         <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
                         <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
                     </div>
-                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.2-SNAPSHOT</a></strong>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 6.2.3-SNAPSHOT</a></strong>
                 </div>
                 <!-- /.container -->
             </footer>
