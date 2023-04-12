@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   ApplicationStaffJournalDto,
   CreateApplicationStaffJournalDto,
@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
   templateUrl: './staff-journal.component.html',
   styleUrls: ['./staff-journal.component.scss'],
 })
-export class StaffJournalComponent implements OnInit {
+export class StaffJournalComponent implements OnChanges {
   @Input() applicationUuid: string = '';
 
   labelText = 'Add a journal note';
@@ -37,7 +37,7 @@ export class StaffJournalComponent implements OnInit {
     private toastService: ToastService
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.loadNotes(this.applicationUuid);
   }
 
