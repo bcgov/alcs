@@ -50,7 +50,14 @@ describe('EmailService', () => {
         },
       }),
     );
-    mockHttpService.post.mockReturnValueOnce(of({}));
+
+    mockHttpService.post.mockReturnValueOnce(
+      of({
+        data: {
+          txId: '',
+        },
+      }),
+    );
 
     const mockEmail = {
       body: 'body',
@@ -79,8 +86,13 @@ describe('EmailService', () => {
         },
       }),
     );
-    mockHttpService.post.mockReturnValueOnce(of({}));
-    mockHttpService.post.mockReturnValueOnce(of({}));
+    mockHttpService.post.mockReturnValue(
+      of({
+        data: {
+          txId: '',
+        },
+      }),
+    );
 
     const mockEmail = {
       body: 'body',
