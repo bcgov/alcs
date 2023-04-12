@@ -15,7 +15,7 @@ import { ApplicationListComponent } from './features/home/application-list/appli
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
-import { ViewApplicationComponent } from './features/view-application/view-application.component';
+import { ViewSubmissionComponent } from './features/view-submission/view-submission.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
@@ -36,7 +36,7 @@ import { SharedModule } from './shared/shared.module';
     CreateApplicationDialogComponent,
     LandingPageComponent,
     ConfirmationDialogComponent,
-    ViewApplicationComponent,
+    ViewSubmissionComponent,
   ],
   imports: [
     BrowserModule,
