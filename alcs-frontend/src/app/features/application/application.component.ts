@@ -98,7 +98,7 @@ export const childRoutes = [
     menuTitle: 'Documents',
     icon: 'description',
     component: DocumentsComponent,
-    requiresAuthorization: true,
+    requiresAuthorization: false,
   },
 ];
 

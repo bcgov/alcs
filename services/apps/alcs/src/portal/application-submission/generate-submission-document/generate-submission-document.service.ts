@@ -185,6 +185,7 @@ export class GenerateSubmissionDocumentService {
       noData: NO_DATA,
       purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
       certificateOfTitle: e.certificateOfTitle?.document.fileName,
+      ownershipType: e.ownershipType?.label,
       owners: e.owners.map((o) => ({
         ...o,
         noData: NO_DATA,

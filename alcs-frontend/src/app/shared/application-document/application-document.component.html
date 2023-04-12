@@ -6,6 +6,7 @@
 
 <table
   cdkDropList
+  [cdkDropListDisabled]='!sortable'
   (cdkDropListDropped)="onRowDropped($event)"
   mat-table
   [dataSource]="dataSource"
