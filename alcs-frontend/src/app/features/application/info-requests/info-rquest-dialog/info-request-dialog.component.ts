@@ -20,6 +20,7 @@ export const REASON_TYPE = {
   DEFAULT: 'Waiting for additional information from applicant',
   CUSTOM: 'custom',
 };
+
 @Component({
   selector: 'app-info-request-dialog',
   templateUrl: './info-request-dialog.component.html',
@@ -29,6 +30,7 @@ export class InfoRequestDialogComponent {
   model: ApplicationInfoRequestForm;
   @ViewChild('customReasonText') customReasonText: any;
   isLoading = false;
+  REASON_TYPE = REASON_TYPE;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationInfoRequestForm,
