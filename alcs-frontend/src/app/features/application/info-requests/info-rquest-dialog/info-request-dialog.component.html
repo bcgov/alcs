@@ -60,6 +60,7 @@
               #customReasonText
               matInput
               type="text"
+              [required]='model.reason === REASON_TYPE.CUSTOM'
               [(ngModel)]="model.reasonText"
               name="reasonText"
               (click)="onReasonInputClick()"
