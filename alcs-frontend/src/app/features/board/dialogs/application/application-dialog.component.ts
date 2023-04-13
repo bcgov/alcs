@@ -5,6 +5,7 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationService } from '../../../../services/application/application.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { CardUpdateDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { UserService } from '../../../../services/user/user.service';
@@ -72,5 +73,18 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
   async reloadApplication() {
     const application = await this.applicationService.fetchApplication(this.application.fileNumber);
     this.populateData(application);
+  }
+
+  override updateCard(changes: Omit<CardUpdateDto, 'uuid'>) {
+    if (this.card) {
+      this.applicationService
+        .updateApplicationCard(this.card.uuid, {
+          ...changes,
+        })
+        .then(() => {
+          this.isDirty = true;
+          this.toastService.showSuccessToast('Card updated');
+        });
+    }
   }
 }

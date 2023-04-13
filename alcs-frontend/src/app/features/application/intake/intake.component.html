@@ -40,6 +40,13 @@
       </div>
     </div>
   </div>
+  <div *ngIf='application?.source !== "APPLICANT"'>
+    <h5>Payment Date</h5>
+    <app-inline-datepicker
+      [value]="application?.feePaidDate"
+      (save)="updateApplicationDate('feePaidDate', $event)"
+    ></app-inline-datepicker>
+  </div>
   <div>
     <h5>Acknowledged Incomplete</h5>
     <div>
