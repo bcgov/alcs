@@ -98,15 +98,11 @@ export class ApplicationParcel extends Base {
   parcelType?: string;
 
   @AutoMap()
-  @Column({
-    comment: 'The application file id that parcel is linked to',
-    nullable: false,
-  })
-  applicationFileNumber: string;
-
-  @AutoMap()
   @ManyToOne(() => ApplicationSubmission)
-  application: ApplicationSubmission;
+  applicationSubmission: ApplicationSubmission;
+
+  @Column()
+  applicationSubmissionUuid: string;
 
   @AutoMap(() => String)
   @Column({ nullable: true })

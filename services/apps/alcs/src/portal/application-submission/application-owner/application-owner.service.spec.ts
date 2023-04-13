@@ -217,7 +217,7 @@ describe('ApplicationOwnerService', () => {
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
@@ -252,7 +252,7 @@ describe('ApplicationOwnerService', () => {
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
@@ -279,7 +279,7 @@ describe('ApplicationOwnerService', () => {
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
@@ -314,7 +314,7 @@ describe('ApplicationOwnerService', () => {
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(

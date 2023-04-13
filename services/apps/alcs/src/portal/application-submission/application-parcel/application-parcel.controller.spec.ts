@@ -88,7 +88,7 @@ describe('ApplicationParcelController', () => {
   });
 
   it('should call out to service when creating parcels', async () => {
-    mockApplicationService.getOrFail.mockResolvedValue(
+    mockApplicationService.getOrFailByFileNumber.mockResolvedValue(
       {} as ApplicationSubmission,
     );
     mockApplicationParcelService.create.mockResolvedValue(
@@ -100,7 +100,7 @@ describe('ApplicationParcelController', () => {
       applicationFileId: 'fake',
     });
 
-    expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
+    expect(mockApplicationService.getOrFailByFileNumber).toBeCalledTimes(1);
     expect(mockApplicationParcelService.create).toBeCalledTimes(1);
     expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(0);
     expect(parcel).toBeDefined();
@@ -108,7 +108,7 @@ describe('ApplicationParcelController', () => {
 
   it('should call out to service and revert newly created "other" parcel if failed to link it to and owner during creation process', async () => {
     const mockError = new Error('mock error');
-    mockApplicationService.getOrFail.mockResolvedValue(
+    mockApplicationService.getOrFailByFileNumber.mockResolvedValue(
       {} as ApplicationSubmission,
     );
     mockApplicationParcelService.create.mockResolvedValue(
@@ -125,7 +125,7 @@ describe('ApplicationParcelController', () => {
       }),
     ).rejects.toMatchObject(mockError);
 
-    expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
+    expect(mockApplicationService.getOrFailByFileNumber).toBeCalledTimes(1);
     expect(mockApplicationParcelService.create).toBeCalledTimes(1);
     expect(mockApplicationParcelService.deleteMany).toBeCalledTimes(1);
     expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(1);

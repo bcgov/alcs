@@ -10,7 +10,6 @@ import {
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';
-import { Document } from '../../../document/document.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
@@ -74,10 +73,10 @@ export class ApplicationOwner extends Base {
   type: ApplicationOwnerType;
 
   @ManyToOne(() => ApplicationSubmission, { nullable: false })
-  application: ApplicationSubmission;
+  applicationSubmission: ApplicationSubmission;
 
   @Column()
-  applicationFileNumber: string;
+  applicationSubmissionUuid: string;
 
   @ManyToMany(() => ApplicationParcel, (appParcel) => appParcel.owners)
   parcels: ApplicationParcel[];

@@ -83,7 +83,10 @@ export class ApplicationSubmissionController {
     }
 
     const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreator(fileId, user);
+      await this.applicationSubmissionService.getIfCreatorByFileNumber(
+        fileId,
+        user,
+      );
 
     return await this.applicationSubmissionService.mapToDetailedDTO(
       applicationSubmission,
@@ -109,13 +112,14 @@ export class ApplicationSubmissionController {
     @Body() updateDto: ApplicationSubmissionUpdateDto,
     @Req() req,
   ) {
-    await this.applicationSubmissionService.verifyAccess(
-      fileId,
-      req.user.entity,
-    );
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileId,
+        req.user.entity,
+      );
 
     const application = await this.applicationSubmissionService.update(
-      fileId,
+      submission.uuid,
       updateDto,
     );
 
@@ -127,10 +131,11 @@ export class ApplicationSubmissionController {
 
   @Post('/:fileId/cancel')
   async cancel(@Param('fileId') fileId: string, @Req() req) {
-    const application = await this.applicationSubmissionService.getIfCreator(
-      fileId,
-      req.user.entity,
-    );
+    const application =
+      await this.applicationSubmissionService.getIfCreatorByFileNumber(
+        fileId,
+        req.user.entity,
+      );
 
     if (application.status.code !== APPLICATION_STATUS.IN_PROGRESS) {
       throw new BadRequestException('Can only cancel in progress Applications');
@@ -146,7 +151,7 @@ export class ApplicationSubmissionController {
   @Post('/alcs/submit/:fileId')
   async submitAsApplicant(@Param('fileId') fileId: string, @Req() req) {
     const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreator(
+      await this.applicationSubmissionService.getIfCreatorByFileNumber(
         fileId,
         req.user.entity,
       );

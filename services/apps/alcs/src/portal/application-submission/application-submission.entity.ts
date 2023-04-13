@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
@@ -39,12 +40,22 @@ export class ApplicationSubmission extends BaseEntity {
     }
   }
 
+  @AutoMap()
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string;
+
   @AutoMap({})
-  @PrimaryColumn({
-    unique: true,
+  @Column({
     comment: 'File Number of attached application',
   })
   fileNumber: string;
+
+  @AutoMap({})
+  @Column({
+    comment: 'Indicates whether submission is currently draft or not',
+    default: false,
+  })
+  isDraft: boolean;
 
   @AutoMap()
   @CreateDateColumn({ type: 'timestamptz' })
@@ -211,7 +222,7 @@ export class ApplicationSubmission extends BaseEntity {
   })
   statusHistory: StatusHistory[];
 
-  @OneToMany(() => ApplicationOwner, (owner) => owner.application)
+  @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];
 
   @AutoMap(() => String)
@@ -374,6 +385,9 @@ export class ApplicationSubmission extends BaseEntity {
   application: Application;
 
   @AutoMap(() => ApplicationParcel)
-  @OneToMany(() => ApplicationParcel, (appParcel) => appParcel.application)
+  @OneToMany(
+    () => ApplicationParcel,
+    (appParcel) => appParcel.applicationSubmission,
+  )
   parcels: ApplicationParcel[];
 }

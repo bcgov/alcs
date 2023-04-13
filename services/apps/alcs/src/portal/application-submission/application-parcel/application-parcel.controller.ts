@@ -37,7 +37,7 @@ import { ApplicationParcelService } from './application-parcel.service';
 export class ApplicationParcelController {
   constructor(
     private parcelService: ApplicationParcelService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     @InjectMapper() private mapper: Mapper,
     private ownerService: ApplicationOwnerService,
     private documentService: DocumentService,
@@ -60,11 +60,12 @@ export class ApplicationParcelController {
   async create(
     @Body() createDto: ApplicationParcelCreateDto,
   ): Promise<ApplicationParcelDto> {
-    const application = await this.applicationService.getOrFail(
-      createDto.applicationFileId,
-    );
+    const application =
+      await this.applicationSubmissionService.getOrFailByFileNumber(
+        createDto.applicationFileId,
+      );
     const parcel = await this.parcelService.create(
-      application.fileNumber,
+      application.uuid,
       createDto.parcelType,
     );
 
@@ -123,9 +124,15 @@ export class ApplicationParcelController {
       source: DOCUMENT_SOURCE.APPLICANT,
     });
 
+    const applicationSubmission =
+      await this.applicationSubmissionService.getByUuid(
+        parcel.applicationSubmissionUuid,
+        req.user.entity,
+      );
+
     const certificateOfTitle =
       await this.applicationDocumentService.attachExternalDocument(
-        parcel.applicationFileNumber,
+        applicationSubmission!.fileNumber,
         {
           documentUuid: document.uuid,
           type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,

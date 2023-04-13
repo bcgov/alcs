@@ -46,7 +46,7 @@ export class ApplicationOwnerController {
     @Param('fileId') fileId: string,
     @Req() req,
   ): Promise<ApplicationOwnerDto[]> {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       fileId,
       req.user.entity,
     );
@@ -65,10 +65,11 @@ export class ApplicationOwnerController {
   ): Promise<ApplicationOwnerDto> {
     this.verifyDto(createDto);
 
-    const application = await this.applicationSubmissionService.verifyAccess(
-      createDto.applicationFileNumber,
-      req.user.entity,
-    );
+    const application =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        createDto.applicationFileNumber,
+        req.user.entity,
+      );
     const owner = await this.ownerService.create(createDto, application);
 
     return this.mapper.mapAsync(owner, ApplicationOwner, ApplicationOwnerDto);
@@ -148,10 +149,11 @@ export class ApplicationOwnerController {
 
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
-    const application = await this.applicationSubmissionService.verifyAccess(
-      data.fileNumber,
-      req.user.entity,
-    );
+    const application =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        data.fileNumber,
+        req.user.entity,
+      );
 
     //Create Owner
     if (!data.ownerUuid) {
@@ -200,8 +202,8 @@ export class ApplicationOwnerController {
 
   private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {
     const owner = await this.ownerService.getOwner(ownerUuid);
-    await this.applicationSubmissionService.verifyAccess(
-      owner.applicationFileNumber,
+    await this.applicationSubmissionService.verifyAccessByUuid(
+      owner.applicationSubmissionUuid,
       req.user.entity,
     );
 
@@ -213,7 +215,7 @@ export class ApplicationOwnerController {
     @Req() req,
     @Body() data: AttachCorporateSummaryDto,
   ) {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       data.fileNumber,
       req.user.entity,
     );

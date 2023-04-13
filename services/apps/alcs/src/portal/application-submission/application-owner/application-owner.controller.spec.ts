@@ -75,7 +75,7 @@ describe('ApplicationOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
     mockAppOwnerService.fetchByApplicationFileId.mockResolvedValue([owner]);
@@ -88,7 +88,9 @@ describe('ApplicationOwnerController', () => {
 
     expect(owners.length).toEqual(1);
     expect(owners[0].displayName).toBe('Bruce Wayne');
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.fetchByApplicationFileId).toHaveBeenCalledTimes(
       1,
     );
@@ -99,7 +101,7 @@ describe('ApplicationOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
     mockAppOwnerService.create.mockResolvedValue(owner);
@@ -121,7 +123,9 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(createdOwner).toBeDefined();
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
   });
 
@@ -167,7 +171,7 @@ describe('ApplicationOwnerController', () => {
   it('should call through for update', async () => {
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -187,14 +191,16 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {
     mockAppOwnerService.delete.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -204,7 +210,9 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
@@ -212,7 +220,7 @@ describe('ApplicationOwnerController', () => {
   it('should call through for attachToParcel', async () => {
     mockAppOwnerService.attachToParcel.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -222,7 +230,9 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
@@ -230,7 +240,7 @@ describe('ApplicationOwnerController', () => {
   it('should call through for removeFromParcel', async () => {
     mockAppOwnerService.removeFromParcel.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -240,7 +250,9 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.removeFromParcel).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
@@ -250,7 +262,7 @@ describe('ApplicationOwnerController', () => {
     mockAppOwnerService.setPrimaryContact.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -265,7 +277,9 @@ describe('ApplicationOwnerController', () => {
 
     expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should set the owner and delete agents when using a non-agent owner', async () => {
@@ -280,7 +294,7 @@ describe('ApplicationOwnerController', () => {
       new ApplicationSubmission(),
     );
     mockAppOwnerService.deleteAgents.mockResolvedValue({} as any);
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -294,7 +308,9 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.deleteAgents).toHaveBeenCalledTimes(1);
   });
 
@@ -310,7 +326,7 @@ describe('ApplicationOwnerController', () => {
     mockAppOwnerService.setPrimaryContact.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -324,7 +340,9 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
   });
 });
