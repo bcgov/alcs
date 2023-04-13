@@ -266,6 +266,7 @@ describe('ApplicationController', () => {
     updatedCard.assigneeUuid = mockUserUuid;
     cardService.get.mockResolvedValue(mockApplicationEntity.card);
     cardService.update.mockResolvedValue(updatedCard);
+    cardService.getWithBoard.mockResolvedValue(updatedCard);
 
     await controller.updateCard('fake', mockUpdate, {
       user: {
@@ -355,6 +356,7 @@ describe('ApplicationController', () => {
     } as Application);
     cardService.get.mockResolvedValue(mockApplicationEntity.card);
     cardService.update.mockResolvedValue(mockApplicationEntity.card!);
+    cardService.getWithBoard.mockResolvedValue(mockApplicationEntity.card!);
 
     const updatedCard = {
       assigneeUuid: 'fake',
