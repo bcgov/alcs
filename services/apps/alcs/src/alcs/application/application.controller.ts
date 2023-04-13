@@ -9,6 +9,7 @@ import {
   Delete,
   Get,
   Inject,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -145,11 +146,17 @@ export class ApplicationController {
       throw new ServiceValidationException(`Card ${cardUuid} not found`);
     }
 
-    const updatedCard = await this.cardService.update(existingCard.uuid, {
+    await this.cardService.update(existingCard.uuid, {
       statusCode: applicationUpdates.statusCode,
       assigneeUuid: applicationUpdates.assigneeUuid,
       highPriority: applicationUpdates.highPriority,
     });
+
+    const updatedCard = await this.cardService.getWithBoard(existingCard.uuid);
+
+    if (!updatedCard) {
+      throw new NotFoundException(`Card not found with uuid: ${existingCard}`);
+    }
 
     const application = await this.applicationService.getByCard(
       updatedCard.uuid,
@@ -166,7 +173,7 @@ export class ApplicationController {
         receiverUuid: updatedCard.assigneeUuid,
         title: "You've been assigned",
         body: `${application.fileNumber} (${application.applicant})`,
-        link: `${frontEnd}/board/${updatedCard.board.code}?card=${updatedCard.uuid}&type=${updatedCard.type.code}`,
+        link: `${frontEnd}/board/${updatedCard.board.code}?card=${updatedCard.uuid}&type=${updatedCard.typeCode}`,
         targetType: 'application',
       });
     }
