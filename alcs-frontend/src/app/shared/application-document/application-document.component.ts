@@ -10,12 +10,12 @@ import {
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-document[title][fileNumber][visibilityFlags]',
+  selector: 'app-document[tableTitle][fileNumber][visibilityFlags]',
   templateUrl: './application-document.component.html',
   styleUrls: ['./application-document.component.scss'],
 })
 export class ApplicationDocumentComponent implements OnChanges {
-  @Input() title = '';
+  @Input() tableTitle = '';
   @Input() fileNumber: string = '';
   @Input() visibilityFlags: string[] = [];
   @Input() sortable = false;
