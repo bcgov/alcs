@@ -384,11 +384,9 @@ describe('ApplicationSubmissionService', () => {
       data: 'fake',
       status: 200,
     } as any);
-    mockAppDocService.attachDocumentAsBuffer = jest
-      .fn()
-      .mockImplementation(() => {
-        throw new Error('fake');
-      });
+    mockAppDocService.attachDocumentAsBuffer.mockRejectedValue(
+      new Error('fake'),
+    );
 
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
