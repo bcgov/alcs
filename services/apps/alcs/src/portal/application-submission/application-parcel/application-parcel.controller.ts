@@ -44,11 +44,13 @@ export class ApplicationParcelController {
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
-  @Get('application/:fileId')
+  @Get('submission/:submissionUuid')
   async fetchByFileId(
-    @Param('fileId') fileId: string,
+    @Param('submissionUuid') submissionUuid: string,
   ): Promise<ApplicationParcelDto[] | undefined> {
-    const parcels = await this.parcelService.fetchByApplicationFileId(fileId);
+    const parcels = await this.parcelService.fetchByApplicationSubmissionUuid(
+      submissionUuid,
+    );
     return this.mapper.mapArrayAsync(
       parcels,
       ApplicationParcel,
@@ -60,10 +62,9 @@ export class ApplicationParcelController {
   async create(
     @Body() createDto: ApplicationParcelCreateDto,
   ): Promise<ApplicationParcelDto> {
-    const application =
-      await this.applicationSubmissionService.getOrFailByFileNumber(
-        createDto.applicationFileId,
-      );
+    const application = await this.applicationSubmissionService.getOrFailByUuid(
+      createDto.applicationSubmissionUuid,
+    );
     const parcel = await this.parcelService.create(
       application.uuid,
       createDto.parcelType,

@@ -57,7 +57,7 @@ describe('OtherParcelsComponent', () => {
 
     fixture = TestBed.createComponent(OtherParcelsComponent);
     component = fixture.componentInstance;
-    component.$application = applicationPipe;
+    component.$applicationSubmission = applicationPipe;
 
     fixture.detectChanges();
   });

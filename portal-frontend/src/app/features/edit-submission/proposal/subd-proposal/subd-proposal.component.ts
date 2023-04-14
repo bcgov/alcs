@@ -58,7 +58,8 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
     agriculturalSupport: this.agriculturalSupport,
     isHomeSiteSeverance: this.isHomeSiteSeverance,
   });
-  private fileId: string | undefined;
+  private fileId = '';
+  private submissionUuid = '';
 
   constructor(
     private router: Router,
@@ -71,6 +72,7 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
 
         let isHomeSiteSeverance = null;
         if (applicationSubmission.subdIsHomeSiteSeverance !== null) {
@@ -95,7 +97,7 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
           this.form.markAllAsTouched();
         }
 
-        this.loadParcels(applicationSubmission.fileNumber);
+        this.loadParcels(this.submissionUuid);
       }
     });
 
@@ -165,7 +167,7 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
         })),
       };
 
-      const updatedApp = await this.applicationService.updatePending(this.fileId, updateDto);
+      const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
   }
@@ -203,8 +205,8 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
       .toFixed(2);
   }
 
-  private async loadParcels(fileNumber: string) {
-    const parcels = await this.parcelService.fetchByFileId(fileNumber);
+  private async loadParcels(submissionUuid: string) {
+    const parcels = await this.parcelService.fetchBySubmissionUuid(submissionUuid);
     if (parcels) {
       this.totalTargetAcres = parcels
         .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)

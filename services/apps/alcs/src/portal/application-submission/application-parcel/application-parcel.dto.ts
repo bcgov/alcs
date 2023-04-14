@@ -17,6 +17,9 @@ export class ApplicationParcelDto {
   @AutoMap()
   uuid: string;
 
+  @AutoMap()
+  applicationSubmissionUuid: string;
+
   @AutoMap(() => String)
   pid?: string | null;
 
@@ -56,7 +59,7 @@ export class ApplicationParcelDto {
 export class ApplicationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
-  applicationFileId: string;
+  applicationSubmissionUuid: string;
 
   @IsOptional()
   @IsString()

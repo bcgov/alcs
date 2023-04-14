@@ -75,6 +75,7 @@ export class ApplicationOwner extends Base {
   @ManyToOne(() => ApplicationSubmission, { nullable: false })
   applicationSubmission: ApplicationSubmission;
 
+  @AutoMap()
   @Column()
   applicationSubmissionUuid: string;
 

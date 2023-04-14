@@ -23,7 +23,7 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 export class TurProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
@@ -48,7 +48,8 @@ export class TurProposalComponent implements OnInit, OnDestroy {
     totalCorridorArea: this.totalCorridorArea,
     allOwnersNotified: this.allOwnersNotified,
   });
-  private fileId: string | undefined;
+  private fileId = '';
+  private submissionUuid = '';
 
   constructor(
     private router: Router,
@@ -57,17 +58,18 @@ export class TurProposalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          purpose: application.turPurpose,
-          outsideLands: application.turOutsideLands,
-          agriculturalActivities: application.turAgriculturalActivities,
-          reduceNegativeImpacts: application.turReduceNegativeImpacts,
-          totalCorridorArea: application.turTotalCorridorArea?.toString(),
-          allOwnersNotified: application.turAllOwnersNotified,
+          purpose: applicationSubmission.turPurpose,
+          outsideLands: applicationSubmission.turOutsideLands,
+          agriculturalActivities: applicationSubmission.turAgriculturalActivities,
+          reduceNegativeImpacts: applicationSubmission.turReduceNegativeImpacts,
+          totalCorridorArea: applicationSubmission.turTotalCorridorArea?.toString(),
+          allOwnersNotified: applicationSubmission.turAllOwnersNotified,
         });
 
         if (this.showErrors) {
@@ -142,8 +144,8 @@ export class TurProposalComponent implements OnInit, OnDestroy {
         turAllOwnersNotified,
       };
 
-      const updatedApp = await this.applicationService.updatePending(this.fileId, updateDto);
-      this.$application.next(updatedApp);
+      const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
+      this.$applicationSubmission.next(updatedApp);
     }
   }
 

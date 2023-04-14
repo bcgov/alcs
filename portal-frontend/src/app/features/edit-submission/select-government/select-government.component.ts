@@ -17,14 +17,16 @@ import { EditApplicationSteps } from '../edit-submission.component';
 export class SelectGovernmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.Government;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
+
+  private fileId = '';
+  private submissionUuid = '';
 
   localGovernment = new FormControl<string | any>('', [Validators.required]);
   showWarning = false;
   selectGovernmentUuid = '';
-  fileId = '';
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
 
@@ -34,18 +36,19 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
 
   constructor(
     private codeService: CodeService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadGovernments();
 
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.selectGovernmentUuid = application.localGovernmentUuid;
-        this.fileId = application.fileNumber;
-        this.populateLocalGovernment(application.localGovernmentUuid);
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.selectGovernmentUuid = applicationSubmission.localGovernmentUuid;
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
+        this.populateLocalGovernment(applicationSubmission.localGovernmentUuid);
       }
     });
 
@@ -109,7 +112,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
 
       if (localGovernment) {
-        await this.applicationService.updatePending(this.fileId, {
+        await this.applicationSubmissionService.updatePending(this.submissionUuid, {
           localGovernmentUuid: localGovernment.uuid,
         });
       }

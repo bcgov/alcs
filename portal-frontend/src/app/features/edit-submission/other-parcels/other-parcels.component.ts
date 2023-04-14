@@ -34,13 +34,14 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
   styleUrls: ['./other-parcels.component.scss'],
 })
 export class OtherParcelsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.OtherParcel;
   $destroy = new Subject<void>();
 
-  fileId: string = '';
+  fileId = '';
+  submissionUuid = '';
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
 
@@ -67,10 +68,11 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.application = application;
         this.fileId = application.fileNumber;
+        this.submissionUuid = application.uuid;
         const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
         this.owners = nonAgentOwners.map((o) => ({
           ...o,
@@ -123,8 +125,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   private async reloadApplication() {
-    const application = await this.applicationService.getByFileId(this.fileId);
-    this.$application.next(application);
+    const application = await this.applicationService.getByUuid(this.submissionUuid);
+    this.$applicationSubmission.next(application);
   }
 
   private async saveProgress() {
@@ -174,7 +176,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async onAddParcel() {
-    const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
+    const parcel = await this.applicationParcelService.create(this.submissionUuid, PARCEL_TYPE.OTHER);
 
     if (parcel) {
       await this.replacePlaceholderParcel();
@@ -234,7 +236,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async setupOtherParcelsData() {
-    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
     this.otherParcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER);
     if (!this.otherParcels || this.otherParcels.length === 0) {
       this.addPlaceHolderParcel();
@@ -275,7 +277,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   private async setHasOtherParcelsInCommunity(value?: boolean | null) {
-    await this.applicationService.updatePending(this.fileId, {
+    await this.applicationService.updatePending(this.submissionUuid, {
       hasOtherParcelsInCommunity: value,
     });
     await this.reloadApplication();
@@ -285,7 +287,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
 
     if (placeHolderParcel && parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
-      const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
+      const parcel = await this.applicationParcelService.create(this.submissionUuid, PARCEL_TYPE.OTHER);
       if (parcel) {
         placeHolderParcel.uuid = parcel.uuid;
       }

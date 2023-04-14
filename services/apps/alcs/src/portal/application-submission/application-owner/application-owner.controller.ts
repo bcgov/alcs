@@ -41,18 +41,19 @@ export class ApplicationOwnerController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get('application/:fileId')
+  @Get('submission/:submissionUuid')
   async fetchByFileId(
-    @Param('fileId') fileId: string,
+    @Param('submissionUuid') submissionUuid: string,
     @Req() req,
   ): Promise<ApplicationOwnerDto[]> {
-    await this.applicationSubmissionService.verifyAccessByFileId(
-      fileId,
-      req.user.entity,
-    );
-    const owners = await this.ownerService.fetchByApplicationFileId(fileId);
+    const applicationSubmission =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        submissionUuid,
+        req.user.entity,
+      );
+
     return this.mapper.mapArrayAsync(
-      owners,
+      applicationSubmission.owners,
       ApplicationOwner,
       ApplicationOwnerDto,
     );
@@ -66,8 +67,8 @@ export class ApplicationOwnerController {
     this.verifyDto(createDto);
 
     const application =
-      await this.applicationSubmissionService.verifyAccessByFileId(
-        createDto.applicationFileNumber,
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        createDto.applicationSubmissionUuid,
         req.user.entity,
       );
     const owner = await this.ownerService.create(createDto, application);
@@ -150,8 +151,8 @@ export class ApplicationOwnerController {
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
     const application =
-      await this.applicationSubmissionService.verifyAccessByFileId(
-        data.fileNumber,
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        data.applicationSubmissionUuid,
         req.user.entity,
       );
 
@@ -165,7 +166,7 @@ export class ApplicationOwnerController {
           firstName: data.agentFirstName,
           phoneNumber: data.agentPhoneNumber,
           organizationName: data.agentOrganization,
-          applicationFileNumber: data.fileNumber,
+          applicationSubmissionUuid: data.applicationSubmissionUuid,
         },
         application,
       );

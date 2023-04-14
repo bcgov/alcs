@@ -25,14 +25,15 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
 
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
 
   @Output() navigateToStep = new EventEmitter<number>();
   @Output() componentInitialized = new EventEmitter<boolean>();
 
   currentStep = EditApplicationSteps.AppParcel;
-  fileId!: string;
+  fileId = '';
+  submissionUuid = '';
   parcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
   newParcelAdded = false;
@@ -46,11 +47,14 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   ) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
         this.loadParcels();
-        const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+        const nonAgentOwners = applicationSubmission.owners.filter(
+          (owner) => owner.type.code !== APPLICATION_OWNER.AGENT
+        );
         this.$owners.next(nonAgentOwners);
       }
     });
@@ -68,7 +72,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async loadParcels() {
-    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
     this.parcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.APPLICATION);
     if (!this.parcels || this.parcels.length === 0) {
       await this.onAddParcel();
@@ -76,7 +80,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async onAddParcel() {
-    const parcel = await this.applicationParcelService.create(this.fileId);
+    const parcel = await this.applicationParcelService.create(this.submissionUuid);
 
     if (parcel) {
       this.parcels.push({
@@ -166,7 +170,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async onOwnersUpdated() {
-    const owners = await this.applicationOwnerService.fetchByFileId(this.fileId);
+    const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (owners) {
       const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.$owners.next(nonAgentOwners);

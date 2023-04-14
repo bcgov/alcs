@@ -26,7 +26,6 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
 
   nonAgentOwners: ApplicationOwnerDto[] = [];
   owners: ApplicationOwnerDto[] = [];
-  private fileId: string | undefined;
   files: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
@@ -47,6 +46,9 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     email: this.email,
   });
 
+  private fileId = '';
+  private submissionUuid = '';
+
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
@@ -58,7 +60,8 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.loadOwners(application.fileNumber, application.primaryContactOwnerUuid);
+        this.submissionUuid = application.uuid;
+        this.loadOwners(application.uuid, application.primaryContactOwnerUuid);
       }
     });
 
@@ -107,27 +110,25 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
   }
 
   private async save() {
-    if (this.fileId) {
-      let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
-        (owner) => owner.uuid === this.selectedOwnerUuid
-      );
+    let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
+      (owner) => owner.uuid === this.selectedOwnerUuid
+    );
 
-      if (this.selectedThirdPartyAgent) {
-        await this.applicationOwnerService.setPrimaryContact({
-          fileNumber: this.fileId,
-          agentOrganization: this.organizationName.getRawValue() ?? '',
-          agentFirstName: this.firstName.getRawValue() ?? '',
-          agentLastName: this.lastName.getRawValue() ?? '',
-          agentEmail: this.email.getRawValue() ?? '',
-          agentPhoneNumber: this.phoneNumber.getRawValue() ?? '',
-          ownerUuid: selectedOwner?.uuid,
-        });
-      } else if (selectedOwner) {
-        await this.applicationOwnerService.setPrimaryContact({
-          fileNumber: this.fileId,
-          ownerUuid: selectedOwner.uuid,
-        });
-      }
+    if (this.selectedThirdPartyAgent) {
+      await this.applicationOwnerService.setPrimaryContact({
+        applicationSubmissionUuid: this.submissionUuid,
+        agentOrganization: this.organizationName.getRawValue() ?? '',
+        agentFirstName: this.firstName.getRawValue() ?? '',
+        agentLastName: this.lastName.getRawValue() ?? '',
+        agentEmail: this.email.getRawValue() ?? '',
+        agentPhoneNumber: this.phoneNumber.getRawValue() ?? '',
+        ownerUuid: selectedOwner?.uuid,
+      });
+    } else if (selectedOwner) {
+      await this.applicationOwnerService.setPrimaryContact({
+        applicationSubmissionUuid: this.submissionUuid,
+        ownerUuid: selectedOwner.uuid,
+      });
     }
   }
 
@@ -170,8 +171,8 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     this.onSelectOwner('agent');
   }
 
-  private async loadOwners(fileNumber: string, primaryContactOwnerUuid?: string) {
-    const owners = await this.applicationOwnerService.fetchByFileId(fileNumber);
+  private async loadOwners(submissionUuid: string, primaryContactOwnerUuid?: string) {
+    const owners = await this.applicationOwnerService.fetchBySubmissionId(submissionUuid);
     if (owners) {
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);

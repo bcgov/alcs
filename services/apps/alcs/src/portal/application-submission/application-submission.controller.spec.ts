@@ -188,7 +188,7 @@ describe('ApplicationSubmissionController', () => {
       {} as ApplicationSubmissionDetailedDto,
     );
 
-    const application = await controller.getApplication(
+    const application = await controller.getSubmissionByFileId(
       {
         user: {
           entity: new User(),
@@ -217,7 +217,7 @@ describe('ApplicationSubmissionController', () => {
       {} as ApplicationSubmissionDetailedDto,
     );
 
-    const application = await controller.getApplication(
+    const application = await controller.getSubmissionByFileId(
       {
         user: {
           entity: new User({

@@ -15,6 +15,7 @@ export interface ApplicationOwnerTypeDto extends BaseCodeDto {
 
 export interface ApplicationOwnerDto {
   uuid: string;
+  applicationSubmissionUuid: string;
   displayName: string;
   firstName: string | null;
   lastName: string | null;
@@ -40,7 +41,7 @@ export interface ApplicationOwnerUpdateDto {
 }
 
 export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
-  applicationFileNumber: string;
+  applicationSubmissionUuid: string;
 }
 
 export interface SetPrimaryContactDto {
@@ -50,5 +51,5 @@ export interface SetPrimaryContactDto {
   agentPhoneNumber?: string;
   agentEmail?: string;
   ownerUuid?: string;
-  fileNumber: string;
+  applicationSubmissionUuid: string;
 }

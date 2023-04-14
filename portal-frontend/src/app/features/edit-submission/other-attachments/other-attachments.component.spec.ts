@@ -52,7 +52,7 @@ describe('OtherAttachmentsComponent', () => {
 
     fixture = TestBed.createComponent(OtherAttachmentsComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     component.$applicationDocuments = applicationDocumentPipe;
     fixture.detectChanges();
   });

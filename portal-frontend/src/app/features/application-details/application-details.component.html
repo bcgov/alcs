@@ -1,9 +1,9 @@
 <section>
-  <app-parcel [$application]="$application" [showErrors]="showErrors" [showEdit]="showEdit"></app-parcel>
+  <app-parcel [$applicationSubmission]="$application" [showErrors]="showErrors" [showEdit]="showEdit"></app-parcel>
 </section>
 <section>
   <app-parcel
-    [$application]="$application"
+    [$applicationSubmission]="$application"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [parcelType]="parcelType.OTHER"
@@ -187,7 +187,7 @@
     *ngIf="application && application.typeCode === 'SUBD'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
-    [application]="application"
+    [applicationSubmission]="application"
     [applicationDocuments]="appDocuments"
   ></app-subd-details>
 </section>

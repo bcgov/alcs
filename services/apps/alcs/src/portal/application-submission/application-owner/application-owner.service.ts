@@ -28,6 +28,22 @@ export class ApplicationOwnerService {
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
+  async fetchBySubmissionUuid(uuid: string) {
+    return this.repository.find({
+      where: {
+        applicationSubmission: {
+          uuid,
+        },
+      },
+      relations: {
+        type: true,
+        corporateSummary: {
+          document: true,
+        },
+      },
+    });
+  }
+
   async fetchByApplicationFileId(fileId: string) {
     return this.repository.find({
       where: {

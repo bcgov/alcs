@@ -25,10 +25,10 @@ export class ApplicationParcelService {
     private overlayService: OverlaySpinnerService
   ) {}
 
-  async fetchByFileId(applicationFileId: string) {
+  async fetchBySubmissionUuid(submissionUuid: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<ApplicationParcelDto[]>(`${this.serviceUrl}/application/${applicationFileId}`)
+        this.httpClient.get<ApplicationParcelDto[]>(`${this.serviceUrl}/submission/${submissionUuid}`)
       );
     } catch (e) {
       console.error(e);
@@ -37,10 +37,14 @@ export class ApplicationParcelService {
     return undefined;
   }
 
-  async create(applicationFileId: string, parcelType?: PARCEL_TYPE, ownerUuid?: string) {
+  async create(applicationSubmissionUuid: string, parcelType?: PARCEL_TYPE, ownerUuid?: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.post<ApplicationParcelDto>(`${this.serviceUrl}`, { applicationFileId, parcelType, ownerUuid })
+        this.httpClient.post<ApplicationParcelDto>(`${this.serviceUrl}`, {
+          applicationSubmissionUuid,
+          parcelType,
+          ownerUuid,
+        })
       );
     } catch (e) {
       console.error(e);

@@ -101,6 +101,7 @@ export class ApplicationParcel extends Base {
   @ManyToOne(() => ApplicationSubmission)
   applicationSubmission: ApplicationSubmission;
 
+  @AutoMap()
   @Column()
   applicationSubmissionUuid: string;
 

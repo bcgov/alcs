@@ -21,7 +21,7 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
-@Controller('application')
+@Controller('application-submission')
 @UseGuards(PortalAuthGuard)
 export class ApplicationSubmissionController {
   private logger: Logger = new Logger(ApplicationSubmissionController.name);
@@ -61,8 +61,8 @@ export class ApplicationSubmissionController {
     return this.applicationSubmissionService.mapToDTOs(applications, user);
   }
 
-  @Get('/:fileId')
-  async getApplication(@Req() req, @Param('fileId') fileId: string) {
+  @Get('/application/:fileId')
+  async getSubmissionByFileId(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
 
     if (user.bceidBusinessGuid) {
@@ -93,6 +93,35 @@ export class ApplicationSubmissionController {
     );
   }
 
+  @Get('/:uuid')
+  async getSubmission(@Req() req, @Param('uuid') uuid: string) {
+    const user = req.user.entity as User;
+
+    if (user.bceidBusinessGuid) {
+      const localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+      if (localGovernment) {
+        const applicationSubmission =
+          await this.applicationSubmissionService.getForGovernmentByUuid(
+            uuid,
+            localGovernment,
+          );
+        return await this.applicationSubmissionService.mapToDetailedDTO(
+          applicationSubmission,
+          localGovernment,
+        );
+      }
+    }
+
+    const applicationSubmission =
+      await this.applicationSubmissionService.getIfCreatorByUuid(uuid, user);
+
+    return await this.applicationSubmissionService.mapToDetailedDTO(
+      applicationSubmission,
+    );
+  }
+
   @Post()
   async create(@Req() req, @Body() body: ApplicationSubmissionCreateDto) {
     const { type } = body;
@@ -106,15 +135,15 @@ export class ApplicationSubmissionController {
     };
   }
 
-  @Put('/:fileId')
+  @Put('/:uuid')
   async update(
-    @Param('fileId') fileId: string,
+    @Param('uuid') uuid: string,
     @Body() updateDto: ApplicationSubmissionUpdateDto,
     @Req() req,
   ) {
     const submission =
-      await this.applicationSubmissionService.verifyAccessByFileId(
-        fileId,
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        uuid,
         req.user.entity,
       );
 
@@ -129,11 +158,11 @@ export class ApplicationSubmissionController {
     );
   }
 
-  @Post('/:fileId/cancel')
-  async cancel(@Param('fileId') fileId: string, @Req() req) {
+  @Post('/:uuid/cancel')
+  async cancel(@Param('uuid') uuid: string, @Req() req) {
     const application =
-      await this.applicationSubmissionService.getIfCreatorByFileNumber(
-        fileId,
+      await this.applicationSubmissionService.getIfCreatorByUuid(
+        uuid,
         req.user.entity,
       );
 
@@ -148,11 +177,11 @@ export class ApplicationSubmissionController {
     };
   }
 
-  @Post('/alcs/submit/:fileId')
-  async submitAsApplicant(@Param('fileId') fileId: string, @Req() req) {
+  @Post('/alcs/submit/:uuid')
+  async submitAsApplicant(@Param('uuid') uuid: string, @Req() req) {
     const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreatorByFileNumber(
-        fileId,
+      await this.applicationSubmissionService.getIfCreatorByUuid(
+        uuid,
         req.user.entity,
       );
 

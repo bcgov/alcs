@@ -24,10 +24,10 @@ export class ApplicationOwnerService {
     private documentService: DocumentService
   ) {}
 
-  async fetchByFileId(applicationFileId: string) {
+  async fetchBySubmissionId(submissionUuid: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<ApplicationOwnerDto[]>(`${this.serviceUrl}/application/${applicationFileId}`)
+        this.httpClient.get<ApplicationOwnerDto[]>(`${this.serviceUrl}/submission/${submissionUuid}`)
       );
     } catch (e) {
       console.error(e);

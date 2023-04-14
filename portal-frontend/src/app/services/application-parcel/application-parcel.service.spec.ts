@@ -47,7 +47,7 @@ describe('ApplicationParcelService', () => {
   it('should make a get request for loading parcels', async () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
-    await service.fetchByFileId(mockUuid);
+    await service.fetchBySubmissionUuid(mockUuid);
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.get.mock.calls[0][0]).toContain('application-parcel');
@@ -56,7 +56,7 @@ describe('ApplicationParcelService', () => {
   it('should show an error toast if getting parcel fails', async () => {
     mockHttpClient.get.mockReturnValue(throwError(() => ({})));
 
-    await service.fetchByFileId(mockUuid);
+    await service.fetchBySubmissionUuid(mockUuid);
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);

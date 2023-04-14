@@ -15,9 +15,9 @@ import { ToastService } from '../../../services/toast/toast.service';
 export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  application: ApplicationSubmissionDetailedDto | undefined;
+  applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 
   constructor(
     private router: Router,
@@ -27,8 +27,8 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((app) => {
-      this.application = app;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((app) => {
+      this.applicationSubmission = app;
     });
   }
 
@@ -38,7 +38,7 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
   }
 
   onNavigateToStep(step: number) {
-    this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}?errors=t`);
+    this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
   async onSubmitToAlcs() {
@@ -49,14 +49,14 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
         block: 'center',
       });
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
-    } else if (this.application) {
-      await this.applicationService.submitToAlcs(this.application.fileNumber);
-      await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
+    } else if (this.applicationSubmission) {
+      await this.applicationService.submitToAlcs(this.applicationSubmission.uuid);
+      await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
     }
   }
 
   async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
+    await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
   }
 
   async onDownloadPdf(fileNumber: string | undefined) {

@@ -26,11 +26,12 @@ export enum MainLandUseTypeOptions {
 export class LandUseComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   currentStep = EditApplicationSteps.LandUse;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = false;
   @Output() navigateToStep = new EventEmitter<number>();
 
-  fileId: string = '';
+  fileId = '';
+  submissionUuid = '';
 
   MainLandUseTypeOptions = MainLandUseTypeOptions;
 
@@ -62,10 +63,11 @@ export class LandUseComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private applicationService: ApplicationSubmissionService) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
-        this.populateFormValues(application);
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
+        this.populateFormValues(applicationSubmission);
       }
     });
 
@@ -97,7 +99,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async saveProgress() {
     const formValues = this.landUseForm.getRawValue();
-    await this.applicationService.updatePending(this.fileId, {
+    await this.applicationService.updatePending(this.submissionUuid, {
       parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
       parcelsAgricultureImprovementDescription: formValues.parcelsAgricultureImprovementDescription,
       parcelsNonAgricultureUseDescription: formValues.parcelsNonAgricultureUseDescription,
