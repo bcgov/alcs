@@ -52,7 +52,7 @@ export class DecisionDialogComponent implements OnInit {
     date: new FormControl<Date | undefined>(undefined, [Validators.required]),
     decisionMaker: new FormControl<string | null>(null, [Validators.required]),
     postDecision: new FormControl<string | null>(null),
-    resolutionNumber: new FormControl<number | null>(null, [Validators.required]),
+    resolutionNumber: new FormControl<string | null>(null, [Validators.required]),
     resolutionYear: new FormControl<number | null>(null, [Validators.required]),
     ceoCriterion: new FormControl<string | null>(null),
     chairReviewRequired: new FormControl<string>('true', [Validators.required]),
@@ -140,7 +140,7 @@ export class DecisionDialogComponent implements OnInit {
 
     const data: CreateApplicationDecisionDto = {
       date: formatDateForApi(date!),
-      resolutionNumber: resolutionNumber!,
+      resolutionNumber: parseInt(resolutionNumber!),
       resolutionYear: resolutionYear!,
       chairReviewRequired: chairReviewRequired === 'true',
       auditDate: auditDate ? formatDateForApi(auditDate) : auditDate,
@@ -276,7 +276,7 @@ export class DecisionDialogComponent implements OnInit {
       ceoCriterion: existingDecision.ceoCriterion?.code,
       date: new Date(existingDecision.date),
       resolutionYear: existingDecision.resolutionYear,
-      resolutionNumber: existingDecision.resolutionNumber,
+      resolutionNumber: existingDecision.resolutionNumber.toString(10),
       chairReviewRequired: existingDecision.chairReviewRequired ? 'true' : 'false',
       chairReviewDate: existingDecision.chairReviewDate ? new Date(existingDecision.chairReviewDate) : undefined,
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,

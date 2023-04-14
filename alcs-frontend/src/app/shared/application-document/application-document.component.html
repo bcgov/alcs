@@ -1,11 +1,12 @@
 <div class="table-header">
   <div>
-    <h4>{{ title }}</h4>
+    <h4>{{ tableTitle }}</h4>
   </div>
 </div>
 
 <table
   cdkDropList
+  [cdkDropListDisabled]='!sortable'
   (cdkDropListDropped)="onRowDropped($event)"
   mat-table
   [dataSource]="dataSource"

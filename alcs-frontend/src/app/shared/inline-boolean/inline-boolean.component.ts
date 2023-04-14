@@ -24,6 +24,13 @@ export class InlineBooleanComponent implements OnInit, OnChanges {
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
+    if (!this.isEditing) {
+      if (this.selectedValue === null) {
+        this.value = undefined;
+      } else {
+        this.value = this.selectedValue ? 'Yes' : 'No';
+      }
+    }
   }
 
   onSave() {

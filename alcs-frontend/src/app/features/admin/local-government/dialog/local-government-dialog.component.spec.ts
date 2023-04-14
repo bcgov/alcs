@@ -10,7 +10,7 @@ import { ApplicationRegionDto } from '../../../../services/application/applicati
 import { ApplicationService } from '../../../../services/application/application.service';
 import { LocalGovernmentDialogComponent } from './local-government-dialog.component';
 
-describe('HolidayDialogComponent', () => {
+describe('LocalGovernmentDialogComponent', () => {
   let component: LocalGovernmentDialogComponent;
   let fixture: ComponentFixture<LocalGovernmentDialogComponent>;
   let mockApplicationService: DeepMocked<ApplicationService>;
@@ -39,6 +39,15 @@ describe('HolidayDialogComponent', () => {
 
     fixture = TestBed.createComponent(LocalGovernmentDialogComponent);
     component = fixture.componentInstance;
+    component.data = {
+      emails: [],
+      name: '',
+      isFirstNation: false,
+      bceidBusinessGuid: null,
+      isActive: true,
+      preferredRegionCode: '',
+      uuid: '',
+    };
     fixture.detectChanges();
   });
 

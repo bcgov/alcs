@@ -9,7 +9,8 @@ import { ApplicationModificationDto } from '../../../services/application/applic
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
+import { ApplicationDto, ApplicationReviewDto } from '../../../services/application/application.dto';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 
 const editLink = new Map<string, string>([
@@ -43,6 +44,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   application?: ApplicationDto;
   private $decisions = new BehaviorSubject<ApplicationDecisionDto[]>([]);
+  private $review = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
   events: TimelineEvent[] = [];
   summary = '';
 
@@ -51,7 +53,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private meetingService: ApplicationMeetingService,
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private modificationService: ApplicationModificationService
+    private modificationService: ApplicationModificationService,
+    private reviewService: ApplicationReviewService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +67,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
               this.$decisions.next(res);
             });
+            this.reviewService.fetchReview(app.fileNumber).then((res) => {
+              this.$review.next(res);
+            });
           }
         })
       )
@@ -72,14 +78,22 @@ export class OverviewComponent implements OnInit, OnDestroy {
           this.meetingService.$meetings,
           this.$decisions,
           this.reconsiderationService.$reconsiderations,
-          this.modificationService.$modifications
+          this.modificationService.$modifications,
+          this.$review
         )
       )
-      .subscribe(([application, meetings, decisions, reconsiderations, modifications]) => {
+      .subscribe(([application, meetings, decisions, reconsiderations, modifications, applicationReview]) => {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
-          this.events = this.mapApplicationToEvents(application, meetings, decisions, reconsiderations, modifications);
+          this.events = this.mapApplicationToEvents(
+            application,
+            meetings,
+            decisions,
+            reconsiderations,
+            modifications,
+            applicationReview
+          );
         }
       });
   }
@@ -94,13 +108,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
     meetings: ApplicationMeetingDto[],
     decisions: ApplicationDecisionDto[],
     reconsiderations: ApplicationReconsiderationDto[],
-    modifications: ApplicationModificationDto[]
+    modifications: ApplicationModificationDto[],
+    applicationReview: ApplicationReviewDto | undefined
   ): TimelineEvent[] {
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateSubmittedToAlc) {
       mappedEvents.push({
         name:
-          application.applicationReview && !application.applicationReview.isAuthorized
+          applicationReview && applicationReview.isAuthorized === false
             ? 'L/FNG Refused to Forward'
             : 'Submitted to ALC',
         startDate: new Date(application.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),

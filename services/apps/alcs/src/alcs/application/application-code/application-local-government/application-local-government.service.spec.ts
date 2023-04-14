@@ -74,6 +74,7 @@ describe('ApplicationLocalGovernmentService', () => {
       isFirstNation: false,
       isActive: true,
       preferredRegionCode: 'fake',
+      emails: [],
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -91,6 +92,7 @@ describe('ApplicationLocalGovernmentService', () => {
       isFirstNation: false,
       isActive: true,
       preferredRegionCode: 'fake',
+      emails: [],
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);

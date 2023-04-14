@@ -1,0 +1,65 @@
+---
+data_management_roles:
+  data_custodian: Avtar Sundher
+  product_owner: Ansley Charbonneau
+product_external_dependencies:
+  common_components:
+    - Common-Document-Generation-Service
+  identity_authorization:
+    - IDIR
+    - BceId
+    - Business-BceId
+    - BCGov-SSO-Keycloak
+  notification_standard:
+    - Common-Hosted-Email-Service
+product_information:
+  api_specifications:
+    - https://alcs-test-api.apps.silver.devops.gov.bc.ca/docs
+  business_capabilities_standard:
+    - Agriculture Land Management - Make Decisions
+    - >-
+      Agriculture Land Management - Manage And Access Land Data Including ALR
+      Boundaries
+    - Agriculture Land Management - Manage Notifications Of Right Of Way
+    - Agriculture Land Management - Receive Applications
+    - Agriculture Land Management - Review Applications
+    - Agriculture Land Management - Set Conditions
+    - Agriculture Land Management - Manage Reconsideration's
+    - Agriculture Land Management - Issue Approvals
+  ministry:
+    - Agriculture and Food
+  product_acronym: ALCS
+  product_description: Submission, Management, and Tracking of ALC Applications
+  product_name: Agricultural Land Commission System
+  product_status: maturing
+  product_urls:
+    - https://alcs-test.apps.silver.devops.gov.bc.ca/home
+    - https://alcs-dev.apps.silver.devops.gov.bc.ca/home
+    - https://alcs-dev-portal.apps.silver.devops.gov.bc.ca/login
+    - https://alcs-test-portal.apps.silver.devops.gov.bc.ca/login
+    - https://alcs.nr.gov.bc.ca/home
+  program_area: Agricultural Land Commission
+product_technology_information:
+  backend_frameworks:
+    - name: NestJS
+      version: '9.3'
+  backend_languages_version:
+    - name: TypeScript
+      version: 4.7.4
+  ci_cd_tools:
+    - ArgoCD
+    - GitHub-Actions
+    - Helm
+  data_storage_platforms:
+    - Postgresql
+    - Redis
+    - Object-Storage
+  frontend_frameworks:
+    - name: Angular
+      version: '15'
+  frontend_languages:
+    - name: TypeScript
+      version: '4.9'
+  hosting_platforms:
+    - Private-Cloud-Openshift
+version: 1

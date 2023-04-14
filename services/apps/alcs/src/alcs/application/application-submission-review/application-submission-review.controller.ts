@@ -11,7 +11,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 @Controller('application-submission-review')
 export class ApplicationSubmissionReviewController {
   constructor(
-    private applicationSubmissionReviewService: ApplicationSubmissionReviewService, // private documentService: DocumentService,
+    private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
   ) {}
 
   @UserRoles(...ANY_AUTH_ROLE)
@@ -20,7 +20,10 @@ export class ApplicationSubmissionReviewController {
     const submission = await this.applicationSubmissionReviewService.get(
       fileNumber,
     );
-
-    return await this.applicationSubmissionReviewService.mapToDto(submission);
+    if (submission) {
+      return await this.applicationSubmissionReviewService.mapToDto(submission);
+    } else {
+      return undefined;
+    }
   }
 }

@@ -17,8 +17,9 @@ import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
 
 export enum APPLICATION_SUBMISSION_TYPES {
-  'NFUP' = 'NFUP',
-  'TURP' = 'TURP',
+  NFUP = 'NFUP',
+  TURP = 'TURP',
+  SUBD = 'SUBD',
 }
 
 class PdfTemplate {
@@ -76,6 +77,9 @@ export class GenerateSubmissionDocumentService {
       case APPLICATION_SUBMISSION_TYPES.TURP:
         payload = this.populateTurData(payload, submission, documents);
         return { payload, templateName: 'tur-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.SUBD:
+        payload = this.populateSubdData(payload, submission, documents);
+        return { payload, templateName: 'subd-submission-template.docx' };
       default:
         throw new ServiceNotFoundException(
           `Could not find template for application submission type ${submission.typeCode}`,
@@ -177,6 +181,7 @@ export class GenerateSubmissionDocumentService {
       noData: NO_DATA,
       purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
       certificateOfTitle: e.certificateOfTitle?.document.fileName,
+      ownershipType: e.ownershipType?.label,
       owners: e.owners.map((o) => ({
         ...o,
         noData: NO_DATA,
@@ -237,4 +242,45 @@ export class GenerateSubmissionDocumentService {
 
     return pdfData;
   }
+
+  private populateSubdData(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
+    const homesiteSeverance = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.HOMESITE_SEVERANCE,
+    );
+    const proposalMap = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+
+    pdfData = {
+      ...pdfData,
+
+      // SUBD Proposal
+      subdPurpose: submission.subdPurpose,
+      subdSuitability: submission.subdSuitability,
+      subdAgricultureSupport: submission.subdAgricultureSupport,
+      subdIsHomeSiteSeverance: this.formatBooleanToYesNoString(
+        submission.subdIsHomeSiteSeverance,
+      ),
+      subdProposedLots: submission.subdProposedLots,
+      homesiteSeverance: homesiteSeverance.map((d) => d.document),
+      proposalMap: proposalMap.find((d) => d)?.document.fileName,
+    };
+
+    return pdfData;
+  }
+
+  private formatBooleanToYesNoString = (val?: boolean | null) => {
+    switch (val) {
+      case true:
+        return 'Yes';
+      case false:
+        return 'No';
+      default:
+        return undefined;
+    }
+  };
 }

@@ -83,7 +83,7 @@ const registerMultiPart = async (app: NestFastifyApplication) => {
     attachFieldsToBody: true,
     limits: {
       fieldNameSize: 100, // Max field name size in bytes
-      fieldSize: 100, // Max field value size in bytes
+      fieldSize: 300, // Max field value size in bytes
       fields: 10, // Max number of non-file fields
       fileSize: config.get<number>('STORAGE.MAX_FILE_SIZE'), // For multipart forms, the max file size in bytes
       files: 1, // Max number of file fields

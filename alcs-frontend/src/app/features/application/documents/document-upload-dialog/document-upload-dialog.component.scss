@@ -13,6 +13,10 @@
   width: 100%;
 }
 
+a {
+  word-break: break-all;
+}
+
 .file {
   border: 1px solid #000;
   border-radius: 8px;

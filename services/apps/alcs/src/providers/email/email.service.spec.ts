@@ -1,17 +1,23 @@
 import { ConfigModule } from '@app/common/config/config.module';
-import { createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { of } from 'rxjs';
+import { Repository } from 'typeorm';
+import { EmailStatus } from './email-status.entity';
 import { EmailService } from './email.service';
 
 describe('EmailService', () => {
   let service: EmailService;
   let mockHttpService;
+  let mockRepo: DeepMocked<Repository<EmailStatus>>;
 
   beforeEach(async () => {
-    mockHttpService = createMock<HttpService>();
+    mockHttpService = createMock();
+    mockRepo = createMock();
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
       providers: [
@@ -20,10 +26,15 @@ describe('EmailService', () => {
           provide: HttpService,
           useValue: mockHttpService,
         },
+        {
+          provide: getRepositoryToken(EmailStatus),
+          useValue: mockRepo,
+        },
       ],
     }).compile();
 
     service = module.get<EmailService>(EmailService);
+    mockRepo.save.mockResolvedValue({} as any);
   });
 
   it('should be defined', () => {
@@ -39,16 +50,23 @@ describe('EmailService', () => {
         },
       }),
     );
-    mockHttpService.post.mockReturnValueOnce(of({}));
+
+    mockHttpService.post.mockReturnValueOnce(
+      of({
+        data: {
+          txId: '',
+        },
+      }),
+    );
 
     const mockEmail = {
       body: 'body',
       subject: 'subject',
       to: ['email'],
     };
-
     await service.sendEmail(mockEmail);
 
+    expect(mockRepo.save).toHaveBeenCalledTimes(1);
     expect(mockHttpService.post).toHaveBeenCalledTimes(2);
     const authUrl = mockHttpService.post.mock.calls[0][0];
     expect(authUrl).toEqual(config.get('CHES.TOKEN_URL'));
@@ -59,7 +77,7 @@ describe('EmailService', () => {
     expect(servicePostBody.from).toEqual(config.get('CHES.FROM'));
   });
 
-  it('should re-use the token if its  not expired', async () => {
+  it('should re-use the token if its not expired', async () => {
     mockHttpService.post.mockReturnValueOnce(
       of({
         data: {
@@ -68,8 +86,13 @@ describe('EmailService', () => {
         },
       }),
     );
-    mockHttpService.post.mockReturnValueOnce(of({}));
-    mockHttpService.post.mockReturnValueOnce(of({}));
+    mockHttpService.post.mockReturnValue(
+      of({
+        data: {
+          txId: '',
+        },
+      }),
+    );
 
     const mockEmail = {
       body: 'body',
@@ -80,6 +103,7 @@ describe('EmailService', () => {
     await service.sendEmail(mockEmail);
     await service.sendEmail(mockEmail);
 
+    expect(mockRepo.save).toHaveBeenCalledTimes(2);
     expect(mockHttpService.post).toHaveBeenCalledTimes(3);
   });
 });
