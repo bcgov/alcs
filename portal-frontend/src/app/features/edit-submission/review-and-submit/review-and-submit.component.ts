@@ -6,16 +6,14 @@ import { ApplicationSubmissionDocumentGenerationService } from '../../../service
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { StepComponent } from '../step.partial';
 
 @Component({
   selector: 'app-review-and-submit',
   templateUrl: './review-and-submit.component.html',
   styleUrls: ['./review-and-submit.component.scss'],
 })
-export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
-
-  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 
@@ -24,7 +22,9 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private applicationService: ApplicationSubmissionService,
     private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((app) => {
@@ -32,12 +32,7 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  onNavigateToStep(step: number) {
+  override onNavigateToStep(step: number) {
     this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
@@ -53,10 +48,6 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
       await this.applicationService.submitToAlcs(this.applicationSubmission.uuid);
       await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
     }
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
   }
 
   async onDownloadPdf(fileNumber: string | undefined) {

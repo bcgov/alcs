@@ -21,6 +21,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
@@ -471,6 +472,27 @@ export class ApplicationSubmissionService {
   }
 
   async verifyAccessByFileId(fileId: string, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return await this.applicationSubmissionRepository.findOneOrFail({
+        where: {
+          fileNumber: fileId,
+          isDraft: true,
+        },
+        relations: {
+          owners: {
+            type: true,
+            corporateSummary: {
+              document: true,
+            },
+            parcels: true,
+          },
+        },
+      });
+    }
+
     if (user.bceidBusinessGuid) {
       const localGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,
@@ -484,6 +506,26 @@ export class ApplicationSubmissionService {
   }
 
   async verifyAccessByUuid(submissionUuid: string, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return await this.applicationSubmissionRepository.findOneOrFail({
+        where: {
+          uuid: submissionUuid,
+        },
+        relations: {
+          owners: {
+            type: true,
+            corporateSummary: {
+              document: true,
+            },
+            parcels: true,
+          },
+        },
+      });
+    }
+
     if (user.bceidBusinessGuid) {
       const localGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,

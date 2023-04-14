@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
   APPLICATION_OWNER,
   ApplicationOwnerDetailedDto,
@@ -24,6 +24,7 @@ import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
+import { StepComponent } from '../step.partial';
 import { OtherParcelConfirmationDialogComponent } from './other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 
 const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
@@ -33,13 +34,8 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
   templateUrl: './other-parcels.component.html',
   styleUrls: ['./other-parcels.component.scss'],
 })
-export class OtherParcelsComponent implements OnInit, OnDestroy {
-  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
+export class OtherParcelsComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.OtherParcel;
-  $destroy = new Subject<void>();
-
   fileId = '';
   submissionUuid = '';
   owners: ApplicationOwnerDetailedDto[] = [];
@@ -65,7 +61,9 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private dialog: MatDialog,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -90,11 +88,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     });
 
     this.newParcelAdded = false;
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 
   async onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
@@ -167,12 +160,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
 
   async onSave() {
     await this.saveProgress();
-  }
-
-  async onSaveExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
   }
 
   async onAddParcel() {
@@ -293,11 +280,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
-  }
-
   getLetterIndex(num: number) {
     return getLetterCombinations(num);
   }

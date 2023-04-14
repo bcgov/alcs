@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
@@ -10,19 +10,17 @@ import { ApplicationSubmissionDetailedDto } from '../../../services/application-
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 
 @Component({
   selector: 'app-primary-contact',
   templateUrl: './primary-contact.component.html',
   styleUrls: ['./primary-contact.component.scss'],
 })
-export class PrimaryContactComponent implements OnInit, OnDestroy {
+export class PrimaryContactComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
-  $destroy = new Subject<void>();
 
   nonAgentOwners: ApplicationOwnerDto[] = [];
   owners: ApplicationOwnerDto[] = [];
@@ -54,7 +52,9 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -94,15 +94,6 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.$applicationDocuments.next(documents);
       }
     }
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSave() {
@@ -201,9 +192,5 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.form.markAllAsTouched();
       }
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

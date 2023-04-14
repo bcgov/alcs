@@ -1,25 +1,21 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
-import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { map, Observable, startWith, takeUntil } from 'rxjs';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 
 @Component({
   selector: 'app-select-government',
   templateUrl: './select-government.component.html',
   styleUrls: ['./select-government.component.scss'],
 })
-export class SelectGovernmentComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class SelectGovernmentComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Government;
-  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
 
   private fileId = '';
   private submissionUuid = '';
@@ -38,7 +34,9 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     private codeService: CodeService,
     private applicationSubmissionService: ApplicationSubmissionService,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadGovernments();
@@ -93,15 +91,6 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
-  }
-
   async onSave() {
     await this.save();
   }
@@ -146,9 +135,5 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
         this.localGovernment.setErrors({ invalid: true });
       }
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

@@ -13,8 +13,8 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationSubmissionService {
-  private serviceUrl = `${environment.apiUrl}/application-submission`;
+export class ApplicationSubmissionDraftService {
+  private serviceUrl = `${environment.apiUrl}/application-edit`;
 
   constructor(
     private httpClient: HttpClient,
@@ -22,31 +22,11 @@ export class ApplicationSubmissionService {
     private overlayService: OverlaySpinnerService
   ) {}
 
-  async getApplications() {
-    try {
-      return await firstValueFrom(this.httpClient.get<ApplicationSubmissionDto[]>(`${this.serviceUrl}`));
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to load Applications, please try again later');
-      return [];
-    }
-  }
-
   async getByFileId(fileId: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<ApplicationSubmissionDetailedDto>(`${this.serviceUrl}/application/${fileId}`)
+        this.httpClient.get<ApplicationSubmissionDetailedDto>(`${this.serviceUrl}/${fileId}`)
       );
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to load Application, please try again later');
-      return undefined;
-    }
-  }
-
-  async getByUuid(uuid: string) {
-    try {
-      return await firstValueFrom(this.httpClient.get<ApplicationSubmissionDetailedDto>(`${this.serviceUrl}/${uuid}`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to load Application, please try again later');
@@ -71,11 +51,11 @@ export class ApplicationSubmissionService {
     return undefined;
   }
 
-  async updatePending(uuid: string, updateDto: ApplicationSubmissionUpdateDto) {
+  async updatePending(fileId: string, updateDto: ApplicationSubmissionUpdateDto) {
     try {
       this.overlayService.showSpinner();
       const result = await firstValueFrom(
-        this.httpClient.put<ApplicationSubmissionDetailedDto>(`${this.serviceUrl}/${uuid}`, updateDto)
+        this.httpClient.put<ApplicationSubmissionDetailedDto>(`${this.serviceUrl}/${fileId}`, updateDto)
       );
       this.toastService.showSuccessToast('Application Saved');
       return result;
@@ -89,10 +69,10 @@ export class ApplicationSubmissionService {
     return undefined;
   }
 
-  async cancel(uuid: string) {
+  async cancel(fileId: string) {
     try {
       this.overlayService.showSpinner();
-      return await firstValueFrom(this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}/${uuid}/cancel`, {}));
+      return await firstValueFrom(this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}/${fileId}/cancel`, {}));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to cancel Application, please try again later');
@@ -102,11 +82,11 @@ export class ApplicationSubmissionService {
     return undefined;
   }
 
-  async submitToAlcs(uuid: string) {
+  async submitToAlcs(fileId: string) {
     try {
       this.overlayService.showSpinner();
       await firstValueFrom(
-        this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${uuid}`, {})
+        this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {})
       );
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {

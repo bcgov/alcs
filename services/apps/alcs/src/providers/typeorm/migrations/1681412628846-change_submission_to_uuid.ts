@@ -12,6 +12,10 @@ export class changeSubmissionToUuid1681412628846 implements MigrationInterface {
       `ALTER TABLE "alcs"."application_owner" DROP CONSTRAINT "FK_8104e51d0d9d1e920cd0f6df17c"`,
     );
 
+    await queryRunner.query(
+      `ALTER TABLE "alcs"."application_submission" DROP CONSTRAINT "UQ_4776c7dcd306a47a372b322fd9b"`,
+    );
+
     //Add new uuids
     await queryRunner.query(
       `ALTER TABLE "alcs"."application_submission" ADD "uuid" uuid NOT NULL DEFAULT gen_random_uuid()`,

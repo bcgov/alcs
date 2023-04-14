@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   DOCUMENT_TYPE,
@@ -10,13 +10,11 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
-import {
-  ApplicationSubmissionDetailedDto,
-  ApplicationSubmissionUpdateDto,
-} from '../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-submission.component';
+import { StepComponent } from '../../step.partial';
 
 type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null };
 
@@ -25,13 +23,9 @@ type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null
   templateUrl: './subd-proposal.component.html',
   styleUrls: ['./subd-proposal.component.scss'],
 })
-export class SubdProposalComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class SubdProposalComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
 
   DOCUMENT = DOCUMENT_TYPE;
 
@@ -66,7 +60,9 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
@@ -105,15 +101,6 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
       this.homesiteSeverance = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.HOMESITE_SEVERANCE);
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     });
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSave() {
@@ -170,10 +157,6 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 
   onChangeLotCount(event: Event) {

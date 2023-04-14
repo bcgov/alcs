@@ -9,18 +9,15 @@ import {
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
+import { StepComponent } from '../../step.partial';
 
 @Component({
   selector: 'app-nfu-proposal',
   templateUrl: './nfu-proposal.component.html',
   styleUrls: ['./nfu-proposal.component.scss'],
 })
-export class NfuProposalComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class NfuProposalComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -52,7 +49,9 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   private fileId = '';
   private submissionUuid = '';
 
-  constructor(private router: Router, private applicationSubmissionService: ApplicationSubmissionService) {}
+  constructor(private router: Router, private applicationSubmissionService: ApplicationSubmissionService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
@@ -84,15 +83,6 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSave() {
@@ -160,9 +150,5 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
       this.fillTypeDescription.setValue(null);
       this.fillOriginDescription.setValue(null);
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

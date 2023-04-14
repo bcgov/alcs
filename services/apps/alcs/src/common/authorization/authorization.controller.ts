@@ -77,7 +77,7 @@ export class AuthorizationController {
         sessionId,
         `${baseUrl}/authorize`,
       );
-      const idpHint = '&kc_idp_hint=bceidboth';
+      //const idpHint = '&kc_idp_hint=bceidboth';
 
       const redis = this.redisService.getClient();
       await redis.set(
@@ -86,7 +86,7 @@ export class AuthorizationController {
       );
 
       return {
-        loginUrl: loginUrl + idpHint,
+        loginUrl: loginUrl,
       };
     } catch (e) {
       console.log(e);

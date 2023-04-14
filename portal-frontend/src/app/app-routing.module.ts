@@ -42,6 +42,13 @@ const routes: Routes = [
     loadChildren: () => import('./features/edit-submission/edit-submission.module').then((m) => m.EditSubmissionModule),
   },
   {
+    title: 'ALCS Edit Application',
+    path: 'alcs/application/:fileId/edit',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/alcs-edit-submission/alcs-edit-submission.module').then((m) => m.AlcsEditSubmissionModule),
+  },
+  {
     title: 'Review Application',
     path: 'application/:fileId/review',
     canActivate: [AuthGuard],
