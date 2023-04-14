@@ -38,6 +38,7 @@ export class GenerateSubmissionDocumentService {
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationService: ApplicationService,
     private parcelService: ApplicationParcelService,
+    @Inject(forwardRef(() => ApplicationOwnerService))
     private ownerService: ApplicationOwnerService,
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
