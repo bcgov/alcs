@@ -239,7 +239,7 @@ export class ApplicationSubmissionService {
       );
 
       if (pdfRes.status === HttpStatus.OK) {
-        this.applicationDocumentService.attachDocumentAsBuffer({
+        await this.applicationDocumentService.attachDocumentAsBuffer({
           fileNumber: fileNumber,
           fileName: `${fileNumber}_Submission`,
           user: user,
