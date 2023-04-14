@@ -71,14 +71,6 @@
   flex-direction: column-reverse;
   justify-content: center;
 
-  div {
-    margin-right: rem(16);
-  }
-
-  div:last-child {
-    margin-right: 0 !important;
-  }
-
   button {
     width: 100%;
     margin-bottom: rem(16) !important;
@@ -86,6 +78,14 @@
 
   @media screen and (min-width: $tabletBreakpoint) {
     flex-direction: row;
+
+    div {
+      margin-right: rem(16);
+    }
+
+    div:last-child {
+      margin-right: 0 !important;
+    }
   }
 }
 
