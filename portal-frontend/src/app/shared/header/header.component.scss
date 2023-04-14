@@ -38,7 +38,7 @@ header {
   }
 
   @media screen and (min-width: $tabletBreakpoint) {
-    margin: rem(18) rem(80) !important;
+    margin: rem(12) rem(36) !important;
     justify-content: space-between;
 
     .burger-menu {
@@ -49,6 +49,7 @@ header {
       display: flex;
       margin: 0;
       justify-content: space-between;
+      align-items: center;
 
       button:not(:last-child) {
         margin-right: rem(28) !important;
@@ -81,5 +82,9 @@ header {
         }
       }
     }
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    margin: rem(18) rem(80) !important;
   }
 }
