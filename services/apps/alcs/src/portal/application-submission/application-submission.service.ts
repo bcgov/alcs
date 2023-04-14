@@ -4,7 +4,13 @@ import {
 } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
@@ -14,6 +20,7 @@ import { VISIBILITY_FLAG } from '../../alcs/application/application-document/app
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
@@ -206,7 +213,7 @@ export class ApplicationSubmissionService {
         },
         shouldCreateCard,
       );
-      // TODO: attach generated PDF here. Should the submit fail if the pdf generation fails?
+
       await this.generateAndAttachSubmissionPdfSilent(
         application.fileNumber,
         user,
@@ -225,29 +232,31 @@ export class ApplicationSubmissionService {
     fileNumber: string,
     user: User,
   ) {
-    const pdfRes = await this.submissionDocumentGenerationService.generate(
-      fileNumber,
-      user,
-    );
+    try {
+      const pdfRes = await this.submissionDocumentGenerationService.generate(
+        fileNumber,
+        user,
+      );
 
-    // TODO check other pdfRes statuses, is there something other then 'OK'
-    console.log('pdf generated successfully', pdfRes.statusText);
-
-    if ((pdfRes.statusText = 'OK')) {
-      this.applicationDocumentService.attachDocumentAsBuffer({
-        fileNumber: fileNumber,
-        fileName: `${fileNumber}_Submission`,
-        user: user,
-        file: pdfRes.data,
-        mimeType: 'application/pdf',
-        fileSize: pdfRes.data.length,
-        documentType: DOCUMENT_TYPE.SUBORIG,
-        visibilityFlags: [
-          VISIBILITY_FLAG.APPLICANT,
-          VISIBILITY_FLAG.COMMISSIONER,
-          VISIBILITY_FLAG.GOVERNMENT,
-        ],
-      });
+      if (pdfRes.status === HttpStatus.OK) {
+        this.applicationDocumentService.attachDocumentAsBuffer({
+          fileNumber: fileNumber,
+          fileName: `${fileNumber}_Submission`,
+          user: user,
+          file: pdfRes.data,
+          mimeType: 'application/pdf',
+          fileSize: pdfRes.data.length,
+          documentType: DOCUMENT_TYPE.SUBORIG,
+          source: DOCUMENT_SOURCE.APPLICANT,
+          visibilityFlags: [
+            VISIBILITY_FLAG.APPLICANT,
+            VISIBILITY_FLAG.COMMISSIONER,
+            VISIBILITY_FLAG.GOVERNMENT,
+          ],
+        });
+      }
+    } catch (e) {
+      this.logger.error(`Error generating the document on submission${e}`);
     }
   }
 

@@ -161,7 +161,6 @@ export class ParcelComponent {
       validation.isCertificateRequired = true;
     }
 
-    // TODO replace this with checking if there at least one error object on the page?
     validation.isInvalid = this.isInvalid(validation);
 
     return validation;
