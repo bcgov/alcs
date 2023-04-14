@@ -24,6 +24,8 @@ export enum DOCUMENT_TYPE {
 
   //SUBD
   HOMESITE_SEVERANCE = 'HOME',
+
+  SUBORIG = 'SUBO',
 }
 
 export const DOCUMENT_TYPES = [

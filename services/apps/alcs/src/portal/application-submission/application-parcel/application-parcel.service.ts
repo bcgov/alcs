@@ -3,7 +3,6 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';

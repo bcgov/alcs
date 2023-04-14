@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
 import { CdogsService } from '../../../../../../libs/common/src/cdogs/cdogs.service';
@@ -33,10 +33,12 @@ const NO_DATA = 'No Data';
 export class GenerateSubmissionDocumentService {
   constructor(
     private documentGenerationService: CdogsService,
+    @Inject(forwardRef(() => ApplicationSubmissionService))
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationService: ApplicationService,
     private parcelService: ApplicationParcelService,
+    @Inject(forwardRef(() => ApplicationOwnerService))
     private ownerService: ApplicationOwnerService,
     private applicationDocumentService: ApplicationDocumentService,
   ) {}

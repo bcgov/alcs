@@ -23,6 +23,7 @@ export class ApplicationOwnerService {
     private typeRepository: Repository<ApplicationOwnerType>,
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
+    @Inject(forwardRef(() => ApplicationSubmissionService))
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
   ) {}

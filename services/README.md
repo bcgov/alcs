@@ -10,15 +10,9 @@ $ npm install
 
 ## Running the app
 
-{env} = alcs or portal
-
-### ALCS
-
 ```bash
 # development
-$ npm run {env}:start
-# example:
-# $ npm run alcs:start
+$ npm run alcs:start
 
 # watch mode
 $ npm run {env}:start:dev
@@ -28,10 +22,7 @@ $ npm run {env}:start:prod
 ```
 
 ## Test
-
-Since alcs and portal share nest infrastructure the tests are executed for both with the same commands.
-
-Create test.json
+Create test.json (you could copy values from default.json and tweak them as needed)
 
 ```bash
 # unit tests
@@ -46,10 +37,6 @@ $ npm run test:cov
 
 ## TypeOrm
 
-Typeorm commands are specific by application.
-
-### ALCS:
-
 ```bash
 # create empty migration file:
   npm run alcs:migration:create --name=<file_name>
@@ -59,19 +46,6 @@ Typeorm commands are specific by application.
   npm run alcs:migration:run
 # revert migration
   npm run alcs:typeorm migration:revert
-```
-
-### Portal
-
-```bash
-# create empty migration file:
-  npm run portal:migration:create --name=<file_name>
-# generate migrations:
-  npm run portal:migration:generate --name=<file_name>
-# apply migration:
-  npm run portal:migration:run
-# revert migration
-  npm run portal:typeorm migration:revert
 ```
 
 ## Postgres tests
