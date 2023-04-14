@@ -68,8 +68,16 @@
 
 .buttons {
   display: flex;
-  justify-content: space-between;
   flex-direction: column-reverse;
+  justify-content: center;
+
+  div {
+    margin-right: rem(16);
+  }
+
+  div:last-child {
+    margin-right: 0 !important;
+  }
 
   button {
     width: 100%;
