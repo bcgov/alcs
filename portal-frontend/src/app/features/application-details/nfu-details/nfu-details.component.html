@@ -68,15 +68,15 @@
     <div class="full-width">
       <span class="subheading1">Project Duration</span>
     </div>
+    <div class="subheading2 grid-1">Duration</div>
+    <div class="grid-double">
+      {{ application.nfuProjectDurationUnit }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuProjectDurationUnit"></app-no-data>
+    </div>
     <div class="subheading2 grid-1">Length</div>
     <div class="grid-double">
       {{ application.nfuProjectDurationAmount }}
       <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuProjectDurationAmount"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Unit</div>
-    <div class="grid-double">
-      {{ application.nfuProjectDurationUnit }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuProjectDurationUnit"></app-no-data>
     </div>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">
