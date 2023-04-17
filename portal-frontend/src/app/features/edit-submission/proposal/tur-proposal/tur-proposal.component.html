@@ -123,6 +123,7 @@
           matInput
           placeholder="Type total area"
         />
+        <span *ngIf="totalCorridorArea.value" matTextSuffix>ha</span>
       </mat-form-field>
       <div
         *ngIf="totalCorridorArea.invalid && (totalCorridorArea.dirty || totalCorridorArea.touched)"

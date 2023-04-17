@@ -31,6 +31,7 @@
           formControlName="hectares"
           placeholder="Type size in hectares"
         />
+        <span *ngIf="hectares.value" matTextSuffix>ha</span>
       </mat-form-field>
       <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -191,6 +192,7 @@
             formControlName="totalFillPlacement"
             placeholder="Type fill depth"
           />
+          <span *ngIf="totalFillPlacement.value" matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
         <div
           *ngIf="totalFillPlacement.invalid && (totalFillPlacement.dirty || totalFillPlacement.touched)"
@@ -216,6 +218,7 @@
             formControlName="maxFillDepth"
             placeholder="Type placement area"
           />
+          <span *ngIf="maxFillDepth.value" matTextSuffix>m</span>
         </mat-form-field>
         <div *ngIf="maxFillDepth.invalid && (maxFillDepth.dirty || maxFillDepth.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -238,6 +241,7 @@
             formControlName="fillVolume"
             placeholder="Type volume"
           />
+          <span *ngIf="fillVolume.value" matTextSuffix>m<sup>3</sup></span>
         </mat-form-field>
         <div *ngIf="fillVolume.invalid && (fillVolume.dirty || fillVolume.touched)" class="field-error">
           <mat-icon>warning</mat-icon>

@@ -41,6 +41,7 @@
           placeholder=""
           (change)="onChangeLotCount($event)"
         />
+        <span *ngIf="lotsProposed.value" matTextSuffix>lots</span>
       </mat-form-field>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -63,7 +64,7 @@
           <th mat-header-cell *matHeaderCellDef>Type</th>
           <td mat-cell *matCellDef="let element; let i = index">
             <mat-form-field appearance="outline">
-              <mat-select [value]='element.type' placeholder="Please select" (valueChange)="onChangeLotType(i, $event)">
+              <mat-select [value]="element.type" placeholder="Please select" (valueChange)="onChangeLotType(i, $event)">
                 <mat-option value="Lot"> Lot </mat-option>
                 <mat-option value="Road Dedication"> Road Dedication </mat-option>
               </mat-select>
@@ -76,14 +77,14 @@
           <td mat-cell *matCellDef="let element; let i = index">
             <mat-form-field appearance="outline">
               <input
-                [(ngModel)]='element.size'
+                [(ngModel)]="element.size"
                 type="text"
                 matInput
-                thousandSeparator=','
+                thousandSeparator=","
                 mask="separator.2"
                 separatorLimit="9999999999"
                 min="0.01"
-                [ngModelOptions]="{standalone: true}"
+                [ngModelOptions]="{ standalone: true }"
                 (change)="onChangeLotSize()"
               />
             </mat-form-field>
@@ -100,7 +101,7 @@
       <div>Total area of the proposed lots: {{ totalAcres }} ha</div>
       <div *ngIf="totalAcres !== '0' && totalAcres !== totalTargetAcres" class="field-error">
         <mat-icon>warning</mat-icon>
-        <div>The total lot area proposed must match {{totalTargetAcres}} hectares as provided in Step 1</div>
+        <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
       </div>
     </div>
     <div class="full-row">
