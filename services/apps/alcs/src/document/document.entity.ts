@@ -40,4 +40,19 @@ export class Document extends Base {
 
   @Column({ default: 'ALC' })
   source: string;
+
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  oatsApplicationId?: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'text',
+    unique: true,
+    comment: 'used only for oats etl process',
+  })
+  oatsDocumentId?: string | null;
 }
