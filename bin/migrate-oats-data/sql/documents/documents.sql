@@ -15,9 +15,9 @@
 		  and od.planning_review_id is null	
 )
  SELECT 
-      document_id::varchar AS oats_document_id,
+      document_id::text AS oats_document_id,
       file_name,
-      alr_application_id::varchar AS oats_application_id,
+      alr_application_id::text AS oats_application_id,
       'oats_etl' AS "source",
       'oats_etl' AS audit_created_by,
       '/migrate/' || alr_application_id || '/' || document_id || '_' || file_name AS file_key,
@@ -25,4 +25,4 @@
 	  '{"ORCS Classification: 85100-20"}'::text[] as tags
     FROM 
       oats_documents_to_insert oti
-      JOIN alcs.application a ON a.file_number = oti.alr_application_id::varchar
+      JOIN alcs.application a ON a.file_number = oti.alr_application_id::text

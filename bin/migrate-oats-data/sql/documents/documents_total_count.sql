@@ -18,4 +18,4 @@
       count(*)
     FROM 
       oats_documents_to_insert oti
-      JOIN alcs.application a ON a.file_number = oti.alr_application_id::varchar
+      JOIN alcs.application a ON a.file_number = oti.alr_application_id::text

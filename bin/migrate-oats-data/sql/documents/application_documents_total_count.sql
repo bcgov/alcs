@@ -10,13 +10,13 @@ with oats_documents_to_map as (
 	from oats.oats_documents od 
 
 		join alcs."document" d 
-		on  d.oats_document_id = od.document_id::varchar  
+		on  d.oats_document_id = od.document_id::text  
 		
 		join alcs.application_document_code adc 
 		on adc.oats_code = od.document_code
 		
 		join alcs.application a 
-		on a.file_number = od.alr_application_id::varchar
+		on a.file_number = od.alr_application_id::text
 )
 select 
     count(*)
