@@ -155,6 +155,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.applicationDetailService.clearApplication();
     this.destroy.next();
     this.destroy.complete();
   }
