@@ -68,8 +68,8 @@ select
 	document_id::varchar as oats_document_id ,
 	file_name ,
 	alr_application_id::varchar as oats_application_id ,
-    'oats-etl' as "source" ,
-    'oats-etl' as audit_created_by ,
+    'oats_etl' as "source" ,
+    'oats_etl' as audit_created_by ,
     '/migrate/' || alr_application_id || '/' || document_id || '_' || file_name as file_key,
     'pdf' as mime_type
 
@@ -117,3 +117,170 @@ select
 	end) as visibility_flags
 
 from oats_documents_to_map otm
+
+-------------------------------------
+
+
+WITH oats_documents_to_insert AS (
+    SELECT
+        od.alr_application_id,
+        document_id,
+        document_code,
+        file_name
+    FROM oats.oats_documents od
+    LEFT JOIN oats.oats_subject_properties osp 
+        ON osp.subject_property_id = od.subject_property_id 
+        AND osp.alr_application_id = od.alr_application_id 
+    WHERE od.alr_application_id IS NOT NULL 
+        AND document_code IS NOT NULL
+        AND od.issue_id IS NULL 
+        AND od.planning_review_id IS NULL
+),
+document_chunks AS (
+    SELECT 
+        document_id::VARCHAR AS oats_document_id,
+        file_name, 
+        alr_application_id::VARCHAR AS oats_application_id,
+        'oats_etl' AS "source",
+        'oats_etl' AS audit_created_by,
+        '/migrate/' || alr_application_id || '/' || document_id || '_' || file_name AS file_key,
+        'pdf' AS mime_type,
+        ROW_NUMBER() OVER (ORDER BY document_id) AS row_num
+    FROM oats_documents_to_insert oti
+    JOIN alcs.application a ON a.file_number = oti.alr_application_id::VARCHAR
+),
+failed_document_import AS (
+    SELECT *
+    FROM document_chunks
+    WHERE 1=0
+)
+SELECT NULL; --initialize variable to ensure that the first loop runs
+
+
+WHILE (SELECT COUNT(*) FROM document_chunks WHERE row_num > (SELECT COALESCE(MAX(row_num), 0) FROM failed_document_import)) > 0
+LOOP
+    BEGIN
+        INSERT INTO alcs."document"
+        (
+            oats_document_id,
+            file_name,
+            oats_application_id,
+            "source",
+            audit_created_by,
+            file_key,
+            mime_type
+        )
+        SELECT *
+        FROM document_chunks
+        WHERE row_num > (SELECT COALESCE(MAX(row_num), 0) FROM failed_document_import)
+        ORDER BY row_num
+        LIMIT 10000;
+    EXCEPTION WHEN OTHERS THEN
+        INSERT INTO failed_document_import
+        SELECT *
+        FROM document_chunks
+        WHERE row_num > (SELECT COALESCE(MAX(row_num), 0) FROM failed_document_import);
+    END;
+END LOOP;
+
+
+-- Constants for chunking
+DO $$
+DECLARE
+  -- Cursor declaration for chunked data
+  CHUNK_SIZE CONSTANT INTEGER := 10000;
+  MAX_RETRIES CONSTANT INTEGER := 5;
+  
+  -- Cursor declaration for chunked data
+  doc_cursor CURSOR FOR 
+    SELECT
+      od.alr_application_id,
+      document_id,
+      file_name
+    FROM oats.oats_documents od
+    LEFT JOIN oats.oats_subject_properties osp
+      ON osp.subject_property_id = od.subject_property_id 
+      AND osp.alr_application_id = od.alr_application_id 
+    WHERE od.alr_application_id IS NOT NULL 
+      AND document_code IS NOT NULL
+      AND od.issue_id IS NULL 
+      AND od.planning_review_id IS null;
+      
+  -- Variables to hold chunk data
+  chunk_doc_id INTEGER;
+  chunk_file_name VARCHAR(100);
+  chunk_application_id INTEGER;
+  
+BEGIN  
+  -- Open the cursor
+  OPEN doc_cursor;
+
+  -- Loop over chunks of data
+  LOOP
+    FETCH doc_cursor INTO chunk_application_id, chunk_doc_id, chunk_file_name;
+    EXIT WHEN NOT FOUND;
+
+    -- Query to insert a chunk of documents
+    INSERT INTO alcs."document" (
+      oats_document_id,
+      file_name,
+      oats_application_id,
+      "source",
+      audit_created_by,
+      file_key,
+      mime_type
+    )
+    SELECT 
+      chunk_doc_id,
+      chunk_file_name,
+      chunk_application_id,
+      'oats_etl' as "source",
+      'oats_etl' as audit_created_by,
+      '/migrate/' || chunk_application_id || '/' || chunk_doc_id || '_' || chunk_file_name as file_key,
+      'pdf' as mime_type
+    FROM doc_cursor
+    WHERE CURRENT OF doc_cursor
+    LIMIT CHUNK_SIZE;
+
+    -- Insert any failed documents into the failed_imports table
+    INSERT INTO failed_imports (
+      oats_document_id,
+      file_name,
+      oats_application_id,
+      "source",
+      audit_created_by,
+      file_key,
+      mime_type,
+      retry_count
+    )
+    SELECT 
+      chunk_doc_id,
+      chunk_file_name,
+      chunk_application_id,
+      'oats_etl' as "source",
+      'oats_etl' as audit_created_by,
+      '/migrate/' || chunk_application_id || '/' || chunk_doc_id || '_' || chunk_file_name as file_key,
+      'pdf' as mime_type,
+      0
+    WHERE NOT EXISTS (SELECT * FROM alcs."document" WHERE oats_document_id = chunk_doc_id);
+
+  END LOOP;
+
+  -- Close the cursor
+  CLOSE doc_cursor;
+
+  -- Retry logic for failed inserts
+  WHILE (SELECT COUNT(*) FROM failed_imports WHERE retry_count < MAX_RETRIES) > 0 LOOP
+    UPDATE failed_imports 
+    SET retry_count = retry_count + 1 
+    WHERE retry_count < MAX_RETRIES;
+    
+    IF (SELECT COUNT(*) FROM failed_imports WHERE retry_count >= MAX_RETRIES) > 0 THEN
+      RAISE NOTICE 'Maximum number of retries reached';
+      EXIT;
+    END IF;
+    
+    PERFORM pg_sleep(5);
+  END LOOP;
+
+END; $$;
