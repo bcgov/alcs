@@ -80,6 +80,14 @@ form {
       color: colors.$grey;
     }
 
+    &:has(+ mat-button-toggle-group mat-button-toggle.mat-button-toggle-disabled) {
+      color: colors.$grey;
+    }
+
+    &:has(+ div ~ mat-button-toggle-group mat-button-toggle.mat-button-toggle-disabled) {
+      color: colors.$grey;
+    }
+
     @media screen and (min-width: $tabletBreakpoint) {
       & {
         font-size: rem(16) !important;
