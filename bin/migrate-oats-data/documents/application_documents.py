@@ -1,7 +1,7 @@
 from db import inject_conn_pool
 
 """
-    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
+    This script links data from ALCS documents table to ALCS application_documents table based on data from OATS.
 """
 
 
@@ -82,7 +82,7 @@ def process_application_documents(conn=None, batch_size=10000):
                     conn.rollback()
                     print("Error", e)
                     failed_inserts += len(rows)
-                    last_document_id = last_document_id + batch_size
+                    last_document_id = last_document_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total amount of failed inserts:", failed_inserts)

@@ -74,7 +74,7 @@ def process_documents(conn=None, batch_size=10000):
                     conn.rollback()
                     print("Error", e)
                     failed_inserts += len(rows)
-                    last_document_id = last_document_id + batch_size
+                    last_document_id = last_document_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total amount of failed inserts:", failed_inserts)
