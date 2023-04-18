@@ -132,7 +132,9 @@
     <h3>Soil & Fill Components</h3>
     <div class="form-row">
       <div class="full-row">
-        <label for="fillTypeDescription">Describe the type and amount of fill proposed to be placed.</label>
+        <label for="fillTypeDescription" [class.disabled-field-label]="fillTypeDescription.status === disabledStatus"
+          >Describe the type and amount of fill proposed to be placed.</label
+        >
         <mat-form-field appearance="outline">
           <textarea
             formControlName="fillTypeDescription"
