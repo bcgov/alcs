@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
+import { ApplicationSubmissionDraftService } from '../../services/application-submission/application-submission-draft.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
 
@@ -20,7 +21,7 @@ describe('AlcsEditSubmissionComponent', () => {
       declarations: [AlcsEditSubmissionComponent],
       providers: [
         {
-          provide: ApplicationSubmissionService,
+          provide: ApplicationSubmissionDraftService,
           useValue: {},
         },
         {

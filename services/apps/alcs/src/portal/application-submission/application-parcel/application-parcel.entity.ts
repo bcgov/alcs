@@ -128,7 +128,7 @@ export class ApplicationParcel extends Base {
 
   @AutoMap(() => ApplicationDocumentDto)
   @JoinColumn()
-  @OneToOne(() => ApplicationDocument, {
+  @ManyToOne(() => ApplicationDocument, {
     nullable: true,
     onDelete: 'SET NULL',
   })

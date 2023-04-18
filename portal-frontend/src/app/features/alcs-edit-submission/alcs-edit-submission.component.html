@@ -1,6 +1,8 @@
 <ng-template #header>
   <div class="header">
-    <h6 *ngIf="applicationSubmission">Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}</h6>
+    <h6 *ngIf="applicationSubmission">
+      Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}
+    </h6>
     <div class="header-btn-wrapper">
       <button
         *ngIf="applicationSubmission?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
@@ -26,8 +28,10 @@
       <app-parcel-details
         [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (componentInitialized)="onParcelDetailsInitialized()"
+        (exit)="onExit()"
       ></app-parcel-details>
     </div>
   </cdk-step>
@@ -37,7 +41,9 @@
       <app-other-parcels
         [showErrors]="showValidationErrors"
         [$applicationSubmission]="$applicationSubmission"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-other-parcels>
     </div>
   </cdk-step>
@@ -48,7 +54,9 @@
         [showErrors]="showValidationErrors"
         [$application]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-primary-contact>
     </div>
   </cdk-step>
@@ -58,7 +66,9 @@
       <app-select-government
         [showErrors]="showValidationErrors"
         [$applicationSubmission]="$applicationSubmission"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-select-government>
     </div>
   </cdk-step>
@@ -68,7 +78,9 @@
       <app-land-use
         [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-land-use>
     </div>
   </cdk-step>
@@ -79,12 +91,15 @@
         *ngIf="applicationSubmission.typeCode === 'NFUP'"
         [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-nfu-proposal>
       <app-tur-proposal
         *ngIf="applicationSubmission.typeCode === 'TURP'"
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        [draftMode]="true"
         [showErrors]="showValidationErrors"
         (navigateToStep)="switchStep($event)"
       ></app-tur-proposal>
@@ -92,8 +107,10 @@
         *ngIf="applicationSubmission.typeCode === 'SUBD'"
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        [draftMode]="true"
         [showErrors]="showValidationErrors"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-subd-proposal>
     </div>
   </cdk-step>
@@ -103,8 +120,10 @@
       <app-other-attachments
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        [draftMode]="true"
         [showErrors]="showValidationErrors"
         (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
       ></app-other-attachments>
     </div>
   </cdk-step>
@@ -114,8 +133,9 @@
       <app-review-and-submit
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        [draftMode]="true"
+        (exit)="onExit()"
       ></app-review-and-submit>
     </div>
   </cdk-step>
 </app-custom-stepper>
-<button>Save Exit</button>

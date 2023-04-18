@@ -108,24 +108,29 @@ export class AuthorizationService {
     }
   }
 
-  async refreshToken(refreshToken: string): Promise<TokenResponse> {
+  async refreshToken(refreshToken: string): Promise<TokenResponse | undefined> {
     const secret = this.config.get<string>('KEYCLOAK.SECRET');
     const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
     const tokenUrl = this.config.get<string>('KEYCLOAK.AUTH_TOKEN_URL');
 
-    const res = await firstValueFrom(
-      this.httpService.post(
-        tokenUrl,
-        new URLSearchParams({
-          grant_type: 'refresh_token',
-          client_id: clientId,
-          client_secret: secret,
-          refresh_token: refreshToken,
-        }),
-      ),
-    );
+    try {
+      const res = await firstValueFrom(
+        this.httpService.post(
+          tokenUrl,
+          new URLSearchParams({
+            grant_type: 'refresh_token',
+            client_id: clientId,
+            client_secret: secret,
+            refresh_token: refreshToken,
+          }),
+        ),
+      );
+      return res.data;
+    } catch (e) {
+      this.logger.warn('Failed to refresh token');
+    }
 
-    return res.data;
+    return undefined;
   }
 
   private mapUserFromTokenToCreateDto(user: BaseToken): CreateUserDto {

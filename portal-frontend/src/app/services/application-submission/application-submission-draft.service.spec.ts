@@ -57,24 +57,6 @@ describe('ApplicationSubmissionDraftService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
-  it('should make a post request for create', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
-
-    await service.create('type');
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('application');
-  });
-
-  it('should show an error toast if creating an application fails', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
-
-    await service.create('type');
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
   it('should make a put request for update', async () => {
     mockHttpClient.put.mockReturnValue(of({}));
     let mockFileId = 'fileId';
@@ -95,21 +77,21 @@ describe('ApplicationSubmissionDraftService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
-  it('should make a post request for cancelling', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
+  it('should make a delete request for delete', async () => {
+    mockHttpClient.delete.mockReturnValue(of({}));
 
-    await service.cancel('fileId');
+    await service.delete('fileId');
 
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('application');
+    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.delete.mock.calls[0][0]).toContain('application');
   });
 
-  it('should show an error toast if cancelling a file fails', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
+  it('should show an error toast if delete a draft fails', async () => {
+    mockHttpClient.delete.mockReturnValue(throwError(() => ({})));
 
-    await service.cancel('fileId');
+    await service.delete('fileId');
 
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });

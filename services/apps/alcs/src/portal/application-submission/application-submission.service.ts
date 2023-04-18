@@ -430,14 +430,10 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async getByUuid(uuid: string, user: User) {
+  async getByUuid(uuid: string) {
     return await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
-        createdBy: {
-          uuid: user.uuid,
-        },
-        isDraft: false,
       },
       relations: {
         owners: {
@@ -462,8 +458,8 @@ export class ApplicationSubmissionService {
   }
 
   async getIfCreatorByUuid(uuid: string, user: User) {
-    const applicationSubmission = await this.getByUuid(uuid, user);
-    if (!applicationSubmission) {
+    const applicationSubmission = await this.getByUuid(uuid);
+    if (!applicationSubmission || applicationSubmission.createdBy !== user) {
       throw new ServiceNotFoundException(
         `Failed to load application with ID ${uuid}`,
       );

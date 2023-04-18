@@ -53,12 +53,14 @@ export class SubdDetailsComponent {
   }
 
   private async loadParcels(fileNumber: string) {
-    const parcels = await this.applicationParcelService.fetchBySubmissionUuid(fileNumber);
-    if (parcels) {
-      this.totalTargetAcres = parcels
-        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-        .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
-        .toFixed(2);
+    if (this._applicationSubmission) {
+      const parcels = await this.applicationParcelService.fetchBySubmissionUuid(this._applicationSubmission?.uuid);
+      if (parcels) {
+        this.totalTargetAcres = parcels
+          .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
+          .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
+          .toFixed(2);
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
@@ -18,11 +18,17 @@ export class ApplicationEditController {
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async getOrCreateReview(@Param('fileNumber') fileNumber: string) {
+  async getOrCreateDraft(@Param('fileNumber') fileNumber: string) {
     const applicationSubmission =
       await this.applicationEditService.getOrCreateDraft(fileNumber);
     return await this.applicationEditService.mapToDetailedDto(
       applicationSubmission,
     );
+  }
+
+  @Delete('/:fileNumber')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async deleteDraft(@Param('fileNumber') fileNumber: string) {
+    await this.applicationEditService.deleteDraft(fileNumber);
   }
 }

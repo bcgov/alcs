@@ -374,10 +374,7 @@ export class ApplicationSubmission extends BaseEntity {
   subdProposedLots: ProposedLot[];
 
   @AutoMap(() => Application)
-  @OneToOne(
-    () => Application,
-    (application) => application.submittedApplication,
-  )
+  @ManyToOne(() => Application)
   @JoinColumn({
     name: 'file_number',
     referencedColumnName: 'fileNumber',

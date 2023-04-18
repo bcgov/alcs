@@ -150,7 +150,7 @@ export class ApplicationOwnerController {
 
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
-    const application =
+    const applicationSubmission =
       await this.applicationSubmissionService.verifyAccessByUuid(
         data.applicationSubmissionUuid,
         req.user.entity,
@@ -168,10 +168,10 @@ export class ApplicationOwnerController {
           organizationName: data.agentOrganization,
           applicationSubmissionUuid: data.applicationSubmissionUuid,
         },
-        application,
+        applicationSubmission,
       );
       await this.ownerService.setPrimaryContact(
-        application.fileNumber,
+        applicationSubmission.fileNumber,
         agentOwner,
       );
     } else if (data.ownerUuid) {
@@ -191,11 +191,11 @@ export class ApplicationOwnerController {
         });
       } else {
         //Delete Agents if we aren't using one
-        await this.ownerService.deleteAgents(application);
+        await this.ownerService.deleteAgents(applicationSubmission);
       }
 
       await this.ownerService.setPrimaryContact(
-        application.fileNumber,
+        applicationSubmission.fileNumber,
         primaryContactOwner,
       );
     }

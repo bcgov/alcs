@@ -59,7 +59,7 @@ export class ApplicationOwner extends Base {
   email?: string | null;
 
   @AutoMap(() => ApplicationDocumentDto)
-  @OneToOne(() => ApplicationDocument, {
+  @ManyToOne(() => ApplicationDocument, {
     onDelete: 'SET NULL',
   })
   @JoinColumn()

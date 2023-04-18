@@ -65,61 +65,53 @@ export class ApplicationSubmissionController {
   async getSubmissionByFileId(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
 
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileId,
+        user,
+      );
+
     if (user.bceidBusinessGuid) {
       const localGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,
       );
-      if (localGovernment) {
-        const applicationSubmission =
-          await this.applicationSubmissionService.getForGovernmentByFileId(
-            fileId,
-            localGovernment,
-          );
+      if (
+        localGovernment &&
+        submission.localGovernmentUuid === localGovernment.uuid
+      ) {
         return await this.applicationSubmissionService.mapToDetailedDTO(
-          applicationSubmission,
+          submission,
           localGovernment,
         );
       }
     }
 
-    const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreatorByFileNumber(
-        fileId,
-        user,
-      );
-
-    return await this.applicationSubmissionService.mapToDetailedDTO(
-      applicationSubmission,
-    );
+    return await this.applicationSubmissionService.mapToDetailedDTO(submission);
   }
 
   @Get('/:uuid')
   async getSubmission(@Req() req, @Param('uuid') uuid: string) {
     const user = req.user.entity as User;
 
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByUuid(uuid, user);
+
     if (user.bceidBusinessGuid) {
       const localGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,
       );
-      if (localGovernment) {
-        const applicationSubmission =
-          await this.applicationSubmissionService.getForGovernmentByUuid(
-            uuid,
-            localGovernment,
-          );
+      if (
+        localGovernment &&
+        localGovernment.uuid === submission.localGovernmentUuid
+      ) {
         return await this.applicationSubmissionService.mapToDetailedDTO(
-          applicationSubmission,
+          submission,
           localGovernment,
         );
       }
     }
 
-    const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreatorByUuid(uuid, user);
-
-    return await this.applicationSubmissionService.mapToDetailedDTO(
-      applicationSubmission,
-    );
+    return await this.applicationSubmissionService.mapToDetailedDTO(submission);
   }
 
   @Post()

@@ -126,7 +126,7 @@ export class ApplicationParcelController {
     });
 
     const applicationSubmission =
-      await this.applicationSubmissionService.getByUuid(
+      await this.applicationSubmissionService.verifyAccessByUuid(
         parcel.applicationSubmissionUuid,
         req.user.entity,
       );

@@ -62,7 +62,7 @@ export class ApplicationOwnerService {
 
   async create(
     createDto: ApplicationOwnerCreateDto,
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
   ) {
     const type = await this.typeRepository.findOneOrFail({
       where: {
@@ -77,7 +77,7 @@ export class ApplicationOwnerService {
       email: createDto.email,
       phoneNumber: createDto.phoneNumber,
       corporateSummaryUuid: createDto.corporateSummaryUuid,
-      applicationSubmission: application,
+      applicationSubmission: applicationSubmission,
       type,
     });
 

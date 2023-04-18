@@ -133,7 +133,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   }
 
   async onSave() {
-    this.exit.emit();
+    await this.saveProgress();
   }
 
   async onDelete(parcelUuid: string, parcelNumber: number) {

@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
   async onLogin() {
     const res = await this.authenticationService.getLoginUrl();
     if (res) {
-      window.location.href = res.loginUrl;
+      const idpHint = '&kc_idp_hint=bceidboth';
+      window.location.href = `${res.loginUrl}${idpHint}`;
     }
   }
 }

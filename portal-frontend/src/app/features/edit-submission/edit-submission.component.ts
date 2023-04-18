@@ -108,6 +108,10 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
       });
   }
 
+  async onExit() {
+    await this.router.navigateByUrl(`/application/${this.fileId}`);
+  }
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();

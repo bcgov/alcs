@@ -34,23 +34,6 @@ export class ApplicationSubmissionDraftService {
     }
   }
 
-  async create(type: string) {
-    try {
-      this.overlayService.showSpinner();
-      return await firstValueFrom(
-        this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}`, {
-          type,
-        })
-      );
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to create Application, please try again later');
-    } finally {
-      this.overlayService.hideSpinner();
-    }
-    return undefined;
-  }
-
   async updatePending(fileId: string, updateDto: ApplicationSubmissionUpdateDto) {
     try {
       this.overlayService.showSpinner();
@@ -69,26 +52,26 @@ export class ApplicationSubmissionDraftService {
     return undefined;
   }
 
-  async cancel(fileId: string) {
+  async publish(fileId: string) {
     try {
       this.overlayService.showSpinner();
-      return await firstValueFrom(this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}/${fileId}/cancel`, {}));
+      // await firstValueFrom(
+      //   this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {})
+      // );
+      this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to cancel Application, please try again later');
+      this.toastService.showErrorToast('Failed to update Application, please try again');
     } finally {
       this.overlayService.hideSpinner();
     }
-    return undefined;
   }
 
-  async submitToAlcs(fileId: string) {
+  async delete(fileId: string) {
     try {
       this.overlayService.showSpinner();
-      await firstValueFrom(
-        this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {})
-      );
-      this.toastService.showSuccessToast('Application Submitted');
+      await firstValueFrom(this.httpClient.delete<ApplicationSubmissionDto>(`${this.serviceUrl}/${fileId}`));
+      this.toastService.showSuccessToast('Draft Edit Deleted');
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to submit Application, please try again');

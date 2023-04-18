@@ -56,7 +56,7 @@ describe('ApplicationOwnerService', () => {
 
     service = module.get<ApplicationOwnerService>(ApplicationOwnerService);
 
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners: [new ApplicationOwner()],
       }),
@@ -84,7 +84,7 @@ describe('ApplicationOwnerService', () => {
 
     await service.create(
       {
-        applicationFileNumber: '',
+        applicationSubmissionUuid: '',
         email: '',
         phoneNumber: '',
         typeCode: '',
@@ -210,7 +210,7 @@ describe('ApplicationOwnerService', () => {
         lastName: 'A',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
         parcelType: PARCEL_TYPE.APPLICATION,
@@ -245,7 +245,7 @@ describe('ApplicationOwnerService', () => {
         lastName: 'C',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
         parcelType: PARCEL_TYPE.APPLICATION,
@@ -272,7 +272,7 @@ describe('ApplicationOwnerService', () => {
         lastName: '2',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
         parcelType: PARCEL_TYPE.APPLICATION,
@@ -301,7 +301,7 @@ describe('ApplicationOwnerService', () => {
         lastName: 'A',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners: owners1,
         auditCreatedAt: new Date(1),

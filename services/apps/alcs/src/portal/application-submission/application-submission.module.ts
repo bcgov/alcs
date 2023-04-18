@@ -60,6 +60,7 @@ import { GenerateSubmissionDocumentService } from './generate-submission-documen
     ApplicationSubmissionService,
     ApplicationOwnerService,
     ApplicationSubmissionValidatorService,
+    ApplicationParcelService,
   ],
 })
 export class ApplicationSubmissionModule {}

@@ -60,6 +60,7 @@
         [$application]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-primary-contact>
     </div>
   </cdk-step>
@@ -70,6 +71,7 @@
         [showErrors]="showValidationErrors"
         [$applicationSubmission]="$applicationSubmission"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-select-government>
     </div>
   </cdk-step>
@@ -80,6 +82,7 @@
         [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-land-use>
     </div>
   </cdk-step>
@@ -91,6 +94,7 @@
         [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-nfu-proposal>
       <app-tur-proposal
         *ngIf="application.typeCode === 'TURP'"
@@ -98,6 +102,7 @@
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-tur-proposal>
       <app-subd-proposal
         *ngIf="application.typeCode === 'SUBD'"
@@ -105,6 +110,7 @@
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-subd-proposal>
     </div>
   </cdk-step>
@@ -116,6 +122,7 @@
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-other-attachments>
     </div>
   </cdk-step>
@@ -125,6 +132,7 @@
       <app-review-and-submit
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        (exit)="onExit()"
       ></app-review-and-submit>
     </div>
   </cdk-step>

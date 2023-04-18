@@ -48,7 +48,8 @@
   </div>
 
   <div class="button-container">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
     <div>
       <div></div>
       <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">

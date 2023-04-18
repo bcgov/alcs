@@ -63,7 +63,12 @@ describe('ApplicationParcelService', () => {
     expect(result).toEqual([mockApplicationParcel]);
     expect(mockParcelRepo.find).toBeCalledTimes(1);
     expect(mockParcelRepo.find).toBeCalledWith({
-      where: { application: { fileNumber: mockApplicationFileNumber } },
+      where: {
+        applicationSubmission: {
+          fileNumber: mockApplicationFileNumber,
+          isDraft: false,
+        },
+      },
       order: { auditCreatedAt: 'ASC' },
       relations: {
         certificateOfTitle: { document: true },

@@ -3,16 +3,15 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDraftService } from '../../services/application-submission/application-submission-draft.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
-import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { ChangeApplicationTypeDialogComponent } from '../edit-submission/change-application-type-dialog/change-application-type-dialog.component';
 import { EditApplicationSteps } from '../edit-submission/edit-submission.component';
 import { LandUseComponent } from '../edit-submission/land-use/land-use.component';
 import { OtherAttachmentsComponent } from '../edit-submission/other-attachments/other-attachments.component';
@@ -184,5 +183,10 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     if (fileNumber) {
       await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
     }
+  }
+
+  async onExit() {
+    await this.applicationSubmissionDraftService.delete(this.fileId);
+    window.location.href = `${environment.alcsUrl}/application/${this.fileId}/applicant-info`;
   }
 }

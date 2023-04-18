@@ -5,6 +5,7 @@ import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { ViewSubmissionComponent } from './features/view-submission/view-submission.component';
+import { AlcsAuthGuard } from './services/authentication/alcs-auth.guard';
 import { AuthGuard } from './services/authentication/auth.guard';
 
 const routes: Routes = [
@@ -44,7 +45,7 @@ const routes: Routes = [
   {
     title: 'ALCS Edit Application',
     path: 'alcs/application/:fileId/edit',
-    canActivate: [AuthGuard],
+    canActivate: [AlcsAuthGuard],
     loadChildren: () =>
       import('./features/alcs-edit-submission/alcs-edit-submission.module').then((m) => m.AlcsEditSubmissionModule),
   },
