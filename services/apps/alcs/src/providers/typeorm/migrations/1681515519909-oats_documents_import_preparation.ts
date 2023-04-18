@@ -9,15 +9,18 @@ export class oatsDocumentsImportPreparation1681515519909
         update "alcs"."application_document_code"
         set code = 'ACKL',
             oats_code = 'ACK'
-        where code = 'ACK'
+        where code = 'ACK';
         `);
 
     // add extra columns for mapping
     await queryRunner.query(`
-        ALTER TABLE "alcs"."document" ADD oats_application_id varchar NULL
+        ALTER TABLE "alcs"."document" ADD oats_application_id varchar NULL;
     `);
     await queryRunner.query(`
-        ALTER TABLE alcs."document" ADD oats_document_id varchar NULL
+        ALTER TABLE alcs."document" ADD oats_document_id varchar NULL;
+    `);
+    await queryRunner.query(`
+    ALTER TABLE alcs."document" ADD CONSTRAINT document_un UNIQUE (oats_document_id);
     `);
   }
 
