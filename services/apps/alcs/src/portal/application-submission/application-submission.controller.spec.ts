@@ -205,15 +205,6 @@ describe('ApplicationSubmissionController', () => {
   });
 
   it('should fetch application by bceid if user has same guid as a local government', async () => {
-    const bceidBusinessGuid = 'business-guid';
-    mockLgService.getByGuid.mockResolvedValue(
-      new ApplicationLocalGovernment({
-        uuid: '',
-        bceidBusinessGuid,
-        name: 'fake-name',
-        isFirstNation: false,
-      }),
-    );
     mockAppService.mapToDetailedDTO.mockResolvedValue(
       {} as ApplicationSubmissionDetailedDto,
     );
@@ -235,7 +226,6 @@ describe('ApplicationSubmissionController', () => {
     );
 
     expect(application).toBeDefined();
-    //expect(mockLgService.getByGuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
   });
 
