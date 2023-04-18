@@ -267,7 +267,10 @@ export class GenerateSubmissionDocumentService {
       subdIsHomeSiteSeverance: this.formatBooleanToYesNoString(
         submission.subdIsHomeSiteSeverance,
       ),
-      subdProposedLots: submission.subdProposedLots,
+      subdProposedLots: submission.subdProposedLots.map((lot, index) => ({
+        ...lot,
+        index: index + 1,
+      })),
       homesiteSeverance: homesiteSeverance.map((d) => d.document),
       proposalMap: proposalMap.find((d) => d)?.document.fileName,
     };
