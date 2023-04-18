@@ -5,6 +5,9 @@ export class manyToOneDocuments1681748327261 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
+      `ALTER TABLE "alcs"."application_parcel" DROP CONSTRAINT "FK_4b5a4dca01e2f175fa448a734f9"`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "alcs"."application_parcel" DROP CONSTRAINT "UQ_4b5a4dca01e2f175fa448a734f9"`,
     );
     await queryRunner.query(
