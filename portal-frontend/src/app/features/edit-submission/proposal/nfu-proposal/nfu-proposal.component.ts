@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormControlStatus, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -34,8 +34,6 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
   fillTypeDescription = new FormControl<string | null>(null, [Validators.required]);
   fillOriginDescription = new FormControl<string | null>(null, [Validators.required]);
-
-  disabledStatus = 'DISABLED';
 
   form = new FormGroup({
     hectares: this.hectares,
