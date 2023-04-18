@@ -38,7 +38,7 @@
           mask="0*"
           maxlength="3"
           matInput
-          placeholder=""
+          placeholder="Type number of lots"
           (change)="onChangeLotCount($event)"
         />
         <span *ngIf="lotsProposed.value" matTextSuffix>lots</span>
@@ -84,9 +84,11 @@
                 mask="separator.2"
                 separatorLimit="9999999999"
                 min="0.01"
+                placeholder="Type size in hectares"
                 [ngModelOptions]="{ standalone: true }"
                 (change)="onChangeLotSize()"
               />
+              <span *ngIf="element.size" matTextSuffix>ha</span>
             </mat-form-field>
           </td>
         </ng-container>

@@ -192,9 +192,9 @@
             min="0.01"
             matInput
             formControlName="totalFillPlacement"
-            placeholder="Type fill depth"
+            placeholder="Type fill depth in hectares"
           />
-          <span *ngIf="totalFillPlacement.value" matTextSuffix>m<sup>2</sup></span>
+          <span *ngIf="totalFillPlacement.value" matTextSuffix>ha</span>
         </mat-form-field>
         <div
           *ngIf="totalFillPlacement.invalid && (totalFillPlacement.dirty || totalFillPlacement.touched)"
@@ -218,7 +218,7 @@
             min="0.01"
             matInput
             formControlName="maxFillDepth"
-            placeholder="Type placement area"
+            placeholder="Type placement area in meters"
           />
           <span *ngIf="maxFillDepth.value" matTextSuffix>m</span>
         </mat-form-field>
@@ -241,7 +241,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="fillVolume"
-            placeholder="Type volume"
+            placeholder="Type volume in cubic meters"
           />
           <span *ngIf="fillVolume.value" matTextSuffix>m<sup>3</sup></span>
         </mat-form-field>

@@ -181,7 +181,7 @@ export class SubdProposalComponent implements OnInit, OnDestroy {
     this.proposedLots = this.proposedLots.slice(0, targetCount);
     while (this.proposedLots.length < targetCount) {
       this.proposedLots.push({
-        size: null,
+        size: '0',
         type: null,
       });
     }
