@@ -51,7 +51,7 @@ export class ParcelComponent {
   // TODO instead of providing application load parcel as input or in addition to application
   $destroy = new Subject<void>();
 
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
@@ -61,7 +61,8 @@ export class ParcelComponent {
   showCertificateOfTitle: boolean = true;
   navigationStepInd = 0;
 
-  fileId: string = '';
+  fileId = '';
+  submissionUuid = '';
   parcels: ApplicationParcelExtended[] = [];
   application!: ApplicationSubmissionDetailedDto;
 
@@ -73,10 +74,11 @@ export class ParcelComponent {
   ) {}
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
-        this.application = application;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
+        this.application = applicationSubmission;
         this.loadParcels().then(async () => await this.validateParcelDetails());
       }
     });
@@ -94,7 +96,7 @@ export class ParcelComponent {
   }
 
   async loadParcels() {
-    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
     this.parcels = parcels
       .filter((p) => p.parcelType === this.parcelType)
       .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));

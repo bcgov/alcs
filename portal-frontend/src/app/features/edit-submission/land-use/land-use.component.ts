@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 
 export enum MainLandUseTypeOptions {
   AgriculturalFarm = 'Agricultural / Farm',
@@ -23,14 +24,11 @@ export enum MainLandUseTypeOptions {
   templateUrl: './land-use.component.html',
   styleUrls: ['./land-use.component.scss'],
 })
-export class LandUseComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class LandUseComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.LandUse;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
 
-  fileId: string = '';
+  fileId = '';
+  submissionUuid = '';
 
   MainLandUseTypeOptions = MainLandUseTypeOptions;
 
@@ -59,24 +57,22 @@ export class LandUseComponent implements OnInit, OnDestroy {
     westLandUseTypeDescription: this.westLandUseTypeDescription,
   });
 
-  constructor(private router: Router, private applicationService: ApplicationSubmissionService) {}
+  constructor(private router: Router, private applicationService: ApplicationSubmissionService) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
-        this.populateFormValues(application);
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
+        this.populateFormValues(applicationSubmission);
       }
     });
 
     if (this.showErrors) {
       this.landUseForm.markAllAsTouched();
     }
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 
   populateFormValues(application: ApplicationSubmissionDetailedDto) {
@@ -97,7 +93,7 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async saveProgress() {
     const formValues = this.landUseForm.getRawValue();
-    await this.applicationService.updatePending(this.fileId, {
+    await this.applicationService.updatePending(this.submissionUuid, {
       parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
       parcelsAgricultureImprovementDescription: formValues.parcelsAgricultureImprovementDescription,
       parcelsNonAgricultureUseDescription: formValues.parcelsNonAgricultureUseDescription,
@@ -114,15 +110,5 @@ export class LandUseComponent implements OnInit, OnDestroy {
 
   async onSave() {
     await this.saveProgress();
-  }
-
-  async onSaveExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

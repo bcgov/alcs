@@ -98,15 +98,12 @@ export class ApplicationParcel extends Base {
   parcelType?: string;
 
   @AutoMap()
-  @Column({
-    comment: 'The application file id that parcel is linked to',
-    nullable: false,
-  })
-  applicationFileNumber: string;
+  @ManyToOne(() => ApplicationSubmission)
+  applicationSubmission: ApplicationSubmission;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationSubmission)
-  application: ApplicationSubmission;
+  @Column()
+  applicationSubmissionUuid: string;
 
   @AutoMap(() => String)
   @Column({ nullable: true })
@@ -131,7 +128,7 @@ export class ApplicationParcel extends Base {
 
   @AutoMap(() => ApplicationDocumentDto)
   @JoinColumn()
-  @OneToOne(() => ApplicationDocument, {
+  @ManyToOne(() => ApplicationDocument, {
     nullable: true,
     onDelete: 'SET NULL',
   })

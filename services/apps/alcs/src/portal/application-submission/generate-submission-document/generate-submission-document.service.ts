@@ -44,10 +44,11 @@ export class GenerateSubmissionDocumentService {
   ) {}
 
   async generate(fileNumber: string, user: User) {
-    const submission = await this.applicationSubmissionService.verifyAccess(
-      fileNumber,
-      user,
-    );
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileNumber,
+        user,
+      );
 
     const template = await this.getPdfTemplateBySubmissionType(submission);
 

@@ -47,7 +47,7 @@ export class ApplicationDocumentController {
     @Param('documentType') documentType: DOCUMENT_TYPE | null,
     @Req() req,
   ): Promise<ApplicationDocumentDto[]> {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       fileNumber,
       req.user.entity,
     );
@@ -78,7 +78,7 @@ export class ApplicationDocumentController {
     @Req() req,
     @Body() body: PortalApplicationDocumentUpdateDto[],
   ) {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       fileNumber,
       req.user.entity,
     );
@@ -113,10 +113,11 @@ export class ApplicationDocumentController {
     @Body() data: AttachExternalDocumentDto,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
-    const submission = await this.applicationSubmissionService.verifyAccess(
-      fileNumber,
-      req.user.entity,
-    );
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileNumber,
+        req.user.entity,
+      );
 
     const document = await this.documentService.createDocumentRecord(data);
 

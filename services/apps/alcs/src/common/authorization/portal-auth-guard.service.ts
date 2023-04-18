@@ -54,9 +54,13 @@ export class PortalAuthGuard implements CanActivate {
     const token = request.user as BaseToken;
 
     const bceidGuid = token['bceid_user_guid'];
+    const idirUserGuid = token['idir_user_guid'];
     this.clsService.set('userGuid', bceidGuid);
     const req = context.switchToHttp().getRequest();
-    req.user.entity = await this.userService.getByGuid({ bceidGuid });
+    req.user.entity = await this.userService.getByGuid({
+      bceidGuid,
+      idirUserGuid,
+    });
 
     return token.aud === this.keycloakOpts.resource;
   }

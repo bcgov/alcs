@@ -37,18 +37,20 @@ import { ApplicationParcelService } from './application-parcel.service';
 export class ApplicationParcelController {
   constructor(
     private parcelService: ApplicationParcelService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     @InjectMapper() private mapper: Mapper,
     private ownerService: ApplicationOwnerService,
     private documentService: DocumentService,
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
-  @Get('application/:fileId')
+  @Get('submission/:submissionUuid')
   async fetchByFileId(
-    @Param('fileId') fileId: string,
+    @Param('submissionUuid') submissionUuid: string,
   ): Promise<ApplicationParcelDto[] | undefined> {
-    const parcels = await this.parcelService.fetchByApplicationFileId(fileId);
+    const parcels = await this.parcelService.fetchByApplicationSubmissionUuid(
+      submissionUuid,
+    );
     return this.mapper.mapArrayAsync(
       parcels,
       ApplicationParcel,
@@ -60,11 +62,11 @@ export class ApplicationParcelController {
   async create(
     @Body() createDto: ApplicationParcelCreateDto,
   ): Promise<ApplicationParcelDto> {
-    const application = await this.applicationService.getOrFail(
-      createDto.applicationFileId,
+    const application = await this.applicationSubmissionService.getOrFailByUuid(
+      createDto.applicationSubmissionUuid,
     );
     const parcel = await this.parcelService.create(
-      application.fileNumber,
+      application.uuid,
       createDto.parcelType,
     );
 
@@ -123,9 +125,15 @@ export class ApplicationParcelController {
       source: DOCUMENT_SOURCE.APPLICANT,
     });
 
+    const applicationSubmission =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        parcel.applicationSubmissionUuid,
+        req.user.entity,
+      );
+
     const certificateOfTitle =
       await this.applicationDocumentService.attachExternalDocument(
-        parcel.applicationFileNumber,
+        applicationSubmission!.fileNumber,
         {
           documentUuid: document.uuid,
           type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,

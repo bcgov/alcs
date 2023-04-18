@@ -1,30 +1,28 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
-import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import { map, Observable, startWith, takeUntil } from 'rxjs';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 
 @Component({
   selector: 'app-select-government',
   templateUrl: './select-government.component.html',
   styleUrls: ['./select-government.component.scss'],
 })
-export class SelectGovernmentComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class SelectGovernmentComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Government;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
+
+  private fileId = '';
+  private submissionUuid = '';
 
   localGovernment = new FormControl<string | any>('', [Validators.required]);
   showWarning = false;
   selectGovernmentUuid = '';
-  fileId = '';
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
 
@@ -34,18 +32,21 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
 
   constructor(
     private codeService: CodeService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadGovernments();
 
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.selectGovernmentUuid = application.localGovernmentUuid;
-        this.fileId = application.fileNumber;
-        this.populateLocalGovernment(application.localGovernmentUuid);
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.selectGovernmentUuid = applicationSubmission.localGovernmentUuid;
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
+        this.populateLocalGovernment(applicationSubmission.localGovernmentUuid);
       }
     });
 
@@ -90,15 +91,6 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
-  }
-
   async onSave() {
     await this.save();
   }
@@ -109,7 +101,7 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
 
       if (localGovernment) {
-        await this.applicationService.updatePending(this.fileId, {
+        await this.applicationSubmissionService.updatePending(this.submissionUuid, {
           localGovernmentUuid: localGovernment.uuid,
         });
       }
@@ -143,9 +135,5 @@ export class SelectGovernmentComponent implements OnInit, OnDestroy {
         this.localGovernment.setErrors({ invalid: true });
       }
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

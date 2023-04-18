@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
@@ -10,23 +10,20 @@ import { ApplicationSubmissionDetailedDto } from '../../../services/application-
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 
 @Component({
   selector: 'app-primary-contact',
   templateUrl: './primary-contact.component.html',
   styleUrls: ['./primary-contact.component.scss'],
 })
-export class PrimaryContactComponent implements OnInit, OnDestroy {
+export class PrimaryContactComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
   currentStep = EditApplicationSteps.PrimaryContact;
-  $destroy = new Subject<void>();
 
   nonAgentOwners: ApplicationOwnerDto[] = [];
   owners: ApplicationOwnerDto[] = [];
-  private fileId: string | undefined;
   files: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
@@ -47,18 +44,24 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     email: this.email,
   });
 
+  private fileId = '';
+  private submissionUuid = '';
+
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.loadOwners(application.fileNumber, application.primaryContactOwnerUuid);
+        this.submissionUuid = application.uuid;
+        this.loadOwners(application.uuid, application.primaryContactOwnerUuid);
       }
     });
 
@@ -93,41 +96,30 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     }
   }
 
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
-  }
-
   async onSave() {
     await this.save();
   }
 
   private async save() {
-    if (this.fileId) {
-      let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
-        (owner) => owner.uuid === this.selectedOwnerUuid
-      );
+    let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
+      (owner) => owner.uuid === this.selectedOwnerUuid
+    );
 
-      if (this.selectedThirdPartyAgent) {
-        await this.applicationOwnerService.setPrimaryContact({
-          fileNumber: this.fileId,
-          agentOrganization: this.organizationName.getRawValue() ?? '',
-          agentFirstName: this.firstName.getRawValue() ?? '',
-          agentLastName: this.lastName.getRawValue() ?? '',
-          agentEmail: this.email.getRawValue() ?? '',
-          agentPhoneNumber: this.phoneNumber.getRawValue() ?? '',
-          ownerUuid: selectedOwner?.uuid,
-        });
-      } else if (selectedOwner) {
-        await this.applicationOwnerService.setPrimaryContact({
-          fileNumber: this.fileId,
-          ownerUuid: selectedOwner.uuid,
-        });
-      }
+    if (this.selectedThirdPartyAgent) {
+      await this.applicationOwnerService.setPrimaryContact({
+        applicationSubmissionUuid: this.submissionUuid,
+        agentOrganization: this.organizationName.getRawValue() ?? '',
+        agentFirstName: this.firstName.getRawValue() ?? '',
+        agentLastName: this.lastName.getRawValue() ?? '',
+        agentEmail: this.email.getRawValue() ?? '',
+        agentPhoneNumber: this.phoneNumber.getRawValue() ?? '',
+        ownerUuid: selectedOwner?.uuid,
+      });
+    } else if (selectedOwner) {
+      await this.applicationOwnerService.setPrimaryContact({
+        applicationSubmissionUuid: this.submissionUuid,
+        ownerUuid: selectedOwner.uuid,
+      });
     }
   }
 
@@ -170,8 +162,8 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
     this.onSelectOwner('agent');
   }
 
-  private async loadOwners(fileNumber: string, primaryContactOwnerUuid?: string) {
-    const owners = await this.applicationOwnerService.fetchByFileId(fileNumber);
+  private async loadOwners(submissionUuid: string, primaryContactOwnerUuid?: string) {
+    const owners = await this.applicationOwnerService.fetchBySubmissionId(submissionUuid);
     if (owners) {
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
@@ -200,9 +192,5 @@ export class PrimaryContactComponent implements OnInit, OnDestroy {
         this.form.markAllAsTouched();
       }
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

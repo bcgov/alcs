@@ -19,7 +19,7 @@ export class ApplicationParcelService {
 
   async fetchByApplicationFileId(fileId: string) {
     return this.parcelRepository.find({
-      where: { application: { fileNumber: fileId } },
+      where: { applicationSubmission: { fileNumber: fileId, isDraft: false } },
       order: { auditCreatedAt: 'ASC' },
       relations: {
         ownershipType: true,
@@ -34,9 +34,26 @@ export class ApplicationParcelService {
     });
   }
 
-  async create(applicationFileNumber: string, parcelType?: string) {
+  async fetchByApplicationSubmissionUuid(uuid: string) {
+    return this.parcelRepository.find({
+      where: { applicationSubmission: { uuid } },
+      order: { auditCreatedAt: 'ASC' },
+      relations: {
+        ownershipType: true,
+        certificateOfTitle: { document: true },
+        owners: {
+          type: true,
+          corporateSummary: {
+            document: true,
+          },
+        },
+      },
+    });
+  }
+
+  async create(applicationSubmissionUuid: string, parcelType?: string) {
     const parcel = new ApplicationParcel({
-      applicationFileNumber,
+      applicationSubmissionUuid,
       parcelType,
     });
 
@@ -88,8 +105,8 @@ export class ApplicationParcelService {
 
     if (hasOwnerUpdate) {
       const firstParcel = updatedParcels[0];
-      await this.applicationOwnerService.updateApplicationApplicant(
-        firstParcel.applicationFileNumber,
+      await this.applicationOwnerService.updateSubmissionApplicant(
+        firstParcel.applicationSubmissionUuid,
       );
     }
     return res;
@@ -107,8 +124,8 @@ export class ApplicationParcelService {
     }
 
     const result = await this.parcelRepository.remove(parcels);
-    await this.applicationOwnerService.updateApplicationApplicant(
-      parcels[0].applicationFileNumber,
+    await this.applicationOwnerService.updateSubmissionApplicant(
+      parcels[0].applicationSubmissionUuid,
     );
 
     return result;

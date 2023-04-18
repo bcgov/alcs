@@ -282,10 +282,6 @@ export class Application extends Base {
   )
   reconsiderations: ApplicationReconsideration[];
 
-  @AutoMap(() => ApplicationSubmission)
-  @OneToOne(() => ApplicationSubmission, (appSub) => appSub.application)
-  submittedApplication?: ApplicationSubmission;
-
   @AutoMap(() => ApplicationSubmissionReview)
   @OneToOne(
     () => ApplicationSubmissionReview,

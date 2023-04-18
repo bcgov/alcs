@@ -55,24 +55,26 @@ export class AuthenticationService {
     return firstValueFrom(this.http.get<{ loginUrl: string }>(`${environment.authUrl}/authorize/login`));
   }
 
-  async getToken() {
+  async getToken(redirect = true) {
     if (!this.isInitialized) {
       this.isInitialized = true;
-      await this.loadTokenFromStorage();
+      await this.loadTokenFromStorage(redirect);
     }
 
     if (this.token && this.refreshToken && this.expires && this.expires < Date.now()) {
       //Clear token to prevent infinite loop from interceptor
       this.token = undefined;
-      await this.refreshTokens();
+      await this.refreshTokens(redirect);
     }
     return this.token;
   }
 
-  async refreshTokens() {
+  async refreshTokens(redirect = true) {
     if (this.refreshToken) {
       if (this.refreshExpires && this.refreshExpires < Date.now()) {
-        await this.router.navigateByUrl('/login');
+        if (redirect) {
+          await this.router.navigateByUrl('/login');
+        }
         return;
       }
 
@@ -81,7 +83,7 @@ export class AuthenticationService {
     }
   }
 
-  private async loadTokenFromStorage() {
+  private async loadTokenFromStorage(redirect = true) {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
@@ -90,7 +92,7 @@ export class AuthenticationService {
       if (valid) {
         await this.setTokens(existingToken, refreshToken);
         //Refresh Tokens Immediately to reset the refresh tokens validity to 5 minutes
-        await this.refreshTokens();
+        await this.refreshTokens(redirect);
       }
     }
   }
@@ -135,6 +137,4 @@ export class AuthenticationService {
   private async getLogoutUrl() {
     return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout/portal`));
   }
-
-  getCurrentUser = () => this.currentUser;
 }

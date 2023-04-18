@@ -54,11 +54,20 @@ export class ApplicationSubmissionReviewController {
   async get(@Param('fileNumber') fileNumber: string, @Req() req) {
     const userLocalGovernment = await this.getUserGovernment(req.user.entity);
     if (userLocalGovernment) {
-      const applicationReview =
-        await this.applicationReviewService.getForGovernment(
+      const applicationSubmission =
+        await this.applicationSubmissionService.getForGovernmentByFileId(
           fileNumber,
           userLocalGovernment,
         );
+
+      if (!applicationSubmission) {
+        throw new NotFoundException(
+          `Application submission not found for ${fileNumber}`,
+        );
+      }
+
+      const applicationReview =
+        await this.applicationReviewService.getByFileNumber(fileNumber);
 
       if (applicationReview) {
         return this.applicationReviewService.mapToDto(
@@ -68,12 +77,16 @@ export class ApplicationSubmissionReviewController {
       }
     }
 
-    const applicationReview = await this.applicationReviewService.getForOwner(
-      fileNumber,
-      req.user.entity,
-    );
+    const applicationReview =
+      await this.applicationReviewService.getByFileNumber(fileNumber);
 
-    if (!applicationReview.application.submittedApplication) {
+    const applicationSubmission =
+      await this.applicationSubmissionService.getByFileNumber(
+        fileNumber,
+        req.user.entity,
+      );
+
+    if (!applicationSubmission) {
       throw new NotFoundException(
         `Application submission not found for ${fileNumber}`,
       );
@@ -83,19 +96,14 @@ export class ApplicationSubmissionReviewController {
       ![
         APPLICATION_STATUS.SUBMITTED_TO_ALC,
         APPLICATION_STATUS.REFUSED_TO_FORWARD,
-      ].includes(
-        applicationReview.application.submittedApplication
-          .statusCode as APPLICATION_STATUS,
-      )
+      ].includes(applicationSubmission.statusCode as APPLICATION_STATUS)
     ) {
       throw new NotFoundException('Failed to load review');
     }
 
     const localGovernments = await this.localGovernmentService.list();
     const matchingGovernment = localGovernments.find(
-      (lg) =>
-        lg.uuid ===
-        applicationReview.application.submittedApplication!.localGovernmentUuid,
+      (lg) => lg.uuid === applicationSubmission.localGovernmentUuid,
     );
     if (!matchingGovernment) {
       throw new BaseServiceException('Failed to load Local Government');
@@ -116,6 +124,19 @@ export class ApplicationSubmissionReviewController {
     const userLocalGovernment = await this.getUserGovernmentOrFail(
       req.user.entity,
     );
+
+    //Check they have access to the original submission
+    const applicationSubmission =
+      await this.applicationSubmissionService.getForGovernmentByFileId(
+        fileNumber,
+        userLocalGovernment,
+      );
+
+    if (!applicationSubmission) {
+      throw new NotFoundException(
+        `Application submission not found for ${fileNumber}`,
+      );
+    }
 
     const applicationReview = await this.applicationReviewService.update(
       fileNumber,
@@ -221,9 +242,8 @@ export class ApplicationSubmissionReviewController {
       );
 
     const applicationReview =
-      await this.applicationReviewService.getForGovernment(
+      await this.applicationReviewService.getByFileNumber(
         application.fileNumber,
-        userLocalGovernment,
       );
 
     if (!applicationReview) {
@@ -288,9 +308,8 @@ export class ApplicationSubmissionReviewController {
       );
 
     const applicationReview =
-      await this.applicationReviewService.getForGovernment(
+      await this.applicationReviewService.getByFileNumber(
         applicationSubmission.fileNumber,
-        userLocalGovernment,
       );
 
     if (!applicationReview) {

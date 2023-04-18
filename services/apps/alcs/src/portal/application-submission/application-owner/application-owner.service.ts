@@ -24,14 +24,30 @@ export class ApplicationOwnerService {
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
     @Inject(forwardRef(() => ApplicationSubmissionService))
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
+
+  async fetchBySubmissionUuid(uuid: string) {
+    return this.repository.find({
+      where: {
+        applicationSubmission: {
+          uuid,
+        },
+      },
+      relations: {
+        type: true,
+        corporateSummary: {
+          document: true,
+        },
+      },
+    });
+  }
 
   async fetchByApplicationFileId(fileId: string) {
     return this.repository.find({
       where: {
-        application: {
+        applicationSubmission: {
           fileNumber: fileId,
         },
       },
@@ -46,7 +62,7 @@ export class ApplicationOwnerService {
 
   async create(
     createDto: ApplicationOwnerCreateDto,
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
   ) {
     const type = await this.typeRepository.findOneOrFail({
       where: {
@@ -61,7 +77,7 @@ export class ApplicationOwnerService {
       email: createDto.email,
       phoneNumber: createDto.phoneNumber,
       corporateSummaryUuid: createDto.corporateSummaryUuid,
-      application,
+      applicationSubmission: applicationSubmission,
       type,
     });
 
@@ -81,7 +97,9 @@ export class ApplicationOwnerService {
     const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
-    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+    await this.updateSubmissionApplicant(
+      existingOwner.applicationSubmissionUuid,
+    );
 
     await this.repository.save(existingOwner);
   }
@@ -100,7 +118,9 @@ export class ApplicationOwnerService {
       (parcel) => parcel.uuid !== parcelUuid,
     );
 
-    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+    await this.updateSubmissionApplicant(
+      existingOwner.applicationSubmissionUuid,
+    );
 
     await this.repository.save(existingOwner);
   }
@@ -164,19 +184,21 @@ export class ApplicationOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
-    await this.updateApplicationApplicant(existingOwner.applicationFileNumber);
+    await this.updateSubmissionApplicant(
+      existingOwner.applicationSubmissionUuid,
+    );
 
     return await this.repository.save(existingOwner);
   }
 
   async delete(owner: ApplicationOwner) {
     const res = await this.repository.remove(owner);
-    await this.updateApplicationApplicant(owner.applicationFileNumber);
+    await this.updateSubmissionApplicant(owner.applicationSubmissionUuid);
     return res;
   }
 
   async setPrimaryContact(fileNumber: string, owner: ApplicationOwner) {
-    return await this.applicationService.setPrimaryContact(
+    return await this.applicationSubmissionService.setPrimaryContact(
       fileNumber,
       owner.uuid,
     );
@@ -207,7 +229,7 @@ export class ApplicationOwnerService {
   async deleteAgents(application: ApplicationSubmission) {
     const agentOwners = await this.repository.find({
       where: {
-        application: {
+        applicationSubmission: {
           fileNumber: application.fileNumber,
         },
         type: {
@@ -218,9 +240,11 @@ export class ApplicationOwnerService {
     return await this.repository.remove(agentOwners);
   }
 
-  async updateApplicationApplicant(fileId: string) {
+  async updateSubmissionApplicant(submissionUuid: string) {
     const parcels =
-      await this.applicationParcelService.fetchByApplicationFileId(fileId);
+      await this.applicationParcelService.fetchByApplicationSubmissionUuid(
+        submissionUuid,
+      );
 
     const applicationParcels = parcels.filter(
       (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
@@ -263,7 +287,7 @@ export class ApplicationOwnerService {
             applicantName += ' et al.';
           }
 
-          await this.applicationService.update(fileId, {
+          await this.applicationSubmissionService.update(submissionUuid, {
             applicant: applicantName || '',
           });
         }

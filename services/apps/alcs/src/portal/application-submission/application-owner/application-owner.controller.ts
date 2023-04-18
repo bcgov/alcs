@@ -41,18 +41,19 @@ export class ApplicationOwnerController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get('application/:fileId')
+  @Get('submission/:submissionUuid')
   async fetchByFileId(
-    @Param('fileId') fileId: string,
+    @Param('submissionUuid') submissionUuid: string,
     @Req() req,
   ): Promise<ApplicationOwnerDto[]> {
-    await this.applicationSubmissionService.verifyAccess(
-      fileId,
-      req.user.entity,
-    );
-    const owners = await this.ownerService.fetchByApplicationFileId(fileId);
+    const applicationSubmission =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        submissionUuid,
+        req.user.entity,
+      );
+
     return this.mapper.mapArrayAsync(
-      owners,
+      applicationSubmission.owners,
       ApplicationOwner,
       ApplicationOwnerDto,
     );
@@ -65,10 +66,11 @@ export class ApplicationOwnerController {
   ): Promise<ApplicationOwnerDto> {
     this.verifyDto(createDto);
 
-    const application = await this.applicationSubmissionService.verifyAccess(
-      createDto.applicationFileNumber,
-      req.user.entity,
-    );
+    const application =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        createDto.applicationSubmissionUuid,
+        req.user.entity,
+      );
     const owner = await this.ownerService.create(createDto, application);
 
     return this.mapper.mapAsync(owner, ApplicationOwner, ApplicationOwnerDto);
@@ -148,10 +150,11 @@ export class ApplicationOwnerController {
 
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
-    const application = await this.applicationSubmissionService.verifyAccess(
-      data.fileNumber,
-      req.user.entity,
-    );
+    const applicationSubmission =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        data.applicationSubmissionUuid,
+        req.user.entity,
+      );
 
     //Create Owner
     if (!data.ownerUuid) {
@@ -163,12 +166,12 @@ export class ApplicationOwnerController {
           firstName: data.agentFirstName,
           phoneNumber: data.agentPhoneNumber,
           organizationName: data.agentOrganization,
-          applicationFileNumber: data.fileNumber,
+          applicationSubmissionUuid: data.applicationSubmissionUuid,
         },
-        application,
+        applicationSubmission,
       );
       await this.ownerService.setPrimaryContact(
-        application.fileNumber,
+        applicationSubmission.fileNumber,
         agentOwner,
       );
     } else if (data.ownerUuid) {
@@ -188,11 +191,11 @@ export class ApplicationOwnerController {
         });
       } else {
         //Delete Agents if we aren't using one
-        await this.ownerService.deleteAgents(application);
+        await this.ownerService.deleteAgents(applicationSubmission);
       }
 
       await this.ownerService.setPrimaryContact(
-        application.fileNumber,
+        applicationSubmission.fileNumber,
         primaryContactOwner,
       );
     }
@@ -200,8 +203,8 @@ export class ApplicationOwnerController {
 
   private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {
     const owner = await this.ownerService.getOwner(ownerUuid);
-    await this.applicationSubmissionService.verifyAccess(
-      owner.applicationFileNumber,
+    await this.applicationSubmissionService.verifyAccessByUuid(
+      owner.applicationSubmissionUuid,
       req.user.entity,
     );
 
@@ -213,7 +216,7 @@ export class ApplicationOwnerController {
     @Req() req,
     @Body() data: AttachCorporateSummaryDto,
   ) {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       data.fileNumber,
       req.user.entity,
     );

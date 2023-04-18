@@ -87,8 +87,15 @@ describe('ApplicationSubmissionController', () => {
     );
 
     mockAppService.create.mockResolvedValue('2');
-    mockAppService.getIfCreator.mockResolvedValue(new ApplicationSubmission());
-    mockAppService.verifyAccess.mockResolvedValue(new ApplicationSubmission());
+    mockAppService.getIfCreatorByFileNumber.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
+    mockAppService.verifyAccessByFileId.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
+    mockAppService.verifyAccessByUuid.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
 
     mockAppService.mapToDTOs.mockResolvedValue([]);
     mockLgService.list.mockResolvedValue([
@@ -137,7 +144,7 @@ describe('ApplicationSubmissionController', () => {
     mockAppService.mapToDTOs.mockResolvedValue([
       {} as ApplicationSubmissionDto,
     ]);
-    mockAppService.getIfCreator.mockResolvedValue(
+    mockAppService.getIfCreatorByUuid.mockResolvedValue(
       new ApplicationSubmission({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.IN_PROGRESS,
@@ -154,11 +161,11 @@ describe('ApplicationSubmissionController', () => {
 
     expect(application).toBeDefined();
     expect(mockAppService.cancel).toHaveBeenCalledTimes(1);
-    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
-    mockAppService.getIfCreator.mockResolvedValue(
+    mockAppService.getIfCreatorByUuid.mockResolvedValue(
       new ApplicationSubmission({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.CANCELLED,
@@ -176,7 +183,7 @@ describe('ApplicationSubmissionController', () => {
       new BadRequestException('Can only cancel in progress Applications'),
     );
     expect(mockAppService.cancel).toHaveBeenCalledTimes(0);
-    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when fetching an application', async () => {
@@ -184,48 +191,42 @@ describe('ApplicationSubmissionController', () => {
       {} as ApplicationSubmissionDetailedDto,
     );
 
-    const application = await controller.getApplication(
+    const application = controller.getSubmission(
       {
         user: {
           entity: new User(),
         },
       },
-      'file-id',
+      '',
     );
 
     expect(application).toBeDefined();
-    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should fetch application by bceid if user has same guid as a local government', async () => {
-    const bceidBusinessGuid = 'business-guid';
-    mockLgService.getByGuid.mockResolvedValue(
-      new ApplicationLocalGovernment({
-        uuid: '',
-        bceidBusinessGuid,
-        name: 'fake-name',
-        isFirstNation: false,
-      }),
-    );
-    const mockApplication = new ApplicationSubmission();
-    mockAppService.getForGovernmentByFileId.mockResolvedValue(mockApplication);
     mockAppService.mapToDetailedDTO.mockResolvedValue(
       {} as ApplicationSubmissionDetailedDto,
     );
+    mockAppService.verifyAccessByUuid.mockResolvedValue(
+      new ApplicationSubmission({
+        localGovernmentUuid: '',
+      }),
+    );
 
-    const application = await controller.getApplication(
+    const application = controller.getSubmission(
       {
         user: {
           entity: new User({
-            bceidBusinessGuid,
+            bceidBusinessGuid: 'guid',
           }),
         },
       },
-      'file-id',
+      '',
     );
 
     expect(application).toBeDefined();
-    expect(mockAppService.getForGovernmentByFileId).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating an application', async () => {
@@ -267,14 +268,14 @@ describe('ApplicationSubmissionController', () => {
       },
     );
 
-    expect(mockAppService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service on submitAlcs if application type is TURP', async () => {
     const mockFileId = 'file-id';
     mockAppService.submitToAlcs.mockResolvedValue(new Application());
-    mockAppService.getIfCreator.mockResolvedValue(
+    mockAppService.getIfCreatorByUuid.mockResolvedValue(
       new ApplicationSubmission({
         typeCode: 'TURP',
       }),
@@ -293,7 +294,7 @@ describe('ApplicationSubmissionController', () => {
       },
     });
 
-    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
   });
@@ -301,7 +302,7 @@ describe('ApplicationSubmissionController', () => {
   it('should submit to LG if application type is NOT-TURP', async () => {
     const mockFileId = 'file-id';
     mockAppService.submitToLg.mockResolvedValue();
-    mockAppService.getIfCreator.mockResolvedValue(
+    mockAppService.getIfCreatorByUuid.mockResolvedValue(
       new ApplicationSubmission({
         typeCode: 'NOT-TURP',
         localGovernmentUuid,
@@ -319,13 +320,13 @@ describe('ApplicationSubmissionController', () => {
       },
     });
 
-    expect(mockAppService.getIfCreator).toHaveBeenCalledTimes(1);
+    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
-    mockAppService.getIfCreator.mockResolvedValue(
+    mockAppService.getIfCreatorByUuid.mockResolvedValue(
       new ApplicationSubmission({
         typeCode: 'NOT-TURP',
       }),

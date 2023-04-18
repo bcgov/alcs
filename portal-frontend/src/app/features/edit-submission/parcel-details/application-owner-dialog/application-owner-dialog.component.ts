@@ -58,6 +58,7 @@ export class ApplicationOwnerDialogComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileId: string;
+      submissionUuid: string;
       parcelUuid?: string;
       existingOwner?: ApplicationOwnerDto;
     }
@@ -95,7 +96,7 @@ export class ApplicationOwnerDialogComponent {
   }
 
   async onCreate() {
-    if (!this.data.fileId) {
+    if (!this.data.submissionUuid) {
       console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
       return;
     }
@@ -109,7 +110,7 @@ export class ApplicationOwnerDialogComponent {
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
-      applicationFileNumber: this.data.fileId,
+      applicationSubmissionUuid: this.data.submissionUuid,
     };
 
     const res = await this.appOwnerService.create(createDto);

@@ -7,7 +7,7 @@ import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 
 @Component({
-  selector: 'app-parcel-owners[owners][fileId]',
+  selector: 'app-parcel-owners[owners][fileId][submissionUuid]',
   templateUrl: './parcel-owners.component.html',
   styleUrls: ['./parcel-owners.component.scss'],
 })
@@ -25,6 +25,7 @@ export class ParcelOwnersComponent {
     this._disabled = disabled;
   }
 
+  @Input() submissionUuid!: string;
   @Input() fileId!: string;
   @Input() parcelUuid?: string | undefined;
   @Input() isCrown = false;
@@ -46,12 +47,14 @@ export class ParcelOwnersComponent {
         data: {
           parcelUuid: this.parcelUuid,
           existingOwner: owner,
+          submissionUuid: this.submissionUuid,
         },
       });
     } else {
       dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
         data: {
           fileId: this.fileId,
+          submissionUuid: this.submissionUuid,
           parcelUuid: this.parcelUuid,
           existingOwner: owner,
         },

@@ -120,7 +120,10 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should check users local government and return the file for get', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
 
     const res = await controller.get(fileNumber, {
       user: {
@@ -134,28 +137,21 @@ describe('ApplicationSubmissionReviewController', () => {
   });
 
   it('should fallback to load by owner if user has no government', async () => {
-    mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppReviewService.getForGovernment.mockResolvedValue(null);
-    mockLGService.list.mockResolvedValue([
-      new ApplicationLocalGovernment({
-        bceidBusinessGuid: '',
-        uuid: 'uuid',
-        name: '',
-        isFirstNation: false,
-      }),
-    ]);
-
     const reviewWithApp = new ApplicationSubmissionReview({
       ...applicationReview,
-      application: new Application({
-        submittedApplication: new ApplicationSubmission({
-          statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
-          localGovernmentUuid: 'uuid',
-        }),
-      }),
+      application: new Application({}),
     });
 
-    mockAppReviewService.getForOwner.mockResolvedValue(reviewWithApp);
+    mockLGService.getByGuid.mockResolvedValue(mockLG);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
+    mockAppSubmissionService.getByFileNumber.mockResolvedValue(
+      new ApplicationSubmission({
+        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        localGovernmentUuid: mockLG.uuid,
+      }),
+    );
+
+    mockLGService.list.mockResolvedValue([mockLG]);
 
     const res = await controller.get(fileNumber, {
       user: {
@@ -167,27 +163,18 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should throw an exception when user loads review that is not complete', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppReviewService.getForGovernment.mockResolvedValue(null);
-    mockLGService.list.mockResolvedValue([
-      new ApplicationLocalGovernment({
-        bceidBusinessGuid: '',
-        uuid: 'uuid',
-        name: '',
-        isFirstNation: false,
-      }),
-    ]);
 
     const reviewWithApp = new ApplicationSubmissionReview({
       ...applicationReview,
-      application: new Application({
-        submittedApplication: new ApplicationSubmission({
-          statusCode: APPLICATION_STATUS.IN_REVIEW,
-          localGovernmentUuid: 'uuid',
-        }),
-      }),
     });
 
-    mockAppReviewService.getForOwner.mockResolvedValue(reviewWithApp);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
+    mockAppSubmissionService.getByFileNumber.mockResolvedValue(
+      new ApplicationSubmission({
+        statusCode: APPLICATION_STATUS.IN_PROGRESS,
+        localGovernmentUuid: mockLG.uuid,
+      }),
+    );
 
     const promise = controller.get(fileNumber, {
       user: {
@@ -274,6 +261,9 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should call through to the service for update', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.update.mockResolvedValue(applicationReview);
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
 
     await controller.update(
       fileNumber,
@@ -299,7 +289,7 @@ describe('ApplicationSubmissionReviewController', () => {
       }),
     );
     mockAppReviewService.verifyComplete.mockReturnValue(applicationReview);
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateSubmission.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
@@ -328,7 +318,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
     );
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppDocService.list.mockResolvedValue([]);
 
     mockAppReviewService.verifyComplete.mockReturnValue({
@@ -366,7 +356,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockAppSubmissionService.getForGovernmentByFileId,
     ).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
@@ -394,7 +384,7 @@ describe('ApplicationSubmissionReviewController', () => {
       ...applicationReview,
       isAuthorized: false,
     });
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateSubmission.mockResolvedValue({
       application:
         new ApplicationSubmission() as ValidatedApplicationSubmission,
@@ -415,7 +405,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockAppSubmissionService.getForGovernmentByFileId,
     ).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.verifyComplete).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
@@ -432,7 +422,7 @@ describe('ApplicationSubmissionReviewController', () => {
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppReviewService.delete.mockResolvedValue();
     mockAppDocService.delete.mockResolvedValue({} as any);
 
@@ -475,7 +465,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockAppSubmissionService.getForGovernmentByFileId,
     ).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppDocService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.delete).toHaveBeenCalledTimes(1);
@@ -491,7 +481,7 @@ describe('ApplicationSubmissionReviewController', () => {
         statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
       }),
     );
-    mockAppReviewService.getForGovernment.mockResolvedValue(applicationReview);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
 
     const promise = controller.return(
       fileNumber,
@@ -513,6 +503,6 @@ describe('ApplicationSubmissionReviewController', () => {
     );
 
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
-    expect(mockAppReviewService.getForGovernment).toHaveBeenCalledTimes(1);
+    expect(mockAppReviewService.getByFileNumber).toHaveBeenCalledTimes(1);
   });
 });

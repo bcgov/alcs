@@ -89,7 +89,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const app = await service.getOrFail('');
+    const app = await service.getOrFailByFileNumber('');
     expect(app).toBe(application);
   });
 
@@ -97,14 +97,14 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const app = await service.getIfCreator('', new User());
+    const app = await service.getIfCreatorByFileNumber('', new User());
     expect(app).toBe(application);
   });
 
   it('should throw an exception if the application is not found the fetched application', async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
-    const promise = service.getIfCreator('', new User());
+    const promise = service.getIfCreatorByFileNumber('', new User());
     await expect(promise).rejects.toMatchObject(
       new Error(`Failed to load application with File ID `),
     );
@@ -113,7 +113,7 @@ describe('ApplicationSubmissionService', () => {
   it("should throw an error if application doesn't exist", async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
-    const promise = service.getOrFail('');
+    const promise = service.getOrFailByFileNumber('');
     await expect(promise).rejects.toMatchObject(
       new Error('Failed to find document'),
     );
@@ -149,7 +149,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const res = await service.getByFileId('', new User());
+    const res = await service.getByFileNumber('', new User());
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
   });

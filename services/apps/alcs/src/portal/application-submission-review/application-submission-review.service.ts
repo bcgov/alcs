@@ -11,7 +11,6 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import {
   ApplicationSubmissionReviewDto,
@@ -28,41 +27,10 @@ export class ApplicationSubmissionReviewService {
     @InjectMapper('') private mapper: Mapper,
   ) {}
 
-  getForGovernment(
-    fileNumber: string,
-    localGovernment: ApplicationLocalGovernment,
-  ) {
-    return this.applicationSubmissionReviewRepository.findOne({
-      where: {
-        application: {
-          submittedApplication: {
-            fileNumber,
-            localGovernmentUuid: localGovernment.uuid,
-          },
-        },
-      },
-      relations: {
-        application: true,
-      },
-    });
-  }
-
-  getForOwner(fileNumber: string, user: User) {
+  getByFileNumber(fileNumber: string) {
     return this.applicationSubmissionReviewRepository.findOneOrFail({
       where: {
         applicationFileNumber: fileNumber,
-        application: {
-          submittedApplication: {
-            createdBy: {
-              uuid: user.uuid,
-            },
-          },
-        },
-      },
-      relations: {
-        application: {
-          submittedApplication: true,
-        },
       },
     });
   }
@@ -81,10 +49,7 @@ export class ApplicationSubmissionReviewService {
     localGovernment: ApplicationLocalGovernment,
     updateDto: UpdateApplicationSubmissionReviewDto,
   ) {
-    const applicationReview = await this.getForGovernment(
-      fileNumber,
-      localGovernment,
-    );
+    const applicationReview = await this.getByFileNumber(fileNumber);
 
     if (!applicationReview) {
       throw new ServiceNotFoundException('Failed to load application review');
