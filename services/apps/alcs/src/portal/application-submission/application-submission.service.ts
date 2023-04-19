@@ -145,11 +145,10 @@ export class ApplicationSubmissionService {
     return this.getOrFailByFileNumber(applicationSubmission.fileNumber);
   }
 
-  async setPrimaryContact(fileNumber: string, primaryContactUuid: string) {
-    const application = await this.getOrFailByFileNumber(fileNumber);
-    application.primaryContactOwnerUuid = primaryContactUuid;
-    await this.applicationSubmissionRepository.save(application);
-    return this.getOrFailByFileNumber(application.fileNumber);
+  async setPrimaryContact(submissionUuid: string, primaryContactUuid: string) {
+    const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
+    applicationSubmission.primaryContactOwnerUuid = primaryContactUuid;
+    await this.applicationSubmissionRepository.save(applicationSubmission);
   }
 
   async submitToLg(application: ApplicationSubmission) {
@@ -436,6 +435,7 @@ export class ApplicationSubmissionService {
         uuid,
       },
       relations: {
+        createdBy: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -459,7 +459,10 @@ export class ApplicationSubmissionService {
 
   async getIfCreatorByUuid(uuid: string, user: User) {
     const applicationSubmission = await this.getByUuid(uuid);
-    if (!applicationSubmission || applicationSubmission.createdBy !== user) {
+    if (
+      !applicationSubmission ||
+      applicationSubmission.createdBy.uuid !== user.uuid
+    ) {
       throw new ServiceNotFoundException(
         `Failed to load application with ID ${uuid}`,
       );

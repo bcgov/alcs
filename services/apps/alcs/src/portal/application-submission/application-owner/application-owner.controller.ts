@@ -171,7 +171,7 @@ export class ApplicationOwnerController {
         applicationSubmission,
       );
       await this.ownerService.setPrimaryContact(
-        applicationSubmission.fileNumber,
+        applicationSubmission.uuid,
         agentOwner,
       );
     } else if (data.ownerUuid) {
@@ -195,7 +195,7 @@ export class ApplicationOwnerController {
       }
 
       await this.ownerService.setPrimaryContact(
-        applicationSubmission.fileNumber,
+        applicationSubmission.uuid,
         primaryContactOwner,
       );
     }

@@ -2,6 +2,7 @@
   <app-application-details
     [$application]="$applicationSubmission"
     [$applicationDocuments]="$applicationDocuments"
+    [draftMode]='draftMode'
   ></app-application-details>
   <div class="button-container">
     <button
@@ -22,7 +23,7 @@
       <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
+      <button *ngIf='!draftMode' mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
     </div>
   </div>
 </section>

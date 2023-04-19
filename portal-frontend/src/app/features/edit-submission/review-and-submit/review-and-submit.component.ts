@@ -33,7 +33,11 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
   }
 
   override onNavigateToStep(step: number) {
-    this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    if (this.draftMode) {
+      this.router.navigateByUrl(`alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    } else {
+      this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    }
   }
 
   async onSubmitToAlcs() {

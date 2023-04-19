@@ -6,6 +6,7 @@ import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
   ApplicationDocumentUpdateDto,
+  DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
 } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
@@ -58,6 +59,7 @@ export class OtherAttachmentsComponent extends StepComponent implements OnInit, 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.otherFiles = documents
         .filter((file) => (file.type ? USER_CONTROLLED_TYPES.includes(file.type.code) : true))
+        .filter((file) => file.source === DOCUMENT_SOURCE.APPLICANT)
         .sort((a, b) => {
           return a.uploadedAt - b.uploadedAt;
         });

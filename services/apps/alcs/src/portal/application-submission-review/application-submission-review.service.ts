@@ -11,6 +11,7 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import {
   ApplicationSubmissionReviewDto,
@@ -24,6 +25,7 @@ export class ApplicationSubmissionReviewService {
     @InjectRepository(ApplicationSubmissionReview)
     private applicationSubmissionReviewRepository: Repository<ApplicationSubmissionReview>,
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationService: ApplicationService,
     @InjectMapper('') private mapper: Mapper,
   ) {}
 
@@ -130,14 +132,19 @@ export class ApplicationSubmissionReviewService {
       applicationReview.isSubjectToZoning == false
     ) {
       applicationReview.isAuthorized = null;
+
+      const applicationUuid = await this.applicationService.getUuid(
+        applicationReview.applicationFileNumber,
+      );
+
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-        applicationReview.application.uuid,
+        applicationUuid,
       );
 
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.STAFF_REPORT,
-        applicationReview.application.uuid,
+        applicationUuid,
       );
     }
 

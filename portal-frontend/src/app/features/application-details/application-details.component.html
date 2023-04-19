@@ -1,5 +1,10 @@
 <section>
-  <app-parcel [$applicationSubmission]="$application" [showErrors]="showErrors" [showEdit]="showEdit"></app-parcel>
+  <app-parcel
+    [draftMode]="draftMode"
+    [$applicationSubmission]="$application"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+  ></app-parcel>
 </section>
 <section>
   <app-parcel
@@ -7,6 +12,7 @@
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [parcelType]="parcelType.OTHER"
+    [draftMode]="draftMode"
   ></app-parcel>
 </section>
 <section>

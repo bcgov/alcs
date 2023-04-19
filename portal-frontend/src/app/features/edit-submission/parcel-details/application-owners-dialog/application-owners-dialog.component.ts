@@ -29,7 +29,7 @@ export class ApplicationOwnersDialogComponent {
   }
 
   async onUpdated() {
-    const updatedOwners = await this.applicationOwnerService.fetchBySubmissionId(this.data.fileId);
+    const updatedOwners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (updatedOwners) {
       this.owners = updatedOwners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.isDirty = true;
