@@ -131,7 +131,9 @@
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #purchaseDatePicker startView="year"></mat-datepicker>
       </mat-form-field>
-      <div class="subtext">Example: 2020-Mar-01</div>
+      <div>
+        <mat-hint class="subtext"> Example: 2020-Mar-01 </mat-hint>
+      </div>
       <div *ngIf="purchaseDate.invalid && (purchaseDate.dirty || purchaseDate.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purchaseDate.errors?.['required']">This field is required</div>
@@ -228,7 +230,7 @@
       <div>
         <app-parcel-owners
           [fileId]="fileId"
-          [submissionUuid]='submissionUuid'
+          [submissionUuid]="submissionUuid"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
@@ -305,7 +307,7 @@
       <div>
         <app-parcel-owners
           [fileId]="fileId"
-          [submissionUuid]='submissionUuid'
+          [submissionUuid]="submissionUuid"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
