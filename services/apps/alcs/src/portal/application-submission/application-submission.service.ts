@@ -475,7 +475,7 @@ export class ApplicationSubmissionService {
       return await this.applicationSubmissionRepository.findOneOrFail({
         where: {
           fileNumber: fileId,
-          isDraft: true,
+          isDraft: false,
         },
         relations: {
           owners: {
