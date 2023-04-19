@@ -35,8 +35,12 @@ a {
 
 .drag-cell {
   cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
-.drag-cell:active {
-  cursor: grabbing;
+.cdk-drag-placeholder, .cdk-drag-preview {
+  background-color: colors.$grey-light !important;
 }
