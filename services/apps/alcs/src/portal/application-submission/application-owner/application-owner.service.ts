@@ -197,9 +197,9 @@ export class ApplicationOwnerService {
     return res;
   }
 
-  async setPrimaryContact(fileNumber: string, owner: ApplicationOwner) {
-    return await this.applicationSubmissionService.setPrimaryContact(
-      fileNumber,
+  async setPrimaryContact(submissionUuid: string, owner: ApplicationOwner) {
+    await this.applicationSubmissionService.setPrimaryContact(
+      submissionUuid,
       owner.uuid,
     );
   }

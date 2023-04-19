@@ -54,7 +54,9 @@ export class ParcelComponent {
   @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() showErrors = true;
   @Input() showEdit = true;
+  @Input() draftMode = false;
   @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
+
   PARCEL_TYPES = PARCEL_TYPE;
 
   pageTitle: string = '1. Identify Parcel(s) Under Application';
@@ -180,11 +182,23 @@ export class ParcelComponent {
 
   onEditParcelsClick($event: any) {
     $event.stopPropagation();
-    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
+    if (this.draftMode) {
+      this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
+    } else {
+      this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
+    }
   }
 
   onEditParcelClick(uuid: string) {
-    this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`);
+    if (this.draftMode) {
+      this.router.navigateByUrl(
+        `alcs/application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
+      );
+    } else {
+      this.router.navigateByUrl(
+        `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
+      );
+    }
   }
 
   getLetterIndex(num: number) {
