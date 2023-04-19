@@ -2,7 +2,6 @@ import { AutoMap } from '@automapper/classes';
 import {
   IsArray,
   IsBoolean,
-  IsJSON,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -19,6 +18,9 @@ export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 export class ApplicationSubmissionDto {
   @AutoMap()
   fileNumber: string;
+
+  @AutoMap()
+  uuid: string;
 
   @AutoMap()
   createdAt: number;

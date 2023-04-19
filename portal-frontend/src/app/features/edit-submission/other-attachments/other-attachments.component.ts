@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
@@ -9,11 +9,11 @@ import {
   DOCUMENT_TYPE,
 } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../services/code/code.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -22,12 +22,9 @@ const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIO
   templateUrl: './other-attachments.component.html',
   styleUrls: ['./other-attachments.component.scss'],
 })
-export class OtherAttachmentsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+export class OtherAttachmentsComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
-  $destroy = new Subject<void>();
+
   currentStep = EditApplicationSteps.Attachments;
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];
@@ -45,12 +42,14 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private codeService: CodeService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
       }
     });
 
@@ -74,12 +73,6 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onSaveExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
   async attachFile(file: FileHandle) {
     if (this.fileId) {
       await this.onSave();
@@ -100,11 +93,6 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
         this.$applicationDocuments.next(documents);
       }
     }
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 
   async openFile(uuid: string) {
@@ -148,10 +136,6 @@ export class OtherAttachmentsComponent implements OnInit, OnDestroy {
       }
       return file;
     });
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 
   private async loadDocumentCodes() {

@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
   APPLICATION_OWNER,
   ApplicationOwnerDetailedDto,
@@ -24,6 +24,7 @@ import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { DeleteParcelDialogComponent } from '../parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from '../parcel-details/parcel-entry/parcel-entry.component';
+import { StepComponent } from '../step.partial';
 import { OtherParcelConfirmationDialogComponent } from './other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 
 const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
@@ -33,14 +34,10 @@ const PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL = 'placeHolderUuidForInitialParcel';
   templateUrl: './other-parcels.component.html',
   styleUrls: ['./other-parcels.component.scss'],
 })
-export class OtherParcelsComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
+export class OtherParcelsComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.OtherParcel;
-  $destroy = new Subject<void>();
-
-  fileId: string = '';
+  fileId = '';
+  submissionUuid = '';
   owners: ApplicationOwnerDetailedDto[] = [];
   PARCEL_TYPE = PARCEL_TYPE;
 
@@ -64,13 +61,16 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private dialog: MatDialog,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.application = application;
         this.fileId = application.fileNumber;
+        this.submissionUuid = application.uuid;
         const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
         this.owners = nonAgentOwners.map((o) => ({
           ...o,
@@ -88,11 +88,6 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     });
 
     this.newParcelAdded = false;
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 
   async onParcelFormChange(formData: Partial<ParcelEntryFormData>) {
@@ -123,8 +118,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   private async reloadApplication() {
-    const application = await this.applicationService.getByFileId(this.fileId);
-    this.$application.next(application);
+    const application = await this.applicationService.getByUuid(this.submissionUuid);
+    this.$applicationSubmission.next(application);
   }
 
   private async saveProgress() {
@@ -167,14 +162,8 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onSaveExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
   async onAddParcel() {
-    const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
+    const parcel = await this.applicationParcelService.create(this.submissionUuid, PARCEL_TYPE.OTHER);
 
     if (parcel) {
       await this.replacePlaceholderParcel();
@@ -234,7 +223,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   async setupOtherParcelsData() {
-    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
     this.otherParcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER);
     if (!this.otherParcels || this.otherParcels.length === 0) {
       this.addPlaceHolderParcel();
@@ -275,7 +264,7 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
   }
 
   private async setHasOtherParcelsInCommunity(value?: boolean | null) {
-    await this.applicationService.updatePending(this.fileId, {
+    await this.applicationService.updatePending(this.submissionUuid, {
       hasOtherParcelsInCommunity: value,
     });
     await this.reloadApplication();
@@ -285,17 +274,12 @@ export class OtherParcelsComponent implements OnInit, OnDestroy {
     const placeHolderParcel = this.otherParcels.find((p) => p.uuid === PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL);
 
     if (placeHolderParcel && parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
-      const parcel = await this.applicationParcelService.create(this.fileId, PARCEL_TYPE.OTHER);
+      const parcel = await this.applicationParcelService.create(this.submissionUuid, PARCEL_TYPE.OTHER);
       if (parcel) {
         placeHolderParcel.uuid = parcel.uuid;
       }
     }
   }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
-  }
-
   getLetterIndex(num: number) {
     return getLetterCombinations(num);
   }

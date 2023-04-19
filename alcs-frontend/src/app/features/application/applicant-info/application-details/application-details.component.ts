@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
@@ -18,6 +19,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   @Input() submittedApplication!: ApplicationSubmissionDto;
   @Input() applicationType!: string;
   @Input() fileNumber!: string;
+  @Input() showEdit = false;
 
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
@@ -32,6 +34,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  onEdit(step: number) {
+    window.location.href = `${environment.portalUrl}/alcs/application/${this.fileNumber}/edit/${step}`;
   }
 
   async openFile(uuid: string) {

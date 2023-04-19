@@ -27,7 +27,11 @@
         </mat-autocomplete>
       </mat-form-field>
       <div
-        *ngIf="localGovernment.errors && localGovernment.errors['required'] && (localGovernment.dirty || localGovernment.touched)"
+        *ngIf="
+          localGovernment.errors &&
+          localGovernment.errors['required'] &&
+          (localGovernment.dirty || localGovernment.touched)
+        "
         class="field-error"
       >
         <mat-icon>warning</mat-icon>
@@ -46,7 +50,8 @@
   <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a> / <a href="tel:236-468-3342">236-468-3342</a>
 </p>
 <div class="button-container">
-  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
   <div>
     <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
       Previous<span class="mobile-hidden"> Step</span>

@@ -35,13 +35,14 @@ export interface ParcelEntryFormData {
 }
 
 @Component({
-  selector: 'app-parcel-entry[parcel][fileId]',
+  selector: 'app-parcel-entry[parcel][fileId][submissionUuid]',
   templateUrl: './parcel-entry.component.html',
   styleUrls: ['./parcel-entry.component.scss'],
 })
 export class ParcelEntryComponent implements OnInit {
   @Input() parcel!: ApplicationParcelDto;
   @Input() fileId!: string;
+  @Input() submissionUuid!: string;
   @Input() $owners: BehaviorSubject<ApplicationOwnerDto[]> = new BehaviorSubject<ApplicationOwnerDto[]>([]);
 
   @Input() enableOwners = true;
@@ -221,6 +222,7 @@ export class ParcelEntryComponent implements OnInit {
     const dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
+        submissionUuid: this.submissionUuid,
         parcelUuid: this.parcel.uuid,
       },
     });
@@ -237,6 +239,7 @@ export class ParcelEntryComponent implements OnInit {
     const dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
+        submissionUuid: this.submissionUuid,
         parcelUuid: this.parcel.uuid,
       },
     });
@@ -296,6 +299,7 @@ export class ParcelEntryComponent implements OnInit {
         data: {
           owners: this.owners,
           fileId: this.fileId,
+          submissionUuid: this.submissionUuid,
         },
       })
       .beforeClosed()

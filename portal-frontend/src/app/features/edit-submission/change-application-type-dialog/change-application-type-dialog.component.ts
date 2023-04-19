@@ -17,7 +17,7 @@ export enum ApplicationChangeTypeStepsEnum {
   styleUrls: ['./change-application-type-dialog.component.scss'],
 })
 export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewChecked {
-  fileId: string;
+  submissionUuid: string;
 
   applicationTypes: ApplicationTypeDto[] = [];
   selectedAppType: ApplicationTypeDto | undefined = undefined;
@@ -33,11 +33,11 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   constructor(
     private dialogRef: MatDialogRef<ChangeApplicationTypeDialogComponent>,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private codeService: CodeService,
     @Inject(MAT_DIALOG_DATA) public data: ChangeApplicationTypeDialogComponent
   ) {
-    this.fileId = data.fileId;
+    this.submissionUuid = data.submissionUuid;
   }
 
   ngAfterViewChecked(): void {
@@ -59,7 +59,9 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
   }
 
   async onSubmit() {
-    const result = await this.applicationService.updatePending(this.fileId, { typeCode: this.selectedAppType!.code });
+    const result = await this.applicationSubmissionService.updatePending(this.submissionUuid, {
+      typeCode: this.selectedAppType!.code,
+    });
     if (result) {
       this.onCancel(true);
     }

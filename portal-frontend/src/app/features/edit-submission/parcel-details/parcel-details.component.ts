@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import {
@@ -10,10 +10,10 @@ import {
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
-import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { StepComponent } from '../step.partial';
 import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialog.component';
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
@@ -22,17 +22,12 @@ import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
   templateUrl: './parcel-details.component.html',
   styleUrls: ['./parcel-details.component.scss'],
 })
-export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
-  $destroy = new Subject<void>();
-
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-
-  @Output() navigateToStep = new EventEmitter<number>();
+export class ParcelDetailsComponent extends StepComponent implements OnInit, AfterViewInit {
   @Output() componentInitialized = new EventEmitter<boolean>();
 
   currentStep = EditApplicationSteps.AppParcel;
-  fileId!: string;
+  fileId = '';
+  submissionUuid = '';
   parcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
   newParcelAdded = false;
@@ -43,14 +38,19 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
     private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
         this.loadParcels();
-        const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+        const nonAgentOwners = applicationSubmission.owners.filter(
+          (owner) => owner.type.code !== APPLICATION_OWNER.AGENT
+        );
         this.$owners.next(nonAgentOwners);
       }
     });
@@ -58,17 +58,12 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
     this.newParcelAdded = false;
   }
 
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
   ngAfterViewInit(): void {
     setTimeout((_) => this.componentInitialized.emit(true));
   }
 
   async loadParcels() {
-    const parcels = (await this.applicationParcelService.fetchByFileId(this.fileId)) || [];
+    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
     this.parcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.APPLICATION);
     if (!this.parcels || this.parcels.length === 0) {
       await this.onAddParcel();
@@ -76,7 +71,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async onAddParcel() {
-    const parcel = await this.applicationParcelService.create(this.fileId);
+    const parcel = await this.applicationParcelService.create(this.submissionUuid);
 
     if (parcel) {
       this.parcels.push({
@@ -141,12 +136,6 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
     await this.saveProgress();
   }
 
-  async onSaveExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
   async onDelete(parcelUuid: string, parcelNumber: number) {
     this.dialog
       .open(DeleteParcelDialogComponent, {
@@ -166,7 +155,7 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async onOwnersUpdated() {
-    const owners = await this.applicationOwnerService.fetchByFileId(this.fileId);
+    const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (owners) {
       const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.$owners.next(nonAgentOwners);
@@ -177,9 +166,5 @@ export class ParcelDetailsComponent implements OnInit, OnDestroy, AfterViewInit 
 
   openParcel(index: string) {
     this.expandedParcel = index;
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

@@ -44,10 +44,11 @@ export class GenerateSubmissionDocumentService {
   ) {}
 
   async generate(fileNumber: string, user: User) {
-    const submission = await this.applicationSubmissionService.verifyAccess(
-      fileNumber,
-      user,
-    );
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileNumber,
+        user,
+      );
 
     const template = await this.getPdfTemplateBySubmissionType(submission);
 
@@ -267,7 +268,10 @@ export class GenerateSubmissionDocumentService {
       subdIsHomeSiteSeverance: this.formatBooleanToYesNoString(
         submission.subdIsHomeSiteSeverance,
       ),
-      subdProposedLots: submission.subdProposedLots,
+      subdProposedLots: submission.subdProposedLots.map((lot, index) => ({
+        ...lot,
+        index: index + 1,
+      })),
       homesiteSeverance: homesiteSeverance.map((d) => d.document),
       proposalMap: proposalMap.find((d) => d)?.document.fileName,
     };

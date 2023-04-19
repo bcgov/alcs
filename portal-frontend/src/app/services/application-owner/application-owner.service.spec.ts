@@ -46,7 +46,7 @@ describe('ApplicationOwnerService', () => {
   it('should make a get request for loading owners', async () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
-    await service.fetchByFileId(fileId);
+    await service.fetchBySubmissionId(fileId);
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.get.mock.calls[0][0]).toContain('application-owner');
@@ -55,7 +55,7 @@ describe('ApplicationOwnerService', () => {
   it('should show an error toast if getting owners fails', async () => {
     mockHttpClient.get.mockReturnValue(throwError(() => ({})));
 
-    await service.fetchByFileId(fileId);
+    await service.fetchBySubmissionId(fileId);
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
@@ -65,7 +65,7 @@ describe('ApplicationOwnerService', () => {
     mockHttpClient.post.mockReturnValue(of({}));
 
     await service.create({
-      applicationFileNumber: '',
+      applicationSubmissionUuid: '',
       email: '',
       phoneNumber: '',
       typeCode: '',
@@ -79,7 +79,7 @@ describe('ApplicationOwnerService', () => {
     mockHttpClient.post.mockReturnValue(throwError(() => ({})));
 
     await service.create({
-      applicationFileNumber: '',
+      applicationSubmissionUuid: '',
       email: '',
       phoneNumber: '',
       typeCode: '',
@@ -172,7 +172,7 @@ describe('ApplicationOwnerService', () => {
   it('should make a post request for setPrimaryContact', async () => {
     mockHttpClient.post.mockReturnValue(of({}));
 
-    await service.setPrimaryContact({ fileNumber: '' });
+    await service.setPrimaryContact({ applicationSubmissionUuid: '' });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.post.mock.calls[0][0]).toContain('application-owner');
@@ -181,7 +181,7 @@ describe('ApplicationOwnerService', () => {
   it('should show an error toast if setPrimaryContact', async () => {
     mockHttpClient.post.mockReturnValue(throwError(() => ({})));
 
-    await service.setPrimaryContact({ fileNumber: '' });
+    await service.setPrimaryContact({ applicationSubmissionUuid: '' });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);

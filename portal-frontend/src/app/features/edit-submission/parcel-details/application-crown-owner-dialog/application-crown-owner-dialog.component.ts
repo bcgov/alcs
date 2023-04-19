@@ -37,6 +37,7 @@ export class ApplicationCrownOwnerDialogComponent {
     private appOwnerService: ApplicationOwnerService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
+      submissionUuid: string;
       fileId: string;
       parcelUuid?: string;
       existingOwner?: ApplicationOwnerDto;
@@ -61,7 +62,7 @@ export class ApplicationCrownOwnerDialogComponent {
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: APPLICATION_OWNER.CROWN,
-      applicationFileNumber: this.data.fileId,
+      applicationSubmissionUuid: this.data.submissionUuid,
     };
 
     const res = await this.appOwnerService.create(createDto);

@@ -7,23 +7,23 @@ import { ApplicationParcelService } from '../../../services/application-parcel/a
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
 @Component({
-  selector: 'app-subd-details[application]',
+  selector: 'app-subd-details[applicationSubmission]',
   templateUrl: './subd-details.component.html',
   styleUrls: ['./subd-details.component.scss'],
 })
 export class SubdDetailsComponent {
-  _application: ApplicationSubmissionDetailedDto | undefined;
+  _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
   totalTargetAcres: string | undefined;
   totalAcres: string | undefined;
 
-  @Input() set application(application: ApplicationSubmissionDetailedDto | undefined) {
-    if (application) {
-      this._application = application;
-      this.loadParcels(application.fileNumber);
+  @Input() set applicationSubmission(applicationSubmission: ApplicationSubmissionDetailedDto | undefined) {
+    if (applicationSubmission) {
+      this._applicationSubmission = applicationSubmission;
+      this.loadParcels(applicationSubmission.fileNumber);
 
-      this.totalAcres = application.subdProposedLots
+      this.totalAcres = applicationSubmission.subdProposedLots
         .reduce((total, lot) => total + (lot.size !== null ? lot.size : 0), 0)
         .toFixed(2);
     }
@@ -44,7 +44,7 @@ export class SubdDetailsComponent {
   ) {}
 
   onEditSection(step: number) {
-    this.router.navigateByUrl(`application/${this._application?.fileNumber}/edit/${step}?errors=t`);
+    this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
   async openFile(uuid: string) {
@@ -53,12 +53,14 @@ export class SubdDetailsComponent {
   }
 
   private async loadParcels(fileNumber: string) {
-    const parcels = await this.applicationParcelService.fetchByFileId(fileNumber);
-    if (parcels) {
-      this.totalTargetAcres = parcels
-        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-        .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
-        .toFixed(2);
+    if (this._applicationSubmission) {
+      const parcels = await this.applicationParcelService.fetchBySubmissionUuid(this._applicationSubmission?.uuid);
+      if (parcels) {
+        this.totalTargetAcres = parcels
+          .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
+          .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
+          .toFixed(2);
+      }
     }
   }
 }

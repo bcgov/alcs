@@ -43,7 +43,7 @@ describe('LandUseComponent', () => {
 
     fixture = TestBed.createComponent(LandUseComponent);
     component = fixture.componentInstance;
-    component.$application = applicationPipe;
+    component.$applicationSubmission = applicationPipe;
 
     fixture.detectChanges();
   });

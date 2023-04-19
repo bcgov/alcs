@@ -45,7 +45,7 @@ describe('TurProposalComponent', () => {
 
     fixture = TestBed.createComponent(TurProposalComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     component.$applicationDocuments = applicationDocumentPipe;
     fixture.detectChanges();
   });

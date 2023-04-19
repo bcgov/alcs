@@ -71,6 +71,7 @@
           [parcel]="parcel"
           [$owners]="$owners"
           [fileId]="fileId"
+          [submissionUuid]='submissionUuid'
           [enableOwners]="true"
           [enableCertificateOfTitleUpload]="false"
           [enableUserSignOff]="false"
@@ -112,7 +113,8 @@
 </section>
 
 <div class="button-container">
-  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
   <div>
     <button mat-stroked-button (click)="onNavigateToStep(currentStep - 1)" color="primary">
       Previous<span class="mobile-hidden"> Step</span>

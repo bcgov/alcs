@@ -25,6 +25,9 @@ export class ApplicationOwnerDto {
   @AutoMap()
   uuid: string;
 
+  @AutoMap()
+  applicationSubmissionUuid: string;
+
   displayName: string;
 
   @AutoMap(() => String)
@@ -84,7 +87,7 @@ export class ApplicationOwnerUpdateDto {
 
 export class ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
   @IsString()
-  applicationFileNumber: string;
+  applicationSubmissionUuid: string;
 }
 
 export class SetPrimaryContactDto {
@@ -113,7 +116,7 @@ export class SetPrimaryContactDto {
   ownerUuid?: string;
 
   @IsString()
-  fileNumber: string;
+  applicationSubmissionUuid: string;
 }
 
 export class AttachCorporateSummaryDto {

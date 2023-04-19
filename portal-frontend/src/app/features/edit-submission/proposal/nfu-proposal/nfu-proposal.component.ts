@@ -9,18 +9,15 @@ import {
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
+import { StepComponent } from '../../step.partial';
 
 @Component({
   selector: 'app-nfu-proposal',
   templateUrl: './nfu-proposal.component.html',
   styleUrls: ['./nfu-proposal.component.scss'],
 })
-export class NfuProposalComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class NfuProposalComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -49,32 +46,36 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
     fillTypeDescription: this.fillTypeDescription,
     fillOriginDescription: this.fillOriginDescription,
   });
-  private fileId: string | undefined;
+  private fileId = '';
+  private submissionUuid = '';
 
-  constructor(private router: Router, private applicationService: ApplicationSubmissionService) {}
+  constructor(private router: Router, private applicationSubmissionService: ApplicationSubmissionService) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          hectares: application.nfuHectares?.toString(),
-          purpose: application.nfuPurpose,
-          outsideLands: application.nfuOutsideLands,
-          agricultureSupport: application.nfuAgricultureSupport,
-          totalFillPlacement: application.nfuTotalFillPlacement?.toString(),
-          maxFillDepth: application.nfuMaxFillDepth?.toString(),
-          fillVolume: application.nfuFillVolume?.toString(),
-          projectDurationAmount: application.nfuProjectDurationAmount?.toString(),
-          projectDurationUnit: application.nfuProjectDurationUnit,
-          fillTypeDescription: application.nfuFillTypeDescription,
-          fillOriginDescription: application.nfuFillOriginDescription,
+          hectares: applicationSubmission.nfuHectares?.toString(),
+          purpose: applicationSubmission.nfuPurpose,
+          outsideLands: applicationSubmission.nfuOutsideLands,
+          agricultureSupport: applicationSubmission.nfuAgricultureSupport,
+          totalFillPlacement: applicationSubmission.nfuTotalFillPlacement?.toString(),
+          maxFillDepth: applicationSubmission.nfuMaxFillDepth?.toString(),
+          fillVolume: applicationSubmission.nfuFillVolume?.toString(),
+          projectDurationAmount: applicationSubmission.nfuProjectDurationAmount?.toString(),
+          projectDurationUnit: applicationSubmission.nfuProjectDurationUnit,
+          fillTypeDescription: applicationSubmission.nfuFillTypeDescription,
+          fillOriginDescription: applicationSubmission.nfuFillOriginDescription,
         });
 
-        if (application.nfuWillImportFill !== null) {
-          this.willImportFill.setValue(application.nfuWillImportFill ? 'true' : 'false');
-          this.onChangeFill(application.nfuWillImportFill ? 'true' : 'false');
+        if (applicationSubmission.nfuWillImportFill !== null) {
+          this.willImportFill.setValue(applicationSubmission.nfuWillImportFill ? 'true' : 'false');
+          this.onChangeFill(applicationSubmission.nfuWillImportFill ? 'true' : 'false');
         }
 
         if (this.showErrors) {
@@ -82,15 +83,6 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSave() {
@@ -127,8 +119,8 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
         nfuFillOriginDescription,
       };
 
-      const updatedApp = await this.applicationService.updatePending(this.fileId, updateDto);
-      this.$application.next(updatedApp);
+      const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
+      this.$applicationSubmission.next(updatedApp);
     }
   }
 
@@ -158,9 +150,5 @@ export class NfuProposalComponent implements OnInit, OnDestroy {
       this.fillTypeDescription.setValue(null);
       this.fillOriginDescription.setValue(null);
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

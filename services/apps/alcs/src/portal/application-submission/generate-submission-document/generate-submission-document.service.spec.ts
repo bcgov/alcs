@@ -78,7 +78,7 @@ describe('GenerateSubmissionDocumentService', () => {
   it('should call cdogs service to generate pdf for nfu', async () => {
     mockCdogsService.generateDocument.mockResolvedValue({} as any);
 
-    mockApplicationSubmissionService.verifyAccess.mockResolvedValue({
+    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue({
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'NFUP',
@@ -105,7 +105,7 @@ describe('GenerateSubmissionDocumentService', () => {
   it('should call cdogs service to generate pdf for tur', async () => {
     mockCdogsService.generateDocument.mockResolvedValue({} as any);
 
-    mockApplicationSubmissionService.verifyAccess.mockResolvedValue({
+    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue({
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'TURP',
@@ -132,7 +132,7 @@ describe('GenerateSubmissionDocumentService', () => {
   it('should fail if wrong submission type used', async () => {
     mockCdogsService.generateDocument.mockResolvedValue({} as any);
 
-    mockApplicationSubmissionService.verifyAccess.mockResolvedValue({
+    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue({
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'not a type',

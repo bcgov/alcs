@@ -56,7 +56,7 @@ describe('ApplicationOwnerService', () => {
 
     service = module.get<ApplicationOwnerService>(ApplicationOwnerService);
 
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners: [new ApplicationOwner()],
       }),
@@ -84,7 +84,7 @@ describe('ApplicationOwnerService', () => {
 
     await service.create(
       {
-        applicationFileNumber: '',
+        applicationSubmissionUuid: '',
         email: '',
         phoneNumber: '',
         typeCode: '',
@@ -210,14 +210,14 @@ describe('ApplicationOwnerService', () => {
         lastName: 'A',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
         parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
@@ -245,14 +245,14 @@ describe('ApplicationOwnerService', () => {
         lastName: 'C',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
         parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
@@ -272,14 +272,14 @@ describe('ApplicationOwnerService', () => {
         lastName: '2',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
         parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
@@ -301,7 +301,7 @@ describe('ApplicationOwnerService', () => {
         lastName: 'A',
       }),
     ];
-    mockParcelService.fetchByApplicationFileId.mockResolvedValue([
+    mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners: owners1,
         auditCreatedAt: new Date(1),
@@ -314,7 +314,7 @@ describe('ApplicationOwnerService', () => {
       }),
     ]);
 
-    await service.updateApplicationApplicant('');
+    await service.updateSubmissionApplicant('');
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(

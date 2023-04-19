@@ -6,39 +6,34 @@ import { ApplicationSubmissionDocumentGenerationService } from '../../../service
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { StepComponent } from '../step.partial';
 
 @Component({
   selector: 'app-review-and-submit',
   templateUrl: './review-and-submit.component.html',
   styleUrls: ['./review-and-submit.component.scss'],
 })
-export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
-
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  application: ApplicationSubmissionDetailedDto | undefined;
+  applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 
   constructor(
     private router: Router,
     private toastService: ToastService,
     private applicationService: ApplicationSubmissionService,
     private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((app) => {
-      this.application = app;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((app) => {
+      this.applicationSubmission = app;
     });
   }
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  onNavigateToStep(step: number) {
-    this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}?errors=t`);
+  override onNavigateToStep(step: number) {
+    this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
   async onSubmitToAlcs() {
@@ -49,14 +44,10 @@ export class ReviewAndSubmitComponent implements OnInit, OnDestroy {
         block: 'center',
       });
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
-    } else if (this.application) {
-      await this.applicationService.submitToAlcs(this.application.fileNumber);
-      await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
+    } else if (this.applicationSubmission) {
+      await this.applicationService.submitToAlcs(this.applicationSubmission.uuid);
+      await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
     }
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.application?.fileNumber}`);
   }
 
   async onDownloadPdf(fileNumber: string | undefined) {

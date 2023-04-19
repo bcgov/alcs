@@ -47,7 +47,7 @@ describe('ReviewAndSubmitComponent', () => {
 
     fixture = TestBed.createComponent(ReviewAndSubmitComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

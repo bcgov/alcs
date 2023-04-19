@@ -35,7 +35,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
       <app-parcel-details
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (componentInitialized)="onParcelDetailsInitialized()"
@@ -47,7 +47,7 @@
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
       <app-other-parcels
         [showErrors]="showValidationErrors"
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-other-parcels>
     </div>
@@ -57,9 +57,10 @@
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
       <app-primary-contact
         [showErrors]="showValidationErrors"
-        [$application]="$application"
+        [$application]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-primary-contact>
     </div>
   </cdk-step>
@@ -68,8 +69,9 @@
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
       <app-select-government
         [showErrors]="showValidationErrors"
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-select-government>
     </div>
   </cdk-step>
@@ -77,9 +79,10 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
       <app-land-use
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-land-use>
     </div>
   </cdk-step>
@@ -88,23 +91,26 @@
     <div *ngIf="application && cdkStepper.selectedIndex === editAppSteps.Proposal">
       <app-nfu-proposal
         *ngIf="application.typeCode === 'NFUP'"
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-nfu-proposal>
       <app-tur-proposal
         *ngIf="application.typeCode === 'TURP'"
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-tur-proposal>
       <app-subd-proposal
         *ngIf="application.typeCode === 'SUBD'"
-        [$applicationSubmission]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-subd-proposal>
     </div>
   </cdk-step>
@@ -112,10 +118,11 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
       <app-other-attachments
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-other-attachments>
     </div>
   </cdk-step>
@@ -123,8 +130,9 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
       <app-review-and-submit
-        [$application]="$application"
+        [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        (exit)="onExit()"
       ></app-review-and-submit>
     </div>
   </cdk-step>

@@ -228,6 +228,7 @@
       <div>
         <app-parcel-owners
           [fileId]="fileId"
+          [submissionUuid]='submissionUuid'
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
@@ -304,6 +305,7 @@
       <div>
         <app-parcel-owners
           [fileId]="fileId"
+          [submissionUuid]='submissionUuid'
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"

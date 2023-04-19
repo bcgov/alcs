@@ -43,7 +43,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   documents: ApplicationDocumentDto[] = [];
 
   $destroy = new Subject<void>();
-  $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+  $applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   application: ApplicationSubmissionDetailedDto | undefined;
 
@@ -65,7 +65,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
@@ -108,6 +108,10 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
       });
   }
 
+  async onExit() {
+    await this.router.navigateByUrl(`/application/${this.fileId}`);
+  }
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
@@ -115,13 +119,13 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   private async loadApplication(fileId: string) {
     this.overlayService.showSpinner();
-    this.application = await this.applicationService.getByFileId(fileId);
+    this.application = await this.applicationSubmissionService.getByFileId(fileId);
     const documents = await this.applicationDocumentService.getByFileId(fileId);
     if (documents) {
       this.$applicationDocuments.next(documents);
     }
     this.fileId = fileId;
-    this.$application.next(this.application);
+    this.$applicationSubmission.next(this.application);
     this.overlayService.hideSpinner();
   }
 

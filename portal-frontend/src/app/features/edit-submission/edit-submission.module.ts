@@ -12,6 +12,7 @@ import { CanDeactivateGuard } from '../../shared/guard/can-deactivate.guard';
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicationDetailsModule } from '../application-details/application-details.module';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
+import { EditSubmissionBaseModule } from './edit-submission-base.module';
 import { EditSubmissionComponent } from './edit-submission.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
@@ -30,6 +31,7 @@ import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { OtherParcelConfirmationDialogComponent } from './other-parcels/other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
+import { StepComponent } from './step.partial';
 
 const routes: Routes = [
   {
@@ -45,40 +47,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    ParcelDetailsComponent,
-    ParcelEntryComponent,
-    ChangeApplicationTypeDialogComponent,
-    EditSubmissionComponent,
-    DeleteParcelDialogComponent,
-    SelectGovernmentComponent,
-    ParcelOwnersComponent,
-    ApplicationOwnersDialogComponent,
-    ApplicationOwnerDialogComponent,
-    ApplicationCrownOwnerDialogComponent,
-    LandUseComponent,
-    OtherParcelsComponent,
-    OtherAttachmentsComponent,
-    PrimaryContactComponent,
-    ReviewAndSubmitComponent,
-    OtherParcelConfirmationDialogComponent,
-    NfuProposalComponent,
-    TurProposalComponent,
-    SubdProposalComponent,
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    RouterModule.forChild(routes),
-    NgxMaskDirective,
-    NgxMaskPipe,
-    ApplicationDetailsModule,
-    MatInputModule,
-    MatButtonToggleModule,
-    MatFormFieldModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatTableModule,
-  ],
+  declarations: [StepComponent],
+  imports: [CommonModule, SharedModule, RouterModule.forChild(routes), EditSubmissionBaseModule],
 })
 export class EditSubmissionModule {}

@@ -5,6 +5,11 @@
     [application]="submittedApplication"
     parcelType="application"
   ></app-parcel>
+  <div class="review-table edit-section">
+    <div class="full-width center">
+      <button *ngIf="showEdit" (click)="onEdit(0)" mat-flat-button color="accent">Edit Section</button>
+    </div>
+  </div>
 </section>
 <section>
   <app-parcel
@@ -13,6 +18,11 @@
     [application]="submittedApplication"
     parcelType="other"
   ></app-parcel>
+  <div class="review-table edit-section">
+    <div class="full-width center">
+      <button *ngIf="showEdit" (click)="onEdit(1)" mat-flat-button color="accent">Edit Section</button>
+    </div>
+  </div>
 </section>
 <section>
   <h3>Primary Contact</h3>
@@ -55,6 +65,9 @@
         </div>
       </div>
     </ng-container>
+    <div class="full-width center">
+      <button *ngIf="showEdit" (click)="onEdit(2)" mat-flat-button color="accent">Edit Section</button>
+    </div>
   </div>
 </section>
 <section>
@@ -117,6 +130,9 @@
         {{ submittedApplication.westLandUseTypeDescription }}
       </div>
     </div>
+    <div class="full-width center">
+      <button *ngIf="showEdit" (click)="onEdit(3)" mat-flat-button color="accent">Edit Section</button>
+    </div>
   </div>
 </section>
 <section>
@@ -135,6 +151,11 @@
     [applicationSubmission]="submittedApplication"
     [files]="files"
   ></app-subd-details>
+  <div class="review-table edit-section">
+    <div class="full-width center">
+      <button *ngIf="showEdit" (click)="onEdit(4)" mat-flat-button color="accent">Edit Section</button>
+    </div>
+  </div>
 </section>
 <section>
   <h3>Optional Documents</h3>
@@ -155,6 +176,9 @@
         </div>
       </ng-container>
       <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
+    </div>
+    <div class="full-width center">
+      <button *ngIf="showEdit" (click)="onEdit(5)" mat-flat-button color="accent">Edit Section</button>
     </div>
   </div>
 </section>

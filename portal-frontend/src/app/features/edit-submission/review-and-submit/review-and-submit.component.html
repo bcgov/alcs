@@ -1,21 +1,22 @@
 <section>
   <app-application-details
-    [$application]="$application"
+    [$application]="$applicationSubmission"
     [$applicationDocuments]="$applicationDocuments"
   ></app-application-details>
   <div class="button-container">
     <button
-      *ngIf="application?.fileNumber"
+      *ngIf="applicationSubmission?.fileNumber"
       mat-flat-button
       color="primary"
-      (click)="onDownloadPdf(application?.fileNumber)"
+      (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
     >
       Download PDF
     </button>
   </div>
 
   <div class="button-container">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
 
     <div>
       <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">

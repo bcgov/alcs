@@ -14,19 +14,16 @@ import {
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-submission.component';
+import { StepComponent } from '../../step.partial';
 
 @Component({
   selector: 'app-tur-proposal',
   templateUrl: './tur-proposal.component.html',
   styleUrls: ['./tur-proposal.component.scss'],
 })
-export class TurProposalComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
+export class TurProposalComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  @Input() showErrors = false;
-  @Output() navigateToStep = new EventEmitter<number>();
 
   DOCUMENT = DOCUMENT_TYPE;
 
@@ -48,26 +45,30 @@ export class TurProposalComponent implements OnInit, OnDestroy {
     totalCorridorArea: this.totalCorridorArea,
     allOwnersNotified: this.allOwnersNotified,
   });
-  private fileId: string | undefined;
+  private fileId = '';
+  private submissionUuid = '';
 
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileId = application.fileNumber;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          purpose: application.turPurpose,
-          outsideLands: application.turOutsideLands,
-          agriculturalActivities: application.turAgriculturalActivities,
-          reduceNegativeImpacts: application.turReduceNegativeImpacts,
-          totalCorridorArea: application.turTotalCorridorArea?.toString(),
-          allOwnersNotified: application.turAllOwnersNotified,
+          purpose: applicationSubmission.turPurpose,
+          outsideLands: applicationSubmission.turOutsideLands,
+          agriculturalActivities: applicationSubmission.turAgriculturalActivities,
+          reduceNegativeImpacts: applicationSubmission.turReduceNegativeImpacts,
+          totalCorridorArea: applicationSubmission.turTotalCorridorArea?.toString(),
+          allOwnersNotified: applicationSubmission.turAllOwnersNotified,
         });
 
         if (this.showErrors) {
@@ -80,15 +81,6 @@ export class TurProposalComponent implements OnInit, OnDestroy {
       this.servingNotice = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     });
-  }
-
-  async ngOnDestroy() {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onSaveExit() {
-    await this.router.navigateByUrl(`/application/${this.fileId}`);
   }
 
   async onSave() {
@@ -142,12 +134,8 @@ export class TurProposalComponent implements OnInit, OnDestroy {
         turAllOwnersNotified,
       };
 
-      const updatedApp = await this.applicationService.updatePending(this.fileId, updateDto);
-      this.$application.next(updatedApp);
+      const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
+      this.$applicationSubmission.next(updatedApp);
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

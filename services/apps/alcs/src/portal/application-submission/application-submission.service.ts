@@ -21,6 +21,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
@@ -58,10 +59,23 @@ export class ApplicationSubmissionService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async getOrFail(fileNumber: string) {
+  async getOrFailByFileNumber(fileNumber: string) {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         fileNumber,
+        isDraft: false,
+      },
+    });
+    if (!application) {
+      throw new Error('Failed to find document');
+    }
+    return application;
+  }
+
+  async getOrFailByUuid(uuid: string) {
+    const application = await this.applicationSubmissionRepository.findOne({
+      where: {
+        uuid,
       },
     });
     if (!application) {
@@ -107,8 +121,11 @@ export class ApplicationSubmissionService {
     return fileNumber;
   }
 
-  async update(fileNumber: string, updateDto: ApplicationSubmissionUpdateDto) {
-    const applicationSubmission = await this.getOrFail(fileNumber);
+  async update(
+    submissionUuid: string,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
 
     applicationSubmission.applicant = updateDto.applicant;
     applicationSubmission.typeCode =
@@ -125,40 +142,14 @@ export class ApplicationSubmissionService {
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
-    return this.getOrFail(applicationSubmission.fileNumber);
+    return this.getOrFailByFileNumber(applicationSubmission.fileNumber);
   }
 
   async setPrimaryContact(fileNumber: string, primaryContactUuid: string) {
-    const application = await this.getOrFail(fileNumber);
+    const application = await this.getOrFailByFileNumber(fileNumber);
     application.primaryContactOwnerUuid = primaryContactUuid;
     await this.applicationSubmissionRepository.save(application);
-    return this.getOrFail(application.fileNumber);
-  }
-
-  private setLandUseFields(
-    application: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
-    application.parcelsAgricultureDescription =
-      updateDto.parcelsAgricultureDescription;
-    application.parcelsAgricultureImprovementDescription =
-      updateDto.parcelsAgricultureImprovementDescription;
-    application.parcelsNonAgricultureUseDescription =
-      updateDto.parcelsNonAgricultureUseDescription;
-    application.northLandUseType = updateDto.northLandUseType;
-    application.northLandUseTypeDescription =
-      updateDto.northLandUseTypeDescription;
-    application.eastLandUseType = updateDto.eastLandUseType;
-    application.eastLandUseTypeDescription =
-      updateDto.eastLandUseTypeDescription;
-    application.southLandUseType = updateDto.southLandUseType;
-    application.southLandUseTypeDescription =
-      updateDto.southLandUseTypeDescription;
-    application.westLandUseType = updateDto.westLandUseType;
-    application.westLandUseTypeDescription =
-      updateDto.westLandUseTypeDescription;
-
-    return application;
+    return this.getOrFailByFileNumber(application.fileNumber);
   }
 
   async submitToLg(application: ApplicationSubmission) {
@@ -176,6 +167,7 @@ export class ApplicationSubmissionService {
       {
         where: {
           fileNumber: applicationSubmission.fileNumber,
+          isDraft: false,
         },
       },
     );
@@ -266,6 +258,7 @@ export class ApplicationSubmissionService {
         createdBy: {
           uuid: user.uuid,
         },
+        isDraft: false,
       },
       order: {
         updatedAt: 'DESC',
@@ -285,6 +278,7 @@ export class ApplicationSubmissionService {
           createdBy: {
             bceidBusinessGuid: localGovernment.bceidBusinessGuid,
           },
+          isDraft: false,
         },
         //Local Government
         {
@@ -292,12 +286,70 @@ export class ApplicationSubmissionService {
           status: {
             code: In(LG_VISIBLE_STATUSES),
           },
+          isDraft: false,
         },
       ],
       order: {
         updatedAt: 'DESC',
       },
     });
+  }
+
+  async getForGovernmentByUuid(
+    uuid: string,
+    localGovernment: ApplicationLocalGovernment,
+  ) {
+    if (!localGovernment.bceidBusinessGuid) {
+      throw new Error("Cannot load by governments that don't have guids");
+    }
+
+    const existingApplication =
+      await this.applicationSubmissionRepository.findOne({
+        where: [
+          //Owns
+          {
+            uuid,
+            createdBy: {
+              bceidBusinessGuid: localGovernment.bceidBusinessGuid,
+            },
+            isDraft: false,
+          },
+          //Local Government
+          {
+            isDraft: false,
+            uuid,
+            localGovernmentUuid: localGovernment.uuid,
+            status: {
+              code: In(LG_VISIBLE_STATUSES),
+            },
+          },
+        ],
+        order: {
+          updatedAt: 'DESC',
+          owners: {
+            parcels: {
+              purchasedDate: 'ASC',
+            },
+          },
+        },
+        relations: {
+          owners: {
+            type: true,
+            corporateSummary: {
+              document: true,
+            },
+            parcels: true,
+          },
+        },
+      });
+
+    if (!existingApplication) {
+      throw new ServiceNotFoundException(
+        `Failed to load application with uuid ${uuid}`,
+      );
+    }
+
+    return existingApplication;
   }
 
   async getForGovernmentByFileId(
@@ -317,9 +369,11 @@ export class ApplicationSubmissionService {
             createdBy: {
               bceidBusinessGuid: localGovernment.bceidBusinessGuid,
             },
+            isDraft: false,
           },
           //Local Government
           {
+            isDraft: false,
             fileNumber,
             localGovernmentUuid: localGovernment.uuid,
             status: {
@@ -355,13 +409,14 @@ export class ApplicationSubmissionService {
     return existingApplication;
   }
 
-  async getByFileId(fileNumber: string, user: User) {
+  async getByFileNumber(fileNumber: string, user: User) {
     return await this.applicationSubmissionRepository.findOne({
       where: {
         fileNumber,
         createdBy: {
           uuid: user.uuid,
         },
+        isDraft: false,
       },
       relations: {
         owners: {
@@ -375,8 +430,25 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async getIfCreator(fileNumber: string, user: User) {
-    const applicationSubmission = await this.getByFileId(fileNumber, user);
+  async getByUuid(uuid: string) {
+    return await this.applicationSubmissionRepository.findOne({
+      where: {
+        uuid,
+      },
+      relations: {
+        owners: {
+          type: true,
+          corporateSummary: {
+            document: true,
+          },
+          parcels: true,
+        },
+      },
+    });
+  }
+
+  async getIfCreatorByFileNumber(fileNumber: string, user: User) {
+    const applicationSubmission = await this.getByFileNumber(fileNumber, user);
     if (!applicationSubmission) {
       throw new ServiceNotFoundException(
         `Failed to load application with File ID ${fileNumber}`,
@@ -385,7 +457,38 @@ export class ApplicationSubmissionService {
     return applicationSubmission;
   }
 
-  async verifyAccess(fileId: string, user: User) {
+  async getIfCreatorByUuid(uuid: string, user: User) {
+    const applicationSubmission = await this.getByUuid(uuid);
+    if (!applicationSubmission || applicationSubmission.createdBy !== user) {
+      throw new ServiceNotFoundException(
+        `Failed to load application with ID ${uuid}`,
+      );
+    }
+    return applicationSubmission;
+  }
+
+  async verifyAccessByFileId(fileId: string, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return await this.applicationSubmissionRepository.findOneOrFail({
+        where: {
+          fileNumber: fileId,
+          isDraft: false,
+        },
+        relations: {
+          owners: {
+            type: true,
+            corporateSummary: {
+              document: true,
+            },
+            parcels: true,
+          },
+        },
+      });
+    }
+
     if (user.bceidBusinessGuid) {
       const localGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,
@@ -395,7 +498,43 @@ export class ApplicationSubmissionService {
       }
     }
 
-    return await this.getIfCreator(fileId, user);
+    return await this.getIfCreatorByFileNumber(fileId, user);
+  }
+
+  async verifyAccessByUuid(submissionUuid: string, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return await this.applicationSubmissionRepository.findOneOrFail({
+        where: {
+          uuid: submissionUuid,
+        },
+        relations: {
+          owners: {
+            type: true,
+            corporateSummary: {
+              document: true,
+            },
+            parcels: true,
+          },
+        },
+      });
+    }
+
+    if (user.bceidBusinessGuid) {
+      const localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+      if (localGovernment) {
+        return await this.getForGovernmentByUuid(
+          submissionUuid,
+          localGovernment,
+        );
+      }
+    }
+
+    return await this.getIfCreatorByUuid(submissionUuid, user);
   }
 
   async mapToDTOs(
@@ -454,6 +593,32 @@ export class ApplicationSubmissionService {
 
   async cancel(application: ApplicationSubmission) {
     await this.updateStatus(application, APPLICATION_STATUS.CANCELLED);
+  }
+
+  private setLandUseFields(
+    application: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    application.parcelsAgricultureDescription =
+      updateDto.parcelsAgricultureDescription;
+    application.parcelsAgricultureImprovementDescription =
+      updateDto.parcelsAgricultureImprovementDescription;
+    application.parcelsNonAgricultureUseDescription =
+      updateDto.parcelsNonAgricultureUseDescription;
+    application.northLandUseType = updateDto.northLandUseType;
+    application.northLandUseTypeDescription =
+      updateDto.northLandUseTypeDescription;
+    application.eastLandUseType = updateDto.eastLandUseType;
+    application.eastLandUseTypeDescription =
+      updateDto.eastLandUseTypeDescription;
+    application.southLandUseType = updateDto.southLandUseType;
+    application.southLandUseTypeDescription =
+      updateDto.southLandUseTypeDescription;
+    application.westLandUseType = updateDto.westLandUseType;
+    application.westLandUseTypeDescription =
+      updateDto.westLandUseTypeDescription;
+
+    return application;
   }
 
   private setNFUFields(

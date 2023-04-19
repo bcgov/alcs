@@ -75,7 +75,7 @@ describe('ApplicationDocumentController', () => {
       ApplicationDocumentController,
     );
 
-    mockApplicationSubmissionService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
     mockApplicationService.getUuid.mockResolvedValue('uuid');
