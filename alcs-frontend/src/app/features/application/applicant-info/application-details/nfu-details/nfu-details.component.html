@@ -23,7 +23,9 @@
     the property, including gravel for construction.
   </div>
   <div class="grid-double">
-    <span *ngIf="application.nfuWillImportFill !== null">{{ application.nfuWillImportFill === 'true' ? 'Yes' : 'No' }}</span>
+    <span *ngIf="application.nfuWillImportFill !== null">{{
+      application.nfuWillImportFill === 'true' ? 'Yes' : 'No'
+    }}</span>
   </div>
   <ng-container *ngIf="application.nfuWillImportFill === 'true'">
     <div class="full-width">
@@ -58,13 +60,13 @@
     <div class="full-width">
       <span class="subheading1">Project Duration</span>
     </div>
+    <div class="subheading2 grid-1">Duration</div>
+    <div class="grid-double">
+      {{ application.nfuProjectDurationUnit }}
+    </div>
     <div class="subheading2 grid-1">Length</div>
     <div class="grid-double">
       {{ application.nfuProjectDurationAmount }}
-    </div>
-    <div class="subheading2 grid-1">Unit</div>
-    <div class="grid-double">
-      {{ application.nfuProjectDurationUnit }}
     </div>
   </ng-container>
 </div>

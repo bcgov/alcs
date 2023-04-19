@@ -166,7 +166,7 @@ export class SubdProposalComponent extends StepComponent implements OnInit, OnDe
     this.proposedLots = this.proposedLots.slice(0, targetCount);
     while (this.proposedLots.length < targetCount) {
       this.proposedLots.push({
-        size: null,
+        size: '0',
         type: null,
       });
     }
