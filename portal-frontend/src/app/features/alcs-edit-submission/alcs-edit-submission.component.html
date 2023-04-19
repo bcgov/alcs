@@ -133,6 +133,8 @@
       <app-review-and-submit
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
+        [updatedFields]="updatedFields"
+        [originalSubmissionUuid]='originalSubmissionUuid'
         [draftMode]="true"
         (exit)="onExit()"
       ></app-review-and-submit>

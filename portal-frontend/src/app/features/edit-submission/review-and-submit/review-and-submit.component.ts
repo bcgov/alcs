@@ -15,6 +15,9 @@ import { StepComponent } from '../step.partial';
 })
 export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
+  @Input() updatedFields: string[] = [];
+  @Input() originalSubmissionUuid = '';
+
   applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 
   constructor(
