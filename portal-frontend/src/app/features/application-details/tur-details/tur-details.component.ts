@@ -5,18 +5,20 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
 @Component({
-  selector: 'app-tur-details[application]',
+  selector: 'app-tur-details[applicationSubmission]',
   templateUrl: './tur-details.component.html',
   styleUrls: ['./tur-details.component.scss'],
 })
 export class TurDetailsComponent {
-  _application: ApplicationSubmissionDetailedDto | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
+  @Input() draftMode = false;
+  @Input() updatedFields: string[] = [];
 
-  @Input() set application(application: ApplicationSubmissionDetailedDto | undefined) {
+  _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
+  @Input() set applicationSubmission(application: ApplicationSubmissionDetailedDto | undefined) {
     if (application) {
-      this._application = application;
+      this._applicationSubmission = application;
     }
   }
 
@@ -31,7 +33,11 @@ export class TurDetailsComponent {
   constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
 
   onEditSection(step: number) {
-    this.router.navigateByUrl(`application/${this._application?.fileNumber}/edit/${step}?errors=t`);
+    if (this.draftMode) {
+      this.router.navigateByUrl(`/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    } else {
+      this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    }
   }
 
   async openFile(uuid: string) {

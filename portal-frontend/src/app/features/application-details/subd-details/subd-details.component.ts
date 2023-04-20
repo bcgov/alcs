@@ -12,9 +12,12 @@ import { ApplicationSubmissionDetailedDto } from '../../../services/application-
   styleUrls: ['./subd-details.component.scss'],
 })
 export class SubdDetailsComponent {
-  _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
+  @Input() draftMode = false;
+  @Input() updatedFields: string[] = [];
+
+  _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
   totalTargetAcres: string | undefined;
   totalAcres: string | undefined;
 
@@ -44,7 +47,11 @@ export class SubdDetailsComponent {
   ) {}
 
   onEditSection(step: number) {
-    this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    if (this.draftMode) {
+      this.router.navigateByUrl(`/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    } else {
+      this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+    }
   }
 
   async openFile(uuid: string) {

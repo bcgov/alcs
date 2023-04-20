@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { getDiff } from 'recursive-diff';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
@@ -52,6 +53,7 @@ export class ParcelComponent {
   $destroy = new Subject<void>();
 
   @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() originalSubmissionUuid: string | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -67,6 +69,7 @@ export class ParcelComponent {
   submissionUuid = '';
   parcels: ApplicationParcelExtended[] = [];
   application!: ApplicationSubmissionDetailedDto;
+  updatedFields: string[] = [];
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -102,6 +105,24 @@ export class ParcelComponent {
     this.parcels = parcels
       .filter((p) => p.parcelType === this.parcelType)
       .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
+
+    if (this.originalSubmissionUuid) {
+      const oldParcels = await this.applicationParcelService.fetchBySubmissionUuid(this.originalSubmissionUuid);
+      if (oldParcels) {
+        const oldTypedParcels = oldParcels.filter((p) => p.parcelType === this.parcelType);
+        const diffResult = getDiff(oldTypedParcels, this.parcels);
+        const changedFields = new Set<string>();
+        for (const diff of diffResult) {
+          const partialPath = [];
+          for (const path of diff.path) {
+            partialPath.push(path);
+            changedFields.add(partialPath.join('.'));
+          }
+        }
+        this.updatedFields = [...changedFields.keys()];
+        debugger;
+      }
+    }
   }
 
   private async validateParcelDetails() {

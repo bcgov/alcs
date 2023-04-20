@@ -26,6 +26,7 @@
     "@bcgov/bc-sans": "^1.0.1",
     "jwt-decode": "^3.1.2",
     "ngx-mask": "^15.0.2",
+    "recursive-diff": "^1.0.9",
     "rxjs": "~7.5.0",
     "source-map-support": "^0.5.21",
     "tslib": "^2.4.1",

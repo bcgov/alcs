@@ -2,6 +2,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { getDiff } from 'recursive-diff';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
@@ -9,6 +10,7 @@ import { ApplicationDocumentService } from '../../services/application-document/
 import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDraftService } from '../../services/application-submission/application-submission-draft.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
@@ -36,11 +38,13 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   $applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
+  originalSubmissionUuid = '';
 
   editAppSteps = EditApplicationSteps;
   expandedParcelUuid?: string;
 
   showValidationErrors = false;
+  updatedFields: string[] = [];
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -56,6 +60,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   constructor(
     private applicationSubmissionDraftService: ApplicationSubmissionDraftService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
@@ -75,7 +80,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
       .subscribe(([queryParamMap, paramMap]) => {
         const fileId = paramMap.get('fileId');
         if (fileId) {
-          this.loadApplication(fileId).then(() => {
+          this.loadDraftSubmission(fileId).then(() => {
             const stepInd = paramMap.get('stepInd');
             const parcelUuid = queryParamMap.get('parcelUuid');
             const showErrors = queryParamMap.get('errors');
@@ -103,9 +108,25 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     this.$destroy.complete();
   }
 
-  private async loadApplication(fileId: string) {
+  private async loadOriginalSubmission(fileId: string) {
+    const originalSubmission = await this.applicationSubmissionService.getByFileId(fileId);
+    if (originalSubmission) {
+      this.originalSubmissionUuid = originalSubmission?.uuid;
+
+      const diffResult = getDiff(originalSubmission, this.applicationSubmission);
+      const changedFields = new Set<string>();
+      for (const diff of diffResult) {
+        changedFields.add(diff.path.join('.'));
+        changedFields.add(diff.path[0].toString());
+      }
+      this.updatedFields = [...changedFields.keys()];
+    }
+  }
+
+  private async loadDraftSubmission(fileId: string) {
     this.overlayService.showSpinner();
     this.applicationSubmission = await this.applicationSubmissionDraftService.getByFileId(fileId);
+    this.loadOriginalSubmission(fileId);
     const documents = await this.applicationDocumentService.getByFileId(fileId);
     if (documents) {
       this.$applicationDocuments.next(documents);

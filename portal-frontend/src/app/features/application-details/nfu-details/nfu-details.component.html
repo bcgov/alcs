@@ -1,36 +1,36 @@
-<div *ngIf="application" class="review-table">
+<div *ngIf="applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">How many hectares are proposed for non-farm use? (hectares)</div>
   <div class="grid-double">
-    {{ application.nfuHectares }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuHectares"></app-no-data>
+    {{ applicationSubmission.nfuHectares }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuHectares"></app-no-data>
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
-    {{ application.nfuPurpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuPurpose"></app-no-data>
+    {{ applicationSubmission.nfuPurpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuPurpose"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
     Could this proposal be accommodated on lands outside of the ALR? Please justify why the proposal cannot be carried
     out on lands outside the ALR.
   </div>
   <div class="grid-double">
-    {{ application.nfuOutsideLands }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuOutsideLands"></app-no-data>
+    {{ applicationSubmission.nfuOutsideLands }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuOutsideLands"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term? Please explain</div>
   <div class="grid-double">
-    {{ application.nfuAgricultureSupport }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuAgricultureSupport"></app-no-data>
+    {{ applicationSubmission.nfuAgricultureSupport }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuAgricultureSupport"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought onto
     the property, including gravel for construction.
   </div>
   <div class="grid-double">
-    <span *ngIf="application.nfuWillImportFill !== null">{{ application.nfuWillImportFill ? 'Yes' : 'No' }}</span>
-    <app-no-data [showRequired]="showErrors" *ngIf="application.nfuWillImportFill === null"></app-no-data>
+    <span *ngIf="applicationSubmission.nfuWillImportFill !== null">{{ applicationSubmission.nfuWillImportFill ? 'Yes' : 'No' }}</span>
+    <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuWillImportFill === null"></app-no-data>
   </div>
-  <ng-container *ngIf="application.nfuWillImportFill === true">
+  <ng-container *ngIf="applicationSubmission.nfuWillImportFill === true">
     <div class="full-width">
       <hr />
     </div>
@@ -39,44 +39,44 @@
     </div>
     <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
     <div class="grid-double">
-      {{ application.nfuFillTypeDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuFillTypeDescription"></app-no-data>
+      {{ applicationSubmission.nfuFillTypeDescription }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillTypeDescription"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
     <div class="grid-double">
-      {{ application.nfuFillOriginDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuFillOriginDescription"></app-no-data>
+      {{ applicationSubmission.nfuFillOriginDescription }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillOriginDescription"></app-no-data>
     </div>
     <div class="full-width">
       <span class="subheading1">Project Dimensions</span>
     </div>
     <div class="subheading2 grid-1">Total fill placement area (ha)</div>
     <div class="grid-double">
-      {{ application.nfuTotalFillPlacement }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuTotalFillPlacement"></app-no-data>
+      {{ applicationSubmission.nfuTotalFillPlacement }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuTotalFillPlacement"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Maximum depth of material to be placed as fill (m)</div>
     <div class="grid-double">
-      {{ application.nfuMaxFillDepth }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuMaxFillDepth"></app-no-data>
+      {{ applicationSubmission.nfuMaxFillDepth }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuMaxFillDepth"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Volume of material to be placed as fill (m3)</div>
     <div class="grid-double">
-      {{ application.nfuFillVolume }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuFillVolume"></app-no-data>
+      {{ applicationSubmission.nfuFillVolume }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillVolume"></app-no-data>
     </div>
     <div class="full-width">
       <span class="subheading1">Project Duration</span>
     </div>
     <div class="subheading2 grid-1">Duration</div>
     <div class="grid-double">
-      {{ application.nfuProjectDurationUnit }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuProjectDurationUnit"></app-no-data>
+      {{ applicationSubmission.nfuProjectDurationUnit }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuProjectDurationUnit"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Length</div>
     <div class="grid-double">
-      {{ application.nfuProjectDurationAmount }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.nfuProjectDurationAmount"></app-no-data>
+      {{ applicationSubmission.nfuProjectDurationAmount }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuProjectDurationAmount"></app-no-data>
     </div>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">

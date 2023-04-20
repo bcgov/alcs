@@ -26,9 +26,11 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
+  @Input() originalSubmissionUuid = '';
+  @Input() updatedFields: string[] = [];
 
   parcelType = PARCEL_TYPE;
-  application: ApplicationSubmissionDetailedDto | undefined;
+  applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
   primaryContact: ApplicationOwnerDetailedDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;
   authorizationLetters: ApplicationDocumentDto[] = [];
@@ -48,7 +50,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadGovernments();
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((app) => {
-      this.application = app;
+      this.applicationSubmission = app;
       if (app) {
         this.primaryContact = app.owners.find((owner) => owner.uuid === app.primaryContactOwnerUuid);
         this.populateLocalGovernment(app.localGovernmentUuid);
@@ -89,17 +91,17 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
   onNavigateToStep(step: number) {
     if (this.draftMode) {
-      this.router.navigateByUrl(`alcs/application/${this.application?.fileNumber}/edit/${step}?errors=t`);
+      this.router.navigateByUrl(`alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
     } else {
-      this.router.navigateByUrl(`application/${this.application?.fileNumber}/edit/${step}?errors=t`);
+      this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
     }
   }
 
   private async loadGovernments() {
     const codes = await this.codeService.loadCodes();
     this.localGovernments = codes.localGovernments.sort((a, b) => (a.name > b.name ? 1 : -1));
-    if (this.application?.localGovernmentUuid) {
-      this.populateLocalGovernment(this.application?.localGovernmentUuid);
+    if (this.applicationSubmission?.localGovernmentUuid) {
+      this.populateLocalGovernment(this.applicationSubmission?.localGovernmentUuid);
     }
   }
 
