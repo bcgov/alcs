@@ -6,6 +6,7 @@ export interface ApplicationParcelUpdateDto {
   uuid: string;
   pid?: string | null;
   pin?: string | null;
+  civicAddress?: string | null;
   legalDescription?: string | null;
   mapAreaHectares?: string | null;
   purchasedDate?: number | null;

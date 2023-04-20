@@ -85,6 +85,7 @@ export class ApplicationParcelService {
       parcel.pin = updateDto.pin;
       parcel.legalDescription = updateDto.legalDescription;
       parcel.mapAreaHectares = updateDto.mapAreaHectares;
+      parcel.civicAddress = updateDto.civicAddress;
       parcel.isFarm = updateDto.isFarm;
       parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
       parcel.ownershipTypeCode = updateDto.ownershipTypeCode;

@@ -54,6 +54,14 @@ export class ApplicationParcel extends Base {
 
   @AutoMap(() => String)
   @Column({
+    type: 'varchar',
+    comment: 'The standard address for the parcel',
+    nullable: true,
+  })
+  civicAddress?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
     type: 'float',
     comment:
       'The Parcels map are in hectares entered by the user or populated from third-party data',

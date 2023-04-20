@@ -125,6 +125,7 @@ export class ApplicationSubmissionValidatorService {
         parcel.ownershipTypeCode === null ||
         parcel.legalDescription === null ||
         parcel.mapAreaHectares === null ||
+        parcel.civicAddress === null ||
         parcel.isFarm === null ||
         (!parcel.isConfirmedByApplicant &&
           parcel.parcelType === PARCEL_TYPE.APPLICATION)

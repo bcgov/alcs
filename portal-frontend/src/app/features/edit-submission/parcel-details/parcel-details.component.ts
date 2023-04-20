@@ -95,6 +95,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
 
     parcel.pid = formData.pid !== undefined ? formData.pid : parcel.pid;
     parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
+    parcel.civicAddress = formData.civicAddress !== undefined ? formData.civicAddress : parcel.civicAddress;
     parcel.legalDescription =
       formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
 
@@ -118,6 +119,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
         uuid: parcel.uuid,
         pid: parcel.pid?.toString() || null,
         pin: parcel.pin?.toString() || null,
+        civicAddress: parcel.civicAddress ?? null,
         legalDescription: parcel.legalDescription,
         isFarm: parcel.isFarm,
         purchasedDate: parcel.purchasedDate,

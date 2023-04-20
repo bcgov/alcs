@@ -92,6 +92,14 @@
       </app-no-data>
     </div>
     <div class="subheading2 grid-1">
+      Civic Address
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
       Farm Classification
       <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.isFarm')"></app-updated-banner>
     </div>

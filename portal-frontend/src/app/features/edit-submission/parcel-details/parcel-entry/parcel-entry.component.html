@@ -141,6 +141,17 @@
     </div>
 
     <div class="full-row">
+      <label for="isFarm">Civic Address</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input id="civicAddress" matInput placeholder="Enter Address" formControlName="civicAddress" />
+      </mat-form-field>
+      <div *ngIf="civicAddress.invalid && (civicAddress.dirty || civicAddress.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="civicAddress.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
       <div>
         <label for="isFarm">Farm classification</label>
         <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
