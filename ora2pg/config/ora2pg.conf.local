@@ -23,12 +23,9 @@ ORACLE_HOME	/usr/lib/oracle/12.2/client64
 
 # Set Oracle database connection (datasource, user, password)
 # Local
-# ORACLE_DSN	dbi:Oracle:host=oraDB;service_name=ORCLPDB1.localdomain;port=1521
-# ORACLE_USER	IMPOATS
-# ORACLE_PWD	Oradoc_db1
-
-ORACLE_DSN	dbi:Oracle:host=nrcdb02.bcgov;service_name=maltest1.nrs.bcgov;port=1521
-ORACLE_USER	PDITTARO
+ORACLE_DSN	dbi:Oracle:host=oraDB;service_name=ORCLPDB1.localdomain;port=1521
+ORACLE_USER	IMPOATS
+ORACLE_PWD	Oradoc_db1
 
 # Set this to 1 if you connect as simple user and can not extract things
 # from the DBA_... tables. It will use tables ALL_... This will not works
@@ -156,7 +153,7 @@ COMPILE_SCHEMA	0
 #       QUERY		Convert Oracle SQL queries from a file.
 #       KETTLE		Generate XML ktr template files to be used by Kettle.
 
-TYPE		TABLE
+TYPE		COPY
 
 # Set this to 1 if you don't want to export comments associated to tables and
 # column definitions. Default is enabled.
