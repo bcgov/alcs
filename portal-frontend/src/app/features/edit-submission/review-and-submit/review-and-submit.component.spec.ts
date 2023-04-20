@@ -5,10 +5,10 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { ReviewAndSubmitComponent } from './review-and-submit.component';
-import { ApplicationSubmissionDocumentGenerationService } from '../../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 
 describe('ReviewAndSubmitComponent', () => {
   let component: ReviewAndSubmitComponent;
@@ -39,7 +39,7 @@ describe('ReviewAndSubmitComponent', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: ApplicationSubmissionDocumentGenerationService,
+          provide: PdfGenerationService,
           useValue: {},
         },
       ],

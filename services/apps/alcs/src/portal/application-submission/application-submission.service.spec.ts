@@ -16,12 +16,12 @@ import { ApplicationType } from '../../alcs/code/application-code/application-ty
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
+import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { GenerateSubmissionDocumentService } from './generate-submission-document/generate-submission-document.service';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;

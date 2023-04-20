@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
-import { ApplicationSubmissionDocumentGenerationService } from '../../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
 
@@ -24,7 +24,7 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
     private router: Router,
     private toastService: ToastService,
     private applicationService: ApplicationSubmissionService,
-    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
+    private pdfGenerationService: PdfGenerationService
   ) {
     super();
   }
@@ -59,7 +59,7 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
+      await this.pdfGenerationService.generateSubmission(fileNumber);
     }
   }
 }

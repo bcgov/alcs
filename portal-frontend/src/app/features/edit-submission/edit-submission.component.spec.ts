@@ -5,9 +5,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
-
 import { MatDialogModule } from '@angular/material/dialog';
-import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { EditSubmissionComponent } from './edit-submission.component';
 
@@ -36,7 +35,7 @@ describe('EditSubmissionComponent', () => {
           useValue: {},
         },
         {
-          provide: ApplicationSubmissionDocumentGenerationService,
+          provide: PdfGenerationService,
           useValue: {},
         },
       ],

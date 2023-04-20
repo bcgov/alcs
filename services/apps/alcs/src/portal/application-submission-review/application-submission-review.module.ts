@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../../alcs/application/application.module';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
@@ -10,13 +10,14 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 @Module({
   imports: [
     TypeOrmModule.forFeature([ApplicationSubmissionReview]),
-    ApplicationSubmissionModule,
+    forwardRef(() => ApplicationSubmissionModule),
     ApplicationModule,
   ],
   providers: [
     ApplicationSubmissionReviewService,
     ApplicationSubmissionReviewProfile,
   ],
+  exports: [ApplicationSubmissionReviewService],
   controllers: [ApplicationSubmissionReviewController],
 })
 export class ApplicationSubmissionReviewModule {}
