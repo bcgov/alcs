@@ -21,11 +21,11 @@ import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/a
 
 export interface ParcelEntryFormData {
   uuid: string;
-  pidPin: string | undefined | null;
   legalDescription: string | undefined | null;
   mapArea: string | undefined | null;
   pin: string | undefined | null;
   pid: string | undefined | null;
+  civicAddress: string | undefined | null;
   parcelType: string | undefined | null;
   isFarm: string | undefined | null;
   purchaseDate?: Date | null;
@@ -74,6 +74,7 @@ export class ParcelEntryComponent implements OnInit {
   mapArea = new FormControl<string | null>(null, [Validators.required]);
   pid = new FormControl<string | null>(null, [Validators.required]);
   pin = new FormControl<string | null>(null);
+  civicAddress = new FormControl<string | null>(null, [Validators.required]);
   parcelType = new FormControl<string | null>(null, [Validators.required]);
   isFarm = new FormControl<string | null>(null, [Validators.required]);
   purchaseDate = new FormControl<any | null>(null, [Validators.required]);
@@ -85,6 +86,7 @@ export class ParcelEntryComponent implements OnInit {
     mapArea: this.mapArea,
     pin: this.pin,
     pid: this.pid,
+    civicAddress: this.civicAddress,
     parcelType: this.parcelType,
     isFarm: this.isFarm,
     purchaseDate: this.purchaseDate,
@@ -316,6 +318,7 @@ export class ParcelEntryComponent implements OnInit {
       mapArea: this.parcel.mapAreaHectares,
       pid: this.parcel.pid,
       pin: this.parcel.pin,
+      civicAddress: this.parcel.civicAddress,
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: formatBooleanToString(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,

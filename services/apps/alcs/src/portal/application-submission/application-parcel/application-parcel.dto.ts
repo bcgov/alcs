@@ -29,6 +29,9 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   legalDescription?: string | null;
 
+  @AutoMap(() => String)
+  civicAddress?: string | null;
+
   @AutoMap(() => Number)
   mapAreaHectares?: number | null;
 
@@ -81,6 +84,10 @@ export class ApplicationParcelUpdateDto {
   @IsString()
   @IsOptional()
   pin?: string | null;
+
+  @IsString()
+  @IsOptional()
+  civicAddress?: string | null;
 
   @IsString()
   @IsOptional()
