@@ -59,8 +59,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
     private applicationParcelService: ApplicationParcelService,
     private applicationService: ApplicationSubmissionService,
     private toastService: ToastService,
-    private dialog: MatDialog,
-    private router: Router
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -103,7 +102,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
     parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
     parcel.legalDescription =
       formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
-
+    parcel.civicAddress = formData.civicAddress !== undefined ? formData.civicAddress : parcel.civicAddress;
     parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
     parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
     parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
@@ -145,6 +144,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
         pid: parcel.pid?.toString() || null,
         pin: parcel.pin?.toString() || null,
         legalDescription: parcel.legalDescription,
+        civicAddress: parcel.civicAddress,
         isFarm: parcel.isFarm,
         purchasedDate: parcel.purchasedDate,
         mapAreaHectares: parcel.mapAreaHectares,
