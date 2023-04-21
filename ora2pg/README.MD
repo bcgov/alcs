@@ -192,11 +192,16 @@ Start importing data with impdp
 impdp IMPOATS/Oradoc_db1@localhost:1521/ORCLPDB1.localdomain directory=DATA_PUMP_DIR dumpfile=expdp.OATS-395.20220831.dmp full=y
 ```
 
+---
+
+# ora2pg
+NOTE: at the time of writing this documentation the only version of ora2pg that was working properly is 18.2. This may change based on the Oracle version used for OATS.
+
 ### Oracle to Postgres migration
 
 Dockerized version of ora2pg tool will be used for migration from Oracle to Postgres. Follow this link for more details: https://github.com/Guy-Incognito/ora2pg
 
-- make sure that the steps above regarding the Oracle data import is completed successfully, and your Oracle instance is running. Use docker ps to check running containers
+- (only if you are running local Oracle in docker) make sure that the steps above regarding the Oracle data import is completed successfully, and your Oracle instance is running. Use docker ps to check running containers
 
 ```sh
 docker ps
@@ -225,7 +230,7 @@ docker ps
    -it \
    -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/config:/config \
    -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/data:/data \
-   georgmoser/ora2pg
+   georgmoser/ora2pg:18.2
   ```
 
   - once the container finishes, you will notice 'output.sql' in the data folder that you specified above. That file contains DDL for schema migration. However, it requires some manual adjustment.
@@ -253,40 +258,50 @@ docker ps
     )
     OR (alr_appl_decision_id IS NULL AND decision_expiry_date IS NULL));
     ```
+    - delete everything related to "document_blob" column
+    - delete sequence creation at the end of the file
+    - file may require some other minot cleanups, mostly deleting some indexes etc. This could be done during the run process of ddl
     - rename the file to something other than 'output.sql'
 
 - second, prepare the migration of data
 
-  - check ora2pg.conf and make sure that TYPE is set to INSERT
+  - check ora2pg.conf and make sure that TYPE is set to COPY
   - check ora2pg.conf and make sure that DEFER_FKEY is 1
   - run ora2pg container:
 
   ```sh
    # docker run \
    # --name ora2pg \
-   # --network alpine-net \
+   # --network host \
    # -it \
    # -v <path on host to config folder with ora2pg.conf>:/config \
    # -v <path on host to data folder where you will see the output of migration>:/data \
-   # georgmoser/ora2pg
+   # georgmoser/ora2pg:18.2
 
    docker run \
    --name ora2pg \
-   --network alpine-net \
+   --network host \
    -it \
    -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/config:/config \
    -v /Users/user/Documents/Bit3/sources/alcs/alcs-api/oracle-to-pg/ora2pg/data:/data \
    georgmoser/ora2pg
   ```
 
+  - if container fails with the error try to comment out this "FDW_SERVER" in 'ora2pg.conf'
   - once the container finishes, you will notice 'output.sql' in the data folder that you specified above. That file contains DATA migration. !NOTE: The output.sql will be huge, and it may cause freezes in your environment if you try to open it.
 
-Assuming that all the steps above completed successfully, you can start import process.
+### Assuming that all the steps above completed successfully, you can start import process.
 
 - make sure that your Postgres container is up and running
 - connect to Postgres DB with any tool of your choice
 - create a new schema where we will be importing data
-- apply the schema migration file that was generated previously. This can be done using UI or CLI tool.
+- apply the schema migration file that was generated previously. This can be done using UI or CLI tool.  
+  Example using the psql:
+
+`psql -h $HOSTe -p $PORT -U $USER -d $DBNAME -a -f path-to-ddl-file/ddl.sql`
+`psql -h localhost -p 5432 -U postgres -d postgres -f ../data/ddl_18_2_test.sql`
+`psql -h localhost -p 5432 -U postgres -d postgres -f ../data/data_18_2_test.sql`
+
 - once schema migration applied check that all the tables are in place
 - in the sources locate 'import.sql'
   - in 'import.sql' update the schema name to whatever schema name you used in Postgres
@@ -312,7 +327,7 @@ docker cp ./output.sql b6c68d998848:/
 docker exec -it postgres bash
 ```
 
-- inside the postgress container run import.sql. This will take a while so go grab some coffee :)
+- inside the postgres container run import.sql. This will take a while so go grab some coffee :)
 
 ```sh
 psql -h localhost -p 5432 -d postgres -U postgres -f import.sql
