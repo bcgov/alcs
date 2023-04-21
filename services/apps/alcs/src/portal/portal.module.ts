@@ -11,6 +11,7 @@ import { ApplicationSubmissionModule } from './application-submission/applicatio
 import { CodeController } from './code/code.controller';
 import { PortalDocumentModule } from './document/document.module';
 import { ParcelModule } from './parcel/parcel.module';
+import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ParcelModule } from './parcel/parcel.module';
     DocumentModule,
     PortalApplicationDocumentModule,
     ApplicationEditModule,
+    PdfGenerationModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: ParcelModule },
@@ -31,6 +33,7 @@ import { ParcelModule } from './parcel/parcel.module';
       { path: 'portal', module: PortalDocumentModule },
       { path: 'portal', module: PortalApplicationDocumentModule },
       { path: 'portal', module: ApplicationEditModule },
+      { path: 'portal', module: PdfGenerationModule },
     ]),
   ],
   controllers: [CodeController],

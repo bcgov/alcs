@@ -59,7 +59,7 @@
                 >
                   Review Application
                 </button>
-                <button mat-flat-button color="accent" (click)="onDownloadPdf(application.fileNumber)">
+                <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
                   Download PDF
                 </button>
               </div>
@@ -114,6 +114,9 @@
               color="primary"
             >
               Edit Application
+            </button>
+            <button (click)="onDownloadReviewPdf(application.fileNumber)" mat-flat-button color="accent">
+              Download PDF
             </button>
             <button
               *ngIf="application.canReview"
@@ -227,6 +230,7 @@
                   </div>
                 </div>
                 <div *ngIf="applicationReview.isOCPDesignation">
+                  <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
                   <div>
                     <span *ngIf="applicationReview.OCPConsistent !== null">{{
                       applicationReview.OCPConsistent ? 'Yes' : 'No'
@@ -419,7 +423,9 @@
           >
             Review Application
           </button>
-          <button mat-flat-button color="accent" (click)="onDownloadPdf(application.fileNumber)">Download PDF</button>
+          <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
+            Download PDF
+          </button>
         </div>
       </div>
       <app-application-details

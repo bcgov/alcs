@@ -9,12 +9,12 @@ import {
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import {
   APPLICATION_STATUS,
   ApplicationSubmissionDetailedDto,
 } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MOBILE_BREAKPOINT } from '../../shared/utils/breakpoints';
 
@@ -58,7 +58,7 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     private applicationDocumentService: ApplicationDocumentService,
     private route: ActivatedRoute,
     private router: Router,
-    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   onChangeMobileStep() {
@@ -155,9 +155,15 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onDownloadPdf(fileNumber: string | undefined) {
+  async onDownloadSubmissionPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
+      await this.pdfGenerationService.generateSubmission(fileNumber);
+    }
+  }
+
+  async onDownloadReviewPdf(fileNumber: string | undefined) {
+    if (fileNumber) {
+      await this.pdfGenerationService.generateReview(fileNumber);
     }
   }
 }

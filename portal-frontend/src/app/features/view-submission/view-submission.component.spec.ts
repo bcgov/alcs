@@ -7,10 +7,10 @@ import { ApplicationDocumentService } from '../../services/application-document/
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ViewSubmissionComponent } from './view-submission.component';
-import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 
 describe('ViewSubmissionComponent', () => {
   let component: ViewSubmissionComponent;
@@ -60,7 +60,7 @@ describe('ViewSubmissionComponent', () => {
           useValue: mockDialogService,
         },
         {
-          provide: ApplicationSubmissionDocumentGenerationService,
+          provide: PdfGenerationService,
           useValue: {},
         },
       ],

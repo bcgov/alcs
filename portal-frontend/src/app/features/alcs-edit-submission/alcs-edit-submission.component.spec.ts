@@ -9,7 +9,7 @@ import { ApplicationSubmissionService } from '../../services/application-submiss
 import { CodeService } from '../../services/code/code.service';
 
 import { MatDialogModule } from '@angular/material/dialog';
-import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { AlcsEditSubmissionComponent } from './alcs-edit-submission.component';
 
@@ -41,7 +41,7 @@ describe('AlcsEditSubmissionComponent', () => {
           useValue: {},
         },
         {
-          provide: ApplicationSubmissionDocumentGenerationService,
+          provide: PdfGenerationService,
           useValue: {},
         },
         {

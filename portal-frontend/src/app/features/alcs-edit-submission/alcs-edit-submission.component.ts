@@ -7,9 +7,9 @@ import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } fr
 import { environment } from '../../../environments/environment';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDraftService } from '../../services/application-submission/application-submission-draft.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
@@ -67,7 +67,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
     private router: Router,
-    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -202,7 +202,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
+      await this.pdfGenerationService.generateSubmission(fileNumber);
     }
   }
 

@@ -1,20 +1,21 @@
+import { CdogsService } from '@app/common/cdogs/cdogs.service';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
-import { CdogsService } from '../../../../../../libs/common/src/cdogs/cdogs.service';
-import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationLocalGovernmentService } from '../../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
-import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
-import { ApplicationService } from '../../../alcs/application/application.service';
-import { User } from '../../../user/user.entity';
-import { ApplicationOwnerService } from '../application-owner/application-owner.service';
-import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
-import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
-import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission.service';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { User } from '../../user/user.entity';
+import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
+import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
+import { PARCEL_TYPE } from '../application-submission/application-parcel/application-parcel.dto';
+import { ApplicationParcel } from '../application-submission/application-parcel/application-parcel.entity';
+import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
+import { ApplicationSubmission } from '../application-submission/application-submission.entity';
+import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
 export enum APPLICATION_SUBMISSION_TYPES {
   NFUP = 'NFUP',
@@ -265,7 +266,7 @@ export class GenerateSubmissionDocumentService {
       subdPurpose: submission.subdPurpose,
       subdSuitability: submission.subdSuitability,
       subdAgricultureSupport: submission.subdAgricultureSupport,
-      subdIsHomeSiteSeverance: this.formatBooleanToYesNoString(
+      subdIsHomeSiteSeverance: formatBooleanToYesNoString(
         submission.subdIsHomeSiteSeverance,
       ),
       subdProposedLots: submission.subdProposedLots.map((lot, index) => ({
@@ -278,15 +279,4 @@ export class GenerateSubmissionDocumentService {
 
     return pdfData;
   }
-
-  private formatBooleanToYesNoString = (val?: boolean | null) => {
-    switch (val) {
-      case true:
-        return 'Yes';
-      case false:
-        return 'No';
-      default:
-        return undefined;
-    }
-  };
 }

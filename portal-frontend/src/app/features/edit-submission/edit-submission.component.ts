@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { ApplicationSubmissionDocumentGenerationService } from '../../services/application-submission/application-submisison-document-generation/application-submission-document-generation.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
@@ -72,7 +72,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
     private router: Router,
-    private applicationSubmissionDocumentGenerationService: ApplicationSubmissionDocumentGenerationService
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -214,7 +214,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.applicationSubmissionDocumentGenerationService.generate(fileNumber);
+      await this.pdfGenerationService.generateSubmission(fileNumber);
     }
   }
 }
