@@ -14,7 +14,7 @@ import {
   providedIn: 'root',
 })
 export class ApplicationSubmissionDraftService {
-  private serviceUrl = `${environment.apiUrl}/application-edit`;
+  private serviceUrl = `${environment.apiUrl}/application-submission-draft`;
 
   constructor(
     private httpClient: HttpClient,
@@ -55,9 +55,7 @@ export class ApplicationSubmissionDraftService {
   async publish(fileId: string) {
     try {
       this.overlayService.showSpinner();
-      // await firstValueFrom(
-      //   this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${fileId}`, {})
-      // );
+      await firstValueFrom(this.httpClient.post<void>(`${this.serviceUrl}/${fileId}/publish`, {}));
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
       console.error(e);
@@ -70,7 +68,7 @@ export class ApplicationSubmissionDraftService {
   async delete(fileId: string) {
     try {
       this.overlayService.showSpinner();
-      await firstValueFrom(this.httpClient.delete<ApplicationSubmissionDto>(`${this.serviceUrl}/${fileId}`));
+      await firstValueFrom(this.httpClient.delete<void>(`${this.serviceUrl}/${fileId}`));
       this.toastService.showSuccessToast('Draft Edit Deleted');
     } catch (e) {
       console.error(e);

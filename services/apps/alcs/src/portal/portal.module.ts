@@ -5,7 +5,7 @@ import { ApplicationModule } from '../alcs/application/application.module';
 import { CardModule } from '../alcs/card/card.module';
 import { DocumentModule } from '../document/document.module';
 import { PortalApplicationDocumentModule } from './application-document/application-document.module';
-import { ApplicationEditModule } from './application-edit/application-edit.module';
+import { ApplicationSubmissionDraftModule } from './application-submission-draft/application-submission-draft.module';
 import { ApplicationSubmissionReviewModule } from './application-submission-review/application-submission-review.module';
 import { ApplicationSubmissionModule } from './application-submission/application-submission.module';
 import { CodeController } from './code/code.controller';
@@ -24,7 +24,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
     PortalDocumentModule,
     DocumentModule,
     PortalApplicationDocumentModule,
-    ApplicationEditModule,
+    ApplicationSubmissionDraftModule,
     PdfGenerationModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
@@ -32,7 +32,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
       { path: 'portal', module: ApplicationSubmissionReviewModule },
       { path: 'portal', module: PortalDocumentModule },
       { path: 'portal', module: PortalApplicationDocumentModule },
-      { path: 'portal', module: ApplicationEditModule },
+      { path: 'portal', module: ApplicationSubmissionDraftModule },
       { path: 'portal', module: PdfGenerationModule },
     ]),
   ],

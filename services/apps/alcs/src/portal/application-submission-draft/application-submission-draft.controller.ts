@@ -1,19 +1,27 @@
-import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { ApplicationEditService } from './application-edit.service';
+import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@Controller('application-edit')
+@Controller('application-submission-draft')
 @UseGuards(RolesGuard)
-export class ApplicationEditController {
+export class ApplicationSubmissionDraftController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
-    private applicationEditService: ApplicationEditService,
+    private applicationEditService: ApplicationSubmissionDraftService,
   ) {}
 
   @Get('/:fileNumber')
@@ -24,6 +32,12 @@ export class ApplicationEditController {
     return await this.applicationEditService.mapToDetailedDto(
       applicationSubmission,
     );
+  }
+
+  @Post('/:fileNumber/publish')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async publishDraft(@Param('fileNumber') fileNumber: string, @Req() req) {
+    await this.applicationEditService.publish(fileNumber, req.user.entity);
   }
 
   @Delete('/:fileNumber')

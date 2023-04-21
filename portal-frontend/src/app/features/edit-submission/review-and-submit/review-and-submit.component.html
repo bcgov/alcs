@@ -2,9 +2,9 @@
   <app-application-details
     [$application]="$applicationSubmission"
     [$applicationDocuments]="$applicationDocuments"
-    [draftMode]='draftMode'
-    [updatedFields]='updatedFields'
-    [originalSubmissionUuid]='originalSubmissionUuid'
+    [draftMode]="draftMode"
+    [updatedFields]="updatedFields"
+    [originalSubmissionUuid]="originalSubmissionUuid"
   ></app-application-details>
   <div class="button-container">
     <button
@@ -25,7 +25,9 @@
       <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
         Previous<span class="mobile-hidden"> Step</span>
       </button>
-      <button *ngIf='!draftMode' mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
+      <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">
+        {{ draftMode ? 'Publish updated version' : 'Submit' }}
+      </button>
     </div>
   </div>
 </section>
