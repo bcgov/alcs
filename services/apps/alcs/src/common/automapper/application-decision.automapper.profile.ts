@@ -1,22 +1,22 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
-import { DecisionOutcomeCode } from '../../alcs/decision/application-decision/application-decision-outcome.entity';
+import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
+import { CeoCriterionCode } from '../../alcs/decision/ceo-criterion/ceo-criterion.entity';
+import { DecisionDocument } from '../../alcs/decision/decision-document/decision-document.entity';
+import { DecisionMakerCode } from '../../alcs/decision/decision-maker/decision-maker.entity';
+import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/decision/decision-outcome-type/application-decision-outcome-type.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { DecisionOutcomeCode } from '../../alcs/decision/decision-v1/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
   DecisionOutcomeCodeDto,
-} from '../../alcs/decision/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../alcs/decision/application-decision/application-decision.entity';
-import { CeoCriterionCodeDto } from '../../alcs/decision/application-decision/ceo-criterion/ceo-criterion.dto';
-import { CeoCriterionCode } from '../../alcs/decision/application-decision/ceo-criterion/ceo-criterion.entity';
-import { DecisionDocument } from '../../alcs/decision/application-decision/decision-document.entity';
-import { DecisionMakerCodeDto } from '../../alcs/decision/application-decision/decision-maker/decision-maker.dto';
-import { DecisionMakerCode } from '../../alcs/decision/application-decision/decision-maker/decision-maker.entity';
-import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/decision/application-decision/decision-outcome-type/application-decision-outcome-type.entity';
+} from '../../alcs/decision/decision-v1/application-decision/application-decision.dto';
+import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v1/application-decision/ceo-criterion/ceo-criterion.dto';
+import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v1/application-decision/decision-maker/decision-maker.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {

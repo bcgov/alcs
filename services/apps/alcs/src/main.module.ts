@@ -24,7 +24,6 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
-import { PdfGenerationModule } from './portal/pdf-generation/pdf-generation.module';
 
 @Module({
   imports: [

@@ -3,18 +3,17 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationService } from '../../application/application.service';
-import { Board } from '../../board/board.entity';
-import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision.automapper.profile';
-import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
-import { UserProfile } from '../../../common/automapper/user.automapper.profile';
 import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
-} from '../../../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
+} from '../../../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
+import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision.automapper.profile';
+import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
+import { ApplicationService } from '../../../application/application.service';
+import { Board } from '../../../board/board.entity';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting.controller';
 import {
   ApplicationDecisionMeetingDto,

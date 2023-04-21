@@ -13,7 +13,7 @@ import {
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
-import { ApplicationDecisionService } from '../application-decision/application-decision.service';
+import { ApplicationDecisionService } from '../decision-v1/application-decision/application-decision.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationDto,

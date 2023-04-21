@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { Base } from '../../../common/entities/base.entity';
-import { Application } from '../../application/application.entity';
+import { Base } from '../../../../common/entities/base.entity';
+import { Application } from '../../../application/application.entity';
 
 @Entity()
 export class ApplicationDecisionMeeting extends Base {

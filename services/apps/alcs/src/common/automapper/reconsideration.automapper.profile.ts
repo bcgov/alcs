@@ -4,10 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../alcs/decision/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../alcs/decision/application-decision/application-decision.entity';
+import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
 import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
@@ -19,6 +16,9 @@ import {
 import { ApplicationReconsideration } from '../../alcs/decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationOutcomeType } from '../../alcs/decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../../alcs/decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../alcs/decision/decision-v1/application-decision/application-decision.dto';
 
 @Injectable()
 export class ReconsiderationProfile extends AutomapperProfile {

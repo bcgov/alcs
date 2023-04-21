@@ -13,13 +13,13 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Any } from 'typeorm';
-import { ApplicationService } from '../../application/application.service';
-import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
-import { RolesGuard } from '../../../common/authorization/roles-guard.service';
-import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { UserDto } from '../../../user/user.dto';
-import { User } from '../../../user/user.entity';
-import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
+import { ApplicationService } from '../../../application/application.service';
+import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
+import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
+import { UserRoles } from '../../../../common/authorization/roles.decorator';
+import { UserDto } from '../../../../user/user.dto';
+import { User } from '../../../../user/user.entity';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import {
   ApplicationDecisionMeetingDto,
   CreateApplicationDecisionMeetingDto,

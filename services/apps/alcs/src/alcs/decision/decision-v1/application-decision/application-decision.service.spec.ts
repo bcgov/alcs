@@ -11,19 +11,19 @@ import { Repository } from 'typeorm';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
-} from '../../../../test/mocks/mockEntities';
-import { ApplicationService } from '../../application/application.service';
-import { DocumentService } from '../../../document/document.service';
+} from '../../../../../test/mocks/mockEntities';
+import { DocumentService } from '../../../../document/document.service';
+import { ApplicationService } from '../../../application/application.service';
+import { ApplicationDecision } from '../../application-decision.entity';
+import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { DecisionDocument } from '../../decision-document/decision-document.entity';
+import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
-import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
-import { DecisionDocument } from './decision-document.entity';
-import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 describe('ApplicationDecisionService', () => {
   let service: ApplicationDecisionService;

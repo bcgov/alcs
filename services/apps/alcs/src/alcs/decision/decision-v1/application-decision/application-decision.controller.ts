@@ -14,12 +14,15 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationService } from '../../application/application.service';
-import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
-import { RolesGuard } from '../../../common/authorization/roles-guard.service';
-import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { ApplicationModificationService } from '../application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
+import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
+import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
+import { UserRoles } from '../../../../common/authorization/roles.decorator';
+import { ApplicationService } from '../../../application/application.service';
+import { ApplicationDecision } from '../../application-decision.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
+import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
@@ -27,12 +30,9 @@ import {
   DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ApplicationDecision } from './application-decision.entity';
 import { ApplicationDecisionService } from './application-decision.service';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
-import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
-import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')

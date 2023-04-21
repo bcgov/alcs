@@ -6,8 +6,8 @@ import { Repository } from 'typeorm';
 import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
-} from '../../../../test/mocks/mockEntities';
-import { ApplicationService } from '../../application/application.service';
+} from '../../../../../test/mocks/mockEntities';
+import { ApplicationService } from '../../../application/application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 

@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import {
-  BaseEntity,
   Column,
   Entity,
   JoinColumn,
@@ -10,7 +9,7 @@ import {
 } from 'typeorm';
 import { Auditable } from '../../../common/entities/audit.entity';
 import { Document } from '../../../document/document.entity';
-import { ApplicationDecision } from './application-decision.entity';
+import { ApplicationDecision } from '../application-decision.entity';
 
 @Entity()
 export class DecisionDocument extends Auditable {

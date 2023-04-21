@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsString } from 'class-validator';
-import { UserDto } from '../../../user/user.dto';
+import { UserDto } from '../../../../user/user.dto';
 
 export class CreateApplicationDecisionMeetingDto {
   @AutoMap()

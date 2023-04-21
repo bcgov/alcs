@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { CeoCriterionCode } from '../../decision/application-decision/ceo-criterion/ceo-criterion.entity';
+import { CeoCriterionCode } from '../../decision/ceo-criterion/ceo-criterion.entity';
 import { CeoCriterionController } from './ceo-criterion.controller';
 import { CeoCriterionService } from './ceo-criterion.service';
 

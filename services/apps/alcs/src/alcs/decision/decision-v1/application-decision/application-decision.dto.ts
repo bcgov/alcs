@@ -6,7 +6,7 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import { BaseCodeDto } from '../../../../common/dtos/base.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 

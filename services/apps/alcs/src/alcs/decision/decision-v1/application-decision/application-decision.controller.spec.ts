@@ -4,20 +4,20 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationService } from '../../application/application.service';
-import { CodeService } from '../../code/code.service';
-import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision.automapper.profile';
-import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
-import { UserProfile } from '../../../common/automapper/user.automapper.profile';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
-} from '../../../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { ApplicationModification } from '../application-modification/application-modification.entity';
-import { ApplicationModificationService } from '../application-modification/application-modification.service';
-import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
+} from '../../../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
+import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision.automapper.profile';
+import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
+import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
+import { ApplicationService } from '../../../application/application.service';
+import { CodeService } from '../../../code/code.service';
+import { ApplicationModification } from '../../application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { ApplicationDecisionController } from './application-decision.controller';
 import {
