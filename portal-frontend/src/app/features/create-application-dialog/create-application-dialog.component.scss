@@ -52,6 +52,22 @@
   display: none;
 }
 
+.step-description {
+  margin-bottom: 0.5rem;
+}
+
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+
+  max-height: 80vh !important;
+}
+
+.dialog-action-container {
+  margin-top: 0;
+  padding: 0 1.5rem;
+}
+
 @media screen and (min-width: $tabletBreakpoint) {
   .sub-type-label,
   .app-type-label {
@@ -67,6 +83,15 @@
     }
   }
 
+  .dialog-container {
+    max-height: unset;
+    width: 70vw;
+  }
+
+  .app-type-dialog {
+    height: 70vh;
+  }
+
   .dialog-content-wrapper {
     margin: 2rem 3rem;
   }
@@ -77,5 +102,14 @@
     button {
       margin-left: 1rem !important;
     }
+  }
+
+  .dialog-action-container {
+    margin: 1.5rem 0;
+    padding: 0 1.5rem;
+  }
+
+  .steps {
+    margin-top: 1rem;
   }
 }
