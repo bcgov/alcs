@@ -16,6 +16,6 @@ import { PdfGenerationController } from './pdf-generation.controller';
   ],
   providers: [GenerateSubmissionDocumentService, GenerateReviewDocumentService],
   controllers: [PdfGenerationController],
-  exports: [GenerateSubmissionDocumentService],
+  exports: [GenerateSubmissionDocumentService, GenerateReviewDocumentService],
 })
 export class PdfGenerationModule {}

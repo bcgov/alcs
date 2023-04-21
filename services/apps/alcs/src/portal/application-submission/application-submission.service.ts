@@ -24,6 +24,7 @@ import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
+import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -56,6 +57,8 @@ export class ApplicationSubmissionService {
     private applicationDocumentService: ApplicationDocumentService,
     @Inject(forwardRef(() => GenerateSubmissionDocumentService))
     private submissionDocumentGenerationService: GenerateSubmissionDocumentService,
+    @Inject(forwardRef(() => GenerateReviewDocumentService))
+    private generateReviewDocumentService: GenerateReviewDocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -205,9 +208,10 @@ export class ApplicationSubmissionService {
         shouldCreateCard,
       );
 
-      await this.generateAndAttachSubmissionPdfSilent(
+      this.generateAndAttachPdfs(
         application.fileNumber,
         user,
+        !!applicationReview,
       );
     } catch (ex) {
       this.logger.error(ex);
@@ -219,24 +223,26 @@ export class ApplicationSubmissionService {
     return submittedApp;
   }
 
-  private async generateAndAttachSubmissionPdfSilent(
+  private async generateAndAttachPdfs(
     fileNumber: string,
     user: User,
+    hasReview: boolean,
   ) {
     try {
-      const pdfRes = await this.submissionDocumentGenerationService.generate(
-        fileNumber,
-        user,
-      );
+      const submissionRes =
+        await this.submissionDocumentGenerationService.generate(
+          fileNumber,
+          user,
+        );
 
-      if (pdfRes.status === HttpStatus.OK) {
+      if (submissionRes.status === HttpStatus.OK) {
         await this.applicationDocumentService.attachDocumentAsBuffer({
           fileNumber: fileNumber,
           fileName: `${fileNumber}_Submission`,
           user: user,
-          file: pdfRes.data,
+          file: submissionRes.data,
           mimeType: 'application/pdf',
-          fileSize: pdfRes.data.length,
+          fileSize: submissionRes.data.length,
           documentType: DOCUMENT_TYPE.SUBORIG,
           source: DOCUMENT_SOURCE.APPLICANT,
           visibilityFlags: [
@@ -245,6 +251,31 @@ export class ApplicationSubmissionService {
             VISIBILITY_FLAG.GOVERNMENT,
           ],
         });
+      }
+
+      if (hasReview) {
+        const reviewRes = await this.generateReviewDocumentService.generate(
+          fileNumber,
+          user,
+        );
+
+        if (reviewRes.status === HttpStatus.OK) {
+          await this.applicationDocumentService.attachDocumentAsBuffer({
+            fileNumber: fileNumber,
+            fileName: `${fileNumber}_Submission`,
+            user: user,
+            file: reviewRes.data,
+            mimeType: 'application/pdf',
+            fileSize: reviewRes.data.length,
+            documentType: DOCUMENT_TYPE.SUBORIG,
+            source: DOCUMENT_SOURCE.LFNG,
+            visibilityFlags: [
+              VISIBILITY_FLAG.APPLICANT,
+              VISIBILITY_FLAG.COMMISSIONER,
+              VISIBILITY_FLAG.GOVERNMENT,
+            ],
+          });
+        }
       }
     } catch (e) {
       this.logger.error(`Error generating the document on submission${e}`);
