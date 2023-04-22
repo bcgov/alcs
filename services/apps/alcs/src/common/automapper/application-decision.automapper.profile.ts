@@ -1,6 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+
 import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
 import { CeoCriterionCode } from '../../alcs/decision/ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from '../../alcs/decision/decision-document/decision-document.entity';

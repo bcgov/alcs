@@ -95,6 +95,13 @@ export class ApplicationDecision extends Base {
   chairReviewOutcomeCode: string | null;
 
   @AutoMap()
+  @Column({
+    comment: 'Indicates whether the decision is currently draft or not',
+    default: false,
+  })
+  isDraft: boolean;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationDecisionChairReviewOutcomeType, {
     nullable: true,
   })

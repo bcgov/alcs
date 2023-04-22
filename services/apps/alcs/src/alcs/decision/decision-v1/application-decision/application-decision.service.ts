@@ -337,7 +337,7 @@ export class ApplicationDecisionService {
   }
 
   async delete(uuid) {
-    const applicationDecision = await this.appDecisionRepository.findOne({
+    const ApplicationDecision = await this.appDecisionRepository.findOne({
       where: { uuid },
       relations: {
         outcome: true,
@@ -348,32 +348,32 @@ export class ApplicationDecisionService {
       },
     });
 
-    if (!applicationDecision) {
+    if (!ApplicationDecision) {
       throw new ServiceNotFoundException(
         `Failed to find decision with uuid ${uuid}`,
       );
     }
 
-    for (const document of applicationDecision.documents) {
+    for (const document of ApplicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
 
     //Clear potential links
-    applicationDecision.reconsiders = null;
-    applicationDecision.modifies = null;
-    await this.appDecisionRepository.save(applicationDecision);
+    ApplicationDecision.reconsiders = null;
+    ApplicationDecision.modifies = null;
+    await this.appDecisionRepository.save(ApplicationDecision);
 
-    await this.appDecisionRepository.softRemove([applicationDecision]);
+    await this.appDecisionRepository.softRemove([ApplicationDecision]);
 
     const existingDecisions = await this.getByAppFileNumber(
-      applicationDecision.application.fileNumber,
+      ApplicationDecision.application.fileNumber,
     );
     if (existingDecisions.length === 0) {
-      await this.applicationService.update(applicationDecision.application, {
+      await this.applicationService.update(ApplicationDecision.application, {
         decisionDate: null,
       });
     } else {
-      await this.applicationService.update(applicationDecision.application, {
+      await this.applicationService.update(ApplicationDecision.application, {
         decisionDate: existingDecisions[existingDecisions.length - 1].date,
       });
     }
