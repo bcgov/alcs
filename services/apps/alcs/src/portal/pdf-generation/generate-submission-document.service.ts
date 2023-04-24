@@ -11,7 +11,7 @@ import {
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
@@ -79,6 +79,7 @@ export class GenerateSubmissionDocumentService {
         fileSize: generatedRes.data.length,
         documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
         source: DOCUMENT_SOURCE.APPLICANT,
+        system: DOCUMENT_SYSTEM.PORTAL,
         visibilityFlags: [
           VISIBILITY_FLAG.APPLICANT,
           VISIBILITY_FLAG.COMMISSIONER,
@@ -126,6 +127,7 @@ export class GenerateSubmissionDocumentService {
         fileSize: generatedRes.data.length,
         documentType: DOCUMENT_TYPE.UPDATED_SUBMISSION,
         source: DOCUMENT_SOURCE.ALC,
+        system: DOCUMENT_SYSTEM.PORTAL,
         visibilityFlags: [
           VISIBILITY_FLAG.APPLICANT,
           VISIBILITY_FLAG.COMMISSIONER,

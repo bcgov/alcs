@@ -22,6 +22,7 @@ import {
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import {
@@ -119,7 +120,10 @@ export class ApplicationDocumentController {
         req.user.entity,
       );
 
-    const document = await this.documentService.createDocumentRecord(data);
+    const document = await this.documentService.createDocumentRecord({
+      ...data,
+      system: DOCUMENT_SYSTEM.PORTAL,
+    });
 
     const savedDocument =
       await this.applicationDocumentService.attachExternalDocument(

@@ -12,7 +12,10 @@ import {
   In,
   Repository,
 } from 'typeorm';
-import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { PortalApplicationDocumentUpdateDto } from '../../../portal/application-document/application-document.dto';
 import { User } from '../../../user/user.entity';
@@ -48,6 +51,7 @@ export class ApplicationDocumentService {
     file,
     documentType,
     user,
+    system,
     source = DOCUMENT_SOURCE.ALC,
     visibilityFlags,
   }: {
@@ -57,6 +61,7 @@ export class ApplicationDocumentService {
     user: User;
     documentType: DOCUMENT_TYPE;
     source?: DOCUMENT_SOURCE;
+    system: DOCUMENT_SYSTEM;
     visibilityFlags: VISIBILITY_FLAG[];
   }) {
     const application = await this.applicationService.getOrFail(fileNumber);
@@ -66,6 +71,7 @@ export class ApplicationDocumentService {
       file,
       user,
       source,
+      system,
     );
     const appDocument = new ApplicationDocument({
       typeCode: documentType,
@@ -85,6 +91,7 @@ export class ApplicationDocumentService {
     fileSize,
     documentType,
     user,
+    system,
     source = DOCUMENT_SOURCE.ALC,
     visibilityFlags,
   }: {
@@ -96,6 +103,7 @@ export class ApplicationDocumentService {
     user: User;
     documentType: DOCUMENT_TYPE;
     source?: DOCUMENT_SOURCE;
+    system: DOCUMENT_SYSTEM;
     visibilityFlags: VISIBILITY_FLAG[];
   }) {
     const application = await this.applicationService.getOrFail(fileNumber);
@@ -107,6 +115,7 @@ export class ApplicationDocumentService {
       fileSize,
       user,
       source,
+      system,
     );
     const appDocument = new ApplicationDocument({
       typeCode: documentType,
@@ -277,6 +286,7 @@ export class ApplicationDocumentService {
         file,
         user,
         source,
+        appDocument.document.system as DOCUMENT_SYSTEM,
       );
     } else {
       await this.documentService.update(appDocument.document, {

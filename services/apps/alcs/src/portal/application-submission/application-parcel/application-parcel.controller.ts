@@ -19,7 +19,10 @@ import {
 } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
-import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -123,6 +126,7 @@ export class ApplicationParcelController {
       ...data,
       uploadedBy: req.user.entity,
       source: DOCUMENT_SOURCE.APPLICANT,
+      system: DOCUMENT_SYSTEM.PORTAL,
     });
 
     const applicationSubmission =

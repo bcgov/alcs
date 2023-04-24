@@ -9,6 +9,7 @@ import {
 import {
   ApplicationDocumentService,
   DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
   DOCUMENT_TYPE,
 } from '../../../../services/application/application-document/application-document.service';
 
@@ -23,6 +24,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   title = 'Create';
   isDirty = false;
   isSaving = false;
+  allowsFileEdit = true;
   sources = DOCUMENT_TYPE;
   documentTypeAhead: string | undefined = undefined;
 
@@ -30,8 +32,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   type = new FormControl<string | undefined>(undefined, [Validators.required]);
   source = new FormControl<string>('', [Validators.required]);
 
-  visibleToApplicant = new FormControl<boolean>(false, [Validators.required]);
-  visibleToCommissioner = new FormControl<boolean>(true, [Validators.required]);
+  visibleToInternal = new FormControl<boolean>(false, [Validators.required]);
   visibleToPublic = new FormControl<boolean>(false, [Validators.required]);
 
   documentTypes: ApplicationDocumentTypeDto[] = [];
@@ -41,8 +42,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     name: this.name,
     type: this.type,
     source: this.source,
-    visibleToApplicant: this.visibleToApplicant,
-    visibleToCommissioner: this.visibleToCommissioner,
+    visibleToInternal: this.visibleToInternal,
     visibleToPublic: this.visibleToPublic,
   });
 
@@ -61,12 +61,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
+      this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
       this.form.patchValue({
         name: document.fileName,
         type: document.type?.code,
         source: document.source,
-        visibleToApplicant: document.visibilityFlags.includes('A'),
-        visibleToCommissioner: document.visibilityFlags.includes('C'),
+        visibleToInternal: document.visibilityFlags.includes('C') || document.visibilityFlags.includes('A'),
         visibleToPublic: document.visibilityFlags.includes('P'),
       });
       this.documentTypeAhead = document.type!.code;
@@ -79,12 +79,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     const visibilityFlags: ('A' | 'C' | 'G' | 'P')[] = [];
-    if (this.visibleToApplicant.getRawValue()) {
+
+    if (this.visibleToInternal.getRawValue()) {
       visibilityFlags.push('A');
       visibilityFlags.push('G');
-    }
-
-    if (this.visibleToCommissioner.getRawValue()) {
       visibilityFlags.push('C');
     }
 

@@ -44,6 +44,11 @@ export enum DOCUMENT_SOURCE {
   PUBLIC = 'Public',
 }
 
+export enum DOCUMENT_SYSTEM {
+  ALCS = 'ALCS',
+  PORTAL = 'Portal',
+}
+
 @Injectable({
   providedIn: 'root',
 })
