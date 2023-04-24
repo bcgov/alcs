@@ -120,7 +120,6 @@ export class ParcelComponent {
           }
         }
         this.updatedFields = [...changedFields.keys()];
-        debugger;
       }
     }
   }

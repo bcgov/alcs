@@ -115,7 +115,12 @@
             >
               Edit Application
             </button>
-            <button (click)="onDownloadReviewPdf(application.fileNumber)" mat-flat-button color="accent">
+            <button
+              *ngIf="applicationReview"
+              (click)="onDownloadReviewPdf(application.fileNumber)"
+              mat-flat-button
+              color="accent"
+            >
               Download PDF
             </button>
             <button
