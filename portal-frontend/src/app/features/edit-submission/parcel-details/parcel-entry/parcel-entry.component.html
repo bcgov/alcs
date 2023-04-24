@@ -110,14 +110,14 @@
       </div>
     </div>
 
-    <div>
+    <div *ngIf="isCrownLand">
       <label for="pin">PIN (optional)</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
       </mat-form-field>
     </div>
 
-    <div>
+    <div *ngIf="!isCrownLand">
       <label for="purchase-date">Parcel Purchase Date</label>
       <mat-form-field class="full-width-input date-picker" appearance="outline">
         <input
@@ -140,36 +140,34 @@
       </div>
     </div>
 
+    <div>
+      <label for="isFarm">Farm classification</label>
+      <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div *ngIf="isFarm.invalid && (isFarm.dirty || isFarm.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="isFarm.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
     <div class="full-row">
-      <label for="isFarm">Civic Address</label>
+      <label for="civicAddress">Civic Address</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="civicAddress" matInput placeholder="Enter Address" formControlName="civicAddress" />
       </mat-form-field>
       <div *ngIf="civicAddress.invalid && (civicAddress.dirty || civicAddress.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="civicAddress.errors?.['required']">This field is required</div>
-      </div>
-    </div>
-
-    <div class="full-row">
-      <div>
-        <label for="isFarm">Farm classification</label>
-        <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
-          <mat-button-toggle
-            value="true"
-            [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
-            >Yes</mat-button-toggle
-          >
-          <mat-button-toggle
-            value="false"
-            [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
-            >No</mat-button-toggle
-          >
-        </mat-button-toggle-group>
-        <div *ngIf="isFarm.invalid && (isFarm.dirty || isFarm.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="isFarm.errors?.['required']">This field is required</div>
-        </div>
       </div>
     </div>
   </div>
