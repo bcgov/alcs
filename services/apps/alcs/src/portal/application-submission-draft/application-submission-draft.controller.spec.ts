@@ -2,29 +2,30 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { ApplicationEditController } from './application-edit.controller';
-import { ApplicationEditService } from './application-edit.service';
+import { ApplicationSubmissionDraftController } from './application-submission-draft.controller';
+import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
-describe('ApplicationEditController', () => {
-  let controller: ApplicationEditController;
+describe('ApplicationSubmissionDraftController', () => {
+  let controller: ApplicationSubmissionDraftController;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockAppEditService: DeepMocked<ApplicationEditService>;
+  let mockAppEditService: DeepMocked<ApplicationSubmissionDraftService>;
 
   beforeEach(async () => {
     mockAppSubmissionService = createMock();
     mockAppEditService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ApplicationEditController],
+      controllers: [ApplicationSubmissionDraftController],
       providers: [
         {
           provide: ApplicationSubmissionService,
           useValue: mockAppSubmissionService,
         },
         {
-          provide: ApplicationEditService,
+          provide: ApplicationSubmissionDraftService,
           useValue: mockAppEditService,
         },
         {
@@ -35,8 +36,8 @@ describe('ApplicationEditController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationEditController>(
-      ApplicationEditController,
+    controller = module.get<ApplicationSubmissionDraftController>(
+      ApplicationSubmissionDraftController,
     );
   });
 
@@ -62,5 +63,16 @@ describe('ApplicationEditController', () => {
 
     await controller.deleteDraft('fileNumber');
     expect(mockAppEditService.deleteDraft).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for publish', async () => {
+    mockAppEditService.publish.mockResolvedValue();
+
+    await controller.publishDraft('fileNumber', {
+      user: {
+        entity: new User(),
+      },
+    });
+    expect(mockAppEditService.publish).toHaveBeenCalledTimes(1);
   });
 });

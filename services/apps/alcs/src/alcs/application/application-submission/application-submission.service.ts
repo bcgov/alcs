@@ -18,7 +18,7 @@ export class ApplicationSubmissionService {
 
   async get(fileNumber: string) {
     return await this.applicationSubmissionRepository.findOneOrFail({
-      where: { fileNumber },
+      where: { fileNumber, isDraft: false },
       relations: {
         application: {
           documents: {

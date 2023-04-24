@@ -45,7 +45,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   $destroy = new Subject<void>();
   $applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
-  application: ApplicationSubmissionDetailedDto | undefined;
+  applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 
   editAppSteps = EditApplicationSteps;
   expandedParcelUuid?: string;
@@ -119,13 +119,13 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   private async loadApplication(fileId: string) {
     this.overlayService.showSpinner();
-    this.application = await this.applicationSubmissionService.getByFileId(fileId);
+    this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
     const documents = await this.applicationDocumentService.getByFileId(fileId);
     if (documents) {
       this.$applicationDocuments.next(documents);
     }
     this.fileId = fileId;
-    this.$applicationSubmission.next(this.application);
+    this.$applicationSubmission.next(this.applicationSubmission);
     this.overlayService.hideSpinner();
   }
 
@@ -215,6 +215,13 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
       await this.pdfGenerationService.generateSubmission(fileNumber);
+    }
+  }
+
+  async onSubmit() {
+    if (this.applicationSubmission) {
+      await this.applicationSubmissionService.submitToAlcs(this.applicationSubmission.uuid);
+      await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
     }
   }
 }

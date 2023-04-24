@@ -13,6 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
+import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -32,7 +33,7 @@ export class ProposedLot {
 }
 
 @Entity()
-export class ApplicationSubmission extends BaseEntity {
+export class ApplicationSubmission extends Base {
   constructor(data?: Partial<ApplicationSubmission>) {
     super();
     if (data) {
@@ -56,14 +57,6 @@ export class ApplicationSubmission extends BaseEntity {
     default: false,
   })
   isDraft: boolean;
-
-  @AutoMap()
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
-
-  @AutoMap()
-  @UpdateDateColumn({ type: 'timestamptz' })
-  updatedAt: Date;
 
   @AutoMap(() => String)
   @Column({
