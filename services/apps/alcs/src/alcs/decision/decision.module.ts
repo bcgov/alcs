@@ -9,7 +9,7 @@ import { DecisionV2Module } from './decision-v2/decision-v2.module';
     DecisionV2Module,
     RouterModule.register([
       { path: 'alcs', module: DecisionV1Module },
-      { path: 'alcs', module: DecisionV2Module },
+      { path: 'alcs/v2', module: DecisionV2Module },
     ]),
   ],
   exports: [DecisionV1Module, DecisionV2Module],
