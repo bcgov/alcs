@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import moment from 'moment';
 import { combineLatestWith } from 'rxjs';
 import {
@@ -12,13 +12,13 @@ import {
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../services/application/application-decision/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
-import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
-import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
-import { ApplicationReconsiderationDto } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
+} from '../../../../../services/application/application-decision/application-decision.dto';
+import { ApplicationDecisionService } from '../../../../../services/application/application-decision/application-decision.service';
+import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
+import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
+import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 
 export enum PostDecisionType {
   Modification = 'modification',
