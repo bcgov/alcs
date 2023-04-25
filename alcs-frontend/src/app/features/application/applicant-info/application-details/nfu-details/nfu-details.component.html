@@ -24,10 +24,10 @@
   </div>
   <div class="grid-double">
     <span *ngIf="application.nfuWillImportFill !== null">{{
-      application.nfuWillImportFill === 'true' ? 'Yes' : 'No'
+      application.nfuWillImportFill === true ? 'Yes' : 'No'
     }}</span>
   </div>
-  <ng-container *ngIf="application.nfuWillImportFill === 'true'">
+  <ng-container *ngIf="application.nfuWillImportFill === true">
     <div class="full-width">
       <hr />
     </div>
