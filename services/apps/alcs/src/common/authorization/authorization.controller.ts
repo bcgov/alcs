@@ -65,7 +65,6 @@ export class AuthorizationController {
   async refreshToken(@Query('r') authCode: string, @Res() res: FastifyReply) {
     const token = await this.authorizationService.refreshToken(authCode);
     if (token) {
-      this.logger.debug('Token Refreshed');
       res.send({
         refresh_token: token.refresh_token,
         token: token.access_token,

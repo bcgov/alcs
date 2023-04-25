@@ -12,6 +12,7 @@ import { ApplicationSubmissionDetailedDto } from '../../services/application-sub
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { EditApplicationSteps } from '../edit-submission/edit-submission.component';
@@ -67,7 +68,8 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
     private router: Router,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
+    private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
@@ -209,5 +211,20 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   async onExit() {
     await this.applicationSubmissionDraftService.delete(this.fileId);
     window.location.href = `${environment.alcsUrl}/application/${this.fileId}/applicant-info`;
+  }
+
+  async onSubmit() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Portal: Any updates made to the applicant's submission will be visible on the Portal.
+        ALCS: An updated version of the submission PDF will be added to the Documents table and made visible to the Commissioners.
+        The original submission PDF will be hidden from the Commissioners but will remain in the Documents table.`,
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm) {
+          await this.applicationSubmissionDraftService.publish(this.fileId);
+          window.location.href = `${environment.alcsUrl}/application/${this.fileId}/applicant-info`;
+        }
+      });
   }
 }

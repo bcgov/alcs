@@ -8,14 +8,13 @@ import { Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
-import { VISIBILITY_FLAG } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
-import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
+import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
@@ -31,6 +30,7 @@ describe('ApplicationSubmissionService', () => {
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
+  let mockGenerateReviewDocumentService: DeepMocked<GenerateReviewDocumentService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -39,6 +39,7 @@ describe('ApplicationSubmissionService', () => {
     mockLGService = createMock();
     mockAppDocService = createMock();
     mockGenerateSubmissionDocumentService = createMock();
+    mockGenerateReviewDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -72,6 +73,10 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: GenerateSubmissionDocumentService,
           useValue: mockGenerateSubmissionDocumentService,
+        },
+        {
+          provide: GenerateReviewDocumentService,
+          useValue: mockGenerateReviewDocumentService,
         },
       ],
     }).compile();
@@ -291,39 +296,12 @@ describe('ApplicationSubmissionService', () => {
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());
-    mockGenerateSubmissionDocumentService.generate.mockResolvedValue({
-      data: 'fake',
-      status: 200,
-    } as any);
-    mockAppDocService.attachDocumentAsBuffer.mockResolvedValue({} as any);
-
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
       new User(),
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
-    expect(mockGenerateSubmissionDocumentService.generate).toBeCalledTimes(1);
-    expect(mockGenerateSubmissionDocumentService.generate).toBeCalledWith(
-      fileNumber,
-      new User(),
-    );
-    expect(mockAppDocService.attachDocumentAsBuffer).toBeCalledTimes(1);
-    expect(mockAppDocService.attachDocumentAsBuffer).toBeCalledWith({
-      fileNumber: fileNumber,
-      fileName: `${fileNumber}_Submission`,
-      user: new User(),
-      file: 'fake',
-      mimeType: 'application/pdf',
-      fileSize: 'fake'.length,
-      documentType: DOCUMENT_TYPE.SUBORIG,
-      source: DOCUMENT_SOURCE.APPLICANT,
-      visibilityFlags: [
-        VISIBILITY_FLAG.APPLICANT,
-        VISIBILITY_FLAG.COMMISSIONER,
-        VISIBILITY_FLAG.GOVERNMENT,
-      ],
-    });
   });
 
   it('should submit to alcs even if document generation fails', async () => {
@@ -344,10 +322,9 @@ describe('ApplicationSubmissionService', () => {
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());
-    mockGenerateSubmissionDocumentService.generate.mockRejectedValue(
+    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
       new Error('fake'),
     );
-    mockAppDocService.attachDocumentAsBuffer.mockResolvedValue({} as any);
 
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
@@ -355,11 +332,12 @@ describe('ApplicationSubmissionService', () => {
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
-    expect(mockGenerateSubmissionDocumentService.generate).toBeCalledTimes(1);
     expect(
-      mockGenerateSubmissionDocumentService.generate,
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).toBeCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
     ).rejects.toMatchObject(new Error('fake'));
-    expect(mockAppDocService.attachDocumentAsBuffer).toBeCalledTimes(0);
   });
 
   it('should submit to alcs even if document attachment to application fails', async () => {
@@ -380,11 +358,7 @@ describe('ApplicationSubmissionService', () => {
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());
-    mockGenerateSubmissionDocumentService.generate.mockResolvedValue({
-      data: 'fake',
-      status: 200,
-    } as any);
-    mockAppDocService.attachDocumentAsBuffer.mockRejectedValue(
+    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
       new Error('fake'),
     );
 
@@ -393,16 +367,15 @@ describe('ApplicationSubmissionService', () => {
       new User(),
     );
 
+    await new Promise((r) => setTimeout(r, 100));
+
     expect(mockApplicationService.submit).toBeCalledTimes(1);
-    expect(mockGenerateSubmissionDocumentService.generate).toBeCalledTimes(1);
-    expect(mockGenerateSubmissionDocumentService.generate).toBeCalledWith(
-      fileNumber,
-      new User(),
-    );
-    expect(mockAppDocService.attachDocumentAsBuffer).toBeCalledTimes(1);
-    expect(mockAppDocService.attachDocumentAsBuffer).rejects.toMatchObject(
-      new Error('fake'),
-    );
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).toBeCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).toBeCalledWith(fileNumber, new User());
   });
 
   it('should update fields if application exists', async () => {

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -17,6 +17,7 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
   @Input() updatedFields: string[] = [];
   @Input() originalSubmissionUuid = '';
+  @Output() submit = new EventEmitter<void>();
 
   applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 
@@ -51,9 +52,8 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
         block: 'center',
       });
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
-    } else if (this.applicationSubmission) {
-      await this.applicationService.submitToAlcs(this.applicationSubmission.uuid);
-      await this.router.navigateByUrl(`/application/${this.applicationSubmission?.fileNumber}`);
+    } else {
+      this.submit.emit();
     }
   }
 

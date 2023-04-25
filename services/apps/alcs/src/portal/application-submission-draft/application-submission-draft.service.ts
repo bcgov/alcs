@@ -2,18 +2,17 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 } from 'uuid';
-import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
+import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from '../application-submission/application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../application-submission/application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
 
 @Injectable()
-export class ApplicationEditService {
-  private logger = new Logger(ApplicationEditService.name);
+export class ApplicationSubmissionDraftService {
+  private logger = new Logger(ApplicationSubmissionDraftService.name);
 
   constructor(
     @InjectRepository(ApplicationSubmission)
@@ -21,6 +20,7 @@ export class ApplicationEditService {
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
+    private generateSubmissionDocumentService: GenerateSubmissionDocumentService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string) {
@@ -81,8 +81,8 @@ export class ApplicationEditService {
     const newReview = new ApplicationSubmission({
       ...originalSubmission,
       uuid: undefined,
-      createdAt: undefined,
-      updatedAt: undefined,
+      auditCreatedAt: undefined,
+      auditUpdatedAt: undefined,
       isDraft: true,
       parcels: [],
       owners: [],
@@ -157,6 +157,50 @@ export class ApplicationEditService {
       throw new BaseServiceException('Failed to save/create draft');
     }
     return submission;
+  }
+
+  async publish(fileNumber: string, user: User) {
+    const draft = await this.getDraft(fileNumber);
+    if (!draft) {
+      throw new BaseServiceException(
+        `Failed to find Draft to Publish with File Number ${fileNumber}`,
+      );
+    }
+
+    const original = await this.applicationSubmissionRepository.findOne({
+      where: {
+        fileNumber,
+        isDraft: false,
+      },
+      relations: {
+        owners: true,
+        parcels: true,
+      },
+    });
+
+    if (!original) {
+      throw new BaseServiceException(
+        `Failed to find original submission to Publish with FileID ${fileNumber}`,
+      );
+    }
+
+    //Delete Original Submission
+    for (const owner of original.owners) {
+      await this.applicationOwnerService.delete(owner);
+    }
+    const parcelUuids = original.parcels.map((parcel) => parcel.uuid);
+    await this.applicationParcelService.deleteMany(parcelUuids);
+    await this.applicationSubmissionRepository.remove(original);
+
+    draft.isDraft = false;
+    await this.applicationSubmissionRepository.save(draft);
+
+    //Generate PDF
+    await this.generateSubmissionDocumentService.generateUpdate(
+      fileNumber,
+      user,
+    );
+    this.logger.debug(`Published Draft for file number ${fileNumber}`);
   }
 
   async deleteDraft(fileNumber: string) {

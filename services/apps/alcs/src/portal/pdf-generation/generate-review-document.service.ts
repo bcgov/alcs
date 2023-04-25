@@ -1,11 +1,14 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
@@ -51,6 +54,28 @@ export class GenerateReviewDocumentService {
       `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${TEMPLATE_FILENAME}`,
       payload,
     );
+  }
+
+  async generateAndAttach(fileNumber: string, user: User) {
+    const reviewRes = await this.generate(fileNumber, user);
+
+    if (reviewRes.status === HttpStatus.OK) {
+      await this.applicationDocumentService.attachDocumentAsBuffer({
+        fileNumber: fileNumber,
+        fileName: `${fileNumber}_Submission`,
+        user: user,
+        file: reviewRes.data,
+        mimeType: 'application/pdf',
+        fileSize: reviewRes.data.length,
+        documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+        source: DOCUMENT_SOURCE.LFNG,
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.COMMISSIONER,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
+      });
+    }
   }
 
   private async preparePdfPayload(

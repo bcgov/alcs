@@ -94,6 +94,8 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
       this.application.typeCode !== 'TURP'
     ) {
       this.loadApplicationReview(fileId);
+    } else {
+      this.applicationReview = undefined;
     }
   }
 
