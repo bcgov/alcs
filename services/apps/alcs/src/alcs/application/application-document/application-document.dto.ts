@@ -27,6 +27,7 @@ export class ApplicationDocumentDto {
   fileName: string;
   fileSize?: number;
   source: string;
+  system: string;
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;

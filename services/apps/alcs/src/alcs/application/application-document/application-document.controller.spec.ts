@@ -8,10 +8,7 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { CodeService } from '../../code/code.service';
-import {
-  DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
-} from './application-document-code.entity';
+import { DOCUMENT_TYPE } from './application-document-code.entity';
 import { ApplicationDocumentController } from './application-document.controller';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';

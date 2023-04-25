@@ -18,8 +18,8 @@
   </ng-container>
 
   <ng-container matColumnDef="source">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by source">Source</th>
-    <td mat-cell *matCellDef="let element">{{ element.source }}</td>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by source">Source - System</th>
+    <td mat-cell *matCellDef="let element">{{ element.source }} - {{ element.system }}</td>
   </ng-container>
 
   <ng-container matColumnDef="visibilityFlags">
@@ -46,7 +46,7 @@
       <button mat-icon-button (click)="onEditFile(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button (click)="onDeleteFile(element)">
+      <button *ngIf="element.system === DOCUMENT_SYSTEM.ALCS" mat-icon-button (click)="onDeleteFile(element)">
         <mat-icon color="warn">delete</mat-icon>
       </button>
     </td>

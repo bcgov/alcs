@@ -22,14 +22,16 @@
           <a (click)="openFile()">{{ pendingFile.name }}</a>
           &nbsp;({{ pendingFile.size | filesize }})
         </div>
-        <button (click)="onRemoveFile()" mat-button><mat-icon>close</mat-icon>Remove</button>
+        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
+          <mat-icon>close</mat-icon>Remove
+        </button>
       </div>
       <div class="file" *ngIf="existingFile">
         <div>
           <a (click)="openExistingFile()">{{ existingFile.name }}</a>
           &nbsp;({{ existingFile.size | filesize }})
         </div>
-        <button (click)="onRemoveFile()" mat-button><mat-icon>close</mat-icon>Remove</button>
+        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button><mat-icon>close</mat-icon>Remove</button>
       </div>
     </div>
 
@@ -48,7 +50,7 @@
         placeholder="Document Type*"
         bindLabel="label"
         bindValue="code"
-        [ngModelOptions]="{standalone: true}"
+        [ngModelOptions]="{ standalone: true }"
         [(ngModel)]="documentTypeAhead"
         [searchFn]="filterDocumentTypes"
         (change)="onDocTypeSelected($event)"
@@ -66,10 +68,7 @@
     <div class="double">
       <mat-label>Visible To:</mat-label>
       <div>
-        <mat-checkbox [formControl]="visibleToApplicant">Applicant & L/FNG</mat-checkbox>
-      </div>
-      <div>
-        <mat-checkbox [formControl]="visibleToCommissioner">Commissioner</mat-checkbox>
+        <mat-checkbox [formControl]="visibleToInternal">Applicant, L/FNG, and Commissioner</mat-checkbox>
       </div>
       <div>
         <mat-checkbox [formControl]="visibleToPublic">Public</mat-checkbox>
@@ -79,10 +78,10 @@
 
   <mat-dialog-actions align="end">
     <div class="button-container">
-      <button type='button' mat-stroked-button color="primary" [mat-dialog-close]="false">Close</button>
+      <button type="button" mat-stroked-button color="primary" [mat-dialog-close]="false">Close</button>
       <button
-        *ngIf='!isSaving'
-        type='button'
+        *ngIf="!isSaving"
+        type="button"
         mat-flat-button
         color="primary"
         [disabled]="!form.valid || (!pendingFile && !existingFile)"
@@ -90,14 +89,8 @@
       >
         Save
       </button>
-      <button
-        *ngIf='isSaving'
-        type='button'
-        mat-flat-button
-        color='primary'
-        [disabled]="true"
-      >
-        <mat-spinner class='spinner' diameter='20'></mat-spinner>
+      <button *ngIf="isSaving" type="button" mat-flat-button color="primary" [disabled]="true">
+        <mat-spinner class="spinner" diameter="20"></mat-spinner>
         Uploading
       </button>
     </div>

@@ -42,6 +42,12 @@ export class Document extends Base {
   source: string;
 
   @Column({
+    default: 'ALC',
+    comment: 'Front-end the document was uploaded from',
+  })
+  system: string;
+
+  @Column({
     nullable: true,
     type: 'text',
     comment: 'used only for oats etl process',

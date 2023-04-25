@@ -1,13 +1,8 @@
-import { DataSource } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
-import {
-  ApplicationDocumentService,
-  DOCUMENT_SOURCE,
-} from '../../services/application/application-document/application-document.service';
-import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
+import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 
 @Component({
   selector: 'app-document[tableTitle][fileNumber][visibilityFlags]',

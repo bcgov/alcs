@@ -16,7 +16,10 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
@@ -77,6 +80,7 @@ export class ApplicationDocumentController {
       documentType: documentType as DOCUMENT_TYPE,
       source: documentSource,
       visibilityFlags,
+      system: DOCUMENT_SYSTEM.ALCS,
     });
     return this.mapper.map(
       savedDocument,

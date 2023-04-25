@@ -139,6 +139,10 @@ export class ApplicationProfile extends AutomapperProfile {
           (a) => a.source,
           mapFrom((ad) => ad.document.source),
         ),
+        forMember(
+          (a) => a.system,
+          mapFrom((ad) => ad.document.system),
+        ),
       );
       createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);
 
