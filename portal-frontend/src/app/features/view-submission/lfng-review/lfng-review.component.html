@@ -1,6 +1,6 @@
-<div *ngIf="application" class="content">
+<div *ngIf="application">
   <div class="header">
-    <h3>L/FNG Information</h3>
+    <h3>Local/First Nation Gov Review</h3>
     <button
       [routerLink]="'/application/' + application.fileNumber + '/edit'"
       *ngIf="application.canEdit"

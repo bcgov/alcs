@@ -18,6 +18,7 @@ enum MOBILE_STEP {
   INTRODUCTION = 0,
   APPLICATION = 1,
   LFNG_INFO = 2,
+  ALC_INFO = 3,
 }
 
 @Component({

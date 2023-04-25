@@ -103,40 +103,79 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="L/FNG Information">
-        <app-lfng-review
-          [$application]="$application"
-          [$applicationDocuments]="$applicationDocuments"
-          [isMobile]="isMobile"
-        ></app-lfng-review>
-        <div class="buttons" *ngIf="application">
-          <div>
-            <button
-              *ngIf="application.canEdit"
-              mat-stroked-button
-              color="warn"
-              (click)="onCancel(application.fileNumber)"
-            >
-              Cancel Application
-            </button>
+      <mat-tab label="Local/First Nation Gov Review">
+        <div class="content">
+          <app-lfng-review
+            [$application]="$application"
+            [$applicationDocuments]="$applicationDocuments"
+          ></app-lfng-review>
+          <div class="buttons" *ngIf="application">
+            <div>
+              <button
+                *ngIf="application.canEdit"
+                mat-stroked-button
+                color="warn"
+                (click)="onCancel(application.fileNumber)"
+              >
+                Cancel Application
+              </button>
+            </div>
+            <div>
+              <button
+                [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                *ngIf="application.canEdit"
+                mat-flat-button
+                color="primary"
+              >
+                Edit Application
+              </button>
+              <button
+                *ngIf="application.canReview"
+                (click)="onReview(application.fileNumber)"
+                mat-flat-button
+                color="primary"
+              >
+                Review Application
+              </button>
+            </div>
           </div>
-          <div>
-            <button
-              [routerLink]="'/application/' + application.fileNumber + '/edit'"
-              *ngIf="application.canEdit"
-              mat-flat-button
-              color="primary"
-            >
-              Edit Application
-            </button>
-            <button
-              *ngIf="application.canReview"
-              (click)="onReview(application.fileNumber)"
-              mat-flat-button
-              color="primary"
-            >
-              Review Application
-            </button>
+        </div>
+      </mat-tab>
+      <mat-tab label="ALC Review and Decision">
+        <div class="content">
+          <app-alc-review
+            [$application]="$application"
+            [$applicationDocuments]="$applicationDocuments"
+          ></app-alc-review>
+          <div class="buttons" *ngIf="application">
+            <div>
+              <button
+                *ngIf="application.canEdit"
+                mat-stroked-button
+                color="warn"
+                (click)="onCancel(application.fileNumber)"
+              >
+                Cancel Application
+              </button>
+            </div>
+            <div>
+              <button
+                [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                *ngIf="application.canEdit"
+                mat-flat-button
+                color="primary"
+              >
+                Edit Application
+              </button>
+              <button
+                *ngIf="application.canReview"
+                (click)="onReview(application.fileNumber)"
+                mat-flat-button
+                color="primary"
+              >
+                Review Application
+              </button>
+            </div>
           </div>
         </div>
       </mat-tab>
@@ -147,8 +186,9 @@
   <h6>Section:</h6>
   <mat-form-field class="page-selector" appearance="outline">
     <mat-select placeholder="Select one" [(ngModel)]="selectedStep">
-      <mat-option [value]="MOBILE_STEP.APPLICATION">Application</mat-option>
-      <mat-option [value]="MOBILE_STEP.LFNG_INFO">L/FNG Info</mat-option>
+      <mat-option [value]="MOBILE_STEP.APPLICATION">Application Submission</mat-option>
+      <mat-option [value]="MOBILE_STEP.LFNG_INFO">Local/First Nation Gov Review</mat-option>
+      <mat-option [value]="MOBILE_STEP.ALC_INFO">ALC Review and Decision</mat-option>
     </mat-select>
   </mat-form-field>
   <button class="change-step" mat-flat-button color="primary" (click)="onChangeMobileStep()">View</button>
@@ -188,6 +228,7 @@
         [showEdit]="false"
         [showErrors]="false"
         [$application]="$application"
+        [$applicationDocuments]="$applicationDocuments"
       ></app-application-details>
       <div class="buttons" *ngIf="application">
         <div>
@@ -222,11 +263,35 @@
     </section>
   </div>
   <div *ngIf="application && mobileStep === MOBILE_STEP.LFNG_INFO" class="content">
-    <app-lfng-review
-      [$applicationDocuments]="$applicationDocuments"
-      [$application]="$application"
-      [isMobile]="isMobile"
-    ></app-lfng-review>
+    <app-lfng-review [$applicationDocuments]="$applicationDocuments" [$application]="$application"></app-lfng-review>
+    <div class="buttons" *ngIf="application">
+      <div>
+        <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">
+          Cancel Application
+        </button>
+      </div>
+      <div>
+        <button
+          [routerLink]="'/application/' + application.fileNumber + '/edit'"
+          *ngIf="application.canEdit"
+          mat-flat-button
+          color="primary"
+        >
+          Edit Application
+        </button>
+        <button
+          *ngIf="application.canReview"
+          (click)="onReview(application.fileNumber)"
+          mat-flat-button
+          color="primary"
+        >
+          Review Application
+        </button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="application && mobileStep === MOBILE_STEP.ALC_INFO" class="content">
+    <app-alc-review [$applicationDocuments]="$applicationDocuments" [$application]="$application"></app-alc-review>
     <div class="buttons" *ngIf="application">
       <div>
         <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">

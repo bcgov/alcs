@@ -25,7 +25,6 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
   @Input() $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   @Input() $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
-  @Input() isMobile = false;
 
   application: ApplicationSubmissionDetailedDto | undefined;
   applicationReview: ApplicationSubmissionReviewDto | undefined;
@@ -48,7 +47,6 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
-      debugger;
       this.loadReview();
     });
 
@@ -70,7 +68,6 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   }
 
   async loadReview() {
-    debugger;
     if (
       this.application &&
       [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
