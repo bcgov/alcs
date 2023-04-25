@@ -2,8 +2,32 @@
 @use '../../../styles/colors';
 @use '../../../styles/navigation-wrapper';
 
-.content {
-  margin: rem(24) 0;
+:host::ng-deep {
+  .content {
+    margin: rem(24) 0;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: rem(24);
+
+    h3 {
+      margin-top: rem(8) !important;
+    }
+
+    .btns-wrapper {
+      button {
+        margin-right: rem(16) !important;
+        margin-top: rem(8) !important;
+      }
+
+      button:last-child {
+        margin-right: 0 !important;
+      }
+    }
+  }
 }
 
 .absolute {
@@ -44,28 +68,6 @@
   }
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: rem(24);
-
-  h3 {
-    margin-top: rem(8) !important;
-  }
-
-  .btns-wrapper {
-    button {
-      margin-right: rem(16) !important;
-      margin-top: rem(8) !important;
-    }
-
-    button:last-child {
-      margin-right: 0 !important;
-    }
-  }
-}
-
 .buttons {
   display: flex;
   flex-direction: column-reverse;
@@ -87,11 +89,6 @@
       margin-right: 0 !important;
     }
   }
-}
-
-.warning {
-  background-color: rgba(colors.$accent-color-light, 0.5);
-  padding: 16px;
 }
 
 .action-bar {
@@ -162,11 +159,6 @@ section {
   margin-bottom: rem(24);
 }
 
-.link {
-  color: colors.$link-color;
-  cursor: pointer;
-}
-
 .document {
   margin-bottom: rem(8);
 }
@@ -193,36 +185,5 @@ section {
     border-left: none;
     border-right: none;
     height: 48px; //Overriding Angular style that is in PX
-  }
-}
-
-.review-table {
-  margin: rem(12) 0 rem(20) 0;
-  background-color: colors.$grey-light;
-  display: grid;
-  grid-row-gap: rem(32);
-  grid-template-columns: 1fr;
-
-  .edit-button {
-    display: flex;
-    justify-content: center;
-  }
-
-  .subheading2 {
-    margin-bottom: rem(4) !important;
-  }
-
-  @media screen and (min-width: $tabletBreakpoint) {
-    padding: rem(16);
-    margin: rem(24) 0 rem(40) 0;
-    grid-template-columns: 1fr 1fr;
-
-    .full-width {
-      grid-column: 1/3;
-    }
-
-    .edit-button {
-      grid-column: 1/3;
-    }
   }
 }
