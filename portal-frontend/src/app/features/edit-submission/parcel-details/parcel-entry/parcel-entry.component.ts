@@ -73,7 +73,7 @@ export class ParcelEntryComponent implements OnInit {
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
   mapArea = new FormControl<string | null>(null, [Validators.required]);
   pid = new FormControl<string | null>(null, [Validators.required]);
-  pin = new FormControl<string | null>(null, [Validators.required]);
+  pin = new FormControl<string | null>(null);
   civicAddress = new FormControl<string | null>(null, [Validators.required]);
   parcelType = new FormControl<string | null>(null, [Validators.required]);
   isFarm = new FormControl<string | null>(null, [Validators.required]);

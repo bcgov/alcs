@@ -63,7 +63,6 @@
       ></app-no-data>
     </div>
     <!-- TODO: Create ownership type code enum -->
-    <!-- Make PID (optional) if crown selected  -->
     <div class="subheading2 grid-1">
       PID {{ parcel.ownershipType?.code === 'CRWN' ? '(optional)' : ''
       }}<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pid')"></app-updated-banner>
@@ -78,7 +77,7 @@
     <!--  Remove field if fee simple selected  -->
     <ng-container *ngIf="parcel.ownershipType?.code === 'CRWN'">
       <div class="subheading2 grid-1">
-        PIN<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
+        PIN (optional)<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
       </div>
       <div class="grid-double">
         {{ parcel.pin }}
@@ -107,13 +106,13 @@
       Civic Address
       <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
     </div>
-    <div class="subheading2 grid-1">
-      Farm Classification
-      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.isFarm')"></app-updated-banner>
-    </div>
     <div class="grid-double">
       {{ parcel.civicAddress }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Farm Classification
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.isFarm')"></app-updated-banner>
     </div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>

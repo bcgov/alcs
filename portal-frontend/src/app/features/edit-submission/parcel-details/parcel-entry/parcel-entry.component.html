@@ -111,14 +111,10 @@
     </div>
 
     <div *ngIf="isCrownLand">
-      <label for="pin">PIN</label>
+      <label for="pin">PIN (optional)</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
       </mat-form-field>
-      <div *ngIf="isCrownLand && pin.invalid && (pin.dirty || pin.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="pin.errors?.['required']">This field is required</div>
-      </div>
     </div>
 
     <div *ngIf="!isCrownLand">
