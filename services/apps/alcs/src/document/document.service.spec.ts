@@ -8,7 +8,11 @@ import { mockClient } from 'aws-sdk-client-mock';
 import * as config from 'config';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
-import { CreateDocumentDto, DOCUMENT_SOURCE } from './document.dto';
+import {
+  CreateDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from './document.dto';
 import { Document } from './document.entity';
 import { DocumentService } from './document.service';
 
@@ -59,6 +63,7 @@ describe('DocumentService', () => {
       } as MultipartFile,
       {} as User,
       DOCUMENT_SOURCE.ALC,
+      DOCUMENT_SYSTEM.PORTAL,
     );
 
     expect(stub.calls().length).toBe(1);

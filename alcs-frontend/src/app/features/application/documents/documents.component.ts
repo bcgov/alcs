@@ -4,7 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
+import {
+  ApplicationDocumentService,
+  DOCUMENT_SYSTEM,
+} from '../../../services/application/application-document/application-document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
@@ -18,6 +21,8 @@ export class DocumentsComponent implements OnInit {
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: ApplicationDocumentDto[] = [];
   private fileId = '';
+
+  DOCUMENT_SYSTEM = DOCUMENT_SYSTEM;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDocumentDto> = new MatTableDataSource<ApplicationDocumentDto>();

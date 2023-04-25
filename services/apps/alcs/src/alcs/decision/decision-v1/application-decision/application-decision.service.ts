@@ -6,6 +6,10 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../../document/document.dto';
 import { DocumentService } from '../../../../document/document.service';
 import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
@@ -337,7 +341,7 @@ export class ApplicationDecisionService {
   }
 
   async delete(uuid) {
-    const ApplicationDecision = await this.appDecisionRepository.findOne({
+    const applicationDecision = await this.appDecisionRepository.findOne({
       where: { uuid },
       relations: {
         outcome: true,
@@ -348,32 +352,32 @@ export class ApplicationDecisionService {
       },
     });
 
-    if (!ApplicationDecision) {
+    if (!applicationDecision) {
       throw new ServiceNotFoundException(
         `Failed to find decision with uuid ${uuid}`,
       );
     }
 
-    for (const document of ApplicationDecision.documents) {
+    for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
 
     //Clear potential links
-    ApplicationDecision.reconsiders = null;
-    ApplicationDecision.modifies = null;
-    await this.appDecisionRepository.save(ApplicationDecision);
+    applicationDecision.reconsiders = null;
+    applicationDecision.modifies = null;
+    await this.appDecisionRepository.save(applicationDecision);
 
-    await this.appDecisionRepository.softRemove([ApplicationDecision]);
+    await this.appDecisionRepository.softRemove([applicationDecision]);
 
     const existingDecisions = await this.getByAppFileNumber(
-      ApplicationDecision.application.fileNumber,
+      applicationDecision.application.fileNumber,
     );
     if (existingDecisions.length === 0) {
-      await this.applicationService.update(ApplicationDecision.application, {
+      await this.applicationService.update(applicationDecision.application, {
         decisionDate: null,
       });
     } else {
-      await this.applicationService.update(ApplicationDecision.application, {
+      await this.applicationService.update(applicationDecision.application, {
         decisionDate: existingDecisions[existingDecisions.length - 1].date,
       });
     }
@@ -386,6 +390,8 @@ export class ApplicationDecisionService {
       file.filename,
       file,
       user,
+      DOCUMENT_SOURCE.ALC,
+      DOCUMENT_SYSTEM.ALCS,
     );
     const appDocument = new DecisionDocument({
       decision,

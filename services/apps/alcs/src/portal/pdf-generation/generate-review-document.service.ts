@@ -11,7 +11,7 @@ import {
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
 import { ApplicationSubmissionReviewDto } from '../application-submission-review/application-submission-review.dto';
@@ -69,6 +69,7 @@ export class GenerateReviewDocumentService {
         fileSize: reviewRes.data.length,
         documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
         source: DOCUMENT_SOURCE.LFNG,
+        system: DOCUMENT_SYSTEM.PORTAL,
         visibilityFlags: [
           VISIBILITY_FLAG.APPLICANT,
           VISIBILITY_FLAG.COMMISSIONER,

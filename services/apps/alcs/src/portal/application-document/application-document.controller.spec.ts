@@ -9,7 +9,7 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
@@ -169,7 +169,10 @@ describe('ApplicationDocumentController', () => {
 
     expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
     expect(appDocumentService.attachExternalDocument).toBeCalledTimes(1);
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith(docDto);
+    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+      ...docDto,
+      system: DOCUMENT_SYSTEM.PORTAL,
+    });
     expect(res.uploadedBy).toEqual(user.user.entity);
     expect(res.uuid).toEqual(fakeUuid);
   });

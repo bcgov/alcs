@@ -5,7 +5,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
-import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
@@ -89,6 +92,7 @@ describe('ApplicationDocumentService', () => {
       documentType: DOCUMENT_TYPE.DECISION_DOCUMENT,
       fileName: '',
       source: DOCUMENT_SOURCE.APPLICANT,
+      system: DOCUMENT_SYSTEM.PORTAL,
       visibilityFlags: [],
     });
 
@@ -310,7 +314,11 @@ describe('ApplicationDocumentService', () => {
   });
 
   it('should delete the existing file and create a new when updating', async () => {
-    mockRepository.findOne.mockResolvedValue(new ApplicationDocument());
+    mockRepository.findOne.mockResolvedValue(
+      new ApplicationDocument({
+        document: new Document(),
+      }),
+    );
     mockApplicationService.getFileNumber.mockResolvedValue('app-uuid');
     mockRepository.save.mockResolvedValue(new ApplicationDocument());
     mockDocumentService.create.mockResolvedValue(new Document());
