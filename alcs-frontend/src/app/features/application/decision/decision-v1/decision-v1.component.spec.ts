@@ -10,7 +10,7 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { DecisionV1Component } from './decision.component';
+import { DecisionV1Component } from './decision-v1.component';
 
 describe('DecisionComponent', () => {
   let component: DecisionV1Component;

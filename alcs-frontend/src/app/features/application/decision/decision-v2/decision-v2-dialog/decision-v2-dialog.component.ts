@@ -32,11 +32,11 @@ type MappedPostDecision = {
 };
 
 @Component({
-  selector: 'app-decision-dialog',
-  templateUrl: './decision-dialog.component.html',
-  styleUrls: ['./decision-dialog.component.scss'],
+  selector: 'app-decision-v2-dialog',
+  templateUrl: './decision-v2-dialog.component.html',
+  styleUrls: ['./decision-v2-dialog.component.scss'],
 })
-export class DecisionDialogComponent implements OnInit {
+export class DecisionV2DialogComponent implements OnInit {
   isLoading = false;
   isEdit = false;
   minDate = new Date(0);
@@ -73,7 +73,7 @@ export class DecisionDialogComponent implements OnInit {
       existingDecision?: ApplicationDecisionDto;
       minDate?: Date;
     },
-    private dialogRef: MatDialogRef<DecisionDialogComponent>,
+    private dialogRef: MatDialogRef<DecisionV2DialogComponent>,
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService

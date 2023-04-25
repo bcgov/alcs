@@ -14,11 +14,11 @@ import { ApplicationReconsiderationDto } from '../../../../../services/applicati
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { MomentPipe } from '../../../../../shared/pipes/moment.pipe';
 import { StartOfDayPipe } from '../../../../../shared/pipes/startOfDay.pipe';
-import { DecisionDialogComponent } from './decision-dialog.component';
+import { DecisionV1DialogComponent } from './decision-v1-dialog.component';
 
 describe('DecisionDialogComponent', () => {
-  let component: DecisionDialogComponent;
-  let fixture: ComponentFixture<DecisionDialogComponent>;
+  let component: DecisionV1DialogComponent;
+  let fixture: ComponentFixture<DecisionV1DialogComponent>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockReconService: DeepMocked<ApplicationReconsiderationService>;
 
@@ -30,7 +30,7 @@ describe('DecisionDialogComponent', () => {
     mockReconService.$reconsiderations = new BehaviorSubject<ApplicationReconsiderationDto[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [DecisionDialogComponent, MomentPipe, StartOfDayPipe],
+      declarations: [DecisionV1DialogComponent, MomentPipe, StartOfDayPipe],
       providers: [
         {
           provide: ApplicationDecisionService,
@@ -51,7 +51,7 @@ describe('DecisionDialogComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DecisionDialogComponent);
+    fixture = TestBed.createComponent(DecisionV1DialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

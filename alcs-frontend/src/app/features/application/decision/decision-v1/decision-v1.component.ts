@@ -17,7 +17,7 @@ import {
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
-import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
+import { DecisionV1DialogComponent } from './decision-v1-dialog/decision-v1-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & {
   reconsideredByResolutions: string[];
@@ -27,8 +27,8 @@ type LoadingDecision = ApplicationDecisionDto & {
 
 @Component({
   selector: 'app-decision-v1',
-  templateUrl: './decision.component.html',
-  styleUrls: ['./decision.component.scss'],
+  templateUrl: './decision-v1.component.html',
+  styleUrls: ['./decision-v1.component.scss'],
 })
 export class DecisionV1Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -87,7 +87,7 @@ export class DecisionV1Component implements OnInit, OnDestroy {
     }
 
     this.dialog
-      .open(DecisionDialogComponent, {
+      .open(DecisionV1DialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
@@ -117,7 +117,7 @@ export class DecisionV1Component implements OnInit, OnDestroy {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
     this.dialog
-      .open(DecisionDialogComponent, {
+      .open(DecisionV1DialogComponent, {
         minWidth: '600px',
         maxWidth: '900px',
         maxHeight: '80vh',
