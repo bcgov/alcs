@@ -11,12 +11,11 @@ import {
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { ApplicationDecisionMeeting } from '../decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeeting } from '../decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';

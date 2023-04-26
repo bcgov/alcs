@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../application/application.module';
 import { CovenantModule } from '../covenant/covenant.module';
-import { CeoCriterionCode } from '../decision/application-decision/ceo-criterion/ceo-criterion.entity';
+import { CeoCriterionCode } from '../decision/ceo-criterion/ceo-criterion.entity';
 import { DecisionModule } from '../decision/decision.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { CeoCriterionController } from './ceo-criterion/ceo-criterion.controller';

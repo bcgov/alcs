@@ -1,0 +1,148 @@
+<div class="split">
+  <h3>Decision</h3>
+  <div
+    matTooltip="This application is currently paused. Only active applications can have decisions."
+    [matTooltipDisabled]="!isPaused"
+  >
+    <button [disabled]="isPaused" mat-flat-button color="primary" (click)="onCreate()">+ New Decision</button>
+  </div>
+</div>
+<section class="no-decisions" *ngIf="!decisions.length">
+  <div>No Decisions</div>
+</section>
+<section class="decision-container" *ngFor="let decision of decisions; let i = index">
+  <div class="loading-overlay" *ngIf="decision.loading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div
+    class="decision"
+    [ngClass]="{
+      'has-post-decisions': decision.modifiedBy?.length || decision.reconsideredBy?.length
+    }"
+  >
+    <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body1-text">
+      <div>
+        <strong>Modified&nbsp;By:&nbsp;</strong>
+        {{ decision.modifiedByResolutions.join(', ') }}
+        <span *ngIf="!decision.modifiedBy?.length">N/A</span>
+      </div>
+      <div>
+        <strong>Reconsidered&nbsp;By:&nbsp;</strong>
+        {{ decision.reconsideredByResolutions.join(', ') }}
+        <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
+      </div>
+    </div>
+    <input hidden type="file" #file (change)="attachFile(decision.uuid, $event)" placeholder="Upload file" />
+    <div class="decision-menu">
+      <button (click)="file.click()" matTooltip="Attach Document" mat-icon-button>
+        <mat-icon>attach_file</mat-icon>
+      </button>
+      <button (click)="onEdit(decision)" matTooltip="Edit Decision" mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button (click)="deleteDecision(decision.uuid)" matTooltip="Delete Decision" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div class="decision-padding">
+      <div class="body-large">
+        Decision #{{ decisions.length - i }} -
+        <ng-container *ngIf="i === decisions.length - 1 && application">
+          <span class="days" matTooltip="Active Days">
+            <mat-icon class="icon">calendar_month</mat-icon>
+            {{ application.activeDays }}
+          </span>
+          <span class="days" matTooltip="Paused Days">
+            <mat-icon class="icon">pause</mat-icon>
+            {{ application.pausedDays }}
+          </span>
+          -
+        </ng-container>
+        <ng-container *ngIf="!!decision.reconsiders">
+          <app-application-type-pill style="margin-left: -12px" [type]="reconLabel"></app-application-type-pill>
+          &nbsp;-
+        </ng-container>
+        <ng-container *ngIf="!!decision.modifies">
+          <app-application-type-pill style="margin-left: -12px" [type]="modificationLabel"></app-application-type-pill>
+          &nbsp;-
+        </ng-container>
+        <span>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
+      </div>
+      <div class="decision-content">
+        <div>
+          <div class="subheading2">Decision Date</div>
+          {{ decision.date | momentFormat }}
+        </div>
+        <div>
+          <div class="subheading2">Decision Outcome</div>
+          {{ decision.outcome.label }} {{ decision.modifies?.linkedResolutions?.join(', ') }}
+          {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
+        </div>
+        <div></div>
+        <div>
+          <div class="subheading2">Decision Maker</div>
+          {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
+        </div>
+        <div>
+          <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
+          {{ decision.ceoCriterion?.label }}
+          <ng-container *ngIf="decision.isTimeExtension || decision.isOther">&#32;-&#32;</ng-container>
+          <ng-container *ngIf="decision.isTimeExtension">Time extension</ng-container>
+          <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,&#32;</ng-container>
+          <ng-container *ngIf="decision.isOther">Other</ng-container>
+        </div>
+        <div></div>
+        <div *ngIf="decision.chairReviewRequired">
+          <div class="subheading2">Chair Review Date</div>
+          <span *ngIf="!decision.chairReviewDate">
+            <app-inline-datepicker (save)="onSaveChairReviewDate(decision.uuid, $event)"></app-inline-datepicker>
+          </span>
+          <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
+        </div>
+        <div *ngIf="decision.chairReviewRequired">
+          <div class="subheading2">Chair Review Outcome</div>
+          <span *ngIf="decision.chairReviewOutcome !== null">{{ decision.chairReviewOutcome?.label }}</span>
+          <span *ngIf="decision.chairReviewOutcome === null">(Unset)</span>
+        </div>
+        <div *ngIf="decision.chairReviewRequired"></div>
+        <div>
+          <div class="subheading2">Audit Date</div>
+          <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+          <span *ngIf="!decision.auditDate">
+            <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
+          </span>
+        </div>
+      </div>
+      <div class="body-large">Documents</div>
+      <div class="decision-documents">
+        <div class="subheading2">File Name</div>
+        <div class="subheading2">File Upload Date</div>
+        <div class="subheading2">File Actions</div>
+        <div *ngIf="!decision.documents.length" class="no-files">No Documents</div>
+        <ng-container *ngFor="let document of decision.documents">
+          <div>
+            <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
+          </div>
+          <div>{{ document.uploadedAt | momentFormat }}</div>
+          <div class="file-actions">
+            <button
+              matTooltip="Download File"
+              mat-icon-button
+              (click)="downloadFile(decision.uuid, document.uuid, document.fileName)"
+            >
+              <mat-icon>download</mat-icon>
+            </button>
+            <button
+              matTooltip="Delete File"
+              class="delete-file-icon"
+              mat-icon-button
+              (click)="deleteFile(decision.uuid, document.uuid, document.fileName)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>

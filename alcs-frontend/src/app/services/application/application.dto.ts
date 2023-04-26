@@ -4,6 +4,11 @@ import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
+export enum APPLICATION_SYSTEM_SOURCE_TYPES {
+  APPLICANT = 'APPLICANT',
+  ALCS = 'ALCS',
+}
+
 export interface StatusHistory {
   type: 'status_change';
   label: string;

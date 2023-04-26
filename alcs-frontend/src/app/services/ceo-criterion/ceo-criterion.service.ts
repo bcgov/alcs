@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CeoCriterionDto } from '../application/application-decision/application-decision.dto';
+import { CeoCriterionDto } from '../application/decision/application-decision-v1/application-decision.dto';
 import { ToastService } from '../toast/toast.service';
 
 @Injectable({

@@ -7,7 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
@@ -15,7 +14,7 @@ import * as config from 'config';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { CeoCriterionCodeDto } from '../../decision/application-decision/ceo-criterion/ceo-criterion.dto';
+import { CeoCriterionCodeDto } from '../../decision/decision-v1/application-decision/ceo-criterion/ceo-criterion.dto';
 import { CeoCriterionService } from './ceo-criterion.service';
 
 @Controller('ceo-criterion')

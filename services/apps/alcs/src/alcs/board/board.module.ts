@@ -1,8 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BoardAutomapperProfile } from '../../common/automapper/board.automapper.profile';
 import { ApplicationModule } from '../application/application.module';
 import { CardModule } from '../card/card.module';
-import { BoardAutomapperProfile } from '../../common/automapper/board.automapper.profile';
 import { CovenantModule } from '../covenant/covenant.module';
 import { DecisionModule } from '../decision/decision.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
