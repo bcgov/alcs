@@ -55,10 +55,8 @@ export class CdogsService {
   }
 
   private async getTemplateAsBase64(templatePath: string) {
-    const filePath = templatePath;
-    const fileContent = await fs.promises.readFile(filePath);
-    const base64Content = fileContent.toString('base64');
-    return base64Content;
+    const fileContent = await fs.promises.readFile(templatePath);
+    return fileContent.toString('base64');
   }
 
   async generateDocument(reportName: string, templatePath: string, data: any) {
@@ -73,7 +71,7 @@ export class CdogsService {
       template: new DocumentGenerationTemplate({ content }),
     });
 
-    const res = await firstValueFrom(
+    return await firstValueFrom(
       this.httpService.post(`${serviceUrl}/api/v2/template/render`, payload, {
         responseType: 'arraybuffer',
         headers: {
@@ -81,7 +79,5 @@ export class CdogsService {
         },
       }),
     );
-
-    return res;
   }
 }

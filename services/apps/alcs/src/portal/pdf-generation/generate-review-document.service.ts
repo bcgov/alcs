@@ -3,6 +3,9 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
+import * as dayjs from 'dayjs';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as utc from 'dayjs/plugin/utc';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import {
@@ -21,6 +24,9 @@ import { ApplicationSubmission } from '../application-submission/application-sub
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
 const TEMPLATE_FILENAME = 'submission-review-template.docx';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @Injectable()
 export class GenerateReviewDocumentService {
@@ -119,6 +125,9 @@ export class GenerateReviewDocumentService {
 
     return {
       ...dto,
+      generatedDateTime: dayjs
+        .tz(new Date(), 'Canada/Pacific')
+        .format('MMM DD, YYYY hh:mm:ss Z'),
       isOCPDesignation: formatBooleanToYesNoString(dto.isOCPDesignation),
       OCPConsistent: formatBooleanToYesNoString(dto.OCPConsistent),
       isSubjectToZoning: formatBooleanToYesNoString(dto.isSubjectToZoning),
