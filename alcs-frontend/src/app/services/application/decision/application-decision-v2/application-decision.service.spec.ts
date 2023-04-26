@@ -108,6 +108,7 @@ describe('ApplicationMeetingService', () => {
       reconsidersUuid: '',
       resolutionNumber: 0,
       resolutionYear: 0,
+      isDraft: true,
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
@@ -131,6 +132,7 @@ describe('ApplicationMeetingService', () => {
         reconsidersUuid: '',
         resolutionNumber: 0,
         resolutionYear: 0,
+        isDraft: true,
       });
     } catch (e) {
       //OM NOM NOM
