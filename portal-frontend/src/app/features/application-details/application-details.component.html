@@ -1,18 +1,29 @@
 <section>
-  <app-parcel [$application]="$application" [showErrors]="showErrors" [showEdit]="showEdit"></app-parcel>
+  <app-parcel
+    [draftMode]="draftMode"
+    [$applicationSubmission]="$application"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [originalSubmissionUuid]='originalSubmissionUuid'
+  ></app-parcel>
 </section>
 <section>
   <app-parcel
-    [$application]="$application"
+    [$applicationSubmission]="$application"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [parcelType]="parcelType.OTHER"
+    [draftMode]="draftMode"
+    [originalSubmissionUuid]='originalSubmissionUuid'
   ></app-parcel>
 </section>
 <section>
   <h3>3. Primary Contact</h3>
-  <div *ngIf="application" class="review-table">
-    <div class="subheading2 grid-1">Primary Contact</div>
+  <div *ngIf="applicationSubmission" class="review-table">
+    <div class="subheading2 grid-1">
+      Primary Contact
+      <app-updated-banner *ngIf="updatedFields.includes('primaryContactOwnerUuid')"></app-updated-banner>
+    </div>
     <div class="grid-double" *ngIf="primaryContact?.type?.code !== 'AGEN'">
       {{ primaryContact?.displayName }}
       <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact"></app-no-data>
@@ -34,7 +45,7 @@
         <div class="subheading2 grid-1">Organization (Optional)</div>
         <div class="grid-double">
           {{ primaryContact.organizationName }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.organizationName"></app-no-data>
+          <app-no-data *ngIf="!primaryContact.organizationName"></app-no-data>
         </div>
         <div class="subheading2 grid-1">Phone</div>
         <div class="grid-double">
@@ -72,8 +83,11 @@
 </section>
 <section>
   <h3>4. Government</h3>
-  <div *ngIf="application" class="review-table">
-    <div class="subheading2 grid-1">Local or First Nation Government</div>
+  <div *ngIf="applicationSubmission" class="review-table">
+    <div class="subheading2 grid-1">
+      Local or First Nation Government
+      <app-updated-banner *ngIf="updatedFields.includes('localGovernmentUuid')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       {{ localGovernment?.name }}
       <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
@@ -91,36 +105,50 @@
 </section>
 <section>
   <h3>5. Land Use</h3>
-  <div *ngIf="application" class="review-table">
+  <div *ngIf="applicationSubmission" class="review-table">
     <div class="full-width">
       <h4>Land Use of Parcel(s) under Application</h4>
     </div>
     <div class="subheading2 grid-1">
       Quantify and describe in detail all agriculture that currently takes place on the parcel(s).
+      <app-updated-banner *ngIf="updatedFields.includes('parcelsAgricultureDescription')"></app-updated-banner>
     </div>
     <div class="grid-double">
-      {{ application.parcelsAgricultureDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.parcelsAgricultureDescription"></app-no-data>
+      {{ applicationSubmission.parcelsAgricultureDescription }}
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="!applicationSubmission.parcelsAgricultureDescription"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       Quantify and describe in detail all agricultural improvements made to the parcel(s).
+      <app-updated-banner
+        *ngIf="updatedFields.includes('parcelsAgricultureImprovementDescription')"
+      ></app-updated-banner>
     </div>
     <div class="grid-double">
-      {{ application.parcelsAgricultureImprovementDescription }}
+      {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
       <app-no-data
         [showRequired]="showErrors"
-        *ngIf="!application.parcelsAgricultureImprovementDescription"
+        *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
+      <app-updated-banner *ngIf="updatedFields.includes('parcelsNonAgricultureUseDescription')"></app-updated-banner>
     </div>
     <div class="grid-double">
-      {{ application.parcelsNonAgricultureUseDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!application.parcelsNonAgricultureUseDescription"></app-no-data>
+      {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="!applicationSubmission.parcelsNonAgricultureUseDescription"
+      ></app-no-data>
     </div>
     <div class="full-width">
-      <h4>Land Use of Adjacent Parcels</h4>
+      <h4>
+        Land Use of Adjacent Parcels
+        <app-updated-banner *ngIf="updatedFields.includes('northLandUseType')"></app-updated-banner>
+      </h4>
     </div>
     <div class="adjacent-parcels full-width">
       <div class="grid-1 subheading2"></div>
@@ -128,39 +156,51 @@
       <div class="grid-3 subheading2">Specific Activity</div>
       <div class="grid-1 subheading2">North</div>
       <div class="grid-2">
-        {{ application.northLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.northLandUseType"></app-no-data>
+        {{ applicationSubmission.northLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.northLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
-        {{ application.northLandUseTypeDescription }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.northLandUseTypeDescription"></app-no-data>
+        {{ applicationSubmission.northLandUseTypeDescription }}
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="!applicationSubmission.northLandUseTypeDescription"
+        ></app-no-data>
       </div>
       <div class="grid-1 subheading2">East</div>
       <div class="grid-2">
-        {{ application.eastLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.eastLandUseType"></app-no-data>
+        {{ applicationSubmission.eastLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.eastLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
-        {{ application.eastLandUseTypeDescription }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.eastLandUseTypeDescription"></app-no-data>
+        {{ applicationSubmission.eastLandUseTypeDescription }}
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="!applicationSubmission.eastLandUseTypeDescription"
+        ></app-no-data>
       </div>
       <div class="grid-1 subheading2">South</div>
       <div class="grid-2">
-        {{ application.southLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.southLandUseType"></app-no-data>
+        {{ applicationSubmission.southLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.southLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
-        {{ application.southLandUseTypeDescription }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.southLandUseTypeDescription"></app-no-data>
+        {{ applicationSubmission.southLandUseTypeDescription }}
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="!applicationSubmission.southLandUseTypeDescription"
+        ></app-no-data>
       </div>
       <div class="grid-1 subheading2">West</div>
       <div class="grid-2">
-        {{ application.westLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.westLandUseType"></app-no-data>
+        {{ applicationSubmission.westLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.westLandUseType"></app-no-data>
       </div>
       <div class="grid-3">
-        {{ application.westLandUseTypeDescription }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!application.westLandUseTypeDescription"></app-no-data>
+        {{ applicationSubmission.westLandUseTypeDescription }}
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="!applicationSubmission.westLandUseTypeDescription"
+        ></app-no-data>
       </div>
     </div>
     <div *ngIf="showEdit" class="edit-button">
@@ -171,29 +211,35 @@
 <section>
   <h3>6. Proposal</h3>
   <app-nfu-details
-    *ngIf="application && application.typeCode === 'NFUP'"
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'NFUP'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
-    [application]="application"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [updatedFields]="updatedFields"
   ></app-nfu-details>
   <app-tur-details
-    *ngIf="application && application.typeCode === 'TURP'"
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'TURP'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
-    [application]="application"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
   ></app-tur-details>
   <app-subd-details
-    *ngIf="application && application.typeCode === 'SUBD'"
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'SUBD'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
-    [application]="application"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
   ></app-subd-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
-  <div *ngIf="application" class="review-table">
+  <div *ngIf="applicationSubmission" class="review-table">
     <div class="other-attachments full-width">
       <div class="grid-1 subheading2">Type</div>
       <div class="grid-2 subheading2">Description</div>

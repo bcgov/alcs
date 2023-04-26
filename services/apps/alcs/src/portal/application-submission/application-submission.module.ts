@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CdogsModule } from '../../../../../libs/common/src/cdogs/cdogs.module';
 import { ApplicationModule } from '../../alcs/application/application.module';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
+import { PdfGenerationModule } from '../pdf-generation/pdf-generation.module';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -21,8 +21,6 @@ import { ApplicationSubmissionValidatorService } from './application-submission-
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { GenerateSubmissionDocumentController } from './generate-submission-document/generate-submission-document.controller';
-import { GenerateSubmissionDocumentService } from './generate-submission-document/generate-submission-document.service';
 
 @Module({
   imports: [
@@ -37,7 +35,7 @@ import { GenerateSubmissionDocumentService } from './generate-submission-documen
     ApplicationModule,
     AuthorizationModule,
     DocumentModule,
-    CdogsModule,
+    PdfGenerationModule,
   ],
   providers: [
     ApplicationSubmissionService,
@@ -48,18 +46,17 @@ import { GenerateSubmissionDocumentService } from './generate-submission-documen
     ApplicationOwnerProfile,
     ApplicationSubmissionStatusSubscriber,
     ApplicationSubmissionValidatorService,
-    GenerateSubmissionDocumentService,
   ],
   controllers: [
     ApplicationSubmissionController,
     ApplicationParcelController,
     ApplicationOwnerController,
-    GenerateSubmissionDocumentController,
   ],
   exports: [
     ApplicationSubmissionService,
     ApplicationOwnerService,
     ApplicationSubmissionValidatorService,
+    ApplicationParcelService,
   ],
 })
 export class ApplicationSubmissionModule {}

@@ -1,6 +1,14 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { RedisService } from '@app/common/redis/redis.service';
-import { Controller, Get, Inject, Logger, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Logger,
+  Query,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { Keycloak } from 'keycloak-connect';
 import { KEYCLOAK_INSTANCE, Public } from 'nest-keycloak-connect';
@@ -55,15 +63,14 @@ export class AuthorizationController {
   @Get('/refresh')
   @Public()
   async refreshToken(@Query('r') authCode: string, @Res() res: FastifyReply) {
-    try {
-      const token = await this.authorizationService.refreshToken(authCode);
-      this.logger.debug('Token Refreshed');
+    const token = await this.authorizationService.refreshToken(authCode);
+    if (token) {
       res.send({
         refresh_token: token.refresh_token,
         token: token.access_token,
       });
-    } catch (e) {
-      console.log(e);
+    } else {
+      throw new UnauthorizedException('Failed to refresh token');
     }
   }
 
@@ -77,7 +84,6 @@ export class AuthorizationController {
         sessionId,
         `${baseUrl}/authorize`,
       );
-      const idpHint = '&kc_idp_hint=bceidboth';
 
       const redis = this.redisService.getClient();
       await redis.set(
@@ -86,7 +92,7 @@ export class AuthorizationController {
       );
 
       return {
-        loginUrl: loginUrl + idpHint,
+        loginUrl: loginUrl,
       };
     } catch (e) {
       console.log(e);

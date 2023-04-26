@@ -6,11 +6,15 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
-import { Application } from '../../application/application.entity';
-import { ApplicationService } from '../../application/application.service';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import { Application } from '../../application/application.entity';
+import { ApplicationService } from '../../application/application.service';
 import { ApplicationModification } from '../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { DecisionOutcomeCode } from './application-decision-outcome.entity';
@@ -386,6 +390,8 @@ export class ApplicationDecisionService {
       file.filename,
       file,
       user,
+      DOCUMENT_SOURCE.ALC,
+      DOCUMENT_SYSTEM.ALCS,
     );
     const appDocument = new DecisionDocument({
       decision,

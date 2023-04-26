@@ -7,6 +7,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Document } from '../../../document/document.entity';
 import { Application } from '../application.entity';
@@ -19,6 +20,7 @@ export enum VISIBILITY_FLAG {
   GOVERNMENT = 'G',
 }
 
+@Unique('OATS_UQ_DOCUMENTS', ['oatsDocumentId', 'oatsApplicationId'])
 @Entity()
 export class ApplicationDocument extends BaseEntity {
   constructor(data?: Partial<ApplicationDocument>) {
@@ -60,4 +62,25 @@ export class ApplicationDocument extends BaseEntity {
   @OneToOne(() => Document)
   @JoinColumn()
   document: Document;
+
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  oatsDocumentId?: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  oatsApplicationId?: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  auditCreatedBy?: string | null;
 }

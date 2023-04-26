@@ -10,6 +10,7 @@ export const environment = {
   apiUrl: (window.env?.['apiUrl'] || 'http://localhost:8080') + '/alcs',
   authUrl: window.env?.['apiUrl'] || 'http://localhost:8080',
   homeUrl: window.env?.['homeUrl'] || '/home',
+  portalUrl: window.env?.['portalUrl'] || 'http://localhost:4201',
   dateFormat: 'YYYY-MMM-DD',
   shortTimeFormat: 'MMM D, h:mm a',
   longTimeFormat: 'YYYY-MMM-DD hh:mm:ss a',

@@ -8,6 +8,11 @@ export enum DOCUMENT_SOURCE {
   PUBLIC = 'Public',
 }
 
+export enum DOCUMENT_SYSTEM {
+  ALCS = 'ALCS',
+  PORTAL = 'Portal',
+}
+
 export class CreateDocumentDto {
   mimeType: string;
   fileKey: string;
@@ -15,4 +20,5 @@ export class CreateDocumentDto {
   fileSize: number;
   uploadedBy?: User | null;
   source: DOCUMENT_SOURCE;
+  system: DOCUMENT_SYSTEM;
 }

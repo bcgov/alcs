@@ -2,6 +2,7 @@
 
 .mat-mdc-snack-bar-container {
   padding: 0 !important;
+  transform: translateY(-50%) !important;
 
   .mat-mdc-simple-snackbar {
     align-items: stretch;
@@ -9,17 +10,14 @@
 
   .mdc-snackbar__label {
     padding: 14px;
-    text-align: center;
   }
 
   .mat-mdc-snack-bar-actions {
-    border-left: 1px solid #fff;
     padding: 0;
     margin: 0;
 
     .mdc-button__label {
       letter-spacing: normal;
-      font-weight: bold;
       color: #fff;
     }
   }
@@ -41,7 +39,10 @@
 
 .mat-mdc-snack-bar-container.warning .mdc-snackbar__surface {
   background: colors.$warning-color;
-  color: #fff;
+
+  .mdc-snackbar__label {
+    color: #000;
+  }
 }
 
 .mat-mdc-snack-bar-container.error .mdc-snackbar__surface {

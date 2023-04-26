@@ -7,7 +7,6 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
-import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -19,12 +18,12 @@ import { ApplicationOwnerService } from './application-owner.service';
 
 describe('ApplicationOwnerController', () => {
   let controller: ApplicationOwnerController;
-  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
+  let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
-    mockApplicationService = createMock();
+    mockApplicationSubmissionService = createMock();
     mockAppOwnerService = createMock();
     mockDocumentService = createMock();
 
@@ -38,7 +37,7 @@ describe('ApplicationOwnerController', () => {
       providers: [
         {
           provide: ApplicationSubmissionService,
-          useValue: mockApplicationService,
+          useValue: mockApplicationSubmissionService,
         },
         {
           provide: ApplicationOwnerService,
@@ -75,10 +74,11 @@ describe('ApplicationOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockApplicationService.verifyAccess.mockResolvedValue(
-      new ApplicationSubmission(),
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      new ApplicationSubmission({
+        owners: [owner],
+      }),
     );
-    mockAppOwnerService.fetchByApplicationFileId.mockResolvedValue([owner]);
 
     const owners = await controller.fetchByFileId('', {
       user: {
@@ -88,10 +88,9 @@ describe('ApplicationOwnerController', () => {
 
     expect(owners.length).toEqual(1);
     expect(owners[0].displayName).toBe('Bruce Wayne');
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.fetchByApplicationFileId).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should verify the dto and file access then create', async () => {
@@ -99,7 +98,7 @@ describe('ApplicationOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
     mockAppOwnerService.create.mockResolvedValue(owner);
@@ -108,7 +107,7 @@ describe('ApplicationOwnerController', () => {
       {
         firstName: 'B',
         lastName: 'W',
-        applicationFileNumber: '',
+        applicationSubmissionUuid: '',
         email: '',
         phoneNumber: '',
         typeCode: 'INDV',
@@ -121,7 +120,9 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(createdOwner).toBeDefined();
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
   });
 
@@ -129,7 +130,7 @@ describe('ApplicationOwnerController', () => {
     const promise = controller.create(
       {
         lastName: 'W',
-        applicationFileNumber: '',
+        applicationSubmissionUuid: '',
         email: '',
         phoneNumber: '',
         typeCode: 'INDV',
@@ -148,7 +149,7 @@ describe('ApplicationOwnerController', () => {
   it('should throw an exception when creating an organization an org name', async () => {
     const promise = controller.create(
       {
-        applicationFileNumber: '',
+        applicationSubmissionUuid: '',
         email: '',
         phoneNumber: '',
         typeCode: 'ORGZ',
@@ -167,7 +168,7 @@ describe('ApplicationOwnerController', () => {
   it('should call through for update', async () => {
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -187,14 +188,16 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {
     mockAppOwnerService.delete.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -204,7 +207,9 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
@@ -212,7 +217,7 @@ describe('ApplicationOwnerController', () => {
   it('should call through for attachToParcel', async () => {
     mockAppOwnerService.attachToParcel.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -222,7 +227,9 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
@@ -230,7 +237,7 @@ describe('ApplicationOwnerController', () => {
   it('should call through for removeFromParcel', async () => {
     mockAppOwnerService.removeFromParcel.mockResolvedValue({} as any);
     mockAppOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
@@ -240,22 +247,22 @@ describe('ApplicationOwnerController', () => {
       },
     });
 
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.removeFromParcel).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
     mockAppOwnerService.create.mockResolvedValue(new ApplicationOwner());
-    mockAppOwnerService.setPrimaryContact.mockResolvedValue(
-      new ApplicationSubmission(),
-    );
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue();
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
     await controller.setPrimaryContact(
-      { fileNumber: '' },
+      { applicationSubmissionUuid: '' },
       {
         user: {
           entity: {},
@@ -265,7 +272,9 @@ describe('ApplicationOwnerController', () => {
 
     expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should set the owner and delete agents when using a non-agent owner', async () => {
@@ -276,16 +285,14 @@ describe('ApplicationOwnerController', () => {
         }),
       }),
     );
-    mockAppOwnerService.setPrimaryContact.mockResolvedValue(
-      new ApplicationSubmission(),
-    );
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue();
     mockAppOwnerService.deleteAgents.mockResolvedValue({} as any);
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
     await controller.setPrimaryContact(
-      { fileNumber: '', ownerUuid: 'fake-uuid' },
+      { applicationSubmissionUuid: '', ownerUuid: 'fake-uuid' },
       {
         user: {
           entity: {},
@@ -294,7 +301,9 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.deleteAgents).toHaveBeenCalledTimes(1);
   });
 
@@ -307,15 +316,13 @@ describe('ApplicationOwnerController', () => {
       }),
     );
     mockAppOwnerService.update.mockResolvedValue(new ApplicationOwner());
-    mockAppOwnerService.setPrimaryContact.mockResolvedValue(
-      new ApplicationSubmission(),
-    );
-    mockApplicationService.verifyAccess.mockResolvedValue(
+    mockAppOwnerService.setPrimaryContact.mockResolvedValue();
+    mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
 
     await controller.setPrimaryContact(
-      { fileNumber: '', ownerUuid: 'fake-uuid' },
+      { applicationSubmissionUuid: '', ownerUuid: 'fake-uuid' },
       {
         user: {
           entity: {},
@@ -324,7 +331,9 @@ describe('ApplicationOwnerController', () => {
     );
 
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockApplicationService.verifyAccess).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.verifyAccessByUuid,
+    ).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.update).toHaveBeenCalledTimes(1);
   });
 });

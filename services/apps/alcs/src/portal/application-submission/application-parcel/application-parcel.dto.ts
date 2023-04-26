@@ -17,6 +17,9 @@ export class ApplicationParcelDto {
   @AutoMap()
   uuid: string;
 
+  @AutoMap()
+  applicationSubmissionUuid: string;
+
   @AutoMap(() => String)
   pid?: string | null;
 
@@ -25,6 +28,9 @@ export class ApplicationParcelDto {
 
   @AutoMap(() => String)
   legalDescription?: string | null;
+
+  @AutoMap(() => String)
+  civicAddress?: string | null;
 
   @AutoMap(() => Number)
   mapAreaHectares?: number | null;
@@ -56,7 +62,7 @@ export class ApplicationParcelDto {
 export class ApplicationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
-  applicationFileId: string;
+  applicationSubmissionUuid: string;
 
   @IsOptional()
   @IsString()
@@ -78,6 +84,10 @@ export class ApplicationParcelUpdateDto {
   @IsString()
   @IsOptional()
   pin?: string | null;
+
+  @IsString()
+  @IsOptional()
+  civicAddress?: string | null;
 
   @IsString()
   @IsOptional()

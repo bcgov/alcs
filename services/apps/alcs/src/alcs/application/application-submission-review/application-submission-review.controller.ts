@@ -11,7 +11,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 @Controller('application-submission-review')
 export class ApplicationSubmissionReviewController {
   constructor(
-    private applicationSubmissionReviewService: ApplicationSubmissionReviewService, // private documentService: DocumentService,
+    private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
   ) {}
 
   @UserRoles(...ANY_AUTH_ROLE)

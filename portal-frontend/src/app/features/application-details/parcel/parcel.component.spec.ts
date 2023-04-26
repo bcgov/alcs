@@ -47,7 +47,7 @@ describe('ParcelComponent', () => {
 
     fixture = TestBed.createComponent(ParcelComponent);
     component = fixture.componentInstance;
-    component.$application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(
+    component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(
       {} as ApplicationSubmissionDetailedDto
     );
     fixture.detectChanges();

@@ -7,17 +7,18 @@
     margin-top: rem(24);
     margin-bottom: rem(24);
     .learn-more-ctr {
-      display: inline-block;
+      align-items: center;
       color: colors.$accent-color;
-      text-transform: uppercase;
-
-      mat-icon {
-        padding-top: rem(6);
-      }
+      display: flex;
+      font-weight: 700;
+      height: fit-content;
+      width: fit-content;
+      margin-bottom: rem(12) !important;
     }
 
     .learn-more-ctr:hover {
       cursor: pointer;
+      color: colors.$accent-color-dark;
     }
   }
 

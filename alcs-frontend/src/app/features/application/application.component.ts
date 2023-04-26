@@ -98,7 +98,7 @@ export const childRoutes = [
     menuTitle: 'Documents',
     icon: 'description',
     component: DocumentsComponent,
-    requiresAuthorization: true,
+    requiresAuthorization: false,
   },
 ];
 
@@ -155,6 +155,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.applicationDetailService.clearApplication();
     this.destroy.next();
     this.destroy.complete();
   }

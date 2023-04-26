@@ -22,6 +22,7 @@ export interface ProposedLot {
 }
 
 export interface ApplicationSubmissionDto {
+  uuid: string;
   fileNumber: string;
   createdAt: string;
   updatedAt: string;

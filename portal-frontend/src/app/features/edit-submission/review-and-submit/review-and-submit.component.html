@@ -1,0 +1,33 @@
+<section>
+  <app-application-details
+    [$application]="$applicationSubmission"
+    [$applicationDocuments]="$applicationDocuments"
+    [draftMode]="draftMode"
+    [updatedFields]="updatedFields"
+    [originalSubmissionUuid]="originalSubmissionUuid"
+  ></app-application-details>
+  <div class="button-container">
+    <button
+      *ngIf="applicationSubmission?.fileNumber"
+      mat-flat-button
+      color="primary"
+      (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
+    >
+      Download PDF
+    </button>
+  </div>
+
+  <div class="button-container">
+    <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+
+    <div>
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
+        Previous<span class="mobile-hidden"> Step</span>
+      </button>
+      <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">
+        {{ draftMode ? 'Publish updated version' : 'Submit' }}
+      </button>
+    </div>
+  </div>
+</section>

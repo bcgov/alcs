@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+import { delay } from 'rxjs';
 import { baseUrl, filePathToUseAsUpload, password, userName } from '../../config';
 
 test('test', async ({ page }) => {
@@ -15,13 +16,8 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByText('Transportation, Utility, or Recreational Trail Uses within the ALR').click();
   await page.getByRole('button', { name: 'create' }).click();
-  await page
-    .locator('section')
-    .filter({
-      hasText: 'Application Edit Application 1. Identify Parcel(s) Under Application 2. Other Pa',
-    })
-    .getByRole('button', { name: 'Edit Application' })
-    .click();
+  await page.locator('.btns-wrapper > button:nth-child(1)').click();
+
   await page.getByRole('button', { name: 'Fee Simple' }).click();
   await page.getByPlaceholder('Enter legal description').click();
   await page.getByPlaceholder('Enter legal description').fill('1');
@@ -72,12 +68,8 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Next Step' }).click();
   await page.locator('#mat-button-toggle-11-button').click();
   await page.getByText('Primary Contact').click();
-  await page
-    .locator(
-      '#appBody > app-create-application > app-custom-stepper > section > div:nth-child(4) > app-primary-contact > section:nth-child(2) > div.contacts > button'
-    )
-    .first()
-    .click();
+  await delay(1000);
+  await page.locator('.contacts > button').first().click();
   await page.getByText('4').first().click();
   await page.getByPlaceholder('Type government').click();
   await page.getByPlaceholder('Type government').fill('peace');

@@ -21,7 +21,7 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
-@Controller('application')
+@Controller('application-submission')
 @UseGuards(PortalAuthGuard)
 export class ApplicationSubmissionController {
   private logger: Logger = new Logger(ApplicationSubmissionController.name);
@@ -61,33 +61,57 @@ export class ApplicationSubmissionController {
     return this.applicationSubmissionService.mapToDTOs(applications, user);
   }
 
-  @Get('/:fileId')
-  async getApplication(@Req() req, @Param('fileId') fileId: string) {
+  @Get('/application/:fileId')
+  async getSubmissionByFileId(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
+
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileId,
+        user,
+      );
 
     if (user.bceidBusinessGuid) {
       const localGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,
       );
-      if (localGovernment) {
-        const applicationSubmission =
-          await this.applicationSubmissionService.getForGovernmentByFileId(
-            fileId,
-            localGovernment,
-          );
+      if (
+        localGovernment &&
+        submission.localGovernmentUuid === localGovernment.uuid
+      ) {
         return await this.applicationSubmissionService.mapToDetailedDTO(
-          applicationSubmission,
+          submission,
           localGovernment,
         );
       }
     }
 
-    const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreator(fileId, user);
+    return await this.applicationSubmissionService.mapToDetailedDTO(submission);
+  }
 
-    return await this.applicationSubmissionService.mapToDetailedDTO(
-      applicationSubmission,
-    );
+  @Get('/:uuid')
+  async getSubmission(@Req() req, @Param('uuid') uuid: string) {
+    const user = req.user.entity as User;
+
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByUuid(uuid, user);
+
+    if (user.bceidBusinessGuid) {
+      const localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+      if (
+        localGovernment &&
+        localGovernment.uuid === submission.localGovernmentUuid
+      ) {
+        return await this.applicationSubmissionService.mapToDetailedDTO(
+          submission,
+          localGovernment,
+        );
+      }
+    }
+
+    return await this.applicationSubmissionService.mapToDetailedDTO(submission);
   }
 
   @Post()
@@ -103,19 +127,20 @@ export class ApplicationSubmissionController {
     };
   }
 
-  @Put('/:fileId')
+  @Put('/:uuid')
   async update(
-    @Param('fileId') fileId: string,
+    @Param('uuid') uuid: string,
     @Body() updateDto: ApplicationSubmissionUpdateDto,
     @Req() req,
   ) {
-    await this.applicationSubmissionService.verifyAccess(
-      fileId,
-      req.user.entity,
-    );
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        uuid,
+        req.user.entity,
+      );
 
     const application = await this.applicationSubmissionService.update(
-      fileId,
+      submission.uuid,
       updateDto,
     );
 
@@ -125,12 +150,13 @@ export class ApplicationSubmissionController {
     );
   }
 
-  @Post('/:fileId/cancel')
-  async cancel(@Param('fileId') fileId: string, @Req() req) {
-    const application = await this.applicationSubmissionService.getIfCreator(
-      fileId,
-      req.user.entity,
-    );
+  @Post('/:uuid/cancel')
+  async cancel(@Param('uuid') uuid: string, @Req() req) {
+    const application =
+      await this.applicationSubmissionService.getIfCreatorByUuid(
+        uuid,
+        req.user.entity,
+      );
 
     if (application.status.code !== APPLICATION_STATUS.IN_PROGRESS) {
       throw new BadRequestException('Can only cancel in progress Applications');
@@ -143,11 +169,11 @@ export class ApplicationSubmissionController {
     };
   }
 
-  @Post('/alcs/submit/:fileId')
-  async submitAsApplicant(@Param('fileId') fileId: string, @Req() req) {
+  @Post('/alcs/submit/:uuid')
+  async submitAsApplicant(@Param('uuid') uuid: string, @Req() req) {
     const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreator(
-        fileId,
+      await this.applicationSubmissionService.getIfCreatorByUuid(
+        uuid,
         req.user.entity,
       );
 
@@ -161,6 +187,7 @@ export class ApplicationSubmissionController {
       if (validatedApplicationSubmission.typeCode === 'TURP') {
         await this.applicationSubmissionService.submitToAlcs(
           validatedApplicationSubmission,
+          req.user.entity,
         );
         return await this.applicationSubmissionService.updateStatus(
           applicationSubmission,

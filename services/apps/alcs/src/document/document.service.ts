@@ -12,7 +12,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { User } from '../user/user.entity';
-import { CreateDocumentDto, DOCUMENT_SOURCE } from './document.dto';
+import {
+  CreateDocumentDto,
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from './document.dto';
 import { Document } from './document.entity';
 
 const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
@@ -47,6 +51,7 @@ export class DocumentService {
     file: MultipartFile,
     user: User,
     source = DOCUMENT_SOURCE.ALC,
+    system: DOCUMENT_SYSTEM,
   ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
@@ -66,6 +71,42 @@ export class DocumentService {
       uploadedBy: user,
       fileName,
       source,
+      system,
+    });
+
+    this.logger.debug(`File Uploaded to ${fileKey}`);
+    return document;
+  }
+
+  async createFromBuffer(
+    filePath: string,
+    fileName: string,
+    file: Buffer,
+    mimeType: string,
+    fileSize: number,
+    user: User,
+    source = DOCUMENT_SOURCE.ALC,
+    system: DOCUMENT_SYSTEM,
+  ) {
+    const fileKey = `${filePath}/${v4()}`;
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: fileKey,
+      Body: file,
+      ACL: 'bucket-owner-full-control',
+      Tagging: DEFAULT_S3_TAGS,
+      ContentType: mimeType,
+      ContentLength: fileSize,
+    });
+    await this.dataStore.send(command);
+    const document = await this.createDocumentRecord({
+      fileKey: fileKey,
+      fileSize: fileSize,
+      mimeType: mimeType,
+      uploadedBy: user,
+      fileName,
+      source,
+      system,
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -140,6 +181,7 @@ export class DocumentService {
         fileName: data.fileName,
         fileSize: data.fileSize,
         source: data.source,
+        system: data.system,
         uploadedBy: data.uploadedBy,
         tags: DEFAULT_DB_TAGS,
       }),

@@ -9,9 +9,11 @@ import {
   OneToMany,
   OneToOne,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
+import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -31,7 +33,7 @@ export class ProposedLot {
 }
 
 @Entity()
-export class ApplicationSubmission extends BaseEntity {
+export class ApplicationSubmission extends Base {
   constructor(data?: Partial<ApplicationSubmission>) {
     super();
     if (data) {
@@ -39,20 +41,22 @@ export class ApplicationSubmission extends BaseEntity {
     }
   }
 
+  @AutoMap()
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string;
+
   @AutoMap({})
-  @PrimaryColumn({
-    unique: true,
+  @Column({
     comment: 'File Number of attached application',
   })
   fileNumber: string;
 
-  @AutoMap()
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
-
-  @AutoMap()
-  @UpdateDateColumn({ type: 'timestamptz' })
-  updatedAt: Date;
+  @AutoMap({})
+  @Column({
+    comment: 'Indicates whether submission is currently draft or not',
+    default: false,
+  })
+  isDraft: boolean;
 
   @AutoMap(() => String)
   @Column({
@@ -211,7 +215,7 @@ export class ApplicationSubmission extends BaseEntity {
   })
   statusHistory: StatusHistory[];
 
-  @OneToMany(() => ApplicationOwner, (owner) => owner.application)
+  @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];
 
   @AutoMap(() => String)
@@ -363,10 +367,7 @@ export class ApplicationSubmission extends BaseEntity {
   subdProposedLots: ProposedLot[];
 
   @AutoMap(() => Application)
-  @OneToOne(
-    () => Application,
-    (application) => application.submittedApplication,
-  )
+  @ManyToOne(() => Application)
   @JoinColumn({
     name: 'file_number',
     referencedColumnName: 'fileNumber',
@@ -374,6 +375,9 @@ export class ApplicationSubmission extends BaseEntity {
   application: Application;
 
   @AutoMap(() => ApplicationParcel)
-  @OneToMany(() => ApplicationParcel, (appParcel) => appParcel.application)
+  @OneToMany(
+    () => ApplicationParcel,
+    (appParcel) => appParcel.applicationSubmission,
+  )
   parcels: ApplicationParcel[];
 }

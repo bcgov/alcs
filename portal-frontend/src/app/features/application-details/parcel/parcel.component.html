@@ -32,12 +32,18 @@
       </div>
     </div>
     <div class="full-width subheading1">Parcel Information</div>
-    <div class="subheading2 grid-1">Ownership Type</div>
+    <div class="subheading2 grid-1">
+      Ownership Type
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.ownershipTypeCode')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       {{ parcel.ownershipType?.label }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Legal Description</div>
+    <div class="subheading2 grid-1">
+      Legal Description
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.legalDescription')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       {{ parcel.legalDescription }}
       <app-no-data
@@ -45,7 +51,10 @@
         *ngIf="parcel.validation?.isLegalDescriptionRequired || false"
       ></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Area (Hectares)</div>
+    <div class="subheading2 grid-1">
+      Area (Hectares)
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.mapAreaHectares')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
       <app-no-data
@@ -53,7 +62,9 @@
         *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"
       ></app-no-data>
     </div>
-    <div class="subheading2 grid-1">PID</div>
+    <div class="subheading2 grid-1">
+      PID<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pid')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
       <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPidRequired" *ngIf="!parcel.pid"></app-no-data>
@@ -61,12 +72,17 @@
         Invalid Format
       </app-validation-error>
     </div>
-    <div class="subheading2 grid-1">PIN (Optional)</div>
+    <div class="subheading2 grid-1">
+      PIN (Optional)<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       {{ parcel.pin }}
       <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPinRequired" *ngIf="!parcel.pin"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Purchase Date</div>
+    <div class="subheading2 grid-1">
+      Purchase Date
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.purchasedDate')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       {{ parcel.purchasedDate | date }}
       <app-no-data
@@ -75,7 +91,18 @@
       >
       </app-no-data>
     </div>
-    <div class="subheading2 grid-1">Farm Classification</div>
+    <div class="subheading2 grid-1">
+      Civic Address
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Farm Classification
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.isFarm')"></app-updated-banner>
+    </div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
       <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
@@ -87,7 +114,10 @@
         <app-no-data [showRequired]="showErrors" *ngIf="parcel.crownLandOwnerType === null"></app-no-data>
       </div>
     </ng-container>
-    <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
+    <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">
+      Certificate Of Title
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.certificateOfTitle.uuid')"></app-updated-banner>
+    </div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
       <div *ngIf="parcel.certificateOfTitle">
         <a (click)="onOpenFile(parcel.certificateOfTitle.uuid)">{{ parcel.certificateOfTitle.fileName }}</a>
@@ -97,7 +127,9 @@
         *ngIf="!parcel.validation?.isCertificateUploaded"
       ></app-no-data>
     </div>
-    <div class="full-width subheading1">Owner Information</div>
+    <div class="full-width subheading1">
+      Owner Information <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.owners')"></app-updated-banner>
+    </div>
     <div class="full-width owner-information">
       <div class="subheading2">Type</div>
       <div class="subheading2">Full Name/ Organization</div>

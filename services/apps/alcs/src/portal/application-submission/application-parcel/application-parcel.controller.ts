@@ -19,7 +19,10 @@ import {
 } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
-import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -37,18 +40,20 @@ import { ApplicationParcelService } from './application-parcel.service';
 export class ApplicationParcelController {
   constructor(
     private parcelService: ApplicationParcelService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     @InjectMapper() private mapper: Mapper,
     private ownerService: ApplicationOwnerService,
     private documentService: DocumentService,
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
-  @Get('application/:fileId')
+  @Get('submission/:submissionUuid')
   async fetchByFileId(
-    @Param('fileId') fileId: string,
+    @Param('submissionUuid') submissionUuid: string,
   ): Promise<ApplicationParcelDto[] | undefined> {
-    const parcels = await this.parcelService.fetchByApplicationFileId(fileId);
+    const parcels = await this.parcelService.fetchByApplicationSubmissionUuid(
+      submissionUuid,
+    );
     return this.mapper.mapArrayAsync(
       parcels,
       ApplicationParcel,
@@ -60,11 +65,11 @@ export class ApplicationParcelController {
   async create(
     @Body() createDto: ApplicationParcelCreateDto,
   ): Promise<ApplicationParcelDto> {
-    const application = await this.applicationService.getOrFail(
-      createDto.applicationFileId,
+    const application = await this.applicationSubmissionService.getOrFailByUuid(
+      createDto.applicationSubmissionUuid,
     );
     const parcel = await this.parcelService.create(
-      application.fileNumber,
+      application.uuid,
       createDto.parcelType,
     );
 
@@ -121,11 +126,18 @@ export class ApplicationParcelController {
       ...data,
       uploadedBy: req.user.entity,
       source: DOCUMENT_SOURCE.APPLICANT,
+      system: DOCUMENT_SYSTEM.PORTAL,
     });
+
+    const applicationSubmission =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        parcel.applicationSubmissionUuid,
+        req.user.entity,
+      );
 
     const certificateOfTitle =
       await this.applicationDocumentService.attachExternalDocument(
-        parcel.applicationFileNumber,
+        applicationSubmission!.fileNumber,
         {
           documentUuid: document.uuid,
           type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,

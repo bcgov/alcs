@@ -58,7 +58,7 @@ export class UserService {
 
   async getByGuid({ bceidGuid, idirUserGuid }: UserGuids) {
     if (!bceidGuid && !idirUserGuid) {
-      throw new Error('Need to pass either bceidGuid or idirUserGuide');
+      throw new Error('Need to pass either bceidGuid or idirUserGuid');
     }
 
     return await this.userRepository.findOne({

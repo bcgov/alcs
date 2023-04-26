@@ -18,6 +18,10 @@ export class ApplicationDetailService {
     this.$application.next(application);
   }
 
+  async clearApplication() {
+    this.$application.next(undefined);
+  }
+
   async updateApplication(fileNumber: string, application: UpdateApplicationDto) {
     const updatedApp = await this.applicationService.updateApplication(fileNumber, application);
     if (updatedApp) {

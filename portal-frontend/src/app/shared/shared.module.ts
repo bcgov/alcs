@@ -34,6 +34,7 @@ import { NoDataComponent } from './no-data/no-data.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
+import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
@@ -83,6 +84,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PhoneValidPipe,
     WarningBannerComponent,
     InfoBannerComponent,
+    UpdatedBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
@@ -104,6 +106,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     InfoBannerComponent,
     NoDataComponent,
+    UpdatedBannerComponent,
     ValidationErrorComponent,
     CustomStepperComponent,
   ],

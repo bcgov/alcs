@@ -22,6 +22,7 @@ import {
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import {
@@ -47,7 +48,7 @@ export class ApplicationDocumentController {
     @Param('documentType') documentType: DOCUMENT_TYPE | null,
     @Req() req,
   ): Promise<ApplicationDocumentDto[]> {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       fileNumber,
       req.user.entity,
     );
@@ -78,7 +79,7 @@ export class ApplicationDocumentController {
     @Req() req,
     @Body() body: PortalApplicationDocumentUpdateDto[],
   ) {
-    await this.applicationSubmissionService.verifyAccess(
+    await this.applicationSubmissionService.verifyAccessByFileId(
       fileNumber,
       req.user.entity,
     );
@@ -113,12 +114,16 @@ export class ApplicationDocumentController {
     @Body() data: AttachExternalDocumentDto,
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
-    const submission = await this.applicationSubmissionService.verifyAccess(
-      fileNumber,
-      req.user.entity,
-    );
+    const submission =
+      await this.applicationSubmissionService.verifyAccessByFileId(
+        fileNumber,
+        req.user.entity,
+      );
 
-    const document = await this.documentService.createDocumentRecord(data);
+    const document = await this.documentService.createDocumentRecord({
+      ...data,
+      system: DOCUMENT_SYSTEM.PORTAL,
+    });
 
     const savedDocument =
       await this.applicationDocumentService.attachExternalDocument(

@@ -1,0 +1,56 @@
+@use './colors';
+@use './functions' as *;
+
+.mat-mdc-snack-bar-container {
+  padding: 0 !important;
+  transform: translateY(100%) !important;
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    transform: translate(-20%, 100%) !important;
+  }
+
+  .mat-mdc-simple-snackbar {
+    align-items: stretch;
+  }
+
+  .mdc-snackbar__label {
+    padding: 14px;
+  }
+
+  .mat-mdc-snack-bar-actions {
+    padding: 0;
+    margin: 0;
+
+    .mdc-button__label {
+      letter-spacing: normal;
+      color: #fff;
+    }
+  }
+
+  .mdc-snackbar__surface {
+    padding-right: 0;
+  }
+}
+
+.mat-mdc-snackbar-action button {
+  height: 100% !important;
+  max-height: unset !important;
+}
+
+.mat-mdc-snack-bar-container.success .mdc-snackbar__surface {
+  background: colors.$success-color;
+  color: #fff;
+}
+
+.mat-mdc-snack-bar-container.warning .mdc-snackbar__surface {
+  background: colors.$warning-color;
+
+  .mdc-snackbar__label {
+    color: #000;
+  }
+}
+
+.mat-mdc-snack-bar-container.error .mdc-snackbar__surface {
+  background: colors.$error-color;
+  color: #fff;
+}

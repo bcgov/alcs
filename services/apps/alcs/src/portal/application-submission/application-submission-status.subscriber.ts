@@ -43,11 +43,17 @@ export class ApplicationSubmissionStatusSubscriber
   }
 
   private updateStatusHistory(event: UpdateEvent<ApplicationSubmission>) {
-    const oldApplication = event.databaseEntity;
-    const newApplication = event.entity as ApplicationSubmission;
+    const oldApplication = event.databaseEntity as
+      | ApplicationSubmission
+      | undefined;
+    const newApplication = event.entity as ApplicationSubmission | undefined;
 
     //Status is set directly since the application.statusCode will still reflect the old status
-    if (oldApplication.statusCode !== newApplication.status.code) {
+    if (
+      oldApplication &&
+      newApplication &&
+      oldApplication?.statusCode !== newApplication?.status.code
+    ) {
       newApplication.statusHistory.push({
         description: newApplication.status.description,
         time: Date.now(),

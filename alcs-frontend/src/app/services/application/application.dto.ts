@@ -108,7 +108,7 @@ export interface ApplicationSubmissionDto {
   nfuPurpose?: string;
   nfuOutsideLands?: string;
   nfuAgricultureSupport?: string;
-  nfuWillImportFill?: string;
+  nfuWillImportFill?: boolean;
   nfuTotalFillPlacement?: string;
   nfuMaxFillDepth?: string;
   nfuFillVolume?: string;

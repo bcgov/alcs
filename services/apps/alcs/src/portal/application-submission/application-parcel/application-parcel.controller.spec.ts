@@ -77,18 +77,20 @@ describe('ApplicationParcelController', () => {
   });
 
   it('should call out to service when fetching parcels', async () => {
-    mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
+    mockApplicationParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue(
+      [],
+    );
 
     const parcels = await controller.fetchByFileId('mockFileID');
 
     expect(parcels).toBeDefined();
     expect(
-      mockApplicationParcelService.fetchByApplicationFileId,
+      mockApplicationParcelService.fetchByApplicationSubmissionUuid,
     ).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating parcels', async () => {
-    mockApplicationService.getOrFail.mockResolvedValue(
+    mockApplicationService.getOrFailByUuid.mockResolvedValue(
       {} as ApplicationSubmission,
     );
     mockApplicationParcelService.create.mockResolvedValue(
@@ -97,10 +99,10 @@ describe('ApplicationParcelController', () => {
     mockApplicationOwnerService.attachToParcel.mockResolvedValue();
 
     const parcel = await controller.create({
-      applicationFileId: 'fake',
+      applicationSubmissionUuid: 'fake',
     });
 
-    expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
+    expect(mockApplicationService.getOrFailByUuid).toBeCalledTimes(1);
     expect(mockApplicationParcelService.create).toBeCalledTimes(1);
     expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(0);
     expect(parcel).toBeDefined();
@@ -108,7 +110,7 @@ describe('ApplicationParcelController', () => {
 
   it('should call out to service and revert newly created "other" parcel if failed to link it to and owner during creation process', async () => {
     const mockError = new Error('mock error');
-    mockApplicationService.getOrFail.mockResolvedValue(
+    mockApplicationService.getOrFailByUuid.mockResolvedValue(
       {} as ApplicationSubmission,
     );
     mockApplicationParcelService.create.mockResolvedValue(
@@ -119,13 +121,13 @@ describe('ApplicationParcelController', () => {
 
     await expect(
       controller.create({
-        applicationFileId: 'fake',
+        applicationSubmissionUuid: 'fake',
         ownerUuid: 'fake_uuid',
         parcelType: 'other',
       }),
     ).rejects.toMatchObject(mockError);
 
-    expect(mockApplicationService.getOrFail).toBeCalledTimes(1);
+    expect(mockApplicationService.getOrFailByUuid).toBeCalledTimes(1);
     expect(mockApplicationParcelService.create).toBeCalledTimes(1);
     expect(mockApplicationParcelService.deleteMany).toBeCalledTimes(1);
     expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(1);

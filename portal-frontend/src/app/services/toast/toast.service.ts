@@ -13,20 +13,26 @@ export class ToastService {
   showSuccessToast(text: string, action: string = '') {
     return this.snackBar.open(text, action, {
       duration: action ? this.ACTION_TOAST_DURATION : this.TOAST_DURATION,
+      horizontalPosition: 'right',
       panelClass: 'success',
+      verticalPosition: 'top',
     });
   }
 
   showWarningToast(text: string, action: string = '') {
     return this.snackBar.open(text, action, {
       duration: action ? this.ACTION_TOAST_DURATION : this.TOAST_DURATION,
+      horizontalPosition: 'right',
       panelClass: 'warning',
+      verticalPosition: 'top',
     });
   }
 
   showErrorToast(text: string, action: string = 'Dismiss') {
     return this.snackBar.open(text, action, {
+      horizontalPosition: 'right',
       panelClass: 'error',
+      verticalPosition: 'top',
     });
   }
 }

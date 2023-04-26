@@ -6,15 +6,16 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  Any,
-  ArrayContains,
   ArrayOverlap,
   FindOptionsRelations,
   FindOptionsWhere,
   In,
   Repository,
 } from 'typeorm';
-import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+} from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { PortalApplicationDocumentUpdateDto } from '../../../portal/application-document/application-document.dto';
 import { User } from '../../../user/user.entity';
@@ -50,6 +51,7 @@ export class ApplicationDocumentService {
     file,
     documentType,
     user,
+    system,
     source = DOCUMENT_SOURCE.ALC,
     visibilityFlags,
   }: {
@@ -59,6 +61,7 @@ export class ApplicationDocumentService {
     user: User;
     documentType: DOCUMENT_TYPE;
     source?: DOCUMENT_SOURCE;
+    system: DOCUMENT_SYSTEM;
     visibilityFlags: VISIBILITY_FLAG[];
   }) {
     const application = await this.applicationService.getOrFail(fileNumber);
@@ -68,6 +71,51 @@ export class ApplicationDocumentService {
       file,
       user,
       source,
+      system,
+    );
+    const appDocument = new ApplicationDocument({
+      typeCode: documentType,
+      application,
+      document,
+      visibilityFlags,
+    });
+
+    return this.applicationDocumentRepository.save(appDocument);
+  }
+
+  async attachDocumentAsBuffer({
+    fileNumber,
+    fileName,
+    file,
+    mimeType,
+    fileSize,
+    documentType,
+    user,
+    system,
+    source = DOCUMENT_SOURCE.ALC,
+    visibilityFlags,
+  }: {
+    fileNumber: string;
+    fileName: string;
+    file: Buffer;
+    mimeType: string;
+    fileSize: number;
+    user: User;
+    documentType: DOCUMENT_TYPE;
+    source?: DOCUMENT_SOURCE;
+    system: DOCUMENT_SYSTEM;
+    visibilityFlags: VISIBILITY_FLAG[];
+  }) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+    const document = await this.documentService.createFromBuffer(
+      `application/${fileNumber}`,
+      fileName,
+      file,
+      mimeType,
+      fileSize,
+      user,
+      source,
+      system,
     );
     const appDocument = new ApplicationDocument({
       typeCode: documentType,
@@ -238,6 +286,7 @@ export class ApplicationDocumentService {
         file,
         user,
         source,
+        appDocument.document.system as DOCUMENT_SYSTEM,
       );
     } else {
       await this.documentService.update(appDocument.document, {

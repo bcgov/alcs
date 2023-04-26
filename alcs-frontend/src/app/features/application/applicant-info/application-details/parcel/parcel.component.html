@@ -40,6 +40,10 @@
     <div class="grid-double">
       {{ parcel.purchasedDate | date }}
     </div>
+    <div class="subheading2 grid-1">Civic Address</div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+    </div>
     <div class="subheading2 grid-1">Farm Classification</div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
@@ -64,7 +68,7 @@
       <div class="subheading2">Email</div>
       <div class="subheading2">Corporate Summary</div>
       <ng-container *ngFor="let owner of parcel.owners">
-        <div>{{ owner.type }}</div>
+        <div>{{ owner.type.label }}</div>
         <div>{{ owner.displayName }}</div>
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>

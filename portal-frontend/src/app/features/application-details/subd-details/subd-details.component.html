@@ -1,10 +1,13 @@
-<div *ngIf="_application" class="review-table">
-  <div class="subheading2 full-width">Proposed Lot Areas</div>
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 full-width">
+    Proposed Lot Areas
+    <app-updated-banner *ngIf="updatedFields.includes('subdProposedLots')"></app-updated-banner>
+  </div>
   <div class="full-width parcel-table">
     <div class="grid-1 subheading2">#</div>
     <div class="grid-2 subheading2">Type</div>
     <div class="grid-3 subheading2">Size</div>
-    <ng-container *ngFor="let lot of _application.subdProposedLots; let i = index">
+    <ng-container *ngFor="let lot of _applicationSubmission.subdProposedLots; let i = index">
       <div class="grid-1">
         {{ i + 1 }}
       </div>
@@ -17,7 +20,7 @@
         <app-no-data [showRequired]="showErrors" *ngIf="!lot.size"></app-no-data>
       </div>
     </ng-container>
-    <div *ngIf="_application.subdProposedLots.length === 0" class="full-width">
+    <div *ngIf="_applicationSubmission.subdProposedLots.length === 0" class="full-width">
       <app-no-data [showRequired]="showErrors"></app-no-data>
     </div>
     <div *ngIf="showErrors && totalAcres !== totalTargetAcres" class="full-width field-error">
@@ -25,20 +28,29 @@
       <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
     </div>
   </div>
-  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
-  <div class="grid-double">
-    {{ _application.subdPurpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_application.subdPurpose"></app-no-data>
+  <div class="subheading2 grid-1">
+    What is the purpose of the proposal?
+    <app-updated-banner *ngIf="updatedFields.includes('subdPurpose')"></app-updated-banner>
   </div>
-  <div class="subheading2 grid-1">Why do you believe this parcel is suitable for subdivision?</div>
   <div class="grid-double">
-    {{ _application.subdSuitability }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_application.subdSuitability"></app-no-data>
+    {{ _applicationSubmission.subdPurpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.subdPurpose"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term? Please explain.</div>
+  <div class="subheading2 grid-1">
+    Why do you believe this parcel is suitable for subdivision?
+    <app-updated-banner *ngIf="updatedFields.includes('subdSuitability')"></app-updated-banner>
+  </div>
   <div class="grid-double">
-    {{ _application.subdAgricultureSupport }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_application.subdAgricultureSupport"></app-no-data>
+    {{ _applicationSubmission.subdSuitability }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.subdSuitability"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">
+    Does the proposal support agriculture in the short or long term? Please explain.
+    <app-updated-banner *ngIf="updatedFields.includes('subdAgricultureSupport')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.subdAgricultureSupport }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.subdAgricultureSupport"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
@@ -47,12 +59,18 @@
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?</div>
+  <div class="subheading2 grid-1">
+    Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?
+    <app-updated-banner *ngIf="updatedFields.includes('subdIsHomeSiteSeverance')"></app-updated-banner>
+  </div>
   <div class="grid-double">
-    <span *ngIf="_application.subdIsHomeSiteSeverance !== null">
-      {{ _application.subdIsHomeSiteSeverance ? 'Yes' : 'No' }}
+    <span *ngIf="_applicationSubmission.subdIsHomeSiteSeverance !== null">
+      {{ _applicationSubmission.subdIsHomeSiteSeverance ? 'Yes' : 'No' }}
     </span>
-    <app-no-data [showRequired]="showErrors" *ngIf="_application.subdIsHomeSiteSeverance === null"></app-no-data>
+    <app-no-data
+      [showRequired]="showErrors"
+      *ngIf="_applicationSubmission.subdIsHomeSiteSeverance === null"
+    ></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
   <div class="grid-double">
@@ -62,7 +80,7 @@
       </a>
     </div>
     <app-no-data
-      [showRequired]="showErrors && !!_application.subdIsHomeSiteSeverance"
+      [showRequired]="showErrors && !!_applicationSubmission.subdIsHomeSiteSeverance"
       *ngIf="homesiteDocuments.length === 0"
     ></app-no-data>
   </div>

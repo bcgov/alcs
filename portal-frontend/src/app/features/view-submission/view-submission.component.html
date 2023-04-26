@@ -1,0 +1,777 @@
+<button *ngIf="isMobile" (click)="onNavigateHome()" mat-button color="accent">
+  <mat-icon>chevron_left</mat-icon>Return to Inbox
+</button>
+<div aria-hidden="true" class="banner absolute">
+  <div>
+    <h4 *ngIf="application">Application ID: {{ application.fileNumber }}</h4>
+  </div>
+  <div class="banner-status">
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Application Status</div>
+      <span *ngIf="application">{{ application.status.label }}</span>
+    </div>
+  </div>
+</div>
+<div class="banner">
+  <div>
+    <h4 *ngIf="application">Application ID: {{ application.fileNumber }}</h4>
+  </div>
+  <div class="banner-status">
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="application">{{ application.updatedAt | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Application Status</div>
+      <span *ngIf="application">{{ application.status.label }}</span>
+    </div>
+  </div>
+</div>
+<button *ngIf="!isMobile" (click)="onNavigateHome()" mat-button color="accent">
+  <mat-icon>chevron_left</mat-icon>Return to Inbox
+</button>
+<div *ngIf="!isMobile">
+  <div class="navigation-wrapper">
+    <mat-tab-group>
+      <mat-tab label="Application">
+        <div *ngIf="application" class="content">
+          <section>
+            <div class="header">
+              <h3>Application</h3>
+              <div class="btns-wrapper">
+                <button
+                  [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                  *ngIf="application.canEdit"
+                  mat-flat-button
+                  color="primary"
+                >
+                  Edit Application
+                </button>
+                <button
+                  *ngIf="application.canReview"
+                  (click)="onReview(application.fileNumber)"
+                  mat-flat-button
+                  color="primary"
+                >
+                  Review Application
+                </button>
+                <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
+                  Download PDF
+                </button>
+              </div>
+            </div>
+            <app-application-details
+              [showEdit]="false"
+              [showErrors]="false"
+              [$application]="$application"
+              [$applicationDocuments]="$applicationDocuments"
+            ></app-application-details>
+          </section>
+        </div>
+        <div class="buttons" *ngIf="application">
+          <div>
+            <button
+              *ngIf="application.canEdit"
+              mat-stroked-button
+              color="warn"
+              (click)="onCancel(application.fileNumber)"
+            >
+              Cancel Application
+            </button>
+          </div>
+          <div>
+            <button
+              [routerLink]="'/application/' + application.fileNumber + '/edit'"
+              *ngIf="application.canEdit"
+              mat-flat-button
+              color="primary"
+            >
+              Edit Application
+            </button>
+            <button
+              *ngIf="application.canReview"
+              (click)="onReview(application.fileNumber)"
+              mat-flat-button
+              color="primary"
+            >
+              Review Application
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="L/FNG Information">
+        <div *ngIf="application" class="content">
+          <div class="header">
+            <h3>L/FNG Information</h3>
+            <button
+              [routerLink]="'/application/' + application.fileNumber + '/edit'"
+              *ngIf="application.canEdit"
+              mat-flat-button
+              color="primary"
+            >
+              Edit Application
+            </button>
+            <button
+              *ngIf="applicationReview"
+              (click)="onDownloadReviewPdf(application.fileNumber)"
+              mat-flat-button
+              color="accent"
+            >
+              Download PDF
+            </button>
+            <button
+              *ngIf="application.canReview"
+              (click)="onReview(application.fileNumber)"
+              mat-flat-button
+              color="primary"
+            >
+              Review Application
+            </button>
+          </div>
+          <div *ngIf="application.status.code === APPLICATION_STATUS.IN_PROGRESS" class="warning">
+            This section will update after the application is submitted.
+          </div>
+          <div
+            *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC"
+            class="warning"
+          >
+            Application not subject to Local/First Nation Government review.
+          </div>
+          <div
+            *ngIf="
+              application.status.code === APPLICATION_STATUS.IN_REVIEW ||
+              application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG
+            "
+            class="warning"
+          >
+            Pending Local/First Nation Government review.
+          </div>
+          <div
+            *ngIf="
+              application.status.code === APPLICATION_STATUS.WRONG_GOV ||
+              application.status.code === APPLICATION_STATUS.INCOMPLETE
+            "
+            class="warning"
+          >
+            <div><strong>Comment for Applicant</strong></div>
+            {{ application.returnedComment }}
+            <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
+          </div>
+          <div *ngIf="applicationReview && !isMobile" class="mobile-hidden">
+            <section>
+              <h4>Contact Information</h4>
+              <div class="review-table">
+                <div>
+                  <div class="subheading2">Local Government File Number</div>
+                  <div>
+                    {{ applicationReview.localGovernmentFileNumber }}
+                  </div>
+                </div>
+                <div>
+                  <div class="subheading2">First Name</div>
+                  <div>
+                    {{ applicationReview.firstName }}
+                  </div>
+                </div>
+                <div>
+                  <div class="subheading2">Last Name</div>
+                  <div>
+                    {{ applicationReview.lastName }}
+                  </div>
+                </div>
+                <div>
+                  <div class="subheading2">Position</div>
+                  <div>
+                    {{ applicationReview.position }}
+                  </div>
+                </div>
+                <div>
+                  <div class="subheading2">Department</div>
+                  <div>
+                    {{ applicationReview.department }}
+                  </div>
+                </div>
+                <div>
+                  <div class="subheading2">Phone Number</div>
+                  <div>
+                    {{ applicationReview.phoneNumber }}
+                  </div>
+                </div>
+                <div>
+                  <div class="subheading2">Email</div>
+                  <div>
+                    {{ applicationReview.email }}
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section *ngIf="!applicationReview.isFirstNationGovernment">
+              <h4>Plans & Bylaws: OCP</h4>
+              <div class="review-table">
+                <div class="full-width">
+                  <div class="subheading2">
+                    Is the application parcel(s) subject to a Local Government OCP designation?
+                  </div>
+                  <div>
+                    <span *ngIf="applicationReview.isOCPDesignation !== null">{{
+                      applicationReview.isOCPDesignation ? 'Yes' : 'No'
+                    }}</span>
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isOCPDesignation">
+                  <div class="subheading2">OCP Bylaw Name</div>
+                  <div>
+                    {{ applicationReview.OCPBylawName }}
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isOCPDesignation">
+                  <div class="subheading2">OCP Designation</div>
+                  <div>
+                    {{ applicationReview.OCPDesignation }}
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isOCPDesignation">
+                  <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+                  <div>
+                    <span *ngIf="applicationReview.OCPConsistent !== null">{{
+                      applicationReview.OCPConsistent ? 'Yes' : 'No'
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section *ngIf="!applicationReview.isFirstNationGovernment">
+              <h4>Plans & Bylaws: Zoning</h4>
+              <div class="review-table">
+                <div class="full-width">
+                  <div class="subheading2">
+                    Is the application parcel(s) subject to a Local Government zoning designation?
+                  </div>
+                  <div>
+                    <span *ngIf="applicationReview.isSubjectToZoning !== null">{{
+                      applicationReview.isSubjectToZoning ? 'Yes' : 'No'
+                    }}</span>
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isSubjectToZoning">
+                  <div class="subheading2">Zoning Bylaw Name</div>
+                  <div>
+                    {{ applicationReview.zoningBylawName }}
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isSubjectToZoning">
+                  <div class="subheading2">Zoning Designation</div>
+                  <div>
+                    {{ applicationReview.zoningDesignation }}
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isSubjectToZoning">
+                  <div class="subheading2">Minimum Lot Size (hectares)</div>
+                  <div>
+                    {{ applicationReview.zoningMinimumLotSize }}
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isSubjectToZoning">
+                  <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+                  <div>
+                    <span *ngIf="applicationReview.isZoningConsistent !== null">{{
+                      applicationReview.isZoningConsistent ? 'Yes' : 'No'
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <h4>Resolution</h4>
+              <div class="review-table">
+                <div
+                  class="full-width"
+                  *ngIf="
+                    !applicationReview.isFirstNationGovernment &&
+                    applicationReview.isOCPDesignation === false &&
+                    applicationReview.isSubjectToZoning === false
+                  "
+                >
+                  By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
+                  <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the
+                  <em>ALC Act</em>. The only option available is to forward this application on to the ALC.
+                </div>
+                <div
+                  *ngIf="
+                    !applicationReview.isFirstNationGovernment &&
+                    (applicationReview.isOCPDesignation === true || applicationReview.isSubjectToZoning === true)
+                  "
+                  class="full-width"
+                >
+                  <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+                  <div>
+                    <span *ngIf="applicationReview.isAuthorized !== null">{{
+                      applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+                    }}</span>
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isFirstNationGovernment" class="full-width">
+                  <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+                  <div>
+                    <span *ngIf="applicationReview.isAuthorized !== null">{{
+                      applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <h4>Attachments</h4>
+              <div class="review-table">
+                <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+                  <div class="subheading2">Resolution Document</div>
+                  <div>
+                    <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+                      document.fileName
+                    }}</a>
+                  </div>
+                </div>
+                <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+                  <div class="subheading2">
+                    Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
+                  </div>
+                  <div>
+                    <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
+                      document.fileName
+                    }}</a>
+                  </div>
+                </div>
+                <div class="full-width">
+                  <div class="subheading2">Other Attachments (optional):</div>
+                  <div>
+                    <div class="document" *ngFor="let document of governmentOtherAttachments">
+                      <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+                    </div>
+                    <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+        <div class="buttons" *ngIf="application">
+          <div>
+            <button
+              *ngIf="application.canEdit"
+              mat-stroked-button
+              color="warn"
+              (click)="onCancel(application.fileNumber)"
+            >
+              Cancel Application
+            </button>
+          </div>
+          <div>
+            <button
+              [routerLink]="'/application/' + application.fileNumber + '/edit'"
+              *ngIf="application.canEdit"
+              mat-flat-button
+              color="primary"
+            >
+              Edit Application
+            </button>
+            <button
+              *ngIf="application.canReview"
+              (click)="onReview(application.fileNumber)"
+              mat-flat-button
+              color="primary"
+            >
+              Review Application
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+<div *ngIf="isMobile">
+  <h6>Section:</h6>
+  <mat-form-field class="page-selector" appearance="outline">
+    <mat-select placeholder="Select one" [(ngModel)]="selectedStep">
+      <mat-option [value]="MOBILE_STEP.APPLICATION">Application</mat-option>
+      <mat-option [value]="MOBILE_STEP.LFNG_INFO">L/FNG Info</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button class="change-step" mat-flat-button color="primary" (click)="onChangeMobileStep()">View</button>
+  <div *ngIf="application && mobileStep === MOBILE_STEP.INTRODUCTION" class="content">
+    <img class="tractor" src="/assets/tractor.png" alt="Tractor" />
+    <span class="center">Select section to view more</span>
+  </div>
+  <div *ngIf="application && mobileStep === MOBILE_STEP.APPLICATION" class="content">
+    <section>
+      <div class="header">
+        <h3>Application</h3>
+      </div>
+      <div class="buttons" *ngIf="application">
+        <div>
+          <button
+            [routerLink]="'/application/' + application.fileNumber + '/edit'"
+            *ngIf="application.canEdit"
+            mat-flat-button
+            color="primary"
+          >
+            Edit Application
+          </button>
+          <button
+            *ngIf="application.canReview"
+            (click)="onReview(application.fileNumber)"
+            mat-flat-button
+            color="primary"
+          >
+            Review Application
+          </button>
+          <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
+            Download PDF
+          </button>
+        </div>
+      </div>
+      <app-application-details
+        [showEdit]="false"
+        [showErrors]="false"
+        [$application]="$application"
+      ></app-application-details>
+      <div class="buttons" *ngIf="application">
+        <div>
+          <button
+            *ngIf="application.canEdit"
+            mat-stroked-button
+            color="warn"
+            (click)="onCancel(application.fileNumber)"
+          >
+            Cancel Application
+          </button>
+        </div>
+        <div>
+          <button
+            [routerLink]="'/application/' + application.fileNumber + '/edit'"
+            *ngIf="application.canEdit"
+            mat-flat-button
+            color="primary"
+          >
+            Edit Application
+          </button>
+          <button
+            *ngIf="application.canReview"
+            (click)="onReview(application.fileNumber)"
+            mat-flat-button
+            color="primary"
+          >
+            Review Application
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div *ngIf="application && mobileStep === MOBILE_STEP.LFNG_INFO" class="content">
+    <div *ngIf="application" class="content">
+      <div class="header">
+        <h3>L/FNG Information</h3>
+      </div>
+      <div class="buttons" *ngIf="application">
+        <div>
+          <button
+            [routerLink]="'/application/' + application.fileNumber + '/edit'"
+            *ngIf="application.canEdit"
+            mat-flat-button
+            color="primary"
+          >
+            Edit Application
+          </button>
+          <button
+            *ngIf="application.canReview"
+            (click)="onReview(application.fileNumber)"
+            mat-flat-button
+            color="primary"
+          >
+            Review Application
+          </button>
+        </div>
+      </div>
+      <div *ngIf="application.status.code === APPLICATION_STATUS.IN_PROGRESS" class="warning">
+        This section will update after the application is submitted.
+      </div>
+      <div
+        *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC"
+        class="warning"
+      >
+        Application not subject to Local/First Nation Government review.
+      </div>
+      <div
+        *ngIf="
+          application.status.code === APPLICATION_STATUS.IN_REVIEW ||
+          application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG
+        "
+        class="warning"
+      >
+        Pending Local/First Nation Government review.
+      </div>
+      <div
+        *ngIf="
+          application.status.code === APPLICATION_STATUS.WRONG_GOV ||
+          application.status.code === APPLICATION_STATUS.INCOMPLETE
+        "
+        class="warning"
+      >
+        <div><strong>Comment for Applicant</strong></div>
+        {{ application.returnedComment }}
+        <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
+      </div>
+      <div *ngIf="applicationReview && isMobile" class="tablet-hidden">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <h4>Contact Information</h4>
+          </mat-expansion-panel-header>
+          <div class="review-table">
+            <div>
+              <div class="subheading2">Local Government File Number</div>
+              <div>
+                {{ applicationReview.localGovernmentFileNumber }}
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">First Name</div>
+              <div>
+                {{ applicationReview.firstName }}
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">Last Name</div>
+              <div>
+                {{ applicationReview.lastName }}
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">Position</div>
+              <div>
+                {{ applicationReview.position }}
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">Department</div>
+              <div>
+                {{ applicationReview.department }}
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">Phone Number</div>
+              <div>
+                {{ applicationReview.phoneNumber }}
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">Email</div>
+              <div>
+                {{ applicationReview.email }}
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel *ngIf="!applicationReview.isFirstNationGovernment">
+          <mat-expansion-panel-header>
+            <h4>Plans & Bylaws: OCP</h4>
+          </mat-expansion-panel-header>
+          <div class="review-table">
+            <div class="full-width">
+              <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
+              <div>
+                <span *ngIf="applicationReview.isOCPDesignation !== null">{{
+                  applicationReview.isOCPDesignation ? 'Yes' : 'No'
+                }}</span>
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isOCPDesignation">
+              <div class="subheading2">OCP Bylaw Name</div>
+              <div>
+                {{ applicationReview.OCPBylawName }}
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isOCPDesignation">
+              <div class="subheading2">OCP Designation</div>
+              <div>
+                {{ applicationReview.OCPDesignation }}
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isOCPDesignation">
+              <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+              <div>
+                <span *ngIf="applicationReview.OCPConsistent !== null">{{
+                  applicationReview.OCPConsistent ? 'Yes' : 'No'
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel *ngIf="!applicationReview.isFirstNationGovernment">
+          <mat-expansion-panel-header><h4>Plans & Bylaws: Zoning</h4></mat-expansion-panel-header>
+          <div class="review-table">
+            <div class="full-width">
+              <div class="subheading2">
+                Is the application parcel(s) subject to a Local Government zoning designation?
+              </div>
+              <div>
+                <span *ngIf="applicationReview.isSubjectToZoning !== null">{{
+                  applicationReview.isSubjectToZoning ? 'Yes' : 'No'
+                }}</span>
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isSubjectToZoning">
+              <div class="subheading2">Zoning Bylaw Name</div>
+              <div>
+                {{ applicationReview.zoningBylawName }}
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isSubjectToZoning">
+              <div class="subheading2">Zoning Designation</div>
+              <div>
+                {{ applicationReview.zoningDesignation }}
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isSubjectToZoning">
+              <div class="subheading2">Minimum Lot Size (hectares)</div>
+              <div>
+                {{ applicationReview.zoningMinimumLotSize }}
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isSubjectToZoning">
+              <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+              <div>
+                <span *ngIf="applicationReview.isZoningConsistent !== null">{{
+                  applicationReview.isZoningConsistent ? 'Yes' : 'No'
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <h4>Resolution</h4>
+          </mat-expansion-panel-header>
+          <div class="review-table">
+            <div
+              class="full-width"
+              *ngIf="applicationReview.isOCPDesignation === false && applicationReview.isSubjectToZoning === false"
+            >
+              By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
+              <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the
+              <em>ALC Act</em>. The only option available to you is to forward this application on to the ALC.
+            </div>
+            <div
+              *ngIf="applicationReview.isOCPDesignation === true || applicationReview.isSubjectToZoning === true"
+              class="full-width"
+            >
+              <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+              <div>
+                <span *ngIf="applicationReview.isAuthorized !== null">{{
+                  applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+                }}</span>
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isFirstNationGovernment" class="full-width">
+              <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+              <div>
+                <span *ngIf="applicationReview.isAuthorized !== null">{{
+                  applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <h4>Attachments</h4>
+          </mat-expansion-panel-header>
+          <div class="review-table">
+            <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+              <div class="subheading2">Resolution Document</div>
+              <div>
+                <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+                  document.fileName
+                }}</a>
+              </div>
+            </div>
+            <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+              <div class="subheading2">
+                Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
+              </div>
+              <div>
+                <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
+                  document.fileName
+                }}</a>
+              </div>
+            </div>
+            <div class="full-width">
+              <div class="subheading2">Other Attachments (optional):</div>
+              <div>
+                <div class="document" *ngFor="let document of governmentOtherAttachments">
+                  <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+                </div>
+                <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+    <div class="buttons" *ngIf="application">
+      <div>
+        <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">
+          Cancel Application
+        </button>
+      </div>
+      <div>
+        <button
+          [routerLink]="'/application/' + application.fileNumber + '/edit'"
+          *ngIf="application.canEdit"
+          mat-flat-button
+          color="primary"
+        >
+          Edit Application
+        </button>
+        <button
+          *ngIf="application.canReview"
+          (click)="onReview(application.fileNumber)"
+          mat-flat-button
+          color="primary"
+        >
+          Review Application
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="application && application.canReview" class="action-bar">
+  <button (click)="onReview(application.fileNumber)" mat-button>
+    <div>
+      <span
+        *ngIf="application.status.code === APPLICATION_STATUS.IN_REVIEW"
+        (click)="onReview(application.fileNumber)"
+        class="subheading2"
+        >Continue Application Review</span
+      >
+      <span
+        *ngIf="application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG"
+        (click)="onReview(application.fileNumber)"
+        class="subheading2"
+        >Start Application Review</span
+      >
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </div>
+  </button>
+</div>
+<div *ngIf="application && application.canEdit" class="action-bar">
+  <button [routerLink]="'/application/' + application.fileNumber + '/edit'" mat-button>
+    <div>
+      <span class="subheading2">Continue Application </span>
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </div>
+  </button>
+</div>

@@ -72,9 +72,25 @@ form {
     font-weight: 700;
     font-size: rem(13) !important;
 
+    &:has(+ .mat-form-field-disabled) {
+      color: colors.$grey;
+    }
+
+    &:has(+ div ~ mat-form-field.mat-form-field-disabled) {
+      color: colors.$grey;
+    }
+
+    &:has(+ mat-button-toggle-group mat-button-toggle.mat-button-toggle-disabled) {
+      color: colors.$grey;
+    }
+
+    &:has(+ div ~ mat-button-toggle-group mat-button-toggle.mat-button-toggle-disabled) {
+      color: colors.$grey;
+    }
+
     @media screen and (min-width: $tabletBreakpoint) {
       & {
-        font-size: rem(16) !important;;
+        font-size: rem(16) !important;
       }
     }
   }
@@ -100,7 +116,8 @@ form {
       }
     }
 
-    .mat-form-field, .mat-mdc-form-field {
+    .mat-form-field,
+    .mat-mdc-form-field {
       margin-top: rem(5);
       width: 100%;
 
@@ -122,4 +139,36 @@ form {
 
 .mdc-list-item__primary-text {
   width: 100%;
+}
+
+.mdc-text-field--invalid {
+  // Default error border
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch {
+    border-bottom-width: 3px !important;
+    border-left-width: 3px !important;
+    border-top-width: 3px !important;
+  }
+
+  .mdc-notched-outline__trailing {
+    border-bottom-width: 3px !important;
+    border-right-width: 3px !important;
+    border-top-width: 3px !important;
+  }
+
+  // Focus error border to match default mat behaviour
+  .mdc-notched-outline--notched {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch {
+      border-bottom-width: 2px !important;
+      border-left-width: 2px !important;
+      border-top-width: 2px !important;
+    }
+
+    .mdc-notched-outline__trailing {
+      border-bottom-width: 2px !important;
+      border-right-width: 2px !important;
+      border-top-width: 2px !important;
+    }
+  }
 }

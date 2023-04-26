@@ -3,7 +3,6 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
@@ -20,7 +19,7 @@ export class ApplicationParcelService {
 
   async fetchByApplicationFileId(fileId: string) {
     return this.parcelRepository.find({
-      where: { application: { fileNumber: fileId } },
+      where: { applicationSubmission: { fileNumber: fileId, isDraft: false } },
       order: { auditCreatedAt: 'ASC' },
       relations: {
         ownershipType: true,
@@ -35,9 +34,26 @@ export class ApplicationParcelService {
     });
   }
 
-  async create(applicationFileNumber: string, parcelType?: string) {
+  async fetchByApplicationSubmissionUuid(uuid: string) {
+    return this.parcelRepository.find({
+      where: { applicationSubmission: { uuid } },
+      order: { auditCreatedAt: 'ASC' },
+      relations: {
+        ownershipType: true,
+        certificateOfTitle: { document: true },
+        owners: {
+          type: true,
+          corporateSummary: {
+            document: true,
+          },
+        },
+      },
+    });
+  }
+
+  async create(applicationSubmissionUuid: string, parcelType?: string) {
     const parcel = new ApplicationParcel({
-      applicationFileNumber,
+      applicationSubmissionUuid,
       parcelType,
     });
 
@@ -69,6 +85,7 @@ export class ApplicationParcelService {
       parcel.pin = updateDto.pin;
       parcel.legalDescription = updateDto.legalDescription;
       parcel.mapAreaHectares = updateDto.mapAreaHectares;
+      parcel.civicAddress = updateDto.civicAddress;
       parcel.isFarm = updateDto.isFarm;
       parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
       parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
@@ -89,8 +106,8 @@ export class ApplicationParcelService {
 
     if (hasOwnerUpdate) {
       const firstParcel = updatedParcels[0];
-      await this.applicationOwnerService.updateApplicationApplicant(
-        firstParcel.applicationFileNumber,
+      await this.applicationOwnerService.updateSubmissionApplicant(
+        firstParcel.applicationSubmissionUuid,
       );
     }
     return res;
@@ -108,8 +125,8 @@ export class ApplicationParcelService {
     }
 
     const result = await this.parcelRepository.remove(parcels);
-    await this.applicationOwnerService.updateApplicationApplicant(
-      parcels[0].applicationFileNumber,
+    await this.applicationOwnerService.updateSubmissionApplicant(
+      parcels[0].applicationSubmissionUuid,
     );
 
     return result;

@@ -1,0 +1,140 @@
+<ng-template #header>
+  <div class="header">
+    <h6 *ngIf="applicationSubmission">Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}</h6>
+    <div class="header-btn-wrapper">
+      <button
+        *ngIf="applicationSubmission?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
+        mat-flat-button
+        color="primary"
+        (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
+      >
+        Download PDF
+      </button>
+      <div class="change-app-type-btn-wrapper">
+        <button mat-flat-button color="accent" (click)="onApplicationTypeChangeClicked()">
+          Change Application Type
+        </button>
+        <mat-icon
+          color="accent"
+          matTooltip="Changing application type will remove some inputs from your saved progress"
+        >
+          help_outline
+        </mat-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<app-custom-stepper
+  class="edit-application"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+>
+  <cdk-step label="Parcel Details">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
+      <app-parcel-details
+        [$applicationSubmission]="$applicationSubmission"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (componentInitialized)="onParcelDetailsInitialized()"
+      ></app-parcel-details>
+    </div>
+  </cdk-step>
+  <cdk-step label="Other Parcels in the Community">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
+      <app-other-parcels
+        [showErrors]="showValidationErrors"
+        [$applicationSubmission]="$applicationSubmission"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+      ></app-other-parcels>
+    </div>
+  </cdk-step>
+  <cdk-step label="Primary Contact">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
+      <app-primary-contact
+        [showErrors]="showValidationErrors"
+        [$application]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-primary-contact>
+    </div>
+  </cdk-step>
+  <cdk-step label="Government">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
+      <app-select-government
+        [showErrors]="showValidationErrors"
+        [$applicationSubmission]="$applicationSubmission"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-select-government>
+    </div>
+  </cdk-step>
+  <cdk-step label="Land Use">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
+      <app-land-use
+        [$applicationSubmission]="$applicationSubmission"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-land-use>
+    </div>
+  </cdk-step>
+  <cdk-step label="Proposal">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="applicationSubmission && cdkStepper.selectedIndex === editAppSteps.Proposal">
+      <app-nfu-proposal
+        *ngIf="applicationSubmission.typeCode === 'NFUP'"
+        [$applicationSubmission]="$applicationSubmission"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-nfu-proposal>
+      <app-tur-proposal
+        *ngIf="applicationSubmission.typeCode === 'TURP'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-tur-proposal>
+      <app-subd-proposal
+        *ngIf="applicationSubmission.typeCode === 'SUBD'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-subd-proposal>
+    </div>
+  </cdk-step>
+  <cdk-step label="Upload Attachments">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
+      <app-other-attachments
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-other-attachments>
+    </div>
+  </cdk-step>
+  <cdk-step label="Review & Submit">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
+      <app-review-and-submit
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        (exit)="onExit()"
+        (submit)='onSubmit()'
+      ></app-review-and-submit>
+    </div>
+  </cdk-step>
+</app-custom-stepper>

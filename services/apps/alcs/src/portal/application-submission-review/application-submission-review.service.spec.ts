@@ -13,6 +13,7 @@ import {
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 
@@ -23,19 +24,17 @@ describe('ApplicationSubmissionReviewService', () => {
   let service: ApplicationSubmissionReviewService;
   let mockRepository: DeepMocked<Repository<ApplicationSubmissionReview>>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockAppService: DeepMocked<ApplicationService>;
 
   const mockLocalGovernment = new ApplicationLocalGovernment({
     isFirstNation: true,
     isActive: true,
   });
 
-  const mockSubmission = new ApplicationSubmission({
-    application: { uuid: 'fake' } as Application,
-  });
-
   beforeEach(async () => {
     mockRepository = createMock();
     mockAppDocumentService = createMock();
+    mockAppService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -54,6 +53,10 @@ describe('ApplicationSubmissionReviewService', () => {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
         },
+        {
+          provide: ApplicationService,
+          useValue: mockAppService,
+        },
       ],
     }).compile();
 
@@ -68,10 +71,11 @@ describe('ApplicationSubmissionReviewService', () => {
 
   it('should call through for get', async () => {
     const appReview = new ApplicationSubmissionReview();
-    mockRepository.findOne.mockResolvedValue(appReview);
+    mockRepository.findOneOrFail.mockResolvedValue(appReview);
 
-    const res = await service.getForGovernment('', mockLocalGovernment);
+    const res = await service.getByFileNumber('');
 
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toBe(appReview);
   });
 
@@ -86,29 +90,33 @@ describe('ApplicationSubmissionReviewService', () => {
 
   it('should call save for update', async () => {
     const appReview = new ApplicationSubmissionReview();
-    mockRepository.findOne.mockResolvedValue(appReview);
+    mockRepository.findOneOrFail.mockResolvedValue(appReview);
     mockRepository.save.mockResolvedValue({} as any);
 
     const res = await service.update('', mockLocalGovernment, {});
 
     expect(res).toBeDefined();
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should delete the staff report and the resolution document when there is no ocp or zoning for update', async () => {
     const appReview = new ApplicationSubmissionReview({
       application: new Application({ uuid: 'fake' }),
     });
-    mockRepository.findOne.mockResolvedValue(appReview);
+    mockRepository.findOneOrFail.mockResolvedValue(appReview);
     mockAppDocumentService.deleteByType.mockResolvedValue({} as any);
     mockRepository.save.mockResolvedValue({} as any);
+    mockAppService.getUuid.mockResolvedValue('');
 
     const res = await service.update('', mockLocalGovernment, {
       isOCPDesignation: false,
       isSubjectToZoning: false,
     });
 
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
     expect(mockAppDocumentService.deleteByType).toHaveBeenCalledTimes(2);
+    expect(mockAppService.getUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should call remove for delete', async () => {

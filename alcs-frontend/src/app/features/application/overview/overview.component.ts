@@ -114,7 +114,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
     const mappedEvents: TimelineEvent[] = [];
     if (application.dateSubmittedToAlc) {
       mappedEvents.push({
-        name: applicationReview && !applicationReview.isAuthorized ? 'L/FNG Refused to Forward' : 'Submitted to ALC',
+        name:
+          applicationReview && applicationReview.isAuthorized === false
+            ? 'L/FNG Refused to Forward'
+            : 'Submitted to ALC',
         startDate: new Date(application.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),
         isFulfilled: true,
       });

@@ -14,6 +14,8 @@ import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { User } from '../../user/user.entity';
+import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
+import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
 import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
@@ -27,6 +29,8 @@ describe('ApplicationSubmissionService', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
+  let mockGenerateReviewDocumentService: DeepMocked<GenerateReviewDocumentService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -34,6 +38,8 @@ describe('ApplicationSubmissionService', () => {
     mockApplicationService = createMock();
     mockLGService = createMock();
     mockAppDocService = createMock();
+    mockGenerateSubmissionDocumentService = createMock();
+    mockGenerateReviewDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -64,6 +70,14 @@ describe('ApplicationSubmissionService', () => {
           provide: ApplicationDocumentService,
           useValue: mockAppDocService,
         },
+        {
+          provide: GenerateSubmissionDocumentService,
+          useValue: mockGenerateSubmissionDocumentService,
+        },
+        {
+          provide: GenerateReviewDocumentService,
+          useValue: mockGenerateReviewDocumentService,
+        },
       ],
     }).compile();
 
@@ -80,7 +94,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const app = await service.getOrFail('');
+    const app = await service.getOrFailByFileNumber('');
     expect(app).toBe(application);
   });
 
@@ -88,14 +102,14 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const app = await service.getIfCreator('', new User());
+    const app = await service.getIfCreatorByFileNumber('', new User());
     expect(app).toBe(application);
   });
 
   it('should throw an exception if the application is not found the fetched application', async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
-    const promise = service.getIfCreator('', new User());
+    const promise = service.getIfCreatorByFileNumber('', new User());
     await expect(promise).rejects.toMatchObject(
       new Error(`Failed to load application with File ID `),
     );
@@ -104,7 +118,7 @@ describe('ApplicationSubmissionService', () => {
   it("should throw an error if application doesn't exist", async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
-    const promise = service.getOrFail('');
+    const promise = service.getOrFailByFileNumber('');
     await expect(promise).rejects.toMatchObject(
       new Error('Failed to find document'),
     );
@@ -140,7 +154,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const res = await service.getByFileId('', new User());
+    const res = await service.getByFileNumber('', new User());
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
   });
@@ -257,6 +271,7 @@ describe('ApplicationSubmissionService', () => {
     await expect(
       service.submitToAlcs(
         applicationSubmission as ValidatedApplicationSubmission,
+        new User(),
       ),
     ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
@@ -281,12 +296,86 @@ describe('ApplicationSubmissionService', () => {
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());
-
-    const res = await service.submitToAlcs(
+    await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
+      new User(),
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
+  });
+
+  it('should submit to alcs even if document generation fails', async () => {
+    const applicant = 'Bruce Wayne';
+    const typeCode = 'fake-code';
+    const fileNumber = 'fake';
+    const localGovernmentUuid = 'fake-uuid';
+    const mockApplication = new ApplicationSubmission({
+      fileNumber,
+      applicant,
+      typeCode,
+      localGovernmentUuid,
+      status: new ApplicationStatus({
+        code: 'status-code',
+        label: '',
+      }),
+      statusHistory: [],
+    });
+
+    mockApplicationService.submit.mockResolvedValue(new Application());
+    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
+      new Error('fake'),
+    );
+
+    await service.submitToAlcs(
+      mockApplication as ValidatedApplicationSubmission,
+      new User(),
+    );
+
+    expect(mockApplicationService.submit).toBeCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).toBeCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).rejects.toMatchObject(new Error('fake'));
+  });
+
+  it('should submit to alcs even if document attachment to application fails', async () => {
+    const applicant = 'Bruce Wayne';
+    const typeCode = 'fake-code';
+    const fileNumber = 'fake';
+    const localGovernmentUuid = 'fake-uuid';
+    const mockApplication = new ApplicationSubmission({
+      fileNumber,
+      applicant,
+      typeCode,
+      localGovernmentUuid,
+      status: new ApplicationStatus({
+        code: 'status-code',
+        label: '',
+      }),
+      statusHistory: [],
+    });
+
+    mockApplicationService.submit.mockResolvedValue(new Application());
+    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
+      new Error('fake'),
+    );
+
+    await service.submitToAlcs(
+      mockApplication as ValidatedApplicationSubmission,
+      new User(),
+    );
+
+    await new Promise((r) => setTimeout(r, 100));
+
+    expect(mockApplicationService.submit).toBeCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).toBeCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateAndAttach,
+    ).toBeCalledWith(fileNumber, new User());
   });
 
   it('should update fields if application exists', async () => {
