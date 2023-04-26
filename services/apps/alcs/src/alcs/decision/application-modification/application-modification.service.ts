@@ -1,7 +1,7 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindOptionsRelations,
@@ -13,7 +13,8 @@ import {
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
-import { ApplicationDecisionService } from '../decision-v1/application-decision/application-decision.service';
+import { ApplicationDecisionV1Service } from '../decision-v1/application-decision/application-decision-v1.service';
+import { ApplicationDecisionV2Service } from '../decision-v2/application-decision/application-decision-v2.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationDto,
@@ -28,7 +29,7 @@ export class ApplicationModificationService {
     private modificationRepository: Repository<ApplicationModification>,
     @InjectMapper() private mapper: Mapper,
     private applicationService: ApplicationService,
-    private applicationDecisionService: ApplicationDecisionService,
+    private applicationDecisionV1Service: ApplicationDecisionV1Service,
     private cardService: CardService,
   ) {}
 
@@ -99,7 +100,7 @@ export class ApplicationModificationService {
     modification.card = await this.cardService.create('MODI', board, false);
     modification.application = await this.getOrCreateApplication(createDto);
     modification.modifiesDecisions =
-      await this.applicationDecisionService.getMany(
+      await this.applicationDecisionV1Service.getMany(
         createDto.modifiesDecisionUuids,
       );
 
@@ -154,7 +155,7 @@ export class ApplicationModificationService {
 
     if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =
-        await this.applicationDecisionService.getMany(
+        await this.applicationDecisionV1Service.getMany(
           updateDto.modifiesDecisionUuids,
         );
     }

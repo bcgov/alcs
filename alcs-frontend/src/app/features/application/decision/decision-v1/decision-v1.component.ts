@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
+import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
+import { ApplicationDto } from '../../../../services/application/application.dto';
 import {
   ApplicationDecisionDto,
   CeoCriterionDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../services/application/application-decision/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
-import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
-import { ApplicationDto } from '../../../../services/application/application.dto';
+} from '../../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import {
   MODIFICATION_TYPE_LABEL,

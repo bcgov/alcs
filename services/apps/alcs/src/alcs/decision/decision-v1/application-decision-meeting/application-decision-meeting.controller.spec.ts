@@ -9,7 +9,7 @@ import {
   initApplicationReconsiderationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
-import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision.automapper.profile';
+import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v1.automapper.profile';
 import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
 import { ApplicationService } from '../../../application/application.service';
 import { Board } from '../../../board/board.entity';

@@ -9,26 +9,26 @@ import {
   initApplicationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
-import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision.automapper.profile';
+import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v1.automapper.profile';
 import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
 import { ApplicationService } from '../../../application/application.service';
 import { CodeService } from '../../../code/code.service';
+import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationModification } from '../../application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
-import { DecisionOutcomeCode } from './application-decision-outcome.entity';
-import { ApplicationDecisionController } from './application-decision.controller';
+import { ApplicationDecisionV1Controller } from './application-decision-v1.controller';
+import { ApplicationDecisionV1Service } from './application-decision-v1.service';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ApplicationDecisionService } from './application-decision.service';
 
-describe('ApplicationDecisionController', () => {
-  let controller: ApplicationDecisionController;
-  let mockDecisionService: DeepMocked<ApplicationDecisionService>;
+describe('ApplicationDecisionV1Controller', () => {
+  let controller: ApplicationDecisionV1Controller;
+  let mockDecisionService: DeepMocked<ApplicationDecisionV1Service>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
@@ -53,13 +53,13 @@ describe('ApplicationDecisionController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationDecisionController],
+      controllers: [ApplicationDecisionV1Controller],
       providers: [
         ApplicationProfile,
         ApplicationDecisionProfile,
         UserProfile,
         {
-          provide: ApplicationDecisionService,
+          provide: ApplicationDecisionV1Service,
           useValue: mockDecisionService,
         },
         {
@@ -86,8 +86,8 @@ describe('ApplicationDecisionController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationDecisionController>(
-      ApplicationDecisionController,
+    controller = module.get<ApplicationDecisionV1Controller>(
+      ApplicationDecisionV1Controller,
     );
 
     mockDecisionService.fetchCodes.mockResolvedValue({

@@ -14,7 +14,7 @@ import {
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CardService } from '../../card/card.service';
-import { ApplicationDecisionService } from '../decision-v1/application-decision/application-decision.service';
+import { ApplicationDecisionV1Service } from '../decision-v1/application-decision/application-decision-v1.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
@@ -39,7 +39,7 @@ export class ApplicationReconsiderationService {
     private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
     private applicationService: ApplicationService,
     private cardService: CardService,
-    private applicationDecisionService: ApplicationDecisionService,
+    private applicationDecisionService: ApplicationDecisionV1Service,
   ) {}
 
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =

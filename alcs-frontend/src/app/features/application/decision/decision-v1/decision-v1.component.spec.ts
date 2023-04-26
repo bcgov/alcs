@@ -4,9 +4,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 

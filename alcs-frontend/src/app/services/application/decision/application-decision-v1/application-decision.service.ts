@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
-import { ToastService } from '../../toast/toast.service';
+import { environment } from '../../../../../environments/environment';
+import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/file';
+import { ToastService } from '../../../toast/toast.service';
 import {
   ApplicationDecisionDto,
   CeoCriterionDto,

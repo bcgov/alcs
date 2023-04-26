@@ -18,31 +18,27 @@ import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { ApplicationService } from '../../../application/application.service';
+import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
-import { ApplicationModificationService } from '../../application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
-import { DecisionOutcomeCode } from './application-decision-outcome.entity';
+import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 import {
   ApplicationDecisionDto,
   CreateApplicationDecisionDto,
   DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ApplicationDecisionService } from './application-decision.service';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
 @UseGuards(RolesGuard)
-export class ApplicationDecisionController {
+export class ApplicationDecisionV2Controller {
   constructor(
-    private appDecisionService: ApplicationDecisionService,
+    private appDecisionService: ApplicationDecisionV2Service,
     private applicationService: ApplicationService,
-    private modificationService: ApplicationModificationService,
-    private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -110,13 +106,9 @@ export class ApplicationDecisionController {
       createDto.applicationFileNumber,
     );
 
-    const modification = createDto.modifiesUuid
-      ? await this.modificationService.getByUuid(createDto.modifiesUuid)
-      : undefined;
-
-    const reconsiders = createDto.reconsidersUuid
-      ? await this.reconsiderationService.getByUuid(createDto.reconsidersUuid)
-      : undefined;
+    // TODO this should be addressed in the create ticket flow
+    const modification = undefined;
+    const reconsiders = undefined;
 
     const newDecision = await this.appDecisionService.create(
       createDto,
@@ -144,29 +136,11 @@ export class ApplicationDecisionController {
       );
     }
 
-    let modifies;
-    if (updateDto.modifiesUuid) {
-      modifies = await this.modificationService.getByUuid(
-        updateDto.modifiesUuid,
-      );
-    } else if (updateDto.modifiesUuid === null) {
-      modifies = null;
-    }
-
-    let reconsiders;
-    if (updateDto.modifiesUuid) {
-      reconsiders = await this.reconsiderationService.getByUuid(
-        updateDto.modifiesUuid,
-      );
-    } else if (updateDto.reconsidersUuid === null) {
-      reconsiders = null;
-    }
-
     const updatedMeeting = await this.appDecisionService.update(
       uuid,
       updateDto,
-      modifies,
-      reconsiders,
+      null,
+      null,
     );
     return this.mapper.mapAsync(
       updatedMeeting,

@@ -2,22 +2,20 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 
+import { DecisionOutcomeCode } from '../../alcs/decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
 import { CeoCriterionCode } from '../../alcs/decision/ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from '../../alcs/decision/decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../alcs/decision/decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/decision/decision-outcome-type/application-decision-outcome-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { DecisionOutcomeCode } from '../../alcs/decision/decision-v1/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
   DecisionOutcomeCodeDto,
-} from '../../alcs/decision/decision-v1/application-decision/application-decision.dto';
-import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v1/application-decision/ceo-criterion/ceo-criterion.dto';
-import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v1/application-decision/decision-maker/decision-maker.dto';
+} from '../../alcs/decision/decision-v2/application-decision/application-decision.dto';
+import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
+import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -150,21 +148,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionChairReviewOutcomeType,
         ChairReviewOutcomeCodeDto,
-      );
-
-      createMap(
-        mapper,
-        ApplicationDecisionMeeting,
-        ApplicationDecisionMeetingDto,
-      );
-      createMap(
-        mapper,
-        ApplicationDecisionMeetingDto,
-        ApplicationDecisionMeeting,
-        forMember(
-          (a) => a.date,
-          mapFrom((ad) => new Date(ad.date)),
-        ),
       );
 
       createMap(

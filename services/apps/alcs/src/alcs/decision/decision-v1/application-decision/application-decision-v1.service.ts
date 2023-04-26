@@ -15,20 +15,20 @@ import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { Application } from '../../../application/application.entity';
 import { ApplicationService } from '../../../application/application.service';
+import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModification } from '../../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from '../../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
-import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 
 @Injectable()
-export class ApplicationDecisionService {
+export class ApplicationDecisionV1Service {
   constructor(
     @InjectRepository(ApplicationDecision)
     private appDecisionRepository: Repository<ApplicationDecision>,

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { ToastService } from '../../toast/toast.service';
+import { environment } from '../../../../../environments/environment';
+import { ToastService } from '../../../toast/toast.service';
 import { ApplicationDecisionService } from './application-decision.service';
 
 describe('ApplicationMeetingService', () => {

@@ -16,7 +16,7 @@ import { Board } from '../../board/board.entity';
 import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { ApplicationDecision } from '../application-decision.entity';
-import { ApplicationDecisionService } from '../decision-v1/application-decision/application-decision.service';
+import { ApplicationDecisionV1Service } from '../decision-v1/application-decision/application-decision-v1.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationUpdateDto,
@@ -29,7 +29,7 @@ describe('ApplicationModificationService', () => {
   let service: ApplicationModificationService;
   let applicationServiceMock: DeepMocked<ApplicationService>;
   let cardServiceMock: DeepMocked<CardService>;
-  let decisionServiceMock: DeepMocked<ApplicationDecisionService>;
+  let decisionServiceMock: DeepMocked<ApplicationDecisionV1Service>;
 
   let mockModification;
   let mockModificationCreateDto;
@@ -75,7 +75,7 @@ describe('ApplicationModificationService', () => {
           useValue: cardServiceMock,
         },
         {
-          provide: ApplicationDecisionService,
+          provide: ApplicationDecisionV1Service,
           useValue: decisionServiceMock,
         },
         {

@@ -1,4 +1,4 @@
-import { BaseCodeDto } from '../../../shared/dto/base.dto';
+import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',

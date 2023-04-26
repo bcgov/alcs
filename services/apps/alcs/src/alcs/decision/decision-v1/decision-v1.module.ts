@@ -1,12 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision.automapper.profile';
+import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision-v1.automapper.profile';
 import { ModificationProfile } from '../../../common/automapper/modification.automapper.profile';
 import { ReconsiderationProfile } from '../../../common/automapper/reconsideration.automapper.profile';
 import { DocumentModule } from '../../../document/document.module';
 import { ApplicationModule } from '../../application/application.module';
 import { BoardModule } from '../../board/board.module';
 import { CardModule } from '../../card/card.module';
+import { DecisionOutcomeCode } from '../application-decision-outcome.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationModificationController } from '../application-modification/application-modification.controller';
 import { ApplicationModification } from '../application-modification/application-modification.entity';
@@ -21,13 +22,11 @@ import { CeoCriterionCode } from '../ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from '../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../decision-outcome-type/application-decision-outcome-type.entity';
-import { DecisionV2Module } from '../decision-v2/decision-v2.module';
 import { ApplicationDecisionMeetingController } from './application-decision-meeting/application-decision-meeting.controller';
 import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
-import { DecisionOutcomeCode } from './application-decision/application-decision-outcome.entity';
-import { ApplicationDecisionController } from './application-decision/application-decision.controller';
-import { ApplicationDecisionService } from './application-decision/application-decision.service';
+import { ApplicationDecisionV1Controller } from './application-decision/application-decision-v1.controller';
+import { ApplicationDecisionV1Service } from './application-decision/application-decision-v1.service';
 
 @Module({
   imports: [
@@ -49,12 +48,11 @@ import { ApplicationDecisionService } from './application-decision/application-d
     ApplicationModule,
     CardModule,
     DocumentModule,
-    DecisionV2Module,
   ],
   providers: [
     ApplicationModificationService,
     ModificationProfile,
-    ApplicationDecisionService,
+    ApplicationDecisionV1Service,
     ApplicationDecisionProfile,
     ApplicationReconsiderationService,
     ReconsiderationProfile,
@@ -62,13 +60,13 @@ import { ApplicationDecisionService } from './application-decision/application-d
   ],
   controllers: [
     ApplicationModificationController,
-    ApplicationDecisionController,
+    ApplicationDecisionV1Controller,
     ApplicationReconsiderationController,
     ApplicationDecisionMeetingController,
   ],
   exports: [
     ApplicationModificationService,
-    ApplicationDecisionService,
+    ApplicationDecisionV1Service,
     ApplicationReconsiderationService,
   ],
 })

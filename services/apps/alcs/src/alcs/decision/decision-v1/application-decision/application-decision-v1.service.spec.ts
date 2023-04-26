@@ -14,19 +14,19 @@ import {
 } from '../../../../../test/mocks/mockEntities';
 import { DocumentService } from '../../../../document/document.service';
 import { ApplicationService } from '../../../application/application.service';
+import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from '../../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
-import { DecisionOutcomeCode } from './application-decision-outcome.entity';
+import { ApplicationDecisionV1Service } from './application-decision-v1.service';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ApplicationDecisionService } from './application-decision.service';
 
-describe('ApplicationDecisionService', () => {
-  let service: ApplicationDecisionService;
+describe('ApplicationDecisionV1Service', () => {
+  let service: ApplicationDecisionV1Service;
   let mockDecisionRepository: DeepMocked<Repository<ApplicationDecision>>;
   let mockDecisionDocumentRepository: DeepMocked<Repository<DecisionDocument>>;
   let mockDecisionOutcomeRepository: DeepMocked<
@@ -60,7 +60,7 @@ describe('ApplicationDecisionService', () => {
         }),
       ],
       providers: [
-        ApplicationDecisionService,
+        ApplicationDecisionV1Service,
         {
           provide: getRepositoryToken(ApplicationDecision),
           useValue: mockDecisionRepository,
@@ -92,8 +92,8 @@ describe('ApplicationDecisionService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionService>(
-      ApplicationDecisionService,
+    service = module.get<ApplicationDecisionV1Service>(
+      ApplicationDecisionV1Service,
     );
 
     mockApplication = initApplicationMockEntity();
