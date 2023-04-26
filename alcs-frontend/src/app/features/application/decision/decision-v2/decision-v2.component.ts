@@ -17,6 +17,7 @@ import {
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
+import { decisionChildRoutes } from '../decision.module';
 import { DecisionV2DialogComponent } from './decision-v2-dialog/decision-v2-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & {
@@ -24,6 +25,7 @@ type LoadingDecision = ApplicationDecisionDto & {
   modifiedByResolutions: string[];
   loading: boolean;
 };
+
 @Component({
   selector: 'app-decision-v2',
   templateUrl: './decision-v2.component.html',
@@ -31,6 +33,8 @@ type LoadingDecision = ApplicationDecisionDto & {
 })
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  createDecision = decisionChildRoutes.find((e) => e.path === 'create')!;
+
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: LoadingDecision[] = [];

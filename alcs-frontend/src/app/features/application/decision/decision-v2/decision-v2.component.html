@@ -4,9 +4,19 @@
     matTooltip="This application is currently paused. Only active applications can have decisions."
     [matTooltipDisabled]="!isPaused"
   >
-    <button [disabled]="isPaused" mat-flat-button color="primary" (click)="onCreate()">+ New Decision</button>
+    <button
+      [disabled]="isPaused"
+      mat-flat-button
+      color="primary"
+      [routerLink]="createDecision.path ? createDecision.path : './'"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: false }"
+    >
+      + Create Draft Decision
+    </button>
   </div>
 </div>
+
 <section class="no-decisions" *ngIf="!decisions.length">
   <div>No Decisions</div>
 </section>
