@@ -11,7 +11,7 @@ import { ApplicationModificationDto } from '../../../../../services/application/
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v2/application-decision.service';
 import { MomentPipe } from '../../../../../shared/pipes/moment.pipe';
 import { StartOfDayPipe } from '../../../../../shared/pipes/startOfDay.pipe';
 import { DecisionV2DialogComponent } from './decision-v2-dialog.component';
