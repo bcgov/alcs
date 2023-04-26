@@ -123,6 +123,7 @@ describe('ApplicationDecisionV2Controller', () => {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
       applicationFileNumber: mockApplication.fileNumber,
       outcomeCode: 'outcome',
+      isDraft: true,
     } as CreateApplicationDecisionDto;
 
     await controller.create(decisionToCreate);
@@ -133,6 +134,7 @@ describe('ApplicationDecisionV2Controller', () => {
         applicationFileNumber: mockApplication.fileNumber,
         outcomeCode: 'outcome',
         date: decisionToCreate.date,
+        isDraft: true,
       },
       mockApplication,
       undefined,

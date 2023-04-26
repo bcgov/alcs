@@ -94,6 +94,9 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   @IsUUID()
   @IsOptional()
   reconsidersUuid?: string;
+
+  @IsBoolean()
+  isDraft: boolean;
 }
 
 export class DecisionOutcomeCodeDto extends BaseCodeDto {
@@ -148,6 +151,9 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Boolean)
   isOther?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  isDraft: boolean;
 
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;

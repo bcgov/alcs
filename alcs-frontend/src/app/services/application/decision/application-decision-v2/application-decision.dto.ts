@@ -32,6 +32,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   applicationFileNumber: string;
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
+  isDraft: boolean;
 }
 
 export interface ApplicationDecisionDto {

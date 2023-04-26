@@ -298,6 +298,7 @@ export class ApplicationDecisionV2Service {
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
       isOther: createDto.isOther,
+      isDraft: createDto.isDraft,
       application,
       modifies,
       reconsiders,

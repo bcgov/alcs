@@ -169,6 +169,7 @@ describe('ApplicationDecisionV2Service', () => {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
         outcomeCode: 'Outcome',
+        isDraft: true,
       } as CreateApplicationDecisionDto;
 
       await service.create(

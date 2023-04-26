@@ -152,6 +152,7 @@ export class DecisionV2DialogComponent implements OnInit {
       applicationFileNumber: this.data.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
+      isDraft: true,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');

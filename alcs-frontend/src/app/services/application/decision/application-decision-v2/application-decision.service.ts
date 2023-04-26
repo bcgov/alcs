@@ -17,7 +17,7 @@ import {
   providedIn: 'root',
 })
 export class ApplicationDecisionService {
-  private url = `${environment.apiUrl}/application-decision`;
+  private url = `${environment.apiUrl}/v2/application-decision`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
