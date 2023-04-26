@@ -1,11 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
@@ -22,6 +18,7 @@ enum MOBILE_STEP {
   INTRODUCTION = 0,
   APPLICATION = 1,
   LFNG_INFO = 2,
+  ALC_INFO = 3,
 }
 
 @Component({
@@ -38,9 +35,6 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   APPLICATION_STATUS = APPLICATION_STATUS;
-  resolutionDocument: ApplicationDocumentDto[] = [];
-  governmentOtherAttachments: ApplicationDocumentDto[] = [];
-  staffReport: ApplicationDocumentDto[] = [];
   isMobile = false;
   mobileStep = MOBILE_STEP.INTRODUCTION;
   selectedStep: MOBILE_STEP | undefined;
@@ -75,28 +69,12 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
         this.loadApplication(fileId);
       }
     });
-
-    this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
-      this.applicationReview = appReview;
-    });
   }
 
   async loadApplication(fileId: string) {
     this.application = await this.applicationService.getByFileId(fileId);
     this.$application.next(this.application);
     this.loadApplicationDocuments(fileId);
-
-    if (
-      this.application &&
-      [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
-        this.application.status.code
-      ) &&
-      this.application.typeCode !== 'TURP'
-    ) {
-      this.loadApplicationReview(fileId);
-    } else {
-      this.applicationReview = undefined;
-    }
   }
 
   onCancel(fileId: string) {
@@ -135,10 +113,6 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  private loadApplicationReview(fileId: string) {
-    this.applicationReviewService.getByFileId(fileId);
-  }
-
   onNavigateHome() {
     this.router.navigateByUrl(`home`);
   }
@@ -147,25 +121,12 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     const documents = await this.applicationDocumentService.getByFileId(fileId);
     if (documents) {
       this.$applicationDocuments.next(documents);
-      this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
-      this.resolutionDocument = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
-      );
-      this.governmentOtherAttachments = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
-      );
     }
   }
 
   async onDownloadSubmissionPdf(fileNumber: string | undefined) {
     if (fileNumber) {
       await this.pdfGenerationService.generateSubmission(fileNumber);
-    }
-  }
-
-  async onDownloadReviewPdf(fileNumber: string | undefined) {
-    if (fileNumber) {
-      await this.pdfGenerationService.generateReview(fileNumber);
     }
   }
 }
