@@ -52,30 +52,68 @@
   display: none;
 }
 
+.step-description {
+  margin-bottom: rem(8);
+}
+
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh !important;
+}
+
+.dialog-action-container {
+  margin: rem(4) 0;
+  padding: 0 rem(24);
+}
+
+@media screen and (min-width: $minWidth) {
+  .dialog-action-container {
+    margin: rem(8) 0 rem(24);
+  }
+}
+
 @media screen and (min-width: $tabletBreakpoint) {
   .sub-type-label,
   .app-type-label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: rem(8);
   }
 
   .warning-banner {
-    padding: 1rem 2rem;
+    padding: rem(16) rem(32);
 
     .ellipsis-3 {
       display: block;
     }
   }
 
+  .dialog-container {
+    max-height: unset;
+    width: 70vw;
+  }
+
+  .app-type-dialog {
+    height: 70vh;
+  }
+
   .dialog-content-wrapper {
-    margin: 2rem 3rem;
+    margin: rem(32) rem(48);
   }
 
   .dialog-controls-wrapper {
     justify-content: flex-end;
 
     button {
-      margin-left: 1rem !important;
+      margin-left: rem(16) !important;
     }
+  }
+
+  .dialog-action-container {
+    margin: rem(24) 0;
+  }
+
+  .steps {
+    margin-top: rem(16);
   }
 }

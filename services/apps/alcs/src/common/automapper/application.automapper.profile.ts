@@ -31,8 +31,8 @@ import { ApplicationRegionDto } from '../../alcs/code/application-code/applicati
 import { ApplicationRegion } from '../../alcs/code/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../alcs/code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/decision/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()
@@ -138,6 +138,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.source,
           mapFrom((ad) => ad.document.source),
+        ),
+        forMember(
+          (a) => a.system,
+          mapFrom((ad) => ad.document.system),
         ),
       );
       createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);

@@ -56,7 +56,7 @@ describe('ApplicationSubmissionService', () => {
       1,
     );
     expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledWith({
-      where: { fileNumber: fakeFileNumber },
+      where: { fileNumber: fakeFileNumber, isDraft: false },
       relations: {
         application: {
           documents: {

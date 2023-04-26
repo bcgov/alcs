@@ -4,24 +4,17 @@ import {
 } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import {
-  forwardRef,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
-import { VISIBILITY_FLAG } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
@@ -229,53 +222,16 @@ export class ApplicationSubmissionService {
     hasReview: boolean,
   ) {
     try {
-      const submissionRes =
-        await this.submissionDocumentGenerationService.generate(
-          fileNumber,
-          user,
-        );
-
-      if (submissionRes.status === HttpStatus.OK) {
-        await this.applicationDocumentService.attachDocumentAsBuffer({
-          fileNumber: fileNumber,
-          fileName: `${fileNumber}_Submission`,
-          user: user,
-          file: submissionRes.data,
-          mimeType: 'application/pdf',
-          fileSize: submissionRes.data.length,
-          documentType: DOCUMENT_TYPE.SUBORIG,
-          source: DOCUMENT_SOURCE.APPLICANT,
-          visibilityFlags: [
-            VISIBILITY_FLAG.APPLICANT,
-            VISIBILITY_FLAG.COMMISSIONER,
-            VISIBILITY_FLAG.GOVERNMENT,
-          ],
-        });
-      }
+      await this.submissionDocumentGenerationService.generateAndAttach(
+        fileNumber,
+        user,
+      );
 
       if (hasReview) {
-        const reviewRes = await this.generateReviewDocumentService.generate(
+        await this.generateReviewDocumentService.generateAndAttach(
           fileNumber,
           user,
         );
-
-        if (reviewRes.status === HttpStatus.OK) {
-          await this.applicationDocumentService.attachDocumentAsBuffer({
-            fileNumber: fileNumber,
-            fileName: `${fileNumber}_Submission`,
-            user: user,
-            file: reviewRes.data,
-            mimeType: 'application/pdf',
-            fileSize: reviewRes.data.length,
-            documentType: DOCUMENT_TYPE.SUBORIG,
-            source: DOCUMENT_SOURCE.LFNG,
-            visibilityFlags: [
-              VISIBILITY_FLAG.APPLICANT,
-              VISIBILITY_FLAG.COMMISSIONER,
-              VISIBILITY_FLAG.GOVERNMENT,
-            ],
-          });
-        }
       }
     } catch (e) {
       this.logger.error(`Error generating the document on submission${e}`);
@@ -291,7 +247,7 @@ export class ApplicationSubmissionService {
         isDraft: false,
       },
       order: {
-        updatedAt: 'DESC',
+        auditUpdatedAt: 'DESC',
       },
     });
   }
@@ -320,7 +276,7 @@ export class ApplicationSubmissionService {
         },
       ],
       order: {
-        updatedAt: 'DESC',
+        auditUpdatedAt: 'DESC',
       },
     });
   }
@@ -355,7 +311,7 @@ export class ApplicationSubmissionService {
           },
         ],
         order: {
-          updatedAt: 'DESC',
+          auditUpdatedAt: 'DESC',
           owners: {
             parcels: {
               purchasedDate: 'ASC',
@@ -412,7 +368,7 @@ export class ApplicationSubmissionService {
           },
         ],
         order: {
-          updatedAt: 'DESC',
+          auditUpdatedAt: 'DESC',
           owners: {
             parcels: {
               purchasedDate: 'ASC',

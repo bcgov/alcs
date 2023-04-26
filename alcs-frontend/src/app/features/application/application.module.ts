@@ -15,7 +15,10 @@ import { ApplicationMeetingDialogComponent } from './application-meeting/applica
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
 import { ApplicationComponent, childRoutes } from './application.component';
-import { DecisionDialogComponent } from './decision/decision-dialog/decision-dialog.component';
+import { DecisionV1DialogComponent } from './decision/decision-v1/decision-v1-dialog/decision-v1-dialog.component';
+import { DecisionV1Component } from './decision/decision-v1/decision-v1.component';
+import { DecisionV2DialogComponent } from './decision/decision-v2/decision-v2-dialog/decision-v2-dialog.component';
+import { DecisionV2Component } from './decision/decision-v2/decision-v2.component';
 import { DecisionComponent } from './decision/decision.component';
 import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
@@ -34,9 +37,9 @@ import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
-import { StaffJournalComponent } from './staff-journal/staff-journal.component';
-import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
 import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
+import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
+import { StaffJournalComponent } from './staff-journal/staff-journal.component';
 
 const routes: Routes = [
   {
@@ -65,11 +68,11 @@ const routes: Routes = [
     ApplicationMeetingComponent,
     ApplicationMeetingDialogComponent,
     CreateApplicationMeetingDialogComponent,
-    DecisionComponent,
+    DecisionV1Component,
     InfoRequestsComponent,
     InfoRequestDialogComponent,
     TimelineComponent,
-    DecisionDialogComponent,
+    DecisionV1DialogComponent,
     PostDecisionComponent,
     InlineReviewOutcomeComponent,
     EditReconsiderationDialogComponent,
@@ -84,6 +87,9 @@ const routes: Routes = [
     ProposalComponent,
     NfuProposalComponent,
     SubdProposalComponent,
+    DecisionComponent,
+    DecisionV2Component,
+    DecisionV2DialogComponent,
   ],
   imports: [
     SharedModule.forRoot(),

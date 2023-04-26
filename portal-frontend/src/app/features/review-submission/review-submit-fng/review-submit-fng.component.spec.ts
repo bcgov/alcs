@@ -8,15 +8,17 @@ import { ApplicationSubmissionReviewDto } from '../../../services/application-su
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 
 import { ReviewSubmitFngComponent } from './review-submit-fng.component';
 
-describe('ReviewSubmitComponent', () => {
+describe('ReviewSubmitFngComponent', () => {
   let component: ReviewSubmitFngComponent;
   let fixture: ComponentFixture<ReviewSubmitFngComponent>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
-  let mockAppService: DeepMocked<ApplicationSubmissionService>;
+  let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
 
   let applicationPipe = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
@@ -27,8 +29,8 @@ describe('ReviewSubmitComponent', () => {
       undefined
     );
     mockAppDocumentService = createMock();
-
-    mockAppService = createMock();
+    mockPdfGenerationService = createMock();
+    mockAppSubmissionService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -38,11 +40,15 @@ describe('ReviewSubmitComponent', () => {
         },
         {
           provide: ApplicationSubmissionService,
-          useValue: mockAppService,
+          useValue: mockAppSubmissionService,
         },
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: PdfGenerationService,
+          useValue: mockPdfGenerationService,
         },
       ],
       declarations: [ReviewSubmitFngComponent],

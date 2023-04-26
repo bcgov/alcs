@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
-import { ApplicationDecisionDto } from '../../../services/application/application-decision/application-decision.dto';
-import { ApplicationDecisionService } from '../../../services/application/application-decision/application-decision.service';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
@@ -11,6 +9,8 @@ import { ApplicationReconsiderationDto } from '../../../services/application/app
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
 import { ApplicationDto, ApplicationReviewDto } from '../../../services/application/application.dto';
+import { ApplicationDecisionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { ApplicationDecisionService } from '../../../services/application/decision/application-decision-v1/application-decision.service';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 
 const editLink = new Map<string, string>([

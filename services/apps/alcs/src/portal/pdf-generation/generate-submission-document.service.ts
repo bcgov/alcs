@@ -1,13 +1,17 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
@@ -60,6 +64,77 @@ export class GenerateSubmissionDocumentService {
     );
 
     return pdf;
+  }
+
+  async generateAndAttach(fileNumber: string, user: User) {
+    const generatedRes = await this.generate(fileNumber, user);
+
+    if (generatedRes.status === HttpStatus.OK) {
+      await this.applicationDocumentService.attachDocumentAsBuffer({
+        fileNumber: fileNumber,
+        fileName: `${fileNumber}_Submission`,
+        user: user,
+        file: generatedRes.data,
+        mimeType: 'application/pdf',
+        fileSize: generatedRes.data.length,
+        documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+        source: DOCUMENT_SOURCE.APPLICANT,
+        system: DOCUMENT_SYSTEM.PORTAL,
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.COMMISSIONER,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
+      });
+    }
+  }
+
+  async generateUpdate(fileNumber: string, user: User) {
+    const generatedRes = await this.generate(fileNumber, user);
+
+    if (generatedRes.status === HttpStatus.OK) {
+      const documents = await this.applicationDocumentService.list(fileNumber);
+
+      const submissionDocuments = documents.filter(
+        (document) =>
+          [DOCUMENT_SOURCE.APPLICANT, DOCUMENT_SOURCE.ALC].includes(
+            document.document.source as DOCUMENT_SOURCE,
+          ) &&
+          [
+            DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+            DOCUMENT_TYPE.UPDATED_SUBMISSION,
+          ].includes(document.typeCode as DOCUMENT_TYPE),
+      );
+
+      //Clear Visibility Flags of existing documents
+      for (const submissionDocument of submissionDocuments) {
+        await this.applicationDocumentService.update({
+          uuid: submissionDocument.uuid,
+          visibilityFlags: [],
+          user,
+          source: submissionDocument.document.source as DOCUMENT_SOURCE,
+          fileName: submissionDocument.document.fileName,
+          documentType: submissionDocument.type?.code as DOCUMENT_TYPE,
+        });
+      }
+
+      await this.applicationDocumentService.attachDocumentAsBuffer({
+        fileNumber: fileNumber,
+        fileName: `${fileNumber}_Submission_Updated`,
+        user: user,
+        file: generatedRes.data,
+        mimeType: 'application/pdf',
+        fileSize: generatedRes.data.length,
+        documentType: DOCUMENT_TYPE.UPDATED_SUBMISSION,
+        source: DOCUMENT_SOURCE.ALC,
+        system: DOCUMENT_SYSTEM.PORTAL,
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.COMMISSIONER,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
+      });
+    }
   }
 
   private async getPdfTemplateBySubmissionType(

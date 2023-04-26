@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CeoCriterionDto } from '../../../../services/application/application-decision/application-decision.dto';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
 
 @Component({

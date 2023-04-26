@@ -1,12 +1,12 @@
 <ng-template #header>
   <div class="header">
-    <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
+    <h6 *ngIf="applicationSubmission">Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}</h6>
     <div class="header-btn-wrapper">
       <button
-        *ngIf="application?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
+        *ngIf="applicationSubmission?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
         mat-flat-button
         color="primary"
-        (click)="onDownloadPdf(application?.fileNumber)"
+        (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
       >
         Download PDF
       </button>
@@ -88,16 +88,16 @@
   </cdk-step>
   <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="application && cdkStepper.selectedIndex === editAppSteps.Proposal">
+    <div *ngIf="applicationSubmission && cdkStepper.selectedIndex === editAppSteps.Proposal">
       <app-nfu-proposal
-        *ngIf="application.typeCode === 'NFUP'"
+        *ngIf="applicationSubmission.typeCode === 'NFUP'"
         [$applicationSubmission]="$applicationSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"
       ></app-nfu-proposal>
       <app-tur-proposal
-        *ngIf="application.typeCode === 'TURP'"
+        *ngIf="applicationSubmission.typeCode === 'TURP'"
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
@@ -105,7 +105,7 @@
         (exit)="onExit()"
       ></app-tur-proposal>
       <app-subd-proposal
-        *ngIf="application.typeCode === 'SUBD'"
+        *ngIf="applicationSubmission.typeCode === 'SUBD'"
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
@@ -133,6 +133,7 @@
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         (exit)="onExit()"
+        (submit)='onSubmit()'
       ></app-review-and-submit>
     </div>
   </cdk-step>

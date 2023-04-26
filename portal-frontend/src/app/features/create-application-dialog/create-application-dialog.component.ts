@@ -63,7 +63,7 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   async onSubmit() {
     const res = await this.applicationService.create(this.selectedAppType!.code);
     if (res) {
-      await this.router.navigateByUrl(`/application/${res.fileId}`);
+      await this.router.navigateByUrl(`/application/${res.fileId}/edit`);
       this.dialogRef.close(true);
     }
   }

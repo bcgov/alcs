@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import {
   ApplicationReconsiderationDetailedDto,
   RECONSIDERATION_TYPE,
   UpdateApplicationReconsiderationDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';

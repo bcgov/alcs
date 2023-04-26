@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { CeoCriterionCode } from '../../decision/application-decision/ceo-criterion/ceo-criterion.entity';
 import { UnarchiveCardController } from './unarchive-card.controller';
 import { UnarchiveCardService } from './unarchive-card.service';
 

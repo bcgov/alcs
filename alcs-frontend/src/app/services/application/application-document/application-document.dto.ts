@@ -1,5 +1,5 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from './application-document.service';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DOCUMENT_TYPE } from './application-document.service';
 
 export interface ApplicationDocumentTypeDto extends BaseCodeDto {
   code: DOCUMENT_TYPE;
@@ -12,7 +12,8 @@ export interface ApplicationDocumentDto {
   type?: ApplicationDocumentTypeDto;
   description?: string;
   visibilityFlags: string[];
-  source: string;
+  source: DOCUMENT_SOURCE;
+  system: DOCUMENT_SYSTEM;
   fileName: string;
   mimeType: string;
   uploadedBy: string;

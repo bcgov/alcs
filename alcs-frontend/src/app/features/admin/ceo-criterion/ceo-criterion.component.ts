@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { CeoCriterionDto } from '../../../services/application/application-decision/application-decision.dto';
+import { CeoCriterionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criterion.service';
 import { HolidayDto } from '../../../services/stat-holiday/holiday.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';

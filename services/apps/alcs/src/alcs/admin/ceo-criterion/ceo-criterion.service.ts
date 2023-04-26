@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CeoCriterionCodeDto } from '../../decision/application-decision/ceo-criterion/ceo-criterion.dto';
-import { CeoCriterionCode } from '../../decision/application-decision/ceo-criterion/ceo-criterion.entity';
+import { CeoCriterionCode } from '../../decision/ceo-criterion/ceo-criterion.entity';
+import { CeoCriterionCodeDto } from '../../decision/decision-v1/application-decision/ceo-criterion/ceo-criterion.dto';
 
 @Injectable()
 export class CeoCriterionService {

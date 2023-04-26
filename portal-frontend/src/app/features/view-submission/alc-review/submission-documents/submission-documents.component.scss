@@ -1,0 +1,25 @@
+@use '../../../../../styles/colors';
+@use '../../../../../styles/functions' as *;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-container {
+  margin: rem(4);
+  overflow-x: auto;
+}
+
+.documents {
+  margin-top: rem(12);
+}
+
+.mat-mdc-no-data-row {
+  height: rem(56);
+  color: colors.$grey-dark;
+}
+
+a {
+  word-break: break-all;
+}

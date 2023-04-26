@@ -9,15 +9,17 @@ import { ApplicationDocumentService } from '../../services/application-document/
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ReviewSubmissionComponent } from './review-submission.component';
 
-describe('ReviewApplicationComponent', () => {
+describe('ReviewSubmissionComponent', () => {
   let component: ReviewSubmissionComponent;
   let fixture: ComponentFixture<ReviewSubmissionComponent>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
@@ -32,6 +34,7 @@ describe('ReviewApplicationComponent', () => {
     );
     mockAppService = createMock();
     mockRoute = createMock();
+    mockPdfGenerationService = createMock();
 
     routeParamMap = new BehaviorSubject(new Map());
     mockRoute.paramMap = routeParamMap;
@@ -57,6 +60,10 @@ describe('ReviewApplicationComponent', () => {
         {
           provide: MatDialog,
           useValue: mockDialog,
+        },
+        {
+          provide: PdfGenerationService,
+          useValue: mockPdfGenerationService,
         },
         {
           provide: ToastService,

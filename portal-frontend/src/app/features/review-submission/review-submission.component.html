@@ -1,7 +1,10 @@
 <ng-template #header>
   <div class="header">
     <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
-    <button (click)="onReturnApplication()" mat-flat-button color="accent">Return Application</button>
+    <div>
+      <button (click)="onReturnApplication()" mat-flat-button color="accent">Return Application</button>
+      <button *ngIf="showDownloadPdf" (click)="onDownloadPdf()" mat-flat-button color="primary">Download PDF</button>
+    </div>
   </div>
 </ng-template>
 

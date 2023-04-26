@@ -7,7 +7,7 @@
   flex-direction: column;
 
   button {
-    margin-top: rem(8) !important;
+    margin: rem(8) 0 rem(8) rem(24) !important;
   }
 
   @media screen and (min-width: $tabletBreakpoint) {

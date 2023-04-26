@@ -1,14 +1,20 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
+import * as dayjs from 'dayjs';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as utc from 'dayjs/plugin/utc';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
 import { ApplicationSubmissionReviewDto } from '../application-submission-review/application-submission-review.dto';
@@ -17,7 +23,11 @@ import { ApplicationSubmissionReviewService } from '../application-submission-re
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
-const TEMPLATE_FILENAME = 'submission-review-template.docx';
+const LG_TEMPLATE_FILENAME = 'submission-lg-review-template.docx';
+const FNG_TEMPLATE_FILENAME = 'submission-fng-review-template.docx';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @Injectable()
 export class GenerateReviewDocumentService {
@@ -46,11 +56,38 @@ export class GenerateReviewDocumentService {
 
     const payload = await this.preparePdfPayload(submission, review, documents);
 
+    const template = payload.isFirstNationGovernment
+      ? FNG_TEMPLATE_FILENAME
+      : LG_TEMPLATE_FILENAME;
+
     return await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
-      `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${TEMPLATE_FILENAME}`,
+      `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${template}`,
       payload,
     );
+  }
+
+  async generateAndAttach(fileNumber: string, user: User) {
+    const reviewRes = await this.generate(fileNumber, user);
+
+    if (reviewRes.status === HttpStatus.OK) {
+      await this.applicationDocumentService.attachDocumentAsBuffer({
+        fileNumber: fileNumber,
+        fileName: `${fileNumber}_Submission`,
+        user: user,
+        file: reviewRes.data,
+        mimeType: 'application/pdf',
+        fileSize: reviewRes.data.length,
+        documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+        source: DOCUMENT_SOURCE.LFNG,
+        system: DOCUMENT_SYSTEM.PORTAL,
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.COMMISSIONER,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
+      });
+    }
   }
 
   private async preparePdfPayload(
@@ -93,6 +130,9 @@ export class GenerateReviewDocumentService {
 
     return {
       ...dto,
+      generatedDateTime: dayjs
+        .tz(new Date(), 'Canada/Pacific')
+        .format('MMM DD, YYYY hh:mm:ss Z'),
       isOCPDesignation: formatBooleanToYesNoString(dto.isOCPDesignation),
       OCPConsistent: formatBooleanToYesNoString(dto.OCPConsistent),
       isSubjectToZoning: formatBooleanToYesNoString(dto.isSubjectToZoning),
@@ -103,6 +143,7 @@ export class GenerateReviewDocumentService {
       applicationTypePortalLabel: application.type.portalLabel,
       applicant: submission.applicant,
       localGovernment: localGovernment ? localGovernment.name : 'No Data',
+      isFirstNationGovernment: localGovernment?.isFirstNation ?? false,
       attachments,
       noData: 'No Data',
       notSubjectToAuthorization: 'Not Subject to Authorization',
