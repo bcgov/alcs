@@ -112,9 +112,9 @@ export class GenerateSubmissionDocumentService {
           uuid: submissionDocument.uuid,
           visibilityFlags: [],
           user,
-          source: DOCUMENT_SOURCE.APPLICANT,
+          source: submissionDocument.document.source as DOCUMENT_SOURCE,
           fileName: submissionDocument.document.fileName,
-          documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+          documentType: submissionDocument.type?.code as DOCUMENT_TYPE,
         });
       }
 
