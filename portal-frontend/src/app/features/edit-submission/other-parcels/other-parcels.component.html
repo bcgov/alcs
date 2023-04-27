@@ -7,10 +7,17 @@
         application are located and owned by the following owners:
       </p>
       <ul>
+        <li *ngIf="owners.length === 0">No owners found</li>
         <li *ngFor="let owner of owners">{{ owner.displayName }}</li>
       </ul>
+      <p>*All fields are required unless stated optional.</p>
+      <div class="step-documents">
+        <h6>Documents needed for this step:</h6>
+        <ul>
+          <li>Certificate of Title (if applicable)</li>
+        </ul>
+      </div>
     </div>
-    <p>*All fields are required unless stated optional.</p>
   </div>
 
   <p *ngIf="hasCrownLandParcels">

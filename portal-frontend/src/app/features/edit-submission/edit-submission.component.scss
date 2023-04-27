@@ -78,6 +78,17 @@
     margin-bottom: rem(32);
   }
 
+  .step-documents {
+    border: rem(1) solid colors.$secondary-color;
+    border-radius: rem(4);
+    padding: rem(8);
+
+    h6 {
+      color: colors.$secondary-color;
+      margin-top: unset !important;
+    }
+  }
+
   .mat-icon.mat-icon-inline {
     line-height: initial;
   }
