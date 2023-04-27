@@ -71,7 +71,7 @@ export class DecisionV1Component implements OnInit, OnDestroy {
     this.ceoCriterion = codes.ceoCriterion;
 
     const loadedDecision = await this.decisionService.fetchByApplication(fileNumber);
-    // TODO: observable, since this may take a while to load?
+
     this.decisions = loadedDecision.map((decision) => ({
       ...decision,
       reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
