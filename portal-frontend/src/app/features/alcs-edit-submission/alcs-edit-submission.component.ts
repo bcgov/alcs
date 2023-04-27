@@ -25,6 +25,7 @@ import { NfuProposalComponent } from '../edit-submission/proposal/nfu-proposal/n
 import { SubdProposalComponent } from '../edit-submission/proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from '../edit-submission/proposal/tur-proposal/tur-proposal.component';
 import { SelectGovernmentComponent } from '../edit-submission/select-government/select-government.component';
+import { ConfirmPublishDialogComponent } from './confirm-publish-dialog/confirm-publish-dialog.component';
 
 @Component({
   selector: 'app-alcs-edit-submission',
@@ -68,8 +69,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
     private router: Router,
-    private pdfGenerationService: PdfGenerationService,
-    private confirmationDialogService: ConfirmationDialogService
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -214,12 +214,9 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   }
 
   async onSubmit() {
-    this.confirmationDialogService
-      .openDialog({
-        body: `Portal: Any updates made to the applicant's submission will be visible on the Portal.
-        ALCS: An updated version of the submission PDF will be added to the Documents table and made visible to the Commissioners.
-        The original submission PDF will be hidden from the Commissioners but will remain in the Documents table.`,
-      })
+    this.dialog
+      .open(ConfirmPublishDialogComponent)
+      .beforeClosed()
       .subscribe(async (didConfirm) => {
         if (didConfirm) {
           await this.applicationSubmissionDraftService.publish(this.fileId);
