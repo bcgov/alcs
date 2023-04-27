@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -29,7 +30,7 @@ export class CeoCriterionController {
     return await this.ceoCriterionService.fetch();
   }
 
-  @Put('/:code')
+  @Patch('/:code')
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(
     @Param('code') code: string,
@@ -46,11 +47,5 @@ export class CeoCriterionController {
   @UserRoles(AUTH_ROLE.ADMIN)
   async create(@Body() createDto: CeoCriterionCodeDto) {
     return await this.ceoCriterionService.create(createDto);
-  }
-
-  @Delete('/:code')
-  @UserRoles(AUTH_ROLE.ADMIN)
-  async delete(@Param('code') code: string) {
-    return await this.ceoCriterionService.delete(code);
   }
 }
