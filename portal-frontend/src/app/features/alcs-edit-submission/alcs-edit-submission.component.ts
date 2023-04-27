@@ -118,8 +118,11 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
       const diffResult = getDiff(originalSubmission, this.applicationSubmission);
       const changedFields = new Set<string>();
       for (const diff of diffResult) {
-        changedFields.add(diff.path.join('.'));
-        changedFields.add(diff.path[0].toString());
+        const fullPath = diff.path.join('.');
+        if (!fullPath.toLowerCase().includes('uuid')) {
+          changedFields.add(diff.path.join('.'));
+          changedFields.add(diff.path[0].toString());
+        }
       }
       this.updatedFields = [...changedFields.keys()];
     }
