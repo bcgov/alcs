@@ -101,7 +101,7 @@ export class ApplicationDecision extends Base {
   })
   isDraft: boolean;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({
     comment: 'Indicates whether the decision is subject to conditions',
     type: 'boolean',
@@ -109,7 +109,7 @@ export class ApplicationDecision extends Base {
   })
   isSubjectToConditions?: boolean | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     comment: 'Staff input field for a description of the decision',
     nullable: true,
@@ -117,7 +117,7 @@ export class ApplicationDecision extends Base {
   })
   decisionDescription?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({
     comment: 'Indicates whether the stats are required for the decision',
     nullable: true,
@@ -125,7 +125,7 @@ export class ApplicationDecision extends Base {
   })
   isStatsRequired?: boolean | null;
 
-  @AutoMap()
+  @AutoMap(() => Number)
   @Column({
     comment:
       'Indicates how long the decision should stay hidden from public in days from decision date',
@@ -134,7 +134,7 @@ export class ApplicationDecision extends Base {
   })
   daysHideFromPublic?: number | null;
 
-  @AutoMap()
+  @AutoMap(() => Date)
   @Column({
     type: 'timestamptz',
     nullable: true,
@@ -142,7 +142,7 @@ export class ApplicationDecision extends Base {
   })
   rescindedDate?: Date | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     comment: 'Comment provided by the staff when the decision was rescinded',
     nullable: true,

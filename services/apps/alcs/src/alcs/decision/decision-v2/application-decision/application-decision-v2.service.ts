@@ -186,6 +186,14 @@ export class ApplicationDecisionV2Service {
     existingDecision.reconsiders = reconsiders;
     existingDecision.resolutionNumber = updateDto.resolutionNumber;
     existingDecision.resolutionYear = updateDto.resolutionYear;
+    existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
+    existingDecision.decisionDescription = updateDto.decisionDescription;
+    existingDecision.isStatsRequired = updateDto.isStatsRequired;
+    existingDecision.daysHideFromPublic = updateDto.daysHideFromPublic;
+    existingDecision.rescindedDate = formatIncomingDate(
+      updateDto.rescindedDate,
+    );
+    existingDecision.rescindedComment = updateDto.rescindedComment;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -303,7 +311,9 @@ export class ApplicationDecisionV2Service {
       decisionDescription: createDto.decisionDescription,
       isStatsRequired: createDto.isStatsRequired,
       daysHideFromPublic: createDto.daysHideFromPublic,
-      rescindedDate: new Date(createDto.rescindedDate),
+      rescindedDate: createDto.rescindedDate
+        ? new Date(createDto.rescindedDate)
+        : null,
       rescindedComment: createDto.rescindedComment,
       application,
       modifies,

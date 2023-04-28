@@ -83,9 +83,10 @@ export class ApplicationDecisionV2Controller {
   @Get('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('uuid') uuid: string): Promise<ApplicationDecisionDto> {
-    const meeting = await this.appDecisionService.get(uuid);
+    const decision = await this.appDecisionService.get(uuid);
+
     return this.mapper.mapAsync(
-      meeting,
+      decision,
       ApplicationDecision,
       ApplicationDecisionDto,
     );
@@ -136,14 +137,14 @@ export class ApplicationDecisionV2Controller {
       );
     }
 
-    const updatedMeeting = await this.appDecisionService.update(
+    const updatedDecision = await this.appDecisionService.update(
       uuid,
       updateDto,
       null,
       null,
     );
     return this.mapper.mapAsync(
-      updatedMeeting,
+      updatedDecision,
       ApplicationDecision,
       ApplicationDecisionDto,
     );

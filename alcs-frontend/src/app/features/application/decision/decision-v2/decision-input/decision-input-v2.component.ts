@@ -4,9 +4,11 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { Subject } from 'rxjs';
+import { combineLatestWith, Subject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
+import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
+import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../../../../services/application/application.dto';
 import {
@@ -92,6 +94,32 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.setYear();
+
+    this.extractAndPopulateQueryParams();
+
+    if (this.fileNumber) {
+      this.loadData(this.fileNumber);
+    }
+  }
+
+  private extractAndPopulateQueryParams() {
+    const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
+    const uuid = this.route.snapshot.paramMap.get('uuid');
+    const isFirst = this.route.snapshot.paramMap.get('isFirstDecision');
+    this.isFirstDecision = isFirst ? parseStringToBoolean(isFirst)! : true;
+
+    if (uuid) {
+      this.uuid = uuid;
+      this.isEdit = true;
+    }
+
+    if (fileNumber) {
+      this.fileNumber = fileNumber;
+    }
+  }
+
+  private setYear() {
     const year = moment('1974');
     const currentYear = moment().year();
     while (year.year() <= currentYear) {
@@ -103,23 +131,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.form.patchValue({
         resolutionYear: currentYear,
       });
-    }
-
-    const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
-    const uuid = this.route.snapshot.paramMap.get('uuid');
-    const isFirst = this.route.snapshot.paramMap.get('isFirstDecision');
-
-    console.log(fileNumber, uuid, this.isFirstDecision);
-    this.isFirstDecision = isFirst ? parseStringToBoolean(isFirst)! : true;
-
-    if (uuid) {
-      this.uuid = uuid;
-      this.isEdit = true;
-    }
-
-    if (fileNumber) {
-      this.fileNumber = fileNumber;
-      this.loadData(this.fileNumber);
     }
   }
 
@@ -134,8 +145,112 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
 
+    await this.prepareDataForEdit();
+  }
+
+  private async prepareDataForEdit() {
     if (this.isEdit) {
       this.existingDecision = await this.decisionService.getByUuid(this.uuid);
+
+      if (!this.isFirstDecision) {
+        this.form.controls.postDecision.addValidators([Validators.required]);
+        this.form.controls.decisionMaker.disable();
+        this.form.controls.outcome.disable();
+      }
+
+      this.modificationService.$modifications
+        .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
+        .subscribe(([modifications, reconsiderations]) => {
+          this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
+        });
+
+      if (this.existingDecision) {
+        this.patchFormWithExistingData(this.existingDecision);
+      }
+    }
+  }
+
+  private mapPostDecisionsToControls(
+    modifications: ApplicationModificationDto[],
+    reconsiderations: ApplicationReconsiderationDto[],
+    existingDecision?: ApplicationDecisionDto
+  ) {
+    const mappedModifications = modifications
+      .filter(
+        (modification) =>
+          (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
+          (modification.reviewOutcome.code !== 'REF' && modification.resultingDecision === null)
+      )
+      .map((modification, index) => ({
+        label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
+          .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+          .join(', ')}`,
+        uuid: modification.uuid,
+        type: PostDecisionType.Modification,
+      }));
+
+    const mappedRecons = reconsiderations
+      .filter(
+        (reconsideration) =>
+          (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
+          (reconsideration.reviewOutcome?.code !== 'REF' && reconsideration.resultingDecision === null)
+      )
+      .map((reconsideration, index) => ({
+        label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
+          .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+          .join(', ')}`,
+        uuid: reconsideration.uuid,
+        type: PostDecisionType.Reconsideration,
+      }));
+    this.postDecisions = [...mappedModifications, ...mappedRecons];
+  }
+
+  private patchFormWithExistingData(existingDecision: ApplicationDecisionDto) {
+    this.isEdit = true;
+    this.form.patchValue({
+      outcome: existingDecision.outcome.code,
+      decisionMaker: existingDecision.decisionMaker?.code,
+      ceoCriterion: existingDecision.ceoCriterion?.code,
+      date: existingDecision.date ? new Date(existingDecision.date) : undefined,
+      resolutionYear: existingDecision.resolutionYear,
+      resolutionNumber: existingDecision.resolutionNumber?.toString(10) || undefined,
+      chairReviewRequired: existingDecision.chairReviewRequired ? 'true' : 'false',
+      chairReviewDate: existingDecision.chairReviewDate ? new Date(existingDecision.chairReviewDate) : undefined,
+      auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
+      postDecision: existingDecision.modifies?.uuid || existingDecision.reconsiders?.uuid,
+      isSubjectToConditions: existingDecision.isSubjectToConditions ? 'true' : 'false',
+      decisionDescription: existingDecision.decisionDescription,
+      isStatsRequired: existingDecision.isStatsRequired ? 'true' : 'false',
+      daysHideFromPublic: existingDecision.daysHideFromPublic,
+      rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
+      rescindedComment: existingDecision.rescindedComment,
+    });
+
+    if (existingDecision.reconsiders) {
+      this.onSelectPostDecision({
+        type: PostDecisionType.Reconsideration,
+      });
+    }
+    if (existingDecision.modifies) {
+      this.onSelectPostDecision({
+        type: PostDecisionType.Modification,
+      });
+    }
+    const selectedCriterion = [];
+    if (existingDecision.isTimeExtension) {
+      selectedCriterion.push('isTimeExtension');
+    }
+    if (existingDecision.isOther) {
+      selectedCriterion.push('isOther');
+    }
+    this.form.patchValue({
+      criterionModification: selectedCriterion,
+    });
+
+    if (existingDecision.chairReviewOutcome !== null) {
+      this.form.patchValue({
+        chairReviewOutcome: existingDecision.chairReviewOutcome?.code,
+      });
     }
   }
 

@@ -21,6 +21,12 @@ export interface UpdateApplicationDecisionDto {
   isOther?: boolean | null;
   modifiesUuid?: string | null;
   reconsidersUuid?: string | null;
+  isSubjectToConditions?: boolean | null;
+  decisionDescription?: string | null;
+  isStatsRequired?: boolean | null;
+  daysHideFromPublic?: number | null;
+  rescindedDate?: number | null;
+  rescindedComment?: string | null;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -33,12 +39,6 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
-  isSubjectToConditions?: boolean | null;
-  decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
-  daysHideFromPublic?: number | null;
-  rescindedDate?: number | null;
-  rescindedComment?: string | null;
 }
 
 export interface ApplicationDecisionDto {
@@ -58,6 +58,12 @@ export interface ApplicationDecisionDto {
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
   isDraft: boolean;
+  isSubjectToConditions?: boolean | null;
+  decisionDescription?: string | null;
+  isStatsRequired?: boolean | null;
+  daysHideFromPublic?: number | null;
+  rescindedDate?: number | null;
+  rescindedComment?: string | null;
   modifies?: LinkedResolutionDto;
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
