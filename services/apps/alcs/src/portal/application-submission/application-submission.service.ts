@@ -626,21 +626,33 @@ export class ApplicationSubmissionService {
         ? updateDto.nfuWillImportFill
         : application.nfuWillImportFill;
     application.nfuTotalFillPlacement =
-      updateDto.nfuTotalFillPlacement || application.nfuTotalFillPlacement;
+      updateDto.nfuTotalFillPlacement !== undefined
+        ? updateDto.nfuTotalFillPlacement
+        : application.nfuTotalFillPlacement;
     application.nfuMaxFillDepth =
-      updateDto.nfuMaxFillDepth || application.nfuMaxFillDepth;
+      updateDto.nfuMaxFillDepth !== undefined
+        ? updateDto.nfuMaxFillDepth
+        : application.nfuMaxFillDepth;
     application.nfuFillVolume =
-      updateDto.nfuFillVolume || application.nfuFillVolume;
+      updateDto.nfuFillVolume !== undefined
+        ? updateDto.nfuFillVolume
+        : application.nfuFillVolume;
     application.nfuProjectDurationUnit =
-      updateDto.nfuProjectDurationUnit || application.nfuProjectDurationUnit;
+      updateDto.nfuProjectDurationUnit !== undefined
+        ? updateDto.nfuProjectDurationUnit
+        : application.nfuProjectDurationUnit;
     application.nfuProjectDurationAmount =
-      updateDto.nfuProjectDurationAmount ||
-      application.nfuProjectDurationAmount;
+      updateDto.nfuProjectDurationAmount !== undefined
+        ? updateDto.nfuProjectDurationAmount
+        : application.nfuProjectDurationAmount;
     application.nfuFillTypeDescription =
-      updateDto.nfuFillTypeDescription || application.nfuFillTypeDescription;
+      updateDto.nfuFillTypeDescription !== undefined
+        ? updateDto.nfuFillTypeDescription
+        : application.nfuFillTypeDescription;
     application.nfuFillOriginDescription =
-      updateDto.nfuFillOriginDescription ||
-      application.nfuFillOriginDescription;
+      updateDto.nfuFillOriginDescription !== undefined
+        ? updateDto.nfuFillOriginDescription
+        : application.nfuFillOriginDescription;
 
     return application;
   }
