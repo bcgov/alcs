@@ -26,6 +26,12 @@ export const decisionChildRoutes = [
     component: DecisionInputV2Component,
     requiresAuthorization: true,
   },
+  {
+    path: 'draft/:uuid/edit/:isFirstDecision',
+    menuTitle: 'Decision',
+    component: DecisionInputV2Component,
+    requiresAuthorization: true,
+  },
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
@@ -54,7 +55,8 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private applicationDetailService: ApplicationDetailService,
     private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -126,29 +128,34 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     if (decisionIndex !== this.decisions.length - 1) {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
-    this.dialog
-      .open(DecisionV2DialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        autoFocus: false,
-        data: {
-          isFirstDecision: decisionIndex === this.decisions.length - 1,
-          minDate,
-          fileNumber: this.fileNumber,
-          outcomes: this.outcomes,
-          decisionMakers: this.decisionMakers,
-          ceoCriterion: this.ceoCriterion,
-          existingDecision: decision,
-        },
-      })
-      .afterClosed()
-      .subscribe((didModify) => {
-        if (didModify) {
-          this.applicationDetailService.loadApplication(this.fileNumber);
-        }
-      });
+
+    // TODO remove this and add it in input?
+    const isFirstDecision = decisionIndex === this.decisions.length - 1;
+    this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit/${isFirstDecision}`]);
+
+    // this.dialog
+    //   .open(DecisionV2DialogComponent, {
+    //     minWidth: '600px',
+    //     maxWidth: '900px',
+    //     maxHeight: '80vh',
+    //     width: '90%',
+    //     autoFocus: false,
+    //     data: {
+    //       isFirstDecision: decisionIndex === this.decisions.length - 1,
+    //       minDate,
+    //       fileNumber: this.fileNumber,
+    //       outcomes: this.outcomes,
+    //       decisionMakers: this.decisionMakers,
+    //       ceoCriterion: this.ceoCriterion,
+    //       existingDecision: decision,
+    //     },
+    //   })
+    //   .afterClosed()
+    //   .subscribe((didModify) => {
+    //     if (didModify) {
+    //       this.applicationDetailService.loadApplication(this.fileNumber);
+    //     }
+    //   });
   }
 
   async deleteDecision(uuid: string) {

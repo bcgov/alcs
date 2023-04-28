@@ -332,12 +332,12 @@ export class ApplicationDecisionV2Service {
   }
 
   private async validateResolutionNumber(number, year) {
+    // we do not need to include deleted items since there may be multiple deleted draft decision wih the same or different numbers
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
         resolutionNumber: number ?? IsNull(),
         resolutionYear: year ?? IsNull(),
       },
-      withDeleted: true,
     });
 
     if (existingDecision) {

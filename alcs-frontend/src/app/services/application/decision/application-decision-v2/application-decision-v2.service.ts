@@ -126,4 +126,14 @@ export class ApplicationDecisionV2Service {
     const url = `${this.url}/${decisionUuid}/file/${documentUuid}`;
     return await firstValueFrom(this.http.delete<{ url: string }>(url));
   }
+
+  async getByUuid(uuid: string) {
+    let decision: ApplicationDecisionDto | undefined;
+    try {
+      decision = await firstValueFrom(this.http.get<ApplicationDecisionDto>(`${this.url}/${uuid}`));
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch decision');
+    }
+    return decision;
+  }
 }

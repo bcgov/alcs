@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -47,6 +48,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   minDate = new Date(0);
 
   fileNumber: string = '';
+  uuid: string = '';
   application: ApplicationDto | undefined;
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
@@ -84,7 +86,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private applicationDetailService: ApplicationDetailService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -101,13 +105,22 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       });
     }
 
-    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
-      if (application) {
-        this.fileNumber = application.fileNumber;
-        this.application = application;
-        this.loadData(application.fileNumber);
-      }
-    });
+    const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
+    const uuid = this.route.snapshot.paramMap.get('uuid');
+    const isFirst = this.route.snapshot.paramMap.get('isFirstDecision');
+
+    console.log(fileNumber, uuid, this.isFirstDecision);
+    this.isFirstDecision = isFirst ? parseStringToBoolean(isFirst)! : true;
+
+    if (uuid) {
+      this.uuid = uuid;
+      this.isEdit = true;
+    }
+
+    if (fileNumber) {
+      this.fileNumber = fileNumber;
+      this.loadData(this.fileNumber);
+    }
   }
 
   ngOnDestroy(): void {
@@ -120,6 +133,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.outcomes = codes.outcomes;
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
+
+    if (this.isEdit) {
+      this.existingDecision = await this.decisionService.getByUuid(this.uuid);
+    }
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
@@ -216,6 +233,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
     } finally {
       this.isLoading = false;
+      // TODO uncomment this once feature is ready
+      // this.onCancel();
     }
   }
 
@@ -264,5 +283,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           // this.loadDocuments(this.fileId);
         }
       });
+  }
+
+  onCancel() {
+    this.router.navigate([`application/${this.fileNumber}/decision`]);
   }
 }
