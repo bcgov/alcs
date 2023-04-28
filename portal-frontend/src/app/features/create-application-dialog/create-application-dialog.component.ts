@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ApplicationTypeDto, SubmissionTypeDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
-import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 
 export enum ApplicationCreateDialogStepsEnum {
   submissionType = 0,
