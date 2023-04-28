@@ -102,6 +102,55 @@ export class ApplicationDecision extends Base {
   isDraft: boolean;
 
   @AutoMap()
+  @Column({
+    comment: 'Indicates whether the decision is subject to conditions',
+    type: 'boolean',
+    nullable: true,
+  })
+  isSubjectToConditions?: boolean | null;
+
+  @AutoMap()
+  @Column({
+    comment: 'Staff input field for a description of the decision',
+    nullable: true,
+    type: 'text',
+  })
+  decisionDescription?: string | null;
+
+  @AutoMap()
+  @Column({
+    comment: 'Indicates whether the stats are required for the decision',
+    nullable: true,
+    type: 'boolean',
+  })
+  isStatsRequired?: boolean | null;
+
+  @AutoMap()
+  @Column({
+    comment:
+      'Indicates how long the decision should stay hidden from public in days from decision date',
+    nullable: true,
+    type: 'integer',
+  })
+  daysHideFromPublic?: number | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+    comment: 'Date when decision was rescinded',
+  })
+  rescindedDate?: Date | null;
+
+  @AutoMap()
+  @Column({
+    comment: 'Comment provided by the staff when the decision was rescinded',
+    nullable: true,
+    type: 'text',
+  })
+  rescindedComment?: string | null;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationDecisionChairReviewOutcomeType, {
     nullable: true,
   })

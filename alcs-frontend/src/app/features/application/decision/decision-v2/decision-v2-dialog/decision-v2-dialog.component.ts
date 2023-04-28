@@ -16,8 +16,8 @@ import {
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../../services/application/decision/application-decision-v2/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v2/application-decision.service';
+} from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 
 export enum PostDecisionType {
@@ -74,7 +74,7 @@ export class DecisionV2DialogComponent implements OnInit {
       minDate?: Date;
     },
     private dialogRef: MatDialogRef<DecisionV2DialogComponent>,
-    private decisionService: ApplicationDecisionService,
+    private decisionService: ApplicationDecisionV2Service,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService
   ) {

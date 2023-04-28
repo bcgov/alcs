@@ -97,6 +97,30 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
 
   @IsBoolean()
   isDraft: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isSubjectToConditions?: boolean;
+
+  @IsString()
+  @IsOptional()
+  decisionDescription?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isStatsRequired?: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  daysHideFromPublic?: number;
+
+  @IsNumber()
+  @IsOptional()
+  rescindedDate: number;
+
+  @IsString()
+  @IsOptional()
+  rescindedComment?: string;
 }
 
 export class DecisionOutcomeCodeDto extends BaseCodeDto {

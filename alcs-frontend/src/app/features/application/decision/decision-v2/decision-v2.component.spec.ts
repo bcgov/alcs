@@ -6,7 +6,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
-import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v2/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -20,7 +20,6 @@ describe('DecisionV2Component', () => {
   beforeEach(async () => {
     mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
-    
 
     await TestBed.configureTestingModule({
       imports: [MatSnackBarModule],
@@ -31,7 +30,7 @@ describe('DecisionV2Component', () => {
           useValue: mockAppDetailService,
         },
         {
-          provide: ApplicationDecisionService,
+          provide: ApplicationDecisionV2Service,
           useValue: {},
         },
         {

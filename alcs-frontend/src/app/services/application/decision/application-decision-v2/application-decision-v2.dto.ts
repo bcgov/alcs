@@ -25,14 +25,20 @@ export interface UpdateApplicationDecisionDto {
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   date: number;
-  outcomeCode: string;
-  resolutionNumber: number;
+  outcomeCode?: string;
+  resolutionNumber?: number | null;
   resolutionYear: number;
   chairReviewRequired: boolean;
   applicationFileNumber: string;
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
+  isSubjectToConditions?: boolean | null;
+  decisionDescription?: string | null;
+  isStatsRequired?: boolean | null;
+  daysHideFromPublic?: number | null;
+  rescindedDate?: number | null;
+  rescindedComment?: string | null;
 }
 
 export interface ApplicationDecisionDto {

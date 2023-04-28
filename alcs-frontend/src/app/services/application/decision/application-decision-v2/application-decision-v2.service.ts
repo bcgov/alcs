@@ -11,12 +11,12 @@ import {
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
-} from './application-decision.dto';
+} from './application-decision-v2.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationDecisionService {
+export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}

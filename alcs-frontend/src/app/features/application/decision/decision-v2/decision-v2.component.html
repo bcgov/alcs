@@ -1,9 +1,6 @@
 <div class="split">
   <h3>Decision</h3>
-  <div
-    matTooltip="This application is currently paused. Only active applications can have decisions."
-    [matTooltipDisabled]="!isPaused"
-  >
+  <div matTooltip="{{ disabledCreateBtnTooltip }}" [matTooltipDisabled]="!isPaused && !isDraftExists">
     <button
       [disabled]="isPaused"
       mat-flat-button

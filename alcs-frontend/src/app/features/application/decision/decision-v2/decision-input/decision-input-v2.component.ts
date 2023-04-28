@@ -16,9 +16,10 @@ import {
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../../services/application/decision/application-decision-v2/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v2/application-decision.service';
+} from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
+import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { DocumentUploadDialogComponent } from '../../../documents/document-upload-dialog/document-upload-dialog.component';
 
 // TODO export this into generic location for V1 and V2
@@ -36,10 +37,10 @@ type MappedPostDecision = {
 
 @Component({
   selector: 'app-decision-input',
-  templateUrl: './decision-input.component.html',
-  styleUrls: ['./decision-input.component.scss'],
+  templateUrl: './decision-input-v2.component.html',
+  styleUrls: ['./decision-input-v2.component.scss'],
 })
-export class DecisionInputComponent implements OnInit, OnDestroy {
+export class DecisionInputV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   isLoading = false;
   isEdit = false;
@@ -79,7 +80,7 @@ export class DecisionInputComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private decisionService: ApplicationDecisionService,
+    private decisionService: ApplicationDecisionV2Service,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private applicationDetailService: ApplicationDetailService,
@@ -162,6 +163,12 @@ export class DecisionInputComponent implements OnInit, OnDestroy {
       chairReviewDate,
       chairReviewOutcome,
       postDecision,
+      isSubjectToConditions,
+      decisionDescription,
+      isStatsRequired,
+      daysHideFromPublic,
+      rescindedDate,
+      rescindedComment,
     } = this.form.getRawValue();
 
     const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
@@ -183,6 +190,12 @@ export class DecisionInputComponent implements OnInit, OnDestroy {
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
       isDraft: true,
+      isSubjectToConditions: parseStringToBoolean(isSubjectToConditions),
+      decisionDescription: decisionDescription,
+      isStatsRequired: parseStringToBoolean(isStatsRequired),
+      daysHideFromPublic: daysHideFromPublic,
+      rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
+      rescindedComment: rescindedComment,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');

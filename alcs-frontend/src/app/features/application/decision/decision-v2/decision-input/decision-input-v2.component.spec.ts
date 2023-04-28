@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DecisionInputComponent } from './decision-input.component';
+import { DecisionInputV2Component } from './decision-input-v2.component';
 
 describe('DecisionInputComponent', () => {
-  let component: DecisionInputComponent;
-  let fixture: ComponentFixture<DecisionInputComponent>;
+  let component: DecisionInputV2Component;
+  let fixture: ComponentFixture<DecisionInputV2Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DecisionInputComponent ]
-    })
-    .compileComponents();
+      declarations: [DecisionInputV2Component],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(DecisionInputComponent);
+    fixture = TestBed.createComponent(DecisionInputV2Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

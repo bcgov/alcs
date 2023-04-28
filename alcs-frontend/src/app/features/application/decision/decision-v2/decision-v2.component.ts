@@ -8,8 +8,8 @@ import {
   CeoCriterionDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v2/application-decision.service';
+} from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import {
   MODIFICATION_TYPE_LABEL,
@@ -35,6 +35,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   createDecision = decisionChildRoutes.find((e) => e.path === 'create')!;
   isDraftExists = true;
+  disabledCreateBtnTooltip = '';
 
   fileNumber: string = '';
   decisionDate: number | undefined;
@@ -51,7 +52,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   constructor(
     public dialog: MatDialog,
     private applicationDetailService: ApplicationDetailService,
-    private decisionService: ApplicationDecisionService,
+    private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
@@ -84,6 +85,9 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     }));
 
     this.isDraftExists = this.decisions.some((d) => d.isDraft);
+    this.disabledCreateBtnTooltip = this.isPaused
+      ? 'This application is currently paused. Only active applications can have decisions.'
+      : 'You cannot create a decision if there are unpublished decisions.';
   }
 
   onCreate() {
