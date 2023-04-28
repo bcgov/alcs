@@ -328,8 +328,8 @@ export class ApplicationDecisionV2Service {
   private async validateResolutionNumber(number, year) {
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
-        resolutionNumber: number,
-        resolutionYear: year,
+        resolutionNumber: number ?? IsNull(),
+        resolutionYear: year ?? IsNull(),
       },
       withDeleted: true,
     });

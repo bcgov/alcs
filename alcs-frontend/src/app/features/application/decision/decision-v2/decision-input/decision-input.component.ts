@@ -16,8 +16,8 @@ import {
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../../services/application/decision/application-decision-v1/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
+} from '../../../../../services/application/decision/application-decision-v2/application-decision.dto';
+import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v2/application-decision.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { DocumentUploadDialogComponent } from '../../../documents/document-upload-dialog/document-upload-dialog.component';
 
@@ -182,6 +182,7 @@ export class DecisionInputComponent implements OnInit, OnDestroy {
       applicationFileNumber: this.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
+      isDraft: true,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');

@@ -51,6 +51,7 @@ export interface ApplicationDecisionDto {
   documents: DecisionDocumentDto[];
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
+  isDraft: boolean;
   modifies?: LinkedResolutionDto;
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];

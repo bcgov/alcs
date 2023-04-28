@@ -11,6 +11,7 @@
       [routerLink]="createDecision.path ? createDecision.path : './'"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: false }"
+      [disabled]="isDraftExists"
     >
       + Create Draft Decision
     </button>

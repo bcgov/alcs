@@ -1,20 +1,22 @@
 <section>
-  <div>
+  <div class="row">
     <h3>Decisions > {{ isEdit ? 'Edit' : 'Create' }} Decision Draft</h3>
   </div>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
     <div class="grid">
-      <ng-select
-        appearance="outline"
-        class="resolution-year"
-        [items]="resolutionYears"
-        formControlName="resolutionYear"
-        appendTo="body"
-        required
-        placeholder="Select Year for Resolution Number*"
-        [clearable]="false"
-      ></ng-select>
+      <div>
+        <ng-select
+          appearance="outline"
+          class="resolution-year"
+          [items]="resolutionYears"
+          formControlName="resolutionYear"
+          appendTo="body"
+          required
+          placeholder="Select Year for Resolution Number*"
+          [clearable]="false"
+        ></ng-select>
+      </div>
 
       <button [loading]="isLoading" type="button" mat-flat-button color="primary">Generate Number</button>
 

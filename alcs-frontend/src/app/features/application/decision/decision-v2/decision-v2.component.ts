@@ -34,6 +34,7 @@ type LoadingDecision = ApplicationDecisionDto & {
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   createDecision = decisionChildRoutes.find((e) => e.path === 'create')!;
+  isDraftExists = true;
 
   fileNumber: string = '';
   decisionDate: number | undefined;
@@ -74,13 +75,15 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.ceoCriterion = codes.ceoCriterion;
 
     const loadedDecision = await this.decisionService.fetchByApplication(fileNumber);
-    // TODO: observable, since this may take a while to load?
+
     this.decisions = loadedDecision.map((decision) => ({
       ...decision,
       reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
       modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
       loading: false,
     }));
+
+    this.isDraftExists = this.decisions.some((d) => d.isDraft);
   }
 
   onCreate() {
