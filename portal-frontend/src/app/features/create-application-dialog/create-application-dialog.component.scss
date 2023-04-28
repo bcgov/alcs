@@ -19,6 +19,10 @@
   margin: rem(16);
 }
 
+ul {
+  margin: 0;
+}
+
 .warning-banner {
   padding: rem(16);
   background-color: rgba(colors.$accent-color-light, 0.5);
