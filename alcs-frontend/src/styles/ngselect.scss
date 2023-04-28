@@ -54,12 +54,20 @@
   bottom: 1.3em;
 }
 
-.ng-select .ng-select-container .ng-value-container .ng-input > input {
+.ng-select .ng-select-container.ng-appearance-outline .ng-value-container .ng-input > input {
   margin-bottom: 8px;
   margin-left: 12px;
   font-size: 18px;
 }
 
 .ng-dropdown-panel.ng-select-bottom {
-  top: calc(100% - 0.5em);
+  top: calc(100% - 0.5em) !important;
+}
+
+.ng-select.ng-select-single .ng-select-container:not(.ng-appearance-outline) .ng-clear-wrapper {
+  bottom: 12px !important;
+}
+
+.ng-select.ng-select-single .ng-select-container:not(.ng-appearance-outline) .ng-arrow-wrapper {
+  bottom: 15px !important;
 }

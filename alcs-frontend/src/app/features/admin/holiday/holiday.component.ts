@@ -54,7 +54,7 @@ export class HolidayComponent implements OnInit, OnDestroy {
   }
 
   async fetch() {
-    await this.holidayService.fetch(this.pageIndex, this.itemsPerPage, undefined);
+    await this.holidayService.fetch(this.pageIndex, this.itemsPerPage);
   }
 
   async loadFilterValues() {
@@ -73,6 +73,8 @@ export class HolidayComponent implements OnInit, OnDestroy {
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
+        this.selectedYear = 'allYears';
+        this.pageIndex = 0;
         await this.fetch();
       }
     });
@@ -89,6 +91,8 @@ export class HolidayComponent implements OnInit, OnDestroy {
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
+        this.selectedYear = 'allYears';
+        this.pageIndex = 0;
         await this.fetch();
       }
     });
@@ -102,6 +106,8 @@ export class HolidayComponent implements OnInit, OnDestroy {
       .subscribe(async (answer) => {
         if (answer) {
           await this.holidayService.delete(holiday.uuid);
+          this.selectedYear = 'allYears';
+          this.pageIndex = 0;
           await this.fetch();
         }
       });

@@ -23,7 +23,8 @@ import { ApplicationSubmissionReviewService } from '../application-submission-re
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
-const TEMPLATE_FILENAME = 'submission-review-template.docx';
+const LG_TEMPLATE_FILENAME = 'submission-lg-review-template.docx';
+const FNG_TEMPLATE_FILENAME = 'submission-fng-review-template.docx';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -55,9 +56,13 @@ export class GenerateReviewDocumentService {
 
     const payload = await this.preparePdfPayload(submission, review, documents);
 
+    const template = payload.isFirstNationGovernment
+      ? FNG_TEMPLATE_FILENAME
+      : LG_TEMPLATE_FILENAME;
+
     return await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
-      `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${TEMPLATE_FILENAME}`,
+      `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${template}`,
       payload,
     );
   }
@@ -138,6 +143,7 @@ export class GenerateReviewDocumentService {
       applicationTypePortalLabel: application.type.portalLabel,
       applicant: submission.applicant,
       localGovernment: localGovernment ? localGovernment.name : 'No Data',
+      isFirstNationGovernment: localGovernment?.isFirstNation ?? false,
       attachments,
       noData: 'No Data',
       notSubjectToAuthorization: 'Not Subject to Authorization',

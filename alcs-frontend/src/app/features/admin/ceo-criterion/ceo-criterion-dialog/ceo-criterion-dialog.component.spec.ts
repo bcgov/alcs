@@ -6,7 +6,7 @@ import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-crit
 
 import { CeoCriterionDialogComponent } from './ceo-criterion-dialog.component';
 
-describe('HolidayDialogComponent', () => {
+describe('CeoCriterionDialogComponent', () => {
   let component: CeoCriterionDialogComponent;
   let fixture: ComponentFixture<CeoCriterionDialogComponent>;
 
@@ -15,7 +15,7 @@ describe('HolidayDialogComponent', () => {
       imports: [ReactiveFormsModule, FormsModule],
       declarations: [CeoCriterionDialogComponent],
       providers: [
-        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: undefined },
         { provide: MatDialogRef, useValue: {} },
         {
           provide: CeoCriterionService,

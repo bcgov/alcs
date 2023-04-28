@@ -63,7 +63,7 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">
-      PID<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pid')"></app-updated-banner>
+      PID <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pid')"></app-updated-banner>
     </div>
     <div class="grid-double">
       <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
@@ -73,7 +73,7 @@
       </app-validation-error>
     </div>
     <div class="subheading2 grid-1">
-      PIN (Optional)<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
+      PIN (Optional) <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ parcel.pin }}
