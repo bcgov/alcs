@@ -2,8 +2,7 @@ name: Generate Schemaspy Docs
 on:
   push:
     branches:
-      - bugfix/ALCS-775
-      # temp changing from main to bugfix/ALCS-775
+      - main
 env:
   NODE_ENV: test
 
