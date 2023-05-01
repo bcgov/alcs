@@ -366,6 +366,129 @@ export class ApplicationSubmission extends Base {
   })
   subdProposedLots: ProposedLot[];
 
+  //Soil & Fill
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilIsNOIFollowUp: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true, name: 'soil_noi_ids' })
+  soilNOIIDs: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilHasPreviousALCAuthorization: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true, name: 'soil_application_ids' })
+  soilApplicationIDs: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilPurpose: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilProjectDurationUnit: string | null;
+
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
   @JoinColumn({

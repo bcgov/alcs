@@ -14,7 +14,6 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
-import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
@@ -35,6 +34,8 @@ const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.REFUSED_TO_FORWARD,
   APPLICATION_STATUS.SUBMITTED_TO_ALC,
 ];
+
+const filterUndefined = (val: any, fallback: any) => (val ? val : fallback);
 
 @Injectable()
 export class ApplicationSubmissionService {
@@ -135,6 +136,7 @@ export class ApplicationSubmissionService {
     this.setNFUFields(applicationSubmission, updateDto);
     this.setTURFields(applicationSubmission, updateDto);
     await this.setSUBDFields(applicationSubmission, updateDto);
+    this.setSoilFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -706,5 +708,79 @@ export class ApplicationSubmissionService {
         applicationUuid,
       );
     }
+  }
+
+  private setSoilFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.soilIsNOIFollowUp = filterUndefined(
+      updateDto.soilIsNOIFollowUp,
+      applicationSubmission.soilIsNOIFollowUp,
+    );
+    applicationSubmission.soilNOIIDs = filterUndefined(
+      updateDto.soilNOIIDs,
+      applicationSubmission.soilNOIIDs,
+    );
+    applicationSubmission.soilHasPreviousALCAuthorization = filterUndefined(
+      updateDto.soilHasPreviousALCAuthorization,
+      applicationSubmission.soilHasPreviousALCAuthorization,
+    );
+    applicationSubmission.soilApplicationIDs = filterUndefined(
+      updateDto.soilApplicationIDs,
+      applicationSubmission.soilApplicationIDs,
+    );
+    applicationSubmission.soilPurpose = filterUndefined(
+      updateDto.soilPurpose,
+      applicationSubmission.soilPurpose,
+    );
+    applicationSubmission.soilTypeRemoved = filterUndefined(
+      updateDto.soilTypeRemoved,
+      applicationSubmission.soilTypeRemoved,
+    );
+    applicationSubmission.soilReduceNegativeImpacts = filterUndefined(
+      updateDto.soilReduceNegativeImpacts,
+      applicationSubmission.soilReduceNegativeImpacts,
+    );
+    applicationSubmission.soilToRemoveVolume = filterUndefined(
+      updateDto.soilToRemoveVolume,
+      applicationSubmission.soilToRemoveVolume,
+    );
+    applicationSubmission.soilToRemoveArea = filterUndefined(
+      updateDto.soilToRemoveArea,
+      applicationSubmission.soilToRemoveArea,
+    );
+    applicationSubmission.soilToRemoveMaximumDepth = filterUndefined(
+      updateDto.soilToRemoveMaximumDepth,
+      applicationSubmission.soilToRemoveMaximumDepth,
+    );
+    applicationSubmission.soilToRemoveAverageDepth = filterUndefined(
+      updateDto.soilToRemoveAverageDepth,
+      applicationSubmission.soilToRemoveAverageDepth,
+    );
+    applicationSubmission.soilAlreadyRemovedVolume = filterUndefined(
+      updateDto.soilAlreadyRemovedVolume,
+      applicationSubmission.soilAlreadyRemovedVolume,
+    );
+    applicationSubmission.soilAlreadyRemovedArea = filterUndefined(
+      updateDto.soilAlreadyRemovedArea,
+      applicationSubmission.soilAlreadyRemovedArea,
+    );
+    applicationSubmission.soilAlreadyRemovedMaximumDepth = filterUndefined(
+      updateDto.soilAlreadyRemovedMaximumDepth,
+      applicationSubmission.soilAlreadyRemovedMaximumDepth,
+    );
+    applicationSubmission.soilAlreadyRemovedAverageDepth = filterUndefined(
+      updateDto.soilAlreadyRemovedAverageDepth,
+      applicationSubmission.soilAlreadyRemovedAverageDepth,
+    );
+    applicationSubmission.soilProjectDurationAmount = filterUndefined(
+      updateDto.soilProjectDurationAmount,
+      applicationSubmission.soilProjectDurationAmount,
+    );
+    applicationSubmission.soilProjectDurationUnit = filterUndefined(
+      updateDto.soilProjectDurationUnit,
+      applicationSubmission.soilProjectDurationUnit,
+    );
   }
 }

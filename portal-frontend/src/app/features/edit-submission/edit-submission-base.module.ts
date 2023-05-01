@@ -24,6 +24,7 @@ import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
+import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
@@ -50,6 +51,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     NfuProposalComponent,
     TurProposalComponent,
     SubdProposalComponent,
+    RosoProposalComponent,
   ],
   imports: [
     CommonModule,

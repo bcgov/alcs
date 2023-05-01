@@ -1,0 +1,239 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a> Section 6 of the ALC Act. </a>
+  </p>
+  <p>All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a href="TODO" target="_blank">FIXME: Removal of Soil</a>
+    </li>
+  </ul>
+</app-warning-banner>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="noi-follow-up">
+        Are you submitting this application as a follow-up to an ALC Notice of Intent (NOI)?
+      </label>
+      <div class="subtext">
+        If yes, please provide your NOI ID in the field below. Only applicants who have submitted a NOI to the ALC will
+        have a NOI ID.
+      </div>
+      <div>
+        <mat-button-toggle-group (valueChange)="onChangeNOI($event)" id="noi-follow-up" formControlName="isNOIFollowUp">
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNOIFollowUp.invalid && (isNOIFollowUp.dirty || isNOIFollowUp.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNOIFollowUp.invalid && (isNOIFollowUp.dirty || isNOIFollowUp.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="noi-id">Notice of Intent (NOI) ID</label>
+      <div class="subtext">If you have multiple NOI IDs, please separate with a comma.</div>
+      <mat-form-field appearance="outline">
+        <input formControlName="NOIIDs" id="noi-id" matInput />
+      </mat-form-field>
+      <div *ngIf="NOIIDs.invalid && (NOIIDs.dirty || NOIIDs.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="NOIIDs.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="application-follow-up">Does this proposal have previous ALC authorization?</label>
+      <div class="subtext">If yes, please provide the ALC Application ID in the field below.</div>
+      <div>
+        <mat-button-toggle-group
+          (valueChange)="onChangeALCAuthorization($event)"
+          id="application-follow-up"
+          formControlName="hasALCAuthorization"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': hasALCAuthorization.invalid && (hasALCAuthorization.dirty || hasALCAuthorization.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': hasALCAuthorization.invalid && (hasALCAuthorization.dirty || hasALCAuthorization.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="noi-id">Application ID</label>
+      <div class="subtext">If you have multiple Application IDs, please separate with a comma.</div>
+      <mat-form-field appearance="outline">
+        <input formControlName="applicationIDs" maxlength="4000" id="application-id" matInput />
+      </mat-form-field>
+      <div *ngIf="applicationIDs.invalid && (applicationIDs.dirty || applicationIDs.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="applicationIDs.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Include why you are applying for removal of soil, what the proposal will achieve, and any benefits to
+        agriculture that the proposal provides.
+      </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="purpose"
+          #purposeText
+          maxlength="4000"
+          id="purpose"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="soilTypeRemoved">Describe the type of soil proposed to be removed.</label>
+      <div class="subtext">List all proposed soil types to be removed.</div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="soilTypeRemoved"
+          #suitabilityText
+          maxlength="4000"
+          id="soilTypeRemoved"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - suitabilityText.textLength }}</span>
+      <div *ngIf="soilTypeRemoved.invalid && (soilTypeRemoved.dirty || soilTypeRemoved.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="soilTypeRemoved.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</div>
+    </div>
+    <div class="full-row">
+      <label for="agricultural-support">
+        What steps will be taken to reduce impacts to surrounding agricultural land?
+        <div class="subtext">Describe impact reducing measures.</div>
+      </label>
+      <mat-form-field appearance="outline">
+        <textarea
+          [formControl]="reduceNegativeImpacts"
+          #reduceNegativeImpactsText
+          maxlength="4000"
+          id="agricultural-support"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</span>
+      <div
+        *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">
+        Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
+        temporary or permanent drainage, etc.
+      </div>
+    </div>
+    <div class="full-row">
+      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+      ></app-file-drag-drop>
+    </div>
+    <div class="full-row">
+      <label class="subheading2" for="cross-section">Cross Sections</label>
+      <div class="subtext">Include North-South and East-West cross sections</div>
+      <app-info-banner>
+        Please refer to <a>TODO: Removal of Soil</a> on the ALC website for more information
+      </app-info-banner>
+      <app-file-drag-drop
+        id="cross-section"
+        [uploadedFiles]="crossSections"
+        (uploadFiles)="attachFile($event, DOCUMENT.CROSS_SECTIONS)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [allowMultiple]="true"
+      ></app-file-drag-drop>
+    </div>
+    <div class="full-row">
+      <label class="subheading2" for="reclamation-plan">Reclamation Plan</label>
+      <div class="subtext">
+        The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
+        agricultural capability assessment.
+      </div>
+      <app-info-banner>
+        Please refer to <a>TODO: Removal of Soil</a> on the ALC website for more information
+      </app-info-banner>
+      <app-file-drag-drop
+        id="reclamation-plan"
+        [uploadedFiles]="reclamationPlan"
+        (uploadFiles)="attachFile($event, DOCUMENT.RECLAMATION_PLAN)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [allowMultiple]="true"
+      ></app-file-drag-drop>
+    </div>
+  </div>
+</form>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

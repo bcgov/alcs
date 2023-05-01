@@ -83,6 +83,23 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   subdAgricultureSupport: string | null;
   subdIsHomeSiteSeverance: boolean | null;
   subdProposedLots: ProposedLot[];
+
+  //Soil Fields
+  soilIsNOIFollowUp: boolean | null;
+  soilNOIIDs: string | null;
+  soilHasPreviousALCAuthorization: boolean | null;
+  soilApplicationIDs: string | null;
+  soilPurpose: string | null;
+  soilTypeRemoved: string | null;
+  soilReduceNegativeImpacts: string | null;
+  soilToRemoveVolume: number | null;
+  soilToRemoveArea: number | null;
+  soilToRemoveMaximumDepth: number | null;
+  soilToRemoveAverageDepth: number | null;
+  soilAlreadyRemovedVolume: number | null;
+  soilAlreadyRemovedArea: number | null;
+  soilAlreadyRemovedMaximumDepth: number | null;
+  soilAlreadyRemovedAverageDepth: number | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -133,4 +150,21 @@ export interface ApplicationSubmissionUpdateDto {
   subdAgricultureSupport?: string | null;
   subdIsHomeSiteSeverance?: boolean | null;
   subdProposedLots?: ProposedLot[];
+
+  //Soil Fields
+  soilIsNOIFollowUp?: boolean | null;
+  soilNOIIDs?: string | null;
+  soilHasPreviousALCAuthorization?: boolean | null;
+  soilApplicationIDs?: string | null;
+  soilPurpose?: string | null;
+  soilTypeRemoved?: string | null;
+  soilReduceNegativeImpacts?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+  soilAlreadyRemovedVolume?: number | null;
+  soilAlreadyRemovedArea?: number | null;
+  soilAlreadyRemovedMaximumDepth?: number | null;
+  soilAlreadyRemovedAverageDepth?: number | null;
 }
