@@ -4,8 +4,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { combineLatestWith, Subject } from 'rxjs';
-import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
+import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
@@ -23,7 +22,6 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
-import { DocumentUploadDialogComponent } from '../../../documents/document-upload-dialog/document-upload-dialog.component';
 
 // TODO export this into generic location for V1 and V2
 export enum PostDecisionType {
@@ -48,6 +46,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   isLoading = false;
   isEdit = false;
   minDate = new Date(0);
+  isFirstDecision = false;
 
   fileNumber: string = '';
   uuid: string = '';
@@ -55,7 +54,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
-  isFirstDecision = true;
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
@@ -87,7 +85,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private decisionService: ApplicationDecisionV2Service,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private applicationDetailService: ApplicationDetailService,
     public dialog: MatDialog,
     public router: Router,
     private route: ActivatedRoute
@@ -106,8 +103,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   private extractAndPopulateQueryParams() {
     const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
     const uuid = this.route.snapshot.paramMap.get('uuid');
-    const isFirst = this.route.snapshot.paramMap.get('isFirstDecision');
-    this.isFirstDecision = isFirst ? parseStringToBoolean(isFirst)! : true;
 
     if (uuid) {
       this.uuid = uuid;
@@ -135,38 +130,59 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.decisionService.cleanDecision();
+    this.decisionService.cleanDecisions();
     this.$destroy.next();
     this.$destroy.complete();
   }
 
   async loadData(fileNumber: string) {
+    this.decisionService.loadDecision(this.uuid);
+    this.decisionService.loadDecisions(this.fileNumber);
+
     const codes = await this.decisionService.fetchCodes();
     this.outcomes = codes.outcomes;
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
+
+    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
+      if (decisions.length > 0) {
+        this.minDate = new Date(decisions[decisions.length - 1].date);
+      }
+    });
 
     await this.prepareDataForEdit();
   }
 
   private async prepareDataForEdit() {
     if (this.isEdit) {
-      this.existingDecision = await this.decisionService.getByUuid(this.uuid);
-
-      if (!this.isFirstDecision) {
-        this.form.controls.postDecision.addValidators([Validators.required]);
-        this.form.controls.decisionMaker.disable();
-        this.form.controls.outcome.disable();
-      }
-
-      this.modificationService.$modifications
-        .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
-        .subscribe(([modifications, reconsiderations]) => {
+      this.decisionService.$decision
+        .pipe(takeUntil(this.$destroy))
+        .pipe(
+          combineLatestWith(
+            this.modificationService.$modifications,
+            this.reconsiderationService.$reconsiderations,
+            this.decisionService.$decisions
+          )
+        )
+        .subscribe(([decision, modifications, reconsiderations, decisions]) => {
+          this.existingDecision = decision;
           this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
-        });
 
-      if (this.existingDecision) {
-        this.patchFormWithExistingData(this.existingDecision);
-      }
+          if (this.existingDecision) {
+            this.patchFormWithExistingData(this.existingDecision);
+
+            if (decisions.length > 0) {
+              this.isFirstDecision = decisions.findIndex((dec) => dec.uuid === this.uuid) === 0;
+
+              if (!this.isFirstDecision) {
+                this.form.controls.postDecision.addValidators([Validators.required]);
+                this.form.controls.decisionMaker.disable();
+                this.form.controls.outcome.disable();
+              }
+            }
+          }
+        });
     }
   }
 
@@ -348,26 +364,25 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
     } finally {
       this.isLoading = false;
-      // TODO uncomment this once feature is ready
-      // this.onCancel();
+      this.onCancel();
     }
   }
 
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
     if (postDecision.type === PostDecisionType.Modification) {
-      // this.form.controls.ceoCriterion.disable();
+      this.form.controls.ceoCriterion.disable();
       this.form.controls.outcome.disable();
       this.form.controls.decisionMaker.disable();
       this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION);
       this.form.patchValue({
         decisionMaker: DecisionMaker.CEO,
-        // ceoCriterion: CeoCriterion.MODIFICATION,
+        ceoCriterion: CeoCriterion.MODIFICATION,
         outcome: 'VARY',
       });
     } else {
       this.form.controls.decisionMaker.enable();
       this.form.controls.outcome.enable();
-      // this.form.controls.ceoCriterion.enable();
+      this.form.controls.ceoCriterion.enable();
       this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION);
     }
   }
@@ -382,22 +397,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   async onUploadFile() {
-    this.dialog
-      .open(DocumentUploadDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '800px',
-        width: '70%',
-        data: {
-          fileId: this.fileNumber,
-        },
-      })
-      .beforeClosed()
-      .subscribe((isDirty) => {
-        if (isDirty) {
-          // load decision document once it is uploaded
-          // this.loadDocuments(this.fileId);
-        }
-      });
+    console.log('There is a separate ticket for this');
   }
 
   onCancel() {

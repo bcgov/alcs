@@ -76,20 +76,21 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.outcomes = codes.outcomes;
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
+    this.decisionService.loadDecisions(fileNumber);
 
-    const loadedDecision = await this.decisionService.fetchByApplication(fileNumber);
+    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
+      this.decisions = decisions.map((decision) => ({
+        ...decision,
+        reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
+        modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
+        loading: false,
+      }));
 
-    this.decisions = loadedDecision.map((decision) => ({
-      ...decision,
-      reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
-      modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
-      loading: false,
-    }));
-
-    this.isDraftExists = this.decisions.some((d) => d.isDraft);
-    this.disabledCreateBtnTooltip = this.isPaused
-      ? 'This application is currently paused. Only active applications can have decisions.'
-      : 'You cannot create a decision if there are unpublished decisions.';
+      this.isDraftExists = this.decisions.some((d) => d.isDraft);
+      this.disabledCreateBtnTooltip = this.isPaused
+        ? 'This application is currently paused. Only active applications can have decisions.'
+        : 'You cannot create a decision if there are unpublished decisions.';
+    });
   }
 
   onCreate() {
@@ -124,38 +125,13 @@ export class DecisionV2Component implements OnInit, OnDestroy {
 
   onEdit(decision: LoadingDecision) {
     const decisionIndex = this.decisions.indexOf(decision);
+    // TODO set minDate for the decision in input
     let minDate = new Date(0);
     if (decisionIndex !== this.decisions.length - 1) {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
 
-    // TODO remove this and add it in input?
-    const isFirstDecision = decisionIndex === this.decisions.length - 1;
-    this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit/${isFirstDecision}`]);
-
-    // this.dialog
-    //   .open(DecisionV2DialogComponent, {
-    //     minWidth: '600px',
-    //     maxWidth: '900px',
-    //     maxHeight: '80vh',
-    //     width: '90%',
-    //     autoFocus: false,
-    //     data: {
-    //       isFirstDecision: decisionIndex === this.decisions.length - 1,
-    //       minDate,
-    //       fileNumber: this.fileNumber,
-    //       outcomes: this.outcomes,
-    //       decisionMakers: this.decisionMakers,
-    //       ceoCriterion: this.ceoCriterion,
-    //       existingDecision: decision,
-    //     },
-    //   })
-    //   .afterClosed()
-    //   .subscribe((didModify) => {
-    //     if (didModify) {
-    //       this.applicationDetailService.loadApplication(this.fileNumber);
-    //     }
-    //   });
+    this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
 
   async deleteDecision(uuid: string) {
@@ -241,6 +217,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.decisionService.cleanDecisions()
     this.$destroy.next();
     this.$destroy.complete();
   }

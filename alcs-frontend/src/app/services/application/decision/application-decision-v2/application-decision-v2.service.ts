@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/file';
 import { ToastService } from '../../../toast/toast.service';
@@ -18,6 +18,8 @@ import {
 })
 export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
+  $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
+  $decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
@@ -135,5 +137,23 @@ export class ApplicationDecisionV2Service {
       this.toastService.showErrorToast('Failed to fetch decision');
     }
     return decision;
+  }
+
+  async loadDecision(uuid: string) {
+    const decision = await this.getByUuid(uuid);
+    this.$decision.next(decision);
+  }
+
+  async loadDecisions(fileNumber: string) {
+    const decisions = await this.fetchByApplication(fileNumber);
+    this.$decisions.next(decisions);
+  }
+
+  async cleanDecision() {
+    this.$decision.next(undefined);
+  }
+
+  async cleanDecisions() {
+    this.$decisions.next([]);
   }
 }

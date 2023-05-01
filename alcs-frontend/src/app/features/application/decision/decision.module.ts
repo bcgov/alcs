@@ -27,7 +27,7 @@ export const decisionChildRoutes = [
     requiresAuthorization: true,
   },
   {
-    path: 'draft/:uuid/edit/:isFirstDecision',
+    path: 'draft/:uuid/edit',
     menuTitle: 'Decision',
     component: DecisionInputV2Component,
     requiresAuthorization: true,
