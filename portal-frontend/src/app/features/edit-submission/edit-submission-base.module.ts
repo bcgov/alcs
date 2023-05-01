@@ -20,6 +20,7 @@ import { ApplicationOwnerDialogComponent } from './parcel-details/application-ow
 import { ApplicationOwnersDialogComponent } from './parcel-details/application-owners-dialog/application-owners-dialog.component';
 import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
+import { ParcelEntryConfirmationDialogComponent } from './parcel-details/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
@@ -33,6 +34,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
   declarations: [
     ParcelDetailsComponent,
     ParcelEntryComponent,
+    ParcelEntryConfirmationDialogComponent,
     ChangeApplicationTypeDialogComponent,
     EditSubmissionComponent,
     DeleteParcelDialogComponent,
@@ -67,6 +69,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
   exports: [
     ParcelDetailsComponent,
     ParcelEntryComponent,
+    ParcelEntryConfirmationDialogComponent,
     ChangeApplicationTypeDialogComponent,
     EditSubmissionComponent,
     DeleteParcelDialogComponent,

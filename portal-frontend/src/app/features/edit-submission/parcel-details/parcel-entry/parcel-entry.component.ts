@@ -18,6 +18,7 @@ import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/application-owners-dialog.component';
+import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 
 export interface ParcelEntryFormData {
   uuid: string;
