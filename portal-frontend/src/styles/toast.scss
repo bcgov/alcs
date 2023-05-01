@@ -6,7 +6,14 @@
   transform: translateY(100%) !important;
 
   @media screen and (min-width: $desktopBreakpoint) {
-    transform: translate(-20%, 100%) !important;
+    &.error,
+    &.warning {
+      transform: translate(-15%, 100%) !important;
+    }
+
+    &.success {
+      transform: translate(-20%, 100%) !important;
+    }
   }
 
   .mat-mdc-simple-snackbar {
@@ -25,6 +32,10 @@
       letter-spacing: normal;
       color: #fff;
     }
+  }
+
+  &.warning .mat-mdc-snack-bar-actions .mdc-button__label {
+    color: colors.$secondary-color;
   }
 
   .mdc-snackbar__surface {
