@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
@@ -23,13 +22,11 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 
-// TODO export this into generic location for V1 and V2
 export enum PostDecisionType {
   Modification = 'modification',
   Reconsideration = 'reconsideration',
 }
 
-// TODO export this into generic location for V1 and V2
 type MappedPostDecision = {
   label: string;
   uuid: string;
@@ -57,7 +54,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
-  // populate this one
   existingDecision: ApplicationDecisionDto | undefined;
 
   form = new FormGroup({
@@ -85,7 +81,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private decisionService: ApplicationDecisionV2Service,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    public dialog: MatDialog,
     public router: Router,
     private route: ActivatedRoute
   ) {}

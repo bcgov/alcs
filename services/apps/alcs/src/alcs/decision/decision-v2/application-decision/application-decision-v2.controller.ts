@@ -107,7 +107,7 @@ export class ApplicationDecisionV2Controller {
       createDto.applicationFileNumber,
     );
 
-    // TODO this should be addressed in the create ticket flow
+    // TODO this should be addressed in the publish ticket flow since there is no way to create a non draft decision
     const modification = undefined;
     const reconsiders = undefined;
 
@@ -137,6 +137,7 @@ export class ApplicationDecisionV2Controller {
       );
     }
 
+    // TODO address linkage of decision to reconsideration and modification
     const updatedDecision = await this.appDecisionService.update(
       uuid,
       updateDto,
