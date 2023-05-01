@@ -107,20 +107,34 @@ export class ParcelComponent {
       .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
 
     if (this.originalSubmissionUuid) {
-      const oldParcels = await this.applicationParcelService.fetchBySubmissionUuid(this.originalSubmissionUuid);
-      if (oldParcels) {
-        const oldTypedParcels = oldParcels.filter((p) => p.parcelType === this.parcelType);
-        const diffResult = getDiff(oldTypedParcels, this.parcels);
-        const changedFields = new Set<string>();
-        for (const diff of diffResult) {
-          const partialPath = [];
+      await this.calculateParcelDiffs(this.originalSubmissionUuid);
+    }
+  }
+
+  private async calculateParcelDiffs(originalSubmissionUuid: string) {
+    const oldParcels = await this.applicationParcelService.fetchBySubmissionUuid(originalSubmissionUuid);
+    if (oldParcels) {
+      const oldTypedParcels = oldParcels.filter((p) => p.parcelType === this.parcelType);
+      const diffResult = getDiff(oldTypedParcels, this.parcels);
+      const changedFields = new Set<string>();
+      for (const diff of diffResult) {
+        const partialPath = [];
+        const fullPath = diff.path.join('.');
+        if (!fullPath.toLowerCase().includes('uuid')) {
           for (const path of diff.path) {
-            partialPath.push(path);
-            changedFields.add(partialPath.join('.'));
+            if (typeof path !== 'string' || !path.includes('Uuid')) {
+              partialPath.push(path);
+              changedFields.add(partialPath.join('.'));
+            }
+          }
+          if ((diff.op = 'add') && typeof diff.val === 'object') {
+            for (const key of Object.keys(diff.val)) {
+              changedFields.add(`${diff.path.join('.')}.${key}`);
+            }
           }
         }
-        this.updatedFields = [...changedFields.keys()];
       }
+      this.updatedFields = [...changedFields.keys()];
     }
   }
 

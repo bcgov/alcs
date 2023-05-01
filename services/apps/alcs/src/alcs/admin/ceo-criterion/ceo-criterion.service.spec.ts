@@ -71,20 +71,6 @@ describe('CeoCriterionService', () => {
     expect(result).toBeDefined();
   });
 
-  it('should successfully delete holiday entry if it exists', async () => {
-    mockRepository.remove.mockResolvedValue(ceoCriterionCode);
-    mockRepository.findOneOrFail.mockResolvedValue(ceoCriterionCode);
-
-    const result = await service.delete(ceoCriterionCode.code);
-
-    expect(mockRepository.remove).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
-      where: { uuid: ceoCriterionCode.code },
-    });
-    expect(result).toBeDefined();
-  });
-
   it('should successfully fetch ceo criterion', async () => {
     mockRepository.find.mockResolvedValue([ceoCriterionCode]);
 

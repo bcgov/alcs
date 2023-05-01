@@ -109,36 +109,6 @@
             [$application]="$application"
             [$applicationDocuments]="$applicationDocuments"
           ></app-lfng-review>
-          <div class="buttons" *ngIf="application">
-            <div>
-              <button
-                *ngIf="application.canEdit"
-                mat-stroked-button
-                color="warn"
-                (click)="onCancel(application.fileNumber)"
-              >
-                Cancel Application
-              </button>
-            </div>
-            <div>
-              <button
-                [routerLink]="'/application/' + application.fileNumber + '/edit'"
-                *ngIf="application.canEdit"
-                mat-flat-button
-                color="primary"
-              >
-                Edit Application
-              </button>
-              <button
-                *ngIf="application.canReview"
-                (click)="onReview(application.fileNumber)"
-                mat-flat-button
-                color="primary"
-              >
-                Review Application
-              </button>
-            </div>
-          </div>
         </div>
       </mat-tab>
       <mat-tab label="ALC Review and Decision">
@@ -147,36 +117,6 @@
             [$application]="$application"
             [$applicationDocuments]="$applicationDocuments"
           ></app-alc-review>
-          <div class="buttons" *ngIf="application">
-            <div>
-              <button
-                *ngIf="application.canEdit"
-                mat-stroked-button
-                color="warn"
-                (click)="onCancel(application.fileNumber)"
-              >
-                Cancel Application
-              </button>
-            </div>
-            <div>
-              <button
-                [routerLink]="'/application/' + application.fileNumber + '/edit'"
-                *ngIf="application.canEdit"
-                mat-flat-button
-                color="primary"
-              >
-                Edit Application
-              </button>
-              <button
-                *ngIf="application.canReview"
-                (click)="onReview(application.fileNumber)"
-                mat-flat-button
-                color="primary"
-              >
-                Review Application
-              </button>
-            </div>
-          </div>
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -292,31 +232,6 @@
   </div>
   <div *ngIf="application && mobileStep === MOBILE_STEP.ALC_INFO" class="content">
     <app-alc-review [$applicationDocuments]="$applicationDocuments" [$application]="$application"></app-alc-review>
-    <div class="buttons" *ngIf="application">
-      <div>
-        <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">
-          Cancel Application
-        </button>
-      </div>
-      <div>
-        <button
-          [routerLink]="'/application/' + application.fileNumber + '/edit'"
-          *ngIf="application.canEdit"
-          mat-flat-button
-          color="primary"
-        >
-          Edit Application
-        </button>
-        <button
-          *ngIf="application.canReview"
-          (click)="onReview(application.fileNumber)"
-          mat-flat-button
-          color="primary"
-        >
-          Review Application
-        </button>
-      </div>
-    </div>
   </div>
 </div>
 

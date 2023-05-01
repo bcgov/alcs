@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { parse } from '@typescript-eslint/parser';
 import { Subject } from 'rxjs';
 import { CeoCriterionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criterion.service';
-import { HolidayDto } from '../../../services/stat-holiday/holiday.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CeoCriterionDialogComponent } from './ceo-criterion-dialog/ceo-criterion-dialog.component';
 
@@ -45,14 +45,12 @@ export class CeoCriterionComponent implements OnInit {
     });
   }
 
-  async onEdit(holiday: HolidayDto) {
+  async onEdit(ceoCriterion: CeoCriterionDto) {
     const dialog = this.dialog.open(CeoCriterionDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
-      data: {
-        ...holiday,
-      },
+      data: ceoCriterion,
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
@@ -61,14 +59,14 @@ export class CeoCriterionComponent implements OnInit {
     });
   }
 
-  async onDelete(holiday: HolidayDto) {
+  async onDelete(ceoCriterion: CeoCriterionDto) {
     this.confirmationDialogService
       .openDialog({
-        body: `Are you sure you want to delete ${holiday.name} ${holiday.day}?`,
+        body: `Are you sure you want to delete ${ceoCriterion.label}?`,
       })
       .subscribe(async (answer) => {
         if (answer) {
-          await this.ceoCriterionService.delete(holiday.uuid);
+          await this.ceoCriterionService.delete(ceoCriterion.code);
           await this.fetch();
         }
       });

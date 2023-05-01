@@ -43,10 +43,4 @@ export class CeoCriterionService {
 
     return await this.ceoCriterionCodeRepository.save(ceoCriterion);
   }
-
-  async delete(code: string) {
-    const ceoCriterion = await this.getOneOrFail(code);
-
-    return await this.ceoCriterionCodeRepository.remove(ceoCriterion);
-  }
 }

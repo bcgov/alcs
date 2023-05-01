@@ -71,13 +71,4 @@ describe('HolidayController', () => {
     expect(holiday).toBeDefined();
     expect(mockCeoCriterionService.create).toHaveBeenCalledTimes(1);
   });
-
-  it('should call out to service when deleting ceo criterion', async () => {
-    mockCeoCriterionService.delete.mockResolvedValue(new CeoCriterionCode());
-
-    const holiday = await controller.delete('fake');
-
-    expect(holiday).toBeDefined();
-    expect(mockCeoCriterionService.delete).toHaveBeenCalledTimes(1);
-  });
 });
