@@ -9,13 +9,13 @@
 </ng-template>
 
 <div mat-dialog-title>
-  <h4>Discard Parcel</h4>
+  <h4>Change Parcel Ownership Type</h4>
 </div>
 
 <div mat-dialog-content class="content">
   <div *ngIf="stepIdx === warningStep">
     <app-warning-banner>
-      <b>Warning:</b> All information relevant to the current [input ownership type] parcel will be deleted.
+      <b>Warning:</b> Changing parcel ownership type will remove some inputs relevant to the current parcel.
     </app-warning-banner>
 
     <div class="step-controls">
@@ -25,7 +25,7 @@
 
   <div *ngIf="stepIdx === confirmationStep">
     <div class="confirm-content">
-      <h5>Are you sure you want to discard? This action cannot be undone.</h5>
+      <h5>Are you sure you want to change parcel ownership type? This action cannot be undone.</h5>
     </div>
 
     <div class="step-controls">
