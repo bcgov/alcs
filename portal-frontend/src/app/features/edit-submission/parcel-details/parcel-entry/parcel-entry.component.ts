@@ -157,6 +157,9 @@ export class ParcelEntryComponent implements OnInit {
     this.parcelForm.controls.pin.reset();
     this.parcelForm.controls.legalDescription.reset();
     this.parcelForm.controls.mapArea.reset();
+    this.parcelForm.controls.purchaseDate.reset();
+    this.parcelForm.controls.isFarm.reset();
+    this.parcelForm.controls.civicAddress.reset();
 
     this.emitFormChangeOnSearchActions();
   }
@@ -172,12 +175,13 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
+    this.onReset();
+
     if ($event.value === 'CRWN') {
       this.searchBy.setValue(null);
       this.pidPinPlaceholder = '';
       this.isCrownLand = true;
       this.pid.setValidators([]);
-      this.purchaseDate.reset();
       this.purchaseDate.disable();
     } else {
       this.searchBy.setValue('pid');
@@ -193,7 +197,7 @@ export class ParcelEntryComponent implements OnInit {
     this.pid.updateValueAndValidity();
   }
 
-  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE, parcelUuid: string) {
+  async attachFile(file: FileHandle, _documentType: DOCUMENT_TYPE, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
       this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
