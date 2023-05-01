@@ -464,18 +464,18 @@
                                         <td><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>Null on delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>FK_803e574fe048adacb88443c8d45</td>
+                                        <td>FK_df7ec267eba52ce3234ff1f2d33</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_parcel.html'>application_parcel</a><span>.application_file_number</span></td>
+                                                    <td><a href='tables/application_parcel.html'>application_parcel</a><span>.application_submission_uuid</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/application_submission.html'>application_submission</a><span>.file_number</span></td>
+                                                    <td><a href='tables/application_submission.html'>application_submission</a><span>.uuid</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -698,6 +698,24 @@
                                         <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
+                                        <td>FK_4e3d14c8a4b41430bfc7b2ed5e2</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application_owner.html'>application_owner</a><span>.application_submission_uuid</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/application_submission.html'>application_submission</a><span>.uuid</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
                                         <td>FK_05181ec6491ee0aa527bd55c714</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
@@ -732,24 +750,6 @@
                                             </table>
                                         </td>
                                         <td><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>Null on delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FK_8104e51d0d9d1e920cd0f6df17c</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application_owner.html'>application_owner</a><span>.application_file_number</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/application_submission.html'>application_submission</a><span>.file_number</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
                                     </tr>
                                     <tr>
                                         <td>FK_09a58410db3f332490181279771</td>

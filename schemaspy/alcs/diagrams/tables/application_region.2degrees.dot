@@ -19,7 +19,7 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_reconsideration":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_reconsideration":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_staff_journal":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_submission":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=teeodot];
+  "application_submission":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_review":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=teeodot];
   "covenant":"card_uuid":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "covenant":"local_government_uuid":w -> "application_local_government":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];

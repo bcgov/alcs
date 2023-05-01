@@ -178,9 +178,16 @@
          </column>
          <column autoUpdated="false" defaultValue="'{}'::text[]" digits="0" id="5" name="visibility_flags" nullable="false" remarks="" size="2147483647" type="_text" typeCode="2003"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="evidentiary_record_sorting" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="oats_document_id" nullable="true" remarks="used only for oats etl process" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="oats_application_id" nullable="true" remarks="used only for oats etl process" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="audit_created_by" nullable="true" remarks="used only for oats etl process" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_87ec4d3edd458858cf7370ddfd3" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="OATS_UQ_DOCUMENTS" unique="true">
+            <column ascending="true" name="oats_document_id"/>
+            <column ascending="true" name="oats_application_id"/>
          </index>
          <index name="REL_12ae8ee45c8e1f1b074c169a3e" unique="true">
             <column ascending="true" name="document_uuid"/>
@@ -353,18 +360,15 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="corporate_summary_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_07928aa07dbb4cdb373be95cf02" implied="false" onDeleteCascade="false" schema="alcs" table="application_document"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="application_file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
-            <parent column="file_number" foreignKey="FK_8104e51d0d9d1e920cd0f6df17c" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_05181ec6491ee0aa527bd55c714" implied="false" onDeleteCascade="false" schema="alcs" table="application_owner_type"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="application_submission_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_4e3d14c8a4b41430bfc7b2ed5e2" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission"/>
          </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_9b2fecd11351ea787e05900672d" unique="true">
             <column ascending="true" name="uuid"/>
-         </index>
-         <index name="REL_07928aa07dbb4cdb373be95cf0" unique="true">
-            <column ascending="true" name="corporate_summary_uuid"/>
          </index>
       </table>
       <table name="application_owner_type" remarks="" schema="alcs" type="TABLE">
@@ -403,22 +407,20 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="purchased_date" nullable="true" remarks="The Parcels purchase date provided by user" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="false" digits="0" id="12" name="is_confirmed_by_applicant" nullable="false" remarks="The Parcels indication whether applicant signed off provided data including the Certificate of Title" size="1" type="bool" typeCode="-7"/>
          <column autoUpdated="false" defaultValue="'application'::character varying" digits="0" id="13" name="parcel_type" nullable="false" remarks="The Parcels type, &quot;other&quot; means parcels not related to application but related to the owner" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="application_file_number" nullable="false" remarks="The application file id that parcel is linked to" size="2147483647" type="varchar" typeCode="12">
-            <parent column="file_number" foreignKey="FK_803e574fe048adacb88443c8d45" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="ownership_type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="ownership_type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_33f7b06b2c4e0e128d670526c66" implied="false" onDeleteCascade="false" schema="alcs" table="application_parcel_ownership_type"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="crown_land_owner_type" nullable="true" remarks="For Crown Land parcels to indicate whether they are provincially owned or federally owned" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="certificate_of_title_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="crown_land_owner_type" nullable="true" remarks="For Crown Land parcels to indicate whether they are provincially owned or federally owned" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="certificate_of_title_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_4b5a4dca01e2f175fa448a734f9" implied="false" onDeleteCascade="false" schema="alcs" table="application_document"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="application_submission_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_df7ec267eba52ce3234ff1f2d33" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="civic_address" nullable="true" remarks="The standard address for the parcel" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_4c88659b418020abbb9b65fd4e0" unique="true">
             <column ascending="true" name="uuid"/>
-         </index>
-         <index name="UQ_4b5a4dca01e2f175fa448a734f9" unique="true">
-            <column ascending="true" name="certificate_of_title_uuid"/>
          </index>
       </table>
       <table name="application_parcel_owners_application_owner" remarks="" schema="alcs" type="TABLE">
@@ -617,68 +619,68 @@
       </table>
       <table name="application_submission" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="file_number" nullable="false" remarks="File Number of attached application" size="2147483647" type="varchar" typeCode="12">
-            <child column="application_file_number" foreignKey="FK_8104e51d0d9d1e920cd0f6df17c" implied="false" onDeleteCascade="false" schema="alcs" table="application_owner"/>
-            <child column="application_file_number" foreignKey="FK_803e574fe048adacb88443c8d45" implied="false" onDeleteCascade="false" schema="alcs" table="application_parcel"/>
-            <child column="local_government_file_number" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission_review"/>
-            <child column="file_number" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="covenant"/>
-            <child column="file_number" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="planning_review"/>
             <parent column="file_number" foreignKey="FK_4776c7dcd306a47a372b322fd9b" implied="false" onDeleteCascade="false" schema="alcs" table="application"/>
          </column>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="applicant" nullable="true" remarks="The Applicants name on the application" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="local_government_uuid" nullable="true" remarks="UUID from ALCS System of the Local Government" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="returned_comment" nullable="true" remarks="Used to store comments when an Application is returned to the Applicant" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="parcels_agriculture_description" nullable="true" remarks="Quantify and describe in detail all agriculture that currently takes place on the parcel(s)." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="parcels_agriculture_improvement_description" nullable="true" remarks="Quantify and describe in detail all agricultural improvements made to the parcel(s)." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="parcels_non_agriculture_use_description" nullable="true" remarks="Quantify and describe all non-agricultural uses that currently take place on the parcel(s)." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="north_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the North." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="north_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the North." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="east_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the East." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="east_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the East." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="south_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the South." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="south_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the South." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="west_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the West." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="west_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the West." size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="status_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="applicant" nullable="true" remarks="The Applicants name on the application" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="local_government_uuid" nullable="true" remarks="UUID from ALCS System of the Local Government" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="returned_comment" nullable="true" remarks="Used to store comments when an Application is returned to the Applicant" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="parcels_agriculture_description" nullable="true" remarks="Quantify and describe in detail all agriculture that currently takes place on the parcel(s)." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="parcels_agriculture_improvement_description" nullable="true" remarks="Quantify and describe in detail all agricultural improvements made to the parcel(s)." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="parcels_non_agriculture_use_description" nullable="true" remarks="Quantify and describe all non-agricultural uses that currently take place on the parcel(s)." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="north_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the North." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="north_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the North." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="east_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the East." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="east_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the East." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="south_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the South." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="south_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the South." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="west_land_use_type" nullable="true" remarks="The land uses surrounding the parcel(s) under application on the West." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="west_land_use_type_description" nullable="true" remarks="Description of the land uses surrounding the parcel(s) under application on the West." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="status_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_d2fb7c905282b86706cad8ef0ab" implied="false" onDeleteCascade="false" schema="alcs" table="application_status"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="primary_contact_owner_uuid" nullable="true" remarks="Stores Uuid of Owner Selected as Primary Contact" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="type_code" nullable="false" remarks="Application Type Code from ALCS System" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="20" name="status_history" nullable="false" remarks="JSONB Column containing the status history of the Application" size="2147483647" type="jsonb" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="has_other_parcels_in_community" nullable="true" remarks="Indicates whether application owners have other parcels in the community." size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="2" id="22" name="nfu_hectares" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="nfu_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="nfu_outside_lands" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="25" name="nfu_agriculture_support" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="26" name="nfu_will_import_fill" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="2" id="27" name="nfu_total_fill_placement" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
-         <column autoUpdated="false" defaultValue="null" digits="2" id="28" name="nfu_max_fill_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
-         <column autoUpdated="false" defaultValue="null" digits="2" id="29" name="nfu_fill_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
-         <column autoUpdated="false" defaultValue="null" digits="2" id="30" name="nfu_project_duration_amount" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="31" name="nfu_project_duration_unit" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="32" name="nfu_fill_type_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="33" name="nfu_fill_origin_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="34" name="tur_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="35" name="tur_agricultural_activities" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="36" name="tur_reduce_negative_impacts" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="37" name="tur_outside_lands" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="2" id="38" name="tur_total_corridor_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="39" name="tur_all_owners_notified" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="40" name="created_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="primary_contact_owner_uuid" nullable="true" remarks="Stores Uuid of Owner Selected as Primary Contact" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="type_code" nullable="false" remarks="Application Type Code from ALCS System" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="18" name="status_history" nullable="false" remarks="JSONB Column containing the status history of the Application" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="has_other_parcels_in_community" nullable="true" remarks="Indicates whether application owners have other parcels in the community." size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="20" name="nfu_hectares" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="nfu_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="nfu_outside_lands" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="nfu_agriculture_support" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="nfu_will_import_fill" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="25" name="nfu_total_fill_placement" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="26" name="nfu_max_fill_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="27" name="nfu_fill_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="28" name="nfu_project_duration_amount" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="nfu_project_duration_unit" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="30" name="nfu_fill_type_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="31" name="nfu_fill_origin_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="32" name="tur_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="33" name="tur_agricultural_activities" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="34" name="tur_reduce_negative_impacts" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="35" name="tur_outside_lands" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="36" name="tur_total_corridor_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="37" name="tur_all_owners_notified" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="38" name="created_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_bf4913015d41f8bb129407e493e" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="41" name="subd_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="42" name="subd_suitability" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="43" name="subd_agriculture_support" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="44" name="subd_is_home_site_severance" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="45" name="subd_proposed_lots" nullable="false" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
-         <primaryKey column="file_number" sequenceNumberInPK="1"/>
-         <index name="PK_4776c7dcd306a47a372b322fd9b" unique="true">
-            <column ascending="true" name="file_number"/>
-         </index>
-         <index name="UQ_4776c7dcd306a47a372b322fd9b" unique="true">
-            <column ascending="true" name="file_number"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="39" name="subd_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="40" name="subd_suitability" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="41" name="subd_agriculture_support" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="42" name="subd_is_home_site_severance" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="43" name="subd_proposed_lots" nullable="false" remarks="JSONB Column containing the proposed subdivision lots" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="44" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="application_submission_uuid" foreignKey="FK_4e3d14c8a4b41430bfc7b2ed5e2" implied="false" onDeleteCascade="false" schema="alcs" table="application_owner"/>
+            <child column="application_submission_uuid" foreignKey="FK_df7ec267eba52ce3234ff1f2d33" implied="false" onDeleteCascade="false" schema="alcs" table="application_parcel"/>
+         </column>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="45" name="is_draft" nullable="false" remarks="Indicates whether submission is currently draft or not" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="46" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="47" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="48" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="49" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="50" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_61e192975e82347bab189b34fcc" unique="true">
+            <column ascending="true" name="uuid"/>
          </index>
       </table>
       <table name="application_submission_review" remarks="" schema="alcs" type="TABLE">
@@ -688,9 +690,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="local_government_file_number" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
-            <parent column="file_number" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission"/>
-         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="local_government_file_number" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="first_name" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="last_name" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="position" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
@@ -763,7 +763,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_status" numRows="112" remarks="" schema="alcs" type="TABLE">
+      <table name="board_status" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1000,9 +1000,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
-            <parent column="file_number" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission"/>
-         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="applicant" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_4dbfa43fa598901ae71504afabf" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
@@ -1104,9 +1102,15 @@
          <column autoUpdated="false" defaultValue="now()" digits="6" id="11" name="uploaded_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="'ALC'::character varying" digits="0" id="12" name="source" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="file_size" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="oats_application_id" nullable="true" remarks="used only for oats etl process" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="oats_document_id" nullable="true" remarks="used only for oats etl process" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'ALCS'::character varying" digits="0" id="16" name="system" nullable="false" remarks="Front-end the document was uploaded from" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_8960855240f8a386eed1d7791c1" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="UQ_f6c871d5b58bfa1148ac728e2ac" unique="true">
+            <column ascending="true" name="oats_document_id"/>
          </index>
       </table>
       <table name="email_status" remarks="" schema="alcs" type="TABLE">
@@ -1129,7 +1133,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" numRows="100" remarks="" schema="alcs" type="TABLE">
+      <table name="holiday_entity" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="Unique identifier that is safe to share." size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="Unique name of the stat holiday." size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="day" nullable="false" remarks="Unique date that is considered as a holiday and will be skipped in the business days calculation process." size="13" type="date" typeCode="91"/>
@@ -1223,9 +1227,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
-            <parent column="file_number" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission"/>
-         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_735dcdd4fa909a60d0fa1828f24" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>

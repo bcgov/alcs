@@ -27,7 +27,7 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_staff_journal":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_staff_journal":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_submission":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=teeodot];
+  "application_submission":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_review":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=teeodot];
   "card":"assignee_uuid":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "card":"board_uuid":w -> "board":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];

@@ -21,9 +21,9 @@ card
 application_local_government
 document
 application
-application_submission
 application_document
 application_modification
+application_submission
 application_reconsideration
 application_decision
 application_paused
@@ -31,10 +31,10 @@ comment
 application_owner
 application_parcel
 application_decision_meeting
+application_submission_review
 card_history
 application_parcel_owners_application_owner
 application_staff_journal
-application_submission_review
 board_status
 comment_mention
 decision_document
@@ -42,9 +42,9 @@ modified_decisions
 notification
 reconsidered_decisions
 card_subtask
-application_meeting
 covenant
 planning_review
+application_meeting
 email_status
 health_check
 holiday_entity

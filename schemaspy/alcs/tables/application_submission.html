@@ -109,7 +109,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="file_number">file_number</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="file_number">file_number</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -117,31 +117,6 @@
                                     <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application_owner.application_file_number references application_submission.file_number via FK_8104e51d0d9d1e920cd0f6df17c"><a href='application_owner.html'>application_owner</a><span class='relatedKey'>.application_file_number</span></td>
-                                                <td class="constraint detail">FK_8104e51d0d9d1e920cd0f6df17c</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="application_parcel.application_file_number references application_submission.file_number via FK_803e574fe048adacb88443c8d45"><a href='application_parcel.html'>application_parcel</a><span class='relatedKey'>.application_file_number</span></td>
-                                                <td class="constraint detail">FK_803e574fe048adacb88443c8d45</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="application_submission_review.local_government_file_number&#39;s name implies that it&#39;s a child of application_submission.file_number, but it doesn&#39;t reference that column."><a href='application_submission_review.html'>application_submission_review</a><span class='relatedKey'>.local_government_file_number</span></td>
-                                                <td class="constraint detail">Implied Constraint</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="covenant.file_number&#39;s name implies that it&#39;s a child of application_submission.file_number, but it doesn&#39;t reference that column."><a href='covenant.html'>covenant</a><span class='relatedKey'>.file_number</span></td>
-                                                <td class="constraint detail">Implied Constraint</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td title="planning_review.file_number&#39;s name implies that it&#39;s a child of application_submission.file_number, but it doesn&#39;t reference that column."><a href='planning_review.html'>planning_review</a><span class='relatedKey'>.file_number</span></td>
-                                                <td class="constraint detail">Implied Constraint</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -154,40 +129,6 @@
                                         </table>
                                     </td>
                                     <td><p>File Number of attached application</p></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="created_at">created_at</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>now()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="updated_at">updated_at</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>now()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td><span id="applicant">applicant</span></td>
@@ -928,6 +869,135 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
+                                    <td><p>JSONB Column containing the proposed subdivision lots</p></td>
+                                </tr>
+                                <tr>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>gen_random_uuid()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_owner.application_submission_uuid references application_submission.uuid via FK_4e3d14c8a4b41430bfc7b2ed5e2"><a href='application_owner.html'>application_owner</a><span class='relatedKey'>.application_submission_uuid</span></td>
+                                                <td class="constraint detail">FK_4e3d14c8a4b41430bfc7b2ed5e2</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_parcel.application_submission_uuid references application_submission.uuid via FK_df7ec267eba52ce3234ff1f2d33"><a href='application_parcel.html'>application_parcel</a><span class='relatedKey'>.application_submission_uuid</span></td>
+                                                <td class="constraint detail">FK_df7ec267eba52ce3234ff1f2d33</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="is_draft">is_draft</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>false</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Indicates whether submission is currently draft or not</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_deleted_date_at">audit_deleted_date_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_created_at">audit_created_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>now()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_updated_at">audit_updated_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>now()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_created_by">audit_created_by</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_updated_by">audit_updated_by</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
                                     <td></td>
                                 </tr>
                                 </tbody>
@@ -961,16 +1031,10 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_4776c7dcd306a47a372b322fd9b</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_61e192975e82347bab189b34fcc</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>file_number</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_4776c7dcd306a47a372b322fd9b</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>file_number</td>
+                                    <td>uuid</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -991,100 +1055,50 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
-                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
-                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="967,5,1219,211">
-<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="352,157,920,1576">
-<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="45,1333,269,1509">
-<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="5,131,308,395">
-<area shape="rect" id="node6" href="application_status.html" target="_top" title="application_status" alt="" coords="44,659,269,805">
-<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="964,228,1221,433">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="964,1125,1243,1331">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="352,32,920,1597">
+<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="45,1149,269,1325">
+<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="5,5,308,269">
+<area shape="rect" id="node6" href="application_status.html" target="_top" title="application_status" alt="" coords="44,475,269,621">
+<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="964,1348,1243,1553">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_submission.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,324,940,588">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,731,492,819">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,488,593,576">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,452,232,540">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,347,541,435">
-<area shape="rect" id="node21" href="user.html" target="_top" title="user" alt="" coords="7,979,231,1155">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1604,499,1845,587">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1129,499,1407,587">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1117,604,1419,692">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1111,111,1425,199">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1139,709,1397,797">
-<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="354,875,515,963">
-<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1604,5,1845,93">
-<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1151,5,1385,93">
-<area shape="rect" id="node14" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1599,701,1851,907">
-<area shape="rect" id="node15" href="application_submission.html" target="_top" title="application_submission" alt="" coords="984,920,1552,2339">
-<area shape="rect" id="node16" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="1133,815,1403,903">
-<area shape="rect" id="node22" href="application_status.html" target="_top" title="application_status" alt="" coords="676,855,901,1001">
-<area shape="rect" id="node17" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1596,924,1853,1129">
-<area shape="rect" id="node18" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="1089,2461,1447,2549">
-<area shape="rect" id="node19" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1897,816,2341,904">
-<area shape="rect" id="node20" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1129,288,1407,376">
-<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1105,393,1431,481">
-<area shape="rect" id="node24" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="697,641,881,729">
-<area shape="rect" id="node25" href="comment.html" target="_top" title="comment" alt="" coords="711,1123,867,1211">
-<area shape="rect" id="node26" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1153,2356,1383,2444">
-<area shape="rect" id="node27" href="notification.html" target="_top" title="notification" alt="" coords="348,1055,521,1143">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="637,305,940,569">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,585,492,673">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,469,593,557">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,433,232,521">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,327,541,415">
+<area shape="rect" id="node21" href="user.html" target="_top" title="user" alt="" coords="7,829,231,1005">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1615,373,1856,461">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1129,373,1407,461">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1117,583,1419,671">
+<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1111,126,1425,214">
+<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1139,689,1397,777">
+<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="354,726,515,814">
+<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1615,231,1856,319">
+<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1151,231,1385,319">
+<area shape="rect" id="node14" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1596,794,1875,999">
+<area shape="rect" id="node15" href="application_submission.html" target="_top" title="application_submission" alt="" coords="984,1215,1552,2781">
+<area shape="rect" id="node16" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="1133,794,1403,882">
+<area shape="rect" id="node22" href="application_status.html" target="_top" title="application_status" alt="" coords="676,1658,901,1805">
+<area shape="rect" id="node17" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1596,1047,1875,1253">
+<area shape="rect" id="node18" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="1089,1110,1447,1198">
+<area shape="rect" id="node19" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1919,878,2363,966">
+<area shape="rect" id="node20" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1129,899,1407,987">
+<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1105,478,1431,566">
+<area shape="rect" id="node24" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="697,658,881,746">
+<area shape="rect" id="node25" href="comment.html" target="_top" title="comment" alt="" coords="711,973,867,1061">
+<area shape="rect" id="node26" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1153,1005,1383,1093">
+<area shape="rect" id="node27" href="notification.html" target="_top" title="notification" alt="" coords="348,831,521,919">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_submission.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
-                                    </div>
-                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
-                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1001,925,1253,1131">
-<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="352,336,920,1755">
-<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="45,1512,269,1688">
-<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="5,249,308,513">
-<area shape="rect" id="node6" href="application_status.html" target="_top" title="application_status" alt="" coords="44,837,269,984">
-<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="999,199,1256,404">
-<area shape="rect" id="node7" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="964,5,1291,181">
-<area shape="rect" id="node8" href="covenant.html" target="_top" title="covenant" alt="" coords="1011,421,1244,656">
-<area shape="rect" id="node9" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1011,673,1244,908">
-</map>
-                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_submission.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
-                                    </div>
-                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
-                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="665,473,835,561">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,499,492,587">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,2464,593,2552">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,2497,232,2585">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,393,541,481">
-<area shape="rect" id="node21" href="user.html" target="_top" title="user" alt="" coords="7,741,231,917">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1561,111,1803,199">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1052,5,1329,93">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1039,111,1342,199">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1033,252,1348,340">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1062,640,1319,728">
-<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="354,640,515,728">
-<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1561,357,1803,445">
-<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1074,357,1307,445">
-<area shape="rect" id="node14" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1556,887,1808,1092">
-<area shape="rect" id="node15" href="application_submission.html" target="_top" title="application_submission" alt="" coords="907,956,1475,2375">
-<area shape="rect" id="node16" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="1056,2392,1325,2480">
-<area shape="rect" id="node22" href="application_status.html" target="_top" title="application_status" alt="" coords="637,1457,863,1604">
-<area shape="rect" id="node17" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1553,611,1811,816">
-<area shape="rect" id="node18" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="1011,535,1370,623">
-<area shape="rect" id="node19" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1889,752,2333,840">
-<area shape="rect" id="node20" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1052,745,1329,833">
-<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1519,479,1845,567">
-<area shape="rect" id="node24" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="658,296,842,384">
-<area shape="rect" id="node25" href="comment.html" target="_top" title="comment" alt="" coords="672,781,828,869">
-<area shape="rect" id="node26" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1075,851,1306,939">
-<area shape="rect" id="node27" href="covenant.html" target="_top" title="covenant" alt="" coords="1565,2264,1799,2499">
-<area shape="rect" id="node28" href="notification.html" target="_top" title="notification" alt="" coords="348,817,521,905">
-<area shape="rect" id="node29" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1565,2516,1799,2751">
-</map>
-                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_submission.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

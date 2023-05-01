@@ -211,7 +211,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="file_number">file_number</span></td>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="file_number">file_number</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -223,11 +223,6 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="covenant.file_number&#39;s name implies that it&#39;s a child of application_submission.file_number, but it doesn&#39;t reference that column."><a href='application_submission.html'>application_submission</a><span class='relatedKey'>.file_number</span></td>
-                                                <td class="constraint detail">Implied Constraint</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -382,8 +377,6 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
-                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
-                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
@@ -414,41 +407,6 @@
 <area shape="rect" id="node15" href="planning_review.html" target="_top" title="planning_review" alt="" coords="727,908,936,996">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/covenant.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
-                                    </div>
-                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
-                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="324,451,641,627">
-<area shape="rect" id="node2" href="application_region.html" target="_top" title="application_region" alt="" coords="5,543,232,689">
-<area shape="rect" id="node3" href="covenant.html" target="_top" title="covenant" alt="" coords="733,73,1121,465">
-<area shape="rect" id="node4" href="card.html" target="_top" title="card" alt="" coords="371,199,595,433">
-<area shape="rect" id="node5" href="application_submission.html" target="_top" title="application_submission" alt="" coords="276,5,689,181">
-</map>
-                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/covenant.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
-                                    </div>
-                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
-                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="665,571,835,659">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="323,353,547,588">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,677,593,765">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,713,232,801">
-<area shape="rect" id="node10" href="user.html" target="_top" title="user" alt="" coords="61,189,176,277">
-<area shape="rect" id="node13" href="board.html" target="_top" title="board" alt="" coords="55,415,182,503">
-<area shape="rect" id="node14" href="card_status.html" target="_top" title="card_status" alt="" coords="33,309,204,397">
-<area shape="rect" id="node15" href="card_type.html" target="_top" title="card_type" alt="" coords="40,520,197,608">
-<area shape="rect" id="node5" href="application_modification.html" target="_top" title="application_modification" alt="" coords="975,393,1252,481">
-<area shape="rect" id="node6" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1445,31,1671,119">
-<area shape="rect" id="node7" href="application_submission.html" target="_top" title="application_submission" alt="" coords="907,144,1320,320">
-<area shape="rect" id="node11" href="application_status.html" target="_top" title="application_status" alt="" coords="637,5,863,93">
-<area shape="rect" id="node8" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1445,136,1671,224">
-<area shape="rect" id="node9" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="962,500,1265,588">
-<area shape="rect" id="node12" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1395,241,1721,329">
-<area shape="rect" id="node16" href="card_history.html" target="_top" title="card_history" alt="" coords="661,465,839,553">
-<area shape="rect" id="node17" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="658,147,842,235">
-<area shape="rect" id="node18" href="comment.html" target="_top" title="comment" alt="" coords="672,252,828,340">
-<area shape="rect" id="node19" href="covenant.html" target="_top" title="covenant" alt="" coords="1364,452,1752,844">
-<area shape="rect" id="node20" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1453,347,1663,435">
-</map>
-                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/covenant.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>
