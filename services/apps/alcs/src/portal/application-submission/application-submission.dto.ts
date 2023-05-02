@@ -151,6 +151,58 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   subdIsHomeSiteSeverance?: boolean | null;
 
   subdProposedLots?: ProposedLot[];
+
+  //Soil Fields
+  @AutoMap(() => Boolean)
+  soilIsNOIFollowUp: boolean | null;
+
+  @AutoMap(() => String)
+  soilNOIIDs: string | null;
+
+  @AutoMap(() => Boolean)
+  soilHasPreviousALCAuthorization: boolean | null;
+
+  @AutoMap(() => String)
+  soilApplicationIDs: string | null;
+
+  @AutoMap(() => String)
+  soilPurpose: string | null;
+
+  @AutoMap(() => String)
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => String)
+  soilReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedArea: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  soilProjectDurationUnit?: string | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -333,4 +385,78 @@ export class ApplicationSubmissionUpdateDto {
   @IsArray()
   @IsOptional()
   subdProposedLots?: ProposedLot[];
+
+  //Soil Fields
+  @IsBoolean()
+  @IsOptional()
+  soilIsNOIFollowUp?: boolean | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  soilNOIIDs?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  soilHasPreviousALCAuthorization?: boolean | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  soilApplicationIDs?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  soilPurpose?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  soilTypeRemoved?: string | null;
+
+  @IsString()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  @IsOptional()
+  soilReduceNegativeImpacts?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveAverageDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyRemovedVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyRemovedArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyRemovedMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyRemovedAverageDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilProjectDurationAmount?: number | null;
+
+  @IsString()
+  @IsOptional()
+  soilProjectDurationUnit?: string | null;
 }
