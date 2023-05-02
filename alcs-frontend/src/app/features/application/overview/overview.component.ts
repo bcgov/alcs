@@ -281,7 +281,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   onSaveSummary(updatedSummary: string) {
     if (this.application) {
-      debugger;
       this.applicationDetailService.updateApplication(this.application.fileNumber, {
         summary: updatedSummary ?? null,
       });
