@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
-import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionDto, PARCEL_OWNERSHIP_TYPE } from '../../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-parcel',
@@ -19,6 +19,8 @@ export class ParcelComponent implements OnInit {
 
   fileId: string = '';
   parcels: any[] = [];
+
+  PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 

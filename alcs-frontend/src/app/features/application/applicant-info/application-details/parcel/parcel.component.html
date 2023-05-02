@@ -28,25 +28,31 @@
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
     </div>
-    <div class="subheading2 grid-1">PID</div>
+    <div class="subheading2 grid-1">
+      PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
+    </div>
     <div class="grid-double">
       <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
     </div>
-    <div class="subheading2 grid-1">PIN</div>
+    <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+      <div class="subheading2 grid-1">PIN (optional)</div>
+      <div class="grid-double">
+        {{ parcel.pin }}
+      </div>
+    </ng-container>
+    <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
+      <div class="subheading2 grid-1">Purchase Date</div>
+      <div class="grid-double">
+        {{ parcel.purchasedDate | date }}
+      </div>
+    </ng-container>
+    <div class="subheading2 grid-1">Farm Classification</div>
     <div class="grid-double">
-      {{ parcel.pin }}
-    </div>
-    <div class="subheading2 grid-1">Purchase Date</div>
-    <div class="grid-double">
-      {{ parcel.purchasedDate | date }}
+      <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
     </div>
     <div class="subheading2 grid-1">Civic Address</div>
     <div class="grid-double">
       {{ parcel.civicAddress }}
-    </div>
-    <div class="subheading2 grid-1">Farm Classification</div>
-    <div class="grid-double">
-      <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
     </div>
     <ng-container *ngIf="parcel.crownLandOwnerType">
       <div class="subheading2 grid-1">Crown Selection</div>
