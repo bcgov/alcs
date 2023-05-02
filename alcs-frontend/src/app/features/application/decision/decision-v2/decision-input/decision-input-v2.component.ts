@@ -19,6 +19,7 @@ import {
   DecisionOutcomeCodeDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 
@@ -82,7 +83,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     public router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -400,7 +402,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   async onGenerateResolutionNumber() {
-    const number = await this.decisionService.getNextAvailableResolutionYear(2023);
-    console.log('number', number);
+    const selectedYear = this.form.controls.resolutionYear.getRawValue();
+    if (selectedYear) {
+      const number = await this.decisionService.getNextAvailableResolutionYear(selectedYear);
+      console.log(`number/year: ${number}/${selectedYear}`);
+    } else {
+      this.toastService.showErrorToast('Resolution year is not selected. Select a resolution year first.');
+    }
   }
 }

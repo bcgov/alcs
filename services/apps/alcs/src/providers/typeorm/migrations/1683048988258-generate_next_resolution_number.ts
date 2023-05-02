@@ -11,9 +11,9 @@ export class generateNextResolutionNumber1683048988258
        AS $function$
            declare next_resolution_number integer;
            BEGIN	
-               select
+                select
                    row_num into next_resolution_number
-               from
+                from
                    (
                    select
                        coalesce(resolution_number, 0) as resolution_number,
@@ -24,12 +24,12 @@ export class generateNextResolutionNumber1683048988258
                    where
                        resolution_year = p_resolution_year
                    ) z
-               where
+                where
                    row_num != resolution_number
-               order by
+                order by
                    row_num offset 0 row fetch next 1 row only;
        
-               return next_resolution_number;
+                return coalesce(next_resolution_number, 1);
            END;
        $function$
        ;
