@@ -350,6 +350,8 @@ export class ApplicationDecisionV2Service {
       },
     });
 
+    console.log('existingDecision', existingDecision);
+
     if (existingDecision) {
       throw new ServiceValidationException(
         `Resolution number #${number}/${year} is already in use`,

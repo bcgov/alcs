@@ -97,16 +97,18 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.extractAndPopulateQueryParams();
 
     if (this.fileNumber) {
-      this.loadData(this.fileNumber);
+      this.loadData();
     }
   }
 
   private extractAndPopulateQueryParams() {
     const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
     const uuid = this.route.snapshot.paramMap.get('uuid');
+    console.log(this.isEdit);
 
     if (uuid) {
       this.uuid = uuid;
+      console.log('uuid', uuid);
       this.isEdit = true;
     }
 
@@ -137,9 +139,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async loadData(fileNumber: string) {
-    this.decisionService.loadDecision(this.uuid);
-    this.decisionService.loadDecisions(this.fileNumber);
+  async loadData() {
+    if (this.uuid) {
+      await this.decisionService.loadDecision(this.uuid);
+    }
+
+    await this.decisionService.loadDecisions(this.fileNumber);
 
     const codes = await this.decisionService.fetchCodes();
     this.outcomes = codes.outcomes;
@@ -167,7 +172,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           )
         )
         .subscribe(([decision, modifications, reconsiderations, decisions]) => {
-          this.existingDecision = decision;
+          if (decision) {
+            this.existingDecision = decision;
+            this.uuid = decision.uuid;
+          }
+
           this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
 
           if (this.existingDecision) {
@@ -361,18 +370,22 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
 
     try {
-      if (this.existingDecision) {
-        await this.decisionService.update(this.existingDecision.uuid, data);
+      debugger;
+      if (this.uuid) {
+        await this.decisionService.update(this.uuid, data);
       } else {
-        await this.decisionService.create({
+        const createdDecision = await this.decisionService.create({
           ...data,
           applicationFileNumber: this.fileNumber,
         });
+        this.uuid = createdDecision.uuid;
       }
     } finally {
       this.isLoading = false;
       if (!isStayOnPage) {
         this.onCancel();
+      } else {
+        await this.loadData();
       }
     }
   }
