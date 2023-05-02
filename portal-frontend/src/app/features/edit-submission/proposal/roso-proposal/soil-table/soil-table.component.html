@@ -1,0 +1,99 @@
+<div class="container">
+  <form [formGroup]="form">
+    <div class="soil-table">
+      <div></div>
+      <div>
+        <span class="subheading1">{{ tableHeader }}</span>
+      </div>
+
+      <div class="label">
+        <label for="volume">Volume</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <input
+            min="0.01"
+            id="volume"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="volume"
+          />
+          <span matTextSuffix>m<sup>3</sup></span>
+        </mat-form-field>
+        <div *ngIf="volume.invalid && (volume.dirty || volume.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="volume.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="label">
+        <label for="area">Area</label>
+        <div class="subtext">Note: 0.01 ha is 100m2</div>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <input
+            min="0.01"
+            id="area"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="area"
+          />
+          <span matTextSuffix>ha</span>
+        </mat-form-field>
+        <div *ngIf="area.invalid && (area.dirty || area.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="area.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="label">
+        <label for="volume">Maximum Depth</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <input
+            min="0.01"
+            id="maximumDepth"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="maximumDepth"
+          />
+          <span matTextSuffix>m</span>
+        </mat-form-field>
+        <div *ngIf="maximumDepth.invalid && (maximumDepth.dirty || maximumDepth.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="maximumDepth.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="label">
+        <label for="volume">Average Depth</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <input
+            min="0.01"
+            id="averageDepth"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="averageDepth"
+          />
+          <span matTextSuffix>m</span>
+        </mat-form-field>
+        <div *ngIf="averageDepth.invalid && (averageDepth.dirty || averageDepth.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="averageDepth.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

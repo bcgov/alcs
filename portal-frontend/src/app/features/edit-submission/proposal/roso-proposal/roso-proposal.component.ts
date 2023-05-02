@@ -7,12 +7,12 @@ import {
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { StepComponent } from '../../step.partial';
+import { SoilTableData } from './soil-table/soil-table.component';
 
 @Component({
   selector: 'app-roso-proposal',
@@ -48,12 +48,13 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   });
   private fileId = '';
   private submissionUuid = '';
+  removalTableData: SoilTableData = {};
+  alreadyRemovedTableData: SoilTableData = {};
 
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService,
-    private parcelService: ApplicationParcelService
+    private applicationDocumentService: ApplicationDocumentService
   ) {
     super();
   }
@@ -63,6 +64,20 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
+
+        this.alreadyRemovedTableData = {
+          volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
+          area: applicationSubmission.soilAlreadyRemovedArea ?? 0,
+          averageDepth: applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0,
+          maximumDepth: applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
+        };
+
+        this.removalTableData = {
+          volume: applicationSubmission.soilToRemoveVolume ?? undefined,
+          area: applicationSubmission.soilToRemoveArea ?? undefined,
+          averageDepth: applicationSubmission.soilToRemoveAverageDepth ?? undefined,
+          maximumDepth: applicationSubmission.soilToRemoveMaximumDepth ?? undefined,
+        };
 
         let isNOIFollowUp = null;
         if (applicationSubmission.soilIsNOIFollowUp !== null) {
@@ -136,7 +151,6 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   }
 
   private async save() {
-    debugger;
     if (this.fileId) {
       const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
       const soilNOIIDs = this.NOIIDs.getRawValue();
@@ -154,6 +168,14 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
         soilNOIIDs,
         soilHasPreviousALCAuthorization: hasALCAuthorization !== null ? hasALCAuthorization === 'true' : null,
         soilApplicationIDs,
+        soilToRemoveVolume: this.removalTableData?.volume ?? null,
+        soilToRemoveArea: this.removalTableData?.area ?? null,
+        soilToRemoveMaximumDepth: this.removalTableData?.maximumDepth ?? null,
+        soilToRemoveAverageDepth: this.removalTableData?.averageDepth ?? null,
+        soilAlreadyRemovedVolume: this.alreadyRemovedTableData?.volume ?? null,
+        soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
+        soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
+        soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
