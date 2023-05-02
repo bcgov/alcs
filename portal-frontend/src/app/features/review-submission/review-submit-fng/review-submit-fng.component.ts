@@ -166,7 +166,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
 
   async onDownloadPdf() {
     if (this.fileId) {
-      await this.pdfGenerationService.generateSubmission(this.fileId);
+      await this.pdfGenerationService.generateReview(this.fileId);
     }
   }
 }
