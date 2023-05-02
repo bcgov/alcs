@@ -237,7 +237,7 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async attachFile(file: FileHandle, _documentType: DOCUMENT_TYPE, parcelUuid: string) {
+  async attachFile(file: FileHandle, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
       this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
