@@ -180,7 +180,6 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
-    // 1. Check if form is dirty
     const dirtyForm =
       this.legalDescription.value ||
       this.mapArea.value ||
@@ -190,62 +189,7 @@ export class ParcelEntryComponent implements OnInit {
       this.isFarm.value ||
       this.civicAddress.value;
 
-    // 3. If form is dirty, check if button has been filled previously
-    // ---- if yes, reset field and set parcel type
-    // ---- if not, carry on
-
-    console.log('iscrownland?:', this.isCrownLand);
-    console.log('this.parcelType.value:', this.parcelType.value);
-    if (dirtyForm && this.isCrownLand !== null) {
-      this.dialog
-        .open(ParcelEntryConfirmationDialogComponent, {
-          panelClass: 'no-padding',
-          disableClose: true,
-        })
-        .beforeClosed()
-        .subscribe(async (result) => {
-          // -- 4. If dialog is confirmed, will reset fields and old ways
-          if (result) {
-            this.onReset();
-
-            if ($event.value === this.parcelOwnershipType.CROWN) {
-              this.searchBy.setValue(null);
-              this.pidPinPlaceholder = '';
-              this.isCrownLand = true;
-              this.pid.setValidators([]);
-              this.purchaseDate.disable();
-              // this.parcelType.setValue(this.parcelOwnershipType.CROWN);
-              console.log('iscrownland');
-            } else {
-              this.searchBy.setValue('pid');
-              this.pidPinPlaceholder = 'Type 9 digit PID';
-              this.isCrownLand = false;
-              this.pid.setValidators([Validators.required]);
-              this.crownLandOwnerType.setValue(null);
-              this.purchaseDate.enable();
-              // this.parcelType.setValue(this.parcelOwnershipType.FEE_SIMPLE);
-              console.log('is Fee simple');
-            }
-
-            this.updateParcelOwners([]);
-            this.filteredOwners = this.mapOwners(this.owners);
-            this.pid.updateValueAndValidity();
-          } else {
-            // -- 5. If dialog is cancelled, will not change anything - reset isCrownland and parcelType back to previous if they are changed on click
-            const newParcelType = this.parcelType.getRawValue();
-
-            const prevParcelType =
-              newParcelType === this.parcelOwnershipType.CROWN
-                ? this.parcelOwnershipType.FEE_SIMPLE
-                : this.parcelOwnershipType.CROWN;
-
-            this.parcelType.setValue(prevParcelType);
-          }
-        });
-    } else {
-      // 2. If form is not dirty, then go with old ways - toggle will change field shown
-      console.log('not dirtyForm');
-
+    const changeParcelType = () => {
       if ($event.value === this.parcelOwnershipType.CROWN) {
         this.searchBy.setValue(null);
         this.pidPinPlaceholder = '';
@@ -264,6 +208,32 @@ export class ParcelEntryComponent implements OnInit {
       this.updateParcelOwners([]);
       this.filteredOwners = this.mapOwners(this.owners);
       this.pid.updateValueAndValidity();
+    };
+
+    if (dirtyForm && this.isCrownLand !== null) {
+      this.dialog
+        .open(ParcelEntryConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (result) => {
+          if (result) {
+            this.onReset();
+            return changeParcelType();
+          } else {
+            const newParcelType = this.parcelType.getRawValue();
+
+            const prevParcelType =
+              newParcelType === this.parcelOwnershipType.CROWN
+                ? this.parcelOwnershipType.FEE_SIMPLE
+                : this.parcelOwnershipType.CROWN;
+
+            this.parcelType.setValue(prevParcelType);
+          }
+        });
+    } else {
+      return changeParcelType();
     }
   }
 
