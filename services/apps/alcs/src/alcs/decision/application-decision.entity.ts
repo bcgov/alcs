@@ -2,12 +2,12 @@ import { AutoMap } from '@automapper/classes';
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
-  Unique,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application/application.entity';
@@ -20,7 +20,10 @@ import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './decision-outcome-type/application-decision-outcome-type.entity';
 
 @Entity()
-@Unique('resolution', ['resolutionNumber', 'resolutionYear'])
+@Index(['resolutionNumber', 'resolutionYear'], {
+  unique: true,
+  where: '"audit_deleted_date_at" is null',
+})
 export class ApplicationDecision extends Base {
   constructor(data?: Partial<ApplicationDecision>) {
     super();
