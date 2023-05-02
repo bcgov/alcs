@@ -22,7 +22,7 @@ import { ApplicationDecisionChairReviewOutcomeType } from './decision-outcome-ty
 @Entity()
 @Index(['resolutionNumber', 'resolutionYear'], {
   unique: true,
-  where: '"audit_deleted_date_at" is null',
+  where: '"audit_deleted_date_at" is null and "resolution_number" is not null',
 })
 export class ApplicationDecision extends Base {
   constructor(data?: Partial<ApplicationDecision>) {

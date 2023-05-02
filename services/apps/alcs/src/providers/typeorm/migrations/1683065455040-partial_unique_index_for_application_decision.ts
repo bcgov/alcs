@@ -16,7 +16,7 @@ export class partialUniqueIndexForApplicationDecision1683065455040
       `COMMENT ON COLUMN "alcs"."application_decision"."rescinded_comment" IS 'Comment provided by the staff when the decision was rescinded'`,
     );
     await queryRunner.query(
-      `CREATE UNIQUE INDEX "IDX_9fd353dcf19ea98d0de8ff8be9" ON "alcs"."application_decision" ("resolution_number", "resolution_year") WHERE "audit_deleted_date_at" is null`,
+      `CREATE UNIQUE INDEX "IDX_9fd353dcf19ea98d0de8ff8be9" ON "alcs"."application_decision" ("resolution_number", "resolution_year") WHERE "audit_deleted_date_at" is null and "resolution_number" is not null`,
     );
   }
 
