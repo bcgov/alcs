@@ -12,12 +12,12 @@
       formControlName="parcelType"
     >
       <mat-button-toggle
-        value="SMPL"
+        value="{{ PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE }}"
         [ngClass]="{ 'error-outline': parcelType.invalid && (parcelType.dirty || parcelType.touched) }"
         >Fee Simple</mat-button-toggle
       >
       <mat-button-toggle
-        value="CRWN"
+        value="{{ PARCEL_OWNERSHIP_TYPES.CROWN }}"
         [ngClass]="{ 'error-outline': parcelType.invalid && (parcelType.dirty || parcelType.touched) }"
         >Crown</mat-button-toggle
       >
@@ -177,7 +177,7 @@
     <app-file-drag-drop
       id="certificate-of-title-upload"
       [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
-      (uploadFiles)="attachFile($event, documentTypes.CERTIFICATE_OF_TITLE, parcel.uuid)"
+      (uploadFiles)="attachFile($event, DOCUMENT_TYPES.CERTIFICATE_OF_TITLE, parcel.uuid)"
       (deleteFile)="deleteFile($event)"
       (openFile)="openFile($event)"
       (beforeFileUploadOpened)="beforeFileUploadOpened()"

@@ -102,8 +102,8 @@ export class ParcelEntryComponent implements OnInit {
 
   ownerInput = new FormControl<string | null>(null);
 
-  documentTypes = DOCUMENT_TYPE;
-  parcelOwnershipType = PARCEL_OWNERSHIP_TYPE;
+  DOCUMENT_TYPES = DOCUMENT_TYPE;
+  PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   maxPurchasedDate = new Date();
 
   constructor(
@@ -190,7 +190,7 @@ export class ParcelEntryComponent implements OnInit {
       this.civicAddress.value;
 
     const changeParcelType = () => {
-      if ($event.value === this.parcelOwnershipType.CROWN) {
+      if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
         this.searchBy.setValue(null);
         this.pidPinPlaceholder = '';
         this.isCrownLand = true;
@@ -225,9 +225,9 @@ export class ParcelEntryComponent implements OnInit {
             const newParcelType = this.parcelType.getRawValue();
 
             const prevParcelType =
-              newParcelType === this.parcelOwnershipType.CROWN
-                ? this.parcelOwnershipType.FEE_SIMPLE
-                : this.parcelOwnershipType.CROWN;
+              newParcelType === this.PARCEL_OWNERSHIP_TYPES.CROWN
+                ? this.PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE
+                : this.PARCEL_OWNERSHIP_TYPES.CROWN;
 
             this.parcelType.setValue(prevParcelType);
           }
