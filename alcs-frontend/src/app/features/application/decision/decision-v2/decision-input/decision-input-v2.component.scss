@@ -1,8 +1,12 @@
+@use '../../../../../../styles/colors.scss';
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 24px;
   grid-row-gap: 24px;
+
+  // font-size: 16px !important;
 }
 
 .resolution-number-wrapper {
@@ -35,6 +39,26 @@
 }
 
 .flex-right {
+  display: flex;
+  justify-content: right;
+}
+
+.resolution-number-wrapper {
+  display: flex;
+  align-items: center;
+
+  .generate-number-btn {
+    width: 100%;
+  }
+
+  .resolution-number {
     display: flex;
-    justify-content: right;
+    align-items: center;
+    font-size: 20px;
+    color: colors.$grey-dark;
+
+    .delete-icon {
+      color: colors.$error-color;
+    }
+  }
 }

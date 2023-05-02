@@ -57,13 +57,16 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
 
+  resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
+  resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
+
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
     date: new FormControl<Date | undefined>(undefined, [Validators.required]),
     decisionMaker: new FormControl<string | null>(null, [Validators.required]),
     postDecision: new FormControl<string | null>(null),
-    resolutionNumber: new FormControl<string | null>(null, [Validators.required]),
-    resolutionYear: new FormControl<number | null>(null, [Validators.required]),
+    resolutionNumber: this.resolutionNumberControl,
+    resolutionYear: this.resolutionYearControl,
     chairReviewRequired: new FormControl<string>('true', [Validators.required]),
     chairReviewDate: new FormControl<Date | null>(null),
     chairReviewOutcome: new FormControl<string | null>(null),
@@ -88,6 +91,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.resolutionYearControl.disable();
     this.setYear();
 
     this.extractAndPopulateQueryParams();
@@ -178,6 +182,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
                 this.form.controls.outcome.disable();
               }
             }
+          } else {
+            this.resolutionYearControl.enable();
           }
         });
     }
@@ -265,6 +271,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         chairReviewOutcome: existingDecision.chairReviewOutcome?.code,
       });
     }
+
+    if (!existingDecision.resolutionNumber) {
+      this.resolutionYearControl.enable();
+    }
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
@@ -292,7 +302,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.form.controls['criterionModification'].updateValueAndValidity();
   }
 
-  async onSubmit() {
+  async onSubmit(isStayOnPage: boolean = false) {
     this.isLoading = true;
 
     const {
@@ -361,7 +371,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
     } finally {
       this.isLoading = false;
-      this.onCancel();
+      if (!isStayOnPage) {
+        this.onCancel();
+      }
     }
   }
 
@@ -405,9 +417,29 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     const selectedYear = this.form.controls.resolutionYear.getRawValue();
     if (selectedYear) {
       const number = await this.decisionService.getNextAvailableResolutionYear(selectedYear);
-      console.log(`number/year: ${number}/${selectedYear}`);
+      if (number) {
+        this.setResolutionNumber(number);
+      } else {
+        this.toastService.showErrorToast('Failed to retrieve resolution number.');
+      }
     } else {
       this.toastService.showErrorToast('Resolution year is not selected. Select a resolution year first.');
     }
+  }
+
+  private async setResolutionNumber(number: number) {
+    try {
+      this.resolutionYearControl.disable();
+      this.form.controls.resolutionNumber.setValue(number.toString());
+      await this.onSubmit(true);
+    } catch {
+      this.resolutionYearControl.enable();
+    }
+  }
+
+  async onDeleteResolutionNumber() {
+    this.resolutionNumberControl.setValue(null);
+    await this.onSubmit(true);
+    this.resolutionYearControl.enable();
   }
 }

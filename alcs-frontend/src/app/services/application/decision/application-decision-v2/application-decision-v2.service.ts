@@ -160,9 +160,7 @@ export class ApplicationDecisionV2Service {
   async getNextAvailableResolutionYear(resolutionYear: number) {
     let result: number | undefined = undefined;
     try {
-      result = await firstValueFrom(
-        this.http.get<number | undefined>(`${this.url}/next-resolution-number/${resolutionYear}`)
-      );
+      result = await firstValueFrom(this.http.get<number>(`${this.url}/next-resolution-number/${resolutionYear}`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch resolutionNumber');
     }
