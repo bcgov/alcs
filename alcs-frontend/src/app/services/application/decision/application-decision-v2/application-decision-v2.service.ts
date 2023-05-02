@@ -156,4 +156,16 @@ export class ApplicationDecisionV2Service {
   async cleanDecisions() {
     this.$decisions.next([]);
   }
+
+  async getNextAvailableResolutionYear(resolutionYear: number) {
+    let result: number | undefined = undefined;
+    try {
+      result = await firstValueFrom(
+        this.http.get<number | undefined>(`${this.url}/next-resolution-number/${resolutionYear}`)
+      );
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch resolutionNumber');
+    }
+    return result;
+  }
 }

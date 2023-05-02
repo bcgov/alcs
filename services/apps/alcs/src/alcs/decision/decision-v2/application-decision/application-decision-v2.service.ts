@@ -493,4 +493,12 @@ export class ApplicationDecisionV2Service {
       },
     });
   }
+
+  async generateResolutionNumber(resolutionYear: number) {
+    const result = await this.appDecisionRepository.query(
+      `SELECT * FROM alcs.generate_next_resolution_number(${resolutionYear})`,
+    );
+
+    return result[0].generate_next_resolution_number;
+  }
 }

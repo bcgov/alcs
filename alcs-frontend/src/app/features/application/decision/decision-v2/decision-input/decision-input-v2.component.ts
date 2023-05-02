@@ -398,4 +398,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   onCancel() {
     this.router.navigate([`application/${this.fileNumber}/decision`]);
   }
+
+  async onGenerateResolutionNumber() {
+    const number = await this.decisionService.getNextAvailableResolutionYear(2023);
+    console.log('number', number);
+  }
 }

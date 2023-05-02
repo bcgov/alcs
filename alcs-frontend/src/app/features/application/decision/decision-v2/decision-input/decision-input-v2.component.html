@@ -18,7 +18,15 @@
         ></ng-select>
       </div>
 
-      <button [loading]="isLoading" type="button" mat-flat-button color="primary">Generate Number</button>
+      <button
+        [loading]="isLoading"
+        type="button"
+        mat-flat-button
+        color="primary"
+        (click)="onGenerateResolutionNumber()"
+      >
+        Generate Number
+      </button>
 
       <mat-form-field appearance="outline" class="date-picker">
         <mat-label>Decision Date</mat-label>
