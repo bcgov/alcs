@@ -36,6 +36,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   purpose = new FormControl<string | null>(null, [Validators.required]);
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
+  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
+  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
     isNOIFollowUp: this.isNOIFollowUp,
@@ -45,7 +47,10 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
     purpose: this.purpose,
     soilTypeRemoved: this.soilTypeRemoved,
     reduceNegativeImpacts: this.reduceNegativeImpacts,
+    projectDurationAmount: this.projectDurationAmount,
+    projectDurationUnit: this.projectDurationUnit,
   });
+
   private fileId = '';
   private submissionUuid = '';
   removalTableData: SoilTableData = {};
@@ -103,6 +108,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
           purpose: applicationSubmission.soilPurpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
+          projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
+          projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -176,6 +183,10 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
         soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
         soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
         soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
+        soilProjectDurationAmount: this.projectDurationAmount.value
+          ? parseFloat(this.projectDurationAmount.value)
+          : null,
+        soilProjectDurationUnit: this.projectDurationUnit.value,
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
@@ -186,7 +197,7 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   onChangeNOI(selectedValue: string) {
     if (selectedValue === 'true') {
       this.NOIIDs.enable();
-    } else {
+    } else if (selectedValue === 'false') {
       this.NOIIDs.disable();
       this.NOIIDs.setValue(null);
     }
@@ -195,7 +206,7 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   onChangeALCAuthorization(selectedValue: string) {
     if (selectedValue === 'true') {
       this.applicationIDs.enable();
-    } else {
+    } else if (selectedValue === 'false') {
       this.applicationIDs.disable();
       this.applicationIDs.setValue(null);
     }
