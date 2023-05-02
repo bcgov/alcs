@@ -370,7 +370,10 @@ export class ParcelEntryComponent implements OnInit {
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
 
-    this.isCrownLand = this.parcelType.value ? this.parcelType.getRawValue() === 'CRWN' : null;
+    this.isCrownLand = this.parcelType.value
+      ? this.parcelType.getRawValue() === this.PARCEL_OWNERSHIP_TYPES.CROWN
+      : null;
+
     if (this.isCrownLand) {
       this.pidPin.disable();
       this.purchaseDate.disable();
