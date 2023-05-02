@@ -289,6 +289,19 @@ export class ApplicationDecisionV2Service {
     modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
+    const isDraftExists = await this.appDecisionRepository.exist({
+      where: {
+        application: { fileNumber: createDto.applicationFileNumber },
+        isDraft: true,
+      },
+    });
+
+    if (isDraftExists) {
+      throw new ServiceValidationException(
+        'Draft decision already exists for this application.',
+      );
+    }
+
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),

@@ -108,7 +108,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (uuid) {
       this.uuid = uuid;
-      console.log('uuid', uuid);
       this.isEdit = true;
     }
 
@@ -161,7 +160,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private async prepareDataForEdit() {
-    if (this.isEdit) {
+    if (this.uuid) {
       this.decisionService.$decision
         .pipe(takeUntil(this.$destroy))
         .pipe(
@@ -195,6 +194,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
             this.resolutionYearControl.enable();
           }
         });
+    } else {
+      this.resolutionYearControl.enable();
     }
   }
 
@@ -370,7 +371,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
 
     try {
-      debugger;
       if (this.uuid) {
         await this.decisionService.update(this.uuid, data);
       } else {
@@ -381,12 +381,13 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         this.uuid = createdDecision.uuid;
       }
     } finally {
-      this.isLoading = false;
       if (!isStayOnPage) {
         this.onCancel();
       } else {
         await this.loadData();
       }
+
+      this.isLoading = false;
     }
   }
 
