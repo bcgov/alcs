@@ -26,6 +26,7 @@ import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-own
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
+import { SoilTableComponent } from './proposal/roso-proposal/soil-table/soil-table.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
@@ -54,6 +55,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     TurProposalComponent,
     SubdProposalComponent,
     RosoProposalComponent,
+    SoilTableComponent,
   ],
   imports: [
     CommonModule,
@@ -89,6 +91,8 @@ import { SelectGovernmentComponent } from './select-government/select-government
     NfuProposalComponent,
     TurProposalComponent,
     SubdProposalComponent,
+    RosoProposalComponent,
+    SoilTableComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

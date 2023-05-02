@@ -1,0 +1,39 @@
+@use '../../../../../../styles/functions' as *;
+
+.container {
+  border: 1px solid #000;
+  max-width: rem(438);
+}
+
+.soil-table {
+  padding: rem(16);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-row-gap: rem(16);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 40% 60%;
+    grid-row-gap: rem(28);
+    padding: rem(24);
+  }
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: rem(-14);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    margin-bottom: 0;
+  }
+
+  .subtext {
+    margin-bottom: rem(-8) !important;
+  }
+}
+
+input {
+  text-align: right;
+  padding-right: rem(8);
+}

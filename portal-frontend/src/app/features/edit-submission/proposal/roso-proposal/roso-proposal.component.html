@@ -33,7 +33,12 @@
         have a NOI ID.
       </div>
       <div>
-        <mat-button-toggle-group (valueChange)="onChangeNOI($event)" id="noi-follow-up" formControlName="isNOIFollowUp">
+        <mat-button-toggle-group
+          class="input"
+          (valueChange)="onChangeNOI($event)"
+          id="noi-follow-up"
+          formControlName="isNOIFollowUp"
+        >
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
@@ -69,6 +74,7 @@
       <div class="subtext">If yes, please provide the ALC Application ID in the field below.</div>
       <div>
         <mat-button-toggle-group
+          class="input"
           (valueChange)="onChangeALCAuthorization($event)"
           id="application-follow-up"
           formControlName="hasALCAuthorization"
@@ -124,6 +130,26 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
+    </div>
+    <div class="full-row">
+      <label>Proposal Dimensions</label>
+      <div class="subtext">
+        Please provide accurate numbers that align with your cross sections, reclamation plan, and site plan. The
+        Commission will consider your proposal dimensions when determining the potential impact it will have on the
+        agricultural capability of the land.
+      </div>
+      <app-info-banner>
+        Please refer to <a href="TODO">Contact Us</a> on the ALC website for more detail.
+      </app-info-banner>
+      <app-soil-table tableHeader="Soil to be Removed" [(data)]="removalTableData"></app-soil-table>
+    </div>
+    <div class="full-row">
+      <label
+        >Of the proposed totals provided above, please input the dimensions of soil that has already been
+        removed.</label
+      >
+      <div class="subtext">If no proposed soil has already been removed, please leave 0 in the fields below</div>
+      <app-soil-table tableHeader="Soil already Removed" [(data)]="alreadyRemovedTableData"></app-soil-table>
     </div>
     <div class="full-row">
       <label for="soilTypeRemoved">Describe the type of soil proposed to be removed.</label>
