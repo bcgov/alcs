@@ -21,12 +21,18 @@ export interface UpdateApplicationDecisionDto {
   isOther?: boolean | null;
   modifiesUuid?: string | null;
   reconsidersUuid?: string | null;
+  isSubjectToConditions?: boolean | null;
+  decisionDescription?: string | null;
+  isStatsRequired?: boolean | null;
+  daysHideFromPublic?: number | null;
+  rescindedDate?: number | null;
+  rescindedComment?: string | null;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   date: number;
-  outcomeCode: string;
-  resolutionNumber: number;
+  outcomeCode?: string;
+  resolutionNumber?: number | null;
   resolutionYear: number;
   chairReviewRequired: boolean;
   applicationFileNumber: string;
@@ -51,6 +57,13 @@ export interface ApplicationDecisionDto {
   documents: DecisionDocumentDto[];
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
+  isDraft: boolean;
+  isSubjectToConditions?: boolean | null;
+  decisionDescription?: string | null;
+  isStatsRequired?: boolean | null;
+  daysHideFromPublic?: number | null;
+  rescindedDate?: number | null;
+  rescindedComment?: string | null;
   modifies?: LinkedResolutionDto;
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];

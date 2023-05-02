@@ -4,10 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ToastService } from '../../../toast/toast.service';
-import { ApplicationDecisionService } from './application-decision.service';
+import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 
-describe('ApplicationMeetingService', () => {
-  let service: ApplicationDecisionService;
+describe('ApplicationDecisionV2Service', () => {
+  let service: ApplicationDecisionV2Service;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;
 
@@ -27,7 +27,7 @@ describe('ApplicationMeetingService', () => {
         },
       ],
     });
-    service = TestBed.inject(ApplicationDecisionService);
+    service = TestBed.inject(ApplicationDecisionV2Service);
   });
 
   it('should be created', () => {

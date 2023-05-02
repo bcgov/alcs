@@ -12,7 +12,7 @@ import { ApplicationReviewService } from '../../services/application/application
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
-import { DecisionComponent } from './decision/decision.component';
+import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
 import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { IntakeComponent } from './intake/intake.component';
@@ -22,7 +22,7 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
 
-export const childRoutes = [
+export const appChildRoutes = [
   {
     path: '',
     menuTitle: 'Overview',
@@ -83,8 +83,9 @@ export const childRoutes = [
     path: 'decision',
     menuTitle: 'Decision',
     icon: 'gavel',
-    component: DecisionComponent,
+    module: DecisionModule,
     requiresAuthorization: true,
+    children: decisionChildRoutes,
   },
   {
     path: 'post-decision',
@@ -109,7 +110,7 @@ export const childRoutes = [
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
-  childRoutes = childRoutes;
+  childRoutes = appChildRoutes;
 
   fileNumber?: string;
   application: ApplicationDto | undefined;

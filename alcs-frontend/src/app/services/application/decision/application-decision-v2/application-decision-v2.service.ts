@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/file';
 import { ToastService } from '../../../toast/toast.service';
@@ -11,13 +11,15 @@ import {
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
-} from './application-decision.dto';
+} from './application-decision-v2.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationDecisionService {
+export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
+  $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
+  $decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
@@ -125,5 +127,33 @@ export class ApplicationDecisionService {
   async deleteFile(decisionUuid: string, documentUuid: string) {
     const url = `${this.url}/${decisionUuid}/file/${documentUuid}`;
     return await firstValueFrom(this.http.delete<{ url: string }>(url));
+  }
+
+  async getByUuid(uuid: string) {
+    let decision: ApplicationDecisionDto | undefined;
+    try {
+      decision = await firstValueFrom(this.http.get<ApplicationDecisionDto>(`${this.url}/${uuid}`));
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch decision');
+    }
+    return decision;
+  }
+
+  async loadDecision(uuid: string) {
+    const decision = await this.getByUuid(uuid);
+    this.$decision.next(decision);
+  }
+
+  async loadDecisions(fileNumber: string) {
+    const decisions = await this.fetchByApplication(fileNumber);
+    this.$decisions.next(decisions);
+  }
+
+  async cleanDecision() {
+    this.$decision.next(undefined);
+  }
+
+  async cleanDecisions() {
+    this.$decisions.next([]);
   }
 }

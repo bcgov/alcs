@@ -1,0 +1,40 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+}
+
+.resolution-number-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 16px 0.7fr;
+}
+
+.row,
+.btn-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 24px 0;
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+  }
+
+  .release-decision-btn {
+    width: 50%;
+  }
+}
+
+.btn-row {
+  justify-content: space-between;
+}
+
+.flex-right {
+    display: flex;
+    justify-content: right;
+}

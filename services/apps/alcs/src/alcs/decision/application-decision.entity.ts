@@ -59,7 +59,7 @@ export class ApplicationDecision extends Base {
   application: Application;
 
   @AutoMap()
-  @Column({ type: 'int4' })
+  @Column({ type: 'int4', nullable: true })
   resolutionNumber: number;
 
   @AutoMap()
@@ -100,6 +100,55 @@ export class ApplicationDecision extends Base {
     default: false,
   })
   isDraft: boolean;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    comment: 'Indicates whether the decision is subject to conditions',
+    type: 'boolean',
+    nullable: true,
+  })
+  isSubjectToConditions?: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({
+    comment: 'Staff input field for a description of the decision',
+    nullable: true,
+    type: 'text',
+  })
+  decisionDescription?: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    comment: 'Indicates whether the stats are required for the decision',
+    nullable: true,
+    type: 'boolean',
+  })
+  isStatsRequired?: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    comment:
+      'Indicates how long the decision should stay hidden from public in days from decision date',
+    nullable: true,
+    type: 'integer',
+  })
+  daysHideFromPublic?: number | null;
+
+  @AutoMap(() => Date)
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+    comment: 'Date when decision was rescinded',
+  })
+  rescindedDate?: Date | null;
+
+  @AutoMap(() => String)
+  @Column({
+    comment: 'Comment provided by the staff when the decision was rescinded',
+    nullable: true,
+    type: 'text',
+  })
+  rescindedComment?: string | null;
 
   @AutoMap()
   @ManyToOne(() => ApplicationDecisionChairReviewOutcomeType, {

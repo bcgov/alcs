@@ -66,6 +66,30 @@ export class UpdateApplicationDecisionDto {
   @IsUUID()
   @IsOptional()
   reconsidersUuid?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  isSubjectToConditions?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  decisionDescription?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  isStatsRequired?: boolean | null;
+
+  @IsNumber()
+  @IsOptional()
+  daysHideFromPublic?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  rescindedDate?: number | null;
+
+  @IsString()
+  @IsOptional()
+  rescindedComment?: string | null;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -90,10 +114,6 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   @IsUUID()
   @IsOptional()
   modifiesUuid?: string;
-
-  @IsUUID()
-  @IsOptional()
-  reconsidersUuid?: string;
 
   @IsBoolean()
   isDraft: boolean;
@@ -154,6 +174,24 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Boolean)
   isDraft: boolean;
+
+  @AutoMap(() => Boolean)
+  isSubjectToConditions?: boolean | null;
+
+  @AutoMap(() => String)
+  decisionDescription?: string | null;
+
+  @AutoMap(() => Boolean)
+  isStatsRequired?: boolean | null;
+
+  @AutoMap(() => Number)
+  daysHideFromPublic?: number | null;
+
+  @AutoMap(() => Number)
+  rescindedDate?: number | null;
+
+  @AutoMap(() => String)
+  rescindedComment?: string | null;
 
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;

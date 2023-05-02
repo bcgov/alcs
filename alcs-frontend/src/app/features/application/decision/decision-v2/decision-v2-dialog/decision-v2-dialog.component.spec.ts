@@ -11,7 +11,7 @@ import { ApplicationModificationDto } from '../../../../../services/application/
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v2/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { MomentPipe } from '../../../../../shared/pipes/moment.pipe';
 import { StartOfDayPipe } from '../../../../../shared/pipes/startOfDay.pipe';
 import { DecisionV2DialogComponent } from './decision-v2-dialog.component';
@@ -33,7 +33,7 @@ describe('DecisionDialogComponent', () => {
       declarations: [DecisionV2DialogComponent, MomentPipe, StartOfDayPipe],
       providers: [
         {
-          provide: ApplicationDecisionService,
+          provide: ApplicationDecisionV2Service,
           useValue: {},
         },
         {

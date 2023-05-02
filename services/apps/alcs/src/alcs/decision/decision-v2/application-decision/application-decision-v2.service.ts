@@ -186,6 +186,14 @@ export class ApplicationDecisionV2Service {
     existingDecision.reconsiders = reconsiders;
     existingDecision.resolutionNumber = updateDto.resolutionNumber;
     existingDecision.resolutionYear = updateDto.resolutionYear;
+    existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
+    existingDecision.decisionDescription = updateDto.decisionDescription;
+    existingDecision.isStatsRequired = updateDto.isStatsRequired;
+    existingDecision.daysHideFromPublic = updateDto.daysHideFromPublic;
+    existingDecision.rescindedDate = formatIncomingDate(
+      updateDto.rescindedDate,
+    );
+    existingDecision.rescindedComment = updateDto.rescindedComment;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -299,6 +307,14 @@ export class ApplicationDecisionV2Service {
       isTimeExtension: createDto.isTimeExtension,
       isOther: createDto.isOther,
       isDraft: createDto.isDraft,
+      isSubjectToConditions: createDto.isSubjectToConditions,
+      decisionDescription: createDto.decisionDescription,
+      isStatsRequired: createDto.isStatsRequired,
+      daysHideFromPublic: createDto.daysHideFromPublic,
+      rescindedDate: createDto.rescindedDate
+        ? new Date(createDto.rescindedDate)
+        : null,
+      rescindedComment: createDto.rescindedComment,
       application,
       modifies,
       reconsiders,
@@ -326,12 +342,12 @@ export class ApplicationDecisionV2Service {
   }
 
   private async validateResolutionNumber(number, year) {
+    // we do not need to include deleted items since there may be multiple deleted draft decision wih the same or different numbers
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
-        resolutionNumber: number,
-        resolutionYear: year,
+        resolutionNumber: number ?? IsNull(),
+        resolutionYear: year ?? IsNull(),
       },
-      withDeleted: true,
     });
 
     if (existingDecision) {

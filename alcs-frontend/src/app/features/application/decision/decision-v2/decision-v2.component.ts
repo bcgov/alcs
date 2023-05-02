@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
@@ -8,8 +9,8 @@ import {
   CeoCriterionDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-} from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v2/application-decision.service';
+} from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import {
   MODIFICATION_TYPE_LABEL,
@@ -17,6 +18,7 @@ import {
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
+import { decisionChildRoutes } from '../decision.module';
 import { DecisionV2DialogComponent } from './decision-v2-dialog/decision-v2-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & {
@@ -24,6 +26,7 @@ type LoadingDecision = ApplicationDecisionDto & {
   modifiedByResolutions: string[];
   loading: boolean;
 };
+
 @Component({
   selector: 'app-decision-v2',
   templateUrl: './decision-v2.component.html',
@@ -31,6 +34,10 @@ type LoadingDecision = ApplicationDecisionDto & {
 })
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  createDecision = decisionChildRoutes.find((e) => e.path === 'create')!;
+  isDraftExists = true;
+  disabledCreateBtnTooltip = '';
+
   fileNumber: string = '';
   decisionDate: number | undefined;
   decisions: LoadingDecision[] = [];
@@ -46,9 +53,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   constructor(
     public dialog: MatDialog,
     private applicationDetailService: ApplicationDetailService,
-    private decisionService: ApplicationDecisionService,
+    private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -68,15 +76,21 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.outcomes = codes.outcomes;
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
+    this.decisionService.loadDecisions(fileNumber);
 
-    const loadedDecision = await this.decisionService.fetchByApplication(fileNumber);
-    // TODO: observable, since this may take a while to load?
-    this.decisions = loadedDecision.map((decision) => ({
-      ...decision,
-      reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
-      modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
-      loading: false,
-    }));
+    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
+      this.decisions = decisions.map((decision) => ({
+        ...decision,
+        reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
+        modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
+        loading: false,
+      }));
+
+      this.isDraftExists = this.decisions.some((d) => d.isDraft);
+      this.disabledCreateBtnTooltip = this.isPaused
+        ? 'This application is currently paused. Only active applications can have decisions.'
+        : 'You cannot create a decision if there are unpublished decisions.';
+    });
   }
 
   onCreate() {
@@ -111,33 +125,13 @@ export class DecisionV2Component implements OnInit, OnDestroy {
 
   onEdit(decision: LoadingDecision) {
     const decisionIndex = this.decisions.indexOf(decision);
+    // TODO set minDate for the decision in input
     let minDate = new Date(0);
     if (decisionIndex !== this.decisions.length - 1) {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
-    this.dialog
-      .open(DecisionV2DialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        autoFocus: false,
-        data: {
-          isFirstDecision: decisionIndex === this.decisions.length - 1,
-          minDate,
-          fileNumber: this.fileNumber,
-          outcomes: this.outcomes,
-          decisionMakers: this.decisionMakers,
-          ceoCriterion: this.ceoCriterion,
-          existingDecision: decision,
-        },
-      })
-      .afterClosed()
-      .subscribe((didModify) => {
-        if (didModify) {
-          this.applicationDetailService.loadApplication(this.fileNumber);
-        }
-      });
+
+    this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
 
   async deleteDecision(uuid: string) {
@@ -223,6 +217,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.decisionService.cleanDecisions()
     this.$destroy.next();
     this.$destroy.complete();
   }

@@ -139,6 +139,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.chairReviewDate,
           mapFrom((a) => a.chairReviewDate?.getTime()),
         ),
+        forMember(
+          (ad) => ad.rescindedDate,
+          mapFrom((a) => a.rescindedDate?.getTime()),
+        ),
       );
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);

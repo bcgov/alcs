@@ -1,4 +1,7 @@
 <section>
   <app-decision-v1 *ngIf="application?.source === APPLICATION_SYSTEM_SOURCE_TYPES.ALCS"></app-decision-v1>
   <app-decision-v2 *ngIf="application?.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT"></app-decision-v2>
+  <div class="child-content">
+    <router-outlet></router-outlet>
+  </div>
 </section>
