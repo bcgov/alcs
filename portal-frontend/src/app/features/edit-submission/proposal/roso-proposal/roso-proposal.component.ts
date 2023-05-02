@@ -136,7 +136,6 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   }
 
   private async save() {
-    debugger;
     if (this.fileId) {
       const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
       const soilNOIIDs = this.NOIIDs.getRawValue();
