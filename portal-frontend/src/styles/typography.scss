@@ -150,5 +150,5 @@ button {
 }
 
 .error-outline {
-  border: 1px solid colors.$error-color !important;
+  border: rem(3) solid colors.$error-color !important;
 }

@@ -9,6 +9,11 @@ export enum APPLICATION_SYSTEM_SOURCE_TYPES {
   ALCS = 'ALCS',
 }
 
+export enum PARCEL_OWNERSHIP_TYPE {
+  FEE_SIMPLE = 'SMPL',
+  CROWN = 'CRWN',
+}
+
 export interface StatusHistory {
   type: 'status_change';
   label: string;
