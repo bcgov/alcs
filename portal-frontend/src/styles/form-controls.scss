@@ -69,7 +69,22 @@ input.mat-input-element:disabled::placeholder {
 
 .mat-mdc-select.mat-mdc-select-disabled {
   .mat-mdc-select-placeholder {
-    color: colors.$grey;
+    color: colors.$mat-input-placeholder-color-disabled;
+  }
+}
+
+.mdc-text-field.mdc-text-field--disabled {
+  background-color: rgba(colors.$grey, 0.1);
+  border-bottom-left-radius: rem(4);
+  border-bottom-right-radius: rem(4);
+}
+
+mat-form-field.mat-form-field-disabled {
+  cursor: not-allowed;
+
+  input,
+  textarea {
+    cursor: not-allowed;
   }
 }
 
