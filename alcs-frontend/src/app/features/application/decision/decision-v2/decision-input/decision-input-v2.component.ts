@@ -77,8 +77,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
-    rescindedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    rescindedComment: new FormControl<string | undefined>(undefined, [Validators.required]),
+    rescindedDate: new FormControl<Date | undefined>(undefined),
+    rescindedComment: new FormControl<string | undefined>(undefined),
   });
 
   constructor(
@@ -311,9 +311,33 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.form.controls['criterionModification'].updateValueAndValidity();
   }
 
-  async onSubmit(isStayOnPage: boolean = false) {
+  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
     this.isLoading = true;
 
+    const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
+
+    try {
+      if (this.uuid) {
+        await this.decisionService.update(this.uuid, data);
+      } else {
+        const createdDecision = await this.decisionService.create({
+          ...data,
+          applicationFileNumber: this.fileNumber,
+        });
+        this.uuid = createdDecision.uuid;
+      }
+    } finally {
+      if (!isStayOnPage) {
+        this.onCancel();
+      } else {
+        await this.loadData();
+      }
+
+      this.isLoading = false;
+    }
+  }
+
+  private mapDecisionDataForSave(isDraft: boolean) {
     const {
       date,
       outcome,
@@ -353,7 +377,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       applicationFileNumber: this.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
-      isDraft: true,
+      isDraft,
       isSubjectToConditions: parseStringToBoolean(isSubjectToConditions),
       decisionDescription: decisionDescription,
       isStatsRequired: parseStringToBoolean(isStatsRequired),
@@ -368,26 +392,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       data.isTimeExtension = null;
       data.isOther = null;
     }
-
-    try {
-      if (this.uuid) {
-        await this.decisionService.update(this.uuid, data);
-      } else {
-        const createdDecision = await this.decisionService.create({
-          ...data,
-          applicationFileNumber: this.fileNumber,
-        });
-        this.uuid = createdDecision.uuid;
-      }
-    } finally {
-      if (!isStayOnPage) {
-        this.onCancel();
-      } else {
-        await this.loadData();
-      }
-
-      this.isLoading = false;
-    }
+    return data;
   }
 
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
@@ -454,5 +459,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.resolutionNumberControl.setValue(null);
     await this.onSubmit(true);
     this.resolutionYearControl.enable();
+  }
+
+  async onRelease() {
+    // TODO add dialog here
+    // TODO once dialog confirmed save current decision and update submission status
+    await this.onSubmit(false, false);
+    
   }
 }

@@ -170,7 +170,6 @@
           [matDatepicker]="rescindedDatePicker"
           formControlName="rescindedDate"
           name="date"
-          required
           [min]="minDate | startOfDay"
         />
         <mat-datepicker-toggle matSuffix [for]="rescindedDatePicker"></mat-datepicker-toggle>
@@ -180,7 +179,7 @@
 
     <mat-form-field appearance="outline" class="row">
       <mat-label>Rescinded Comment</mat-label>
-      <input matInput formControlName="rescindedComment" required />
+      <input matInput formControlName="rescindedComment" />
     </mat-form-field>
 
     <div class="row">
@@ -260,7 +259,14 @@
   </form>
 
   <div class="row flex-right">
-    <button class="release-decision-btn" type="submit" disabled="!form.valid" mat-flat-button color="primary">
+    <button
+      class="release-decision-btn"
+      type="button"
+      [disabled]="!form.valid"
+      (click)="onRelease()"
+      mat-flat-button
+      color="primary"
+    >
       Release Decision
     </button>
   </div>
