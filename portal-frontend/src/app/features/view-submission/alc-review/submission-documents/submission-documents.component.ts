@@ -30,7 +30,10 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    await this.applicationDocumentService.openFile(uuid);
+    const res = await this.applicationDocumentService.openFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
+    }
   }
 
   ngOnDestroy(): void {
