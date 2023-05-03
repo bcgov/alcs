@@ -16,11 +16,11 @@ import { StepComponent } from '../../step.partial';
 import { SoilTableData } from '../soil-table/soil-table.component';
 
 @Component({
-  selector: 'app-roso-proposal',
-  templateUrl: './roso-proposal.component.html',
-  styleUrls: ['./roso-proposal.component.scss'],
+  selector: 'app-pofo-proposal',
+  templateUrl: './pofo-proposal.component.html',
+  styleUrls: ['./pofo-proposal.component.scss'],
 })
-export class RosoProposalComponent extends StepComponent implements OnInit, OnDestroy {
+export class PofoProposalComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
 
@@ -35,8 +35,9 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   hasALCAuthorization = new FormControl<string | null>(null, [Validators.required]);
   applicationIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
-  soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
+  fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
+  alternativeMeasures = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
 
@@ -46,7 +47,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
     hasALCAuthorization: this.hasALCAuthorization,
     applicationIDs: this.applicationIDs,
     purpose: this.purpose,
-    soilTypeRemoved: this.soilTypeRemoved,
+    fillTypeToPlace: this.fillTypeToPlace,
+    alternativeMeasures: this.alternativeMeasures,
     reduceNegativeImpacts: this.reduceNegativeImpacts,
     projectDurationAmount: this.projectDurationAmount,
     projectDurationUnit: this.projectDurationUnit,
@@ -54,8 +56,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
 
   private fileId = '';
   private submissionUuid = '';
-  removalTableData: SoilTableData = {};
-  alreadyRemovedTableData: SoilTableData = {};
+  fillTableData: SoilTableData = {};
+  alreadyFilledTableData: SoilTableData = {};
 
   constructor(
     private router: Router,
@@ -71,14 +73,14 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
 
-        this.alreadyRemovedTableData = {
+        this.alreadyFilledTableData = {
           volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
           area: applicationSubmission.soilAlreadyRemovedArea ?? 0,
           averageDepth: applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0,
           maximumDepth: applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
         };
 
-        this.removalTableData = {
+        this.fillTableData = {
           volume: applicationSubmission.soilToRemoveVolume ?? undefined,
           area: applicationSubmission.soilToRemoveArea ?? undefined,
           averageDepth: applicationSubmission.soilToRemoveAverageDepth ?? undefined,
@@ -107,7 +109,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
           NOIIDs: applicationSubmission.soilNOIIDs,
           applicationIDs: applicationSubmission.soilApplicationIDs,
           purpose: applicationSubmission.soilPurpose,
-          soilTypeRemoved: applicationSubmission.soilTypeRemoved,
+          fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
+          alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
           projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
           projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
@@ -167,25 +170,27 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
       const soilApplicationIDs = this.applicationIDs.getRawValue();
       const soilPurpose = this.purpose.getRawValue();
-      const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
+      const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
+      const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         soilPurpose,
-        soilTypeRemoved,
+        soilFillTypeToPlace,
+        soilAlternativeMeasures,
         soilReduceNegativeImpacts,
         soilIsNOIFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilNOIIDs,
         soilHasPreviousALCAuthorization: parseStringToBoolean(hasALCAuthorization),
         soilApplicationIDs,
-        soilToRemoveVolume: this.removalTableData?.volume ?? null,
-        soilToRemoveArea: this.removalTableData?.area ?? null,
-        soilToRemoveMaximumDepth: this.removalTableData?.maximumDepth ?? null,
-        soilToRemoveAverageDepth: this.removalTableData?.averageDepth ?? null,
-        soilAlreadyRemovedVolume: this.alreadyRemovedTableData?.volume ?? null,
-        soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
-        soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
-        soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
+        soilToRemoveVolume: this.fillTableData?.volume ?? null,
+        soilToRemoveArea: this.fillTableData?.area ?? null,
+        soilToRemoveMaximumDepth: this.fillTableData?.maximumDepth ?? null,
+        soilToRemoveAverageDepth: this.fillTableData?.averageDepth ?? null,
+        soilAlreadyRemovedVolume: this.alreadyFilledTableData?.volume ?? null,
+        soilAlreadyRemovedArea: this.alreadyFilledTableData?.area ?? null,
+        soilAlreadyRemovedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
+        soilAlreadyRemovedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
         soilProjectDurationAmount: this.projectDurationAmount.value
           ? parseFloat(this.projectDurationAmount.value)
           : null,

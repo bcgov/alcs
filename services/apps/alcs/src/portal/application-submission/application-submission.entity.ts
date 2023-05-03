@@ -484,6 +484,14 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   soilProjectDurationUnit: string | null;
 
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilFillTypeToPlace: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilAlternativeMeasures: string | null;
+
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
   @JoinColumn({
