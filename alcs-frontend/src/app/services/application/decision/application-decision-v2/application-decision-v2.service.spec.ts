@@ -197,7 +197,7 @@ describe('ApplicationDecisionV2Service', () => {
   it('should make an http get when requesting a new resolution number', async () => {
     httpClient.get.mockReturnValue(of(1));
 
-    await service.getNextAvailableNumberInResolutionYear(2023);
+    await service.getNextAvailableResolutionNumber(2023);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
   });
