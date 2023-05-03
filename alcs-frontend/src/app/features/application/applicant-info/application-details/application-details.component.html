@@ -139,11 +139,11 @@
   <h3>Proposal</h3>
   <app-nfu-details
     *ngIf="submittedApplication && applicationType === 'NFUP'"
-    [application]="submittedApplication"
+    [applicationSubmission]="submittedApplication"
   ></app-nfu-details>
   <app-tur-details
     *ngIf="submittedApplication && applicationType === 'TURP'"
-    [application]="submittedApplication"
+    [applicationSubmission]="submittedApplication"
     [files]="files"
   ></app-tur-details>
   <app-subd-details
@@ -151,6 +151,11 @@
     [applicationSubmission]="submittedApplication"
     [files]="files"
   ></app-subd-details>
+  <app-roso-details
+    *ngIf="submittedApplication && applicationType === 'ROSO'"
+    [applicationSubmission]="submittedApplication"
+    [files]="files"
+  ></app-roso-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" (click)="onEdit(5)" mat-flat-button color="accent">Edit Section</button>

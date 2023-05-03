@@ -59,11 +59,12 @@
       </div>
     </div>
     <div class="full-row">
-      <label for="noi-id">Notice of Intent (NOI) ID</label>
+      <label for="NOIIDs">Notice of Intent (NOI) ID</label>
       <div class="subtext">If you have multiple NOI IDs, please separate with a comma.</div>
       <mat-form-field appearance="outline">
-        <input formControlName="NOIIDs" id="noi-id" matInput />
+        <input type="text" formControlName="NOIIDs" id="NOIIDs" matInput />
       </mat-form-field>
+
       <div *ngIf="NOIIDs.invalid && (NOIIDs.dirty || NOIIDs.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="NOIIDs.errors?.['required']">This field is required</div>
@@ -99,10 +100,10 @@
       </div>
     </div>
     <div class="full-row">
-      <label for="noi-id">Application ID</label>
+      <label for="application-id">Application ID</label>
       <div class="subtext">If you have multiple Application IDs, please separate with a comma.</div>
       <mat-form-field appearance="outline">
-        <input formControlName="applicationIDs" maxlength="4000" id="application-id" matInput />
+        <input type="text" formControlName="applicationIDs" id="application-id" matInput />
       </mat-form-field>
       <div *ngIf="applicationIDs.invalid && (applicationIDs.dirty || applicationIDs.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -151,6 +152,53 @@
       <div class="subtext">If no proposed soil has already been removed, please leave 0 in the fields below</div>
       <app-soil-table tableHeader="Soil already Removed" [(data)]="alreadyRemovedTableData"></app-soil-table>
     </div>
+
+    <section>
+      <h4>Project Duration</h4>
+      <div class="subtext">Estimated duration of the project</div>
+      <div class="form-row">
+        <div>
+          <label for="projectDurationUnit">Duration</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">
+              <mat-option value="days">Days</mat-option>
+              <mat-option value="months">Months</mat-option>
+              <mat-option value="years">Years</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div
+            *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="projectDurationAmount">Length</label>
+          <mat-form-field appearance="outline">
+            <input
+              id="projectDurationAmount"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              min="0.01"
+              matInput
+              formControlName="projectDurationAmount"
+              placeholder="Type length as a decimal number"
+            />
+          </mat-form-field>
+          <div
+            *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="full-row">
       <label for="soilTypeRemoved">Describe the type of soil proposed to be removed.</label>
       <div class="subtext">List all proposed soil types to be removed.</div>

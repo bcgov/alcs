@@ -81,6 +81,13 @@ export class ApplicationSubmissionValidatorService {
         errors,
       );
     }
+    if (applicationSubmission.typeCode === 'ROSO') {
+      await this.validateRosoProposal(
+        applicationSubmission,
+        applicationDocuments,
+        errors,
+      );
+    }
 
     const validatedApplication =
       validatedParcels && validatedPrimaryContact
@@ -424,6 +431,83 @@ export class ApplicationSubmissionValidatorService {
           ),
         );
       }
+    }
+  }
+
+  private async validateRosoProposal(
+    application: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      application.soilIsNOIFollowUp === null ||
+      application.soilHasPreviousALCAuthorization === null ||
+      !application.soilPurpose ||
+      !application.soilTypeRemoved ||
+      application.soilReduceNegativeImpacts === null
+    ) {
+      errors.push(new ServiceValidationException(`ROSO Proposal incomplete`));
+    }
+
+    if (application.soilIsNOIFollowUp && !application.soilNOIIDs) {
+      errors.push(
+        new ServiceValidationException(`ROSO Proposal missing NOI IDs`),
+      );
+    }
+
+    if (
+      application.soilHasPreviousALCAuthorization &&
+      !application.soilApplicationIDs
+    ) {
+      errors.push(
+        new ServiceValidationException(`ROSO Proposal missing Application IDs`),
+      );
+    }
+
+    if (
+      application.soilToRemoveVolume === null ||
+      application.soilToRemoveArea === null ||
+      application.soilToRemoveMaximumDepth === null ||
+      application.soilToRemoveAverageDepth === null ||
+      application.soilAlreadyRemovedVolume === null ||
+      application.soilAlreadyRemovedArea === null ||
+      application.soilAlreadyRemovedMaximumDepth === null ||
+      application.soilAlreadyRemovedAverageDepth === null
+    ) {
+      errors.push(new ServiceValidationException(`ROSO Soil Table Incomplete`));
+    }
+
+    const proposalMaps = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMaps.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `ROSO proposal missing Proposal Map / Site Plan`,
+        ),
+      );
+    }
+
+    const crossSections = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.CROSS_SECTIONS,
+    );
+    if (crossSections.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `ROSO proposal missing Cross Section Diagrams`,
+        ),
+      );
+    }
+
+    const reclamationPlans = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.RECLAMATION_PLAN,
+    );
+    if (reclamationPlans.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `ROSO proposal missing Reclamation Plans`,
+        ),
+      );
     }
   }
 }

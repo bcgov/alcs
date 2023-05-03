@@ -1,16 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import {
-  BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
 import { Base } from '../../common/entities/base.entity';

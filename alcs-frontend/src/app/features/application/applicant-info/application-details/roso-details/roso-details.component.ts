@@ -8,27 +8,29 @@ import {
 import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-tur-details[applicationSubmission]',
-  templateUrl: './tur-details.component.html',
-  styleUrls: ['./tur-details.component.scss'],
+  selector: 'app-roso-details[applicationSubmission]',
+  templateUrl: './roso-details.component.html',
+  styleUrls: ['./roso-details.component.scss'],
 })
-export class TurDetailsComponent {
-  _application: ApplicationSubmissionDto | undefined;
+export class RosoDetailsComponent {
+  _applicationSubmission: ApplicationSubmissionDto | undefined;
   @Input() set applicationSubmission(application: ApplicationSubmissionDto | undefined) {
     if (application) {
-      this._application = application;
+      this._applicationSubmission = application;
     }
   }
 
-  @Input() set files(files: ApplicationDocumentDto[] | undefined) {
-    if (files) {
-      this.servingNotice = files.filter((file) => file.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
-      this.proposalMap = files.filter((file) => file.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+  @Input() set files(documents: ApplicationDocumentDto[] | undefined) {
+    if (documents) {
+      this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
+      this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.reclamationPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
     }
   }
 
-  servingNotice: ApplicationDocumentDto[] = [];
+  crossSections: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
+  reclamationPlans: ApplicationDocumentDto[] = [];
 
   constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
 
