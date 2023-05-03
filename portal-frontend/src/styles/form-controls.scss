@@ -67,6 +67,12 @@ input.mat-input-element:disabled::placeholder {
   color: colors.$grey;
 }
 
+.mat-mdc-select.mat-mdc-select-disabled {
+  .mat-mdc-select-placeholder {
+    color: colors.$grey;
+  }
+}
+
 form {
   label {
     font-weight: 700;
