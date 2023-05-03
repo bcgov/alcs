@@ -8,13 +8,13 @@ import {
 import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-tur-details[application]',
+  selector: 'app-tur-details[applicationSubmission]',
   templateUrl: './tur-details.component.html',
   styleUrls: ['./tur-details.component.scss'],
 })
 export class TurDetailsComponent {
   _application: ApplicationSubmissionDto | undefined;
-  @Input() set application(application: ApplicationSubmissionDto | undefined) {
+  @Input() set applicationSubmission(application: ApplicationSubmissionDto | undefined) {
     if (application) {
       this._application = application;
     }

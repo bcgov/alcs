@@ -112,6 +112,22 @@
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-subd-proposal>
+      <app-roso-proposal
+        *ngIf="applicationSubmission.typeCode === 'ROSO'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-roso-proposal>
+      <app-pofo-proposal
+        *ngIf="applicationSubmission.typeCode === 'POFO'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-pofo-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">
@@ -134,10 +150,10 @@
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [updatedFields]="updatedFields"
-        [originalSubmissionUuid]='originalSubmissionUuid'
+        [originalSubmissionUuid]="originalSubmissionUuid"
         [draftMode]="true"
         (exit)="onExit()"
-        (submit)='onSubmit()'
+        (submit)="onSubmit()"
       ></app-review-and-submit>
     </div>
   </cdk-step>

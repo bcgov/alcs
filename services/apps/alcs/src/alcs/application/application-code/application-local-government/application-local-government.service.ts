@@ -28,6 +28,20 @@ export class ApplicationLocalGovernmentService {
     });
   }
 
+  async listActive() {
+    return this.repository.find({
+      where: {
+        isActive: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+      relations: {
+        preferredRegion: true,
+      },
+    });
+  }
+
   async getByName(name: string) {
     return this.repository.findOne({
       where: {

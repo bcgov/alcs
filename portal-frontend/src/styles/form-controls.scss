@@ -145,30 +145,30 @@ form {
   // Default error border
   .mdc-notched-outline__leading,
   .mdc-notched-outline__notch {
-    border-bottom-width: 3px !important;
-    border-left-width: 3px !important;
-    border-top-width: 3px !important;
+    border-bottom-width: rem(3) !important;
+    border-left-width: rem(3) !important;
+    border-top-width: rem(3) !important;
   }
 
   .mdc-notched-outline__trailing {
-    border-bottom-width: 3px !important;
-    border-right-width: 3px !important;
-    border-top-width: 3px !important;
+    border-bottom-width: rem(3) !important;
+    border-right-width: rem(3) !important;
+    border-top-width: rem(3) !important;
   }
 
   // Focus error border to match default mat behaviour
   .mdc-notched-outline--notched {
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch {
-      border-bottom-width: 2px !important;
-      border-left-width: 2px !important;
-      border-top-width: 2px !important;
+      border-bottom-width: rem(2) !important;
+      border-left-width: rem(2) !important;
+      border-top-width: rem(2) !important;
     }
 
     .mdc-notched-outline__trailing {
-      border-bottom-width: 2px !important;
-      border-right-width: 2px !important;
-      border-top-width: 2px !important;
+      border-bottom-width: rem(2) !important;
+      border-right-width: rem(2) !important;
+      border-top-width: rem(2) !important;
     }
   }
 }

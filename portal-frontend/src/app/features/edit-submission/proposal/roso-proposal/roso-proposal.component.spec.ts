@@ -11,7 +11,7 @@ import { ApplicationSubmissionService } from '../../../../services/application-s
 
 import { RosoProposalComponent } from './roso-proposal.component';
 
-describe('SubdProposalComponent', () => {
+describe('RosoProposalComponent', () => {
   let component: RosoProposalComponent;
   let fixture: ComponentFixture<RosoProposalComponent>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;

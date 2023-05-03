@@ -135,6 +135,58 @@ export class SubmittedApplicationDto {
   subdIsHomeSiteSeverance?: boolean | null;
 
   subdProposedLots?: ProposedLot[];
+
+  //Soil Fields
+  @AutoMap(() => Boolean)
+  soilIsNOIFollowUp: boolean | null;
+
+  @AutoMap(() => String)
+  soilNOIIDs: string | null;
+
+  @AutoMap(() => Boolean)
+  soilHasPreviousALCAuthorization: boolean | null;
+
+  @AutoMap(() => String)
+  soilApplicationIDs: string | null;
+
+  @AutoMap(() => String)
+  soilPurpose: string | null;
+
+  @AutoMap(() => String)
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => String)
+  soilReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedArea: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  soilProjectDurationUnit?: string | null;
 }
 
 export class CreateApplicationDto {

@@ -37,6 +37,11 @@
     margin-bottom: rem(16);
   }
 
+  .app-type-radio-group {
+    display: flex;
+    flex-direction: column;
+  }
+
   @media screen and (min-width: $desktopBreakpoint) {
     .warning-banner {
       padding: 2rem 3rem;

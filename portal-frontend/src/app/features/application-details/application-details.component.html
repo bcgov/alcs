@@ -42,7 +42,7 @@
           {{ primaryContact.lastName }}
           <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.lastName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">Organization (Optional)</div>
+        <div class="subheading2 grid-1">Organization (optional)</div>
         <div class="grid-double">
           {{ primaryContact.organizationName }}
           <app-no-data *ngIf="!primaryContact.organizationName"></app-no-data>
@@ -219,10 +219,10 @@
     </div>
   </div>
 </section>
-<section>
+<section *ngIf="applicationSubmission">
   <h3>6. Proposal</h3>
   <app-nfu-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'NFUP'"
+    *ngIf="applicationSubmission.typeCode === 'NFUP'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -230,7 +230,7 @@
     [updatedFields]="updatedFields"
   ></app-nfu-details>
   <app-tur-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'TURP'"
+    *ngIf="applicationSubmission.typeCode === 'TURP'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -239,7 +239,7 @@
     [updatedFields]="updatedFields"
   ></app-tur-details>
   <app-subd-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'SUBD'"
+    *ngIf="applicationSubmission.typeCode === 'SUBD'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -247,6 +247,15 @@
     [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-subd-details>
+  <app-roso-details
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'ROSO'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-roso-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

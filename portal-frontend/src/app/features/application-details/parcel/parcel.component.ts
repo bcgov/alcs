@@ -9,6 +9,7 @@ import { ApplicationOwnerService } from '../../../services/application-owner/app
 import {
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
+  PARCEL_OWNERSHIP_TYPE,
   PARCEL_TYPE,
 } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
@@ -60,6 +61,7 @@ export class ParcelComponent {
   @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
 
   PARCEL_TYPES = PARCEL_TYPE;
+  PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
   pageTitle: string = '1. Identify Parcel(s) Under Application';
   showCertificateOfTitle: boolean = true;
@@ -168,7 +170,7 @@ export class ParcelComponent {
       }
     }
 
-    if (!parcel.pid && parcel.ownershipType?.code === 'SMPL') {
+    if (!parcel.pid && parcel.ownershipType?.code === this.PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE) {
       validation.isPidRequired = true;
     }
 
@@ -180,11 +182,11 @@ export class ParcelComponent {
       validation.isMapAreaHectaresRequired = true;
     }
 
-    if (!parcel.purchasedDate && parcel.ownershipType?.code === 'SMPL') {
+    if (!parcel.purchasedDate && parcel.ownershipType?.code === this.PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE) {
       validation.isPurchasedDateRequired = true;
     }
 
-    if (parcel.ownershipType?.code === 'CRWN') {
+    if (parcel.ownershipType?.code === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
       validation.isCrownSelectionMandatory = true;
     }
 
@@ -193,8 +195,9 @@ export class ParcelComponent {
     }
 
     validation.isCertificateUploaded = !!parcel.certificateOfTitle;
-    const isCrownWithPid = parcel.ownershipType?.code === 'CRWN' && parcel.pid && parcel.pid.length > 0;
-    const isFeeSimple = parcel.ownershipType?.code === 'SMPL';
+    const isCrownWithPid =
+      parcel.ownershipType?.code === this.PARCEL_OWNERSHIP_TYPES.CROWN && parcel.pid && parcel.pid.length > 0;
+    const isFeeSimple = parcel.ownershipType?.code === this.PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE;
     if (this.showCertificateOfTitle && (isCrownWithPid || isFeeSimple)) {
       validation.isCertificateRequired = true;
     }

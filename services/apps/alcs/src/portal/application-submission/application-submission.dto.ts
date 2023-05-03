@@ -203,6 +203,12 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   soilProjectDurationUnit?: string | null;
+
+  @AutoMap(() => String)
+  soilFillTypeToPlace?: string | null;
+
+  @AutoMap(() => String)
+  soilAlternativeMeasures?: string | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -459,4 +465,12 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   soilProjectDurationUnit?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilFillTypeToPlace?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilAlternativeMeasures?: string | null;
 }

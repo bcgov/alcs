@@ -282,7 +282,10 @@ export class GenerateSubmissionDocumentService {
       nfuPurpose: submission.nfuPurpose,
       nfuOutsideLands: submission.nfuOutsideLands,
       nfuAgricultureSupport: submission.nfuAgricultureSupport,
-      nfuWillImportFill: submission.nfuWillImportFill,
+      showImportFill: submission.nfuWillImportFill,
+      nfuWillImportFill: formatBooleanToYesNoString(
+        submission.nfuWillImportFill,
+      ),
       // NFU Proposal => Soil and Fill
       nfuFillTypeDescription: submission.nfuFillTypeDescription,
       nfuFillOriginDescription: submission.nfuFillOriginDescription,

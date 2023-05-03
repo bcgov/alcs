@@ -9,6 +9,11 @@ export enum APPLICATION_SYSTEM_SOURCE_TYPES {
   ALCS = 'ALCS',
 }
 
+export enum PARCEL_OWNERSHIP_TYPE {
+  FEE_SIMPLE = 'SMPL',
+  CROWN = 'CRWN',
+}
+
 export interface StatusHistory {
   type: 'status_change';
   label: string;
@@ -135,6 +140,25 @@ export interface ApplicationSubmissionDto {
   subdAgricultureSupport?: string;
   subdIsHomeSiteSeverance?: boolean;
   subdProposedLots: ProposedLot[];
+
+  //Soil Fields
+  soilIsNOIFollowUp?: boolean | null;
+  soilNOIIDs?: string | null;
+  soilHasPreviousALCAuthorization?: boolean | null;
+  soilApplicationIDs?: string | null;
+  soilPurpose?: string | null;
+  soilTypeRemoved?: string | null;
+  soilReduceNegativeImpacts?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+  soilAlreadyRemovedVolume?: number | null;
+  soilAlreadyRemovedArea?: number | null;
+  soilAlreadyRemovedMaximumDepth?: number | null;
+  soilAlreadyRemovedAverageDepth?: number | null;
+  soilProjectDurationAmount?: number | null;
+  soilProjectDurationUnit?: string;
 }
 
 export interface ApplicationDto {

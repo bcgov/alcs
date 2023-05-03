@@ -63,7 +63,8 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">
-      PID <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pid')"></app-updated-banner>
+      PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pid')"></app-updated-banner>
     </div>
     <div class="grid-double">
       <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
@@ -72,25 +73,32 @@
         Invalid Format
       </app-validation-error>
     </div>
-    <div class="subheading2 grid-1">
-      PIN (Optional) <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
-    </div>
-    <div class="grid-double">
-      {{ parcel.pin }}
-      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPinRequired" *ngIf="!parcel.pin"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
-      Purchase Date
-      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.purchasedDate')"></app-updated-banner>
-    </div>
-    <div class="grid-double">
-      {{ parcel.purchasedDate | date }}
-      <app-no-data
-        [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
-        *ngIf="!parcel.purchasedDate"
-      >
-      </app-no-data>
-    </div>
+    <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN">
+      <div class="subheading2 grid-1">
+        PIN (optional)<app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.pin')"></app-updated-banner>
+      </div>
+      <div class="grid-double">
+        {{ parcel.pin }}
+        <app-no-data
+          [showRequired]="showErrors && !!parcel.validation?.isPinRequired"
+          *ngIf="!parcel.pin"
+        ></app-no-data>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
+      <div class="subheading2 grid-1">
+        Purchase Date
+        <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.purchasedDate')"></app-updated-banner>
+      </div>
+      <div class="grid-double">
+        {{ parcel.purchasedDate | date }}
+        <app-no-data
+          [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
+          *ngIf="!parcel.purchasedDate"
+        >
+        </app-no-data>
+      </div>
+    </ng-container>
     <div class="subheading2 grid-1">
       Civic Address
       <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>

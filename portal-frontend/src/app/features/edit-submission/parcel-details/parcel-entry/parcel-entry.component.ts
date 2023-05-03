@@ -10,7 +10,10 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
-import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
+import {
+  ApplicationParcelDto,
+  PARCEL_OWNERSHIP_TYPE,
+} from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
@@ -18,6 +21,7 @@ import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/application-owners-dialog.component';
+import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -66,7 +70,7 @@ export class ParcelEntryComponent implements OnInit {
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
 
   searchBy = new FormControl<string | null>(null);
-  isCrownLand = false;
+  isCrownLand: boolean | null = null;
   isCertificateOfTitleRequired = true;
 
   pidPin = new FormControl<string>('');
@@ -98,7 +102,8 @@ export class ParcelEntryComponent implements OnInit {
 
   ownerInput = new FormControl<string | null>(null);
 
-  documentTypes = DOCUMENT_TYPE;
+  DOCUMENT_TYPES = DOCUMENT_TYPE;
+  PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   maxPurchasedDate = new Date();
 
   constructor(
@@ -157,6 +162,9 @@ export class ParcelEntryComponent implements OnInit {
     this.parcelForm.controls.pin.reset();
     this.parcelForm.controls.legalDescription.reset();
     this.parcelForm.controls.mapArea.reset();
+    this.parcelForm.controls.purchaseDate.reset();
+    this.parcelForm.controls.isFarm.reset();
+    this.parcelForm.controls.civicAddress.reset();
 
     this.emitFormChangeOnSearchActions();
   }
@@ -172,28 +180,64 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onChangeParcelType($event: MatButtonToggleChange) {
-    if ($event.value === 'CRWN') {
-      this.searchBy.setValue(null);
-      this.pidPinPlaceholder = '';
-      this.isCrownLand = true;
-      this.pid.setValidators([]);
-      this.purchaseDate.reset();
-      this.purchaseDate.disable();
-    } else {
-      this.searchBy.setValue('pid');
-      this.pidPinPlaceholder = 'Type 9 digit PID';
-      this.isCrownLand = false;
-      this.pid.setValidators([Validators.required]);
-      this.crownLandOwnerType.setValue(null);
-      this.purchaseDate.enable();
-    }
+    const dirtyForm =
+      this.legalDescription.value ||
+      this.mapArea.value ||
+      this.pid.value ||
+      this.pin.value ||
+      this.purchaseDate.value ||
+      this.isFarm.value ||
+      this.civicAddress.value;
 
-    this.updateParcelOwners([]);
-    this.filteredOwners = this.mapOwners(this.owners);
-    this.pid.updateValueAndValidity();
+    const changeParcelType = () => {
+      if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
+        this.searchBy.setValue(null);
+        this.pidPinPlaceholder = '';
+        this.isCrownLand = true;
+        this.pid.setValidators([]);
+        this.purchaseDate.disable();
+      } else {
+        this.searchBy.setValue('pid');
+        this.pidPinPlaceholder = 'Type 9 digit PID';
+        this.isCrownLand = false;
+        this.pid.setValidators([Validators.required]);
+        this.crownLandOwnerType.setValue(null);
+        this.purchaseDate.enable();
+      }
+
+      this.updateParcelOwners([]);
+      this.filteredOwners = this.mapOwners(this.owners);
+      this.pid.updateValueAndValidity();
+    };
+
+    if (dirtyForm && this.isCrownLand !== null) {
+      this.dialog
+        .open(ParcelEntryConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (result) => {
+          if (result) {
+            this.onReset();
+            return changeParcelType();
+          } else {
+            const newParcelType = this.parcelType.getRawValue();
+
+            const prevParcelType =
+              newParcelType === this.PARCEL_OWNERSHIP_TYPES.CROWN
+                ? this.PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE
+                : this.PARCEL_OWNERSHIP_TYPES.CROWN;
+
+            this.parcelType.setValue(prevParcelType);
+          }
+        });
+    } else {
+      return changeParcelType();
+    }
   }
 
-  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE, parcelUuid: string) {
+  async attachFile(file: FileHandle, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
       this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
@@ -326,7 +370,10 @@ export class ParcelEntryComponent implements OnInit {
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
 
-    this.isCrownLand = this.parcelType.getRawValue() === 'CRWN';
+    this.isCrownLand = this.parcelType.value
+      ? this.parcelType.getRawValue() === this.PARCEL_OWNERSHIP_TYPES.CROWN
+      : null;
+
     if (this.isCrownLand) {
       this.pidPin.disable();
       this.purchaseDate.disable();

@@ -1,16 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import {
-  BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
 import { Base } from '../../common/entities/base.entity';
@@ -488,6 +483,14 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   soilProjectDurationUnit: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilFillTypeToPlace: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilAlternativeMeasures: string | null;
 
   @AutoMap(() => Application)
   @ManyToOne(() => Application)

@@ -12,7 +12,6 @@ import { ApplicationSubmissionDetailedDto } from '../../services/application-sub
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { EditApplicationSteps } from '../edit-submission/edit-submission.component';
@@ -22,6 +21,8 @@ import { OtherParcelsComponent } from '../edit-submission/other-parcels/other-pa
 import { ParcelDetailsComponent } from '../edit-submission/parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from '../edit-submission/primary-contact/primary-contact.component';
 import { NfuProposalComponent } from '../edit-submission/proposal/nfu-proposal/nfu-proposal.component';
+import { PofoProposalComponent } from '../edit-submission/proposal/pofo-proposal/pofo-proposal.component';
+import { RosoProposalComponent } from '../edit-submission/proposal/roso-proposal/roso-proposal.component';
 import { SubdProposalComponent } from '../edit-submission/proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from '../edit-submission/proposal/tur-proposal/tur-proposal.component';
 import { SelectGovernmentComponent } from '../edit-submission/select-government/select-government.component';
@@ -58,6 +59,8 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   @ViewChild(NfuProposalComponent) nfuProposalComponent?: NfuProposalComponent;
   @ViewChild(TurProposalComponent) turProposalComponent?: TurProposalComponent;
   @ViewChild(SubdProposalComponent) subdProposalComponent?: SubdProposalComponent;
+  @ViewChild(RosoProposalComponent) rosoProposalComponent?: RosoProposalComponent;
+  @ViewChild(PofoProposalComponent) profoProposalComponent?: PofoProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -179,6 +182,12 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
         }
         if (this.subdProposalComponent) {
           await this.subdProposalComponent.onSave();
+        }
+        if (this.rosoProposalComponent) {
+          await this.rosoProposalComponent.onSave();
+        }
+        if (this.profoProposalComponent) {
+          await this.profoProposalComponent.onSave();
         }
         break;
       case EditApplicationSteps.Attachments:
