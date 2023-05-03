@@ -74,7 +74,7 @@ input.mat-input-element:disabled::placeholder {
 }
 
 .mdc-text-field.mdc-text-field--disabled {
-  background-color: rgba(colors.$grey, 0.1);
+  background-color: rgba(colors.$grey, 0.2);
   border-bottom-left-radius: rem(4);
   border-bottom-right-radius: rem(4);
 }
@@ -154,6 +154,14 @@ form {
 
     .mat-button-toggle {
       width: 100%;
+    }
+
+    .mat-button-toggle-disabled {
+      background-color: rgba(colors.$grey, 0.2);
+
+      .mat-button-toggle-button {
+        cursor: not-allowed;
+      }
     }
   }
 }
