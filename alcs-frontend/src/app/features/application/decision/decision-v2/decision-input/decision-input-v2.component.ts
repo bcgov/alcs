@@ -104,7 +104,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   private extractAndPopulateQueryParams() {
     const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
     const uuid = this.route.snapshot.paramMap.get('uuid');
-    console.log(this.isEdit);
 
     if (uuid) {
       this.uuid = uuid;
@@ -430,7 +429,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   async onGenerateResolutionNumber() {
     const selectedYear = this.form.controls.resolutionYear.getRawValue();
     if (selectedYear) {
-      const number = await this.decisionService.getNextAvailableNumberInResolutionYear(selectedYear);
+      const number = await this.decisionService.getNextAvailableResolutionNumber(selectedYear);
       if (number) {
         this.setResolutionNumber(number);
       } else {
