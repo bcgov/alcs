@@ -221,7 +221,7 @@ describe('ApplicationDecisionV2Controller', () => {
   });
 
   it('should call through for resolution number generation', async () => {
-    mockDecisionService.deleteDocument.mockResolvedValue({} as any);
+    mockDecisionService.generateResolutionNumber.mockResolvedValue(1);
     await controller.getNextAvailableResolutionNumber(2023);
 
     expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
