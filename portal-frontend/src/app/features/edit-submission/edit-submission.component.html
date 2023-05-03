@@ -122,6 +122,14 @@
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"
       ></app-roso-proposal>
+      <app-pofo-proposal
+        *ngIf="applicationSubmission.typeCode === 'POFO'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-pofo-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">

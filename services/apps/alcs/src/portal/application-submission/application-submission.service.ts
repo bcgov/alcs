@@ -782,5 +782,13 @@ export class ApplicationSubmissionService {
       updateDto.soilProjectDurationUnit,
       applicationSubmission.soilProjectDurationUnit,
     );
+    applicationSubmission.soilFillTypeToPlace = filterUndefined(
+      updateDto.soilFillTypeToPlace,
+      applicationSubmission.soilFillTypeToPlace,
+    );
+    applicationSubmission.soilAlternativeMeasures = filterUndefined(
+      updateDto.soilAlternativeMeasures,
+      applicationSubmission.soilAlternativeMeasures,
+    );
   }
 }

@@ -102,6 +102,8 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlreadyRemovedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
   soilProjectDurationUnit: string | null;
+  soilFillTypeToPlace: string | null;
+  soilAlternativeMeasures: string | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -171,4 +173,6 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlreadyRemovedAverageDepth?: number | null;
   soilProjectDurationAmount?: number | null;
   soilProjectDurationUnit?: string | null;
+  soilFillTypeToPlace?: string | null;
+  soilAlternativeMeasures?: string | null;
 }
