@@ -213,4 +213,12 @@ export class ApplicationDecisionV2Controller {
     await this.appDecisionService.deleteDocument(documentUuid);
     return {};
   }
+
+  @Get('next-resolution-number/:resolutionYear')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getNextAvailableResolutionNumber(
+    @Param('resolutionYear') resolutionYear: number,
+  ) {
+    return this.appDecisionService.generateResolutionNumber(resolutionYear);
+  }
 }

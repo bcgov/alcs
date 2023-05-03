@@ -154,6 +154,17 @@ services:
         condition: service_healthy
     links:
       - db
+  ##################### PGTAP #####################
+  pgtap:
+    image: hbpmip/pgtap:1.0.0-2
+    environment:
+      - DATABASE=postgres
+      - USER=postgres
+      - PASSWORD=postgres
+    command:
+      - cp /mnt/** /test
+    volumes:
+      - ./services/apps/alcs/test/pgtap:/test
 
 volumes:
   postgres:

@@ -18,7 +18,32 @@
         ></ng-select>
       </div>
 
-      <button [loading]="isLoading" type="button" mat-flat-button color="primary">Generate Number</button>
+      <div class="resolution-number-wrapper">
+        <button
+          *ngIf="!resolutionNumberControl.getRawValue()"
+          class="generate-number-btn"
+          [loading]="isLoading"
+          type="button"
+          mat-stroked-button
+          color="primary"
+          (click)="onGenerateResolutionNumber()"
+        >
+          Generate Number
+        </button>
+        <div *ngIf="resolutionNumberControl.getRawValue()">
+          <div class="resolution-number">
+            <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
+            <button
+              matTooltip="Delete resolution number"
+              class="delete-icon"
+              mat-icon-button
+              (click)="onDeleteResolutionNumber()"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
 
       <mat-form-field appearance="outline" class="date-picker">
         <mat-label>Decision Date</mat-label>

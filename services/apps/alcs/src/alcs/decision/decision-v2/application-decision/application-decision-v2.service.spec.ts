@@ -162,7 +162,10 @@ describe('ApplicationDecisionV2Service', () => {
 
     it('should create a decision and update the application if this was the first decision', async () => {
       mockDecisionRepository.find.mockResolvedValue([]);
-      mockDecisionRepository.findOne.mockResolvedValueOnce(null);
+      mockDecisionRepository.findOne.mockResolvedValue({
+        documents: [] as DecisionDocument[],
+      } as ApplicationDecision);
+      mockDecisionRepository.exist.mockResolvedValue(false);
 
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
       const decisionToCreate = {
@@ -193,6 +196,7 @@ describe('ApplicationDecisionV2Service', () => {
       mockDecisionRepository.findOne.mockResolvedValue(
         {} as ApplicationDecision,
       );
+      mockDecisionRepository.exist.mockResolvedValueOnce(false);
 
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
       const decisionToCreate = {
@@ -215,8 +219,39 @@ describe('ApplicationDecisionV2Service', () => {
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
     });
 
+    it('should fail create a draft decision if draft already exists', async () => {
+      mockDecisionRepository.findOne.mockResolvedValue({
+        documents: [] as DecisionDocument[],
+      } as ApplicationDecision);
+      mockDecisionRepository.exist.mockResolvedValueOnce(true);
+
+      const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
+      const decisionToCreate = {
+        resolutionNumber: 1,
+        resolutionYear: 1,
+        date: decisionDate.getTime(),
+        applicationFileNumber: 'file-number',
+        outcomeCode: 'Outcome',
+        isDraft: true,
+      } as CreateApplicationDecisionDto;
+
+      await expect(
+        service.create(decisionToCreate, mockApplication, undefined, undefined),
+      ).rejects.toMatchObject(
+        new ServiceValidationException(
+          'Draft decision already exists for this application.',
+        ),
+      );
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
+    });
+
     it('should create a decision and NOT update the application if this was the second decision', async () => {
-      mockDecisionRepository.findOne.mockResolvedValueOnce(null);
+      mockDecisionRepository.findOne.mockResolvedValue({
+        documents: [] as DecisionDocument[],
+      } as ApplicationDecision);
+      mockDecisionRepository.exist.mockResolvedValueOnce(false);
 
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
       const decisionToCreate = {
@@ -241,6 +276,7 @@ describe('ApplicationDecisionV2Service', () => {
       const decisionUpdate: UpdateApplicationDecisionDto = {
         date: decisionDate.getTime(),
         outcomeCode: 'New Outcome',
+        isDraft: true,
       };
 
       await service.update(
@@ -274,6 +310,7 @@ describe('ApplicationDecisionV2Service', () => {
       const decisionUpdate: UpdateApplicationDecisionDto = {
         date: decisionDate.getTime(),
         outcomeCode: 'New Outcome',
+        isDraft: true,
       };
 
       await service.update(
@@ -294,6 +331,7 @@ describe('ApplicationDecisionV2Service', () => {
       const decisionUpdate: UpdateApplicationDecisionDto = {
         date: new Date(2022, 2, 2, 2, 2, 2, 2).getTime(),
         outcomeCode: 'New Outcome',
+        isDraft: true,
       };
       const promise = service.update(
         nonExistantUuid,
@@ -314,6 +352,7 @@ describe('ApplicationDecisionV2Service', () => {
       const uuid = 'uuid';
       const decisionUpdate: UpdateApplicationDecisionDto = {
         ceoCriterionCode: 'fake-code',
+        isDraft: true,
       };
 
       const promise = service.update(
@@ -336,6 +375,7 @@ describe('ApplicationDecisionV2Service', () => {
       const decisionUpdate: UpdateApplicationDecisionDto = {
         ceoCriterionCode: 'fake-code',
         decisionMakerCode: 'CEOP',
+        isDraft: true,
       };
 
       await service.update(uuid, decisionUpdate, undefined, undefined);
@@ -348,6 +388,7 @@ describe('ApplicationDecisionV2Service', () => {
       const uuid = 'uuid';
       const decisionUpdate: UpdateApplicationDecisionDto = {
         isTimeExtension: true,
+        isDraft: true,
       };
 
       const promise = service.update(

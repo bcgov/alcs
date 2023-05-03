@@ -289,6 +289,19 @@ export class ApplicationDecisionV2Service {
     modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
+    const isDraftExists = await this.appDecisionRepository.exist({
+      where: {
+        application: { fileNumber: createDto.applicationFileNumber },
+        isDraft: true,
+      },
+    });
+
+    if (isDraftExists) {
+      throw new ServiceValidationException(
+        'Draft decision already exists for this application.',
+      );
+    }
+
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
@@ -342,10 +355,15 @@ export class ApplicationDecisionV2Service {
   }
 
   private async validateResolutionNumber(number, year) {
+    // we do not need to validate decision without number
+    if (!number) {
+      return;
+    }
+
     // we do not need to include deleted items since there may be multiple deleted draft decision wih the same or different numbers
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
-        resolutionNumber: number ?? IsNull(),
+        resolutionNumber: number,
         resolutionYear: year ?? IsNull(),
       },
     });
@@ -492,5 +510,13 @@ export class ApplicationDecisionV2Service {
         uuid: In(modifiesDecisionUuids),
       },
     });
+  }
+
+  async generateResolutionNumber(resolutionYear: number) {
+    const result = await this.appDecisionRepository.query(
+      `SELECT * FROM alcs.generate_next_resolution_number(${resolutionYear})`,
+    );
+
+    return result[0].generate_next_resolution_number;
   }
 }

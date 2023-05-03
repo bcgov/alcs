@@ -12,7 +12,7 @@
             *ngIf="route.requiresAuthorization ? isAuthorized : true"
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
+            [routerLinkActiveOptions]="{ exact: route.path === '' ? true : false }"
             class="nav-item"
           >
             <mat-icon>{{ route.icon }}</mat-icon>
