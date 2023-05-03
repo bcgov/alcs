@@ -90,6 +90,9 @@ export class UpdateApplicationDecisionDto {
   @IsString()
   @IsOptional()
   rescindedComment?: string | null;
+
+  @IsBoolean()
+  isDraft: boolean;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -114,9 +117,6 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   @IsUUID()
   @IsOptional()
   modifiesUuid?: string;
-
-  @IsBoolean()
-  isDraft: boolean;
 }
 
 export class DecisionOutcomeCodeDto extends BaseCodeDto {

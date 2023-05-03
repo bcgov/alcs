@@ -147,6 +147,7 @@ describe('ApplicationDecisionV2Controller', () => {
     const updates = {
       outcome: 'New Outcome',
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      isDraft: true,
     } as UpdateApplicationDecisionDto;
 
     await controller.update('fake-uuid', updates);
@@ -157,6 +158,7 @@ describe('ApplicationDecisionV2Controller', () => {
       {
         outcome: 'New Outcome',
         date: updates.date,
+        isDraft: true,
       },
       null,
       null,
@@ -216,5 +218,13 @@ describe('ApplicationDecisionV2Controller', () => {
     await controller.deleteDocument('fake-uuid', 'document-uuid');
 
     expect(mockDecisionService.deleteDocument).toBeCalledTimes(1);
+  });
+
+  it('should call through for resolution number generation', async () => {
+    mockDecisionService.deleteDocument.mockResolvedValue({} as any);
+    await controller.getNextAvailableResolutionNumber(2023);
+
+    expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
+    expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
   });
 });
