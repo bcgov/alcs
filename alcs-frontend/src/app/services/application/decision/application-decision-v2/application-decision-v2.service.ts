@@ -157,7 +157,7 @@ export class ApplicationDecisionV2Service {
     this.$decisions.next([]);
   }
 
-  async getNextAvailableResolutionYear(resolutionYear: number) {
+  async getNextAvailableNumberInResolutionYear(resolutionYear: number) {
     let result: number | undefined = undefined;
     try {
       result = await firstValueFrom(this.http.get<number>(`${this.url}/next-resolution-number/${resolutionYear}`));

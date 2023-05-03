@@ -430,7 +430,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   async onGenerateResolutionNumber() {
     const selectedYear = this.form.controls.resolutionYear.getRawValue();
     if (selectedYear) {
-      const number = await this.decisionService.getNextAvailableResolutionYear(selectedYear);
+      const number = await this.decisionService.getNextAvailableNumberInResolutionYear(selectedYear);
       if (number) {
         this.setResolutionNumber(number);
       } else {

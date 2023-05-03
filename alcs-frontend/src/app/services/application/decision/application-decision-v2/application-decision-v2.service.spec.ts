@@ -193,4 +193,12 @@ describe('ApplicationDecisionV2Service', () => {
 
     expect(httpClient.delete).toHaveBeenCalledTimes(1);
   });
+
+  it('should make an http get when requesting a new resolution number', async () => {
+    httpClient.get.mockReturnValue(of(1));
+
+    await service.getNextAvailableNumberInResolutionYear(2023);
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
 });
