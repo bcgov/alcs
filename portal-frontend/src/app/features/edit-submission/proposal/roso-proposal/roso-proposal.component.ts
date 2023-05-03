@@ -10,6 +10,7 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
+import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { StepComponent } from '../../step.partial';
 import { SoilTableData } from './soil-table/soil-table.component';
@@ -171,9 +172,9 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
         soilPurpose,
         soilTypeRemoved,
         soilReduceNegativeImpacts,
-        soilIsNOIFollowUp: isNOIFollowUp !== null ? isNOIFollowUp === 'true' : null,
+        soilIsNOIFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilNOIIDs,
-        soilHasPreviousALCAuthorization: hasALCAuthorization !== null ? hasALCAuthorization === 'true' : null,
+        soilHasPreviousALCAuthorization: parseStringToBoolean(hasALCAuthorization),
         soilApplicationIDs,
         soilToRemoveVolume: this.removalTableData?.volume ?? null,
         soilToRemoveArea: this.removalTableData?.area ?? null,
