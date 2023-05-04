@@ -157,8 +157,18 @@ export interface ApplicationSubmissionDto {
   soilAlreadyRemovedArea?: number | null;
   soilAlreadyRemovedMaximumDepth?: number | null;
   soilAlreadyRemovedAverageDepth?: number | null;
+  soilToPlaceVolume?: number | null;
+  soilToPlaceArea?: number | null;
+  soilToPlaceMaximumDepth?: number | null;
+  soilToPlaceAverageDepth?: number | null;
+  soilAlreadyPlacedVolume?: number | null;
+  soilAlreadyPlacedArea?: number | null;
+  soilAlreadyPlacedMaximumDepth?: number | null;
+  soilAlreadyPlacedAverageDepth?: number | null;
   soilProjectDurationAmount?: number | null;
   soilProjectDurationUnit?: string;
+  soilFillTypeToPlace?: string;
+  soilAlternativeMeasures?: string;
 }
 
 export interface ApplicationDto {

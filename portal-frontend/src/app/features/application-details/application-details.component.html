@@ -256,6 +256,15 @@
     [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-roso-details>
+  <app-pofo-details
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'POFO'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pofo-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
