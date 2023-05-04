@@ -482,11 +482,5 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
         }
       });
-
-    // TODO add dialog here
-    // TODO once dialog confirmed save current decision and update submission status
-    // await this.onSubmit(false, false);
-    // TODO replace CEOD with the actual status selected
-    // await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, 'CEOD');
   }
 }
