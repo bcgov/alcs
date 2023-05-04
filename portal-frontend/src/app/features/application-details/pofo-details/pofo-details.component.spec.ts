@@ -3,11 +3,11 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 
-import { RosoDetailsComponent } from './roso-details.component';
+import { PofoDetailsComponent } from './pofo-details.component';
 
-describe('RosoDetailsComponent', () => {
-  let component: RosoDetailsComponent;
-  let fixture: ComponentFixture<RosoDetailsComponent>;
+describe('PofoDetailsComponent', () => {
+  let component: PofoDetailsComponent;
+  let fixture: ComponentFixture<PofoDetailsComponent>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
 
@@ -16,7 +16,7 @@ describe('RosoDetailsComponent', () => {
     mockAppDocumentService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [RosoDetailsComponent],
+      declarations: [PofoDetailsComponent],
       providers: [
         {
           provide: ApplicationDocumentService,
@@ -29,7 +29,7 @@ describe('RosoDetailsComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RosoDetailsComponent);
+    fixture = TestBed.createComponent(PofoDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

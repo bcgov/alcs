@@ -74,17 +74,17 @@ export class PofoProposalComponent extends StepComponent implements OnInit, OnDe
         this.submissionUuid = applicationSubmission.uuid;
 
         this.alreadyFilledTableData = {
-          volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
-          area: applicationSubmission.soilAlreadyRemovedArea ?? 0,
-          averageDepth: applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0,
-          maximumDepth: applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
+          volume: applicationSubmission.soilAlreadyPlacedVolume ?? 0,
+          area: applicationSubmission.soilAlreadyPlacedArea ?? 0,
+          averageDepth: applicationSubmission.soilAlreadyPlacedAverageDepth ?? 0,
+          maximumDepth: applicationSubmission.soilAlreadyPlacedMaximumDepth ?? 0,
         };
 
         this.fillTableData = {
-          volume: applicationSubmission.soilToRemoveVolume ?? undefined,
-          area: applicationSubmission.soilToRemoveArea ?? undefined,
-          averageDepth: applicationSubmission.soilToRemoveAverageDepth ?? undefined,
-          maximumDepth: applicationSubmission.soilToRemoveMaximumDepth ?? undefined,
+          volume: applicationSubmission.soilToPlaceVolume ?? undefined,
+          area: applicationSubmission.soilToPlaceArea ?? undefined,
+          averageDepth: applicationSubmission.soilToPlaceAverageDepth ?? undefined,
+          maximumDepth: applicationSubmission.soilToPlaceMaximumDepth ?? undefined,
         };
 
         let isNOIFollowUp = null;
@@ -183,14 +183,14 @@ export class PofoProposalComponent extends StepComponent implements OnInit, OnDe
         soilNOIIDs,
         soilHasPreviousALCAuthorization: parseStringToBoolean(hasALCAuthorization),
         soilApplicationIDs,
-        soilToRemoveVolume: this.fillTableData?.volume ?? null,
-        soilToRemoveArea: this.fillTableData?.area ?? null,
-        soilToRemoveMaximumDepth: this.fillTableData?.maximumDepth ?? null,
-        soilToRemoveAverageDepth: this.fillTableData?.averageDepth ?? null,
-        soilAlreadyRemovedVolume: this.alreadyFilledTableData?.volume ?? null,
-        soilAlreadyRemovedArea: this.alreadyFilledTableData?.area ?? null,
-        soilAlreadyRemovedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
-        soilAlreadyRemovedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
+        soilToPlaceVolume: this.fillTableData?.volume ?? null,
+        soilToPlaceArea: this.fillTableData?.area ?? null,
+        soilToPlaceMaximumDepth: this.fillTableData?.maximumDepth ?? null,
+        soilToPlaceAverageDepth: this.fillTableData?.averageDepth ?? null,
+        soilAlreadyPlacedVolume: this.alreadyFilledTableData?.volume ?? null,
+        soilAlreadyPlacedArea: this.alreadyFilledTableData?.area ?? null,
+        soilAlreadyPlacedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
+        soilAlreadyPlacedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
         soilProjectDurationAmount: this.projectDurationAmount.value
           ? parseFloat(this.projectDurationAmount.value)
           : null,

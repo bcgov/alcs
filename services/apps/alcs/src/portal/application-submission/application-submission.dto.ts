@@ -199,6 +199,30 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   soilAlreadyRemovedAverageDepth: number | null;
 
   @AutoMap(() => Number)
+  soilToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedArea: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
   soilProjectDurationAmount: number | null;
 
   @AutoMap(() => String)
@@ -457,6 +481,38 @@ export class ApplicationSubmissionUpdateDto {
   @IsNumber()
   @IsOptional()
   soilAlreadyRemovedAverageDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceAverageDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyPlacedVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyPlacedArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyPlacedMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilAlreadyPlacedAverageDepth?: number | null;
 
   @IsNumber()
   @IsOptional()

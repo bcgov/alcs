@@ -183,10 +183,40 @@ export class SubmittedApplicationDto {
   soilAlreadyRemovedAverageDepth: number | null;
 
   @AutoMap(() => Number)
+  soilToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedArea: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
   soilProjectDurationAmount: number | null;
 
   @AutoMap(() => String)
   soilProjectDurationUnit?: string | null;
+
+  @AutoMap(() => String)
+  soilFillTypeToPlace?: string;
+
+  @AutoMap(() => String)
+  soilAlternativeMeasures?: string;
 }
 
 export class CreateApplicationDto {

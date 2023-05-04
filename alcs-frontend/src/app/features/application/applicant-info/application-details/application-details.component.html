@@ -156,6 +156,11 @@
     [applicationSubmission]="submittedApplication"
     [files]="files"
   ></app-roso-details>
+  <app-pofo-details
+    *ngIf="submittedApplication && applicationType === 'POFO'"
+    [applicationSubmission]="submittedApplication"
+    [files]="files"
+  ></app-pofo-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" (click)="onEdit(5)" mat-flat-button color="accent">Edit Section</button>

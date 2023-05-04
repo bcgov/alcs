@@ -52,68 +52,68 @@
   </div>
 
   <div class="subheading1 full-width">
-    Soil to be Removed
-    <app-updated-banner *ngIf="updatedFields.includes('subdProposedLots')"></app-updated-banner>
+    Fill to be Placed
+    <app-updated-banner *ngIf="updatedFields.includes('soilToPlaceVolume')"></app-updated-banner>
   </div>
   <div class="full-width soil-table">
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilToRemoveVolume }}
-      <span *ngIf="_applicationSubmission.soilToRemoveVolume">m<sup>3</sup></span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToRemoveVolume"></app-no-data>
+      {{ _applicationSubmission.soilToPlaceVolume }}
+      <span *ngIf="_applicationSubmission.soilToPlaceVolume">m<sup>3</sup></span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToPlaceVolume"></app-no-data>
     </div>
     <div class="grid-1"><strong>Area</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilToRemoveArea }} <span *ngIf="_applicationSubmission.soilToRemoveArea">ha</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToRemoveArea"></app-no-data>
+      {{ _applicationSubmission.soilToPlaceArea }} <span *ngIf="_applicationSubmission.soilToPlaceArea">ha</span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToPlaceArea"></app-no-data>
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilToRemoveMaximumDepth }}
-      <span *ngIf="_applicationSubmission.soilToRemoveMaximumDepth">m</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToRemoveMaximumDepth"></app-no-data>
+      {{ _applicationSubmission.soilToPlaceMaximumDepth }}
+      <span *ngIf="_applicationSubmission.soilToPlaceMaximumDepth">m</span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToPlaceMaximumDepth"></app-no-data>
     </div>
     <div class="grid-1"><strong>Average Depth</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilToRemoveAverageDepth }}
-      <span *ngIf="_applicationSubmission.soilToRemoveAverageDepth">m</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToRemoveAverageDepth"></app-no-data>
+      {{ _applicationSubmission.soilToPlaceAverageDepth }}
+      <span *ngIf="_applicationSubmission.soilToPlaceAverageDepth">m</span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilToPlaceAverageDepth"></app-no-data>
     </div>
   </div>
 
   <div class="subheading1 full-width">
-    Soil already Removed
+    Fill already Placed
     <app-updated-banner *ngIf="updatedFields.includes('subdProposedLots')"></app-updated-banner>
   </div>
   <div class="full-width soil-table">
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilAlreadyRemovedVolume }}
-      <span *ngIf="_applicationSubmission.soilAlreadyRemovedVolume">m<sup>3</sup></span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlreadyRemovedVolume"></app-no-data>
+      {{ _applicationSubmission.soilAlreadyPlacedVolume }}
+      <span *ngIf="_applicationSubmission.soilAlreadyPlacedVolume">m<sup>3</sup></span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlreadyPlacedVolume"></app-no-data>
     </div>
     <div class="grid-1"><strong>Area</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea">ha</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlreadyRemovedArea"></app-no-data>
+      {{ _applicationSubmission.soilAlreadyPlacedArea }}
+      <span *ngIf="_applicationSubmission.soilAlreadyPlacedArea">ha</span>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlreadyPlacedArea"></app-no-data>
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilAlreadyRemovedMaximumDepth }}
-      <span *ngIf="_applicationSubmission.soilAlreadyRemovedMaximumDepth">m</span>
+      {{ _applicationSubmission.soilAlreadyPlacedMaximumDepth }}
+      <span *ngIf="_applicationSubmission.soilAlreadyPlacedMaximumDepth">m</span>
       <app-no-data
         [showRequired]="showErrors"
-        *ngIf="!_applicationSubmission.soilAlreadyRemovedMaximumDepth"
+        *ngIf="!_applicationSubmission.soilAlreadyPlacedMaximumDepth"
       ></app-no-data>
     </div>
     <div class="grid-1"><strong>Average Depth</strong></div>
     <div class="grid-2">
-      {{ _applicationSubmission.soilAlreadyRemovedAverageDepth }}
-      <span *ngIf="_applicationSubmission.soilAlreadyRemovedAverageDepth">m</span>
+      {{ _applicationSubmission.soilAlreadyPlacedAverageDepth }}
+      <span *ngIf="_applicationSubmission.soilAlreadyPlacedAverageDepth">m</span>
       <app-no-data
         [showRequired]="showErrors"
-        *ngIf="!_applicationSubmission.soilAlreadyRemovedAverageDepth"
+        *ngIf="!_applicationSubmission.soilAlreadyPlacedAverageDepth"
       ></app-no-data>
     </div>
   </div>
@@ -137,12 +137,21 @@
   </div>
 
   <div class="subheading2 grid-1">
-    Describe the type of soil proposed to be removed.
-    <app-updated-banner *ngIf="updatedFields.includes('soilTypeRemoved')"></app-updated-banner>
+    What alternative measures have you considered or attempted before proposing to place fill?
+    <app-updated-banner *ngIf="updatedFields.includes('soilAlternativeMeasures')"></app-updated-banner>
   </div>
   <div class="grid-double">
-    {{ _applicationSubmission.soilTypeRemoved }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilTypeRemoved"></app-no-data>
+    {{ _applicationSubmission.soilAlternativeMeasures }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlternativeMeasures"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe the type, origin and quality of fill proposed to be placed.
+    <app-updated-banner *ngIf="updatedFields.includes('soilFillTypeToPlace')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.soilFillTypeToPlace }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">

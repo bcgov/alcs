@@ -590,7 +590,7 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   describe('ROSO Applications', () => {
-    it('should report errors when base information is filled correctly', async () => {
+    it('should not have an error when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
         soilPurpose: 'soilPurpose',
@@ -620,8 +620,8 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         soilPurpose: 'soilPurpose',
-        soilToRemoveArea: null,
-        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilReduceNegativeImpacts: null,
+        soilToRemoveVolume: null,
         typeCode: 'ROSO',
       });
 
@@ -686,6 +686,114 @@ describe('ApplicationSubmissionValidatorService', () => {
         includesError(
           res.errors,
           new Error(`ROSO proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
+  });
+
+  describe('POFO Applications', () => {
+    it('should not have errors when base information is filled correctly', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilHasPreviousALCAuthorization: false,
+        soilIsNOIFollowUp: false,
+        soilAlreadyPlacedVolume: 5,
+        soilAlreadyPlacedMaximumDepth: 5,
+        soilToPlaceMaximumDepth: 5,
+        soilAlreadyPlacedAverageDepth: 5,
+        soilAlreadyPlacedArea: 5,
+        soilToPlaceAverageDepth: 5,
+        soilToPlaceVolume: 5,
+        soilToPlaceArea: 5,
+        soilAlternativeMeasures: 'soilAlternativeMeasures',
+        soilFillTypeToPlace: 'soilFillTypeToPlace',
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
+      ).toBe(false);
+    });
+
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilFillTypeToPlace: null,
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilToPlaceArea: null,
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOIDs and ApplicationIDs', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal missing NOI IDs`)),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO Proposal missing Application IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Reclamation Plans`),
         ),
       ).toBe(true);
     });

@@ -35,7 +35,8 @@ const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.SUBMITTED_TO_ALC,
 ];
 
-const filterUndefined = (val: any, fallback: any) => (val ? val : fallback);
+const filterUndefined = (val: any, fallback: any) =>
+  val !== undefined ? val : fallback;
 
 @Injectable()
 export class ApplicationSubmissionService {
@@ -773,6 +774,38 @@ export class ApplicationSubmissionService {
     applicationSubmission.soilAlreadyRemovedAverageDepth = filterUndefined(
       updateDto.soilAlreadyRemovedAverageDepth,
       applicationSubmission.soilAlreadyRemovedAverageDepth,
+    );
+    applicationSubmission.soilToPlaceVolume = filterUndefined(
+      updateDto.soilToPlaceVolume,
+      applicationSubmission.soilToPlaceVolume,
+    );
+    applicationSubmission.soilToPlaceArea = filterUndefined(
+      updateDto.soilToPlaceArea,
+      applicationSubmission.soilToPlaceArea,
+    );
+    applicationSubmission.soilToPlaceMaximumDepth = filterUndefined(
+      updateDto.soilToPlaceMaximumDepth,
+      applicationSubmission.soilToPlaceMaximumDepth,
+    );
+    applicationSubmission.soilToPlaceAverageDepth = filterUndefined(
+      updateDto.soilToPlaceAverageDepth,
+      applicationSubmission.soilToPlaceAverageDepth,
+    );
+    applicationSubmission.soilAlreadyPlacedVolume = filterUndefined(
+      updateDto.soilAlreadyPlacedVolume,
+      applicationSubmission.soilAlreadyPlacedVolume,
+    );
+    applicationSubmission.soilAlreadyPlacedArea = filterUndefined(
+      updateDto.soilAlreadyPlacedArea,
+      applicationSubmission.soilAlreadyPlacedArea,
+    );
+    applicationSubmission.soilAlreadyPlacedMaximumDepth = filterUndefined(
+      updateDto.soilAlreadyPlacedMaximumDepth,
+      applicationSubmission.soilAlreadyPlacedMaximumDepth,
+    );
+    applicationSubmission.soilAlreadyPlacedAverageDepth = filterUndefined(
+      updateDto.soilAlreadyPlacedAverageDepth,
+      applicationSubmission.soilAlreadyPlacedAverageDepth,
     );
     applicationSubmission.soilProjectDurationAmount = filterUndefined(
       updateDto.soilProjectDurationAmount,
