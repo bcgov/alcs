@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
-import { ApplicationReconsiderationType } from '../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { CardStatus } from '../card/card-status/card-status.entity';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
+import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
+import { CardStatus } from '../card/card-status/card-status.entity';
+import { ApplicationReconsiderationType } from '../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
@@ -21,6 +22,8 @@ export class CodeService {
     private meetingTypesRepository: Repository<ApplicationMeetingType>,
     @InjectRepository(ApplicationReconsiderationType)
     private reconsiderationTypesRepository: Repository<ApplicationReconsiderationType>,
+    @InjectRepository(ApplicationStatus)
+    private applicationStatusRepository: Repository<ApplicationStatus>,
   ) {}
 
   async getAll() {
@@ -36,6 +39,7 @@ export class CodeService {
       this.regionRepository.find(alphabeticalFindOptions),
       this.meetingTypesRepository.find(alphabeticalFindOptions),
       this.reconsiderationTypesRepository.find(alphabeticalFindOptions),
+      this.applicationStatusRepository.find(alphabeticalFindOptions),
     ]);
 
     return {
@@ -44,6 +48,7 @@ export class CodeService {
       region: values[2],
       meetingTypes: values[3],
       reconsiderationTypes: values[4],
+      applicationStatusTypes: values[5],
     };
   }
 

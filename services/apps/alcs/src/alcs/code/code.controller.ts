@@ -3,13 +3,15 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ReconsiderationTypeDto } from '../decision/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationType } from '../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { CardStatusDto } from '../card/card-status/card-status.dto';
-import { CardStatus } from '../card/card-status/card-status.entity';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { ApplicationStatusDto } from '../../portal/application-submission/application-status/application-status.dto';
+import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
+import { CardStatusDto } from '../card/card-status/card-status.dto';
+import { CardStatus } from '../card/card-status/card-status.entity';
+import { ReconsiderationTypeDto } from '../decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationType } from '../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { MasterCodesDto } from './application-code/application-code.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
@@ -47,6 +49,11 @@ export class CodeController {
         types.reconsiderationTypes,
         ApplicationReconsiderationType,
         ReconsiderationTypeDto,
+      ),
+      applicationStatusType: this.mapper.mapArray(
+        types.applicationStatusTypes,
+        ApplicationStatus,
+        ApplicationStatusDto,
       ),
     };
   }

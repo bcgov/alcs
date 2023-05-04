@@ -190,6 +190,7 @@ export class ApplicationDecisionV2Service {
     existingDecision.decisionDescription = updateDto.decisionDescription;
     existingDecision.isStatsRequired = updateDto.isStatsRequired;
     existingDecision.daysHideFromPublic = updateDto.daysHideFromPublic;
+    existingDecision.isDraft = updateDto.isDraft;
     existingDecision.rescindedDate = formatIncomingDate(
       updateDto.rescindedDate,
     );
@@ -319,7 +320,7 @@ export class ApplicationDecisionV2Service {
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
       isOther: createDto.isOther,
-      isDraft: createDto.isDraft,
+      isDraft: true,
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
       isStatsRequired: createDto.isStatsRequired,

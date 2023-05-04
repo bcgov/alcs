@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
+import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
+import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { SubmittedApplicationDto } from '../application.dto';
 
@@ -13,6 +15,8 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
+    @InjectRepository(ApplicationStatus)
+    private applicationStatusRepository: Repository<ApplicationStatus>,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -59,5 +63,31 @@ export class ApplicationSubmissionService {
     );
 
     return mappedSubmission;
+  }
+
+  async getStatus(code: APPLICATION_STATUS) {
+    return await this.applicationStatusRepository.findOneOrFail({
+      where: {
+        code,
+      },
+    });
+  }
+
+  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
+    const status = await this.getStatus(statusCode);
+
+    //Load submission without relations to prevent save from crazy cascading
+    const submission = await this.applicationSubmissionRepository.findOneOrFail(
+      {
+        where: {
+          fileNumber: fileNumber,
+        },
+      },
+    );
+
+    submission.status = status;
+
+    //Use save to trigger subscriber
+    await this.applicationSubmissionRepository.save(submission);
   }
 }

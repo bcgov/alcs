@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
@@ -8,7 +9,7 @@ import { ApplicationModificationDto } from '../../../../../services/application/
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
   ApplicationDecisionDto,
   CeoCriterion,
@@ -22,6 +23,7 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
+import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -48,7 +50,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   fileNumber: string = '';
   uuid: string = '';
-  application: ApplicationDto | undefined;
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
@@ -56,6 +57,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
+  applicationStatusCodes = [];
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
@@ -87,7 +89,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private modificationService: ApplicationModificationService,
     public router: Router,
     private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private applicationSubmissionService: ApplicationSubmissionService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -462,9 +466,27 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   async onRelease() {
+    this.dialog
+      .open(ReleaseDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
+        autoFocus: false,
+        data: {},
+      })
+      .afterClosed()
+      .subscribe(async (submissionType) => {
+        if (submissionType) {
+          await this.onSubmit(false, false);
+          await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
+        }
+      });
+
     // TODO add dialog here
     // TODO once dialog confirmed save current decision and update submission status
-    await this.onSubmit(false, false);
-    
+    // await this.onSubmit(false, false);
+    // TODO replace CEOD with the actual status selected
+    // await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, 'CEOD');
   }
 }

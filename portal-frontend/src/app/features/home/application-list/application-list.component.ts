@@ -33,6 +33,8 @@ export class ApplicationListComponent implements OnInit {
     [APPLICATION_STATUS.INCOMPLETE, 'incomplete'],
     [APPLICATION_STATUS.WRONG_GOV, 'wrong-government'],
     [APPLICATION_STATUS.CANCELLED, 'cancelled'],
+    [APPLICATION_STATUS.ALCDECISION, 'submitted-to-alc'],
+    [APPLICATION_STATUS.CEODECISION, 'submitted-to-alc'],
   ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
