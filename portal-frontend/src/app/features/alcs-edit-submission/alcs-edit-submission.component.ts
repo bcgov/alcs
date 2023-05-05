@@ -176,24 +176,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
         await this.landUseComponent.onSave();
         break;
       case EditApplicationSteps.Proposal:
-        if (this.nfuProposalComponent) {
-          await this.nfuProposalComponent.onSave();
-        }
-        if (this.turProposalComponent) {
-          await this.turProposalComponent.onSave();
-        }
-        if (this.subdProposalComponent) {
-          await this.subdProposalComponent.onSave();
-        }
-        if (this.rosoProposalComponent) {
-          await this.rosoProposalComponent.onSave();
-        }
-        if (this.profoProposalComponent) {
-          await this.profoProposalComponent.onSave();
-        }
-        if (this.pfrsProposalComponent) {
-          await this.pfrsProposalComponent.onSave();
-        }
+        await this.saveProposalSteps();
         break;
       case EditApplicationSteps.Attachments:
         await this.otherAttachmentsComponent.onSave();
@@ -202,6 +185,27 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
         break;
       default:
         this.toastService.showErrorToast('Error updating application.');
+    }
+  }
+
+  private async saveProposalSteps() {
+    if (this.nfuProposalComponent) {
+      await this.nfuProposalComponent.onSave();
+    }
+    if (this.turProposalComponent) {
+      await this.turProposalComponent.onSave();
+    }
+    if (this.subdProposalComponent) {
+      await this.subdProposalComponent.onSave();
+    }
+    if (this.rosoProposalComponent) {
+      await this.rosoProposalComponent.onSave();
+    }
+    if (this.profoProposalComponent) {
+      await this.profoProposalComponent.onSave();
+    }
+    if (this.pfrsProposalComponent) {
+      await this.pfrsProposalComponent.onSave();
     }
   }
 

@@ -143,15 +143,19 @@
   </div>
   <div class="subheading2 grid-1">Cross Sections</div>
   <div class="grid-double">
-    <a *ngFor="let file of crossSections" (click)="openFile(file)">
-      {{ file.fileName }}
-    </a>
+    <div>
+      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+    </div>
   </div>
   <div class="subheading2 grid-1">Reclamation Plan</div>
   <div class="grid-double">
-    <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
-      {{ file.fileName }}
-    </a>
+    <div *ngFor="let file of reclamationPlans">
+      <a (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+    </div>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
