@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
@@ -19,6 +20,7 @@ describe('DecisionInputComponent', () => {
   let mockApplicationModificationService: DeepMocked<ApplicationModificationService>;
   let mockRouter: DeepMocked<Router>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockMatDialog: DeepMocked<MatDialog>;
 
   beforeEach(async () => {
     mockApplicationDecisionV2Service = createMock();
@@ -27,6 +29,7 @@ describe('DecisionInputComponent', () => {
     mockToastService = createMock();
     mockRouter = createMock();
     mockRouter.navigateByUrl.mockResolvedValue(true);
+    mockMatDialog = createMock();
 
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -59,6 +62,10 @@ describe('DecisionInputComponent', () => {
         {
           provide: Router,
           useValue: mockRouter,
+        },
+        {
+          provide: MatDialog,
+          useValue: mockMatDialog,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
