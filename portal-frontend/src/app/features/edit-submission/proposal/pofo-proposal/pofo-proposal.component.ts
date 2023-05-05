@@ -129,9 +129,7 @@ export class PofoProposalComponent extends StepComponent implements OnInit, OnDe
   }
 
   async onSave() {
-    if (this.form.dirty) {
-      await this.save();
-    }
+    await this.save();
   }
 
   async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE) {

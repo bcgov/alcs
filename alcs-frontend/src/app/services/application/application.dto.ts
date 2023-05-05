@@ -169,6 +169,8 @@ export interface ApplicationSubmissionDto {
   soilProjectDurationUnit?: string;
   soilFillTypeToPlace?: string;
   soilAlternativeMeasures?: string;
+  soilIsExtractionOrMining?: boolean;
+  soilHasSubmittedNotice?: boolean;
 }
 
 export interface ApplicationDto {

@@ -3,6 +3,17 @@
 .container {
   border: 1px solid #000;
   max-width: rem(438);
+
+  &.double-table {
+    grid-template-columns: 20% 38% 38%;
+    max-width: rem(686);
+  }
+}
+
+:host::ng-deep {
+  .mat-mdc-form-field-infix {
+    width: auto;
+  }
 }
 
 .soil-table {
@@ -10,11 +21,20 @@
   display: grid;
   grid-template-columns: 100%;
   grid-row-gap: rem(16);
+  grid-column-gap: 2%;
 
   @media screen and (min-width: $tabletBreakpoint) {
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 39% 59%;
     grid-row-gap: rem(28);
-    padding: rem(24);
+    padding: rem(10);
+
+    &.double-table {
+      grid-template-columns: 22% 37% 37%;
+    }
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    padding: rem(16);
   }
 }
 

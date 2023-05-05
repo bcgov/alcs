@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
@@ -10,25 +10,32 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { StepComponent } from '../../step.partial';
 import { SoilTableData } from '../soil-table/soil-table.component';
 
 @Component({
-  selector: 'app-roso-proposal',
-  templateUrl: './roso-proposal.component.html',
-  styleUrls: ['./roso-proposal.component.scss'],
+  selector: 'app-pfrs-proposal',
+  templateUrl: './pfrs-proposal.component.html',
+  styleUrls: ['./pfrs-proposal.component.scss'],
 })
-export class RosoProposalComponent extends StepComponent implements OnInit, OnDestroy {
+export class PfrsProposalComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
 
   DOCUMENT = DOCUMENT_TYPE;
 
   proposalMap: ApplicationDocumentDto[] = [];
   crossSections: ApplicationDocumentDto[] = [];
   reclamationPlan: ApplicationDocumentDto[] = [];
+  noticeOfWork: ApplicationDocumentDto[] = [];
 
   isNOIFollowUp = new FormControl<string | null>(null, [Validators.required]);
   NOIIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
@@ -39,6 +46,10 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
+  alternativeMeasures = new FormControl<string | null>(null, [Validators.required]);
+  isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
+  hasSubmittedNotice = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
 
   form = new FormGroup({
     isNOIFollowUp: this.isNOIFollowUp,
@@ -50,12 +61,20 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
     reduceNegativeImpacts: this.reduceNegativeImpacts,
     projectDurationAmount: this.projectDurationAmount,
     projectDurationUnit: this.projectDurationUnit,
+    fillTypeToPlace: this.fillTypeToPlace,
+    alternativeMeasures: this.alternativeMeasures,
+    isExtractionOrMining: this.isExtractionOrMining,
+    hasSubmittedNotice: this.hasSubmittedNotice,
   });
 
   private fileId = '';
   private submissionUuid = '';
+  isMobile = false;
   removalTableData: SoilTableData = {};
   alreadyRemovedTableData: SoilTableData = {};
+  fillTableData: SoilTableData = {};
+  alreadyFilledTableData: SoilTableData = {};
+  requiresNoticeOfWork = false;
 
   constructor(
     private router: Router,
@@ -66,6 +85,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   }
 
   ngOnInit(): void {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
@@ -85,6 +106,20 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
           maximumDepth: applicationSubmission.soilToRemoveMaximumDepth ?? undefined,
         };
 
+        this.alreadyFilledTableData = {
+          volume: applicationSubmission.soilAlreadyPlacedVolume ?? 0,
+          area: applicationSubmission.soilAlreadyPlacedArea ?? 0,
+          averageDepth: applicationSubmission.soilAlreadyPlacedAverageDepth ?? 0,
+          maximumDepth: applicationSubmission.soilAlreadyPlacedMaximumDepth ?? 0,
+        };
+
+        this.fillTableData = {
+          volume: applicationSubmission.soilToPlaceVolume ?? undefined,
+          area: applicationSubmission.soilToPlaceArea ?? undefined,
+          averageDepth: applicationSubmission.soilToPlaceAverageDepth ?? undefined,
+          maximumDepth: applicationSubmission.soilToPlaceMaximumDepth ?? undefined,
+        };
+
         let isNOIFollowUp = null;
         if (applicationSubmission.soilIsNOIFollowUp !== null) {
           isNOIFollowUp = applicationSubmission.soilIsNOIFollowUp ? 'true' : 'false';
@@ -101,6 +136,23 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
           }
         }
 
+        let isExtractionOrMining = null;
+        if (applicationSubmission.soilIsExtractionOrMining !== null) {
+          isExtractionOrMining = applicationSubmission.soilIsExtractionOrMining ? 'true' : 'false';
+          if (isExtractionOrMining) {
+            this.hasSubmittedNotice.enable();
+          }
+        }
+
+        let hasSubmittedNotice = null;
+        if (applicationSubmission.soilHasSubmittedNotice !== null) {
+          hasSubmittedNotice = applicationSubmission.soilHasSubmittedNotice ? 'true' : 'false';
+        }
+
+        if (isExtractionOrMining && hasSubmittedNotice) {
+          this.requiresNoticeOfWork = true;
+        }
+
         this.form.patchValue({
           isNOIFollowUp: isNOIFollowUp,
           hasALCAuthorization: hasALCAuthorization,
@@ -109,8 +161,12 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
           purpose: applicationSubmission.soilPurpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
+          alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
+          fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
           projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
+          isExtractionOrMining: isExtractionOrMining,
+          hasSubmittedNotice: hasSubmittedNotice,
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -122,6 +178,7 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
       this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
       this.reclamationPlan = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
+      this.noticeOfWork = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.NOTICE_OF_WORK);
     });
   }
 
@@ -167,11 +224,15 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
       const soilPurpose = this.purpose.getRawValue();
       const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
+      const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
+      const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         soilPurpose,
         soilTypeRemoved,
+        soilFillTypeToPlace,
         soilReduceNegativeImpacts,
+        soilAlternativeMeasures,
         soilIsNOIFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilNOIIDs,
         soilHasPreviousALCAuthorization: parseStringToBoolean(hasALCAuthorization),
@@ -184,10 +245,20 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
         soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
         soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
         soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
+        soilToPlaceVolume: this.fillTableData?.volume ?? null,
+        soilToPlaceArea: this.fillTableData?.area ?? null,
+        soilToPlaceMaximumDepth: this.fillTableData?.maximumDepth ?? null,
+        soilToPlaceAverageDepth: this.fillTableData?.averageDepth ?? null,
+        soilAlreadyPlacedVolume: this.alreadyFilledTableData?.volume ?? null,
+        soilAlreadyPlacedArea: this.alreadyFilledTableData?.area ?? null,
+        soilAlreadyPlacedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
+        soilAlreadyPlacedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
         soilProjectDurationAmount: this.projectDurationAmount.value
           ? parseFloat(this.projectDurationAmount.value)
           : null,
         soilProjectDurationUnit: this.projectDurationUnit.value,
+        soilHasSubmittedNotice: parseStringToBoolean(this.hasSubmittedNotice.getRawValue()),
+        soilIsExtractionOrMining: parseStringToBoolean(this.isExtractionOrMining.getRawValue()),
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
@@ -211,5 +282,18 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
       this.applicationIDs.disable();
       this.applicationIDs.setValue(null);
     }
+  }
+
+  onChangeMiningExtraction(selectedValue: string) {
+    if (selectedValue === 'true') {
+      this.hasSubmittedNotice.enable();
+    } else if (selectedValue === 'false') {
+      this.hasSubmittedNotice.disable();
+      this.hasSubmittedNotice.setValue(null);
+    }
+  }
+
+  onChangeNoticeOfWork(selectedValue: string) {
+    this.requiresNoticeOfWork = selectedValue === 'true';
   }
 }

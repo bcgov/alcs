@@ -128,6 +128,14 @@
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-pofo-proposal>
+      <app-pfrs-proposal
+        *ngIf="applicationSubmission.typeCode === 'PFRS'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-pfrs-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">

@@ -5,11 +5,11 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
 @Component({
-  selector: 'app-roso-details[applicationSubmission]',
-  templateUrl: './roso-details.component.html',
-  styleUrls: ['./roso-details.component.scss'],
+  selector: 'app-pfrs-details[applicationSubmission]',
+  templateUrl: './pfrs-details.component.html',
+  styleUrls: ['./pfrs-details.component.scss'],
 })
-export class RosoDetailsComponent {
+export class PfrsDetailsComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -27,11 +27,13 @@ export class RosoDetailsComponent {
     this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     this.reclamationPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
+    this.noticeOfWork = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.NOTICE_OF_WORK);
   }
 
   crossSections: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
   reclamationPlans: ApplicationDocumentDto[] = [];
+  noticeOfWork: ApplicationDocumentDto[] = [];
 
   constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
 

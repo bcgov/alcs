@@ -25,6 +25,7 @@ import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
+import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from './proposal/pofo-proposal/pofo-proposal.component';
 import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
 import { SoilTableComponent } from './proposal/soil-table/soil-table.component';
@@ -57,6 +58,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     SubdProposalComponent,
     RosoProposalComponent,
     PofoProposalComponent,
+    PfrsProposalComponent,
     SoilTableComponent,
   ],
   imports: [
@@ -95,6 +97,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     SubdProposalComponent,
     RosoProposalComponent,
     PofoProposalComponent,
+    PfrsProposalComponent,
     SoilTableComponent,
   ],
 })

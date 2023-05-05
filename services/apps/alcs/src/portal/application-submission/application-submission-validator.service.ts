@@ -54,19 +54,19 @@ export class ApplicationSubmissionValidatorService {
       errors,
     );
 
-    const applicationDocuments =
+    const applicantDocuments =
       await this.appDocumentService.getApplicantDocuments(
         applicationSubmission.fileNumber,
       );
 
     const validatedPrimaryContact = await this.validatePrimaryContact(
       applicationSubmission,
-      applicationDocuments,
+      applicantDocuments,
       errors,
     );
     await this.validateLocalGovernment(applicationSubmission, errors);
     await this.validateLandUse(applicationSubmission, errors);
-    await this.validateOptionalDocuments(applicationDocuments, errors);
+    await this.validateOptionalDocuments(applicantDocuments, errors);
 
     if (applicationSubmission.typeCode === 'NFUP') {
       await this.validateNfuProposal(applicationSubmission, errors);
@@ -77,21 +77,38 @@ export class ApplicationSubmissionValidatorService {
     if (applicationSubmission.typeCode === 'SUBD') {
       await this.validateSubdProposal(
         applicationSubmission,
-        applicationDocuments,
+        applicantDocuments,
         errors,
       );
     }
     if (applicationSubmission.typeCode === 'ROSO') {
       await this.validateRosoProposal(
         applicationSubmission,
-        applicationDocuments,
+        applicantDocuments,
         errors,
       );
     }
     if (applicationSubmission.typeCode === 'POFO') {
       await this.validatePofoProposal(
         applicationSubmission,
-        applicationDocuments,
+        applicantDocuments,
+        errors,
+      );
+    }
+    if (applicationSubmission.typeCode === 'PFRS') {
+      await this.validatePofoProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+      await this.validateRosoProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+      await this.validatePfrsProposal(
+        applicationSubmission,
+        applicantDocuments,
         errors,
       );
     }
@@ -451,7 +468,11 @@ export class ApplicationSubmissionValidatorService {
       applicationSubmission.soilTypeRemoved === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
-      errors.push(new ServiceValidationException(`ROSO Proposal incomplete`));
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal incomplete`,
+        ),
+      );
     }
 
     if (
@@ -465,7 +486,11 @@ export class ApplicationSubmissionValidatorService {
       applicationSubmission.soilAlreadyRemovedMaximumDepth === null ||
       applicationSubmission.soilAlreadyRemovedAverageDepth === null
     ) {
-      errors.push(new ServiceValidationException(`ROSO Soil Table Incomplete`));
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Soil Table Incomplete`,
+        ),
+      );
     }
     this.runSharedSoilValidation(
       applicationSubmission,
@@ -485,7 +510,11 @@ export class ApplicationSubmissionValidatorService {
       applicationSubmission.soilAlternativeMeasures === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
-      errors.push(new ServiceValidationException(`POFO Proposal incomplete`));
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal incomplete`,
+        ),
+      );
     }
 
     this.runSharedSoilValidation(
@@ -504,7 +533,11 @@ export class ApplicationSubmissionValidatorService {
       applicationSubmission.soilAlreadyPlacedMaximumDepth === null ||
       applicationSubmission.soilAlreadyPlacedAverageDepth === null
     ) {
-      errors.push(new ServiceValidationException(`POFO Soil Table Incomplete`));
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Soil Table Incomplete`,
+        ),
+      );
     }
     this.runSharedSoilValidation(
       applicationSubmission,
@@ -514,38 +547,41 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private runSharedSoilValidation(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
     errors: Error[],
     applicantDocuments: ApplicationDocument[],
   ) {
     if (
-      application.soilIsNOIFollowUp === null ||
-      application.soilHasPreviousALCAuthorization === null ||
-      !application.soilPurpose ||
-      application.soilReduceNegativeImpacts === null
+      applicationSubmission.soilIsNOIFollowUp === null ||
+      applicationSubmission.soilHasPreviousALCAuthorization === null ||
+      !applicationSubmission.soilPurpose ||
+      applicationSubmission.soilReduceNegativeImpacts === null
     ) {
       errors.push(
         new ServiceValidationException(
-          `${application.typeCode} Proposal incomplete`,
-        ),
-      );
-    }
-
-    if (application.soilIsNOIFollowUp && !application.soilNOIIDs) {
-      errors.push(
-        new ServiceValidationException(
-          `${application.typeCode} Proposal missing NOI IDs`,
+          `${applicationSubmission.typeCode} Proposal incomplete`,
         ),
       );
     }
 
     if (
-      application.soilHasPreviousALCAuthorization &&
-      !application.soilApplicationIDs
+      applicationSubmission.soilIsNOIFollowUp &&
+      !applicationSubmission.soilNOIIDs
     ) {
       errors.push(
         new ServiceValidationException(
-          `${application.typeCode} Proposal missing Application IDs`,
+          `${applicationSubmission.typeCode} Proposal missing NOI IDs`,
+        ),
+      );
+    }
+
+    if (
+      applicationSubmission.soilHasPreviousALCAuthorization &&
+      !applicationSubmission.soilApplicationIDs
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal missing Application IDs`,
         ),
       );
     }
@@ -556,7 +592,7 @@ export class ApplicationSubmissionValidatorService {
     if (proposalMaps.length === 0) {
       errors.push(
         new ServiceValidationException(
-          `${application.typeCode} proposal missing Proposal Map / Site Plan`,
+          `${applicationSubmission.typeCode} proposal missing Proposal Map / Site Plan`,
         ),
       );
     }
@@ -567,7 +603,7 @@ export class ApplicationSubmissionValidatorService {
     if (crossSections.length === 0) {
       errors.push(
         new ServiceValidationException(
-          `${application.typeCode} proposal missing Cross Section Diagrams`,
+          `${applicationSubmission.typeCode} proposal missing Cross Section Diagrams`,
         ),
       );
     }
@@ -578,7 +614,42 @@ export class ApplicationSubmissionValidatorService {
     if (reclamationPlans.length === 0) {
       errors.push(
         new ServiceValidationException(
-          `${application.typeCode} proposal missing Reclamation Plans`,
+          `${applicationSubmission.typeCode} proposal missing Reclamation Plans`,
+        ),
+      );
+    }
+  }
+
+  private async validatePfrsProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicationDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (applicationSubmission.soilIsExtractionOrMining === null) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing extraction/mining answer`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.soilIsExtractionOrMining) {
+      if (applicationSubmission.soilHasSubmittedNotice === null) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal missing notice submitted answer`,
+          ),
+        );
+      }
+    }
+
+    const noticeOfWork = applicationDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
+    );
+    if (noticeOfWork.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal has yes to notice of work but is not attached`,
         ),
       );
     }

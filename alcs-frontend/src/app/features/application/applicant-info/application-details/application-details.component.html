@@ -161,6 +161,11 @@
     [applicationSubmission]="submittedApplication"
     [files]="files"
   ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="submittedApplication && applicationType === 'PFRS'"
+    [applicationSubmission]="submittedApplication"
+    [files]="files"
+  ></app-pfrs-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" (click)="onEdit(5)" mat-flat-button color="accent">Edit Section</button>

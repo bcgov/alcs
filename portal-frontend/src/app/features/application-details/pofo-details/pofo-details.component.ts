@@ -18,17 +18,10 @@ export class PofoDetailsComponent {
   @Input() updatedFields: string[] = [];
 
   _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
-  totalTargetAcres: string | undefined;
-  totalAcres: string | undefined;
 
   @Input() set applicationSubmission(applicationSubmission: ApplicationSubmissionDetailedDto | undefined) {
     if (applicationSubmission) {
       this._applicationSubmission = applicationSubmission;
-      this.loadParcels(applicationSubmission.fileNumber);
-
-      this.totalAcres = applicationSubmission.subdProposedLots
-        .reduce((total, lot) => total + (lot.size !== null ? lot.size : 0), 0)
-        .toFixed(2);
     }
   }
 
@@ -42,11 +35,7 @@ export class PofoDetailsComponent {
   proposalMap: ApplicationDocumentDto[] = [];
   reclamationPlans: ApplicationDocumentDto[] = [];
 
-  constructor(
-    private router: Router,
-    private applicationDocumentService: ApplicationDocumentService,
-    private applicationParcelService: ApplicationParcelService
-  ) {}
+  constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
 
   onEditSection(step: number) {
     if (this.draftMode) {
@@ -59,17 +48,5 @@ export class PofoDetailsComponent {
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     window.open(res?.url, '_blank');
-  }
-
-  private async loadParcels(fileNumber: string) {
-    if (this._applicationSubmission) {
-      const parcels = await this.applicationParcelService.fetchBySubmissionUuid(this._applicationSubmission?.uuid);
-      if (parcels) {
-        this.totalTargetAcres = parcels
-          .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-          .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
-          .toFixed(2);
-      }
-    }
   }
 }

@@ -798,4 +798,134 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
   });
+
+  describe('PFRS Applications', () => {
+    it('should not have errors when base information is filled correctly', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilHasPreviousALCAuthorization: false,
+        soilIsNOIFollowUp: false,
+        soilAlreadyPlacedVolume: 5,
+        soilAlreadyPlacedMaximumDepth: 5,
+        soilToPlaceMaximumDepth: 5,
+        soilAlreadyPlacedAverageDepth: 5,
+        soilAlreadyPlacedArea: 5,
+        soilToPlaceAverageDepth: 5,
+        soilToPlaceVolume: 5,
+        soilToPlaceArea: 5,
+        soilAlternativeMeasures: 'soilAlternativeMeasures',
+        soilFillTypeToPlace: 'soilFillTypeToPlace',
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
+      ).toBe(false);
+    });
+
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilFillTypeToPlace: null,
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilToPlaceArea: null,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOIDs and ApplicationIDs', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Proposal missing NOI IDs`)),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS Proposal missing Application IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should require a notice of work for both mining and notice true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        soilIsExtractionOrMining: true,
+        soilHasSubmittedNotice: true,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(
+            `PFRS proposal has yes to notice of work but is not attached`,
+          ),
+        ),
+      ).toBe(true);
+    });
+  });
 });

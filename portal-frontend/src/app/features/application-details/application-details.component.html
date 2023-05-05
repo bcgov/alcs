@@ -265,6 +265,15 @@
     [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'PFRS'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pfrs-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

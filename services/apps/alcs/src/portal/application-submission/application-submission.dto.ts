@@ -233,6 +233,12 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   soilAlternativeMeasures?: string | null;
+
+  @AutoMap(() => Boolean)
+  soilIsExtractionOrMining?: boolean;
+
+  @AutoMap(() => Boolean)
+  soilHasSubmittedNotice?: boolean;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -529,4 +535,12 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   soilAlternativeMeasures?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  soilIsExtractionOrMining?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  soilHasSubmittedNotice?: boolean;
 }

@@ -112,6 +112,8 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilProjectDurationUnit: string | null;
   soilFillTypeToPlace: string | null;
   soilAlternativeMeasures: string | null;
+  soilIsExtractionOrMining: boolean;
+  soilHasSubmittedNotice: boolean;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -191,4 +193,6 @@ export interface ApplicationSubmissionUpdateDto {
   soilProjectDurationUnit?: string | null;
   soilFillTypeToPlace?: string | null;
   soilAlternativeMeasures?: string | null;
+  soilIsExtractionOrMining?: boolean | null;
+  soilHasSubmittedNotice?: boolean | null;
 }

@@ -2,6 +2,7 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
+import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
@@ -711,7 +712,7 @@ export class ApplicationSubmissionService {
     }
   }
 
-  private setSoilFields(
+  private async setSoilFields(
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
@@ -823,5 +824,28 @@ export class ApplicationSubmissionService {
       updateDto.soilAlternativeMeasures,
       applicationSubmission.soilAlternativeMeasures,
     );
+
+    applicationSubmission.soilIsExtractionOrMining = filterUndefined(
+      updateDto.soilIsExtractionOrMining,
+      applicationSubmission.soilIsExtractionOrMining,
+    );
+
+    applicationSubmission.soilHasSubmittedNotice = filterUndefined(
+      updateDto.soilHasSubmittedNotice,
+      applicationSubmission.soilHasSubmittedNotice,
+    );
+
+    if (
+      updateDto.soilHasSubmittedNotice === false ||
+      updateDto.soilIsExtractionOrMining === false
+    ) {
+      const applicationUuid = await this.applicationService.getUuid(
+        applicationSubmission.fileNumber,
+      );
+      await this.applicationDocumentService.deleteByType(
+        DOCUMENT_TYPE.NOTICE_OF_WORK,
+        applicationUuid,
+      );
+    }
   }
 }
