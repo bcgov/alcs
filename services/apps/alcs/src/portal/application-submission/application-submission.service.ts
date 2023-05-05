@@ -712,7 +712,7 @@ export class ApplicationSubmissionService {
     }
   }
 
-  private setSoilFields(
+  private async setSoilFields(
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
@@ -834,5 +834,18 @@ export class ApplicationSubmissionService {
       updateDto.soilHasSubmittedNotice,
       applicationSubmission.soilHasSubmittedNotice,
     );
+
+    if (
+      updateDto.soilHasSubmittedNotice === false ||
+      updateDto.soilIsExtractionOrMining === false
+    ) {
+      const applicationUuid = await this.applicationService.getUuid(
+        applicationSubmission.fileNumber,
+      );
+      await this.applicationDocumentService.deleteByType(
+        DOCUMENT_TYPE.NOTICE_OF_WORK,
+        applicationUuid,
+      );
+    }
   }
 }
