@@ -217,6 +217,12 @@ export class SubmittedApplicationDto {
 
   @AutoMap(() => String)
   soilAlternativeMeasures?: string;
+
+  @AutoMap(() => Boolean)
+  soilIsExtractionOrMining?: boolean;
+
+  @AutoMap(() => Boolean)
+  soilHasSubmittedNotice?: boolean;
 }
 
 export class CreateApplicationDto {

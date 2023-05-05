@@ -2,6 +2,7 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
+import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
@@ -822,6 +823,16 @@ export class ApplicationSubmissionService {
     applicationSubmission.soilAlternativeMeasures = filterUndefined(
       updateDto.soilAlternativeMeasures,
       applicationSubmission.soilAlternativeMeasures,
+    );
+
+    applicationSubmission.soilIsExtractionOrMining = filterUndefined(
+      updateDto.soilIsExtractionOrMining,
+      applicationSubmission.soilIsExtractionOrMining,
+    );
+
+    applicationSubmission.soilHasSubmittedNotice = filterUndefined(
+      updateDto.soilHasSubmittedNotice,
+      applicationSubmission.soilHasSubmittedNotice,
     );
   }
 }

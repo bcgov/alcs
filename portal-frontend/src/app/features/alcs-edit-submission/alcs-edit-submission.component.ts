@@ -21,6 +21,7 @@ import { OtherParcelsComponent } from '../edit-submission/other-parcels/other-pa
 import { ParcelDetailsComponent } from '../edit-submission/parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from '../edit-submission/primary-contact/primary-contact.component';
 import { NfuProposalComponent } from '../edit-submission/proposal/nfu-proposal/nfu-proposal.component';
+import { PfrsProposalComponent } from '../edit-submission/proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from '../edit-submission/proposal/pofo-proposal/pofo-proposal.component';
 import { RosoProposalComponent } from '../edit-submission/proposal/roso-proposal/roso-proposal.component';
 import { SubdProposalComponent } from '../edit-submission/proposal/subd-proposal/subd-proposal.component';
@@ -61,6 +62,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   @ViewChild(SubdProposalComponent) subdProposalComponent?: SubdProposalComponent;
   @ViewChild(RosoProposalComponent) rosoProposalComponent?: RosoProposalComponent;
   @ViewChild(PofoProposalComponent) profoProposalComponent?: PofoProposalComponent;
+  @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -188,6 +190,9 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
         }
         if (this.profoProposalComponent) {
           await this.profoProposalComponent.onSave();
+        }
+        if (this.pfrsProposalComponent) {
+          await this.pfrsProposalComponent.onSave();
         }
         break;
       case EditApplicationSteps.Attachments:

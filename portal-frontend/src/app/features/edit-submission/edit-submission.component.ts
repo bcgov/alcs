@@ -18,6 +18,7 @@ import { OtherAttachmentsComponent } from './other-attachments/other-attachments
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from './proposal/pofo-proposal/pofo-proposal.component';
 import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
@@ -66,6 +67,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(SubdProposalComponent) subdProposalComponent?: SubdProposalComponent;
   @ViewChild(RosoProposalComponent) rosoProposalComponent?: RosoProposalComponent;
   @ViewChild(PofoProposalComponent) pofoProposalComponent?: RosoProposalComponent;
+  @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -196,6 +198,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.pofoProposalComponent) {
           await this.pofoProposalComponent.onSave();
+        }
+        if (this.pfrsProposalComponent) {
+          await this.pfrsProposalComponent.onSave();
         }
         break;
       case EditApplicationSteps.Attachments:

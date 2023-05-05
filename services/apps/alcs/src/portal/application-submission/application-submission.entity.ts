@@ -572,6 +572,14 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   soilAlternativeMeasures: string | null;
 
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilIsExtractionOrMining: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilHasSubmittedNotice: boolean | null;
+
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
   @JoinColumn({
