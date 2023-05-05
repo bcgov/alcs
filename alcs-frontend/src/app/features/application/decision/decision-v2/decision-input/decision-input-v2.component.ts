@@ -163,43 +163,39 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private async prepareDataForEdit() {
-    if (this.uuid) {
-      this.decisionService.$decision
-        .pipe(takeUntil(this.$destroy))
-        .pipe(
-          combineLatestWith(
-            this.modificationService.$modifications,
-            this.reconsiderationService.$reconsiderations,
-            this.decisionService.$decisions
-          )
+    this.decisionService.$decision
+      .pipe(takeUntil(this.$destroy))
+      .pipe(
+        combineLatestWith(
+          this.modificationService.$modifications,
+          this.reconsiderationService.$reconsiderations,
+          this.decisionService.$decisions
         )
-        .subscribe(([decision, modifications, reconsiderations, decisions]) => {
-          if (decision) {
-            this.existingDecision = decision;
-            this.uuid = decision.uuid;
-          }
+      )
+      .subscribe(([decision, modifications, reconsiderations, decisions]) => {
+        if (decision) {
+          this.existingDecision = decision;
+          this.uuid = decision.uuid;
+        }
 
-          this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
+        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
 
-          if (this.existingDecision) {
-            this.patchFormWithExistingData(this.existingDecision);
+        if (this.existingDecision) {
+          this.patchFormWithExistingData(this.existingDecision);
 
-            if (decisions.length > 0) {
-              this.isFirstDecision = decisions.findIndex((dec) => dec.uuid === this.uuid) === 0;
+          if (decisions.length > 0) {
+            this.isFirstDecision = decisions.findIndex((dec) => dec.uuid === this.uuid) === 0;
 
-              if (!this.isFirstDecision) {
-                this.form.controls.postDecision.addValidators([Validators.required]);
-                this.form.controls.decisionMaker.disable();
-                this.form.controls.outcome.disable();
-              }
+            if (!this.isFirstDecision) {
+              this.form.controls.postDecision.addValidators([Validators.required]);
+              this.form.controls.decisionMaker.disable();
+              this.form.controls.outcome.disable();
             }
-          } else {
-            this.resolutionYearControl.enable();
           }
-        });
-    } else {
-      this.resolutionYearControl.enable();
-    }
+        } else {
+          this.resolutionYearControl.enable();
+        }
+      });
   }
 
   private mapPostDecisionsToControls(
@@ -235,6 +231,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         type: PostDecisionType.Reconsideration,
       }));
     this.postDecisions = [...mappedModifications, ...mappedRecons];
+
+    console.log('this.postDecisions', this.postDecisions);
   }
 
   private patchFormWithExistingData(existingDecision: ApplicationDecisionDto) {
