@@ -52,7 +52,7 @@ export class ApplicationDecisionV2Service {
         applicationUuid: application.uuid,
       },
       order: {
-        date: 'DESC',
+        createdAt: 'DESC',
       },
       relations: {
         outcome: true,
@@ -72,6 +72,11 @@ export class ApplicationDecisionV2Service {
     const decisionsWithModifiedBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
+        modifiedBy: {
+          resultingDecision: {
+            isDraft: false,
+          },
+        },
       },
       relations: {
         modifiedBy: {
@@ -85,6 +90,11 @@ export class ApplicationDecisionV2Service {
     const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
+        reconsideredBy: {
+          resultingDecision: {
+            isDraft: false,
+          },
+        },
       },
       relations: {
         reconsideredBy: {
@@ -132,6 +142,12 @@ export class ApplicationDecisionV2Service {
         ceoCriterion: true,
         documents: {
           document: true,
+        },
+        modifies: {
+          modifiesDecisions: true,
+        },
+        reconsiders: {
+          reconsidersDecisions: true,
         },
       },
     });

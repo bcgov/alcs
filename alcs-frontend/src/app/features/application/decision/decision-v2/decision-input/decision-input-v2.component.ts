@@ -153,12 +153,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
 
-    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      if (decisions.length > 0) {
-        this.minDate = new Date(decisions[decisions.length - 1].date);
-      }
-    });
-
     await this.prepareDataForEdit();
   }
 
@@ -184,13 +178,39 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           this.patchFormWithExistingData(this.existingDecision);
 
           if (decisions.length > 0) {
-            this.isFirstDecision = decisions.findIndex((dec) => dec.uuid === this.uuid) === 0;
+            let minDate = null;
+
+            for (const decision of decisions) {
+              if (!minDate && decision.date) {
+                minDate = decision.date;
+              }
+
+              if (minDate && decision.date && minDate > decision.date) {
+                minDate = decision.date;
+              }
+
+              if (
+                this.existingDecision.createdAt > decision.createdAt &&
+                this.existingDecision.uuid !== decision.uuid
+              ) {
+                this.isFirstDecision = false;
+              }
+            }
+
+            if (minDate) {
+              this.minDate = new Date(minDate);
+            }
 
             if (!this.isFirstDecision) {
               this.form.controls.postDecision.addValidators([Validators.required]);
               this.form.controls.decisionMaker.disable();
               this.form.controls.outcome.disable();
+              this.onSelectPostDecision({
+                type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
+              });
             }
+          } else {
+            this.isFirstDecision = true;
           }
         } else {
           this.resolutionYearControl.enable();
@@ -231,8 +251,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         type: PostDecisionType.Reconsideration,
       }));
     this.postDecisions = [...mappedModifications, ...mappedRecons];
-
-    console.log('this.postDecisions', this.postDecisions);
   }
 
   private patchFormWithExistingData(existingDecision: ApplicationDecisionDto) {

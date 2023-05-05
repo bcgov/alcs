@@ -154,9 +154,9 @@ export class ApplicationDecisionV1Controller {
     }
 
     let reconsiders;
-    if (updateDto.modifiesUuid) {
+    if (updateDto.reconsidersUuid) {
       reconsiders = await this.reconsiderationService.getByUuid(
-        updateDto.modifiesUuid,
+        updateDto.reconsidersUuid,
       );
     } else if (updateDto.reconsidersUuid === null) {
       reconsiders = null;
