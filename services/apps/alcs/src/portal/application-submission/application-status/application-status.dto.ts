@@ -9,6 +9,8 @@ export enum APPLICATION_STATUS {
   INCOMPLETE = 'INCM',
   WRONG_GOV = 'WRNG',
   CANCELLED = 'CANC',
+  ALC_DECISION = 'ALCD',
+  CEO_DECISION = 'CEOD',
 }
 
 export class ApplicationStatusDto extends BaseCodeDto {}

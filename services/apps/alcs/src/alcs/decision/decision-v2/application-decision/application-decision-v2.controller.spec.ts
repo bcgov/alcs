@@ -14,6 +14,8 @@ import { UserProfile } from '../../../../common/automapper/user.automapper.profi
 import { ApplicationService } from '../../../application/application.service';
 import { CodeService } from '../../../code/code.service';
 import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionV2Controller } from './application-decision-v2.controller';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 import {
@@ -26,6 +28,8 @@ describe('ApplicationDecisionV2Controller', () => {
   let mockDecisionService: DeepMocked<ApplicationDecisionV2Service>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockModificationService: DeepMocked<ApplicationModificationService>;
+  let mockReconService: DeepMocked<ApplicationReconsiderationService>;
 
   let mockApplication;
   let mockDecision;
@@ -34,6 +38,8 @@ describe('ApplicationDecisionV2Controller', () => {
     mockDecisionService = createMock();
     mockApplicationService = createMock();
     mockCodeService = createMock();
+    mockModificationService = createMock();
+    mockReconService = createMock();
 
     mockApplication = initApplicationMockEntity();
     mockDecision = initApplicationDecisionMock(mockApplication);
@@ -60,6 +66,14 @@ describe('ApplicationDecisionV2Controller', () => {
         {
           provide: CodeService,
           useValue: mockCodeService,
+        },
+        {
+          provide: ApplicationModificationService,
+          useValue: mockModificationService,
+        },
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: mockReconService,
         },
         {
           provide: ClsService,
@@ -160,8 +174,8 @@ describe('ApplicationDecisionV2Controller', () => {
         date: updates.date,
         isDraft: true,
       },
-      null,
-      null,
+      undefined,
+      undefined,
     );
   });
 
