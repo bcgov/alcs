@@ -1,4 +1,5 @@
 @use '../../../../styles/functions' as *;
+@use '../../../../styles/colors';
 
 section {
   margin-top: rem(32);
@@ -28,4 +29,10 @@ h4 {
   .mdc-text-field--invalid {
     margin-top: rem(8);
   }
+}
+
+.no-data-text {
+  text-align: center;
+  color: colors.$grey;
+  padding-top: rem(12);
 }
