@@ -6,13 +6,12 @@
 }
 
 .desktop-file-drag-drop {
-  border: 0.2rem dashed rgba(colors.$grey-dark, 0.5);
-  border-radius: 0.4rem;
-  width: 100%;
   display: none;
+  margin-top: rem(5);
+  width: 100%;
 }
 
-.desktop-file-drag-drop[ng-reflect-disabled="true"] {
+.desktop-file-drag-drop[ng-reflect-disabled='true'] {
   background-color: #cbc9c9 !important;
 }
 
@@ -27,15 +26,13 @@ a {
 }
 
 .icon {
-  font-size: 8rem;
-  line-height: 8rem;
-  color: colors.$grey-dark;
+  font-size: 4rem;
+  color: colors.$grey;
 }
 
 .drag-text {
   color: colors.$grey-dark;
-  font-size: 1.6rem;
-  font-weight: bold;
+  font-size: 1.2rem;
   margin-top: 1rem;
 }
 
@@ -43,17 +40,22 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem;
 }
 
 .uploaded-file {
-  border: 1px solid colors.$black;
+  border: 1px solid colors.$grey;
   border-radius: rem(4);
-  padding: rem(8);
+  padding: rem(8) rem(16);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  margin-top: rem(5);
   margin-bottom: rem(8);
+
+  &:hover {
+    border-color: colors.$black;
+  }
 
   &.error {
     border: 2px solid colors.$error-color;
