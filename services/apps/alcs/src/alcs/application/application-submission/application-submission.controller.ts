@@ -40,7 +40,6 @@ export class ApplicationSubmissionController {
     @Param('fileNumber') fileNumber: string,
     @Body('statusCode') status: string,
   ) {
-    console.log('updateStatus', status, fileNumber);
     if (!fileNumber) {
       throw new ServiceValidationException('File number is required');
     }
