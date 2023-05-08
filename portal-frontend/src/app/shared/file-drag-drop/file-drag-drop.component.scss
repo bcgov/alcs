@@ -9,6 +9,11 @@
   display: none;
   margin-top: rem(5);
   width: 100%;
+  border-radius: rem(4);
+
+  &:hover {
+    background: #f9f9f9 !important;
+  }
 }
 
 .desktop-file-drag-drop[ng-reflect-disabled='true'] {
@@ -26,7 +31,7 @@ a {
 }
 
 .icon {
-  font-size: 4rem;
+  font-size: 3rem;
   color: colors.$grey;
 }
 
