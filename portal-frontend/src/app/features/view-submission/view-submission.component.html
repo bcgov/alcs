@@ -37,11 +37,11 @@
 <div *ngIf="!isMobile">
   <div class="navigation-wrapper">
     <mat-tab-group>
-      <mat-tab label="Application">
+      <mat-tab label="Applicant Submission">
         <div *ngIf="application" class="content">
           <section>
             <div class="header">
-              <h3>Application</h3>
+              <h3>Applicant Submission</h3>
               <div class="btns-wrapper">
                 <button
                   [routerLink]="'/application/' + application.fileNumber + '/edit'"
@@ -126,7 +126,7 @@
   <h6>Section:</h6>
   <mat-form-field class="page-selector" appearance="outline">
     <mat-select placeholder="Select one" [(ngModel)]="selectedStep">
-      <mat-option [value]="MOBILE_STEP.APPLICATION">Application Submission</mat-option>
+      <mat-option [value]="MOBILE_STEP.APPLICATION">Applicant Submission</mat-option>
       <mat-option [value]="MOBILE_STEP.LFNG_INFO">Local/First Nation Gov Review</mat-option>
       <mat-option [value]="MOBILE_STEP.ALC_INFO">ALC Review and Decision</mat-option>
     </mat-select>
