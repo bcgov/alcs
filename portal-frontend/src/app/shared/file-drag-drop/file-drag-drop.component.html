@@ -10,9 +10,9 @@
       <a class="file-name" (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
       <div class="file-size-cta-container">
         <div class="file-size">
-          <span class="file-size-paranthesis">(</span>
+          <span class="file-size-parentheses">(</span>
           {{ file.fileSize | filesize }}
-          <span class="file-size-paranthesis">)</span>
+          <span class="file-size-parentheses">)</span>
         </div>
         <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
           <mat-icon>close</mat-icon>
