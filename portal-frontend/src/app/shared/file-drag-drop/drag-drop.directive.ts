@@ -26,7 +26,7 @@ export class DragDropDirective {
       evt.preventDefault();
       evt.stopPropagation();
       this.background = '#acd2ed30';
-      this.border = '0.15rem solid #0c2e4650';
+      this.border = '0.15rem solid #0c2e4650 !important';
     }
   }
 
