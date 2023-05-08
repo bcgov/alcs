@@ -3,16 +3,6 @@
     <h6 *ngIf="applicationSubmission">
       Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}
     </h6>
-    <div class="header-btn-wrapper">
-      <button
-        *ngIf="applicationSubmission?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
-        mat-flat-button
-        color="primary"
-        (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
-      >
-        Download PDF
-      </button>
-    </div>
   </div>
 </ng-template>
 
