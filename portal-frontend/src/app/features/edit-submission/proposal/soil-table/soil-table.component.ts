@@ -1,6 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 export type SoilTableData = {
   volume?: number;
@@ -61,17 +60,17 @@ export class SoilTableComponent implements OnInit {
 
     this.form.valueChanges.subscribe((changes) => {
       this.dataChange.emit({
-        volume: this.volume.value ? parseFloat(this.volume.value) : undefined,
-        area: this.area.value ? parseFloat(this.area.value) : undefined,
-        maximumDepth: this.maximumDepth.value ? parseFloat(this.maximumDepth.value) : undefined,
-        averageDepth: this.averageDepth.value ? parseFloat(this.averageDepth.value) : undefined,
+        volume: this.volume.value !== null ? parseFloat(this.volume.value) : undefined,
+        area: this.area.value !== null ? parseFloat(this.area.value) : undefined,
+        maximumDepth: this.maximumDepth.value !== null ? parseFloat(this.maximumDepth.value) : undefined,
+        averageDepth: this.averageDepth.value !== null ? parseFloat(this.averageDepth.value) : undefined,
       });
 
       this.data2Change.emit({
-        volume: this.volume2.value ? parseFloat(this.volume2.value) : undefined,
-        area: this.area2.value ? parseFloat(this.area2.value) : undefined,
-        maximumDepth: this.maximumDepth2.value ? parseFloat(this.maximumDepth2.value) : undefined,
-        averageDepth: this.averageDepth2.value ? parseFloat(this.averageDepth2.value) : undefined,
+        volume: this.volume2.value !== null ? parseFloat(this.volume2.value) : undefined,
+        area: this.area2.value !== null ? parseFloat(this.area2.value) : undefined,
+        maximumDepth: this.maximumDepth2.value !== null ? parseFloat(this.maximumDepth2.value) : undefined,
+        averageDepth: this.averageDepth2.value !== null ? parseFloat(this.averageDepth2.value) : undefined,
       });
     });
   }
