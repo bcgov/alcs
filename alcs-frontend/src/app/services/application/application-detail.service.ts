@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, MonoTypeOperatorFunction } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
