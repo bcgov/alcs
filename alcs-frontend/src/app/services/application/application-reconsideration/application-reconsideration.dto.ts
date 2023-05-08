@@ -16,6 +16,8 @@ export interface ReconsiderationTypeDto extends BaseCodeDto {
 
 export interface ReconsiderationReviewOutcomeTypeDto extends BaseCodeDto {}
 
+export interface ApplicationStatusTypeDto extends BaseCodeDto {}
+
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;

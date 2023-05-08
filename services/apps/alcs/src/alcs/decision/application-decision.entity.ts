@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -152,6 +153,15 @@ export class ApplicationDecision extends Base {
     type: 'text',
   })
   rescindedComment?: string | null;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    nullable: false,
+    update: false,
+    comment:
+      'Date that indicates when decision was created. It is not editable by user.',
+  })
+  createdAt: Date;
 
   @AutoMap()
   @ManyToOne(() => ApplicationDecisionChairReviewOutcomeType, {

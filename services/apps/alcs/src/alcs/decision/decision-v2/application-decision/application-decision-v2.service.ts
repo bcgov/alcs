@@ -52,7 +52,7 @@ export class ApplicationDecisionV2Service {
         applicationUuid: application.uuid,
       },
       order: {
-        date: 'DESC',
+        createdAt: 'DESC',
       },
       relations: {
         outcome: true,
@@ -72,6 +72,11 @@ export class ApplicationDecisionV2Service {
     const decisionsWithModifiedBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
+        modifiedBy: {
+          resultingDecision: {
+            isDraft: false,
+          },
+        },
       },
       relations: {
         modifiedBy: {
@@ -85,6 +90,11 @@ export class ApplicationDecisionV2Service {
     const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
+        reconsideredBy: {
+          resultingDecision: {
+            isDraft: false,
+          },
+        },
       },
       relations: {
         reconsideredBy: {
@@ -132,6 +142,12 @@ export class ApplicationDecisionV2Service {
         ceoCriterion: true,
         documents: {
           document: true,
+        },
+        modifies: {
+          modifiesDecisions: true,
+        },
+        reconsiders: {
+          reconsidersDecisions: true,
         },
       },
     });
@@ -190,6 +206,7 @@ export class ApplicationDecisionV2Service {
     existingDecision.decisionDescription = updateDto.decisionDescription;
     existingDecision.isStatsRequired = updateDto.isStatsRequired;
     existingDecision.daysHideFromPublic = updateDto.daysHideFromPublic;
+    existingDecision.isDraft = updateDto.isDraft;
     existingDecision.rescindedDate = formatIncomingDate(
       updateDto.rescindedDate,
     );
@@ -319,7 +336,7 @@ export class ApplicationDecisionV2Service {
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
       isOther: createDto.isOther,
-      isDraft: createDto.isDraft,
+      isDraft: true,
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
       isStatsRequired: createDto.isStatsRequired,

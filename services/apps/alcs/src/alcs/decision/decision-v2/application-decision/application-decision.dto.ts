@@ -193,6 +193,9 @@ export class ApplicationDecisionDto {
   @AutoMap(() => String)
   rescindedComment?: string | null;
 
+  @AutoMap(() => Number)
+  createdAt?: number | null;
+
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];

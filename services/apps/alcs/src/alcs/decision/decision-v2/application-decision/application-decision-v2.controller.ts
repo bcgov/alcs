@@ -20,6 +20,8 @@ import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { ApplicationService } from '../../../application/application.service';
 import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
@@ -39,6 +41,8 @@ export class ApplicationDecisionV2Controller {
   constructor(
     private appDecisionService: ApplicationDecisionV2Service,
     private applicationService: ApplicationService,
+    private modificationService: ApplicationModificationService,
+    private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -50,6 +54,7 @@ export class ApplicationDecisionV2Controller {
     const decisions = await this.appDecisionService.getByAppFileNumber(
       fileNumber,
     );
+
     return await this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,
@@ -107,9 +112,13 @@ export class ApplicationDecisionV2Controller {
       createDto.applicationFileNumber,
     );
 
-    // TODO this should be addressed in the publish ticket flow since there is no way to create a non draft decision
-    const modification = undefined;
-    const reconsiders = undefined;
+    const modification = createDto.modifiesUuid
+      ? await this.modificationService.getByUuid(createDto.modifiesUuid)
+      : undefined;
+
+    const reconsiders = createDto.reconsidersUuid
+      ? await this.reconsiderationService.getByUuid(createDto.reconsidersUuid)
+      : undefined;
 
     const newDecision = await this.appDecisionService.create(
       createDto,
@@ -137,12 +146,29 @@ export class ApplicationDecisionV2Controller {
       );
     }
 
-    // TODO address linkage of decision to reconsideration and modification
+    let modifies;
+    if (updateDto.modifiesUuid) {
+      modifies = await this.modificationService.getByUuid(
+        updateDto.modifiesUuid,
+      );
+    } else if (updateDto.modifiesUuid === null) {
+      modifies = null;
+    }
+
+    let reconsiders;
+    if (updateDto.reconsidersUuid) {
+      reconsiders = await this.reconsiderationService.getByUuid(
+        updateDto.reconsidersUuid,
+      );
+    } else if (updateDto.reconsidersUuid === null) {
+      reconsiders = null;
+    }
+
     const updatedDecision = await this.appDecisionService.update(
       uuid,
       updateDto,
-      null,
-      null,
+      modifies,
+      reconsiders,
     );
     return this.mapper.mapAsync(
       updatedDecision,

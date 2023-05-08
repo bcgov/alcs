@@ -68,7 +68,6 @@ export class StaffJournalComponent implements OnChanges {
 
   async onEditNote(update: UpdateApplicationStaffJournalDto | any) {
     this.labelText = 'Edit note';
-    console.log('onEditNote', update);
 
     await this.staffJournalService.updateNote(update);
     await this.loadNotes(this.applicationUuid);

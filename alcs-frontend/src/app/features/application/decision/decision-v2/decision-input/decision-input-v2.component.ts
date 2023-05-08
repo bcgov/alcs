@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
@@ -8,7 +9,7 @@ import { ApplicationModificationDto } from '../../../../../services/application/
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
   ApplicationDecisionDto,
   CeoCriterion,
@@ -22,6 +23,7 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
+import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -48,7 +50,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   fileNumber: string = '';
   uuid: string = '';
-  application: ApplicationDto | undefined;
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
@@ -56,6 +57,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
+  applicationStatusCodes = [];
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
@@ -77,8 +79,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
-    rescindedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    rescindedComment: new FormControl<string | undefined>(undefined, [Validators.required]),
+    rescindedDate: new FormControl<Date | undefined>(undefined),
+    rescindedComment: new FormControl<string | undefined>(undefined),
   });
 
   constructor(
@@ -87,7 +89,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private modificationService: ApplicationModificationService,
     public router: Router,
     private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private applicationSubmissionService: ApplicationSubmissionService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -149,53 +153,69 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.decisionMakers = codes.decisionMakers;
     this.ceoCriterion = codes.ceoCriterion;
 
-    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      if (decisions.length > 0) {
-        this.minDate = new Date(decisions[decisions.length - 1].date);
-      }
-    });
-
     await this.prepareDataForEdit();
   }
 
   private async prepareDataForEdit() {
-    if (this.uuid) {
-      this.decisionService.$decision
-        .pipe(takeUntil(this.$destroy))
-        .pipe(
-          combineLatestWith(
-            this.modificationService.$modifications,
-            this.reconsiderationService.$reconsiderations,
-            this.decisionService.$decisions
-          )
+    this.decisionService.$decision
+      .pipe(takeUntil(this.$destroy))
+      .pipe(
+        combineLatestWith(
+          this.modificationService.$modifications,
+          this.reconsiderationService.$reconsiderations,
+          this.decisionService.$decisions
         )
-        .subscribe(([decision, modifications, reconsiderations, decisions]) => {
-          if (decision) {
-            this.existingDecision = decision;
-            this.uuid = decision.uuid;
-          }
+      )
+      .subscribe(([decision, modifications, reconsiderations, decisions]) => {
+        if (decision) {
+          this.existingDecision = decision;
+          this.uuid = decision.uuid;
+        }
 
-          this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
+        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
 
-          if (this.existingDecision) {
-            this.patchFormWithExistingData(this.existingDecision);
+        if (this.existingDecision) {
+          this.patchFormWithExistingData(this.existingDecision);
 
-            if (decisions.length > 0) {
-              this.isFirstDecision = decisions.findIndex((dec) => dec.uuid === this.uuid) === 0;
+          if (decisions.length > 0) {
+            let minDate = null;
 
-              if (!this.isFirstDecision) {
-                this.form.controls.postDecision.addValidators([Validators.required]);
-                this.form.controls.decisionMaker.disable();
-                this.form.controls.outcome.disable();
+            for (const decision of decisions) {
+              if (!minDate && decision.date) {
+                minDate = decision.date;
+              }
+
+              if (minDate && decision.date && minDate > decision.date) {
+                minDate = decision.date;
+              }
+
+              if (
+                this.existingDecision.createdAt > decision.createdAt &&
+                this.existingDecision.uuid !== decision.uuid
+              ) {
+                this.isFirstDecision = false;
               }
             }
+
+            if (minDate) {
+              this.minDate = new Date(minDate);
+            }
+
+            if (!this.isFirstDecision) {
+              this.form.controls.postDecision.addValidators([Validators.required]);
+              this.form.controls.decisionMaker.disable();
+              this.form.controls.outcome.disable();
+              this.onSelectPostDecision({
+                type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
+              });
+            }
           } else {
-            this.resolutionYearControl.enable();
+            this.isFirstDecision = true;
           }
-        });
-    } else {
-      this.resolutionYearControl.enable();
-    }
+        } else {
+          this.resolutionYearControl.enable();
+        }
+      });
   }
 
   private mapPostDecisionsToControls(
@@ -311,9 +331,33 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.form.controls['criterionModification'].updateValueAndValidity();
   }
 
-  async onSubmit(isStayOnPage: boolean = false) {
+  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
     this.isLoading = true;
 
+    const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
+
+    try {
+      if (this.uuid) {
+        await this.decisionService.update(this.uuid, data);
+      } else {
+        const createdDecision = await this.decisionService.create({
+          ...data,
+          applicationFileNumber: this.fileNumber,
+        });
+        this.uuid = createdDecision.uuid;
+      }
+    } finally {
+      if (!isStayOnPage) {
+        this.onCancel();
+      } else {
+        await this.loadData();
+      }
+
+      this.isLoading = false;
+    }
+  }
+
+  private mapDecisionDataForSave(isDraft: boolean) {
     const {
       date,
       outcome,
@@ -353,7 +397,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       applicationFileNumber: this.fileNumber,
       modifiesUuid: isPostDecisionReconsideration ? null : postDecision!,
       reconsidersUuid: isPostDecisionReconsideration ? postDecision! : null,
-      isDraft: true,
+      isDraft,
       isSubjectToConditions: parseStringToBoolean(isSubjectToConditions),
       decisionDescription: decisionDescription,
       isStatsRequired: parseStringToBoolean(isStatsRequired),
@@ -368,26 +412,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       data.isTimeExtension = null;
       data.isOther = null;
     }
-
-    try {
-      if (this.uuid) {
-        await this.decisionService.update(this.uuid, data);
-      } else {
-        const createdDecision = await this.decisionService.create({
-          ...data,
-          applicationFileNumber: this.fileNumber,
-        });
-        this.uuid = createdDecision.uuid;
-      }
-    } finally {
-      if (!isStayOnPage) {
-        this.onCancel();
-      } else {
-        await this.loadData();
-      }
-
-      this.isLoading = false;
-    }
+    return data;
   }
 
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
@@ -454,5 +479,24 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.resolutionNumberControl.setValue(null);
     await this.onSubmit(true);
     this.resolutionYearControl.enable();
+  }
+
+  async onRelease() {
+    this.dialog
+      .open(ReleaseDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '900px',
+        maxHeight: '80vh',
+        width: '90%',
+        autoFocus: false,
+        data: {},
+      })
+      .afterClosed()
+      .subscribe(async (submissionType) => {
+        if (submissionType) {
+          await this.onSubmit(false, false);
+          await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
+        }
+      });
   }
 }

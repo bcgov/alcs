@@ -44,6 +44,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
 export interface ApplicationDecisionDto {
   uuid: string;
   date: number;
+  createdAt: number;
   outcome: DecisionOutcomeCodeDto;
   resolutionNumber: number;
   resolutionYear: number;
