@@ -18,6 +18,8 @@ import {
 })
 export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
+  private decision: ApplicationDecisionDto | undefined;
+  private decisions: ApplicationDecisionDto[] = [];
   $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
   $decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
 
@@ -140,13 +142,13 @@ export class ApplicationDecisionV2Service {
   }
 
   async loadDecision(uuid: string) {
-    const decision = await this.getByUuid(uuid);
-    this.$decision.next(decision);
+    this.decision = await this.getByUuid(uuid);
+    this.$decision.next(this.decision);
   }
 
   async loadDecisions(fileNumber: string) {
-    const decisions = await this.fetchByApplication(fileNumber);
-    this.$decisions.next(decisions);
+    this.decisions = await this.fetchByApplication(fileNumber);
+    this.$decisions.next(this.decisions);
   }
 
   async cleanDecision() {

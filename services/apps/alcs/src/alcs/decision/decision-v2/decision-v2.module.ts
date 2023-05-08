@@ -23,6 +23,9 @@ import { ApplicationDecisionChairReviewOutcomeType } from '../decision-outcome-t
 import { ApplicationDecisionV1Service } from '../decision-v1/application-decision/application-decision-v1.service';
 import { ApplicationDecisionV2Controller } from './application-decision/application-decision-v2.controller';
 import { ApplicationDecisionV2Service } from './application-decision/application-decision-v2.service';
+import { ComponentService } from './application-decision/component/component.service';
+import { ApplicationDecisionComponentType } from './application-decision/component/decision-component-type.entity';
+import { ApplicationDecisionComponent } from './application-decision/component/decision-component.entity';
 
 @Module({
   imports: [
@@ -38,6 +41,8 @@ import { ApplicationDecisionV2Service } from './application-decision/application
       ApplicationDecisionChairReviewOutcomeType,
       ApplicationReconsiderationOutcomeType,
       ApplicationModificationOutcomeType,
+      ApplicationDecisionComponent,
+      ApplicationDecisionComponentType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
@@ -55,6 +60,7 @@ import { ApplicationDecisionV2Service } from './application-decision/application
     ReconsiderationProfile,
     ApplicationDecisionV2Service,
     ApplicationDecisionProfile,
+    ComponentService,
   ],
   controllers: [ApplicationDecisionV2Controller],
   exports: [ApplicationDecisionV2Service],
