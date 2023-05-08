@@ -182,20 +182,8 @@
       <input matInput formControlName="rescindedComment" />
     </mat-form-field>
 
-    <div class="row">
-      <div class="column">
-        <mat-label for="decisionDocBtn">Decision Document*</mat-label>
-        <button
-          type="button"
-          id="decisionDocBtn"
-          class="upload-button"
-          mat-flat-button
-          color="accent"
-          (click)="onUploadFile()"
-        >
-          Upload
-        </button>
-      </div>
+    <div>
+      <app-decision-documents></app-decision-documents>
     </div>
 
     <div class="row">

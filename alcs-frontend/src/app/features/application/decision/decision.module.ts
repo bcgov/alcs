@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSortModule } from '@angular/material/sort';
 import { RouterModule } from '@angular/router';
 import { MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
@@ -8,6 +9,8 @@ import { InlineDatepickerComponent } from '../../../shared/inline-datepicker/inl
 import { SharedModule } from '../../../shared/shared.module';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
+import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
+import { DecisionDocumentUploadDialogComponent } from './decision-v2/decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
 import { DecisionInputV2Component } from './decision-v2/decision-input/decision-input-v2.component';
 import { DecisionV2DialogComponent } from './decision-v2/decision-v2-dialog/decision-v2-dialog.component';
 import { DecisionV2Component } from './decision-v2/decision-v2.component';
@@ -45,6 +48,8 @@ export const decisionChildRoutes = [
     DecisionV1DialogComponent,
     InlineDatepickerComponent,
     ReleaseDialogComponent,
+    DecisionDocumentUploadDialogComponent,
+    DecisionDocumentsComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +58,7 @@ export const decisionChildRoutes = [
     MtxDatetimepickerModule,
     MtxNativeDatetimeModule,
     MatCheckboxModule,
+    MatSortModule,
   ],
   exports: [InlineDatepickerComponent],
 })

@@ -24,6 +24,7 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
+import { DecisionDocumentUploadDialogComponent } from './decision-file-upload-dialog/decision-document-upload-dialog.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -441,10 +442,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         chairReviewDate: null,
       });
     }
-  }
-
-  async onUploadFile() {
-    console.log('There is a separate ticket for this');
   }
 
   onCancel() {
