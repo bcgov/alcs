@@ -8,7 +8,7 @@
   ></app-application-details>
   <div class="button-container">
     <button
-      *ngIf="applicationSubmission?.fileNumber"
+      *ngIf="applicationSubmission?.fileNumber && !draftMode"
       mat-flat-button
       color="primary"
       (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
