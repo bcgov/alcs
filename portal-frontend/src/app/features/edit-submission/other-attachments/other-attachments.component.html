@@ -82,6 +82,10 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="no-data-text" colspan="6">No attachemnts</td>
+        </tr>
       </table>
     </div>
   </form>

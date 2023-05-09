@@ -7,14 +7,18 @@
         error: !!file.errorMessage
       }"
     >
-      <div class="file-name">
-        <a (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
-        <div>&ensp;({{ file.fileSize | filesize }})</div>
+      <a class="file-name" (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
+      <div class="file-size-cta-container">
+        <div class="file-size">
+          <span class="file-size-parentheses">(</span>
+          {{ file.fileSize | filesize }}
+          <span class="file-size-parentheses">)</span>
+        </div>
+        <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
+          <mat-icon>close</mat-icon>
+          REMOVE
+        </button>
       </div>
-      <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
-        <mat-icon>close</mat-icon>
-        REMOVE
-      </button>
     </div>
     <div class="error-message" *ngIf="!!file.errorMessage"><mat-icon>warning</mat-icon> {{ file.errorMessage }}</div>
   </ng-container>
@@ -29,7 +33,7 @@
 >
   <div class="content">
     <div class="icon">
-      <mat-icon inline="true">cloud_upload</mat-icon>
+      <mat-icon inline="true">file_upload</mat-icon>
     </div>
     <button [disabled]="disabled" type="button" (click)="onFileUploadClicked()" mat-flat-button color="accent">
       Choose file to Upload

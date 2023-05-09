@@ -1,4 +1,4 @@
-@use "../../../../../styles/colors";
+@use '../../../../../styles/colors';
 
 :host::ng-deep {
   .view-grid-item {
@@ -28,6 +28,7 @@
   .no-data-text {
     text-align: center;
     color: colors.$grey;
+    padding-top: rem(12);
 
     .error {
       justify-content: center;
