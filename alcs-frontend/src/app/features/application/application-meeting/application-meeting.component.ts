@@ -122,21 +122,21 @@ export class ApplicationMeetingComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onSaveMeetingEndDate(uuid: any, typeLabel: string, meetingEndDate: number) {
+  async onSaveMeetingEndDate(uuid: any, typeLabel: string, meetingEndDate: number | null) {
     await this.updateMeeting(uuid, typeLabel, {
-      meetingEndDate: new Date(meetingEndDate),
+      meetingEndDate: meetingEndDate ? new Date(meetingEndDate) : null,
     });
   }
 
-  async onSaveReportStartDate(uuid: any, typeLabel: string, reportStartDate: number) {
+  async onSaveReportStartDate(uuid: any, typeLabel: string, reportStartDate: number | null) {
     await this.updateMeeting(uuid, typeLabel, {
-      reportStartDate: new Date(reportStartDate),
+      reportStartDate: reportStartDate ? new Date(reportStartDate) : null,
     });
   }
 
-  async onSaveReportEndDate(uuid: any, typeLabel: string, reportEndDate: number) {
+  async onSaveReportEndDate(uuid: any, typeLabel: string, reportEndDate: number | null) {
     await this.updateMeeting(uuid, typeLabel, {
-      reportEndDate: new Date(reportEndDate),
+      reportEndDate: reportEndDate ? new Date(reportEndDate) : null,
     });
   }
 
